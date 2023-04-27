@@ -1,10 +1,26 @@
 $(function () {
     if (!location.href.includes("pocketrose")) {
-        return;
+        return
     }
-    pocketrose();
+    pocketrose()
 })
 
-function pocketrose() {
+const interceptorList = [
+    new BattleRequestInterceptor()
+]
 
+function pocketrose() {
+    $(document).ready(function () {
+        const request = StringUtils.substringAfterLast(location.href, "/")
+        let interceptor = null
+        for (const it of interceptorList) {
+            if (it.cgi === request) {
+                interceptor = it
+                break
+            }
+        }
+        if (interceptor !== null) {
+            interceptor.process()
+        }
+    });
 }
