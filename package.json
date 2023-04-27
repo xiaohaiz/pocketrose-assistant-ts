@@ -1,0 +1,19 @@
+{
+  "name": "pocketrose-assistant",
+  "version": "1.0.0",
+  "description": "",
+  "main": "/src/index.ts",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/xiaohaiz/pocketrose-assistant-ts.git"
+  },
+  "author": "xiaohaiz",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/xiaohaiz/pocketrose-assistant-ts/issues"
+  },
+  "homepage": "https://github.com/xiaohaiz/pocketrose-assistant-ts#readme"
+}
