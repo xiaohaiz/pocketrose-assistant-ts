@@ -15,5 +15,15 @@
   "bugs": {
     "url": "https://github.com/xiaohaiz/pocketrose-assistant-ts/issues"
   },
-  "homepage": "https://github.com/xiaohaiz/pocketrose-assistant-ts#readme"
+  "homepage": "https://github.com/xiaohaiz/pocketrose-assistant-ts#readme",
+  "dependencies": {
+    "@babel/core": "^7.21.4",
+    "@babel/preset-env": "^7.21.4",
+    "babel-loader": "^9.1.2",
+    "ts-loader": "^9.4.2",
+    "typescript": "^5.0.4",
+    "webpack": "^5.81.0",
+    "webpack-cli": "^5.0.2",
+    "@types/jquery": "^3.5.16"
+  }
 }
