@@ -19,7 +19,7 @@ const interceptorList = [
 ]
 
 function pocketrose() {
-    $(document).ready(function () {
+    $(function () {
         const request = StringUtils.substringAfterLast(location.href, "/")
         let interceptor = null
         for (const it of interceptorList) {
