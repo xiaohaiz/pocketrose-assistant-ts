@@ -13,12 +13,30 @@ class MessageBoard {
         $("#" + containerId).html(html);
     }
 
-    static publishMessageBoard(message: string) {
+    static resetMessageBoard(message: string) {
+        if ($("#messageBoard").length === 0) {
+            return;
+        }
+        $("#messageBoard").html(message);
+    }
+
+    static publishMessage(message: string) {
         if ($("#messageBoard").length > 0) {
             let html = $("#messageBoard").html();
             const now = new Date();
-            const timeHtml = "<span style='color:midnightblue'>(" + now.toLocaleString() + ")</span>";
+            const timeHtml = "<span style='color:forestgreen'>(" + now.toLocaleString() + ")</span>";
             html = html + "<li>" + timeHtml + " " + message + "</li>";
+            $("#messageBoard").html(html);
+        }
+    }
+
+    static publishWarning(message: string) {
+        if ($("#messageBoard").length > 0) {
+            let html = $("#messageBoard").html();
+            const now = new Date();
+            const timeHtml = "<span style='color:forestgreen'>(" + now.toLocaleString() + ")</span>";
+            const messageHtml = "<span style='color:red'>" + message + "</span>";
+            html = html + "<li>" + timeHtml + " " + messageHtml + "</li>";
             $("#messageBoard").html(html);
         }
     }

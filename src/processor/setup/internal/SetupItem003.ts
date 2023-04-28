@@ -49,7 +49,7 @@ function doGenerateSetupItem() {
 function doSaveSetupItem() {
     const value = $("#select_" + code).val();
     StorageUtils.set(key, value!.toString());
-    MessageBoard.publishMessageBoard("<b style='color:red'>" + name + "</b>已经设置。");
+    MessageBoard.publishMessage("<b style='color:red'>" + name + "</b>已经设置。");
     $("#refreshButton").trigger("click");
 }
 

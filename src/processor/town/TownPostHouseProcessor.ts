@@ -4,6 +4,8 @@ import Credential from "../../util/Credential";
 import TownSelectionBuilder from "../../pocket/TownSelectionBuilder";
 import RoleLoader from "../../pocket/RoleLoader";
 import Role from "../../pocket/Role";
+import MessageBoard from "../../util/MessageBoard";
+import TownLoader from "../../pocket/TownLoader";
 
 class TownPostHouseProcessor extends PocketroseProcessor {
 
@@ -21,7 +23,7 @@ function doProcess(credential: Credential): void {
 
     const t1 = $("table:eq(1)");
     const t3 = $("table:eq(3)");
-    const t4 = $("table:eq(4)");
+    const t5 = $("table:eq(5)");
 
     // 修改标题
     let td = $(t1).find("tr:first td:first");
@@ -45,9 +47,9 @@ function doProcess(credential: Credential): void {
         "</tr>"));
 
     // 创建消息面板
-    td = $(t4).find("tr:first td:first");
+    td = $(t5).find("tr:first td:first");
     $(td).attr("id", "messageBoard");
-    $(td).attr("color", "white");
+    $(td).css("color", "white");
 
     // 增加驿站面板
     tr = $(t1).find("tr:last");
@@ -78,12 +80,20 @@ function doProcess(credential: Credential): void {
 
 function doBindTownButton(credential: Credential) {
     $("#townButton").on("click", function () {
-        $("#lodgeButton").parent().remove();
-        $("#returnButton").hide();
         const destinationTownId = $("input:radio:checked").val();
         if (destinationTownId === undefined) {
-
+            MessageBoard.publishWarning("没有选择目的地城市！");
+            return;
         }
+
+        MessageBoard.resetMessageBoard("行程实时播报：<br>");
+        $("#lodgeButton").parent().remove();
+        $("#returnButton").prop("disabled", true);
+        $("#townButton").prop("disabled", true);
+        $("#castleButton").prop("disabled", true);
+        $("input:radio").prop("disabled", true);
+
+        const destinationTown = TownLoader.getTownById(destinationTownId as string)!;
     });
 }
 

@@ -61,7 +61,7 @@ function doSaveSetupItem(id: string) {
     value["zodiac"] = $("#zodiac_battle").prop("checked");
 
     StorageUtils.set(key + "_" + id, JSON.stringify(value));
-    MessageBoard.publishMessageBoard("<b style='color:red'>" + name + "</b>已经设置。");
+    MessageBoard.publishMessage("<b style='color:red'>" + name + "</b>已经设置。");
     $("#refreshButton").trigger("click");
 }
 

@@ -45,10 +45,10 @@ function doSaveSetupItem() {
     const value = $("#text_" + code).val();
     if (value === "") {
         StorageUtils.remove(key);
-        MessageBoard.publishMessageBoard("<b style='color:red'>" + name + "</b>已经重置。");
+        MessageBoard.publishMessage("<b style='color:red'>" + name + "</b>已经重置。");
     } else {
         StorageUtils.set(key, value as string);
-        MessageBoard.publishMessageBoard("<b style='color:red'>" + name + "</b>已经设置。");
+        MessageBoard.publishMessage("<b style='color:red'>" + name + "</b>已经设置。");
     }
     $("#refreshButton").trigger("click");
 }
