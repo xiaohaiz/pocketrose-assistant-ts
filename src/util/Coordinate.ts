@@ -10,19 +10,19 @@ class Coordinate {
         this.#y = y;
     }
 
-    get x() {
+    get x(): number {
         return this.#x;
     }
 
-    get y() {
+    get y(): number {
         return this.#y;
     }
 
-    asText() {
+    asText(): string {
         return "(" + this.#x + "," + this.#y + ")";
     }
 
-    equals(other: Coordinate) {
+    equals(other: Coordinate): boolean {
         return this.#x === other.x && this.#y === other.y;
     }
 }
