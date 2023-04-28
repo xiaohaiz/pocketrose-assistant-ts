@@ -3,7 +3,7 @@ const path = require('path');
 module.exports = {
     entry: './src/Pocketrose.ts',
     output: {
-        filename: 'bundle.js',
+        filename: 'pocketrose.js',
         path: path.resolve(__dirname, 'dist'),
     },
     module: {

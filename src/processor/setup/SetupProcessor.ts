@@ -23,6 +23,8 @@ import SetupItem014 from "./internal/SetupItem014";
 class SetupProcessor extends PocketroseProcessor {
 
     process() {
+        PageUtils.removeUnusedHyperLinks();
+        PageUtils.removeGoogleAnalyticsScript();
         const credential = PageUtils.currentCredential();
         doInitialize(credential);
     }
@@ -48,8 +50,11 @@ const setupItemList: SetupItem[] = [
 
 function doInitialize(credential: Credential) {
     // 整个页面是放在一个大form里面，删除重组
+    const lastDivHtml = $("div:last").html();
     $("form:first").remove();
-    $("body:first").prepend($("<div id='top_container'></div>"));
+    $("body:first").prepend($("<div id='top_container'></div>" +
+        "<hr style='height:0;width:100%'>" +
+        "<div style='text-align:center'>" + lastDivHtml + "</div>"));
 
     // 绘制新的页面
     let html = "";

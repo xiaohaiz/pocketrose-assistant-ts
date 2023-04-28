@@ -15,8 +15,7 @@ class PageUtils {
      */
     static removeUnusedHyperLinks() {
         const div = $("div:last");
-        div.find("a:first").attr("href", "javascript:void(0)");
-        div.find("a:eq(1)").attr("href", "javascript:void(0)");
+        div.find("a").attr("href", "javascript:void(0)");
         div.find("a").attr("tabIndex", "-1");
     }
 
