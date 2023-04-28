@@ -1,3 +1,5 @@
+import Town from "./Town";
+
 export = Role;
 
 class Role {
@@ -21,9 +23,7 @@ class Role {
     pet?: string;
     attribute?: string;
     location?: string;           // 所在位置(TOWN|CASTLE|WILD)
-    coordinate?: string;         // 所在坐标(location=CASTLE)
-    castleName?: string;         // 城堡名称(location=CASTLE)
-    townName?: string;           // 城市名称(location=TOWN)
+    town?: Town;
     task?: string;
     experience?: number;
     cash?: number;

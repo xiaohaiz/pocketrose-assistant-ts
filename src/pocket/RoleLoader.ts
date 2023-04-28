@@ -2,6 +2,7 @@ import Credential from "../util/Credential";
 import NetworkUtils from "../util/NetworkUtils";
 import Role from "./Role";
 import StringUtils from "../util/StringUtils";
+import TownLoader from "./TownLoader";
 
 export = RoleLoader;
 
@@ -94,7 +95,16 @@ function doParseRole(html: string): Role {
     td = $(tr).find("td:eq(1)");
     role.attribute = $(td).text();
     td = $(tr).find("td:eq(3)");
-    role.location = $(td).text();
+    s = $(td).text();
+    if (s === "野外") {
+        role.location = "WILD";
+    } else {
+        const town = TownLoader.getTownByName(s);
+        if (town !== null) {
+            role.location = "TOWN";
+            role.town = town;
+        }
+    }
 
     tr = $(table).find("tr:eq(11)");
     td = $(tr).find("td:eq(1)");
@@ -128,7 +138,9 @@ function doParseRole(html: string): Role {
     s = $(td).text();
     s = StringUtils.substringAfter(s, "仙人的宝物：");
     for (const it of s.split(" ")) {
-        role.treasureList.push(it);
+        if (it !== "") {
+            role.treasureList.push(it);
+        }
     }
 
     return role;
