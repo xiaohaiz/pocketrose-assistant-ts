@@ -40,5 +40,15 @@ function doParseRole(html: string): Role {
     role.race = StringUtils.substringBefore(t, " ");
     role.gender = StringUtils.substringAfter(t, " ");
 
+    let tr = $(table).find("tr:eq(1)");
+    let td = $(tr).find("td:first");
+    s = $(td).text();
+    role.level = parseInt(StringUtils.substringAfter(s, "Ｌｖ"));
+    td = $(tr).find("td:eq(1)");
+    s = $(td).text();
+    role.country = StringUtils.substringBetween(s, "所属：", "(");
+    role.unit = StringUtils.substringBetween(s, "(", " 部队)");
+
+
     return role;
 }

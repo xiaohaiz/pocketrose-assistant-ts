@@ -5,6 +5,8 @@ class Role {
     race?: string;
     gender?: string;
     level?: number;              // 等级
+    country?: string;
+    unit?: string;
     health?: number;
     maxHealth?: number;
     mana?: number;
