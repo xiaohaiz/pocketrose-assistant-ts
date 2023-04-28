@@ -22,7 +22,6 @@ function doRenderMenu() {
         });
 
     let html = $(th).html();
-    html += "<input type='button' value='图片'>";
     html += "<input type='button' id='setupButton' value='助手'>";
     html += "<input type='button' id='equipmentButton' value='装备'>";
     html += "<input type='button' id='petButton' value='宠物'>";
