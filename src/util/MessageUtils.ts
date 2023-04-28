@@ -13,6 +13,15 @@ class MessageUtils {
         $("#" + containerId).html(html);
     }
 
+    static publishMessageBoard(message: string) {
+        if ($("#messageBoard").length > 0) {
+            let html = $("#messageBoard").html();
+            const now = new Date();
+            const timeHtml = "<span style='color:midnightblue'>(" + now.toLocaleString() + ")</span>";
+            html = html + "<li>" + timeHtml + " " + message + "</li>";
+            $("#messageBoard").html(html);
+        }
+    }
 }
 
 export = MessageUtils;

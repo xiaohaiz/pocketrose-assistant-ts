@@ -5,6 +5,7 @@ import RoleLoader from "../../pocket/RoleLoader";
 import Role from "../../pocket/Role";
 import DOMAIN from "../../util/Constants";
 import MessageUtils from "../../util/MessageUtils";
+import SetupItem001 from "./internal/SetupItem001";
 
 class SetupProcessor extends PocketroseProcessor {
 
@@ -14,6 +15,10 @@ class SetupProcessor extends PocketroseProcessor {
     }
 
 }
+
+const setupItemList: SetupItem[] = [
+    new SetupItem001()
+];
 
 function doInitialize(credential: Credential) {
     // 整个页面是放在一个大form里面，删除重组
@@ -44,17 +49,19 @@ function doInitialize(credential: Credential) {
     html += "<td id='message_board_container'></td>";
     html += "</tr>";
     html += "<tr>";
-    html += "<td id='setup_container'></td>";
+    html += "<td id='setup_item_container'></td>";
     html += "</tr>";
     html += "<tr>";
     html += "<td style='text-align:center'>" +
-        "<input type='button' id='returnButton' value='返回城市'>" +
+        "<input type='button' id='refreshButton' value='刷新助手设置'>" +
+        "<input type='button' id='returnButton' value='返回城市界面'>" +
         "</td>";
     html += "</tr>";
     html += "</tody>";
     html += "</table>";
     $("#top_container").append($(html));
 
+    __bindRefreshButton(credential);
     __bindReturnButton();
 
     new RoleLoader(credential).load()
@@ -64,6 +71,36 @@ function doInitialize(credential: Credential) {
             const imageHtml = "<img src='" + src + "' alt='' width='64' height='64'>";
             MessageUtils.createMessageBoard("message_board_container", imageHtml);
         });
+
+    doRender(credential);
+}
+
+function doRender(credential: Credential) {
+    let html = "";
+    html += "<table style='background-color:#888888;width:100%;text-align:center'>";
+    html += "<tbody style='background-color:#F8F0E0' id='setup_item_table'>";
+    html += "<tr>";
+    html += "<th style='background-color:#E8E8D0'>名字</th>";
+    html += "<th style='background-color:#E8E8D0'>专属</th>";
+    html += "<th style='background-color:#EFE0C0'>设置</th>";
+    html += "<th style='background-color:#E0D0B0'>选择</th>";
+    html += "</tr>";
+    html += "</tbody>";
+    html += "</table>";
+    $("#setup_item_container").html(html);
+
+    for (const it of setupItemList) {
+        it.render(credential.id);
+    }
+
+}
+
+function __bindRefreshButton(credential: Credential) {
+    $("#refreshButton").on("click", function () {
+        $("#setup_item_table").html("");
+        $(".dynamic_button").off("click");
+        doRender(credential);
+    });
 }
 
 function __bindReturnButton() {
