@@ -12,6 +12,7 @@ import SetupItem004 from "./internal/SetupItem004";
 import SetupItem005 from "./internal/SetupItem005";
 import SetupItem006 from "./internal/SetupItem006";
 import SetupItem007 from "./internal/SetupItem007";
+import SetupItem008 from "./internal/SetupItem008";
 
 class SetupProcessor extends PocketroseProcessor {
 
@@ -29,7 +30,8 @@ const setupItemList: SetupItem[] = [
     new SetupItem004(),
     new SetupItem005(),
     new SetupItem006(),
-    new SetupItem007()
+    new SetupItem007(),
+    new SetupItem008()
 ];
 
 function doInitialize(credential: Credential) {
