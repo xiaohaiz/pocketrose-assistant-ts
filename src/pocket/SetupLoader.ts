@@ -41,6 +41,10 @@ class SetupLoader {
     static isEquipmentManagementUIEnabled(): boolean {
         return StorageUtils.getBoolean("_pa_010");
     }
+
+    static isCareerManagementUIEnabled(): boolean {
+        return StorageUtils.getBoolean("_pa_011");
+    }
 }
 
 export = SetupLoader;
