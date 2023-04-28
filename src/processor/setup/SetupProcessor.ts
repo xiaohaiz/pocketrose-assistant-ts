@@ -9,7 +9,10 @@ class SetupProcessor extends PocketroseProcessor {
     process() {
         const credential = PageUtils.currentCredential();
 
-        new RoleLoader(credential).load().then();
+        new RoleLoader(credential).load()
+            .then(role => {
+                console.log(JSON.stringify(role));
+            });
     }
 
 }
