@@ -1,5 +1,5 @@
 import StorageUtils from "../../../util/StorageUtils";
-import MessageUtils from "../../../util/MessageUtils";
+import MessageBoard from "../../../util/MessageBoard";
 import SetupLoader from "../../../pocket/SetupLoader";
 
 class SetupItem016 implements SetupItem {
@@ -45,10 +45,10 @@ function doSaveSetupItem() {
     const value = $("#text_" + code).val();
     if (value === "") {
         StorageUtils.remove(key);
-        MessageUtils.publishMessageBoard("<b style='color:red'>" + name + "</b>已经重置。");
+        MessageBoard.publishMessageBoard("<b style='color:red'>" + name + "</b>已经重置。");
     } else {
         StorageUtils.set(key, value as string);
-        MessageUtils.publishMessageBoard("<b style='color:red'>" + name + "</b>已经设置。");
+        MessageBoard.publishMessageBoard("<b style='color:red'>" + name + "</b>已经设置。");
     }
     $("#refreshButton").trigger("click");
 }

@@ -4,7 +4,7 @@ import Credential from "../../util/Credential";
 import RoleLoader from "../../pocket/RoleLoader";
 import Role from "../../pocket/Role";
 import DOMAIN from "../../util/Constants";
-import MessageUtils from "../../util/MessageUtils";
+import MessageBoard from "../../util/MessageBoard";
 import SetupItem001 from "./internal/SetupItem001";
 import SetupItem002 from "./internal/SetupItem002";
 import SetupItem003 from "./internal/SetupItem003";
@@ -108,7 +108,7 @@ function doInitialize(credential: Credential) {
             const image = (role as Role).image!;
             const src = DOMAIN + "/image/head/" + image;
             const imageHtml = "<img src='" + src + "' alt='' width='64' height='64'>";
-            MessageUtils.createMessageBoard("message_board_container", imageHtml);
+            MessageBoard.createMessageBoard("message_board_container", imageHtml);
         });
 
     doRender(credential);

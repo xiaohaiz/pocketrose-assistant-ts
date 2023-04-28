@@ -2,6 +2,8 @@ import PocketroseProcessor from "../PocketroseProcessor";
 import PageUtils from "../../util/PageUtils";
 import Credential from "../../util/Credential";
 import TownSelectionBuilder from "../../pocket/TownSelectionBuilder";
+import RoleLoader from "../../pocket/RoleLoader";
+import Role from "../../pocket/Role";
 
 class TownPostHouseProcessor extends PocketroseProcessor {
 
@@ -14,6 +16,9 @@ class TownPostHouseProcessor extends PocketroseProcessor {
 }
 
 function doProcess(credential: Credential): void {
+    $("input:submit[value='宿泊']").attr("id", "lodgeButton");
+    $("input:submit[value='返回城市']").attr("id", "returnButton");
+
     const t1 = $("table:eq(1)");
     const t3 = $("table:eq(3)");
     const t4 = $("table:eq(4)");
@@ -53,14 +58,36 @@ function doProcess(credential: Credential): void {
         "</tr>" +
         "<tr>" +
         "<td style='background-color:#F8F0E0;text-align:center'>" +
-        "<input type='button' id='townButton' value='开始旅途'>" +
-        "<input type='button' id='castleButton' value='回到城堡'>" +
+        "<input type='button' id='townButton' value='开始旅途' style='color:blue'>" +
+        "<input type='button' id='castleButton' value='回到城堡' style='color:red'>" +
         "</td>" +
         "</tr>"));
 
     $("#townButton").prop("disabled", true);
     $("#castleButton").prop("disabled", true);
     $("#castleButton").hide();
+
+    new RoleLoader(credential).load()
+        .then(role => {
+            const currentTown = (role as Role).town!;
+            $("input:radio[value='" + currentTown.id + "']").prop("disabled", true);
+            $("#townButton").prop("disabled", false);
+            doBindTownButton(credential);
+        });
+}
+
+function doBindTownButton(credential: Credential) {
+    $("#townButton").on("click", function () {
+        $("#lodgeButton").parent().remove();
+        $("#returnButton").hide();
+        const destinationTownId = $("input:radio:checked").val();
+        if (destinationTownId === undefined) {
+
+        }
+    });
+}
+
+function doBindCastleButton() {
 }
 
 export = TownPostHouseProcessor;

@@ -1,4 +1,4 @@
-class MessageUtils {
+class MessageBoard {
 
     static createMessageBoard(containerId: string, imageHtml: string) {
         let html = "";
@@ -24,4 +24,4 @@ class MessageUtils {
     }
 }
 
-export = MessageUtils;
+export = MessageBoard;

@@ -1,5 +1,5 @@
 import StorageUtils from "../../../util/StorageUtils";
-import MessageUtils from "../../../util/MessageUtils";
+import MessageBoard from "../../../util/MessageBoard";
 import SetupLoader from "../../../pocket/SetupLoader";
 
 class SetupItem012 implements SetupItem {
@@ -61,7 +61,7 @@ function doSaveSetupItem(id: string) {
     value["zodiac"] = $("#zodiac_battle").prop("checked");
 
     StorageUtils.set(key + "_" + id, JSON.stringify(value));
-    MessageUtils.publishMessageBoard("<b style='color:red'>" + name + "</b>已经设置。");
+    MessageBoard.publishMessageBoard("<b style='color:red'>" + name + "</b>已经设置。");
     $("#refreshButton").trigger("click");
 }
 

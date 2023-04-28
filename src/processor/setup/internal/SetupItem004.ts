@@ -1,5 +1,5 @@
 import StorageUtils from "../../../util/StorageUtils";
-import MessageUtils from "../../../util/MessageUtils";
+import MessageBoard from "../../../util/MessageBoard";
 import SetupLoader from "../../../pocket/SetupLoader";
 
 class SetupItem004 implements SetupItem {
@@ -46,7 +46,7 @@ function doGenerateSetupItem() {
 function doSaveSetupItem() {
     const value = $("#select_" + code).val();
     StorageUtils.set(key, value!.toString());
-    MessageUtils.publishMessageBoard("<b style='color:red'>" + name + "</b>已经设置。");
+    MessageBoard.publishMessageBoard("<b style='color:red'>" + name + "</b>已经设置。");
     $("#refreshButton").trigger("click");
 }
 
