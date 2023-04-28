@@ -2,7 +2,7 @@ export = NetworkUtils;
 
 class NetworkUtils {
 
-    sendPostRequest(cgi: string, request: {}, handler?: (html: string) => void) {
+    static sendPostRequest(cgi: string, request: {}, handler?: (html: string) => void) {
         fetch(cgi, {
             method: "POST",
             headers: {

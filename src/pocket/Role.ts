@@ -1,0 +1,5 @@
+export = Role;
+
+class Role {
+
+}
