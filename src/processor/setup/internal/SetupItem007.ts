@@ -1,5 +1,6 @@
 import StorageUtils from "../../../util/StorageUtils";
 import MessageUtils from "../../../util/MessageUtils";
+import SetupLoader from "../../../pocket/SetupLoader";
 
 class SetupItem007 implements SetupItem {
 
@@ -24,7 +25,7 @@ function doRender() {
 
     $("#setup_item_table").append($(html));
 
-    const value = StorageUtils.getBoolean(key);
+    const value = SetupLoader.isBattleForceRecommendationEnabled();
     $(".option_class_" + code + "[value='" + Number(value) + "']").prop("selected", true);
 
     $("#setup_" + code).on("click", function () {

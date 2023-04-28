@@ -1,5 +1,6 @@
 import StorageUtils from "../../../util/StorageUtils";
 import MessageUtils from "../../../util/MessageUtils";
+import SetupLoader from "../../../pocket/SetupLoader";
 
 class SetupItem002 implements SetupItem {
 
@@ -24,7 +25,7 @@ function doRender() {
 
     $("#setup_item_table").append($(html));
 
-    const value = StorageUtils.getFloat(key, 0.6);
+    const value = SetupLoader.getLodgeHealthLostRatio();
     $(".option_class_" + code + "[value='" + Number(value) + "']").prop("selected", true);
 
     $("#setup_" + code).on("click", function () {
