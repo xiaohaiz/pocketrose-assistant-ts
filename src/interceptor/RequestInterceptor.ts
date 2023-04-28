@@ -1,6 +1,6 @@
 interface RequestInterceptor {
 
-    readonly cgi: string
+    readonly cgi: string;
 
     process(): void
 
