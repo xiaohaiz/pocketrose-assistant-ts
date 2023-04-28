@@ -1,0 +1,5 @@
+class Pet {
+
+}
+
+export = Pet;

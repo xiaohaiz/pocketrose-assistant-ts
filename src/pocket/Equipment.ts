@@ -1,0 +1,5 @@
+class Equipment {
+
+}
+
+export = Equipment;
