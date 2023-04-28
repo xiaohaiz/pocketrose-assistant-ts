@@ -88,6 +88,114 @@ class SetupLoader {
     static getBattleDepositButtonText(): string {
         return StorageUtils.getString("_pa_018");
     }
+
+    static loadEquipmentSet_A(id: string) {
+        const s = StorageUtils.getString("_pa_019_" + id);
+        if (s === "") {
+            const value = {};
+            // @ts-ignore
+            value["weaponName"] = "NONE";
+            // @ts-ignore
+            value["armorName"] = "NONE";
+            // @ts-ignore
+            value["accessoryName"] = "NONE";
+            return value;
+        } else {
+            return JSON.parse(s);
+        }
+    }
+
+    static loadEquipmentSet_B(id: string) {
+        const s = StorageUtils.getString("_pa_020_" + id);
+        if (s === "") {
+            const value = {};
+            // @ts-ignore
+            value["weaponName"] = "NONE";
+            // @ts-ignore
+            value["armorName"] = "NONE";
+            // @ts-ignore
+            value["accessoryName"] = "NONE";
+            return value;
+        } else {
+            return JSON.parse(s);
+        }
+    }
+
+    static loadEquipmentSet_C(id: string) {
+        const s = StorageUtils.getString("_pa_021_" + id);
+        if (s === "") {
+            const value = {};
+            // @ts-ignore
+            value["weaponName"] = "NONE";
+            // @ts-ignore
+            value["armorName"] = "NONE";
+            // @ts-ignore
+            value["accessoryName"] = "NONE";
+            return value;
+        } else {
+            return JSON.parse(s);
+        }
+    }
+
+    static loadEquipmentSet_D(id: string) {
+        const s = StorageUtils.getString("_pa_022_" + id);
+        if (s === "") {
+            const value = {};
+            // @ts-ignore
+            value["weaponName"] = "NONE";
+            // @ts-ignore
+            value["armorName"] = "NONE";
+            // @ts-ignore
+            value["accessoryName"] = "NONE";
+            return value;
+        } else {
+            return JSON.parse(s);
+        }
+    }
+
+    static loadEquipmentSet_E(id: string) {
+        const s = StorageUtils.getString("_pa_023_" + id);
+        if (s === "") {
+            const value = {};
+            // @ts-ignore
+            value["weaponName"] = "NONE";
+            // @ts-ignore
+            value["armorName"] = "NONE";
+            // @ts-ignore
+            value["accessoryName"] = "NONE";
+            return value;
+        } else {
+            return JSON.parse(s);
+        }
+    }
+
+    static getBattleHarvestPrompt() {
+        const s = StorageUtils.getString("_pa_024");
+        if (s === "") {
+            const value = {};
+            // @ts-ignore
+            value["person"] = "NONE";
+            // @ts-ignore
+            value["text"] = "";
+            return value;
+        } else {
+            return JSON.parse(s);
+        }
+    }
+
+    static getNormalBattlePrompt() {
+        const s = StorageUtils.getString("_pa_025");
+        if (s === "") {
+            const value = {};
+            // @ts-ignore
+            value["person"] = "NONE";
+            // @ts-ignore
+            value["text"] = "";
+            return value;
+        } else {
+            return JSON.parse(s);
+        }
+    }
 }
 
 export = SetupLoader;
