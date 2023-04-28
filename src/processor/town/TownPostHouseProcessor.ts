@@ -1,6 +1,7 @@
 import PocketroseProcessor from "../PocketroseProcessor";
 import PageUtils from "../../util/PageUtils";
 import Credential from "../../util/Credential";
+import TownSelectionBuilder from "../../pocket/TownSelectionBuilder";
 
 class TownPostHouseProcessor extends PocketroseProcessor {
 
@@ -46,11 +47,20 @@ function doProcess(credential: Credential): void {
     // 增加驿站面板
     tr = $(t1).find("tr:last");
     $(tr).after($("<tr>" +
-        "<td style='background-color:#F8F0E0;text-align:center'></td>" +
+        "<td style='background-color:#F8F0E0;text-align:center'>" +
+        TownSelectionBuilder.buildTownSelectionTable() +
+        "</td>" +
         "</tr>" +
         "<tr>" +
-        "<td style='background-color:#F8F0E0;text-align:center'></td>" +
+        "<td style='background-color:#F8F0E0;text-align:center'>" +
+        "<input type='button' id='townButton' value='开始旅途'>" +
+        "<input type='button' id='castleButton' value='回到城堡'>" +
+        "</td>" +
         "</tr>"));
+
+    $("#townButton").prop("disabled", true);
+    $("#castleButton").prop("disabled", true);
+    $("#castleButton").hide();
 }
 
 export = TownPostHouseProcessor;
