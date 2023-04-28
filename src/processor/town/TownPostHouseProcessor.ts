@@ -1,9 +1,44 @@
 import PocketroseProcessor from "../PocketroseProcessor";
+import PageUtils from "../../util/PageUtils";
+import Credential from "../../util/Credential";
 
 class TownPostHouseProcessor extends PocketroseProcessor {
 
     process() {
+        PageUtils.removeUnusedHyperLinks();
+        PageUtils.removeGoogleAnalyticsScript();
+        const credential = PageUtils.currentCredential();
+        doProcess(credential);
     }
+}
+
+function doProcess(credential: Credential): void {
+    const t1 = $("table:eq(1)");
+    const t3 = $("table:eq(3)");
+
+    // 修改标题
+    let td = $(t1).find("tr:first td:first");
+    $(td).removeAttr("bgcolor");
+    $(td).removeAttr("width");
+    $(td).removeAttr("height");
+    $(td).css("text-align", "center");
+    $(td).css("font-size", "150%");
+    $(td).css("font-weight", "bold");
+    $(td).css("background-color", "navy");
+    $(td).css("color", "yellowgreen");
+    $(td).text("＜＜  宿 屋 & 驿 站  ＞＞");
+
+
+    // 标记现金栏、增加计时器
+    let tr = $(t3).find("tr:last");
+    td = $(tr).find("td:last");
+    $(td).attr("id", "roleCash");
+    $(tr).after($("<tr>" +
+        "<td style='background-color:#E0D0B0'>计时器</td>" +
+        "<td style='background-color:#E8E8D0;color:red;font-weight:bold;text-align:right' id='countDownTimer' colspan='3'>-</td>" +
+        "</tr>"));
+
+    console.log($("body:first").html());
 }
 
 export = TownPostHouseProcessor;
