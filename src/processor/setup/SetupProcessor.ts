@@ -1,6 +1,10 @@
 import PocketroseProcessor from "../PocketroseProcessor";
 import PageUtils from "../../util/PageUtils";
 import Credential from "../../util/Credential";
+import RoleLoader from "../../pocket/RoleLoader";
+import Role from "../../pocket/Role";
+import DOMAIN from "../../util/Constants";
+import MessageUtils from "../../util/MessageUtils";
 
 class SetupProcessor extends PocketroseProcessor {
 
@@ -52,6 +56,14 @@ function doInitialize(credential: Credential) {
     $("#top_container").append($(html));
 
     __bindReturnButton();
+
+    new RoleLoader(credential).load()
+        .then(role => {
+            const image = (role as Role).image!;
+            const src = DOMAIN + "/image/head/" + image;
+            const imageHtml = "<img src='" + src + "' alt='' width='64' height='64'>";
+            MessageUtils.createMessageBoard("message_board_container", imageHtml);
+        });
 }
 
 function __bindReturnButton() {
