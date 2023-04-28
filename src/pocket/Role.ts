@@ -28,8 +28,8 @@ class Role {
     experience?: number;
     cash?: number;
     career?: string;
-    masterCareerList?: [string?];
-    treasureList?: [string?];
+    masterCareerList?: string[];
+    treasureList?: string[];
 
     asShortText(): string {
         return this.name + " " + this.level +
