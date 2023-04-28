@@ -1,6 +1,7 @@
 import StringUtils from "./util/StringUtils";
 import BattleRequestInterceptor from "./interceptor/BattleRequestInterceptor";
 import PersonalRequestInterceptor from "./interceptor/PersonalRequestInterceptor";
+import StatusRequestInterceptor from "./interceptor/StatusRequestInterceptor";
 
 $(function () {
     if (!location.href.includes("pocketrose")) {
@@ -11,7 +12,8 @@ $(function () {
 
 const interceptorList = [
     new BattleRequestInterceptor(),
-    new PersonalRequestInterceptor()
+    new PersonalRequestInterceptor(),
+    new StatusRequestInterceptor()
 ]
 
 function pocketrose() {
