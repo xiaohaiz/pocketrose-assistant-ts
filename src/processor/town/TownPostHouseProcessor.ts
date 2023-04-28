@@ -29,7 +29,6 @@ function doProcess(credential: Credential): void {
     $(td).css("color", "yellowgreen");
     $(td).text("＜＜  宿 屋 & 驿 站  ＞＞");
 
-
     // 标记现金栏、增加计时器
     let tr = $(t3).find("tr:last");
     td = $(tr).find("td:last");
@@ -43,6 +42,15 @@ function doProcess(credential: Credential): void {
     td = $(t4).find("tr:first td:first");
     $(td).attr("id", "messageBoard");
     $(td).attr("color", "white");
+
+    // 增加驿站面板
+    tr = $(t1).find("tr:last");
+    $(tr).after($("<tr>" +
+        "<td style='background-color:#F8F0E0;text-align:center'></td>" +
+        "</tr>" +
+        "<tr>" +
+        "<td style='background-color:#F8F0E0;text-align:center'></td>" +
+        "</tr>"));
 }
 
 export = TownPostHouseProcessor;
