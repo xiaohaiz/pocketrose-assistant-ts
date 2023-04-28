@@ -1,7 +1,5 @@
 import Coordinate from "../util/Coordinate";
 
-export = Town;
-
 class Town {
     readonly id: string;
     readonly name: string;
@@ -19,3 +17,5 @@ class Town {
         return "(" + this.id + ") " + this.name + " " + this.coordinate.asText();
     }
 }
+
+export = Town;

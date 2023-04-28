@@ -1,5 +1,3 @@
-export = Credential;
-
 class Credential {
 
     readonly id: string;
@@ -15,3 +13,5 @@ class Credential {
     }
 
 }
+
+export = Credential;

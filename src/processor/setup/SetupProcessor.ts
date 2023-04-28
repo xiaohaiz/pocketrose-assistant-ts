@@ -3,8 +3,6 @@ import PageUtils from "../../util/PageUtils";
 import RoleLoader from "../../pocket/RoleLoader";
 import Role from "../../pocket/Role";
 
-export = SetupProcessor;
-
 class SetupProcessor extends PocketroseProcessor {
 
     process() {
@@ -17,3 +15,5 @@ class SetupProcessor extends PocketroseProcessor {
     }
 
 }
+
+export = SetupProcessor;

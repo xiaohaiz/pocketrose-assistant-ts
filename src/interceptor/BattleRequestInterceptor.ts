@@ -1,5 +1,3 @@
-export = BattleRequestInterceptor;
-
 class BattleRequestInterceptor implements RequestInterceptor {
 
     readonly cgi: string = "/battle.cgi";
@@ -8,3 +6,5 @@ class BattleRequestInterceptor implements RequestInterceptor {
     }
 
 }
+
+export = BattleRequestInterceptor;

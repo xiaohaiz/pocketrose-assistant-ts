@@ -1,5 +1,3 @@
-export = Coordinate;
-
 class Coordinate {
 
     readonly x: number;
@@ -22,5 +20,6 @@ class Coordinate {
     equals(other: Coordinate): boolean {
         return this.x === other.x && this.y === other.y;
     }
-
 }
+
+export = Coordinate;

@@ -1,8 +1,6 @@
 import PageUtils from "../../util/PageUtils";
 import PocketroseProcessor from "../PocketroseProcessor";
 
-export = PersonalStatusProcessor;
-
 class PersonalStatusProcessor extends PocketroseProcessor {
 
     process() {
@@ -20,3 +18,5 @@ function reRenderHonor() {
     $(td).attr("style", "word-break:break-all");
     $(td).html(html);
 }
+
+export = PersonalStatusProcessor;

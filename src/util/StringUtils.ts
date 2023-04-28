@@ -1,5 +1,3 @@
-export = StringUtils;
-
 class StringUtils {
     static substringBefore(text: string, searchString: string): string {
         const idx = text.indexOf(searchString);
@@ -49,3 +47,5 @@ class StringUtils {
         return text;
     }
 }
+
+export = StringUtils;

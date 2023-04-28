@@ -1,8 +1,6 @@
 import Coordinate from "../util/Coordinate";
 import Town from "./Town";
 
-export = TownLoader;
-
 class TownLoader {
 
     static getTownById(id: string): Town | null {
@@ -143,3 +141,4 @@ const TOWN_DEFINITION = {
         new Coordinate(13, 14))
 };
 
+export = TownLoader;

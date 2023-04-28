@@ -1,5 +1,3 @@
-export = PocketroseProcessor;
-
 abstract class PocketroseProcessor {
 
     readonly pageHtml: string;
@@ -10,3 +8,5 @@ abstract class PocketroseProcessor {
         this.pageText = pageText;
     }
 }
+
+export = PocketroseProcessor;

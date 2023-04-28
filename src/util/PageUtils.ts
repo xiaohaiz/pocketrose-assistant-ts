@@ -1,7 +1,5 @@
 import Credential from "./Credential";
 
-export = PageUtils;
-
 class PageUtils {
 
     static currentPageHtml(): string {
@@ -36,3 +34,5 @@ class PageUtils {
     }
 
 }
+
+export = PageUtils;

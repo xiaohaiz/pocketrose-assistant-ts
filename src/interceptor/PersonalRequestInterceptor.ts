@@ -2,8 +2,6 @@ import PageUtils from "../util/PageUtils";
 import PersonalStatusProcessor from "../processor/personal/PersonalStatusProcessor";
 import SetupProcessor from "../processor/setup/SetupProcessor";
 
-export = PersonalRequestInterceptor;
-
 class PersonalRequestInterceptor implements RequestInterceptor {
 
     readonly cgi: string = "mydata.cgi";
@@ -20,5 +18,6 @@ class PersonalRequestInterceptor implements RequestInterceptor {
         }
     }
 
-
 }
+
+export = PersonalRequestInterceptor;

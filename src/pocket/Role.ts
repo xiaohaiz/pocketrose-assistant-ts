@@ -1,7 +1,5 @@
 import Town from "./Town";
 
-export = Role;
-
 class Role {
     name?: string;               // 姓名
     race?: string;
@@ -42,3 +40,5 @@ class Role {
             " " + this.speed;
     }
 }
+
+export = Role;

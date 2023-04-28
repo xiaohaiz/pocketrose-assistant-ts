@@ -1,8 +1,6 @@
 import PageUtils from "../util/PageUtils";
 import TownDashboardProcessor from "../processor/dashboard/TownDashboardProcessor";
 
-export = TownRequestInterceptor;
-
 class TownRequestInterceptor implements RequestInterceptor {
 
     readonly cgi: string = "town.cgi";
@@ -14,6 +12,7 @@ class TownRequestInterceptor implements RequestInterceptor {
             new TownDashboardProcessor(pageHtml, pageText).process();
         }
     }
-
-
 }
+
+
+export = TownRequestInterceptor;

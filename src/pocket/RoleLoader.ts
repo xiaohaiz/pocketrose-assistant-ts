@@ -4,8 +4,6 @@ import Role from "./Role";
 import StringUtils from "../util/StringUtils";
 import TownLoader from "./TownLoader";
 
-export = RoleLoader;
-
 class RoleLoader {
 
     readonly #credential: Credential;
@@ -145,3 +143,5 @@ function doParseRole(html: string): Role {
 
     return role;
 }
+
+export = RoleLoader;

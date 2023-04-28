@@ -1,8 +1,6 @@
 import PageUtils from "../util/PageUtils";
 import TownDashboardProcessor from "../processor/dashboard/TownDashboardProcessor";
 
-export = StatusRequestInterceptor;
-
 class StatusRequestInterceptor implements RequestInterceptor {
 
     readonly cgi: string = "status.cgi";
@@ -16,3 +14,5 @@ class StatusRequestInterceptor implements RequestInterceptor {
     }
 
 }
+
+export = StatusRequestInterceptor;

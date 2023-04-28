@@ -1,5 +1,3 @@
-export = NetworkUtils;
-
 class NetworkUtils {
 
     static sendPostRequest(cgi: string, request: {}, handler?: (html: string) => void) {
@@ -28,3 +26,5 @@ class NetworkUtils {
             });
     }
 }
+
+export = NetworkUtils;
