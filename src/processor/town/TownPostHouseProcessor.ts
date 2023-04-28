@@ -15,6 +15,7 @@ class TownPostHouseProcessor extends PocketroseProcessor {
 function doProcess(credential: Credential): void {
     const t1 = $("table:eq(1)");
     const t3 = $("table:eq(3)");
+    const t4 = $("table:eq(4)");
 
     // 修改标题
     let td = $(t1).find("tr:first td:first");
@@ -38,7 +39,10 @@ function doProcess(credential: Credential): void {
         "<td style='background-color:#E8E8D0;color:red;font-weight:bold;text-align:right' id='countDownTimer' colspan='3'>-</td>" +
         "</tr>"));
 
-    console.log($("body:first").html());
+    // 创建消息面板
+    td = $(t4).find("tr:first td:first");
+    $(td).attr("id", "messageBoard");
+    $(td).attr("color", "white");
 }
 
 export = TownPostHouseProcessor;
