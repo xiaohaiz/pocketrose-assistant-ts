@@ -72,6 +72,22 @@ class SetupLoader {
     static isCareerTransferEntranceDisabled(id: string): boolean {
         return StorageUtils.getBoolean("_pa_014_" + id);
     }
+
+    static getBattleReturnButtonText(): string {
+        return StorageUtils.getString("_pa_015");
+    }
+
+    static getBattleLodgeButtonText(): string {
+        return StorageUtils.getString("_pa_016");
+    }
+
+    static getBattleRepairButtonText(): string {
+        return StorageUtils.getString("_pa_017");
+    }
+
+    static getBattleDepositButtonText(): string {
+        return StorageUtils.getString("_pa_018");
+    }
 }
 
 export = SetupLoader;
