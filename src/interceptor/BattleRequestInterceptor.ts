@@ -3,7 +3,7 @@ import BattleProcessor from "../processor/battle/BattleProcessor";
 
 class BattleRequestInterceptor implements RequestInterceptor {
 
-    readonly cgi: string = "/battle.cgi";
+    readonly cgi: string = "battle.cgi";
 
     process(): void {
         const pageHtml = PageUtils.currentPageHtml();
