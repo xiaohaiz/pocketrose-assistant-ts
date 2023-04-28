@@ -6,6 +6,7 @@ import Role from "../../pocket/Role";
 import DOMAIN from "../../util/Constants";
 import MessageUtils from "../../util/MessageUtils";
 import SetupItem001 from "./internal/SetupItem001";
+import SetupItem002 from "./internal/SetupItem002";
 
 class SetupProcessor extends PocketroseProcessor {
 
@@ -17,7 +18,8 @@ class SetupProcessor extends PocketroseProcessor {
 }
 
 const setupItemList: SetupItem[] = [
-    new SetupItem001()
+    new SetupItem001(),
+    new SetupItem002()
 ];
 
 function doInitialize(credential: Credential) {
