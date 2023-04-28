@@ -6,7 +6,8 @@ $(function () {
 })
 
 const interceptorList = [
-    new BattleRequestInterceptor()
+    new BattleRequestInterceptor(),
+    new PersonalRequestInterceptor()
 ]
 
 function pocketrose() {
