@@ -31,7 +31,7 @@ class StorageUtils {
         return value !== "0";
     }
 
-    getInt(key: string, defaultValue: number): number {
+    static getInt(key: string, defaultValue: number): number {
         const value = StorageUtils.getString(key);
         if (value === "") {
             return defaultValue;
@@ -39,7 +39,7 @@ class StorageUtils {
         return parseInt(value);
     }
 
-    getFloat(key: string, defaultValue: number): number {
+    static getFloat(key: string, defaultValue: number): number {
         const value = StorageUtils.getString(key);
         if (value === "") {
             return defaultValue;
