@@ -64,6 +64,10 @@ class SetupLoader {
         }
         return value;
     }
+
+    static isPocketSuperMarketEnabled(): boolean {
+        return StorageUtils.getBoolean("_pa_013");
+    }
 }
 
 export = SetupLoader;
