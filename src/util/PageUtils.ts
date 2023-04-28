@@ -1,3 +1,5 @@
+import Credential from "./Credential";
+
 export = PageUtils;
 
 class PageUtils {
@@ -25,6 +27,15 @@ class PageUtils {
      */
     static removeGoogleAnalyticsScript() {
         $("script:last").remove();
+    }
+
+    static currentCredential() {
+        const id = $("input:hidden[name='id']:first").val();
+        const pass = $("input:hidden[name='pass']:first").val();
+        if (id === undefined || pass === undefined) {
+            throw new Error("No id/pass found");
+        }
+        return new Credential(id.toString(), pass.toString());
     }
 
 }
