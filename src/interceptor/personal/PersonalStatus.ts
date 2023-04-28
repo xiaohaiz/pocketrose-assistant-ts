@@ -1,3 +1,7 @@
+import PageUtils from "../../util/PageUtils";
+
+export = PersonalStatus;
+
 class PersonalStatus {
 
     private readonly pageHtml: string;
@@ -9,5 +13,9 @@ class PersonalStatus {
     }
 
     process() {
+        PageUtils.removeUnusedHyperLinks();
+        PageUtils.removeGoogleAnalyticsScript();
+
+        console.log(PageUtils.currentPageHtml());
     }
 }

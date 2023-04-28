@@ -1,3 +1,8 @@
+import PageUtils from "../util/PageUtils";
+import PersonalStatus from "./personal/PersonalStatus";
+
+export = PersonalRequestInterceptor;
+
 class PersonalRequestInterceptor implements RequestInterceptor {
 
     readonly cgi: string = "mydata.cgi";

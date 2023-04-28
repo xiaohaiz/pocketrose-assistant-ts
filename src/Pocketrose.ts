@@ -1,3 +1,7 @@
+import StringUtils from "./util/StringUtils";
+import BattleRequestInterceptor from "./interceptor/BattleRequestInterceptor";
+import PersonalRequestInterceptor from "./interceptor/PersonalRequestInterceptor";
+
 $(function () {
     if (!location.href.includes("pocketrose")) {
         return

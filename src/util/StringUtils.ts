@@ -1,3 +1,5 @@
+export = StringUtils;
+
 class StringUtils {
     static substringAfterLast(text: string, searchString: string): string {
         const idx = text.lastIndexOf(searchString);
