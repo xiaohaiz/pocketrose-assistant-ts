@@ -18,11 +18,8 @@ class Credential {
         return this.#pass;
     }
 
-    asRequest(): Map<string, string> {
-        const request = new Map<string, string>();
-        request.set("id", this.#id);
-        request.set("pass", this.#pass);
-        return request;
+    asRequest() {
+        return {"id": this.#id, "pass": this.#pass};
     }
 
 }
