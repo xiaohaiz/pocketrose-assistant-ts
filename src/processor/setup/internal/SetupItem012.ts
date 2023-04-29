@@ -16,7 +16,7 @@ const key: string = "_pa_" + code;
 
 function doRender(id: string) {
     let html = "";
-    html += "<tr>";
+    html += "<tr id='battle_field_setup' style='display:none'>";
     html += "<th style='background-color:#E8E8D0'>" + name + "</th>";
     html += "<td style='background-color:#E8E8D0'>★</td>";
     html += "<td style='background-color:#EFE0C0'><input type='button' class='dynamic_button' id='setup_" + code + "' value='设置'></td>";

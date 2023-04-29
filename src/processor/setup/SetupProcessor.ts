@@ -107,8 +107,26 @@ function doInitialize(credential: Credential) {
         .then(role => {
             const image = (role as Role).image!;
             const src = DOMAIN + "/image/head/" + image;
-            const imageHtml = "<img src='" + src + "' alt='' width='64' height='64'>";
+            const imageHtml = "<img src='" + src + "' alt='' width='64' height='64' id='roleImage'>";
             MessageBoard.createMessageBoard("message_board_container", imageHtml);
+
+            $("#roleImage").on("dblclick", function () {
+                // Get setup 001-005 status
+                const s1 = $("#select_001").val();
+                const s2 = $("#select_002").val();
+                const s3 = $("#select_003").val();
+                const s4 = $("#select_004").val();
+                const s5 = $("#select_005").val();
+                if (s1 === "1" &&
+                    s2 === "0.2" &&
+                    s3 === "20" &&
+                    s4 === "20" &&
+                    s5 === "2") {
+                    if ($("#battle_field_setup").length > 0) {
+                        $("#battle_field_setup").toggle();
+                    }
+                }
+            });
         });
 
     doRender(credential);
