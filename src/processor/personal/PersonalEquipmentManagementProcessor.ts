@@ -8,6 +8,7 @@ import NetworkUtils from "../../util/NetworkUtils";
 import EquipmentSet from "../../pocket/EquipmentSet";
 import EquipmentSetLoader from "../../pocket/EquipmentSetLoader";
 import TownBank from "../../pocket/TownBank";
+import SetupLoader from "../../pocket/SetupLoader";
 
 class PersonalEquipmentManagementProcessor extends PageProcessor {
 
@@ -231,6 +232,27 @@ function doRender(credential: Credential, equipmentList: Equipment[]) {
         $("#goldenCageButton").css("display", "none");
     }
 
+    const config_a = SetupLoader.loadEquipmentSet_A(credential.id);
+    if (!isSetConfigAvailable(config_a)) {
+        $("#setButton_A").prop("disabled", true);
+    }
+    const config_b = SetupLoader.loadEquipmentSet_B(credential.id);
+    if (!isSetConfigAvailable(config_b)) {
+        $("#setButton_B").prop("disabled", true);
+    }
+    const config_c = SetupLoader.loadEquipmentSet_C(credential.id);
+    if (!isSetConfigAvailable(config_c)) {
+        $("#setButton_C").prop("disabled", true);
+    }
+    const config_d = SetupLoader.loadEquipmentSet_D(credential.id);
+    if (!isSetConfigAvailable(config_d)) {
+        $("#setButton_D").prop("disabled", true);
+    }
+    const config_e = SetupLoader.loadEquipmentSet_E(credential.id);
+    if (!isSetConfigAvailable(config_e)) {
+        $("#setButton_E").prop("disabled", true);
+    }
+
     doBindUseButton(credential);
     doBindPutIntoBagButton(credential);
     doBindTreasureBagButton(credential, treasureBag);
@@ -239,6 +261,11 @@ function doRender(credential: Credential, equipmentList: Equipment[]) {
     doBindLuckCharmButton(credential, equipmentList);
     doBindDontForgetMeButton(credential, equipmentList);
     doBindMagicBallButton(credential, equipmentList);
+    doBindSetButton(credential, equipmentList, "A", config_a);
+    doBindSetButton(credential, equipmentList, "B", config_b);
+    doBindSetButton(credential, equipmentList, "C", config_c);
+    doBindSetButton(credential, equipmentList, "D", config_d);
+    doBindSetButton(credential, equipmentList, "E", config_e);
     doBindSearchButton(credential);
     doBindSendButton(credential);
     doBindStoreButton(credential);
@@ -411,6 +438,41 @@ function doBindMagicBallButton(credential: Credential, equipmentList: Equipment[
     });
 }
 
+function doBindSetButton(credential: Credential, equipmentList: Equipment[], setId: string, setConfig: {}) {
+    const buttonId = "setButton_" + setId;
+    if ($("#" + buttonId).prop("disabled")) {
+        return;
+    }
+    $("#" + buttonId).on("click", function () {
+        const set = new EquipmentSet();
+        set.initialize();
+
+        // @ts-ignore
+        set.weaponName = setConfig["weaponName"];
+        // @ts-ignore
+        if (setConfig["weaponStar"] !== undefined && setConfig["weaponStar"]) {
+            set.weaponName = "齐心★" + set.weaponName;
+        }
+        // @ts-ignore
+        set.armorName = setConfig["armorName"];
+        // @ts-ignore
+        if (setConfig["armorStar"] !== undefined && setConfig["armorStar"]) {
+            set.armorName = "齐心★" + set.armorName;
+        }
+        // @ts-ignore
+        set.accessoryName = setConfig["accessoryName"];
+        // @ts-ignore
+        if (setConfig["accessoryStar"] !== undefined && setConfig["accessoryStar"]) {
+            set.accessoryName = "齐心★" + set.accessoryName;
+        }
+
+        new EquipmentSetLoader(credential, equipmentList).load(set)
+            .then(() => {
+                doRefresh(credential);
+            });
+    });
+}
+
 function doBindSearchButton(credential: Credential) {
     $("#searchButton").on("click", function () {
         let receiver = $("#receiver").val();
@@ -510,5 +572,14 @@ function doBindRefreshButton(credential: Credential) {
     });
 }
 
+function isSetConfigAvailable(config: {}) {
+    // @ts-ignore
+    const a = config["weaponName"];
+    // @ts-ignore
+    const b = config["armorName"];
+    // @ts-ignore
+    const c = config["accessoryName"];
+    return (a !== undefined && a !== "NONE") || (b !== undefined && b !== "NONE") || (c !== undefined && c !== "NONE");
+}
 
 export = PersonalEquipmentManagementProcessor;
