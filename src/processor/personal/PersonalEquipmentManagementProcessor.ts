@@ -230,6 +230,7 @@ function doRender(credential: Credential, equipmentList: Equipment[]) {
     doBindUseButton(credential);
     doBindPutIntoBagButton(credential);
     doBindTreasureBagButton(credential, treasureBag);
+    doBindGoldenCageButton(credential, goldenCage);
 }
 
 function doRefresh(credential: Credential) {
@@ -311,7 +312,21 @@ function doBindTreasureBagButton(credential: Credential, treasureBag: Equipment 
         $("#eden_form").attr("action", "mydata.cgi");
         $("#eden_form_payload").html("" +
             "<input type='hidden' name='chara' value='1'>" +
-            "<input type='hidden' name='item" + treasureBag!.index + "' value='" + treasureBag!.index + "'>" +
+            "<input type='hidden' name='item" + treasureBag.index + "' value='" + treasureBag.index + "'>" +
+            "<input type='hidden' name='mode' value='USE'>");
+        $("#eden_form_submit").trigger("click");
+    });
+}
+
+function doBindGoldenCageButton(credential: Credential, goldenCage: Equipment | null) {
+    if (goldenCage === null) {
+        return;
+    }
+    $("#goldenCageButton").on("click", function () {
+        $("#eden_form").attr("action", "mydata.cgi");
+        $("#eden_form_payload").html("" +
+            "<input type='hidden' name='chara' value='1'>" +
+            "<input type='hidden' name='item" + goldenCage.index + "' value='" + goldenCage.index + "'>" +
             "<input type='hidden' name='mode' value='USE'>");
         $("#eden_form_submit").trigger("click");
     });
