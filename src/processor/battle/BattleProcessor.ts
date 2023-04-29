@@ -133,7 +133,6 @@ function shouldRepair(reportText: string, endure: number): boolean {
             }
         }
     }
-    console.log(JSON.stringify(lowEndures));
     if (lowEndures.length === 0) {
         // 没有装备耐久掉到阈值之下，忽略
         return false;
