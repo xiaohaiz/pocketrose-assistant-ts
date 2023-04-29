@@ -133,10 +133,9 @@ function doBindTownButton(credential: Credential) {
 
                 const roleLoader = new RoleLoader(credential);
                 // 更新现金栏
-                roleLoader.load()
-                    .then(role => {
-                        const cash = role.cash;
-                        $("#roleCash").text(cash + " GOLD");
+                bank.loadBankAccount()
+                    .then(account => {
+                        $("#roleCash").text(account.cash + " GOLD");
                     });
 
                 const entrance = new TownEntrance(credential);
@@ -155,10 +154,9 @@ function doBindTownButton(credential: Credential) {
                                         bank.deposit(undefined)
                                             .then(() => {
                                                 // 更新现金栏
-                                                roleLoader.load()
-                                                    .then(role => {
-                                                        const cash = role.cash;
-                                                        $("#roleCash").text(cash + " GOLD");
+                                                bank.loadBankAccount()
+                                                    .then(account => {
+                                                        $("#roleCash").text(account.cash + " GOLD");
                                                     });
 
                                                 MessageBoard.publishMessage("旅途愉快，下次再见。");
