@@ -193,7 +193,7 @@ function doBindCastleButton(credential: Credential, castle: Castle) {
                 const executor = new TravelPlanExecutor(plan);
                 executor.execute()
                     .then(() => {
-                        const entrance = new CastleEntrance(credential, castle);
+                        const entrance = new CastleEntrance(credential);
                         entrance.enter()
                             .then(() => {
                                 $("form[action='status.cgi']").attr("action", "castlestatus.cgi");
