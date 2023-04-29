@@ -5,6 +5,10 @@ import PageUtils from "../../util/PageUtils";
 import TownSelectionBuilder from "../../pocket/TownSelectionBuilder";
 import TownLoader from "../../pocket/TownLoader";
 import CastleBank from "../../pocket/CastleBank";
+import CastleEntrance from "../../pocket/CastleEntrance";
+import TravelPlanExecutor from "../../pocket/TravelPlanExecutor";
+import TownEntrance from "../../pocket/TownEntrance";
+import TownBank from "../../pocket/TownBank";
 
 class CastlePostHouseProcessor extends PageProcessor {
     process() {
@@ -41,6 +45,7 @@ function doProcess(credential: Credential) {
     td = $(tr).find("td:first");
     $(td).text("坐标点");
     td = $(tr).find("td:last");
+    $(td).attr("id", "roleLocation");
     $(td).text("-");
     $(tr).after($("<tr>" +
         "<td style='background-color:#E0D0B0'>计时器</td>" +
@@ -67,10 +72,12 @@ function doGenerate(credential: Credential): string {
     let html = "";
     html += "<tr style='display:none'>";
     html += "<td>";
-    html += "<form action='' method='post' id='eden_form'>"
+    html += "<form action='castlestatus.cgi' method='post' id='eden_form'>"
     html += "<input type='hidden' name='id' value='" + credential.id + "'>";
     html += "<input type='hidden' name='pass' value='" + credential.pass + "'>";
-    html += "<div id='eden_form_payload' style='display:none'></div>";
+    html += "<div id='eden_form_payload' style='display:none'>";
+    html += "<input type='hidden' name='mode' value='CASTLESTATUS'>";
+    html += "</div>";
     html += "<input type='submit' id='eden_form_submit'>";
     html += "</form>"
     html += "</td>";
@@ -95,8 +102,6 @@ function doGenerate(credential: Credential): string {
 
 function doBindReturnButton() {
     $("#returnButton").on("click", function () {
-        $("#eden_form").attr("action", "castlestatus.cgi");
-        $("#eden_form_submit").html("<input type='hidden' name='mode' value='CASTLESTATUS'>");
         $("#eden_form_submit").trigger("click");
     });
 }
@@ -113,6 +118,7 @@ function doBindTownButton(credential: Credential) {
         $("#returnButton").prop("disabled", true);
         $("#townButton").prop("disabled", true);
         $("#townButton").css("color", "grey");
+        $("input:radio").prop("disabled", true);
 
         const destinationTown = TownLoader.getTownById(destinationTownId as string)!;
         MessageBoard.publishMessage("目的地城市：<span style='color:greenyellow'>" + destinationTown.name + "</span>");
@@ -133,7 +139,30 @@ function doBindTownButton(credential: Credential) {
                         $("#roleCash").text(account.cash + " GOLD");
                     });
 
+                new CastleEntrance(credential).leave()
+                    .then(plan => {
+                        plan.destination = destinationTown.coordinate;
+                        new TravelPlanExecutor(plan).execute()
+                            .then(() => {
+                                new TownEntrance(credential).enter(destinationTown.id)
+                                    .then(() => {
+                                        const townBank = new TownBank(credential);
+                                        townBank.deposit(undefined)
+                                            .then(() => {
+                                                townBank.loadBankAccount()
+                                                    .then(account => {
+                                                        $("#roleCash").text(account.cash + " GOLD");
+                                                    });
 
+                                                MessageBoard.publishMessage("旅途愉快，下次再见。");
+                                                $("#eden_form").attr("action", "status.cgi");
+                                                $("#eden_form_payload").html("<input type='hidden' name='mode' value='STATUS'>");
+                                                $("#returnButton").val(destinationTown.name + "欢迎您");
+                                                $("#returnButton").prop("disabled", false);
+                                            });
+                                    });
+                            });
+                    });
             });
     });
 }
