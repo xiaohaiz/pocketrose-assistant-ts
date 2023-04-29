@@ -228,6 +228,7 @@ function doRender(credential: Credential, equipmentList: Equipment[]) {
     }
 
     doBindUseButton(credential);
+    doBindPutIntoBagButton(credential);
 }
 
 function doRefresh(credential: Credential) {
@@ -264,6 +265,37 @@ function doBindUseButton(credential: Credential) {
         request["chara"] = "1";
         // @ts-ignore
         request["mode"] = "USE";
+        NetworkUtils.sendPostRequest("mydata.cgi", request, function (html) {
+            MessageBoard.processResponseMessage(html);
+            doRefresh(credential);
+        });
+    });
+}
+
+function doBindPutIntoBagButton(credential: Credential) {
+    if ($("#putIntoBagButton").prop("disabled")) {
+        return;
+    }
+    $("#putIntoBagButton").on("click", function () {
+        const request = credential.asRequest();
+        let checkedCount = 0;
+        $("input:checkbox:checked").each(function (_idx, checkbox) {
+            const index = parseInt($(checkbox).val() as string);
+            if ($(checkbox).parent().next().text() !== "★") {
+                checkedCount++;
+                const name = $(checkbox).attr("name");
+                // @ts-ignore
+                request[name] = $(checkbox).val();
+            }
+        });
+        if (checkedCount === 0) {
+            MessageBoard.publishWarning("没有选择任何装备！");
+            return;
+        }
+        // @ts-ignore
+        request["chara"] = "1";
+        // @ts-ignore
+        request["mode"] = "PUTINBAG";
         NetworkUtils.sendPostRequest("mydata.cgi", request, function (html) {
             MessageBoard.processResponseMessage(html);
             doRefresh(credential);
