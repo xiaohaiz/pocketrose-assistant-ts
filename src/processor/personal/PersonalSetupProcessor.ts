@@ -24,6 +24,10 @@ import SetupItem017 from "./internal/SetupItem017";
 import SetupItem018 from "./internal/SetupItem018";
 import EquipmentLoader from "../../pocket/EquipmentLoader";
 import SetupItem019 from "./internal/SetupItem019";
+import NetworkUtils from "../../util/NetworkUtils";
+import Equipment from "../../pocket/Equipment";
+import EquipmentParser from "../../pocket/EquipmentParser";
+import TreasureBag from "../../pocket/TreasureBag";
 
 class PersonalSetupProcessor extends PageProcessor {
 
@@ -97,6 +101,7 @@ function doInitialize(credential: Credential) {
     html += "</tr>";
     html += "<tr>";
     html += "<td style='text-align:center'>" +
+        "<input type='button' id='loadButton' value='加载自己装备'>" +
         "<input type='button' id='refreshButton' value='刷新助手设置'>" +
         "<input type='button' id='returnButton' value='返回城市界面'>" +
         "</td>";
@@ -109,6 +114,7 @@ function doInitialize(credential: Credential) {
     $("#armor_list").text(EquipmentLoader.loadArmorList().join(","));
     $("#accessory_list").text(EquipmentLoader.loadAccessoryList().join(","));
 
+    doBindLoadButton(credential);
     __bindRefreshButton(credential);
     __bindReturnButton();
 
@@ -174,6 +180,83 @@ function __bindReturnButton() {
         $("#eden_form_payload").html("<input type='hidden' name='mode' value='STATUS'>");
         $("#eden_form_submit").trigger("click");
     });
+}
+
+function doBindLoadButton(credential: Credential) {
+    $("#loadButton").on("click", function () {
+        const request = credential.asRequest();
+        // @ts-ignore
+        request["mode"] = "USE_ITEM";
+        NetworkUtils.sendPostRequest("mydata.cgi", request, function (html) {
+            const equipmentList = EquipmentParser.parsePersonalItemList(html);
+            const treasureBag = EquipmentParser.findTreasureBag(equipmentList);
+            if (treasureBag !== null) {
+                new TreasureBag(credential, treasureBag.index!).open()
+                    .then(bagEquipmentList => {
+                        doLoadEquipments(equipmentList, bagEquipmentList);
+                        $("#refreshButton").trigger("click");
+                    });
+            } else {
+                doLoadEquipments(equipmentList, undefined);
+                $("#refreshButton").trigger("click");
+            }
+        });
+    });
+}
+
+function doLoadEquipments(itemList: Equipment[], bagItemList?: Equipment[]) {
+    const weaponLib = [];
+    const armorLib = [];
+    const accessoryLib = [];
+
+    for (const it of itemList) {
+        if (it.isWeapon) {
+            weaponLib.push(it.name);
+        }
+        if (it.isArmor) {
+            armorLib.push(it.name);
+        }
+        if (it.isAccessory) {
+            accessoryLib.push(it.name);
+        }
+    }
+    if (bagItemList !== undefined) {
+        for (const it of bagItemList) {
+            if (it.isWeapon) {
+                weaponLib.push(it.name);
+            }
+            if (it.isArmor) {
+                armorLib.push(it.name);
+            }
+            if (it.isAccessory) {
+                accessoryLib.push(it.name);
+            }
+        }
+    }
+
+    const weaponCandidates = [];
+    const armorCandidates = [];
+    const accessoryCandidates = [];
+
+    for (const it of EquipmentLoader.loadWeaponList()) {
+        if (weaponLib.includes(it)) {
+            weaponCandidates.push(it);
+        }
+    }
+    for (const it of EquipmentLoader.loadArmorList()) {
+        if (armorLib.includes(it)) {
+            armorCandidates.push(it);
+        }
+    }
+    for (const it of EquipmentLoader.loadAccessoryList()) {
+        if (accessoryLib.includes(it)) {
+            accessoryCandidates.push(it);
+        }
+    }
+
+    $("#weapon_list").text(weaponCandidates.join(","));
+    $("#armor_list").text(armorCandidates.join(","));
+    $("#accessory_list").text(accessoryCandidates.join(","));
 }
 
 export = PersonalSetupProcessor;
