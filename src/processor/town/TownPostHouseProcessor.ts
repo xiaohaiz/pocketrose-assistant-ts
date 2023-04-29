@@ -6,6 +6,7 @@ import RoleLoader from "../../pocket/RoleLoader";
 import Role from "../../pocket/Role";
 import MessageBoard from "../../util/MessageBoard";
 import TownLoader from "../../pocket/TownLoader";
+import TownBank from "../../pocket/TownBank";
 
 class TownPostHouseProcessor extends PocketroseProcessor {
 
@@ -86,7 +87,7 @@ function doBindTownButton(credential: Credential) {
             return;
         }
 
-        MessageBoard.resetMessageBoard("行程实时播报：<br>");
+        MessageBoard.resetMessageBoard("我们将实时为你播报旅途的动态：<br>");
         $("#lodgeButton").parent().remove();
         $("#returnButton").prop("disabled", true);
         $("#townButton").prop("disabled", true);
@@ -96,6 +97,16 @@ function doBindTownButton(credential: Credential) {
         const destinationTown = TownLoader.getTownById(destinationTownId as string)!;
         MessageBoard.publishMessage("目的地城市：<span style='color:greenyellow'>" + destinationTown.name + "</span>");
         MessageBoard.publishMessage("目的地坐标：<span style='color:greenyellow'>" + destinationTown.coordinate.asText() + "</span>");
+
+        new TownBank(credential).withdraw(10)
+            .then(success => {
+                if (!success) {
+                    MessageBoard.publishWarning("因为没有足够的保证金，旅途被中断！");
+                    MessageBoard.publishMessage("回去吧，没钱就别来了。");
+                    $("#returnButton").prop("disabled", false);
+                    return;
+                }
+            });
     });
 }
 
