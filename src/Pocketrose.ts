@@ -3,6 +3,8 @@ import BattleRequestInterceptor from "./interceptor/internal/BattleRequestInterc
 import PersonalRequestInterceptor from "./interceptor/internal/PersonalRequestInterceptor";
 import StatusRequestInterceptor from "./interceptor/internal/StatusRequestInterceptor";
 import TownRequestInterceptor from "./interceptor/internal/TownRequestInterceptor";
+import CastleRequestInterceptor from "./interceptor/internal/CastleRequestInterceptor";
+import CastleStatusRequestInterceptor from "./interceptor/internal/CastleStatusRequestInterceptor";
 
 $(function () {
     if (!location.href.includes("pocketrose")) {
@@ -13,6 +15,8 @@ $(function () {
 
 const interceptorList = [
     new BattleRequestInterceptor(),
+    new CastleRequestInterceptor(),
+    new CastleStatusRequestInterceptor(),
     new PersonalRequestInterceptor(),
     new StatusRequestInterceptor(),
     new TownRequestInterceptor()

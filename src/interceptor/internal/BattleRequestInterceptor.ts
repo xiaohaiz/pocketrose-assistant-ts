@@ -7,7 +7,7 @@ class BattleRequestInterceptor implements RequestInterceptor {
 
     process(): void {
         const pageHtml = PageUtils.currentPageHtml();
-        const pageText = PageUtils.currentPageText()
+        const pageText = PageUtils.currentPageText();
 
         if (pageText.includes("＜＜ - 秘宝之岛 - ＞＞") ||
             pageText.includes("＜＜ - 初级之森 - ＞＞") ||
