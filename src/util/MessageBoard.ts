@@ -40,6 +40,20 @@ class MessageBoard {
             $("#messageBoard").html(html);
         }
     }
+
+    static processResponseMessage(html: string) {
+        if ($(html).text().includes("ERROR !")) {
+            const errorMessage = $(html).find("font b").text();
+            MessageBoard.publishMessage("<b style='color:red'>" + errorMessage + "</b>");
+        } else {
+            $(html).find("h2").each(function (_idx, h2) {
+                let successMessage = $(h2).html();
+                successMessage = successMessage.replace("<br>", "");
+                successMessage = "<td>" + successMessage + "</td>";
+                MessageBoard.publishMessage($(successMessage).text());
+            });
+        }
+    }
 }
 
 export = MessageBoard;

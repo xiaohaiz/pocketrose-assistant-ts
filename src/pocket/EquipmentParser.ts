@@ -232,6 +232,24 @@ class EquipmentParser {
         });
         return equipmentList;
     }
+
+    static findTreasureBag(equipmentList: Equipment[]): Equipment | null {
+        for (const equipment of equipmentList) {
+            if (equipment.isTreasureBag) {
+                return equipment;
+            }
+        }
+        return null;
+    }
+
+    static findGoldenCage(equipmentList: Equipment[]): Equipment | null {
+        for (const equipment of equipmentList) {
+            if (equipment.isGoldenCage) {
+                return equipment;
+            }
+        }
+        return null;
+    }
 }
 
 export = EquipmentParser;

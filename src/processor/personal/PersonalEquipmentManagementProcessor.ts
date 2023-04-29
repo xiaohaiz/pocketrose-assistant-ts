@@ -4,6 +4,7 @@ import EquipmentParser from "../../pocket/EquipmentParser";
 import Credential from "../../util/Credential";
 import Equipment from "../../pocket/Equipment";
 import MessageBoard from "../../util/MessageBoard";
+import NetworkUtils from "../../util/NetworkUtils";
 
 class PersonalEquipmentManagementProcessor extends PageProcessor {
 
@@ -209,6 +210,65 @@ function doRender(credential: Credential, equipmentList: Equipment[]) {
 
     // 渲染装备管理界面
     $("#ItemUI").html(html);
+
+    // 修改按钮的状态，如果有必要的话
+    const treasureBag = EquipmentParser.findTreasureBag(equipmentList);
+    if (treasureBag === null) {
+        $("#putIntoBagButton").prop("disabled", true);
+        $("#putIntoBagButton").css("display", "none");
+        $("#treasureBagButton").prop("disabled", true);
+        $("#treasureBagButton").css("display", "none");
+        $("#putAllIntoBagButton").prop("disabled", true);
+        $("#putAllIntoBagButton").css("display", "none");
+    }
+    const goldenCage = EquipmentParser.findGoldenCage(equipmentList);
+    if (goldenCage === null) {
+        $("#goldenCageButton").prop("disabled", true);
+        $("#goldenCageButton").css("display", "none");
+    }
+
+    doBindUseButton(credential);
+}
+
+function doRefresh(credential: Credential) {
+    const request = credential.asRequest();
+    // @ts-ignore
+    request["mode"] = "USE_ITEM";
+    NetworkUtils.sendPostRequest("mydata.cgi", request, function (html) {
+        // 从新的界面中重新解析装备状态
+        const equipmentList = EquipmentParser.parsePersonalItemList(html);
+        // 解除当前所有的按钮
+        $(".ItemUIButton").off("click");
+        // 清除ItemUI的内容
+        $("#ItemUI").html("");
+        // 使用新的重新渲染ItemUI并绑定新的按钮
+        doRender(credential, equipmentList);
+    });
+}
+
+function doBindUseButton(credential: Credential) {
+    $("#useButton").on("click", function () {
+        const request = credential.asRequest();
+        let checkedCount = 0;
+        $("input:checkbox:checked").each(function (_idx, checkbox) {
+            checkedCount++;
+            const name = $(checkbox).attr("name");
+            // @ts-ignore
+            request[name] = $(checkbox).val();
+        });
+        if (checkedCount === 0) {
+            MessageBoard.publishWarning("没有选择任何装备！");
+            return;
+        }
+        // @ts-ignore
+        request["chara"] = "1";
+        // @ts-ignore
+        request["mode"] = "USE";
+        NetworkUtils.sendPostRequest("mydata.cgi", request, function (html) {
+            MessageBoard.processResponseMessage(html);
+            doRefresh(credential);
+        });
+    });
 }
 
 export = PersonalEquipmentManagementProcessor;
