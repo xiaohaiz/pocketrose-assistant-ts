@@ -167,7 +167,7 @@ class EquipmentParser {
 
             // price
             s = $(tr).find("td:eq(5)").text();
-            equipment.price = parseInt(util.substringBefore(s, " Gold"));
+            equipment.price = parseInt(StringUtils.substringBefore(s, " Gold"));
             equipment.priceHTML = $(tr).find("td:eq(5)").html();
 
             equipmentList.push(equipment);
