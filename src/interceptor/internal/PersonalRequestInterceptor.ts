@@ -3,6 +3,8 @@ import PersonalStatusProcessor from "../../processor/personal/PersonalStatusProc
 import PersonalSetupProcessor from "../../processor/personal/PersonalSetupProcessor";
 import PersonalPetManagementProcessor from "../../processor/personal/PersonalPetManagementProcessor";
 import PersonalEquipmentManagementProcessor from "../../processor/personal/PersonalEquipmentManagementProcessor";
+import SetupLoader from "../../pocket/SetupLoader";
+import PersonalCareerManagementProcessor from "../../processor/personal/PersonalCareerManagementProcessor";
 
 class PersonalRequestInterceptor implements RequestInterceptor {
 
@@ -20,11 +22,21 @@ class PersonalRequestInterceptor implements RequestInterceptor {
             return;
         }
         if (pageText.includes("＜＜　|||　物品使用．装备　|||　＞＞")) {
-            new PersonalEquipmentManagementProcessor(pageHtml, pageText).process();
+            if (SetupLoader.isEquipmentManagementUIEnabled()) {
+                new PersonalEquipmentManagementProcessor(pageHtml, pageText).process();
+            }
             return;
         }
         if (pageText.includes("宠物现在升级时学习新技能情况一览")) {
-            new PersonalPetManagementProcessor(pageHtml, pageText).process();
+            if (SetupLoader.isPetManagementUIEnabled()) {
+                new PersonalPetManagementProcessor(pageHtml, pageText).process();
+            }
+            return;
+        }
+        if (pageText.includes("* 转职神殿 *")) {
+            if (SetupLoader.isCareerManagementUIEnabled()) {
+                new PersonalCareerManagementProcessor(pageHtml, pageText).process();
+            }
         }
     }
 
