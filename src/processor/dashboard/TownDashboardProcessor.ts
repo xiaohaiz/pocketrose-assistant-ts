@@ -20,6 +20,7 @@ function doProcess(credential: Credential) {
     doRenderPostHouseMenu();
     doRenderSetupMenu();
     doRenderEquipmentManagementMenu();
+    doRenderPetManagementMenu();
 }
 
 function doRenderBattleMenu(credential: Credential) {
@@ -183,12 +184,19 @@ function doRenderSetupMenu() {
 }
 
 function doRenderEquipmentManagementMenu() {
-    if (!SetupLoader.isEquipmentManagementUIEnabled()) {
-        return;
+    if (SetupLoader.isEquipmentManagementUIEnabled()) {
+        $("option[value='USE_ITEM']").text("装备管理");
+        $("option[value='USE_ITEM']").css("background-color", "yellow");
+        $("option[value='ITEM_SEND']").remove();
     }
-    $("option[value='USE_ITEM']").text("装备管理");
-    $("option[value='USE_ITEM']").css("background-color", "yellow");
-    $("option[value='ITEM_SEND']").remove();
+}
+
+function doRenderPetManagementMenu() {
+    if (SetupLoader.isPetManagementUIEnabled()) {
+        $("option[value='PETSTATUS']").text("宠物管理");
+        $("option[value='PETSTATUS']").css("background-color", "yellow");
+        $("option[value='PET_SEND']").remove();
+    }
 }
 
 export = TownDashboardProcessor;
