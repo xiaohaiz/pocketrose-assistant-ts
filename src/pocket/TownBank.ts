@@ -1,6 +1,8 @@
 import Credential from "../util/Credential";
 import NetworkUtils from "../util/NetworkUtils";
 import MessageBoard from "../util/MessageBoard";
+import BankAccount from "./BankAccount";
+import StringUtils from "../util/StringUtils";
 
 class TownBank {
 
@@ -10,7 +12,28 @@ class TownBank {
         this.#credential = credential;
     }
 
-    loadBankAccount() {
+    async loadBankAccount(): Promise<BankAccount> {
+        const action = (credential: Credential) => {
+            return new Promise<BankAccount>(resolve => {
+                const request = credential.asRequest();
+                // @ts-ignore
+                request["con_str"] = "50";
+                // @ts-ignore
+                request["mode"] = "BANK";
+                NetworkUtils.sendPostRequest("town.cgi", request, function (html) {
+                    const account = new BankAccount();
+                    account.credential = credential;
+                    const font = $(html).find("font:contains('现在的所持金'):first");
+                    let s = $(font).text();
+                    s = StringUtils.substringBefore(s, "现在的所持金");
+                    account.name = s.substring(1);
+                    account.cash = parseInt($(font).find("font:first").text());
+                    account.saving = parseInt($(font).find("font:last").text());
+                    resolve(account);
+                });
+            });
+        };
+        return await action(this.#credential);
     }
 
     async deposit(amount?: number): Promise<boolean> {
