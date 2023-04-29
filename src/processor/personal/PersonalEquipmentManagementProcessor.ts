@@ -229,6 +229,7 @@ function doRender(credential: Credential, equipmentList: Equipment[]) {
 
     doBindUseButton(credential);
     doBindPutIntoBagButton(credential);
+    doBindTreasureBagButton(credential, treasureBag);
 }
 
 function doRefresh(credential: Credential) {
@@ -280,7 +281,6 @@ function doBindPutIntoBagButton(credential: Credential) {
         const request = credential.asRequest();
         let checkedCount = 0;
         $("input:checkbox:checked").each(function (_idx, checkbox) {
-            const index = parseInt($(checkbox).val() as string);
             if ($(checkbox).parent().next().text() !== "★") {
                 checkedCount++;
                 const name = $(checkbox).attr("name");
@@ -300,6 +300,20 @@ function doBindPutIntoBagButton(credential: Credential) {
             MessageBoard.processResponseMessage(html);
             doRefresh(credential);
         });
+    });
+}
+
+function doBindTreasureBagButton(credential: Credential, treasureBag: Equipment | null) {
+    if (treasureBag === null) {
+        return;
+    }
+    $("#treasureBagButton").on("click", function () {
+        $("#eden_form").attr("action", "mydata.cgi");
+        $("#eden_form_payload").html("" +
+            "<input type='hidden' name='chara' value='1'>" +
+            "<input type='hidden' name='item" + treasureBag!.index + "' value='" + treasureBag!.index + "'>" +
+            "<input type='hidden' name='mode' value='USE'>");
+        $("#eden_form_submit").trigger("click");
     });
 }
 
