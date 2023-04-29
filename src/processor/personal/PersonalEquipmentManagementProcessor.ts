@@ -268,7 +268,7 @@ function doRender(credential: Credential, equipmentList: Equipment[]) {
     doBindSetButton(credential, equipmentList, "E", config_e);
     doBindSearchButton(credential);
     doBindSendButton(credential);
-    doBindStoreButton(credential);
+    doBindStoreButton(credential, treasureBag);
     doBindRefreshButton(credential);
 }
 
@@ -533,7 +533,7 @@ function doBindSendButton(credential: Credential) {
     });
 }
 
-function doBindStoreButton(credential: Credential) {
+function doBindStoreButton(credential: Credential, treasureBag: Equipment | null) {
     for (let i = 0; i < 20; i++) {
         const buttonId = "storeItem_" + i;
         if ($("#" + buttonId).length === 0) {
@@ -547,19 +547,22 @@ function doBindStoreButton(credential: Credential) {
             // @ts-ignore
             request["mode"] = "MY_ARM2";
             NetworkUtils.sendPostRequest("town.cgi", request, function () {
-                MessageBoard.publishMessage("选定装备完成了修理。");
-
-                const request = credential.asRequest();
-                // @ts-ignore
-                request["item" + index] = index;
-                // @ts-ignore
-                request["chara"] = "1";
-                // @ts-ignore
-                request["mode"] = "PUTINBAG";
-                NetworkUtils.sendPostRequest("mydata.cgi", request, function (html) {
-                    MessageBoard.processResponseMessage(html);
+                MessageBoard.publishMessage("待收藏装备完成了修理。");
+                if (treasureBag !== null) {
+                    const request = credential.asRequest();
+                    // @ts-ignore
+                    request["item" + index] = index;
+                    // @ts-ignore
+                    request["chara"] = "1";
+                    // @ts-ignore
+                    request["mode"] = "PUTINBAG";
+                    NetworkUtils.sendPostRequest("mydata.cgi", request, function (html) {
+                        MessageBoard.processResponseMessage(html);
+                        doRefresh(credential);
+                    });
+                } else {
                     doRefresh(credential);
-                });
+                }
             });
         });
     }
