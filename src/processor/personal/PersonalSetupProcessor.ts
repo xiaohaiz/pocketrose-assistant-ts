@@ -2,7 +2,6 @@ import PageProcessor from "../PageProcessor";
 import PageUtils from "../../util/PageUtils";
 import Credential from "../../util/Credential";
 import RoleLoader from "../../pocket/RoleLoader";
-import Role from "../../pocket/Role";
 import DOMAIN from "../../util/Constants";
 import MessageBoard from "../../util/MessageBoard";
 import SetupItem001 from "./internal/SetupItem001";
@@ -81,7 +80,7 @@ function doInitialize(credential: Credential) {
     html += "<tbody style='background-color:#F8F0E0'>";
     html += "<tr>";
     html += "<td style='background-color:navy;color:yellowgreen;font-size:200%;font-weight:bold'>" +
-        "＜＜ 口 袋 助 手 设 置 ＞＞" +
+        "＜＜  口 袋 助 手 设 置  ＞＞" +
         "</td>";
     html += "</tr>";
     html += "<tr>";
@@ -105,8 +104,7 @@ function doInitialize(credential: Credential) {
 
     new RoleLoader(credential).load()
         .then(role => {
-            const image = (role as Role).image!;
-            const src = DOMAIN + "/image/head/" + image;
+            const src = DOMAIN + "/image/head/" + role.image;
             const imageHtml = "<img src='" + src + "' alt='' width='64' height='64' id='roleImage'>";
             MessageBoard.createMessageBoard("message_board_container", imageHtml);
 
