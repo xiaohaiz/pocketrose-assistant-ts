@@ -111,6 +111,16 @@ class Equipment {
         }
     }
 
+    get isStorable(): boolean {
+        if (this.using!) {
+            return false;
+        }
+        if (this.isItem) {
+            return false;
+        }
+        return !NONE_REPAIRABLE_ITEM_LIST.includes(this.name!);
+    }
+
     get fullExperienceRatio() {
         if (this.isItem) {
             return -1;

@@ -90,8 +90,7 @@ function doRender(credential: Credential, equipmentList: Equipment[]) {
     html += "           <th style='background-color:#E0D0B0'>幸运</th>";
     html += "           <th style='background-color:#E0D0B0'>经验</th>";
     html += "           <th style='background-color:#EFE0C0'>属性</th>";
-    html += "           <th style='background-color:#EFE0C0'>出售</th>";
-    html += "           <th style='background-color:#EFE0C0'>修理</th>";
+    html += "           <th style='background-color:#EFE0C0'>收藏</th>";
     html += "       </tr>";
     for (const equipment of equipmentList) {
         if (equipment.isTreasureBag || equipment.isGoldenCage) {
@@ -153,19 +152,21 @@ function doRender(credential: Credential, equipmentList: Equipment[]) {
         html += "    <td style='background-color:#EFE0C0'>";
         html += "    " + (equipment.attribute === "无" ? "-" : equipment.attribute);
         html += "    </td>";
-        html += "    <td style='background-color:#EFE0C0' id='sellButtonContainer_" + equipment.index + "'>";
-        html += "    </td>";
-        html += "    <td style='background-color:#EFE0C0'>" + (equipment.isRepairable ? "<input type='button' class='ItemUIButton' id='repairItem_" + equipment.index + "' value='修'>" : "");
+        html += "    <td style='background-color:#EFE0C0'>" +
+            (equipment.isStorable ?
+                "<input type='button' class='ItemUIButton' " +
+                "id='storeItem_" + equipment.index + "' value='&nbsp;&nbsp;' " +
+                "style='height:15px;background-color:goldenrod;border-color:#888888;border-width:medium'>" : "");
         html += "    </td>";
         html += "</tr>";
     }
     html += "       <tr>";
-    html += "           <td style='background-color:#E8E8D0;text-align:left;font-weight:bold' colspan='20'>";
+    html += "           <td style='background-color:#E8E8D0;text-align:left;font-weight:bold' colspan='19'>";
     html += "               <span style='color:navy'>目前剩余空位数：</span><span style='color:red'>" + (20 - equipmentList.length) + "</span>";
     html += "           </td>";
     html += "       </tr>";
     html += "       <tr>";
-    html += "           <td style='background-color:#E8E8D0;text-align:center' colspan='20'>";
+    html += "           <td style='background-color:#E8E8D0;text-align:center' colspan='19'>";
     html += "               <table style='background-color:#E8E8D0;border-width:0;width:100%'>";
     html += "                   <tbody style='background-color:#E8E8D0'>";
     html += "                       <tr style='background-color:#E8E8D0'>";
@@ -187,7 +188,7 @@ function doRender(credential: Credential, equipmentList: Equipment[]) {
     html += "           </td>";
     html += "       </tr>";
     html += "       <tr>";
-    html += "           <td style='background-color:#E8E8D0;text-align:right' colspan='20'>";
+    html += "           <td style='background-color:#E8E8D0;text-align:right' colspan='19'>";
     html += "               <input type='button' class='ItemUIButton' id='setButton_A' value='套装Ａ'>";
     html += "               <input type='button' class='ItemUIButton' id='setButton_B' value='套装Ｂ'>";
     html += "               <input type='button' class='ItemUIButton' id='setButton_C' value='套装Ｃ'>";
@@ -196,7 +197,7 @@ function doRender(credential: Credential, equipmentList: Equipment[]) {
     html += "           </td>";
     html += "       </tr>";
     html += "       <tr>";
-    html += "          <td style='background-color:#E8E8D0;text-align:right' colspan='20'>";
+    html += "          <td style='background-color:#E8E8D0;text-align:right' colspan='19'>";
     html += "              <input type='text' id='receiver' size='15' maxlength='20'>";
     html += "              <input type='button' class='ItemUIButton' id='searchButton' value='找人'>";
     html += "              <select id='receiverSelect'><option value=''>选择发送对象</select>";
@@ -204,7 +205,7 @@ function doRender(credential: Credential, equipmentList: Equipment[]) {
     html += "          </td>"
     html += "       </tr>";
     html += "       <tr>";
-    html += "           <td style='background-color:#E8E8D0;text-align:center' colspan='20'>";
+    html += "           <td style='background-color:#E8E8D0;text-align:center' colspan='19'>";
     html += "           <input type='button' class='ItemUIButton' id='refreshButton' value='刷新装备管理界面'>";
     html += "           </td>"
     html += "       </tr>";
@@ -240,6 +241,7 @@ function doRender(credential: Credential, equipmentList: Equipment[]) {
     doBindMagicBallButton(credential, equipmentList);
     doBindSearchButton(credential);
     doBindSendButton(credential);
+    doBindStoreButton(credential);
     doBindRefreshButton(credential);
 }
 
@@ -467,6 +469,38 @@ function doBindSendButton(credential: Credential) {
                 }
             });
     });
+}
+
+function doBindStoreButton(credential: Credential) {
+    for (let i = 0; i < 20; i++) {
+        const buttonId = "storeItem_" + i;
+        if ($("#" + buttonId).length === 0) {
+            continue;
+        }
+        $("#" + buttonId).on("click", function () {
+            const index = ($(this).attr("id") as string).split("_")[1];
+            const request = credential.asRequest();
+            // @ts-ignore
+            request["select"] = index;
+            // @ts-ignore
+            request["mode"] = "MY_ARM2";
+            NetworkUtils.sendPostRequest("town.cgi", request, function () {
+                MessageBoard.publishMessage("选定装备完成了修理。");
+
+                const request = credential.asRequest();
+                // @ts-ignore
+                request["item" + index] = index;
+                // @ts-ignore
+                request["chara"] = "1";
+                // @ts-ignore
+                request["mode"] = "PUTINBAG";
+                NetworkUtils.sendPostRequest("mydata.cgi", request, function (html) {
+                    MessageBoard.processResponseMessage(html);
+                    doRefresh(credential);
+                });
+            });
+        });
+    }
 }
 
 function doBindRefreshButton(credential: Credential) {
