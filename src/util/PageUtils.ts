@@ -46,6 +46,23 @@ class PageUtils {
             "<img src='" + DOMAIN + "/image/bg/bar2.gif'  height='7' width='" + w2 + "' alt=''>";
     }
 
+    static findFirstUserImageHtml() {
+        let userImage = "";
+        $("img").each(function (_idx, img) {
+            if (userImage === "") {
+                const src = $(img).attr("src");
+                if (src !== undefined && src.startsWith(DOMAIN + "/image/head/")) {
+                    // 发现了用户头像
+                    userImage = src;
+                }
+            }
+        });
+        if (userImage === "") {
+            return undefined;
+        } else {
+            return "<img src='" + userImage + "' width='64' height='64' id='userImage' alt=''>";
+        }
+    }
 }
 
 export = PageUtils;
