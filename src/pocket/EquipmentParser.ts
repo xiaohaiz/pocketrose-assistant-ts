@@ -76,6 +76,56 @@ class EquipmentParser {
         });
         return equipmentList;
     }
+
+    static parseTreasureBagItemList(html: string) {
+        const equipmentList: Equipment[] = [];
+        $(html).find("input:checkbox").each(function (_idx, checkbox) {
+            const equipment = new Equipment();
+            const tr = $(checkbox).parent().parent();
+
+            // index & selectable
+            equipment.index = parseInt($(checkbox).val() as string);
+            equipment.selectable = true;
+
+            // name & star
+            let s = $(tr).find("td:eq(1)").text();
+            if (s.startsWith("齐心★")) {
+                equipment.star = true;
+                equipment.name = StringUtils.substringAfter(s, "齐心★");
+            } else {
+                equipment.star = false;
+                equipment.name = s;
+            }
+            equipment.nameHTML = $(tr).find("td:eq(1)").html();
+
+            // category
+            s = $(tr).find("td:eq(2)").text();
+            equipment.category = s;
+
+            // power & weight & endure
+            s = $(tr).find("td:eq(3)").text();
+            equipment.power = parseInt(s);
+            s = $(tr).find("td:eq(4)").text();
+            equipment.weight = parseInt(s);
+            s = $(tr).find("td:eq(5)").text();
+            equipment.endure = parseInt(s);
+
+            // additional
+            s = $(tr).find("td:eq(6)").text();
+            equipment.additionalPower = parseInt(s);
+            s = $(tr).find("td:eq(7)").text();
+            equipment.additionalWeight = parseInt(s);
+            s = $(tr).find("td:eq(8)").text();
+            equipment.additionalLuck = parseInt(s);
+
+            // experience
+            s = $(tr).find("td:eq(9)").text();
+            equipment.experience = parseInt(s);
+
+            equipmentList.push(equipment);
+        });
+        return equipmentList;
+    }
 }
 
 export = EquipmentParser;
