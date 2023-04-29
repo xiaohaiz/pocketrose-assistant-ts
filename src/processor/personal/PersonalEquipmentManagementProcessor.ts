@@ -5,6 +5,8 @@ import Credential from "../../util/Credential";
 import Equipment from "../../pocket/Equipment";
 import MessageBoard from "../../util/MessageBoard";
 import NetworkUtils from "../../util/NetworkUtils";
+import EquipmentSet from "../../pocket/EquipmentSet";
+import EquipmentSetLoader from "../../pocket/EquipmentSetLoader";
 
 class PersonalEquipmentManagementProcessor extends PageProcessor {
 
@@ -232,6 +234,7 @@ function doRender(credential: Credential, equipmentList: Equipment[]) {
     doBindTreasureBagButton(credential, treasureBag);
     doBindGoldenCageButton(credential, goldenCage);
     doBindPutAllIntoBagButton(credential);
+    doBindLuckCharmButton(credential, equipmentList);
 }
 
 function doRefresh(credential: Credential) {
@@ -361,6 +364,19 @@ function doBindPutAllIntoBagButton(credential: Credential) {
             MessageBoard.processResponseMessage(html);
             doRefresh(credential);
         });
+    });
+}
+
+function doBindLuckCharmButton(credential: Credential, equipmentList: Equipment[]) {
+    $("#luckCharmButton").on("click", function () {
+        const set = new EquipmentSet();
+        set.initialize();
+        set.accessoryName = "千与千寻";
+        const loader = new EquipmentSetLoader(credential, equipmentList);
+        loader.load(set)
+            .then(() => {
+                doRefresh(credential);
+            });
     });
 }
 
