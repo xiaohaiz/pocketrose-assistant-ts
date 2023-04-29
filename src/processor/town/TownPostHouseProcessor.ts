@@ -7,6 +7,8 @@ import Role from "../../pocket/Role";
 import MessageBoard from "../../util/MessageBoard";
 import TownLoader from "../../pocket/TownLoader";
 import TownBank from "../../pocket/TownBank";
+import TownEntrance from "../../pocket/TownEntrance";
+import TravelPlanExecutor from "../../pocket/TravelPlanExecutor";
 
 class TownPostHouseProcessor extends PocketroseProcessor {
 
@@ -91,7 +93,9 @@ function doBindTownButton(credential: Credential) {
         $("#lodgeButton").parent().remove();
         $("#returnButton").prop("disabled", true);
         $("#townButton").prop("disabled", true);
+        $("#townButton").css("color", "grey");
         $("#castleButton").prop("disabled", true);
+        $("#castleButton").css("color", "grey");
         $("input:radio").prop("disabled", true);
 
         const destinationTown = TownLoader.getTownById(destinationTownId as string)!;
@@ -106,6 +110,15 @@ function doBindTownButton(credential: Credential) {
                     $("#returnButton").prop("disabled", false);
                     return;
                 }
+                const entrance = new TownEntrance(credential);
+                entrance.leave()
+                    .then(plan => {
+                        plan.destination = destinationTown.coordinate;
+                        const executor = new TravelPlanExecutor(plan);
+                        executor.execute()
+                            .then(() => {
+                            });
+                    });
             });
     });
 }
