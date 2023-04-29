@@ -1,8 +1,8 @@
-import StorageUtils from "../../../util/StorageUtils";
-import MessageBoard from "../../../util/MessageBoard";
-import SetupLoader from "../../../pocket/SetupLoader";
+import StorageUtils from "../../../../util/StorageUtils";
+import MessageBoard from "../../../../util/MessageBoard";
+import SetupLoader from "../../../../pocket/SetupLoader";
 
-class SetupItem001 implements SetupItem {
+class SetupItem006 implements SetupItem {
 
     render(id?: string): void {
         doRender();
@@ -10,8 +10,8 @@ class SetupItem001 implements SetupItem {
 
 }
 
-const code: string = "001";
-const name: string = "宝可梦百科超链";
+const code: string = "006";
+const name: string = "战斗页自动触底";
 const key: string = "_pa_" + code;
 
 function doRender() {
@@ -25,7 +25,7 @@ function doRender() {
 
     $("#setup_item_table").append($(html));
 
-    const value = SetupLoader.isPokemonWikiEnabled();
+    const value = SetupLoader.isBattleResultAutoScrollEnabled();
     $(".option_class_" + code + "[value='" + Number(value) + "']").prop("selected", true);
 
     $("#setup_" + code).on("click", function () {
@@ -49,4 +49,4 @@ function doSaveSetupItem() {
     $("#refreshButton").trigger("click");
 }
 
-export = SetupItem001;
+export = SetupItem006;

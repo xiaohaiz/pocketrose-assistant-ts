@@ -1,8 +1,8 @@
-import StorageUtils from "../../../util/StorageUtils";
-import MessageBoard from "../../../util/MessageBoard";
-import SetupLoader from "../../../pocket/SetupLoader";
+import StorageUtils from "../../../../util/StorageUtils";
+import MessageBoard from "../../../../util/MessageBoard";
+import SetupLoader from "../../../../pocket/SetupLoader";
 
-class SetupItem010 implements SetupItem {
+class SetupItem011 implements SetupItem {
 
     render(id?: string): void {
         doRender();
@@ -10,8 +10,8 @@ class SetupItem010 implements SetupItem {
 
 }
 
-const code: string = "010";
-const name: string = "新装备管理界面";
+const code: string = "011";
+const name: string = "新职业管理界面";
 const key: string = "_pa_" + code;
 
 function doRender() {
@@ -25,7 +25,7 @@ function doRender() {
 
     $("#setup_item_table").append($(html));
 
-    const value = SetupLoader.isEquipmentManagementUIEnabled();
+    const value = SetupLoader.isCareerManagementUIEnabled();
     $(".option_class_" + code + "[value='" + Number(value) + "']").prop("selected", true);
 
     $("#setup_" + code).on("click", function () {
@@ -49,4 +49,4 @@ function doSaveSetupItem() {
     $("#refreshButton").trigger("click");
 }
 
-export = SetupItem010;
+export = SetupItem011;

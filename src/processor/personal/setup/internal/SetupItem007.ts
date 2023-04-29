@@ -1,8 +1,8 @@
-import StorageUtils from "../../../util/StorageUtils";
-import MessageBoard from "../../../util/MessageBoard";
-import SetupLoader from "../../../pocket/SetupLoader";
+import StorageUtils from "../../../../util/StorageUtils";
+import MessageBoard from "../../../../util/MessageBoard";
+import SetupLoader from "../../../../pocket/SetupLoader";
 
-class SetupItem009 implements SetupItem {
+class SetupItem007 implements SetupItem {
 
     render(id?: string): void {
         doRender();
@@ -10,8 +10,8 @@ class SetupItem009 implements SetupItem {
 
 }
 
-const code: string = "009";
-const name: string = "新宠物管理界面";
+const code: string = "007";
+const name: string = "战斗后强制推荐";
 const key: string = "_pa_" + code;
 
 function doRender() {
@@ -25,7 +25,7 @@ function doRender() {
 
     $("#setup_item_table").append($(html));
 
-    const value = SetupLoader.isPetManagementUIEnabled();
+    const value = SetupLoader.isBattleForceRecommendationEnabled();
     $(".option_class_" + code + "[value='" + Number(value) + "']").prop("selected", true);
 
     $("#setup_" + code).on("click", function () {
@@ -49,4 +49,4 @@ function doSaveSetupItem() {
     $("#refreshButton").trigger("click");
 }
 
-export = SetupItem009;
+export = SetupItem007;

@@ -1,8 +1,8 @@
-import StorageUtils from "../../../util/StorageUtils";
-import MessageBoard from "../../../util/MessageBoard";
-import SetupLoader from "../../../pocket/SetupLoader";
+import StorageUtils from "../../../../util/StorageUtils";
+import MessageBoard from "../../../../util/MessageBoard";
+import SetupLoader from "../../../../pocket/SetupLoader";
 
-class SetupItem020 implements SetupItem {
+class SetupItem019 implements SetupItem {
 
     render(id?: string): void {
         doRender(id!);
@@ -10,8 +10,8 @@ class SetupItem020 implements SetupItem {
 
 }
 
-const code: string = "020";
-const name: string = "自定义的套装Ｂ";
+const code: string = "019";
+const name: string = "自定义的套装Ａ";
 const key: string = "_pa_" + code;
 
 function doRender(id: string) {
@@ -25,7 +25,7 @@ function doRender(id: string) {
 
     $("#setup_item_table").append($(html));
 
-    const value = SetupLoader.loadEquipmentSet_B(id);
+    const value = SetupLoader.loadEquipmentSet_A(id);
     if (value["weaponStar"] !== undefined && value["weaponStar"]) {
         $(".checkbox_" + code + "[value='weaponStar']").prop("checked", true);
     }
@@ -107,4 +107,4 @@ function doSaveSetupItem(id: string) {
     $("#refreshButton").trigger("click");
 }
 
-export = SetupItem020;
+export = SetupItem019;

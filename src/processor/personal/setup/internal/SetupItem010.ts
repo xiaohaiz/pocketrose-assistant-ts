@@ -1,35 +1,35 @@
-import StorageUtils from "../../../util/StorageUtils";
-import MessageBoard from "../../../util/MessageBoard";
-import SetupLoader from "../../../pocket/SetupLoader";
+import StorageUtils from "../../../../util/StorageUtils";
+import MessageBoard from "../../../../util/MessageBoard";
+import SetupLoader from "../../../../pocket/SetupLoader";
 
-class SetupItem014 implements SetupItem {
+class SetupItem010 implements SetupItem {
 
     render(id?: string): void {
-        doRender(id!);
+        doRender();
     }
 
 }
 
-const code: string = "014";
-const name: string = "关闭转职的入口";
+const code: string = "010";
+const name: string = "新装备管理界面";
 const key: string = "_pa_" + code;
 
-function doRender(id: string) {
+function doRender() {
     let html = "";
     html += "<tr>";
     html += "<th style='background-color:#E8E8D0'>" + name + "</th>";
-    html += "<td style='background-color:#E8E8D0'>★</td>";
+    html += "<td style='background-color:#E8E8D0'></td>";
     html += "<td style='background-color:#EFE0C0'><input type='button' class='dynamic_button' id='setup_" + code + "' value='设置'></td>";
     html += "<td style='background-color:#E0D0B0;text-align:left'>" + doGenerateSetupItem() + "</td>";
     html += "</tr>";
 
     $("#setup_item_table").append($(html));
 
-    const value = SetupLoader.isCareerTransferEntranceDisabled(id);
+    const value = SetupLoader.isEquipmentManagementUIEnabled();
     $(".option_class_" + code + "[value='" + Number(value) + "']").prop("selected", true);
 
     $("#setup_" + code).on("click", function () {
-        doSaveSetupItem(id);
+        doSaveSetupItem();
     });
 }
 
@@ -42,11 +42,11 @@ function doGenerateSetupItem() {
     return html;
 }
 
-function doSaveSetupItem(id: string) {
+function doSaveSetupItem() {
     const value = $("#select_" + code).val();
-    StorageUtils.set(key + "_" + id, value!.toString());
+    StorageUtils.set(key, value!.toString());
     MessageBoard.publishMessage("<b style='color:red'>" + name + "</b>已经设置。");
     $("#refreshButton").trigger("click");
 }
 
-export = SetupItem014;
+export = SetupItem010;

@@ -1,8 +1,8 @@
-import StorageUtils from "../../../util/StorageUtils";
-import MessageBoard from "../../../util/MessageBoard";
-import SetupLoader from "../../../pocket/SetupLoader";
+import StorageUtils from "../../../../util/StorageUtils";
+import MessageBoard from "../../../../util/MessageBoard";
+import SetupLoader from "../../../../pocket/SetupLoader";
 
-class SetupItem003 implements SetupItem {
+class SetupItem001 implements SetupItem {
 
     render(id?: string): void {
         doRender();
@@ -10,8 +10,8 @@ class SetupItem003 implements SetupItem {
 
 }
 
-const code: string = "003";
-const name: string = "掉魔后自动住宿";
+const code: string = "001";
+const name: string = "宝可梦百科超链";
 const key: string = "_pa_" + code;
 
 function doRender() {
@@ -25,7 +25,7 @@ function doRender() {
 
     $("#setup_item_table").append($(html));
 
-    const value = SetupLoader.getLodgeManaLostPoint();
+    const value = SetupLoader.isPokemonWikiEnabled();
     $(".option_class_" + code + "[value='" + Number(value) + "']").prop("selected", true);
 
     $("#setup_" + code).on("click", function () {
@@ -34,14 +34,10 @@ function doRender() {
 }
 
 function doGenerateSetupItem() {
-    let html = "<select id='select_" + code + "'>";
-    html += "<option class='option_class_" + code + "' value='-1'>禁用</option>";
-    html += "<option class='option_class_" + code + "' value='10'>10PP</option>";
-    html += "<option class='option_class_" + code + "' value='20'>20PP</option>";
-    html += "<option class='option_class_" + code + "' value='50'>50PP</option>";
-    html += "<option class='option_class_" + code + "' value='100'>100PP</option>";
-    html += "<option class='option_class_" + code + "' value='200'>200PP</option>";
-    html += "<option class='option_class_" + code + "' value='500'>500PP</option>";
+    let html = "";
+    html += "<select id='select_" + code + "'>";
+    html += "<option class='option_class_" + code + "' value='1'>启用</option>";
+    html += "<option class='option_class_" + code + "' value='0'>禁用</option>";
     html += "</select>";
     return html;
 }
@@ -53,4 +49,4 @@ function doSaveSetupItem() {
     $("#refreshButton").trigger("click");
 }
 
-export = SetupItem003;
+export = SetupItem001;

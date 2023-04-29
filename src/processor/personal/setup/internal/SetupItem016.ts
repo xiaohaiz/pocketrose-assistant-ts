@@ -1,8 +1,8 @@
-import StorageUtils from "../../../util/StorageUtils";
-import MessageBoard from "../../../util/MessageBoard";
-import SetupLoader from "../../../pocket/SetupLoader";
+import StorageUtils from "../../../../util/StorageUtils";
+import MessageBoard from "../../../../util/MessageBoard";
+import SetupLoader from "../../../../pocket/SetupLoader";
 
-class SetupItem018 implements SetupItem {
+class SetupItem016 implements SetupItem {
 
     render(id?: string): void {
         doRender();
@@ -10,8 +10,8 @@ class SetupItem018 implements SetupItem {
 
 }
 
-const code: string = "018";
-const name: string = "战斗的存钱台词";
+const code: string = "016";
+const name: string = "战斗的住宿台词";
 const key: string = "_pa_" + code;
 
 function doRender() {
@@ -25,7 +25,7 @@ function doRender() {
 
     $("#setup_item_table").append($(html));
 
-    const value = SetupLoader.getBattleDepositButtonText();
+    const value = SetupLoader.getBattleLodgeButtonText();
     if (value !== "") {
         $("#text_" + code).attr("placeholder", value);
     }
@@ -53,4 +53,4 @@ function doSaveSetupItem() {
     $("#refreshButton").trigger("click");
 }
 
-export = SetupItem018;
+export = SetupItem016;

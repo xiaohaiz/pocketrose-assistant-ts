@@ -1,8 +1,8 @@
-import StorageUtils from "../../../util/StorageUtils";
-import MessageBoard from "../../../util/MessageBoard";
-import SetupLoader from "../../../pocket/SetupLoader";
+import StorageUtils from "../../../../util/StorageUtils";
+import MessageBoard from "../../../../util/MessageBoard";
+import SetupLoader from "../../../../pocket/SetupLoader";
 
-class SetupItem008 implements SetupItem {
+class SetupItem005 implements SetupItem {
 
     render(id?: string): void {
         doRender();
@@ -10,8 +10,8 @@ class SetupItem008 implements SetupItem {
 
 }
 
-const code: string = "008";
-const name: string = "十二宫极速战斗";
+const code: string = "005";
+const name: string = "触发存钱的战数";
 const key: string = "_pa_" + code;
 
 function doRender() {
@@ -25,7 +25,7 @@ function doRender() {
 
     $("#setup_item_table").append($(html));
 
-    const value = SetupLoader.isZodiacFlashBattleEnabled();
+    const value = SetupLoader.getDepositBattleCount();
     $(".option_class_" + code + "[value='" + Number(value) + "']").prop("selected", true);
 
     $("#setup_" + code).on("click", function () {
@@ -34,10 +34,12 @@ function doRender() {
 }
 
 function doGenerateSetupItem() {
-    let html = "";
-    html += "<select id='select_" + code + "'>";
-    html += "<option class='option_class_" + code + "' value='1'>启用</option>";
-    html += "<option class='option_class_" + code + "' value='0'>禁用</option>";
+    let html = "<select id='select_" + code + "'>";
+    html += "<option class='option_class_" + code + "' value='-1'>不存</option>";
+    html += "<option class='option_class_" + code + "' value='0'>每战存钱</option>";
+    html += "<option class='option_class_" + code + "' value='2'>2战一存</option>";
+    html += "<option class='option_class_" + code + "' value='5'>5战一存</option>";
+    html += "<option class='option_class_" + code + "' value='10'>10战一存</option>";
     html += "</select>";
     return html;
 }
@@ -49,4 +51,4 @@ function doSaveSetupItem() {
     $("#refreshButton").trigger("click");
 }
 
-export = SetupItem008;
+export = SetupItem005;
