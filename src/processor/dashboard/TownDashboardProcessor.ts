@@ -13,6 +13,7 @@ class TownDashboardProcessor extends PocketroseProcessor {
         const credential = PageUtils.currentCredential();
 
         doRenderBattleMenu(credential);
+        doRenderPostHouseMenu();
         doRenderSetupMenu();
     }
 
@@ -142,6 +143,11 @@ function doRenderBattleMenu(credential: Credential) {
     }
 
 
+}
+
+function doRenderPostHouseMenu() {
+    $("option[value='INN']").text("客栈·驿站");
+    $("option[value='INN']").css("background-color", "yellow");
 }
 
 function doRenderSetupMenu() {
