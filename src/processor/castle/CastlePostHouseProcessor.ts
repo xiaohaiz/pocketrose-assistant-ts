@@ -2,6 +2,7 @@ import PageProcessor from "../PageProcessor";
 import Credential from "../../util/Credential";
 import MessageBoard from "../../util/MessageBoard";
 import PageUtils from "../../util/PageUtils";
+import TownSelectionBuilder from "../../pocket/TownSelectionBuilder";
 
 class CastlePostHouseProcessor extends PageProcessor {
     process() {
@@ -54,7 +55,52 @@ function doProcess(credential: Credential) {
     tr = $(t3).parent().parent();
     $(tr).next().remove();
 
-    console.log(PageUtils.currentPageHtml());
+    $(tr).after($(doGenerate(credential)));
+
+    doBindReturnButton();
+    doBindTownButton(credential);
+}
+
+function doGenerate(credential: Credential): string {
+    let html = "";
+    html += "<tr style='display:none'>";
+    html += "<td>";
+    html += "<form action='' method='post' id='eden_form'>"
+    html += "<input type='hidden' name='id' value='" + credential.id + "'>";
+    html += "<input type='hidden' name='pass' value='" + credential.pass + "'>";
+    html += "<div id='eden_form_payload' style='display:none'></div>";
+    html += "<input type='submit' id='eden_form_submit'>";
+    html += "</form>"
+    html += "</td>";
+    html += "</tr>";
+    html += "<tr style='background-color:#F8F0E0;text-align:center'>";
+    html += "<td>";
+    html += "<input type='button' id='returnButton' value='返回城堡'>";
+    html += "</td>";
+    html += "</tr>";
+    html += "<tr style='background-color:#F8F0E0;text-align:center'>";
+    html += "<td>";
+    html += TownSelectionBuilder.buildTownSelectionTable();
+    html += "</td>";
+    html += "</tr>";
+    html += "<tr style='background-color:#F8F0E0;text-align:center'>";
+    html += "<td>";
+    html += "<input type='button' id='townButton' value='开始旅途' style='color:blue'>";
+    html += "</td>";
+    html += "</tr>";
+    return html;
+}
+
+function doBindReturnButton() {
+    $("#returnButton").on("click", function () {
+        $("#eden_form").attr("action", "castlestatus.cgi");
+        $("#eden_form_submit").html("<input type='hidden' name='mode' value='CASTLESTATUS'>");
+        $("#eden_form_submit").trigger("click");
+    });
+}
+
+function doBindTownButton(credential: Credential) {
+
 }
 
 export = CastlePostHouseProcessor;

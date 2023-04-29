@@ -38,10 +38,7 @@ class TownSelectionBuilder {
             }
             html += "</tr>";
         }
-
         html += "</tbody></table>";
-        html += "<br>";
-
         return html;
     }
 
