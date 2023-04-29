@@ -1,3 +1,5 @@
+import DOMAIN from "../util/Constants";
+
 class Pet {
 
     index?: number;                  // 下标（唯一性）
@@ -30,6 +32,11 @@ class Pet {
     attribute2?: string;
     race?: string;
     code?: string;
+
+    get imageHTML() {
+        const src = DOMAIN + "/image/pet/" + this.picture;
+        return "<img src='" + src + "' width='64' height='64' alt='" + this.race + "' style='border-width:0'>";
+    }
 }
 
 export = Pet;
