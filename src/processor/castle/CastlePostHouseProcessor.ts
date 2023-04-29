@@ -3,6 +3,8 @@ import Credential from "../../util/Credential";
 import MessageBoard from "../../util/MessageBoard";
 import PageUtils from "../../util/PageUtils";
 import TownSelectionBuilder from "../../pocket/TownSelectionBuilder";
+import TownLoader from "../../pocket/TownLoader";
+import CastleBank from "../../pocket/CastleBank";
 
 class CastlePostHouseProcessor extends PageProcessor {
     process() {
@@ -100,7 +102,40 @@ function doBindReturnButton() {
 }
 
 function doBindTownButton(credential: Credential) {
+    $("#townButton").on("click", function () {
+        const destinationTownId = $("input:radio:checked").val();
+        if (destinationTownId === undefined) {
+            MessageBoard.publishWarning("没有选择目的地城市！");
+            return;
+        }
 
+        MessageBoard.resetMessageBoard("我们将实时为你播报旅途的动态：<br>");
+        $("#returnButton").prop("disabled", true);
+        $("#townButton").prop("disabled", true);
+        $("#townButton").css("color", "grey");
+
+        const destinationTown = TownLoader.getTownById(destinationTownId as string)!;
+        MessageBoard.publishMessage("目的地城市：<span style='color:greenyellow'>" + destinationTown.name + "</span>");
+        MessageBoard.publishMessage("目的地坐标：<span style='color:greenyellow'>" + destinationTown.coordinate.asText() + "</span>");
+
+        const castleBank = new CastleBank(credential);
+        castleBank.withdraw(10)
+            .then(success => {
+                if (!success) {
+                    MessageBoard.publishWarning("因为没有足够的保证金，旅途被中断！");
+                    MessageBoard.publishMessage("回去吧，没钱就别来了。");
+                    $("#returnButton").prop("disabled", false);
+                    return;
+                }
+
+                castleBank.loadBankAccount()
+                    .then(account => {
+                        $("#roleCash").text(account.cash + " GOLD");
+                    });
+
+
+            });
+    });
 }
 
 export = CastlePostHouseProcessor;
