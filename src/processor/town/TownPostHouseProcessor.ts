@@ -1,4 +1,4 @@
-import PocketroseProcessor from "../PocketroseProcessor";
+import PageProcessor from "../PageProcessor";
 import PageUtils from "../../util/PageUtils";
 import Credential from "../../util/Credential";
 import TownSelectionBuilder from "../../pocket/TownSelectionBuilder";
@@ -13,7 +13,7 @@ import CastleLoader from "../../pocket/CastleLoader";
 import Castle from "../../pocket/Castle";
 import CastleEntrance from "../../pocket/CastleEntrance";
 
-class TownPostHouseProcessor extends PocketroseProcessor {
+class TownPostHouseProcessor extends PageProcessor {
 
     process() {
         PageUtils.removeUnusedHyperLinks();

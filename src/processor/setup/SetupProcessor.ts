@@ -1,4 +1,4 @@
-import PocketroseProcessor from "../PocketroseProcessor";
+import PageProcessor from "../PageProcessor";
 import PageUtils from "../../util/PageUtils";
 import Credential from "../../util/Credential";
 import RoleLoader from "../../pocket/RoleLoader";
@@ -24,7 +24,7 @@ import SetupItem016 from "./internal/SetupItem016";
 import SetupItem017 from "./internal/SetupItem017";
 import SetupItem018 from "./internal/SetupItem018";
 
-class SetupProcessor extends PocketroseProcessor {
+class SetupProcessor extends PageProcessor {
 
     process() {
         PageUtils.removeUnusedHyperLinks();

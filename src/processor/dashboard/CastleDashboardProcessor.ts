@@ -1,6 +1,6 @@
-import PocketroseProcessor from "../PocketroseProcessor";
+import PageProcessor from "../PageProcessor";
 
-class CastleDashboardProcessor extends PocketroseProcessor {
+class CastleDashboardProcessor extends PageProcessor {
 
     process() {
     }

@@ -1,4 +1,4 @@
-abstract class PocketroseProcessor {
+abstract class PageProcessor {
 
     readonly pageHtml: string;
     readonly pageText: string;
@@ -9,4 +9,4 @@ abstract class PocketroseProcessor {
     }
 }
 
-export = PocketroseProcessor;
+export = PageProcessor;

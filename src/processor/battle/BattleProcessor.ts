@@ -1,9 +1,9 @@
-import PocketroseProcessor from "../PocketroseProcessor";
+import PageProcessor from "../PageProcessor";
 import PageUtils from "../../util/PageUtils";
 import SetupLoader from "../../pocket/SetupLoader";
 import StringUtils from "../../util/StringUtils";
 
-class BattleProcessor extends PocketroseProcessor {
+class BattleProcessor extends PageProcessor {
 
     process(): void {
         PageUtils.removeUnusedHyperLinks();

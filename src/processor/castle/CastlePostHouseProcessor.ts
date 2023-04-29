@@ -1,9 +1,9 @@
-import PocketroseProcessor from "../PocketroseProcessor";
+import PageProcessor from "../PageProcessor";
 import Credential from "../../util/Credential";
 import MessageBoard from "../../util/MessageBoard";
 import PageUtils from "../../util/PageUtils";
 
-class CastlePostHouseProcessor extends PocketroseProcessor {
+class CastlePostHouseProcessor extends PageProcessor {
     process() {
         PageUtils.removeUnusedHyperLinks();
         PageUtils.removeGoogleAnalyticsScript();

@@ -1,7 +1,7 @@
 import PageUtils from "../../util/PageUtils";
-import PocketroseProcessor from "../PocketroseProcessor";
+import PageProcessor from "../PageProcessor";
 
-class PersonalStatusProcessor extends PocketroseProcessor {
+class PersonalStatusProcessor extends PageProcessor {
 
     process() {
         PageUtils.removeUnusedHyperLinks();

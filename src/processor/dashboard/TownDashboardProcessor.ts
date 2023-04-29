@@ -1,9 +1,9 @@
-import PocketroseProcessor from "../PocketroseProcessor";
+import PageProcessor from "../PageProcessor";
 import PageUtils from "../../util/PageUtils";
 import Credential from "../../util/Credential";
 import SetupLoader from "../../pocket/SetupLoader";
 
-class TownDashboardProcessor extends PocketroseProcessor {
+class TownDashboardProcessor extends PageProcessor {
 
     process() {
         PageUtils.removeUnusedHyperLinks();
