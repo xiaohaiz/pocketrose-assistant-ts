@@ -8,15 +8,18 @@ class TownDashboardProcessor extends PageProcessor {
     process() {
         PageUtils.removeUnusedHyperLinks();
         PageUtils.removeGoogleAnalyticsScript();
-
-        $("input:text:first").attr("id", "messageInputText");
         const credential = PageUtils.currentCredential();
-
-        doRenderBattleMenu(credential);
-        doRenderPostHouseMenu();
-        doRenderSetupMenu();
+        doProcess(credential);
     }
 
+}
+
+function doProcess(credential: Credential) {
+    $("input:text:first").attr("id", "messageInputText");
+    doRenderBattleMenu(credential);
+    doRenderPostHouseMenu();
+    doRenderSetupMenu();
+    doRenderEquipmentManagementMenu();
 }
 
 function doRenderBattleMenu(credential: Credential) {
@@ -177,6 +180,15 @@ function doRenderSetupMenu() {
         $("option[value='PETSTATUS']").prop("selected", true);
         $("option[value='PETSTATUS']").closest("td").next().find("input:submit:first").trigger("click");
     });
+}
+
+function doRenderEquipmentManagementMenu() {
+    if (!SetupLoader.isEquipmentManagementUIEnabled()) {
+        return;
+    }
+    $("option[value='USE_ITEM']").text("装备管理");
+    $("option[value='USE_ITEM']").css("background-color", "yellow");
+    $("option[value='ITEM_SEND']").remove();
 }
 
 export = TownDashboardProcessor;
