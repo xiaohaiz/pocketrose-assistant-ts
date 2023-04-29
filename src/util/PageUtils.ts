@@ -63,6 +63,16 @@ class PageUtils {
             return "<img src='" + userImage + "' width='64' height='64' id='userImage' alt=''>";
         }
     }
+
+    static isColorBlue(id: string) {
+        const color = $("#" + id).css("color");
+        return color.toString() === "rgb(0, 0, 255)"
+    }
+
+    static isColorGrey(id: string) {
+        const color = $("#" + id).css("color");
+        return color.toString() === "rgb(128, 128, 128)"
+    }
 }
 
 export = PageUtils;

@@ -7,6 +7,9 @@ import StringUtils from "../../util/StringUtils";
 import RoleLoader from "../../pocket/RoleLoader";
 import DOMAIN from "../../util/Constants";
 import MessageBoard from "../../util/MessageBoard";
+import NetworkUtils from "../../util/NetworkUtils";
+import TownBank from "../../pocket/TownBank";
+import EquipmentParser from "../../pocket/EquipmentParser";
 
 class PersonalPetManagementProcessor extends PageProcessor {
 
@@ -56,10 +59,10 @@ function doProcess(credential: Credential, petList: Pet[], studyStatus: number[]
             MessageBoard.resetMessageBoard("全新的宠物管理UI为您带来不一样的感受。");
         });
 
-    doRender(petList, studyStatus);
+    doRender(credential, petList, studyStatus);
 }
 
-function doRender(petList: Pet[], studyStatus: number[]) {
+function doRender(credential: Credential, petList: Pet[], studyStatus: number[]) {
     let html = "";
     html += "<table style='border-width:0;background-color:#888888;text-align:center;width:100%'>";
     html += "<tbody style='background-color:#F8F0E0'>";
@@ -180,6 +183,592 @@ function doRender(petList: Pet[], studyStatus: number[]) {
     html += "</table>";
 
     $("#pet_management_container").html(html);
+
+    // 根据宠物状态修改按钮的样式
+    for (let i = 0; i < petList.length; i++) {
+        const pet = petList[i];
+
+        // 设置卸下宠物按钮的状态
+        if (!pet.using) {
+            let buttonId = "pet_" + pet.index + "_uninstall";
+            $("#" + buttonId).prop("disabled", true);
+            $("#" + buttonId).css("color", "grey");
+        }
+
+        // 设置使用宠物按钮的状态
+        if (pet.using) {
+            let buttonId = "pet_" + pet.index + "_install";
+            $("#" + buttonId).prop("disabled", true);
+            $("#" + buttonId).css("color", "grey");
+
+            buttonId = "pet_" + pet.index + "_cage";
+            $("#" + buttonId).prop("disabled", true);
+            $("#" + buttonId).css("color", "grey");
+        }
+
+        // 设置宠物技能按钮的状态
+        let spellButtonId = "pet_" + pet.index + "_spell_1";
+        if (pet.usingSpell1) {
+            $("#" + spellButtonId).css("color", "blue");
+        } else {
+            $("#" + spellButtonId).css("color", "grey");
+        }
+        spellButtonId = "pet_" + pet.index + "_spell_2";
+        if (pet.usingSpell2) {
+            $("#" + spellButtonId).css("color", "blue");
+        } else {
+            $("#" + spellButtonId).css("color", "grey");
+        }
+        spellButtonId = "pet_" + pet.index + "_spell_3";
+        if (pet.usingSpell3) {
+            $("#" + spellButtonId).css("color", "blue");
+        } else {
+            $("#" + spellButtonId).css("color", "grey");
+        }
+        spellButtonId = "pet_" + pet.index + "_spell_4";
+        if (pet.usingSpell4) {
+            $("#" + spellButtonId).css("color", "blue");
+        } else {
+            $("#" + spellButtonId).css("color", "grey");
+        }
+
+        // 设置宠物亲密度按钮的状态
+        if (pet.love! >= 100) {
+            let buttonId = "pet_" + pet.index + "_love";
+            $("#" + buttonId).prop("disabled", true);
+            $("#" + buttonId).css("color", "grey");
+        }
+
+        // 设置宠物联赛按钮的状态
+        if (pet.level! < 100) {
+            let buttonId = "pet_" + pet.index + "_league";
+            $("#" + buttonId).prop("disabled", true);
+            $("#" + buttonId).css("color", "grey");
+        }
+
+        // 设置宠物献祭按钮的状态
+        if (pet.level !== 1) {
+            let buttonId = "pet_" + pet.index + "_consecrate";
+            $("#" + buttonId).prop("disabled", true);
+            $("#" + buttonId).css("color", "grey");
+        }
+
+        // 设置宠物发送按钮的状态
+        if (pet.using) {
+            let buttonId = "pet_" + pet.index + "_send";
+            $("#" + buttonId).prop("disabled", true);
+            $("#" + buttonId).css("color", "grey");
+        }
+    }
+
+    // 设置技能学习位的按钮样式
+    if (studyStatus.includes(1)) {
+        $("#pet_spell_study_1").css("color", "blue");
+    } else {
+        $("#pet_spell_study_1").css("color", "grey");
+    }
+    if (studyStatus.includes(2)) {
+        $("#pet_spell_study_2").css("color", "blue");
+    } else {
+        $("#pet_spell_study_2").css("color", "grey");
+    }
+    if (studyStatus.includes(3)) {
+        $("#pet_spell_study_3").css("color", "blue");
+    } else {
+        $("#pet_spell_study_3").css("color", "grey");
+    }
+    if (studyStatus.includes(4)) {
+        $("#pet_spell_study_4").css("color", "blue");
+    } else {
+        $("#pet_spell_study_4").css("color", "grey");
+    }
+
+    // 绑定按钮点击事件处理
+    doBind(credential, petList);
+}
+
+function doBind(credential: Credential, petList: Pet[]) {
+    for (let i = 0; i < petList.length; i++) {
+        const pet = petList[i];
+        let buttonId = "pet_" + pet.index + "_uninstall";
+        if (!$("#" + buttonId).prop("disabled")) {
+            doBindPetUninstallButton(credential, buttonId);
+        }
+        buttonId = "pet_" + pet.index + "_install";
+        if (!$("#" + buttonId).prop("disabled")) {
+            doBindPetInstallButton(credential, buttonId, pet);
+        }
+        buttonId = "pet_" + pet.index + "_cage";
+        if (!$("#" + buttonId).prop("disabled")) {
+            doBindPetCageButton(credential, buttonId, pet);
+        }
+
+        doBindPetSpellButton(credential, pet);
+
+        buttonId = "pet_" + pet.index + "_love";
+        if (!$("#" + buttonId).prop("disabled")) {
+            doBindPetLoveButton(credential, buttonId, pet);
+        }
+        buttonId = "pet_" + pet.index + "_league";
+        if (!$("#" + buttonId).prop("disabled")) {
+            doBindPetLeagueButton(credential, buttonId, pet);
+        }
+        buttonId = "pet_" + pet.index + "_rename";
+        if (!$("#" + buttonId).prop("disabled")) {
+            doBindPetRenameButton(credential, buttonId, pet);
+        }
+
+        buttonId = "pet_" + pet.index + "_consecrate";
+        if (!$("#" + buttonId).prop("disabled")) {
+            doBindPetConsecrateButton(credential, buttonId, pet);
+        }
+
+        buttonId = "pet_" + pet.index + "_send";
+        if (!$("#" + buttonId).prop("disabled")) {
+            doBindPetSendButton(credential, buttonId, pet);
+        }
+    }
+
+    // 设置宠物技能学习位的按钮行为
+    doBindPetStudyButton(credential);
+
+    // 设置查找发送对象按钮行为
+    doBindSearchButton(credential);
+
+    // 设置更新按钮行为
+    doBindRefreshButton(credential);
+
+    // 设置黄金笼子按钮的行为
+    doBindGoldenCageButton(credential);
+}
+
+function doRefresh(credential: Credential) {
+    const request = credential.asRequest();
+    // @ts-ignore
+    request["mode"] = "PETSTATUS";
+    NetworkUtils.sendPostRequest("mydata.cgi", request, function (html) {
+        // 从新的宠物界面中重新解析宠物状态
+        const petList = PetParser.parsePersonalPetList(html);
+        const petStudyStatus = PetParser.parsePersonalPetStudyStatus(html);
+        // 解除当前所有的按钮
+        $(".PetUIButton").off("click");
+        // 清除PetUI的内容
+        $("#pet_management_container").html("");
+        // 使用新的宠物重新渲染PetUI
+        doRender(credential, petList, petStudyStatus);
+    });
+}
+
+function doBindPetUninstallButton(credential: Credential, buttonId: string) {
+    $("#" + buttonId).on("click", function () {
+        const request = credential.asRequest();
+        // @ts-ignore
+        request["select"] = "-1";
+        // @ts-ignore
+        request["mode"] = "CHOOSEPET";
+        NetworkUtils.sendPostRequest("mydata.cgi", request, function (html) {
+            MessageBoard.processResponseMessage(html);
+            doRefresh(credential);
+        });
+    });
+}
+
+function doBindPetInstallButton(credential: Credential, buttonId: string, pet: Pet) {
+    $("#" + buttonId).on("click", function () {
+        const request = credential.asRequest();
+        // @ts-ignore
+        request["select"] = pet.index;
+        // @ts-ignore
+        request["mode"] = "CHOOSEPET";
+        NetworkUtils.sendPostRequest("mydata.cgi", request, function (html) {
+            MessageBoard.processResponseMessage(html);
+            doRefresh(credential);
+        });
+    });
+}
+
+function doBindPetCageButton(credential: Credential, buttonId: string, pet: Pet) {
+    $("#" + buttonId).on("click", function () {
+        const request = credential.asRequest();
+        // @ts-ignore
+        request["select"] = pet.index;
+        // @ts-ignore
+        request["mode"] = "PUTINLONGZI";
+        NetworkUtils.sendPostRequest("mydata.cgi", request, function (html) {
+            MessageBoard.processResponseMessage(html);
+            doRefresh(credential);
+        });
+    });
+}
+
+function doBindPetSpellButton(credential: Credential, pet: Pet) {
+    $("#" + "pet_" + pet.index + "_spell_1").on("click", function () {
+        const request = credential.asRequest();
+        // @ts-ignore
+        request["select"] = pet.index;
+        // @ts-ignore
+        request["mode"] = "PETUSESKILL_SET";
+        if (PageUtils.isColorGrey("pet_" + pet.index + "_spell_1")) {
+            // 启用当前的技能
+            // @ts-ignore
+            request["use1"] = "1";
+        }
+        if (PageUtils.isColorBlue("pet_" + pet.index + "_spell_2")) {
+            // @ts-ignore
+            request["use2"] = "2";
+        }
+        if (PageUtils.isColorBlue("pet_" + pet.index + "_spell_3")) {
+            // @ts-ignore
+            request["use3"] = "3";
+        }
+        if (PageUtils.isColorBlue("pet_" + pet.index + "_spell_4")) {
+            // @ts-ignore
+            request["use4"] = "4";
+        }
+        NetworkUtils.sendPostRequest("mydata.cgi", request, function (html) {
+            MessageBoard.processResponseMessage(html);
+            doRefresh(credential);
+        });
+    });
+    $("#" + "pet_" + pet.index + "_spell_2").on("click", function () {
+        const request = credential.asRequest();
+        // @ts-ignore
+        request["select"] = pet.index;
+        // @ts-ignore
+        request["mode"] = "PETUSESKILL_SET";
+        if (PageUtils.isColorGrey("pet_" + pet.index + "_spell_2")) {
+            // 启用当前的技能
+            // @ts-ignore
+            request["use2"] = "2";
+        }
+        if (PageUtils.isColorBlue("pet_" + pet.index + "_spell_1")) {
+            // @ts-ignore
+            request["use1"] = "1";
+        }
+        if (PageUtils.isColorBlue("pet_" + pet.index + "_spell_3")) {
+            // @ts-ignore
+            request["use3"] = "3";
+        }
+        if (PageUtils.isColorBlue("pet_" + pet.index + "_spell_4")) {
+            // @ts-ignore
+            request["use4"] = "4";
+        }
+        NetworkUtils.sendPostRequest("mydata.cgi", request, function (html) {
+            MessageBoard.processResponseMessage(html);
+            doRefresh(credential);
+        });
+    });
+    $("#" + "pet_" + pet.index + "_spell_3").on("click", function () {
+        const request = credential.asRequest();
+        // @ts-ignore
+        request["select"] = pet.index;
+        // @ts-ignore
+        request["mode"] = "PETUSESKILL_SET";
+        if (PageUtils.isColorGrey("pet_" + pet.index + "_spell_3")) {
+            // 启用当前的技能
+            // @ts-ignore
+            request["use3"] = "3";
+        }
+        if (PageUtils.isColorBlue("pet_" + pet.index + "_spell_1")) {
+            // @ts-ignore
+            request["use1"] = "1";
+        }
+        if (PageUtils.isColorBlue("pet_" + pet.index + "_spell_2")) {
+            // @ts-ignore
+            request["use2"] = "2";
+        }
+        if (PageUtils.isColorBlue("pet_" + pet.index + "_spell_4")) {
+            // @ts-ignore
+            request["use4"] = "4";
+        }
+        NetworkUtils.sendPostRequest("mydata.cgi", request, function (html) {
+            MessageBoard.processResponseMessage(html);
+            doRefresh(credential);
+        });
+    });
+    $("#" + "pet_" + pet.index + "_spell_4").on("click", function () {
+        const request = credential.asRequest();
+        // @ts-ignore
+        request["select"] = pet.index;
+        // @ts-ignore
+        request["mode"] = "PETUSESKILL_SET";
+        if (PageUtils.isColorGrey("pet_" + pet.index + "_spell_4")) {
+            // 启用当前的技能
+            // @ts-ignore
+            request["use4"] = "4";
+        }
+        if (PageUtils.isColorBlue("pet_" + pet.index + "_spell_1")) {
+            // @ts-ignore
+            request["use1"] = "1";
+        }
+        if (PageUtils.isColorBlue("pet_" + pet.index + "_spell_2")) {
+            // @ts-ignore
+            request["use2"] = "2";
+        }
+        if (PageUtils.isColorBlue("pet_" + pet.index + "_spell_3")) {
+            // @ts-ignore
+            request["use3"] = "3";
+        }
+        NetworkUtils.sendPostRequest("mydata.cgi", request, function (html) {
+            MessageBoard.processResponseMessage(html);
+            doRefresh(credential);
+        });
+    });
+}
+
+function doBindPetLoveButton(credential: Credential, buttonId: string, pet: Pet) {
+    $("#" + buttonId).on("click", function () {
+        const expect = Math.ceil(100 - pet.love!) * 10000;
+        const bank = new TownBank(credential);
+        bank.withdraw(100)
+            .then(success => {
+                if (!success) {
+                    MessageBoard.publishWarning("没钱就不要顾及宠物亲密度了！");
+                } else {
+                    const request = credential.asRequest();
+                    // @ts-ignore
+                    request["mode"] = "PETADDLOVE";
+                    // @ts-ignore
+                    request["select"] = pet.index;
+                    NetworkUtils.sendPostRequest("mydata.cgi", request, function (html) {
+                        MessageBoard.processResponseMessage(html);
+                        bank.deposit(undefined)
+                            .then(() => {
+                                doRefresh(credential);
+                            });
+                    });
+                }
+            });
+    });
+}
+
+function doBindPetLeagueButton(credential: Credential, buttonId: string, pet: Pet) {
+    $("#" + buttonId).on("click", function () {
+        const request = credential.asRequest();
+        // @ts-ignore
+        request["select"] = pet.index;
+        // @ts-ignore
+        request["mode"] = "PETGAME";
+        NetworkUtils.sendPostRequest("mydata.cgi", request, function (html) {
+            if (html.includes("ERROR !")) {
+                const result = $(html).find("font b").text();
+                MessageBoard.publishWarning(result);
+                doRefresh(credential);
+            } else {
+                // 由于目前登陆宠联的操作不会触发页面刷新，因此直接返回主页面
+                $("#returnButton").trigger("click");
+            }
+        });
+    });
+}
+
+function doBindPetRenameButton(credential: Credential, buttonId: string, pet: Pet) {
+    $("#" + buttonId).on("click", function () {
+        const textId = "pet_" + pet.index + "_name_text";
+        let newName = $("#" + textId).val();
+        if (newName !== "") {
+            newName = escape(newName as string);
+            const request = credential.asRequest();
+            // @ts-ignore
+            request["select"] = pet.index;
+            // @ts-ignore
+            request["name"] = newName;
+            // @ts-ignore
+            request["mode"] = "PETCHANGENAME";
+            NetworkUtils.sendPostRequest("mydata.cgi", request, function (html) {
+                MessageBoard.processResponseMessage(html);
+                doRefresh(credential);
+            });
+        }
+    });
+}
+
+function doBindPetConsecrateButton(credential: Credential, buttonId: string, pet: Pet) {
+    $("#" + buttonId).on("click", function () {
+        if (!confirm("你确认要献祭宠物" + pet.name + "吗？")) {
+            return;
+        }
+        const bank = new TownBank(credential);
+        bank.withdraw(1000)
+            .then(success => {
+                if (!success) {
+                    MessageBoard.publishWarning("没钱玩什么献祭！");
+                    return;
+                }
+                consecratePet(credential, pet.index!)
+                    .then(() => {
+                        bank.deposit(undefined)
+                            .then(() => {
+                                doRefresh(credential);
+                            });
+                    });
+            });
+    });
+}
+
+function doBindPetSendButton(credential: Credential, buttonId: string, pet: Pet) {
+    $("#" + buttonId).on("click", function () {
+        const receiver = $("#receiverCandidates").val();
+        if (receiver === undefined || receiver === "") {
+            MessageBoard.publishWarning("没有选择发送对象！");
+            return;
+        }
+        const bank = new TownBank(credential);
+        bank.withdraw(10)
+            .then(success => {
+                if (!success) {
+                    MessageBoard.publishWarning("没钱还是自己留着宠物吧！");
+                    return;
+                }
+                const request = credential.asRequest();
+                // @ts-ignore
+                request["mode"] = "PET_SEND2";
+                // @ts-ignore
+                request["eid"] = receiver;
+                // @ts-ignore
+                request["select"] = pet.index;
+                NetworkUtils.sendPostRequest("town.cgi", request, function (html) {
+                    MessageBoard.processResponseMessage(html);
+                    bank.deposit(undefined)
+                        .then(() => {
+                            doRefresh(credential);
+                        });
+                });
+            });
+    });
+}
+
+function doBindPetStudyButton(credential: Credential) {
+    $("#pet_spell_study_1").on("click", function () {
+        const request = credential.asRequest();
+        const color = $("#pet_spell_study_1").css("color");
+        if (color.toString() === "rgb(128, 128, 128)") {
+            // @ts-ignore
+            request["study1"] = "1";
+        }
+        if (color.toString() === "rgb(0, 0, 255)") {
+            // 当前是已经设置学习状态
+        }
+        // @ts-ignore
+        request["mode"] = "STUDY_SET";
+        NetworkUtils.sendPostRequest("mydata.cgi", request, function (html) {
+            MessageBoard.processResponseMessage(html);
+            doRefresh(credential);
+        });
+    });
+    $("#pet_spell_study_2").on("click", function () {
+        const request = credential.asRequest();
+        const color = $("#pet_spell_study_2").css("color");
+        if (color.toString() === "rgb(128, 128, 128)") {
+            // @ts-ignore
+            request["study2"] = "2";
+        }
+        if (color.toString() === "rgb(0, 0, 255)") {
+            // 当前是已经设置学习状态
+        }
+        // @ts-ignore
+        request["mode"] = "STUDY_SET";
+        NetworkUtils.sendPostRequest("mydata.cgi", request, function (html) {
+            MessageBoard.processResponseMessage(html);
+            doRefresh(credential);
+        });
+    });
+    $("#pet_spell_study_3").on("click", function () {
+        const request = credential.asRequest();
+        const color = $("#pet_spell_study_3").css("color");
+        if (color.toString() === "rgb(128, 128, 128)") {
+            // @ts-ignore
+            request["study3"] = "3";
+        }
+        if (color.toString() === "rgb(0, 0, 255)") {
+            // 当前是已经设置学习状态
+        }
+        // @ts-ignore
+        request["mode"] = "STUDY_SET";
+        NetworkUtils.sendPostRequest("mydata.cgi", request, function (html) {
+            MessageBoard.processResponseMessage(html);
+            doRefresh(credential);
+        });
+    });
+    $("#pet_spell_study_4").on("click", function () {
+        const request = credential.asRequest();
+        const color = $("#pet_spell_study_4").css("color");
+        if (color.toString() === "rgb(128, 128, 128)") {
+            // @ts-ignore
+            request["study4"] = "4";
+        }
+        if (color.toString() === "rgb(0, 0, 255)") {
+            // 当前是已经设置学习状态
+        }
+        // @ts-ignore
+        request["mode"] = "STUDY_SET";
+        NetworkUtils.sendPostRequest("mydata.cgi", request, function (html) {
+            MessageBoard.processResponseMessage(html);
+            doRefresh(credential);
+        });
+    });
+}
+
+function doBindSearchButton(credential: Credential) {
+    $("#searchReceiverButton").on("click", function () {
+        const search = $("#receiverName").val();
+        if ((search as string).trim() === "") {
+            MessageBoard.publishWarning("接收人没有输入！");
+            return;
+        }
+        const request = credential.asRequest();
+        // @ts-ignore
+        request["mode"] = "PET_SEND";
+        // @ts-ignore
+        request["serch"] = escape(search.trim());
+        NetworkUtils.sendPostRequest("town.cgi", request, function (html) {
+            const optionHTML = $(html).find("select[name='eid']").html();
+            $("#receiverCandidates").html(optionHTML);
+        });
+    });
+}
+
+function doBindRefreshButton(credential: Credential) {
+    $("#refreshButton").on("click", function () {
+        MessageBoard.resetMessageBoard("");
+        doRefresh(credential);
+    });
+}
+
+async function consecratePet(credential: Credential, petIndex: number) {
+    const action = function (credential: Credential, petIndex: number) {
+        return new Promise<void>((resolve) => {
+            const request = credential.asRequest();
+            // @ts-ignore
+            request["select"] = petIndex;
+            // @ts-ignore
+            request["mode"] = "PETBORN6";
+            NetworkUtils.sendPostRequest("mydata.cgi", request, function (html) {
+                MessageBoard.processResponseMessage(html);
+                resolve();
+            });
+        });
+    }
+    return await action(credential, petIndex);
+}
+
+function doBindGoldenCageButton(credential: Credential) {
+    $("#goldenCageButton").on("click", function () {
+        const request = credential.asRequest();
+        // @ts-ignore
+        request["mode"] = "USE_ITEM";
+        NetworkUtils.sendPostRequest("mydata.cgi", request, function (html) {
+            const equipmentList = EquipmentParser.parsePersonalItemList(html);
+            const cage = EquipmentParser.findGoldenCage(equipmentList);
+            if (cage !== null) {
+                $("form[action='status.cgi']").attr("action", "mydata.cgi");
+                $("input:hidden[value='STATUS']").attr("value", "USE");
+                $("#returnButton").prepend("<input type='hidden' name='chara' value='1'>");
+                $("#returnButton").prepend("<input type='hidden' name='item" + cage.index + "' value='" + cage.index + "'>");
+                $("#returnButton").trigger("click");
+            }
+        });
+    });
 }
 
 export = PersonalPetManagementProcessor;
