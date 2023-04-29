@@ -11,6 +11,7 @@ import TownEntrance from "../../pocket/TownEntrance";
 import TravelPlanExecutor from "../../pocket/TravelPlanExecutor";
 import CastleLoader from "../../pocket/CastleLoader";
 import Castle from "../../pocket/Castle";
+import CastleEntrance from "../../pocket/CastleEntrance";
 
 class TownPostHouseProcessor extends PocketroseProcessor {
 
@@ -192,6 +193,15 @@ function doBindCastleButton(credential: Credential, castle: Castle) {
                 const executor = new TravelPlanExecutor(plan);
                 executor.execute()
                     .then(() => {
+                        const entrance = new CastleEntrance(credential, castle);
+                        entrance.enter()
+                            .then(() => {
+                                $("form[action='status.cgi']").attr("action", "castlestatus.cgi");
+                                $("input:hidden[value='STATUS']").attr("value", "CASTLESTATUS");
+                                MessageBoard.publishMessage("旅途愉快，下次再见。");
+                                $("#returnButton").val("欢迎您回到" + castle.name);
+                                $("#returnButton").prop("disabled", false);
+                            });
                     });
             });
     });
