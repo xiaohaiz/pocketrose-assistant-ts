@@ -518,9 +518,9 @@ function doBindPetSpellButton(credential: Credential, pet: Pet) {
 
 function doBindPetLoveButton(credential: Credential, buttonId: string, pet: Pet) {
     $("#" + buttonId).on("click", function () {
-        const expect = Math.ceil(100 - pet.love!) * 10000;
+        const amount = Math.ceil(100 - pet.love!);
         const bank = new TownBank(credential);
-        bank.withdraw(100)
+        bank.withdraw(amount)
             .then(success => {
                 if (!success) {
                     MessageBoard.publishWarning("没钱就不要顾及宠物亲密度了！");
