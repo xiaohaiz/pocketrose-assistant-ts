@@ -11,12 +11,16 @@ class PersonalPetManagementProcessor extends PageProcessor {
         PageUtils.removeGoogleAnalyticsScript();
         const credential = PageUtils.currentCredential();
         const petList = PetParser.parsePersonalPetList(this.pageHtml);
-        doProcess(credential, petList);
+        const studyStatus = PetParser.parsePersonalPetStudyStatus(this.pageHtml);
+        doProcess(credential, petList, studyStatus);
     }
 }
 
-function doProcess(credential: Credential, petList: Pet[]) {
-    console.log(JSON.stringify(petList));
+function doProcess(credential: Credential, petList: Pet[], studyStatus: number[]) {
+    $("input:submit[value='返回城市']").attr("id", "returnButton");
+
+    console.log(JSON.stringify(studyStatus));
+    console.log(PageUtils.currentPageHtml());
 }
 
 export = PersonalPetManagementProcessor;

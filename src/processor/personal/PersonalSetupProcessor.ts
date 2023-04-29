@@ -24,7 +24,7 @@ import SetupItem016 from "./internal/SetupItem016";
 import SetupItem017 from "./internal/SetupItem017";
 import SetupItem018 from "./internal/SetupItem018";
 
-class SetupProcessor extends PageProcessor {
+class PersonalSetupProcessor extends PageProcessor {
 
     process() {
         PageUtils.removeUnusedHyperLinks();
@@ -168,4 +168,4 @@ function __bindReturnButton() {
     });
 }
 
-export = SetupProcessor;
+export = PersonalSetupProcessor;

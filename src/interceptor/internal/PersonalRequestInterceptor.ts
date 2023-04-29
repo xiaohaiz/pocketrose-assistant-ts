@@ -1,6 +1,6 @@
 import PageUtils from "../../util/PageUtils";
 import PersonalStatusProcessor from "../../processor/personal/PersonalStatusProcessor";
-import SetupProcessor from "../../processor/setup/SetupProcessor";
+import PersonalSetupProcessor from "../../processor/personal/PersonalSetupProcessor";
 import PersonalPetManagementProcessor from "../../processor/personal/PersonalPetManagementProcessor";
 
 class PersonalRequestInterceptor implements RequestInterceptor {
@@ -15,7 +15,7 @@ class PersonalRequestInterceptor implements RequestInterceptor {
             return;
         }
         if (pageText.includes("给其他人发送消息")) {
-            new SetupProcessor(pageHtml, pageText).process();
+            new PersonalSetupProcessor(pageHtml, pageText).process();
             return;
         }
         if (pageText.includes("宠物现在升级时学习新技能情况一览")) {
