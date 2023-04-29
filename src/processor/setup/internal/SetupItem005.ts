@@ -40,7 +40,6 @@ function doGenerateSetupItem() {
     html += "<option class='option_class_" + code + "' value='2'>2战一存</option>";
     html += "<option class='option_class_" + code + "' value='5'>5战一存</option>";
     html += "<option class='option_class_" + code + "' value='10'>10战一存</option>";
-    html += "<option class='option_class_" + code + "' value='20'>20战一存</option>";
     html += "</select>";
     return html;
 }
