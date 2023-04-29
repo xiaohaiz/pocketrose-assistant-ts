@@ -35,7 +35,14 @@ class TravelPlanExecutor {
                     MessageBoard.publishMessage(msg);
                 }
 
-                resolve();
+                doMoveOnPath(
+                    plan.credential!,
+                    pathList,
+                    0,
+                    function () {
+                        resolve();
+                    }
+                );
             });
         };
         return await action(this.#plan);
