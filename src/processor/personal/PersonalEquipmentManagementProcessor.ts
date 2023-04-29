@@ -240,6 +240,7 @@ function doRender(credential: Credential, equipmentList: Equipment[]) {
     doBindMagicBallButton(credential, equipmentList);
     doBindSearchButton(credential);
     doBindSendButton(credential);
+    doBindRefreshButton(credential);
 }
 
 function doRefresh(credential: Credential) {
@@ -467,5 +468,13 @@ function doBindSendButton(credential: Credential) {
             });
     });
 }
+
+function doBindRefreshButton(credential: Credential) {
+    $("#refreshButton").on("click", function () {
+        MessageBoard.resetMessageBoard("");
+        doRefresh(credential);
+    });
+}
+
 
 export = PersonalEquipmentManagementProcessor;
