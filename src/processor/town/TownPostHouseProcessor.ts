@@ -40,11 +40,15 @@ function doProcess(credential: Credential): void {
     $(td).css("color", "yellowgreen");
     $(td).text("＜＜  宿 屋 & 驿 站  ＞＞");
 
-    // 标记现金栏、增加计时器
+    // 标记现金栏、增加坐标栏和计时器
     let tr = $(t3).find("tr:last");
     td = $(tr).find("td:last");
     $(td).attr("id", "roleCash");
     $(tr).after($("<tr>" +
+        "<td style='background-color:#E0D0B0'>坐标点</td>" +
+        "<td style='background-color:#E8E8D0;text-align:right' id='roleLocation' colspan='3'>-</td>" +
+        "</tr>" +
+        "<tr>" +
         "<td style='background-color:#E0D0B0'>计时器</td>" +
         "<td style='background-color:#E8E8D0;color:red;font-weight:bold;text-align:right' id='countDownTimer' colspan='3'>-</td>" +
         "</tr>"));

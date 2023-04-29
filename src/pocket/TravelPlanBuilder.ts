@@ -2,6 +2,7 @@ import TravelPlan from "./TravelPlan";
 import StringUtils from "../util/StringUtils";
 import Coordinate from "../util/Coordinate";
 import MessageBoard from "../util/MessageBoard";
+import TownLoader from "./TownLoader";
 
 class TravelPlanBuilder {
 
@@ -37,6 +38,15 @@ class TravelPlanBuilder {
         MessageBoard.publishMessage("移动范围：<span style='color:greenyellow'>" + scope + "</span>");
         MessageBoard.publishMessage("移动模式：<span style='color:greenyellow'>" + mode + "</span>");
         MessageBoard.publishMessage("当前坐标：<span style='color:greenyellow'>" + source.asText() + "</span>");
+
+        if ($("#roleLocation").length > 0) {
+            let roleLocation = source.asText();
+            const town = TownLoader.getTownByCoordinate(source);
+            if (town !== null) {
+                roleLocation = town.name + " " + roleLocation;
+            }
+            $("#roleLocation").text(roleLocation);
+        }
 
         const plan = new TravelPlan();
         plan.scope = scope;

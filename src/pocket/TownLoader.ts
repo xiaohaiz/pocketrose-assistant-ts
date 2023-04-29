@@ -21,6 +21,14 @@ class TownLoader {
         return null;
     }
 
+    static getTownByCoordinate(coordinate: Coordinate): Town | null {
+        for (const town of TownLoader.getTownList()) {
+            if (town.coordinate.equals(coordinate)) {
+                return town;
+            }
+        }
+        return null;
+    }
 
     static getTownList(): Town[] {
         return Object.values(TOWN_DEFINITION);

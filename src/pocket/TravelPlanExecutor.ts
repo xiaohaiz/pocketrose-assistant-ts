@@ -4,6 +4,7 @@ import MessageBoard from "../util/MessageBoard";
 import Credential from "../util/Credential";
 import TimeoutUtils from "../util/TimeoutUtils";
 import NetworkUtils from "../util/NetworkUtils";
+import TownLoader from "./TownLoader";
 
 class TravelPlanExecutor {
 
@@ -77,6 +78,16 @@ function doMoveOnPath(credential: Credential, pathList: Coordinate[], index: num
             request["chara_m"] = distance;
             NetworkUtils.sendPostRequest("map.cgi", request, function () {
                 MessageBoard.publishMessage("<span style='color:greenyellow'>" + direction + "</span>移动" + distance + "格，到达" + to.asText() + "。");
+
+                if ($("#roleLocation").length > 0) {
+                    let roleLocation = to.asText();
+                    const town = TownLoader.getTownByCoordinate(to);
+                    if (town !== null) {
+                        roleLocation = town.name + " " + roleLocation;
+                    }
+                    $("#roleLocation").text(roleLocation);
+                }
+
                 doMoveOnPath(credential, pathList, index + 1, callback);
             });
         });
