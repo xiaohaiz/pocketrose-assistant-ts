@@ -1,6 +1,9 @@
 import TravelPlan from "./TravelPlan";
 import Coordinate from "../util/Coordinate";
 import MessageBoard from "../util/MessageBoard";
+import Credential from "../util/Credential";
+import TimeoutUtils from "../util/TimeoutUtils";
+import NetworkUtils from "../util/NetworkUtils";
 
 class TravelPlanExecutor {
 
@@ -38,6 +41,39 @@ class TravelPlanExecutor {
         return await action(this.#plan);
     }
 
+}
+
+function doMoveOnPath(credential: Credential, pathList: Coordinate[], index: number, callback: () => void) {
+    if (pathList.length === 1 || index === pathList.length - 1) {
+        // 路径中只有一个点，表示起点和终点是一个点，直接结束
+        // 已经移动到最后一个点
+        callback();
+    } else {
+        MessageBoard.publishMessage("等待移动冷却中......(约55秒)");
+        TimeoutUtils.execute(55000, function () {
+            const from = pathList[index];
+            const to = pathList[index + 1];
+
+            const direction = calculateDirection(from, to);
+            const distance = calculateDistance(from, to);
+
+            const request = credential.asRequest();
+            // @ts-ignore
+            request["con"] = "2";
+            // @ts-ignore
+            request["navi"] = "on";
+            // @ts-ignore
+            request["mode"] = "CHARA_MOVE";
+            // @ts-ignore
+            request["direct"] = escape(direction);
+            // @ts-ignore
+            request["chara_m"] = distance;
+            NetworkUtils.sendPostRequest("map.cgi", request, function () {
+                MessageBoard.publishMessage("<span style='color:greenyellow'>" + direction + "</span>移动" + distance + "格，到达" + to.asText() + "。");
+                doMoveOnPath(credential, pathList, index + 1, callback);
+            });
+        });
+    }
 }
 
 function calculatePath(source: Coordinate, destination: Coordinate, scope: number, mode: string) {
@@ -138,6 +174,54 @@ function calculateMilestonePath(from: Coordinate, to: Coordinate, scope: number)
         }
     }
     return nodeList;
+}
+
+function calculateDirection(from: Coordinate, to: Coordinate): string {
+    const x1 = from.x;
+    const y1 = from.y;
+    const x2 = to.x;
+    const y2 = to.y;
+
+    let direction = "";
+    if (x1 === x2) {
+        // 上或者下
+        if (y2 > y1) {
+            direction = "↑";
+        } else {
+            direction = "↓";
+        }
+    } else if (y1 === y2) {
+        // 左或者右
+        if (x2 > x1) {
+            direction = "→";
+        } else {
+            direction = "←";
+        }
+    } else {
+        // 4种斜向移动
+        if (x2 > x1 && y2 > y1) {
+            direction = "↗";
+        }
+        if (x2 > x1 && y2 < y1) {
+            direction = "↘";
+        }
+        if (x2 < x1 && y2 > y1) {
+            direction = "↖";
+        }
+        if (x2 < x1 && y2 < y1) {
+            direction = "↙";
+        }
+    }
+
+    return direction;
+}
+
+function calculateDistance(from: Coordinate, to: Coordinate) {
+    const x1 = from.x;
+    const y1 = from.y;
+    const x2 = to.x;
+    const y2 = to.y;
+    return Math.max(Math.abs(x1 - x2), Math.abs(y1 - y2));
 }
 
 export = TravelPlanExecutor;
