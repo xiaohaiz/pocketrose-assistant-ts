@@ -102,7 +102,8 @@ function doBindTownButton(credential: Credential) {
         MessageBoard.publishMessage("目的地城市：<span style='color:greenyellow'>" + destinationTown.name + "</span>");
         MessageBoard.publishMessage("目的地坐标：<span style='color:greenyellow'>" + destinationTown.coordinate.asText() + "</span>");
 
-        new TownBank(credential).withdraw(10)
+        const bank = new TownBank(credential);
+        bank.withdraw(10)
             .then(success => {
                 if (!success) {
                     MessageBoard.publishWarning("因为没有足够的保证金，旅途被中断！");
@@ -110,6 +111,14 @@ function doBindTownButton(credential: Credential) {
                     $("#returnButton").prop("disabled", false);
                     return;
                 }
+
+                // 更新现金栏的数目
+                bank.loadBankAccount()
+                    .then(account => {
+                        const cash = account.cash;
+                        $("#roleCash").text(cash + " GOLD");
+                    });
+
                 const entrance = new TownEntrance(credential);
                 entrance.leave()
                     .then(plan => {
