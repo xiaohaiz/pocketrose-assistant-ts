@@ -103,6 +103,14 @@ class Equipment {
         return this.isItem && this.name === "黄金笼子";
     }
 
+    get isRepairable() {
+        if (this.isItem) {
+            return this.name!.includes("(自动)");
+        } else {
+            return !NONE_REPAIRABLE_ITEM_LIST.includes(this.name!);
+        }
+    }
+
     get fullExperienceRatio() {
         if (this.isItem) {
             return -1;

@@ -64,7 +64,151 @@ function doProcess(credential: Credential, equipmentList: Equipment[]) {
 }
 
 function doRender(credential: Credential, equipmentList: Equipment[]) {
+    let html = "";
+    html += "<table style='background-color:#888888;width:100%;text-align:center'>";
+    html += "   <tbody style='background-color:#F8F0E0'>";
+    html += "       <tr>";
+    html += "           <th style='background-color:#E8E8D0'>选择</th>";
+    html += "           <th style='background-color:#EFE0C0'>装备</th>";
+    html += "           <th style='background-color:#E0D0B0'>名字</th>";
+    html += "           <th style='background-color:#EFE0C0'>种类</th>";
+    html += "           <th style='background-color:#E0D0B0'>效果</th>";
+    html += "           <th style='background-color:#EFE0C0'>重量</th>";
+    html += "           <th style='background-color:#EFE0C0'>耐久</th>";
+    html += "           <th style='background-color:#E0D0B0'>职业</th>";
+    html += "           <th style='background-color:#E0D0B0'>攻击</th>";
+    html += "           <th style='background-color:#E0D0B0'>防御</th>";
+    html += "           <th style='background-color:#E0D0B0'>智力</th>";
+    html += "           <th style='background-color:#E0D0B0'>精神</th>";
+    html += "           <th style='background-color:#E0D0B0'>速度</th>";
+    html += "           <th style='background-color:#E0D0B0'>威力</th>";
+    html += "           <th style='background-color:#E0D0B0'>重量</th>";
+    html += "           <th style='background-color:#E0D0B0'>幸运</th>";
+    html += "           <th style='background-color:#E0D0B0'>经验</th>";
+    html += "           <th style='background-color:#EFE0C0'>属性</th>";
+    html += "           <th style='background-color:#EFE0C0'>出售</th>";
+    html += "           <th style='background-color:#EFE0C0'>修理</th>";
+    html += "       </tr>";
+    for (const equipment of equipmentList) {
+        if (equipment.isTreasureBag || equipment.isGoldenCage) {
+            // 百宝袋和黄金笼子不再显示在页面上
+            continue;
+        }
+        html += "<tr>";
+        html += "    <td style='background-color:#E8E8D0'>";
+        html += "    " + equipment.checkboxHTML;
+        html += "    </td>";
+        html += "    <td style='background-color:#EFE0C0'>";
+        html += "    " + equipment.usingHTML;
+        html += "    </td>";
+        html += "    <td style='background-color:#E0D0B0'>";
+        html += "    " + equipment.nameHTML;
+        html += "    </td>";
+        html += "    <td style='background-color:#EFE0C0'>";
+        html += "    " + equipment.category;
+        html += "    </td>";
+        html += "    <td style='background-color:#E0D0B0'>";
+        html += "    " + equipment.power;
+        html += "    </td>";
+        html += "    <td style='background-color:#EFE0C0'>";
+        html += "    " + equipment.weight;
+        html += "    </td>";
+        html += "    <td style='background-color:#EFE0C0'>";
+        html += "    " + equipment.endure;
+        html += "    </td>";
+        html += "    <td style='background-color:#E0D0B0'>";
+        html += "    " + (equipment.requiredCareer === "所有职业" ? "-" : equipment.requiredCareer);
+        html += "    </td>";
+        html += "    <td style='background-color:#E0D0B0'>";
+        html += "    " + (equipment.requiredAttack === 0 ? "-" : equipment.requiredAttack);
+        html += "    </td>";
+        html += "    <td style='background-color:#E0D0B0'>";
+        html += "    " + (equipment.requiredDefense === 0 ? "-" : equipment.requiredDefense);
+        html += "    </td>";
+        html += "    <td style='background-color:#E0D0B0'>";
+        html += "    " + (equipment.requiredSpecialAttack === 0 ? "-" : equipment.requiredSpecialAttack);
+        html += "    </td>";
+        html += "    <td style='background-color:#E0D0B0'>";
+        html += "    " + (equipment.requiredSpecialDefense === 0 ? "-" : equipment.requiredSpecialDefense);
+        html += "    </td>";
+        html += "    <td style='background-color:#E0D0B0'>";
+        html += "    " + (equipment.requiredSpeed === 0 ? "-" : equipment.requiredSpeed);
+        html += "    </td>";
+        html += "    <td style='background-color:#E0D0B0'>";
+        html += "    " + (equipment.isItem ? "-" : equipment.additionalPower);
+        html += "    </td>";
+        html += "    <td style='background-color:#E0D0B0'>";
+        html += "    " + (equipment.isItem ? "-" : equipment.additionalWeight);
+        html += "    </td>";
+        html += "    <td style='background-color:#E0D0B0'>";
+        html += "    " + (equipment.isItem ? "-" : equipment.additionalLuck);
+        html += "    </td>";
+        html += "    <td style='background-color:#E0D0B0'>";
+        html += "    " + equipment.experienceHTML;
+        html += "    </td>";
+        html += "    <td style='background-color:#EFE0C0'>";
+        html += "    " + (equipment.attribute === "无" ? "-" : equipment.attribute);
+        html += "    </td>";
+        html += "    <td style='background-color:#EFE0C0' id='sellButtonContainer_" + equipment.index + "'>";
+        html += "    </td>";
+        html += "    <td style='background-color:#EFE0C0'>" + (equipment.isRepairable ? "<input type='button' class='ItemUIButton' id='repairItem_" + equipment.index + "' value='修'>" : "");
+        html += "    </td>";
+        html += "</tr>";
+    }
+    html += "       <tr>";
+    html += "           <td style='background-color:#E8E8D0;text-align:left;font-weight:bold' colspan='20'>";
+    html += "               <span style='color:navy'>目前剩余空位数：</span><span style='color:red'>" + (20 - equipmentList.length) + "</span>";
+    html += "           </td>";
+    html += "       </tr>";
+    html += "       <tr>";
+    html += "           <td style='background-color:#E8E8D0;text-align:center' colspan='20'>";
+    html += "               <table style='background-color:#E8E8D0;border-width:0;width:100%'>";
+    html += "                   <tbody style='background-color:#E8E8D0'>";
+    html += "                       <tr style='background-color:#E8E8D0'>";
+    html += "                           <td style='text-align:left'>";
+    html += "                               <input type='button' class='ItemUIButton' id='useButton' value='使用'>";
+    html += "                               <input type='button' class='ItemUIButton' id='putIntoBagButton' value='入袋'>";
+    html += "                           </td>";
+    html += "                           <td style='text-align:right'>";
+    html += "                               <input type='button' class='ItemUIButton' id='treasureBagButton' value='百宝袋'>";
+    html += "                               <input type='button' class='ItemUIButton' id='goldenCageButton' value='黄金笼子'>";
+    html += "                               <input type='button' class='ItemUIButton' id='putAllIntoBagButton' value='全部入袋'>";
+    html += "                               <input type='button' class='ItemUIButton' id='luckCharmButton' value='千与千寻' style='color:blue'>";
+    html += "                               <input type='button' class='ItemUIButton' id='dontForgetMeButton' value='勿忘我' style='color:red'>";
+    html += "                               <input type='button' class='ItemUIButton' id='magicBallButton' value='魔法使的闪光弹' style='color:green'>";
+    html += "                           </td>";
+    html += "                       </tr>";
+    html += "                   </tbody>";
+    html += "               </table>";
+    html += "           </td>";
+    html += "       </tr>";
+    html += "       <tr>";
+    html += "           <td style='background-color:#E8E8D0;text-align:right' colspan='20'>";
+    html += "               <input type='button' class='ItemUIButton' id='setButton_A' value='套装Ａ'>";
+    html += "               <input type='button' class='ItemUIButton' id='setButton_B' value='套装Ｂ'>";
+    html += "               <input type='button' class='ItemUIButton' id='setButton_C' value='套装Ｃ'>";
+    html += "               <input type='button' class='ItemUIButton' id='setButton_D' value='套装Ｄ'>";
+    html += "               <input type='button' class='ItemUIButton' id='setButton_E' value='套装Ｅ'>";
+    html += "           </td>";
+    html += "       </tr>";
+    html += "       <tr>";
+    html += "          <td style='background-color:#E8E8D0;text-align:right' colspan='20'>";
+    html += "              <input type='text' id='receiver' size='15' maxlength='20'>";
+    html += "              <input type='button' class='ItemUIButton' id='searchButton' value='找人'>";
+    html += "              <select id='receiverSelect'><option value=''>选择发送对象</select>";
+    html += "              <input type='button' class='ItemUIButton' id='sendButton' value='发送'>";
+    html += "          </td>"
+    html += "       </tr>";
+    html += "       <tr>";
+    html += "           <td style='background-color:#E8E8D0;text-align:center' colspan='20'>";
+    html += "           <input type='button' class='ItemUIButton' id='refreshButton' value='刷新装备管理界面'>";
+    html += "           </td>"
+    html += "       </tr>";
+    html += "   </tbody>";
+    html += "</table>";
 
+    // 渲染装备管理界面
+    $("#ItemUI").html(html);
 }
 
 export = PersonalEquipmentManagementProcessor;
