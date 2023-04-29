@@ -1,8 +1,8 @@
 import StringUtils from "./util/StringUtils";
-import BattleRequestInterceptor from "./interceptor/BattleRequestInterceptor";
-import PersonalRequestInterceptor from "./interceptor/PersonalRequestInterceptor";
-import StatusRequestInterceptor from "./interceptor/StatusRequestInterceptor";
-import TownRequestInterceptor from "./interceptor/TownRequestInterceptor";
+import BattleRequestInterceptor from "./interceptor/internal/BattleRequestInterceptor";
+import PersonalRequestInterceptor from "./interceptor/internal/PersonalRequestInterceptor";
+import StatusRequestInterceptor from "./interceptor/internal/StatusRequestInterceptor";
+import TownRequestInterceptor from "./interceptor/internal/TownRequestInterceptor";
 
 $(function () {
     if (!location.href.includes("pocketrose")) {

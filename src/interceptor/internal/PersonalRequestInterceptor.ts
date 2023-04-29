@@ -1,6 +1,6 @@
-import PageUtils from "../util/PageUtils";
-import PersonalStatusProcessor from "../processor/personal/PersonalStatusProcessor";
-import SetupProcessor from "../processor/setup/SetupProcessor";
+import PageUtils from "../../util/PageUtils";
+import PersonalStatusProcessor from "../../processor/personal/PersonalStatusProcessor";
+import SetupProcessor from "../../processor/setup/SetupProcessor";
 
 class PersonalRequestInterceptor implements RequestInterceptor {
 
