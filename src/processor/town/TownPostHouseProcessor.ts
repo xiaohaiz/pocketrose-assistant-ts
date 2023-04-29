@@ -103,6 +103,7 @@ function doBindTownButton(credential: Credential) {
         MessageBoard.publishMessage("目的地坐标：<span style='color:greenyellow'>" + destinationTown.coordinate.asText() + "</span>");
 
         const bank = new TownBank(credential);
+        // 支取10万城门税
         bank.withdraw(10)
             .then(success => {
                 if (!success) {
@@ -112,20 +113,41 @@ function doBindTownButton(credential: Credential) {
                     return;
                 }
 
-                // 更新现金栏的数目
-                bank.loadBankAccount()
-                    .then(account => {
-                        const cash = account.cash;
+                const roleLoader = new RoleLoader(credential);
+                // 更新现金栏
+                roleLoader.load()
+                    .then(role => {
+                        const cash = role.cash;
                         $("#roleCash").text(cash + " GOLD");
                     });
 
                 const entrance = new TownEntrance(credential);
+                // 离开当前城市
                 entrance.leave()
                     .then(plan => {
                         plan.destination = destinationTown.coordinate;
                         const executor = new TravelPlanExecutor(plan);
+                        // 执行旅途计划
                         executor.execute()
                             .then(() => {
+                                // 进入目标城市
+                                entrance.enter(destinationTown.id)
+                                    .then(() => {
+                                        // 把身上现金全部存入
+                                        bank.deposit(undefined)
+                                            .then(() => {
+                                                // 更新现金栏
+                                                roleLoader.load()
+                                                    .then(role => {
+                                                        const cash = role.cash;
+                                                        $("#roleCash").text(cash + " GOLD");
+                                                    });
+
+                                                MessageBoard.publishMessage("旅途愉快，下次再见。");
+                                                $("#returnButton").val(destinationTown.name + "欢迎您");
+                                                $("#returnButton").prop("disabled", false);
+                                            });
+                                    });
                             });
                     });
             });
