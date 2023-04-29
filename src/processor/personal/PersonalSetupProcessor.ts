@@ -2,7 +2,6 @@ import PageProcessor from "../PageProcessor";
 import PageUtils from "../../util/PageUtils";
 import Credential from "../../util/Credential";
 import RoleLoader from "../../pocket/RoleLoader";
-import DOMAIN from "../../util/Constants";
 import MessageBoard from "../../util/MessageBoard";
 import SetupItem001 from "./setup/internal/SetupItem001";
 import SetupItem002 from "./setup/internal/SetupItem002";
@@ -128,9 +127,7 @@ function doInitialize(credential: Credential) {
 
     new RoleLoader(credential).load()
         .then(role => {
-            const src = DOMAIN + "/image/head/" + role.image;
-            const imageHtml = "<img src='" + src + "' alt='' width='64' height='64' id='roleImage'>";
-            MessageBoard.createMessageBoard("message_board_container", imageHtml);
+            MessageBoard.createMessageBoard("message_board_container", role.imageHtml);
 
             $("#roleImage").on("dblclick", function () {
                 // Get setup 001-005 status

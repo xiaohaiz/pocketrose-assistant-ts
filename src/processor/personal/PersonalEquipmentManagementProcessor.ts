@@ -23,7 +23,7 @@ class PersonalEquipmentManagementProcessor extends PageProcessor {
 }
 
 function doProcess(credential: Credential, equipmentList: Equipment[]) {
-    const userImage = PageUtils.findFirstUserImageHtml();
+    const roleImage = PageUtils.findFirstRoleImageHtml();
 
     // 修改标题
     $("table:first").removeAttr("height");
@@ -36,7 +36,7 @@ function doProcess(credential: Credential, equipmentList: Equipment[]) {
 
     // 创建消息面板
     $("table:first tr:first").after($("<tr><td style='background-color:#E8E8D0' id='message_board_container'></td></tr>"));
-    MessageBoard.createMessageBoard("message_board_container", userImage!);
+    MessageBoard.createMessageBoard("message_board_container", roleImage!);
     MessageBoard.resetMessageBoard("全新的装备管理界面为您带来全新的体验。");
 
     // 删除旧的页面组件，并且预留新的刷新的位置

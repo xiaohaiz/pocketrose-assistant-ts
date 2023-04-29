@@ -1,4 +1,5 @@
 import Town from "./Town";
+import DOMAIN from "../util/Constants";
 
 class Role {
     name?: string;               // 姓名
@@ -28,6 +29,11 @@ class Role {
     career?: string;
     masterCareerList?: string[];
     treasureList?: string[];
+
+    get imageHtml(): string {
+        const src = DOMAIN + "/image/head/" + this.image;
+        return "<img src='" + src + "' alt='" + this.name + "' width='64' height='64' id='roleImage'>";
+    }
 
     asShortText(): string {
         return this.name + " " + this.level +

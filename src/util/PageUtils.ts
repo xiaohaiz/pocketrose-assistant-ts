@@ -46,21 +46,21 @@ class PageUtils {
             "<img src='" + DOMAIN + "/image/bg/bar2.gif'  height='7' width='" + w2 + "' alt=''>";
     }
 
-    static findFirstUserImageHtml() {
-        let userImage = "";
+    static findFirstRoleImageHtml() {
+        let roleImage = "";
         $("img").each(function (_idx, img) {
-            if (userImage === "") {
+            if (roleImage === "") {
                 const src = $(img).attr("src");
                 if (src !== undefined && src.startsWith(DOMAIN + "/image/head/")) {
                     // 发现了用户头像
-                    userImage = src;
+                    roleImage = src;
                 }
             }
         });
-        if (userImage === "") {
-            return undefined;
+        if (roleImage === "") {
+            return null;
         } else {
-            return "<img src='" + userImage + "' width='64' height='64' id='userImage' alt=''>";
+            return "<img src='" + roleImage + "' width='64' height='64' id='roleImage' alt=''>";
         }
     }
 

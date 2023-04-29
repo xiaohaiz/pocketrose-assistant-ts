@@ -5,7 +5,6 @@ import Credential from "../../util/Credential";
 import Pet from "../../pocket/Pet";
 import StringUtils from "../../util/StringUtils";
 import RoleLoader from "../../pocket/RoleLoader";
-import DOMAIN from "../../util/Constants";
 import MessageBoard from "../../util/MessageBoard";
 import NetworkUtils from "../../util/NetworkUtils";
 import TownBank from "../../pocket/TownBank";
@@ -53,9 +52,7 @@ function doProcess(credential: Credential, petList: Pet[], studyStatus: number[]
 
     new RoleLoader(credential).load()
         .then(role => {
-            const src = DOMAIN + "/image/head/" + role.image;
-            const imageHtml = "<img src='" + src + "' alt='' width='64' height='64' id='roleImage'>";
-            MessageBoard.createMessageBoard("message_board_container", imageHtml);
+            MessageBoard.createMessageBoard("message_board_container", role.imageHtml);
             MessageBoard.resetMessageBoard("全新的宠物管理UI为您带来不一样的感受。");
         });
 
