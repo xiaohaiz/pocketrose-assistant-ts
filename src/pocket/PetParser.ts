@@ -3,6 +3,30 @@ import Pet from "./Pet";
 
 class PetParser {
 
+    static parsePersonalPetList(pageHtml: string): Pet[] {
+        const petList: Pet[] = [];
+        $(pageHtml).find("input:radio[name='select']").each(function (_idx, radio) {
+            const index = $(radio).val() as string;
+            if (parseInt(index) >= 0) {
+                // index为-1的意味着“无宠物”那个选项
+                const table = $(radio).closest("table");
+                // pet index & using
+                const pet = new Pet();
+                pet.index = parseInt(index);
+                const usingText = radio.nextSibling!.nodeValue;
+                if (usingText === "未使用") {
+                    pet.using = false;
+                }
+                if (usingText === "★使用") {
+                    pet.using = true;
+                }
+                doParsePet(pet, table);
+                petList.push(pet);
+            }
+        });
+        return petList;
+    }
+
 }
 
 function doParsePet(pet: Pet, table: JQuery<HTMLElement>) {
