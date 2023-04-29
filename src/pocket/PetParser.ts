@@ -27,6 +27,17 @@ class PetParser {
         return petList;
     }
 
+    static parsePersonalPetStudyStatus(html: string): number[] {
+        const studyStatus: number[] = [];
+        $(html).find("input:checkbox:checked").each(function (_idx, checkbox) {
+            const name = $(checkbox).attr("name") as string;
+            if (name.startsWith("study")) {
+                studyStatus.push(parseInt($(checkbox).val() as string));
+            }
+        });
+        return studyStatus;
+    }
+
 }
 
 function doParsePet(pet: Pet, table: JQuery<HTMLElement>) {
