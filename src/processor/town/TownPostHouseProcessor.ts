@@ -9,6 +9,8 @@ import TownLoader from "../../pocket/TownLoader";
 import TownBank from "../../pocket/TownBank";
 import TownEntrance from "../../pocket/TownEntrance";
 import TravelPlanExecutor from "../../pocket/TravelPlanExecutor";
+import CastleLoader from "../../pocket/CastleLoader";
+import Castle from "../../pocket/Castle";
 
 class TownPostHouseProcessor extends PocketroseProcessor {
 
@@ -25,7 +27,7 @@ function doProcess(credential: Credential): void {
     $("input:submit[value='返回城市']").attr("id", "returnButton");
 
     const t1 = $("table:eq(1)");
-    const t3 = $("table:eq(3)");
+    const t4 = $("table:eq(4)");
     const t5 = $("table:eq(5)");
 
     // 修改标题
@@ -41,7 +43,8 @@ function doProcess(credential: Credential): void {
     $(td).text("＜＜  宿 屋 & 驿 站  ＞＞");
 
     // 标记现金栏、增加坐标栏和计时器
-    let tr = $(t3).find("tr:last");
+    const player = $(t4).find("tr:eq(1) td:first").text();
+    let tr = $(t4).find("tr:last");
     td = $(tr).find("td:last");
     $(td).attr("id", "roleCash");
     $(tr).after($("<tr>" +
@@ -82,6 +85,16 @@ function doProcess(credential: Credential): void {
             $("input:radio[value='" + currentTown.id + "']").prop("disabled", true);
             $("#townButton").prop("disabled", false);
             doBindTownButton(credential);
+        });
+
+    CastleLoader.loadCastle(player)
+        .then(castle => {
+            if (castle !== null) {
+                $("#castleButton").show();
+                $("#castleButton").val("回到" + castle.name);
+                $("#castleButton").prop("disabled", false);
+                doBindCastleButton(credential, castle);
+            }
         });
 }
 
@@ -158,7 +171,30 @@ function doBindTownButton(credential: Credential) {
     });
 }
 
-function doBindCastleButton() {
+function doBindCastleButton(credential: Credential, castle: Castle) {
+    $("#castleButton").on("click", function () {
+        MessageBoard.resetMessageBoard("我们将实时为你播报旅途的动态：<br>");
+        $("#lodgeButton").parent().remove();
+        $("#returnButton").prop("disabled", true);
+        $("#townButton").prop("disabled", true);
+        $("#townButton").css("color", "grey");
+        $("#castleButton").prop("disabled", true);
+        $("#castleButton").css("color", "grey");
+        $("input:radio").prop("disabled", true);
+
+        MessageBoard.publishMessage("目的地城堡：<span style='color:greenyellow'>" + castle.name + "</span>");
+        MessageBoard.publishMessage("目的地坐标：<span style='color:greenyellow'>" + castle.coordinate!.asText() + "</span>");
+
+        const entrance = new TownEntrance(credential);
+        entrance.leave()
+            .then(plan => {
+                plan.destination = castle.coordinate;
+                const executor = new TravelPlanExecutor(plan);
+                executor.execute()
+                    .then(() => {
+                    });
+            });
+    });
 }
 
 export = TownPostHouseProcessor;
