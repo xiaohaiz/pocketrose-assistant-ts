@@ -237,6 +237,7 @@ function doRender(credential: Credential, equipmentList: Equipment[]) {
     doBindLuckCharmButton(credential, equipmentList);
     doBindDontForgetMeButton(credential, equipmentList);
     doBindMagicBallButton(credential, equipmentList);
+    doBindSearchButton(credential);
 }
 
 function doRefresh(credential: Credential) {
@@ -402,6 +403,25 @@ function doBindMagicBallButton(credential: Credential, equipmentList: Equipment[
             .then(() => {
                 doRefresh(credential);
             });
+    });
+}
+
+function doBindSearchButton(credential: Credential) {
+    $("#searchButton").on("click", function () {
+        let receiver = $("#receiver").val();
+        if (receiver === undefined || (receiver as string).trim() === "") {
+            return;
+        }
+        receiver = escape((receiver as string).trim());
+        const request = credential.asRequest();
+        // @ts-ignore
+        request["serch"] = receiver;
+        // @ts-ignore
+        request["mode"] = "ITEM_SEND";
+        NetworkUtils.sendPostRequest("town.cgi", request, function (html) {
+            const optionHTML = $(html).find("select[name='eid']").html();
+            $("#receiverSelect").html(optionHTML);
+        });
     });
 }
 
