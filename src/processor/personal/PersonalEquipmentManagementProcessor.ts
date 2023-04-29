@@ -231,6 +231,7 @@ function doRender(credential: Credential, equipmentList: Equipment[]) {
     doBindPutIntoBagButton(credential);
     doBindTreasureBagButton(credential, treasureBag);
     doBindGoldenCageButton(credential, goldenCage);
+    doBindPutAllIntoBagButton(credential);
 }
 
 function doRefresh(credential: Credential) {
@@ -282,7 +283,7 @@ function doBindPutIntoBagButton(credential: Credential) {
         const request = credential.asRequest();
         let checkedCount = 0;
         $("input:checkbox:checked").each(function (_idx, checkbox) {
-            if ($(checkbox).parent().next().text() !== "★") {
+            if (!$(checkbox).parent().next().text().includes("★")) {
                 checkedCount++;
                 const name = $(checkbox).attr("name");
                 // @ts-ignore
@@ -329,6 +330,37 @@ function doBindGoldenCageButton(credential: Credential, goldenCage: Equipment | 
             "<input type='hidden' name='item" + goldenCage.index + "' value='" + goldenCage.index + "'>" +
             "<input type='hidden' name='mode' value='USE'>");
         $("#eden_form_submit").trigger("click");
+    });
+}
+
+function doBindPutAllIntoBagButton(credential: Credential) {
+    if ($("#putAllIntoBagButton").prop("disabled")) {
+        return;
+    }
+    $("#putAllIntoBagButton").on("click", function () {
+        const request = credential.asRequest();
+        let checkedCount = 0;
+        $("input:checkbox").each(function (_idx, checkbox) {
+            console.log("[" + $(checkbox).parent().next().text() + "]");
+            if (!$(checkbox).parent().next().text().includes("★")) {
+                checkedCount++;
+                const name = $(checkbox).attr("name");
+                // @ts-ignore
+                request[name] = $(checkbox).val();
+            }
+        });
+        if (checkedCount === 0) {
+            MessageBoard.publishWarning("目前没有任何装备可以放入百宝袋。");
+            return;
+        }
+        // @ts-ignore
+        request["chara"] = "1";
+        // @ts-ignore
+        request["mode"] = "PUTINBAG";
+        NetworkUtils.sendPostRequest("mydata.cgi", request, function (html) {
+            MessageBoard.processResponseMessage(html);
+            doRefresh(credential);
+        });
     });
 }
 
