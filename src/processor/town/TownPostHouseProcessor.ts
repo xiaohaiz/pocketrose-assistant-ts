@@ -94,6 +94,8 @@ function doBindTownButton(credential: Credential) {
         $("input:radio").prop("disabled", true);
 
         const destinationTown = TownLoader.getTownById(destinationTownId as string)!;
+        MessageBoard.publishMessage("目的地城市：<span style='color:greenyellow'>" + destinationTown.name + "</span>");
+        MessageBoard.publishMessage("目的地坐标：<span style='color:greenyellow'>" + destinationTown.coordinate.asText() + "</span>");
     });
 }
 

@@ -14,7 +14,7 @@ class RoleLoader {
 
     async load() {
         const action = (credential: Credential) => {
-            return new Promise(resolve => {
+            return new Promise<Role>(resolve => {
                 const request = credential.asRequest();
                 // @ts-ignore
                 request["mode"] = "STATUS_PRINT";

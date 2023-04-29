@@ -8,7 +8,7 @@ class Credential {
         this.pass = pass;
     }
 
-    asRequest() {
+    asRequest(): {} {
         return {"id": this.id, "pass": this.pass};
     }
 
