@@ -28,6 +28,7 @@ import NetworkUtils from "../../util/NetworkUtils";
 import Equipment from "../../pocket/Equipment";
 import EquipmentParser from "../../pocket/EquipmentParser";
 import TreasureBag from "../../pocket/TreasureBag";
+import SetupItem020 from "./internal/SetupItem020";
 
 class PersonalSetupProcessor extends PageProcessor {
 
@@ -59,7 +60,8 @@ const setupItemList: SetupItem[] = [
     new SetupItem016(),
     new SetupItem017(),
     new SetupItem018(),
-    new SetupItem019()
+    new SetupItem019(),
+    new SetupItem020()
 ];
 
 function doInitialize(credential: Credential) {
