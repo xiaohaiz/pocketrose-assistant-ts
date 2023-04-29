@@ -22,6 +22,8 @@ import SetupItem015 from "./internal/SetupItem015";
 import SetupItem016 from "./internal/SetupItem016";
 import SetupItem017 from "./internal/SetupItem017";
 import SetupItem018 from "./internal/SetupItem018";
+import EquipmentLoader from "../../pocket/EquipmentLoader";
+import SetupItem019 from "./internal/SetupItem019";
 
 class PersonalSetupProcessor extends PageProcessor {
 
@@ -52,7 +54,8 @@ const setupItemList: SetupItem[] = [
     new SetupItem015(),
     new SetupItem016(),
     new SetupItem017(),
-    new SetupItem018()
+    new SetupItem018(),
+    new SetupItem019()
 ];
 
 function doInitialize(credential: Credential) {
@@ -73,6 +76,9 @@ function doInitialize(credential: Credential) {
     html += "<input type='submit' id='eden_form_submit'>";
     html += "</form>";
     html += "</div>";
+    html += "<div id='weapon_list' style='display:none'></div>";
+    html += "<div id='armor_list' style='display:none'></div>";
+    html += "<div id='accessory_list' style='display:none'></div>";
     $("#top_container").append($(html));
 
     html = "";
@@ -98,6 +104,10 @@ function doInitialize(credential: Credential) {
     html += "</tody>";
     html += "</table>";
     $("#top_container").append($(html));
+
+    $("#weapon_list").text(EquipmentLoader.loadWeaponList().join(","));
+    $("#armor_list").text(EquipmentLoader.loadArmorList().join(","));
+    $("#accessory_list").text(EquipmentLoader.loadAccessoryList().join(","));
 
     __bindRefreshButton(credential);
     __bindReturnButton();
