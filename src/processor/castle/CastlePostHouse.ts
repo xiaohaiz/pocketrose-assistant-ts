@@ -3,7 +3,7 @@ import PageUtils from "../../util/PageUtils";
 import Credential from "../../util/Credential";
 import MessageBoard from "../../util/MessageBoard";
 
-class CastlePostHouseProcessor extends PocketroseProcessor {
+class CastlePostHouse extends PocketroseProcessor {
 
     process() {
         PageUtils.removeUnusedHyperLinks();
@@ -58,4 +58,4 @@ function doProcess(credential: Credential) {
     console.log(PageUtils.currentPageHtml());
 }
 
-export = CastlePostHouseProcessor;
+export = CastlePostHouse;

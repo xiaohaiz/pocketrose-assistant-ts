@@ -1,6 +1,6 @@
 import PageUtils from "../../util/PageUtils";
 import CastleDashboardProcessor from "../../processor/dashboard/CastleDashboardProcessor";
-import CastlePostHouseProcessor from "../../processor/castle/CastlePostHouseProcessor";
+import CastlePostHouse from "../../processor/castle/CastlePostHouse";
 
 class CastleRequestInterceptor implements RequestInterceptor {
 
@@ -16,7 +16,7 @@ class CastleRequestInterceptor implements RequestInterceptor {
         }
 
         if (pageText.includes("＜＜ * 机车建造厂 *＞＞")) {
-            new CastlePostHouseProcessor(pageHtml, pageText).process();
+            new CastlePostHouse(pageHtml, pageText).process();
         }
     }
 
