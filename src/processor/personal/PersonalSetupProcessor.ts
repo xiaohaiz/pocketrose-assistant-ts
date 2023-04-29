@@ -30,6 +30,7 @@ import EquipmentParser from "../../pocket/EquipmentParser";
 import TreasureBag from "../../pocket/TreasureBag";
 import SetupItem020 from "./internal/SetupItem020";
 import SetupItem021 from "./internal/SetupItem021";
+import SetupItem022 from "./internal/SetupItem022";
 
 class PersonalSetupProcessor extends PageProcessor {
 
@@ -63,7 +64,8 @@ const setupItemList: SetupItem[] = [
     new SetupItem018(),
     new SetupItem019(),
     new SetupItem020(),
-    new SetupItem021()
+    new SetupItem021(),
+    new SetupItem022()
 ];
 
 function doInitialize(credential: Credential) {
