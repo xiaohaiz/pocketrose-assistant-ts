@@ -235,6 +235,7 @@ function doRender(credential: Credential, equipmentList: Equipment[]) {
     doBindGoldenCageButton(credential, goldenCage);
     doBindPutAllIntoBagButton(credential);
     doBindLuckCharmButton(credential, equipmentList);
+    doBindDontForgetMeButton(credential, equipmentList);
 }
 
 function doRefresh(credential: Credential) {
@@ -372,6 +373,19 @@ function doBindLuckCharmButton(credential: Credential, equipmentList: Equipment[
         const set = new EquipmentSet();
         set.initialize();
         set.accessoryName = "千与千寻";
+        const loader = new EquipmentSetLoader(credential, equipmentList);
+        loader.load(set)
+            .then(() => {
+                doRefresh(credential);
+            });
+    });
+}
+
+function doBindDontForgetMeButton(credential: Credential, equipmentList: Equipment[]) {
+    $("#dontForgetMeButton").on("click", function () {
+        const set = new EquipmentSet();
+        set.initialize();
+        set.accessoryName = "勿忘我";
         const loader = new EquipmentSetLoader(credential, equipmentList);
         loader.load(set)
             .then(() => {
