@@ -13,7 +13,7 @@ class TownDashboardProcessor extends PocketroseProcessor {
         const credential = PageUtils.currentCredential();
 
         doRenderBattleMenu(credential);
-        doRenderMenu();
+        doRenderSetupMenu();
     }
 
 }
@@ -144,7 +144,7 @@ function doRenderBattleMenu(credential: Credential) {
 
 }
 
-function doRenderMenu() {
+function doRenderSetupMenu() {
     $("option[value='LETTER']").text("口袋助手设置");
     $("option[value='LETTER']").css("background-color", "yellow");
 
