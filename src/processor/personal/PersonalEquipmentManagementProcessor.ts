@@ -236,6 +236,7 @@ function doRender(credential: Credential, equipmentList: Equipment[]) {
     doBindPutAllIntoBagButton(credential);
     doBindLuckCharmButton(credential, equipmentList);
     doBindDontForgetMeButton(credential, equipmentList);
+    doBindMagicBallButton(credential, equipmentList);
 }
 
 function doRefresh(credential: Credential) {
@@ -373,8 +374,7 @@ function doBindLuckCharmButton(credential: Credential, equipmentList: Equipment[
         const set = new EquipmentSet();
         set.initialize();
         set.accessoryName = "千与千寻";
-        const loader = new EquipmentSetLoader(credential, equipmentList);
-        loader.load(set)
+        new EquipmentSetLoader(credential, equipmentList).load(set)
             .then(() => {
                 doRefresh(credential);
             });
@@ -386,8 +386,19 @@ function doBindDontForgetMeButton(credential: Credential, equipmentList: Equipme
         const set = new EquipmentSet();
         set.initialize();
         set.accessoryName = "勿忘我";
-        const loader = new EquipmentSetLoader(credential, equipmentList);
-        loader.load(set)
+        new EquipmentSetLoader(credential, equipmentList).load(set)
+            .then(() => {
+                doRefresh(credential);
+            });
+    });
+}
+
+function doBindMagicBallButton(credential: Credential, equipmentList: Equipment[]) {
+    $("#magicBallButton").on("click", function () {
+        const set = new EquipmentSet();
+        set.initialize();
+        set.accessoryName = "魔法使的闪光弹";
+        new EquipmentSetLoader(credential, equipmentList).load(set)
             .then(() => {
                 doRefresh(credential);
             });
