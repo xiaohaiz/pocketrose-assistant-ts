@@ -7,6 +7,7 @@ import MessageBoard from "../../util/MessageBoard";
 import NetworkUtils from "../../util/NetworkUtils";
 import EquipmentSet from "../../pocket/EquipmentSet";
 import EquipmentSetLoader from "../../pocket/EquipmentSetLoader";
+import TownBank from "../../pocket/TownBank";
 
 class PersonalEquipmentManagementProcessor extends PageProcessor {
 
@@ -238,6 +239,7 @@ function doRender(credential: Credential, equipmentList: Equipment[]) {
     doBindDontForgetMeButton(credential, equipmentList);
     doBindMagicBallButton(credential, equipmentList);
     doBindSearchButton(credential);
+    doBindSendButton(credential);
 }
 
 function doRefresh(credential: Credential) {
@@ -422,6 +424,47 @@ function doBindSearchButton(credential: Credential) {
             const optionHTML = $(html).find("select[name='eid']").html();
             $("#receiverSelect").html(optionHTML);
         });
+    });
+}
+
+function doBindSendButton(credential: Credential) {
+    $("#sendButton").on("click", function () {
+        const receiver = $("#receiverSelect").val();
+        if (receiver === undefined || receiver === "") {
+            MessageBoard.publishWarning("没有选择接收的对象！");
+            return;
+        }
+        const request = credential.asRequest();
+        // @ts-ignore
+        request["eid"] = receiver;
+        let checkedCount = 0;
+        $("input:checkbox:checked").each(function (_idx, checkbox) {
+            checkedCount++;
+            const name = $(checkbox).attr("name");
+            // @ts-ignore
+            request[name] = $(checkbox).val();
+        });
+        if (checkedCount === 0) {
+            MessageBoard.publishWarning("没有选择要发送的装备！");
+            return;
+        }
+        // @ts-ignore
+        request["mode"] = "ITEM_SEND2";
+        const bank = new TownBank(credential);
+        bank.withdraw(10)
+            .then(success => {
+                if (!success) {
+                    MessageBoard.publishWarning("没钱就不要学别人送装备了！");
+                } else {
+                    NetworkUtils.sendPostRequest("town.cgi", request, function (html) {
+                        MessageBoard.processResponseMessage(html);
+                        bank.deposit(undefined)
+                            .then(() => {
+                                doRefresh(credential);
+                            });
+                    });
+                }
+            });
     });
 }
 
