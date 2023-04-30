@@ -31,7 +31,7 @@ class Role {
     treasureList?: string[];
 
     get imageHtml(): string {
-        const src = Constants.DOMAIN + "/image/head/" + this.image;
+        const src = Constants.POCKET_DOMAIN + "/image/head/" + this.image;
         return "<img src='" + src + "' alt='" + this.name + "' width='64' height='64' id='roleImage'>";
     }
 

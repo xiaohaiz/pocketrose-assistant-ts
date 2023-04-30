@@ -1,6 +1,6 @@
 class Constants {
 
-    static DOMAIN: string = "https://pocketrose.itsns.net.cn/pocketrose";
+    static POCKET_DOMAIN: string = "https://pocketrose.itsns.net.cn/pocketrose";
 
 }
 
