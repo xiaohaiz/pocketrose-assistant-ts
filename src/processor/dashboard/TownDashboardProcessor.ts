@@ -27,6 +27,7 @@ function doProcess(credential: Credential) {
 
     const role = doParseRole();
     doRenderBattleCount(role);
+    doRenderCareerTransferWarning(credential, role);
 }
 
 function doParseRole(): Role {
@@ -264,6 +265,19 @@ function doRenderBattleCount(role: Role) {
                 return name + "(" + unit + ")" + "&nbsp;&nbsp;&nbsp;" + role.battleCount + "战";
             }
         });
+}
+
+function doRenderCareerTransferWarning(credential: Credential, role: Role) {
+    // 如果满级并且没有关闭转职入口，则战斗前标签用红色显示
+    if (role.level === 150) {
+        if (!SetupLoader.isCareerTransferEntranceDisabled(credential.id)) {
+            $("th:contains('训练·战斗')")
+                .filter(function () {
+                    return $(this).text() === "训练·战斗";
+                })
+                .css("color", "red");
+        }
+    }
 }
 
 export = TownDashboardProcessor;
