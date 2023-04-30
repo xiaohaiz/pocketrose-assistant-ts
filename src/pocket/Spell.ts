@@ -1,4 +1,4 @@
-class Spell {
+export class Spell {
 
     id?: string;
     name?: string;
@@ -10,5 +10,3 @@ class Spell {
         return this.power! * this.accuracy!;
     }
 }
-
-export = Spell;
