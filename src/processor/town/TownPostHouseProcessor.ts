@@ -1,15 +1,11 @@
 import PageProcessor from "../PageProcessor";
 import PageUtils from "../../util/PageUtils";
 import Credential from "../../util/Credential";
-import TownSelectionBuilder from "../../pocket/TownSelectionBuilder";
-import RoleLoader from "../../pocket/RoleLoader";
-import Role from "../../pocket/Role";
 import MessageBoard from "../../util/MessageBoard";
 import TownLoader from "../../pocket/TownLoader";
 import TownBank from "../../pocket/TownBank";
 import TownEntrance from "../../pocket/TownEntrance";
 import TravelPlanExecutor from "../../pocket/TravelPlanExecutor";
-import CastleLoader from "../../pocket/CastleLoader";
 import Castle from "../../pocket/Castle";
 import CastleEntrance from "../../pocket/CastleEntrance";
 
@@ -24,8 +20,8 @@ class TownPostHouseProcessor extends PageProcessor {
 }
 
 function doProcess(credential: Credential): void {
-    $("input:submit[value='宿泊']").attr("id", "lodgeButton");
-    $("input:submit[value='返回城市']").attr("id", "returnButton");
+    // 记录原有表单上的住宿费用
+    const lodgeExpense = $("input:hidden[name='inn_gold']").val() as string;
 
     const t1 = $("table:eq(1)");
     const t4 = $("table:eq(4)");
@@ -62,41 +58,95 @@ function doProcess(credential: Credential): void {
     $(td).attr("id", "messageBoard");
     $(td).css("color", "white");
 
-    // 增加驿站面板
+    // 增加扩展驿站面板
     tr = $(t1).find("tr:last");
-    $(tr).after($("<tr>" +
-        "<td style='background-color:#F8F0E0;text-align:center'>" +
-        TownSelectionBuilder.buildTownSelectionTable() +
+    $(tr).find("td:first")
+        .removeAttr("bgcolor")
+        .removeAttr("align")
+        .css("background-color", "#F8F0E0")
+        .css("text-align", "center")
+        .attr("id", "menu");
+    $(tr).after($("" +
+        "<tr style='display:none'>" +
+        "<td id='eden'>" +
         "</td>" +
         "</tr>" +
-        "<tr>" +
-        "<td style='background-color:#F8F0E0;text-align:center'>" +
-        "<input type='button' id='townButton' value='开始旅途' style='color:blue'>" +
-        "<input type='button' id='castleButton' value='回到城堡' style='color:red'>" +
+        "<tr style='background-color:#F8F0E0;text-align:center'>" +
+        "<td id='map'>" +
         "</td>" +
         "</tr>"));
 
-    $("#townButton").prop("disabled", true);
-    $("#castleButton").prop("disabled", true);
-    $("#castleButton").hide();
+    doRenderEden(credential, parseInt(lodgeExpense));
+    doRenderMenu();
 
-    new RoleLoader(credential).load()
-        .then(role => {
-            const currentTown = (role as Role).town!;
-            $("input:radio[value='" + currentTown.id + "']").prop("disabled", true);
-            $("#townButton").prop("disabled", false);
-            doBindTownButton(credential);
-        });
+    console.log(PageUtils.currentPageHtml());
 
-    CastleLoader.loadCastle(player)
-        .then(castle => {
-            if (castle !== null) {
-                $("#castleButton").show();
-                $("#castleButton").val("回到" + castle.name);
-                $("#castleButton").prop("disabled", false);
-                doBindCastleButton(credential, castle);
-            }
-        });
+    // $(tr).after($("<tr>" +
+    //     "<td style='background-color:#F8F0E0;text-align:center'>" +
+    //     TownSelectionBuilder.buildTownSelectionTable() +
+    //     "</td>" +
+    //     "</tr>" +
+    //     "<tr>" +
+    //     "<td style='background-color:#F8F0E0;text-align:center'>" +
+    //     "<input type='button' id='townButton' value='开始旅途' style='color:blue'>" +
+    //     "<input type='button' id='castleButton' value='回到城堡' style='color:red'>" +
+    //     "</td>" +
+    //     "</tr>"));
+    //
+    // $("#townButton").prop("disabled", true);
+    // $("#castleButton").prop("disabled", true);
+    // $("#castleButton").hide();
+    //
+    // new RoleLoader(credential).load()
+    //     .then(role => {
+    //         const currentTown = (role as Role).town!;
+    //         $("input:radio[value='" + currentTown.id + "']").prop("disabled", true);
+    //         $("#townButton").prop("disabled", false);
+    //         doBindTownButton(credential);
+    //     });
+    //
+    // CastleLoader.loadCastle(player)
+    //     .then(castle => {
+    //         if (castle !== null) {
+    //             $("#castleButton").show();
+    //             $("#castleButton").val("回到" + castle.name);
+    //             $("#castleButton").prop("disabled", false);
+    //             doBindCastleButton(credential, castle);
+    //         }
+    //     });
+}
+
+function doRenderEden(credential: Credential, lodgeExpense: number) {
+    let html = "";
+    // noinspection HtmlUnknownTarget
+    html += "<form action='town.cgi' method='post'>";
+    html += "<input type='hidden' name='id' value='" + credential.id + "'>";
+    html += "<input type='hidden' name='pass' value='" + credential.pass + "'>";
+    html += "<input type='hidden' name='inn_gold' value='" + lodgeExpense + "'>";
+    html += "<input type='hidden' name='mode' value='RECOVERY'>";
+    html += "<input type='submit' id='lodgeSubmit'>";
+    html += "</form>";
+    // noinspection HtmlUnknownTarget
+    html += "<form action='status.cgi' method='post'>";
+    html += "<input type='hidden' name='id' value='" + credential.id + "'>";
+    html += "<input type='hidden' name='pass' value='" + credential.pass + "'>";
+    html += "<input type='hidden' name='mode' value='STATUS'>";
+    html += "<input type='submit' id='returnSubmit'>";
+    html += "</form>";
+    $("#eden").html(html);
+}
+
+function doRenderMenu() {
+    $("#menu").html("" +
+        "<input type='button' id='lodgeButton' value='宿泊'>" +
+        "<input type='button' id='returnButton' value='返回城市'>"
+    );
+    $("#lodgeButton").on("click", function () {
+        $("#lodgeSubmit").trigger("click");
+    });
+    $("#returnButton").on("click", function () {
+        $("#returnSubmit").trigger("click");
+    });
 }
 
 function doBindTownButton(credential: Credential) {
@@ -131,7 +181,6 @@ function doBindTownButton(credential: Credential) {
                     return;
                 }
 
-                const roleLoader = new RoleLoader(credential);
                 // 更新现金栏
                 bank.loadBankAccount()
                     .then(account => {
