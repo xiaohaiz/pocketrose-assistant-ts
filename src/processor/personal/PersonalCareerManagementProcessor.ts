@@ -10,6 +10,8 @@ import CareerLoader from "../../pocket/CareerLoader";
 import SetupLoader from "../../pocket/SetupLoader";
 import Spell from "../../pocket/Spell";
 import SpellLoader from "../../pocket/SpellLoader";
+import NetworkUtils from "../../util/NetworkUtils";
+import MessageBoard from "../../util/MessageBoard";
 
 class PersonalCareerManagementProcessor extends PageProcessor {
 
@@ -102,11 +104,13 @@ function doRender(credential: Credential, candidateList: string[]) {
 
             if (role.level! > 50) {
                 doRenderCareer(credential, role, candidateList);
+                doBindCareerButton(credential);
             }
 
             new SpellLoader(credential).load()
                 .then(spellList => {
                     doRenderSpell(credential, role, spellList);
+                    doBindSpellButton(credential, spellList);
                 });
         });
 }
@@ -351,6 +355,68 @@ function doRenderSpell(credential: Credential, role: Role, spellList: Spell[]) {
         if (using) {
             const buttonId = "set_spell_" + spell.id;
             $("#" + buttonId).prop("disabled", true);
+        }
+    }
+}
+
+function doRefresh(credential: Credential) {
+    const request = credential.asRequest();
+    // @ts-ignore
+    request["mode"] = "CHANGE_OCCUPATION";
+    NetworkUtils.sendPostRequest("mydata.cgi", request, function (html) {
+        const careerCandidateList = CareerParser.parseCareerTransferCandidateList(html);
+        $(".CareerUIButton").off("click");
+        $("#CareerUI").html("");
+        doRender(credential, careerCandidateList);
+    });
+}
+
+function doBindCareerButton(credential: Credential) {
+    const careerNames = Object.keys(CareerLoader.loadCareers());
+    for (let i = 0; i < careerNames.length; i++) {
+        const careerName = careerNames[i];
+        // @ts-ignore
+        const careerId = CareerLoader.loadCareers()[careerName]["id"];
+        const buttonId = "career_" + careerId;
+        if ($("#" + buttonId).length > 0 && !$("#" + buttonId).prop("disabled")) {
+            $("#" + buttonId).on("click", function () {
+                const careerId = parseInt(($(this).attr("id") as string).split("_")[1]);
+                const careerName = CareerLoader.findCareerById(careerId);
+                if (!confirm("请确认要转职到" + careerName + "？")) {
+                    return;
+                }
+                const request = credential.asRequest();
+                // @ts-ignore
+                request["chara"] = "1";
+                // @ts-ignore
+                request["mode"] = "JOB_CHANGE";
+                // @ts-ignore
+                request["syoku_no"] = careerId;
+                NetworkUtils.sendPostRequest("mydata.cgi", request, function (html) {
+                    MessageBoard.processResponseMessage(html);
+                    doRefresh(credential);
+                });
+            });
+        }
+    }
+}
+
+function doBindSpellButton(credential: Credential, spellList: Spell[]) {
+    for (const spell of spellList) {
+        const buttonId = "set_spell_" + spell.id;
+        if ($("#" + buttonId).length > 0 && !$("#" + buttonId).prop("disabled")) {
+            $("#" + buttonId).on("click", function () {
+                const spellId = ($(this).attr("id") as string).split("_")[2];
+                const request = credential.asRequest();
+                // @ts-ignore
+                request["mode"] = "MAGIC_SET";
+                // @ts-ignore
+                request["ktec_no"] = spellId;
+                NetworkUtils.sendPostRequest("mydata.cgi", request, function (html) {
+                    MessageBoard.processResponseMessage(html);
+                    doRefresh(credential);
+                });
+            });
         }
     }
 }
