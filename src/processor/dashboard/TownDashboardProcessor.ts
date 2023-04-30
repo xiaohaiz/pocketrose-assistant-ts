@@ -21,6 +21,7 @@ function doProcess(credential: Credential) {
     doRenderSetupMenu();
     doRenderEquipmentManagementMenu();
     doRenderPetManagementMenu();
+    doRenderCareerManagementMenu();
 }
 
 function doRenderBattleMenu(credential: Credential) {
@@ -196,6 +197,14 @@ function doRenderPetManagementMenu() {
         $("option[value='PETSTATUS']").text("宠物管理");
         $("option[value='PETSTATUS']").css("background-color", "yellow");
         $("option[value='PET_SEND']").remove();
+    }
+}
+
+function doRenderCareerManagementMenu() {
+    if (SetupLoader.isCareerManagementUIEnabled()) {
+        $("option[value='CHANGE_OCCUPATION']").text("职业管理");
+        $("option[value='CHANGE_OCCUPATION']").css("background-color", "yellow");
+        $("option[value='MAGIC']").remove();
     }
 }
 
