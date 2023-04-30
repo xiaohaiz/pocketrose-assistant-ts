@@ -1,9 +1,9 @@
-import {Spell} from "./Spell";
 import StringUtils from "../util/StringUtils";
 import Credential from "../util/Credential";
 import NetworkUtils from "../util/NetworkUtils";
+import Spell from "./Spell";
 
-export class SpellLoader {
+class SpellLoader {
 
     readonly #credential: Credential;
 
@@ -48,3 +48,5 @@ function doParseSpellList(pageHtml: string): Spell[] {
     });
     return spellList;
 }
+
+export = SpellLoader;

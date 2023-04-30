@@ -6,6 +6,8 @@ import NpcLoader from "../../pocket/NpcLoader";
 import CommentBoard from "../../util/CommentBoard";
 import Role from "../../pocket/Role";
 import RoleLoader from "../../pocket/RoleLoader";
+import CareerLoader from "../../pocket/CareerLoader";
+import SetupLoader from "../../pocket/SetupLoader";
 
 class PersonalCareerManagementProcessor extends PageProcessor {
 
@@ -95,6 +97,10 @@ function doRender(credential: Credential, candidateList: string[]) {
     new RoleLoader(credential).load()
         .then(role => {
             doRenderRoleStatus(role);
+
+            if (role.level! > 50) {
+                doRenderCareer(credential, role, candidateList);
+            }
         });
 }
 
@@ -132,6 +138,202 @@ function doRenderRoleStatus(role: Role) {
     html += "</table>";
 
     $("#roleStatus").html(html);
+}
+
+function doRenderCareer(credential: Credential, role: Role, careerCandidateList: string[]) {
+    let html = "";
+    html += "<table style='background-color:#888888;width:100%;text-align:center'>";
+    html += "<tbody style='background-color:#F8F0E0'>";
+    html += "<tr>";
+    html += "<th colspan='7' style='background-color:#E8E8D0;color:navy;text-align:center;font-weight:bold;font-size:120%'>＜＜ 选 择 新 的 职 业 ＞＞</th>";
+    html += "</tr>";
+
+    html += "<tr>";
+    html += "<th style='background-color:#E8E8D0'>战士系</th>";
+    html += "<td style='background-color:#EFE0C0;text-align:left'>" +
+        "<input type='button' class='CareerUIButton' id='career_0' value='兵士'>" +
+        "<input type='button' class='CareerUIButton' id='career_1' value='武士'>" +
+        "<input type='button' class='CareerUIButton' id='career_2' value='剑客'>" +
+        "<input type='button' class='CareerUIButton' id='career_3' value='剑侠'>" +
+        "<input type='button' class='CareerUIButton' id='career_4' value='魔法剑士'>" +
+        "<input type='button' class='CareerUIButton' id='career_5' value='暗黑剑士'>" +
+        "<input type='button' class='CareerUIButton' id='career_6' value='奥法剑士'>" +
+        "<input type='button' class='CareerUIButton' id='career_7' value='魔导剑士'>" +
+        "<input type='button' class='CareerUIButton' id='career_8' value='神圣剑士'>" +
+        "<input type='button' class='CareerUIButton' id='career_9' value='圣殿武士'>" +
+        "<input type='button' class='CareerUIButton' id='career_10' value='剑圣'>" +
+        "</td>";
+    html += "</tr>";
+
+    html += "<tr>";
+    html += "<th style='background-color:#E8E8D0'>枪系</th>";
+    html += "<td style='background-color:#EFE0C0;text-align:left'>" +
+        "<input type='button' class='CareerUIButton' id='career_11' value='枪战士'>" +
+        "<input type='button' class='CareerUIButton' id='career_12' value='重战士'>" +
+        "<input type='button' class='CareerUIButton' id='career_13' value='狂战士'>" +
+        "<input type='button' class='CareerUIButton' id='career_14' value='龙战士'>" +
+        "</td>";
+    html += "</tr>";
+
+    html += "<tr>";
+    html += "<th style='background-color:#E8E8D0'>格斗系</th>";
+    html += "<td style='background-color:#EFE0C0;text-align:left'>" +
+        "<input type='button' class='CareerUIButton' id='career_15' value='武僧'>" +
+        "<input type='button' class='CareerUIButton' id='career_16' value='决斗家'>" +
+        "<input type='button' class='CareerUIButton' id='career_17' value='拳王'>" +
+        "</td>";
+    html += "</tr>";
+
+    html += "<tr>";
+    html += "<th style='background-color:#E8E8D0'>魔术系</th>";
+    html += "<td style='background-color:#EFE0C0;text-align:left'>" +
+        "<input type='button' class='CareerUIButton' id='career_18' value='术士'>" +
+        "<input type='button' class='CareerUIButton' id='career_19' value='魔法师'>" +
+        "<input type='button' class='CareerUIButton' id='career_20' value='咒灵师'>" +
+        "<input type='button' class='CareerUIButton' id='career_21' value='大魔导士'>" +
+        "</td>";
+    html += "</tr>";
+
+    html += "<tr>";
+    html += "<th style='background-color:#E8E8D0'>祭司系</th>";
+    html += "<td style='background-color:#EFE0C0;text-align:left'>" +
+        "<input type='button' class='CareerUIButton' id='career_22' value='牧师'>" +
+        "<input type='button' class='CareerUIButton' id='career_23' value='德鲁伊'>" +
+        "<input type='button' class='CareerUIButton' id='career_24' value='贤者'>" +
+        "</td>";
+    html += "</tr>";
+
+    html += "<tr>";
+    html += "<th style='background-color:#E8E8D0'>弓矢系</th>";
+    html += "<td style='background-color:#EFE0C0;text-align:left'>" +
+        "<input type='button' class='CareerUIButton' id='career_25' value='弓箭士'>" +
+        "<input type='button' class='CareerUIButton' id='career_26' value='魔弓手'>" +
+        "<input type='button' class='CareerUIButton' id='career_27' value='狙击手'>" +
+        "</td>";
+    html += "</tr>";
+
+    html += "<tr>";
+    html += "<th style='background-color:#E8E8D0'>游侠系</th>";
+    html += "<td style='background-color:#EFE0C0;text-align:left'>" +
+        "<input type='button' class='CareerUIButton' id='career_28' value='游侠'>" +
+        "<input type='button' class='CareerUIButton' id='career_29' value='巡林客'>" +
+        "<input type='button' class='CareerUIButton' id='career_30' value='吟游诗人'>" +
+        "</td>";
+    html += "</tr>";
+
+    html += "<tr>";
+    html += "<th style='background-color:#E8E8D0'>天位系</th>";
+    html += "<td style='background-color:#EFE0C0;text-align:left'>" +
+        "<input type='button' class='CareerUIButton' id='career_31' value='小天位'>" +
+        "<input type='button' class='CareerUIButton' id='career_32' value='强天位'>" +
+        "<input type='button' class='CareerUIButton' id='career_33' value='斋天位'>" +
+        "<input type='button' class='CareerUIButton' id='career_34' value='太天位'>" +
+        "<input type='button' class='CareerUIButton' id='career_35' value='终极'>" +
+        "</td>";
+    html += "</tr>";
+
+    html += "</toby>";
+    html += "</table>";
+
+    $("#careerCell").html(html);
+
+    // 已经掌握的职业用蓝色标记
+    // 没有掌握的职业用红色标记（满级的情况下）
+    // 不在转职列表中的按钮删除
+    // 当前职业绿色显示
+    if (role.masterCareerList!.includes("小天位")) {
+        $("#career_32").css("color", "blue");
+        $("#career_33").css("color", "blue");
+        $("#career_34").css("color", "blue");
+        $("#career_35").css("color", "blue");
+    }
+    const careerNames = Object.keys(CareerLoader.loadCareers());
+    for (let i = 0; i < careerNames.length; i++) {
+        const careerName = careerNames[i];
+        // @ts-ignore
+        const careerId = CareerLoader.loadCareers()[careerName]["id"];
+        const buttonId = "career_" + careerId;
+        if (role.masterCareerList!.includes(careerName)) {
+            $("#" + buttonId).css("color", "blue");
+        } else {
+            if (role.level! >= 150) {
+                if (careerName === role.career) {
+                    $("#" + buttonId).css("color", "green");
+                    $("#" + buttonId).css("font-weight", "bold");
+                } else {
+                    $("#" + buttonId).css("color", "red");
+                    $("#" + buttonId).css("font-weight", "bold");
+                }
+            }
+        }
+        if (!careerCandidateList.includes(careerName)) {
+            $("#" + buttonId).prop("disabled", true);
+            $("#" + buttonId).css("color", "grey");
+            $("#" + buttonId).css("font-weight", "normal");
+        }
+    }
+
+    // 推荐计算
+    const recommendations = doCalculateRecommendationCareers(role, careerCandidateList);
+    if (recommendations.length > 0) {
+        for (const recommendation of recommendations) {
+            // @ts-ignore
+            const careerId = CareerLoader.loadCareers()[recommendation]["id"];
+            const buttonId = "career_" + careerId;
+            if (recommendation === role.career) {
+                $("#" + buttonId).css("color", "green");
+                $("#" + buttonId).css("font-weight", "bold");
+            } else {
+                $("#" + buttonId).css("color", "red");
+                $("#" + buttonId).css("font-weight", "bold");
+            }
+        }
+    }
+
+    if (SetupLoader.isCareerTransferEntranceDisabled(credential.id)) {
+        // 转职入口被关闭了，那就禁止所有的转职按钮。
+        for (let i = 0; i < careerNames.length; i++) {
+            const careerName = careerNames[i];
+            // @ts-ignore
+            const careerId = CareerLoader.loadCareers()[careerName]["id"];
+            const buttonId = "career_" + careerId;
+            $("#" + buttonId).prop("disabled", true);
+            $("#" + buttonId).css("color", "grey");
+            $("#" + buttonId).css("font-weight", "normal");
+        }
+    }
+}
+
+function doCalculateRecommendationCareers(role: Role, careerCandidateList: string[]) {
+    // 没有满级，不推荐
+    if (role.level! < 150) {
+        return [];
+    }
+    // 没有掌握全部职业，不推荐
+    if (role.masterCareerList!.length !== 32) {
+        return [];
+    }
+    const recommendations: string[] = [];
+    const targetCareerNames = Object.keys(CareerLoader.loadCareerTransferRequirements());
+    for (let i = 0; i < targetCareerNames.length; i++) {
+        const name = targetCareerNames[i];
+        // @ts-ignore
+        const requirement = CareerLoader.loadCareerTransferRequirements()[name];
+        if (role.maxMana! >= requirement[0] &&
+            role.attack! >= requirement[1] &&
+            role.defense! >= requirement[2] &&
+            role.specialAttack! >= requirement[3] &&
+            role.specialDefense! >= requirement[4] &&
+            role.speed! >= requirement[5]) {
+            // 发现了可以推荐的职业
+            recommendations.push(name);
+        }
+    }
+    if (recommendations.length === 0) {
+        // 没有推荐出来，那么就推荐转职列表中的最后一个吧
+        recommendations.push(careerCandidateList[careerCandidateList.length - 1]);
+    }
+    return recommendations;
 }
 
 export = PersonalCareerManagementProcessor;

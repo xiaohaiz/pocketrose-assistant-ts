@@ -1,15 +1,19 @@
 class CareerLoader {
 
     static findCareerById(id: number) {
-        const careerNames = Object.keys(CAREER_LIST);
+        const careerNames = Object.keys(CAREERS);
         for (let i = 0; i < careerNames.length; i++) {
             const careerName = careerNames[i];
             // @ts-ignore
-            if (CAREER_LIST[careerName]["id"] === id) {
+            if (CAREERS[careerName]["id"] === id) {
                 return careerName;
             }
         }
         return null;
+    }
+
+    static loadCareers() {
+        return CAREERS;
     }
 
     static loadCareerTransferRequirements() {
@@ -18,7 +22,7 @@ class CareerLoader {
 
 }
 
-const CAREER_LIST = {
+const CAREERS = {
     "兵士": {"id": 0},
     "武士": {"id": 1},
     "剑客": {"id": 2},
