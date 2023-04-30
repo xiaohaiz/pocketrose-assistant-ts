@@ -87,7 +87,7 @@ function doRender(credential: Credential, petList: Pet[], studyStatus: number[])
     for (const pet of petList) {
         html += "<tr>";
         html += "<td style='background-color:#EFE0C0' rowspan='2'>" +
-            pet.imageHTML +
+            pet.imageHtml +
             "</td>";
         html += "<td style='background-color:#EFE0C0' rowspan='2'>" +
             (pet.using ? "★" : "") +

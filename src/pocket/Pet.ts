@@ -1,4 +1,4 @@
-import DOMAIN from "../util/Constants";
+import Constants from "../util/Constants";
 
 class Pet {
 
@@ -33,8 +33,8 @@ class Pet {
     race?: string;
     code?: string;
 
-    get imageHTML() {
-        const src = DOMAIN + "/image/pet/" + this.picture;
+    get imageHtml() {
+        const src = Constants.DOMAIN + "/image/pet/" + this.picture;
         return "<img src='" + src + "' width='64' height='64' alt='" + this.race + "' style='border-width:0'>";
     }
 }
