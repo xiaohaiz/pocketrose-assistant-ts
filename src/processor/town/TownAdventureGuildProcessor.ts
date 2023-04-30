@@ -1,6 +1,7 @@
 import PageProcessor from "../PageProcessor";
 import PageUtils from "../../util/PageUtils";
 import Credential from "../../util/Credential";
+import LocationSelectionBuilder from "../../pocket/LocationSelectionBuilder";
 
 class TownAdventureGuildProcessor extends PageProcessor {
 
@@ -51,7 +52,7 @@ function doProcess(credential: Credential) {
         .attr("id", "messageBoard");
 
     $("form:first").parent()
-        .attr("id", "map")
+        .attr("id", "treasureHint")
         .parent()
         .after($("" +
             "<tr>" +
@@ -61,16 +62,28 @@ function doProcess(credential: Credential) {
             "<td id='eden' style='width:100%'></td>" +
             "</tr>" +
             "<tr>" +
-            "<td style='width:100%;background-color:navy;color:greenyellow;text-align:center;font-weight:bold'>＜＜  冒 险 家 业 务  ＞＞</td>" +
-            "</tr>" +
-            "<tr>" +
-            "<td id='move' style='width:100%;background-color:#E8E8D0;text-align:center'></td>" +
+            "<td id='location' style='width:100%;background-color:#E8E8D0;text-align:center'></td>" +
             "</tr>" +
             "<tr style='display:none'>" +
             "<td id='treasure' style='width:100%;background-color:#E8E8D0;text-align:center'></td>" +
             "</tr>"
         ));
 
+    doRenderLocation(credential);
+
+}
+
+function doRenderLocation(credential: Credential) {
+    const html = LocationSelectionBuilder.buildLocationSelectionTable();
+    $("#location").html(html);
+
+    $(".location_button_class")
+        .on("mouseenter", function () {
+            $(this).css("background-color", "red");
+        })
+        .on("mouseleave", function () {
+            $(this).removeAttr("style");
+        });
 }
 
 export = TownAdventureGuildProcessor;

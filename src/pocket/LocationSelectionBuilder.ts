@@ -2,7 +2,7 @@ class LocationSelectionBuilder {
 
     static buildLocationSelectionTable(): string {
         let html = "";
-        html += "<table style='background-color:#888888'>";
+        html += "<table style='background-color:#888888;margin:auto;border-width:0'>";
         html += "<tbody style='background-color:#F8F0E0'>";
         html += "<tr>";
         html += "<td></td>";
@@ -29,10 +29,11 @@ class LocationSelectionBuilder {
             html += "<td>" + y + "</td>";
             for (let x = 0; x <= 15; x++) {
                 html += "<td>";
+                html += "<span title='坐标(" + x + "," + y + ")'>";
                 html += "<input type='button' value='&nbsp;&nbsp;' " +
                     "class='location_button_class' " +
-                    "id='location_" + x + "_" + y + "' " +
-                    "style='border-width:medium'>";
+                    "id='location_" + x + "_" + y + "'>";
+                html += "</span>";
                 html += "</td>";
             }
             html += "</tr>";
