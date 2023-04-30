@@ -1,6 +1,7 @@
 const path = require('path');
 const webpack = require('webpack');
 
+// noinspection JSUnresolvedReference
 module.exports = {
     entry: './src/Pocketrose.ts',
     output: {
