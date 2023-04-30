@@ -17,6 +17,13 @@ class CommentBoard {
         $("#commentBoardContainer").html(html);
     }
 
+    static writeMessage(message: string) {
+        if ($("#commentBoard").length > 0) {
+            let html = $("#commentBoard").html();
+            html += message;
+            $("#commentBoard").html(html);
+        }
+    }
 }
 
 export = CommentBoard;
