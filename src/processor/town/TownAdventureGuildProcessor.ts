@@ -2,6 +2,7 @@ import PageProcessor from "../PageProcessor";
 import PageUtils from "../../util/PageUtils";
 import Credential from "../../util/Credential";
 import LocationSelectionBuilder from "../../pocket/LocationSelectionBuilder";
+import RoleLoader from "../../pocket/RoleLoader";
 
 class TownAdventureGuildProcessor extends PageProcessor {
 
@@ -61,7 +62,7 @@ function doProcess(credential: Credential) {
             "<tr style='display:none'>" +
             "<td id='eden' style='width:100%'></td>" +
             "</tr>" +
-            "<tr>" +
+            "<tr style='display:none'>" +
             "<td id='location' style='width:100%;background-color:#E8E8D0;text-align:center'></td>" +
             "</tr>" +
             "<tr style='display:none'>" +
@@ -77,13 +78,27 @@ function doRenderLocation(credential: Credential) {
     const html = LocationSelectionBuilder.buildLocationSelectionTable();
     $("#location").html(html);
 
-    $(".location_button_class")
-        .on("mouseenter", function () {
-            $(this).css("background-color", "red");
-        })
-        .on("mouseleave", function () {
-            $(this).removeAttr("style");
+    new RoleLoader(credential).load()
+        .then(role => {
+            const town = role.town!;
+            const buttonId = "location_" + town.coordinate.x + "_" + town.coordinate.y;
+            $("#" + buttonId)
+                .closest("td")
+                .css("background-color", "black")
+                .find("span:first")
+                .remove();
+
+            $(".location_button_class")
+                .on("mouseenter", function () {
+                    $(this).css("background-color", "red");
+                })
+                .on("mouseleave", function () {
+                    $(this).removeAttr("style");
+                });
+
+            $("#location").parent().show();
         });
+
 }
 
 export = TownAdventureGuildProcessor;
