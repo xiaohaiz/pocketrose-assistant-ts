@@ -1,4 +1,5 @@
 const path = require('path');
+const webpack = require('webpack');
 
 module.exports = {
     entry: './src/Pocketrose.ts',
@@ -6,6 +7,7 @@ module.exports = {
         filename: 'pocketrose.js',
         path: path.resolve(__dirname, 'dist'),
     },
+    devtool: false,
     module: {
         rules: [
             {
@@ -25,6 +27,26 @@ module.exports = {
             }
         ],
     },
+    plugins: [
+        new webpack.BannerPlugin({
+            banner: "// ==UserScript==\n" +
+                "// @name         pocketrose assistant ts\n" +
+                "// @namespace    https://pocketrose.itsns.net.cn/\n" +
+                "// @description  Intercepts and modifies pocketrose CGI requests\n" +
+                "// @icon         data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==\n" +
+                "// @license      mit\n" +
+                "// @author       xiaohaiz,fugue\n" +
+                "// @version      1.0.0-SNAPSHOT\n" +
+                "// @grant        unsafeWindow\n" +
+                "// @match        *://pocketrose.itsns.net.cn/*\n" +
+                "// @require      https://cdn.bootcdn.net/ajax/libs/jquery/3.6.4/jquery.min.js\n" +
+                "// @run-at       document-start\n" +
+                "// @unwrap\n" +
+                "// ==/UserScript==\n",
+            raw: true
+        })
+
+    ],
     performance: {
         hints: false,
     },
