@@ -14,6 +14,20 @@ class NpcLoader {
         return "<img src='" + image + "' width='64' height='64' alt='" + name + "' id='p_" + s + "'>";
     }
 
+    static getNpcNames(): string[] {
+        const names: string[] = [];
+        const allNames = Object.keys(POCKET_NPC_IMAGES);
+        for (let i = 0; i < allNames.length; i++) {
+            const name = allNames[i];
+            // @ts-ignore
+            const image = POCKET_NPC_IMAGES[name];
+            if (image.includes("/image/head/")) {
+                names.push(name);
+            }
+        }
+        return names;
+    }
+
 }
 
 const POCKET_NPC_IMAGES = {
