@@ -2,12 +2,17 @@ import PageProcessor from "../PageProcessor";
 import PageUtils from "../../util/PageUtils";
 import SetupLoader from "../../pocket/SetupLoader";
 import StringUtils from "../../util/StringUtils";
+import NpcLoader from "../../pocket/NpcLoader";
+import RandomUtils from "../../util/RandomUtils";
+import CommentBoard from "../../util/CommentBoard";
 
 class BattleProcessor extends PageProcessor {
 
     process(): void {
         PageUtils.removeUnusedHyperLinks();
         PageUtils.removeGoogleAnalyticsScript();
+
+        doRenderPrompt(this.pageText);
 
         $('input[value="返回住宿"]').attr('id', 'lodgeButton');
         $('input[value="返回修理"]').attr('id', 'repairButton');
@@ -63,6 +68,14 @@ class BattleProcessor extends PageProcessor {
         if (this.pageText.includes("＜＜ - 十二神殿 - ＞＞") && SetupLoader.isZodiacFlashBattleEnabled()) {
             $("input:submit[tabindex='1']").trigger("click");
         }
+    }
+}
+
+function doRenderPrompt(pageText: string) {
+    if (pageText.includes("入手！")) {
+        doRenderBattleHarvestPrompt();
+    } else {
+        doRenderNormalBattlePrompt();
     }
 }
 
@@ -213,6 +226,67 @@ function determinePostBattleBehaviour(pageText: string, endure: number): number 
     } else {
         // 没有设置定期存钱，那就表示每战都存钱
         return 2;
+    }
+}
+
+function doRenderBattleHarvestPrompt() {
+    const prompt = SetupLoader.getNormalBattlePrompt();
+    if (prompt["person"] !== undefined && prompt["person"] !== "NONE") {
+        const candidates: string[] = [];
+        $("p").each(function (_idx, p) {
+            if ($(p).text().includes("入手！")) {
+                const html = $(p).html();
+                html.split("<br>").forEach(it => {
+                    if (it.endsWith("入手！")) {
+                        candidates.push(it);
+                    }
+                });
+            }
+        });
+        if (candidates.length > 0) {
+            // @ts-ignore
+            let person = prompt["person"];
+            let imageHTML: string;
+            if (person === "SELF") {
+                imageHTML = PageUtils.findFirstRoleImageHtml()!;
+            } else if (person === "RANDOM") {
+                const persons = NpcLoader.getNpcNames();
+                const idx = RandomUtils.randomInt(0, persons.length - 1);
+                person = persons[idx];
+                imageHTML = NpcLoader.getNpcImageHtml(person)!;
+            } else {
+                imageHTML = NpcLoader.getNpcImageHtml(person)!;
+            }
+
+            CommentBoard.createCommentBoard(imageHTML);
+            $("#commentBoard").css("text-align", "center");
+            for (const it of candidates) {
+                CommentBoard.writeMessage("<b style='font-size:150%'>" + it + "</b><br>");
+            }
+            // @ts-ignore
+            CommentBoard.writeMessage($("<td>" + prompt["text"] + "</td>").text());
+        }
+    }
+}
+
+function doRenderNormalBattlePrompt() {
+    const prompt = SetupLoader.getNormalBattlePrompt();
+    if (prompt["person"] !== undefined && prompt["person"] !== "NONE") {
+        let person = prompt["person"];
+        let imageHTML: string;
+        if (person === "SELF") {
+            imageHTML = PageUtils.findFirstRoleImageHtml()!;
+        } else if (person === "RANDOM") {
+            const persons = NpcLoader.getNpcNames();
+            const idx = RandomUtils.randomInt(0, persons.length - 1);
+            person = persons[idx];
+            imageHTML = NpcLoader.getNpcImageHtml(person)!;
+        } else {
+            imageHTML = NpcLoader.getNpcImageHtml(person)!;
+        }
+        CommentBoard.createCommentBoard(imageHTML);
+        $("#commentBoard").css("text-align", "center");
+        CommentBoard.writeMessage($("<td>" + prompt["text"] + "</td>").text());
     }
 }
 
