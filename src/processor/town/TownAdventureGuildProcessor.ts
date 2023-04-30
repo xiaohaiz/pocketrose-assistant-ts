@@ -55,7 +55,7 @@ function doProcess(credential: Credential) {
         .parent()
         .after($("" +
             "<tr>" +
-            "<td style='width:100%;background-color:#E8E8D0;text-align:center'></td>" +
+            "<td id='menu' style='width:100%;background-color:#E8E8D0;text-align:center'></td>" +
             "</tr>" +
             "<tr style='display:none'>" +
             "<td id='eden' style='width:100%'></td>" +
