@@ -1,9 +1,9 @@
 import Coordinate from "../util/Coordinate";
 import TownLoader from "./TownLoader";
 
-class LocationSelectionBuilder {
+class MapBuilder {
 
-    static buildLocationSelectionTable(): string {
+    static buildMapTable(): string {
         let html = "";
         html += "<table style='background-color:#888888;margin:auto;border-width:0'>";
         html += "<tbody style='background-color:#F8F0E0'>";
@@ -37,7 +37,7 @@ class LocationSelectionBuilder {
                 const town = TownLoader.getTownByCoordinate(coordinate);
                 if (town !== null) {
                     buttonValue = town.name.substring(0, 1);
-                    buttonTitle = town.name + coordinate.asText();
+                    buttonTitle = "城市" + coordinate.asText() + " " + town.name;
                 }
 
                 html += "<td>";
@@ -67,4 +67,4 @@ class LocationSelectionBuilder {
 
 }
 
-export = LocationSelectionBuilder;
+export = MapBuilder;

@@ -8,6 +8,7 @@ import TownEntrance from "../../pocket/TownEntrance";
 import TravelPlanExecutor from "../../pocket/TravelPlanExecutor";
 import Castle from "../../pocket/Castle";
 import CastleEntrance from "../../pocket/CastleEntrance";
+import MapBuilder from "../../pocket/MapBuilder";
 
 class TownPostHouseProcessor extends PageProcessor {
 
@@ -71,8 +72,8 @@ function doProcess(credential: Credential): void {
         "<td id='eden'>" +
         "</td>" +
         "</tr>" +
-        "<tr style='background-color:#F8F0E0;text-align:center'>" +
-        "<td id='map'>" +
+        "<tr style='display:none'>" +
+        "<td id='map' style='background-color:#F8F0E0;text-align:center'>" +
         "</td>" +
         "</tr>"));
 
@@ -147,6 +148,10 @@ function doRenderMenu() {
     $("#returnButton").on("click", function () {
         $("#returnSubmit").trigger("click");
     });
+}
+
+function doRenderMap(credential: Credential) {
+    MapBuilder.buildMapTable();
 }
 
 function doBindTownButton(credential: Credential) {

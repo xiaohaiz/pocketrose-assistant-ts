@@ -1,7 +1,7 @@
 import PageProcessor from "../PageProcessor";
 import PageUtils from "../../util/PageUtils";
 import Credential from "../../util/Credential";
-import LocationSelectionBuilder from "../../pocket/LocationSelectionBuilder";
+import MapBuilder from "../../pocket/MapBuilder";
 import RoleLoader from "../../pocket/RoleLoader";
 import StringUtils from "../../util/StringUtils";
 
@@ -76,7 +76,7 @@ function doProcess(credential: Credential) {
 }
 
 function doRenderLocation(credential: Credential) {
-    const html = LocationSelectionBuilder.buildLocationSelectionTable();
+    const html = MapBuilder.buildMapTable();
     $("#location").html(html);
 
     new RoleLoader(credential).load()
