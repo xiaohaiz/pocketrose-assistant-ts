@@ -1,7 +1,30 @@
 import {Spell} from "./Spell";
 import StringUtils from "../util/StringUtils";
+import Credential from "../util/Credential";
+import NetworkUtils from "../util/NetworkUtils";
 
 export class SpellLoader {
+
+    readonly #credential: Credential;
+
+    constructor(credential: Credential) {
+        this.#credential = credential;
+    }
+
+    async load(): Promise<Spell[]> {
+        const action = (credential: Credential) => {
+            return new Promise<Spell[]>(resolve => {
+                const request = credential.asRequest();
+                // @ts-ignore
+                request["mode"] = "MAGIC";
+                NetworkUtils.sendPostRequest("mydata.cgi", request, function (html) {
+                    const spellList = doParseSpellList(html);
+                    resolve(spellList);
+                });
+            });
+        };
+        return await action(this.#credential);
+    }
 
 }
 
