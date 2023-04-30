@@ -290,6 +290,12 @@ function doRenderRoleStatus(role: Role) {
                 $(td).next()
                     .attr("style", "color: blue")
                     .text("MAX");
+            } else {
+                const ratio = role.level! / 150;
+                const progressBar = PageUtils.generateProgressBarHTML(ratio);
+                const exp = $(td).next().text();
+                $(td).next()
+                    .html("<span title='" + exp + "'>" + progressBar + "</span>");
             }
         }
         if (text === "身份") {
