@@ -379,7 +379,6 @@ function doBindPutAllIntoBagButton(credential: Credential) {
         const request = credential.asRequest();
         let checkedCount = 0;
         $("input:checkbox").each(function (_idx, checkbox) {
-            console.log("[" + $(checkbox).parent().next().text() + "]");
             if (!$(checkbox).parent().next().text().includes("★")) {
                 checkedCount++;
                 const name = $(checkbox).attr("name");

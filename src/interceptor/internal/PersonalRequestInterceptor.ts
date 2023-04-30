@@ -6,6 +6,7 @@ import PersonalEquipmentManagementProcessor from "../../processor/personal/Perso
 import SetupLoader from "../../pocket/SetupLoader";
 import PersonalCareerManagementProcessor from "../../processor/personal/PersonalCareerManagementProcessor";
 import RequestInterceptor from "../RequestInterceptor";
+import PersonalGoldenCageProcessor from "../../processor/personal/PersonalGoldenCageProcessor";
 
 class PersonalRequestInterceptor implements RequestInterceptor {
 
@@ -32,6 +33,10 @@ class PersonalRequestInterceptor implements RequestInterceptor {
             if (SetupLoader.isPetManagementUIEnabled()) {
                 new PersonalPetManagementProcessor(pageHtml, pageText).process();
             }
+            return;
+        }
+        if (pageText.includes("物品 黄金笼子 使用")) {
+            new PersonalGoldenCageProcessor(pageHtml, pageText).process();
             return;
         }
         if (pageText.includes("* 转职神殿 *")) {
