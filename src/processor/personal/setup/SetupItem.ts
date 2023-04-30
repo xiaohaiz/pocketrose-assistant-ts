@@ -1,5 +1,7 @@
-export interface SetupItem {
+interface SetupItem {
 
     render(id?: string): void
 
 }
+
+export = SetupItem;
