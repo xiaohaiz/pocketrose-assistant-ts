@@ -18,6 +18,8 @@ class TownDashboardProcessor extends PageProcessor {
 
 function doProcess(credential: Credential) {
     $("input:text:first").attr("id", "messageInputText");
+    $("input:submit[value='更新']").attr("id", "refreshButton");
+
     doRenderBattleMenu(credential);
     doRenderPostHouseMenu();
     doRenderSetupMenu();
@@ -28,6 +30,7 @@ function doProcess(credential: Credential) {
     const role = doParseRole();
     doRenderBattleCount(role);
     doRenderCareerTransferWarning(credential, role);
+    doRenderRoleStatus(role);
 }
 
 function doParseRole(): Role {
@@ -180,7 +183,7 @@ function doRenderBattleMenu(credential: Credential) {
                         inputDigits = '';
                         break;
                 }
-                btnBattle.focus();
+                btnBattle.trigger("focus")
                 // 重置 inputDigits
                 inputDigits = '';
             }
@@ -271,13 +274,38 @@ function doRenderCareerTransferWarning(credential: Credential, role: Role) {
     // 如果满级并且没有关闭转职入口，则战斗前标签用红色显示
     if (role.level === 150) {
         if (!SetupLoader.isCareerTransferEntranceDisabled(credential.id)) {
-            $("th:contains('训练·战斗')")
-                .filter(function () {
-                    return $(this).text() === "训练·战斗";
-                })
+            $("#refreshButton")
+                .closest("td")
+                .prev()
                 .css("color", "red");
         }
     }
+}
+
+function doRenderRoleStatus(role: Role) {
+    $("td:parent").each(function (_idx, td) {
+        const text = $(td).text();
+        if (text === "经验值") {
+            if (role.level === 150) {
+                $(td).next()
+                    .attr("style", "color: blue")
+                    .text("MAX");
+            }
+        }
+        if (text === "身份") {
+            if (role.level !== 150 && (role.attack === 375 || role.defense === 375
+                || role.specialAttack === 375 || role.specialDefense === 375 || role.speed === 375)) {
+                $(td).next().css("color", "red");
+            }
+        }
+        if (text === "资金") {
+            const cashText = $(td).next().text();
+            const cash = cashText.substring(0, cashText.indexOf(" Gold"));
+            if (parseInt(cash) >= 1000000) {
+                $(td).next().css("color", "red");
+            }
+        }
+    });
 }
 
 export = TownDashboardProcessor;
