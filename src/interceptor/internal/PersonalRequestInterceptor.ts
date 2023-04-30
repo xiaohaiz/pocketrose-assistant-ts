@@ -5,6 +5,7 @@ import PersonalPetManagementProcessor from "../../processor/personal/PersonalPet
 import PersonalEquipmentManagementProcessor from "../../processor/personal/PersonalEquipmentManagementProcessor";
 import SetupLoader from "../../pocket/SetupLoader";
 import PersonalCareerManagementProcessor from "../../processor/personal/PersonalCareerManagementProcessor";
+import {RequestInterceptor} from "../RequestInterceptor";
 
 class PersonalRequestInterceptor implements RequestInterceptor {
 

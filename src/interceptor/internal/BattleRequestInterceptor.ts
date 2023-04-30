@@ -1,5 +1,6 @@
 import PageUtils from "../../util/PageUtils";
 import BattleProcessor from "../../processor/battle/BattleProcessor";
+import {RequestInterceptor} from "../RequestInterceptor";
 
 class BattleRequestInterceptor implements RequestInterceptor {
 

@@ -1,4 +1,4 @@
-interface SetupItem {
+export interface SetupItem {
 
     render(id?: string): void
 

@@ -1,6 +1,7 @@
 import PageUtils from "../../util/PageUtils";
 import CastleDashboardProcessor from "../../processor/dashboard/CastleDashboardProcessor";
 import CastlePostHouseProcessor from "../../processor/castle/CastlePostHouseProcessor";
+import {RequestInterceptor} from "../RequestInterceptor";
 
 class CastleRequestInterceptor implements RequestInterceptor {
 

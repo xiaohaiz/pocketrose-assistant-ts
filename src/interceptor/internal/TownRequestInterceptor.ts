@@ -1,6 +1,7 @@
 import PageUtils from "../../util/PageUtils";
 import TownDashboardProcessor from "../../processor/dashboard/TownDashboardProcessor";
 import TownPostHouseProcessor from "../../processor/town/TownPostHouseProcessor";
+import {RequestInterceptor} from "../RequestInterceptor";
 
 class TownRequestInterceptor implements RequestInterceptor {
 

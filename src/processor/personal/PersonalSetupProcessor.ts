@@ -31,6 +31,7 @@ import SetupItem020 from "./setup/internal/SetupItem020";
 import SetupItem021 from "./setup/internal/SetupItem021";
 import SetupItem022 from "./setup/internal/SetupItem022";
 import SetupItem023 from "./setup/internal/SetupItem023";
+import {SetupItem} from "./setup/SetupItem";
 
 class PersonalSetupProcessor extends PageProcessor {
 

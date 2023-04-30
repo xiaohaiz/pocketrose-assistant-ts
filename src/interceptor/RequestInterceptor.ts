@@ -1,4 +1,4 @@
-interface RequestInterceptor {
+export interface RequestInterceptor {
 
     readonly cgi: string;
 
