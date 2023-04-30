@@ -32,6 +32,7 @@ import SetupItem021 from "./setup/internal/SetupItem021";
 import SetupItem022 from "./setup/internal/SetupItem022";
 import SetupItem023 from "./setup/internal/SetupItem023";
 import SetupItem from "./setup/SetupItem";
+import SetupItem024 from "./setup/internal/SetupItem024";
 
 class PersonalSetupProcessor extends PageProcessor {
 
@@ -67,7 +68,8 @@ const setupItemList: SetupItem[] = [
     new SetupItem020(),
     new SetupItem021(),
     new SetupItem022(),
-    new SetupItem023()
+    new SetupItem023(),
+    new SetupItem024()
 ];
 
 function doInitialize(credential: Credential) {
