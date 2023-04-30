@@ -1,3 +1,6 @@
+import Coordinate from "../util/Coordinate";
+import TownLoader from "./TownLoader";
+
 class LocationSelectionBuilder {
 
     static buildLocationSelectionTable(): string {
@@ -28,12 +31,30 @@ class LocationSelectionBuilder {
             html += "<tr>";
             html += "<td>" + y + "</td>";
             for (let x = 0; x <= 15; x++) {
+                const coordinate = new Coordinate(x, y);
+                let buttonValue = "　";
+                let buttonTitle = "坐标" + coordinate.asText();
+                const town = TownLoader.getTownByCoordinate(coordinate);
+                if (town !== null) {
+                    buttonValue = town.name.substring(0, 1);
+                    buttonTitle = town.name + coordinate.asText();
+                }
+
                 html += "<td>";
-                html += "<span title='坐标(" + x + "," + y + ")'>";
-                html += "<input type='button' value='&nbsp;&nbsp;' " +
-                    "class='location_button_class' " +
-                    "id='location_" + x + "_" + y + "'>";
-                html += "</span>";
+                if (buttonValue === "　") {
+                    html += "<span title='" + buttonTitle + "' class='color_none'>";
+                    html += "<input type='button' value='" + buttonValue + "' " +
+                        "class='location_button_class' " +
+                        "id='location_" + x + "_" + y + "'>";
+                    html += "</span>";
+                } else {
+                    html += "<span title='" + buttonTitle + "' class='color_yellow'>";
+                    html += "<input type='button' value='" + buttonValue + "' " +
+                        "class='location_button_class' " +
+                        "id='location_" + x + "_" + y + "' " +
+                        "style='background-color:yellow'>";
+                    html += "</span>";
+                }
                 html += "</td>";
             }
             html += "</tr>";

@@ -3,6 +3,7 @@ import PageUtils from "../../util/PageUtils";
 import Credential from "../../util/Credential";
 import LocationSelectionBuilder from "../../pocket/LocationSelectionBuilder";
 import RoleLoader from "../../pocket/RoleLoader";
+import StringUtils from "../../util/StringUtils";
 
 class TownAdventureGuildProcessor extends PageProcessor {
 
@@ -85,15 +86,22 @@ function doRenderLocation(credential: Credential) {
             $("#" + buttonId)
                 .closest("td")
                 .css("background-color", "black")
-                .find("span:first")
-                .remove();
+                .css("color", "white")
+                .css("text-align", "center")
+                .html($("#" + buttonId).val() as string);
 
             $(".location_button_class")
                 .on("mouseenter", function () {
                     $(this).css("background-color", "red");
                 })
                 .on("mouseleave", function () {
-                    $(this).removeAttr("style");
+                    const s = $(this).parent().attr("class")!;
+                    const c = StringUtils.substringAfter(s, "_");
+                    if (c !== "none") {
+                        $(this).css("background-color", c);
+                    } else {
+                        $(this).removeAttr("style");
+                    }
                 });
 
             $("#location").parent().show();
