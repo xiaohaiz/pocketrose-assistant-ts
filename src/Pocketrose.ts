@@ -5,15 +5,16 @@ import StatusRequestInterceptor from "./interceptor/internal/StatusRequestInterc
 import TownRequestInterceptor from "./interceptor/internal/TownRequestInterceptor";
 import CastleRequestInterceptor from "./interceptor/internal/CastleRequestInterceptor";
 import CastleStatusRequestInterceptor from "./interceptor/internal/CastleStatusRequestInterceptor";
+import RequestInterceptor from "./interceptor/RequestInterceptor";
 
 $(function () {
     if (!location.href.includes("pocketrose")) {
-        return
+        return;
     }
-    pocketrose()
+    pocketrose();
 })
 
-const interceptorList = [
+const interceptorList: RequestInterceptor[] = [
     new BattleRequestInterceptor(),
     new CastleRequestInterceptor(),
     new CastleStatusRequestInterceptor(),
@@ -25,15 +26,15 @@ const interceptorList = [
 function pocketrose() {
     $(function () {
         const request = StringUtils.substringAfterLast(location.href, "/")
-        let interceptor = null
+        let interceptor = null;
         for (const it of interceptorList) {
             if (it.cgi === request) {
-                interceptor = it
-                break
+                interceptor = it;
+                break;
             }
         }
         if (interceptor !== null) {
-            interceptor.process()
+            interceptor.process();
         }
     });
 }

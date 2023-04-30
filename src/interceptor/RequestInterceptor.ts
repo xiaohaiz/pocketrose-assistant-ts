@@ -1,7 +1,9 @@
-export interface RequestInterceptor {
+interface RequestInterceptor {
 
     readonly cgi: string;
 
     process(): void
 
 }
+
+export = RequestInterceptor;
