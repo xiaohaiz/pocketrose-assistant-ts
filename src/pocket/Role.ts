@@ -24,6 +24,7 @@ class Role {
     location?: string;           // 所在位置(TOWN|CASTLE|WILD)
     town?: Town;
     task?: string;
+    battleCount?: number;
     experience?: number;
     cash?: number;
     career?: string;

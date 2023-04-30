@@ -2,6 +2,8 @@ import PageProcessor from "../PageProcessor";
 import PageUtils from "../../util/PageUtils";
 import Credential from "../../util/Credential";
 import SetupLoader from "../../pocket/SetupLoader";
+import Role from "../../pocket/Role";
+import StringUtils from "../../util/StringUtils";
 
 class TownDashboardProcessor extends PageProcessor {
 
@@ -22,6 +24,43 @@ function doProcess(credential: Credential) {
     doRenderEquipmentManagementMenu();
     doRenderPetManagementMenu();
     doRenderCareerManagementMenu();
+
+    const role = doParseRole();
+    doRenderBattleCount(role);
+}
+
+function doParseRole(): Role {
+    // 读取角色当前的能力值
+    const text = $("#c_001").find("table:last").find("td:first").text();
+    let idx = text.indexOf("Lv：");
+    let s = text.substring(idx);
+    const level = parseInt(s.substring(3, s.indexOf(" ")));
+    idx = text.indexOf("攻击力：");
+    s = text.substring(idx);
+    const attack = parseInt(s.substring(4, s.indexOf(" ")));
+    idx = s.indexOf("防御力：");
+    s = s.substring(idx);
+    const defense = parseInt(s.substring(4, s.indexOf(" ")));
+    idx = s.indexOf("智力：");
+    s = s.substring(idx);
+    const specialAttack = parseInt(s.substring(3, s.indexOf(" ")));
+    idx = s.indexOf("精神力：");
+    s = s.substring(idx);
+    const specialDefense = parseInt(s.substring(4, s.indexOf(" ")));
+    idx = s.indexOf("速度：");
+    s = s.substring(idx);
+    const speed = parseInt(s.substring(3));
+    const battleCount = parseInt($("input:hidden[name='ktotal']").val() as string);
+
+    const role = new Role();
+    role.level = level;
+    role.attack = attack;
+    role.defense = defense;
+    role.specialAttack = specialAttack;
+    role.specialDefense = specialDefense;
+    role.speed = speed;
+    role.battleCount = battleCount;
+    return role;
 }
 
 function doRenderBattleMenu(credential: Credential) {
@@ -206,6 +245,25 @@ function doRenderCareerManagementMenu() {
         $("option[value='CHANGE_OCCUPATION']").css("background-color", "yellow");
         $("option[value='MAGIC']").remove();
     }
+}
+
+function doRenderBattleCount(role: Role) {
+    $("td:contains('贡献度')")
+        .filter(function () {
+            return $(this).text() === "贡献度";
+        })
+        .closest("table")
+        .find("th:first")
+        .find("font:first")
+        .html(function (_idx, text) {
+            const name = StringUtils.substringBefore(text, "(");
+            const unit = StringUtils.substringBetween(text, "(", "军)");
+            if (unit.includes("无所属")) {
+                return name + "&nbsp;&nbsp;&nbsp;" + role.battleCount + "战";
+            } else {
+                return name + "(" + unit + ")" + "&nbsp;&nbsp;&nbsp;" + role.battleCount + "战";
+            }
+        });
 }
 
 export = TownDashboardProcessor;
