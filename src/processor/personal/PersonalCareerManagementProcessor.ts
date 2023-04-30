@@ -8,6 +8,8 @@ import Role from "../../pocket/Role";
 import RoleLoader from "../../pocket/RoleLoader";
 import CareerLoader from "../../pocket/CareerLoader";
 import SetupLoader from "../../pocket/SetupLoader";
+import Spell from "../../pocket/Spell";
+import SpellLoader from "../../pocket/SpellLoader";
 
 class PersonalCareerManagementProcessor extends PageProcessor {
 
@@ -101,6 +103,11 @@ function doRender(credential: Credential, candidateList: string[]) {
             if (role.level! > 50) {
                 doRenderCareer(credential, role, candidateList);
             }
+
+            new SpellLoader(credential).load()
+                .then(spellList => {
+                    doRenderSpell(credential, role, spellList);
+                });
         });
 }
 
@@ -300,6 +307,50 @@ function doRenderCareer(credential: Credential, role: Role, careerCandidateList:
             $("#" + buttonId).prop("disabled", true);
             $("#" + buttonId).css("color", "grey");
             $("#" + buttonId).css("font-weight", "normal");
+        }
+    }
+}
+
+function doRenderSpell(credential: Credential, role: Role, spellList: Spell[]) {
+    let html = "";
+    html += "<table style='background-color:#888888;width:100%;text-align:center'>";
+    html += "<tbody style='background-color:#F8F0E0'>";
+    html += "<tr>";
+    html += "<th colspan='7' style='background-color:#E8E8D0;color:navy;text-align:center;font-weight:bold;font-size:120%'>＜＜ 设 置 技 能 ＞＞</th>";
+    html += "</tr>";
+    html += "<tr>";
+    html += "<th style='background-color:#E8E8D0'>使用</th>";
+    html += "<th style='background-color:#EFE0C0'>技能</th>";
+    html += "<th style='background-color:#E0D0B0'>威力</th>";
+    html += "<th style='background-color:#EFE0C0'>确率</th>";
+    html += "<th style='background-color:#E0D0B0'>ＰＰ</th>";
+    html += "<th style='background-color:#EFE0C0'>评分</th>";
+    html += "<th style='background-color:#E0D0B0'>设置</th>";
+    html += "</tr>";
+    for (const spell of spellList) {
+        const using = spell.name === role.spell;
+        html += "<tr>";
+        html += "<td style='background-color:#E8E8D0'>" + (using ? "★" : "") + "</td>";
+        html += "<td style='background-color:#EFE0C0'>" + spell.name + "</td>";
+        html += "<td style='background-color:#E0D0B0'>" + spell.power + "</td>";
+        html += "<td style='background-color:#EFE0C0'>" + spell.accuracy + "</td>";
+        html += "<td style='background-color:#E0D0B0'>" + spell.pp + "</td>";
+        html += "<td style='background-color:#EFE0C0'>" + spell.score + "</td>";
+        html += "<td style='background-color:#E0D0B0'>" +
+            "<input type='button' class='CareerUIButton' id='set_spell_" + spell.id + "' value='选择'>" +
+            "</td>";
+        html += "</tr>";
+    }
+    html += "</toby>";
+    html += "</table>";
+
+    $("#spellCell").html(html);
+
+    for (const spell of spellList) {
+        const using = spell.name === role.spell;
+        if (using) {
+            const buttonId = "set_spell_" + spell.id;
+            $("#" + buttonId).prop("disabled", true);
         }
     }
 }
