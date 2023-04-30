@@ -8,7 +8,7 @@ module.exports = {
         filename: 'pocketrose.js',
         path: path.resolve(__dirname, 'dist'),
     },
-    devtool: false,
+    mode: "none",
     module: {
         rules: [
             {
