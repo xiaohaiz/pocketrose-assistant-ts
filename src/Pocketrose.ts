@@ -25,7 +25,10 @@ const interceptorList: RequestInterceptor[] = [
 
 function pocketrose() {
     $(function () {
-        const request = StringUtils.substringAfterLast(location.href, "/")
+        let request = StringUtils.substringAfterLast(location.href, "/")
+        if (request.includes("?")) {
+            request = StringUtils.substringBefore(request, "?");
+        }
         let interceptor = null;
         for (const it of interceptorList) {
             if (it.cgi === request) {
