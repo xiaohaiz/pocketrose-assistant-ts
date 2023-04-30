@@ -31,13 +31,13 @@ module.exports = {
     plugins: [
         new webpack.BannerPlugin({
             banner: "// ==UserScript==\n" +
-                "// @name         pocketrose assistant ts\n" +
+                "// @name         pocketrose assistant\n" +
                 "// @namespace    https://pocketrose.itsns.net.cn/\n" +
                 "// @description  Intercepts and modifies pocketrose CGI requests\n" +
                 "// @icon         data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==\n" +
                 "// @license      mit\n" +
                 "// @author       xiaohaiz,fugue\n" +
-                "// @version      1.0.0-SNAPSHOT\n" +
+                "// @version      3.0.0-SNAPSHOT\n" +
                 "// @grant        unsafeWindow\n" +
                 "// @match        *://pocketrose.itsns.net.cn/*\n" +
                 "// @require      https://cdn.bootcdn.net/ajax/libs/jquery/3.6.4/jquery.min.js\n" +
