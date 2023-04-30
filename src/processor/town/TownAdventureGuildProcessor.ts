@@ -51,10 +51,17 @@ function doProcess(credential: Credential) {
         .attr("id", "messageBoard");
 
     $("form:first").parent()
+        .attr("id", "map")
         .parent()
         .after($("" +
+            "<tr>" +
+            "<td style='width:100%;background-color:#E8E8D0;text-align:center'></td>" +
+            "</tr>" +
             "<tr style='display:none'>" +
             "<td id='eden' style='width:100%'></td>" +
+            "</tr>" +
+            "<tr>" +
+            "<td style='width:100%;background-color:navy;color:greenyellow;text-align:center;font-weight:bold'>＜＜  冒 险 家 业 务  ＞＞</td>" +
             "</tr>" +
             "<tr>" +
             "<td id='move' style='width:100%;background-color:#E8E8D0;text-align:center'></td>" +
