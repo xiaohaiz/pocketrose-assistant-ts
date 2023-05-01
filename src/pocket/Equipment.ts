@@ -150,7 +150,7 @@ class Equipment {
 
     get checkboxHTML() {
         if (this.selectable) {
-            return "<input type='checkbox' name='item" + this.index + "' value='" + this.index + "'>";
+            return "<input type='checkbox' name='item" + this.index + "' value='" + this.index + "' class='personal_checkbox'>";
         } else {
             return "";
         }

@@ -101,7 +101,7 @@ function doProcess(credential: Credential, equipmentList: Equipment[]) {
 
 function doRender(credential: Credential, equipmentList: Equipment[]) {
     let html = "";
-    html += "<table style='background-color:#888888;width:100%;text-align:center' id='personalEquipments'>";
+    html += "<table style='background-color:#888888;width:100%;text-align:center'>";
     html += "   <tbody style='background-color:#F8F0E0'>";
     html += "       <tr>";
     html += "           <th style='background-color:#E8E8D0'>选择</th>";
@@ -336,7 +336,7 @@ function doRenderTreasureBag(credential: Credential) {
         const bagEquipmentList = EquipmentParser.parseTreasureBagItemList(pageHtml);
 
         let html = "";
-        html += "<table style='background-color:#888888;width:100%;text-align:center' id='treasureBagEquipments'>";
+        html += "<table style='background-color:#888888;width:100%;text-align:center'>";
         html += "<tbody style='background-color:#F8F0E0'>";
         html += "<tr>";
         html += "<th style='background-color:#E8E8D0'>选择</th>";
@@ -353,7 +353,7 @@ function doRenderTreasureBag(credential: Credential) {
         for (const equipment of bagEquipmentList) {
             html += "<tr>";
             html += "<td style='background-color:#E8E8D0'>";
-            html += "<input type='checkbox' name='item" + equipment.index + "' value='" + equipment.index + "'>";
+            html += "<input class='bag_checkbox' type='checkbox' name='item" + equipment.index + "' value='" + equipment.index + "'>";
             html += "</td>";
             html += "<td style='background-color:#E0D0B0'>" + equipment.nameHTML + "</td>";
             html += "<td style='background-color:#EFE0C0'>" + equipment.category + "</td>";
@@ -401,8 +401,7 @@ function doBindUseButton(credential: Credential) {
     $("#useButton").on("click", function () {
         const request = credential.asRequest();
         let checkedCount = 0;
-        $("#personalEquipments")
-            .find("input:checkbox:checked")
+        $(".personal_checkbox")
             .each(function (_idx, checkbox) {
                 checkedCount++;
                 const name = $(checkbox).attr("name");
@@ -431,8 +430,7 @@ function doBindPutIntoBagButton(credential: Credential) {
     $("#putIntoBagButton").on("click", function () {
         const request = credential.asRequest();
         let checkedCount = 0;
-        $("#personalEquipments")
-            .find("input:checkbox:checked")
+        $(".personal_checkbox")
             .each(function (_idx, checkbox) {
                 if (!$(checkbox).parent().next().text().includes("★")) {
                     checkedCount++;
@@ -491,8 +489,7 @@ function doBindPutAllIntoBagButton(credential: Credential) {
     $("#putAllIntoBagButton").on("click", function () {
         const request = credential.asRequest();
         let checkedCount = 0;
-        $("#personalEquipments")
-            .find("input:checkbox")
+        $(".personal_checkbox")
             .each(function (_idx, checkbox) {
                 if (!$(checkbox).parent().next().text().includes("★")) {
                     checkedCount++;
@@ -617,8 +614,7 @@ function doBindSendButton(credential: Credential) {
         // @ts-ignore
         request["eid"] = receiver;
         let checkedCount = 0;
-        $("#personalEquipments")
-            .find("input:checkbox:checked")
+        $(".personal_checkbox")
             .each(function (_idx, checkbox) {
                 checkedCount++;
                 const name = $(checkbox).attr("name");
@@ -715,8 +711,7 @@ function doBindTakeOutButton(credential: Credential) {
     $("#takeOutButton").on("click", function () {
         const request = credential.asRequest();
         let checkedCount = 0;
-        $("#treasureBagEquipments")
-            .find("input:checkbox:checked")
+        $(".bag_checkbox")
             .each(function (_idx, checkbox) {
                 checkedCount++;
                 const name = $(checkbox).attr("name")!;
@@ -741,8 +736,7 @@ function doBindConsecrateButton(credential: Credential) {
         const consecrateCandidates: number[] = [];
         const consecrateCandidateNames: string[] = [];
 
-        $("#personalEquipments")
-            .find("input:checkbox:checked")
+        $(".personal_checkbox")
             .each(function (_idx, checkbox) {
                 const c0 = $(checkbox).parent();
                 const c1 = $(c0).next();
