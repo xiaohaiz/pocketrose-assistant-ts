@@ -87,48 +87,12 @@ function doProcess(credential: Credential): void {
     doRenderEden(credential, parseInt(lodgeExpense));
     doRenderMenu();
     doRenderMap(credential, player);
-
-    console.log(PageUtils.currentPageHtml());
-
-    // $(tr).after($("<tr>" +
-    //     "<td style='background-color:#F8F0E0;text-align:center'>" +
-    //     TownSelectionBuilder.buildTownSelectionTable() +
-    //     "</td>" +
-    //     "</tr>" +
-    //     "<tr>" +
-    //     "<td style='background-color:#F8F0E0;text-align:center'>" +
-    //     "<input type='button' id='townButton' value='开始旅途' style='color:blue'>" +
-    //     "<input type='button' id='castleButton' value='回到城堡' style='color:red'>" +
-    //     "</td>" +
-    //     "</tr>"));
-    //
-    // $("#townButton").prop("disabled", true);
-    // $("#castleButton").prop("disabled", true);
-    // $("#castleButton").hide();
-    //
-    // new RoleLoader(credential).load()
-    //     .then(role => {
-    //         const currentTown = (role as Role).town!;
-    //         $("input:radio[value='" + currentTown.id + "']").prop("disabled", true);
-    //         $("#townButton").prop("disabled", false);
-    //         doBindTownButton(credential);
-    //     });
-    //
-    // CastleLoader.loadCastle(player)
-    //     .then(castle => {
-    //         if (castle !== null) {
-    //             $("#castleButton").show();
-    //             $("#castleButton").val("回到" + castle.name);
-    //             $("#castleButton").prop("disabled", false);
-    //             doBindCastleButton(credential, castle);
-    //         }
-    //     });
 }
 
 function doRenderEden(credential: Credential, lodgeExpense: number) {
     let html = "";
     // noinspection HtmlUnknownTarget
-    html += "<form action='town.cgi' method='post'>";
+    html += "<form action='town.cgi' method='post' id='lodgeForm'>";
     html += "<input type='hidden' name='id' value='" + credential.id + "'>";
     html += "<input type='hidden' name='pass' value='" + credential.pass + "'>";
     html += "<input type='hidden' name='inn_gold' value='" + lodgeExpense + "'>";
@@ -136,7 +100,7 @@ function doRenderEden(credential: Credential, lodgeExpense: number) {
     html += "<input type='submit' id='lodgeSubmit'>";
     html += "</form>";
     // noinspection HtmlUnknownTarget
-    html += "<form action='status.cgi' method='post'>";
+    html += "<form action='status.cgi' method='post' id='returnForm'>";
     html += "<input type='hidden' name='id' value='" + credential.id + "'>";
     html += "<input type='hidden' name='pass' value='" + credential.pass + "'>";
     html += "<input type='hidden' name='mode' value='STATUS'>";
@@ -238,11 +202,16 @@ function doBindMapButton(credential: Credential) {
         // 准备切换到移动模式
         document.getElementById("title")?.scrollIntoView();
         MessageBoard.resetMessageBoard("我们将实时为你播报旅途的动态：<br>");
-        $("#lodgeButton").prop("disabled", true);
-        $("#lodgeButton").hide();
-        $("#returnButton").prop("disabled", true);
-        $("#returnButton").val("旅途中请耐心等候......");
-        $(".location_button_class").prop("disabled", true);
+        $("#lodgeButton")
+            .prop("disabled", true)
+            .hide();
+        $("#returnButton")
+            .prop("disabled", true)
+            .val("旅途中请耐心等候......");
+        $(".location_button_class")
+            .prop("disabled", true)
+            .off("mouseenter")
+            .off("mouseleave");
 
         if (townName !== "") {
             const town = TownLoader.getTownByCoordinate(coordinate)!;
@@ -325,18 +294,38 @@ function doTravelToCastle(credential: Credential, castle: Castle) {
                     const entrance = new CastleEntrance(credential);
                     entrance.enter()
                         .then(() => {
-                            $("form[action='status.cgi']").attr("action", "castlestatus.cgi");
-                            $("input:hidden[value='STATUS']").attr("value", "CASTLESTATUS");
+                            $("#returnForm")
+                                .attr("action", "castlestatus.cgi")
+                                .find("input:hidden[value='STATUS']")
+                                .val("CASTLESTATUS");
                             MessageBoard.publishMessage("旅途愉快，下次再见。");
-                            $("#returnButton").val("欢迎您回到" + castle.name);
-                            $("#returnButton").prop("disabled", false);
+                            $("#returnButton")
+                                .prop("disabled", false)
+                                .val("欢迎您回到" + castle.name);
                         });
                 });
         });
 }
 
 function doTravelToLocation(credential: Credential, location: Coordinate) {
+    MessageBoard.publishMessage("目的地坐标：<span style='color:greenyellow'>" + location.asText() + "</span>");
 
+    new TownEntrance(credential).leave()
+        .then(plan => {
+            plan.destination = location;
+            const executor = new TravelPlanExecutor(plan);
+            executor.execute()
+                .then(() => {
+                    const entrance = new CastleEntrance(credential);
+                    entrance.enter()
+                        .then(() => {
+                            MessageBoard.publishMessage("旅途愉快，下次再见。");
+                            $("#returnButton")
+                                .prop("disabled", false)
+                                .val("到达了目的地" + location.asText());
+                        });
+                });
+        });
 }
 
 export = TownPostHouseProcessor;
