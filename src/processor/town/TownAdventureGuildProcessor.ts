@@ -9,6 +9,7 @@ import NetworkUtils from "../../util/NetworkUtils";
 import TownBank from "../../pocket/TownBank";
 import MapBuilder from "../../pocket/MapBuilder";
 import StringUtils from "../../util/StringUtils";
+import Coordinate from "../../util/Coordinate";
 
 class TownAdventureGuildProcessor extends PageProcessor {
 
@@ -66,20 +67,19 @@ function doProcess(credential: Credential, treasureHintList: TreasureHint[]) {
     MessageBoard.resetMessageBoard("S、S、SHIT，隔壁驿站推出了新的业务，抢、抢走了我的生意，幸亏挖宝的还得来我这儿！");
 
     $("form:first").parent()
-        .attr("id", "treasureHint")
+        .attr("id", "menu")
         .parent()
-        .css("display", "none")
         .after($("" +
             "<tr style='display:none'>" +
             "<td id='eden' style='width:100%'></td>" +
             "</tr>" +
-            "<tr>" +
-            "<td id='menu' style='width:100%;background-color:#E8E8D0;text-align:center'></td>" +
+            "<tr style='display:none'>" +
+            "<td id='treasureHint' style='width:100%;background-color:#E8E8D0;text-align:center'></td>" +
             "</tr>"
         ));
 
     // 清空之前的藏宝图交换的表单
-    $("#treasureHint").html("");
+    $("#menu").html("");
 
     doRenderEden(credential);
     doRenderMenu();
@@ -224,7 +224,37 @@ function doBindExchangeButton(credential: Credential) {
 
 function doBindTreasureButton(credential: Credential) {
     $("#treasureButton").on("click", function () {
+        const candidates: Coordinate[] = [];
+        $("input:checkbox:checked").each(function (_idx, checkbox) {
+            const c0 = $(checkbox).parent();
+            const c1 = $(c0).next();
+            const c2 = $(c1).next();
+            const c3 = $(c2).next();
+            const c4 = $(c3).next();
+            if ($(c4).text() === "-") {
+                const x = parseInt($(c2).text());
+                const y = parseInt($(c3).text());
+                candidates.push(new Coordinate(x, y));
+            }
+        });
+        if (candidates.length === 0) {
+            MessageBoard.publishWarning("没有选择有效的藏宝图！");
+            return;
+        }
 
+        // 开始进入探险模式
+        document.getElementById("title")?.scrollIntoView();
+        MessageBoard.resetMessageBoard("藏宝图探险动态实时播报：<br>");
+
+        $("#resetButton").prop("disabled", true).hide();
+        $("#returnButton").prop("disabled", true).val("藏宝图探险中......");
+        $("input:checkbox").prop("disabled", true);
+        $(".location_button_class").prop("disabled", true);
+        $(".treasure_hint_class")
+            .off("mouseenter")
+            .off("mouseleave");
+
+        // 页面渲染完毕，开始探险
     });
 }
 
