@@ -865,7 +865,16 @@ function doBindGoldenCageButton(credential: Credential) {
 
 function doBindTakeOutButton(credential: Credential, index: number) {
     $("#takeOutButton_" + index).on("click", function () {
-
+        const select = StringUtils.substringAfter($(this).attr("id") as string, "_");
+        const request = credential.asRequest();
+        // @ts-ignore
+        request["select"] = select;
+        // @ts-ignore
+        request["mode"] = "GETOUTLONGZI";
+        NetworkUtils.sendPostRequest("mydata.cgi", request, function (html) {
+            MessageBoard.processResponseMessage(html);
+            doRefresh(credential);
+        });
     });
 }
 
