@@ -47,7 +47,8 @@ function doProcess(credential: Credential, treasureHintList: TreasureHint[]) {
         .text("＜＜  冒 险 家 公 会  ＞＞");
 
     $(t3).find("tr:last td:eq(1)")
-        .attr("id", "roleCash");
+        .attr("id", "roleCash")
+        .text("-");
     $(t3).find("tr:last")
         .after($("" +
             "<tr>" +
@@ -214,12 +215,10 @@ function doBindExchangeButton(credential: Credential) {
                     MessageBoard.publishWarning("没钱你就回吧，晦气！");
                     return;
                 }
-                doUpdateRoleCash(credential);
                 NetworkUtils.sendPostRequest("town.cgi", request, function () {
                     MessageBoard.publishMessage("交换藏宝图成功。");
                     bank.deposit(undefined)
                         .then(() => {
-                            doUpdateRoleCash(credential);
                             doRefresh(credential);
                         });
                 });
@@ -266,7 +265,6 @@ function doBindTreasureButton(credential: Credential) {
                     MessageBoard.publishWarning("没钱还学别人探险？");
                     return;
                 }
-                doUpdateRoleCash(credential);
                 new RoleLoader(credential).load()
                     .then(role => {
                         const town = role.town!;
@@ -403,13 +401,6 @@ function doRefresh(credential: Credential) {
         const hints = TreasureHintParser.parseTreasureHintList(html);
         doRenderTreasureHint(credential, hints);
     });
-}
-
-function doUpdateRoleCash(credential: Credential) {
-    new TownBank(credential).loadBankAccount()
-        .then(account => {
-            $("#roleCash").text(account.cash + " GOLD");
-        });
 }
 
 export = TownAdventureGuildProcessor;
