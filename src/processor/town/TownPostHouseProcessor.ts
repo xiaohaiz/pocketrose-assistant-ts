@@ -9,6 +9,10 @@ import TravelPlanExecutor from "../../pocket/TravelPlanExecutor";
 import Castle from "../../pocket/Castle";
 import CastleEntrance from "../../pocket/CastleEntrance";
 import MapBuilder from "../../pocket/MapBuilder";
+import RoleLoader from "../../pocket/RoleLoader";
+import Role from "../../pocket/Role";
+import StringUtils from "../../util/StringUtils";
+import CastleLoader from "../../pocket/CastleLoader";
 
 class TownPostHouseProcessor extends PageProcessor {
 
@@ -79,6 +83,7 @@ function doProcess(credential: Credential): void {
 
     doRenderEden(credential, parseInt(lodgeExpense));
     doRenderMenu();
+    doRenderMap(credential, player);
 
     console.log(PageUtils.currentPageHtml());
 
@@ -150,8 +155,54 @@ function doRenderMenu() {
     });
 }
 
-function doRenderMap(credential: Credential) {
-    MapBuilder.buildMapTable();
+function doRenderMap(credential: Credential, player: string) {
+    const html = MapBuilder.buildMapTable();
+    $("#map").html(html);
+
+    new RoleLoader(credential).load()
+        .then((role: Role) => {
+            const town = role.town!;
+            const buttonId = "location_" + town.coordinate.x + "_" + town.coordinate.y;
+            $("#" + buttonId)
+                .closest("td")
+                .css("background-color", "black")
+                .css("color", "white")
+                .css("text-align", "center")
+                .html($("#" + buttonId).val() as string);
+
+            $(".location_button_class")
+                .on("mouseenter", function () {
+                    $(this).css("background-color", "red");
+                })
+                .on("mouseleave", function () {
+                    const s = $(this).parent().attr("class")!;
+                    const c = StringUtils.substringAfter(s, "_");
+                    if (c !== "none") {
+                        $(this).css("background-color", c);
+                    } else {
+                        $(this).removeAttr("style");
+                    }
+                });
+
+            // 显示地图
+            $("#map").parent().show();
+
+            // 如果有必要的话绘制城堡
+            CastleLoader.loadCastle(player)
+                .then(castle => {
+                    if (castle === null) {
+                        return;
+                    }
+                    const coordinate = castle.coordinate!;
+                    const buttonId = "location_" + coordinate.x + "_" + coordinate.y;
+                    $("#" + buttonId)
+                        .attr("value", "堡")
+                        .css("background-color", "fuchsia")
+                        .parent()
+                        .attr("title", "城堡" + coordinate.asText() + " " + castle.name)
+                        .attr("class", "color_fuchsia");
+                });
+        });
 }
 
 function doBindTownButton(credential: Credential) {
