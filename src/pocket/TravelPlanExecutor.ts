@@ -5,6 +5,7 @@ import Credential from "../util/Credential";
 import TimeoutUtils from "../util/TimeoutUtils";
 import NetworkUtils from "../util/NetworkUtils";
 import TownLoader from "./TownLoader";
+import StringUtils from "../util/StringUtils";
 
 class TravelPlanExecutor {
 
@@ -86,6 +87,22 @@ function doMoveOnPath(credential: Credential, pathList: Coordinate[], index: num
                         roleLocation = town.name + " " + roleLocation;
                     }
                     $("#roleLocation").text(roleLocation);
+                }
+
+                let mapId = "location_" + from.x + "_" + from.y;
+                if ($("#" + mapId).length > 0) {
+                    const s = $("#" + mapId).parent().attr("class")!;
+                    const c = StringUtils.substringAfter(s, "_");
+                    if (c !== "none") {
+                        $("#" + mapId).css("background-color", c);
+                    } else {
+                        $("#" + mapId).removeAttr("style");
+                    }
+                }
+
+                mapId = "location_" + to.x + "_" + to.y;
+                if ($("#" + mapId).length > 0) {
+                    $("#" + mapId).css("background-color", "red");
                 }
 
                 doMoveOnPath(credential, pathList, index + 1, callback);

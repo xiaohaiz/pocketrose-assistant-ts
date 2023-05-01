@@ -48,6 +48,11 @@ class TravelPlanBuilder {
             $("#roleLocation").text(roleLocation);
         }
 
+        const mapId = "location_" + source.x + "_" + source.y;
+        if ($("#" + mapId).length > 0) {
+            $("#" + mapId).css("background-color", "red");
+        }
+
         const plan = new TravelPlan();
         plan.scope = scope;
         plan.mode = mode;
