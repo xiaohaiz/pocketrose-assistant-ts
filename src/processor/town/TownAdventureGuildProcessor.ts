@@ -8,6 +8,7 @@ import MessageBoard from "../../util/MessageBoard";
 import NetworkUtils from "../../util/NetworkUtils";
 import TownBank from "../../pocket/TownBank";
 import MapBuilder from "../../pocket/MapBuilder";
+import StringUtils from "../../util/StringUtils";
 
 class TownAdventureGuildProcessor extends PageProcessor {
 
@@ -137,8 +138,9 @@ function doRenderTreasureHint(credential: Credential, treasureHintList: Treasure
     html += "<th style='background-color:#E0D0B0'>Y坐标</th>";
     html += "<th style='background-color:#EFE0C0'>备注</th>";
     html += "</tr>";
+    let rowIndex = 0;
     for (const treasureHint of treasureHintList) {
-        html += "<tr>";
+        html += "<tr class='treasure_hint_class' id='row_" + (rowIndex++) + "'>";
         html += "<td style='background-color:#E8E8D0'><input type='checkbox' name='item" + treasureHint.index + "' value='" + treasureHint.index + "'></td>";
         html += "<td style='background-color:#F8F0E0'>" + treasureHint.name + "</td>";
         html += "<td style='background-color:#EFE0C0'>" + treasureHint.coordinate?.x + "</td>";
@@ -160,6 +162,26 @@ function doRenderTreasureHint(credential: Credential, treasureHintList: Treasure
         .html(html)
         .parent()
         .show();
+
+    $(".treasure_hint_class")
+        .on("mouseenter", function () {
+            const x = parseInt($(this).find("td:eq(2)").text());
+            const y = parseInt($(this).find("td:eq(3)").text());
+            const mapId = "location_" + x + "_" + y;
+            $("#" + mapId).css("background-color", "blue");
+        })
+        .on("mouseleave", function () {
+            const x = parseInt($(this).find("td:eq(2)").text());
+            const y = parseInt($(this).find("td:eq(3)").text());
+            const mapId = "location_" + x + "_" + y;
+            const s = $("#" + mapId).parent().attr("class")!;
+            const c = StringUtils.substringAfter(s, "_");
+            if (c !== "none") {
+                $("#" + mapId).css("background-color", c);
+            } else {
+                $("#" + mapId).removeAttr("style");
+            }
+        });
 
     $("#exchangeButton")
         .prop("disabled", false)
@@ -218,6 +240,9 @@ function doRefresh(credential: Credential) {
     $("#treasureHint").parent().hide();
     $("#exchangeButton").off("click");
     $("#treasureButton").off("click");
+    $(".treasure_hint_class")
+        .off("mouseenter")
+        .off("mouseleave");
     const request = credential.asRequest();
     // @ts-ignore
     request["con_str"] = "50";
