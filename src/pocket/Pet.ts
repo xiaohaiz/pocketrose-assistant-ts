@@ -27,6 +27,7 @@ class Pet {
     specialAttack?: number;
     specialDefense?: number;
     speed?: number;
+    experience?: number;
     love?: number;
     attribute1?: string;
     attribute2?: string;
