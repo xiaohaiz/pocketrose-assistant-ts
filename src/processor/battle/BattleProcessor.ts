@@ -285,7 +285,10 @@ function doRenderNormalBattlePrompt() {
             imageHTML = NpcLoader.getNpcImageHtml(person)!;
         }
         CommentBoard.createCommentBoard(imageHTML);
-        $("#commentBoard").css("text-align", "center");
+        $("#commentBoard")
+            .css("text-align", "center")
+            .css("background-color", "black")
+            .css("color", "greenyellow");
         CommentBoard.writeMessage($("<td>" + prompt["text"] + "</td>").text());
     }
 }
