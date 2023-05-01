@@ -36,6 +36,12 @@ function doProcess(credential: Credential, petList: Pet[], studyStatus: number[]
     html += "<tr style='display:none'>";
     html += "<td id='eden'></td>";
     html += "</tr>";
+    html += "<tr style='display:none'>";
+    html += "<td id='goldenCageIndex'>none</td>";
+    html += "</tr>";
+    html += "<tr style='display:none'>";
+    html += "<td id='goldenCageStatus'>off</td>";
+    html += "</tr>";
     html += "<tr>";
     html += "<td id='message_board_container'></td>";
     html += "</tr>";
