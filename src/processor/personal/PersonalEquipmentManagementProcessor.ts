@@ -335,10 +335,49 @@ function doRenderTreasureBag(credential: Credential) {
     NetworkUtils.sendPostRequest("mydata.cgi", request, function (pageHtml) {
         const bagEquipmentList = EquipmentParser.parseTreasureBagItemList(pageHtml);
 
-        let html = "xxx";
+        let html = "";
+        html += "<table style='background-color:#888888;width:100%;text-align:center' id='treasureBagEquipments'>";
+        html += "<tbody style='background-color:#F8F0E0'>";
+        html += "<tr>";
+        html += "<th style='background-color:#E8E8D0'>选择</th>";
+        html += "<th style='background-color:#E0D0B0'>名字</th>";
+        html += "<th style='background-color:#EFE0C0'>种类</th>";
+        html += "<th style='background-color:#E0D0B0'>效果</th>";
+        html += "<th style='background-color:#EFE0C0'>重量</th>";
+        html += "<th style='background-color:#EFE0C0'>耐久</th>";
+        html += "<th style='background-color:#E0D0B0'>威力</th>";
+        html += "<th style='background-color:#E0D0B0'>重量</th>";
+        html += "<th style='background-color:#E0D0B0'>幸运</th>";
+        html += "<th style='background-color:#E0D0B0'>经验</th>";
+        html += "</tr>";
+        for (const equipment of bagEquipmentList) {
+            html += "<tr>";
+            html += "<td style='background-color:#E8E8D0'>";
+            html += "<input type='checkbox' name='item" + equipment.index + "' value='" + equipment.index + "'>";
+            html += "</td>";
+            html += "<td style='background-color:#E0D0B0'>" + equipment.nameHTML + "</td>";
+            html += "<td style='background-color:#EFE0C0'>" + equipment.category + "</td>";
+            html += "<td style='background-color:#E0D0B0'>" + equipment.power + "</td>";
+            html += "<td style='background-color:#EFE0C0'>" + equipment.weight + "</td>";
+            html += "<td style='background-color:#EFE0C0'>" + equipment.endure + "</td>";
+            html += "<td style='background-color:#E0D0B0'>" + equipment.additionalPower + "</td>";
+            html += "<td style='background-color:#E0D0B0'>" + equipment.additionalWeight + "</td>";
+            html += "<td style='background-color:#E0D0B0'>" + equipment.additionalLuck + "</td>";
+            html += "<td style='background-color:#E0D0B0'>" + equipment.experienceHTML + "</td>";
+            html += "</tr>";
+        }
+        html += "<tr>";
+        html += "<td colspan='10' style='background-color:#E8E8D0;text-align:left'>";
+        html += "<input type='button' class='ItemUIButton' id='takeOutButton' value='从百宝袋中取出'>";
+        html += "</td>";
+        html += "</tr>";
+        html += "</tbody>";
+        html += "</table>";
 
         $("#treasureBagContainer").html(html).parent().show();
         $("#treasureBagStatus").text("on");
+
+        doBindTakeOutButton(credential);
     });
 }
 
@@ -670,6 +709,31 @@ function doBindOpenCloseTreasureBagButton(credential: Credential) {
             $("#treasureBagStatus").text("off");
         });
     }
+}
+
+function doBindTakeOutButton(credential: Credential) {
+    $("#takeOutButton").on("click", function () {
+        const request = credential.asRequest();
+        let checkedCount = 0;
+        $("#treasureBagEquipments")
+            .find("input:checkbox:checked")
+            .each(function (_idx, checkbox) {
+                checkedCount++;
+                const name = $(checkbox).attr("name")!;
+                // @ts-ignore
+                request[name] = $(checkbox).val();
+            });
+        if (checkedCount === 0) {
+            MessageBoard.publishWarning("没有选择要从百宝袋中取出的装备！");
+            return;
+        }
+        // @ts-ignore
+        request["mode"] = "GETOUTBAG";
+        NetworkUtils.sendPostRequest("mydata.cgi", request, function (html) {
+            MessageBoard.processResponseMessage(html);
+            doRefresh(credential);
+        });
+    });
 }
 
 function doBindConsecrateButton(credential: Credential) {
