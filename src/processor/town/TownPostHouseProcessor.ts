@@ -248,9 +248,12 @@ function doBindMapButton(credential: Credential) {
             const town = TownLoader.getTownByCoordinate(coordinate)!;
             doTravelToTown(credential, town);
         } else if (castleName !== "") {
-
+            const castle = new Castle();
+            castle.name = castleName;
+            castle.coordinate = coordinate;
+            doTravelToCastle(credential, castle);
         } else {
-
+            doTravelToLocation(credential, coordinate);
         }
     });
 }
@@ -308,109 +311,32 @@ function doTravelToTown(credential: Credential, town: Town) {
         });
 }
 
-function doBindTownButton(credential: Credential) {
-    $("#townButton").on("click", function () {
-        const destinationTownId = $("input:radio:checked").val();
-        if (destinationTownId === undefined) {
-            MessageBoard.publishWarning("没有选择目的地城市！");
-            return;
-        }
+function doTravelToCastle(credential: Credential, castle: Castle) {
+    MessageBoard.publishMessage("目的地城堡：<span style='color:greenyellow'>" + castle.name + "</span>");
+    MessageBoard.publishMessage("目的地坐标：<span style='color:greenyellow'>" + castle.coordinate!.asText() + "</span>");
 
-        MessageBoard.resetMessageBoard("我们将实时为你播报旅途的动态：<br>");
-        $("#lodgeButton").parent().remove();
-        $("#returnButton").prop("disabled", true);
-        $("#townButton").prop("disabled", true);
-        $("#townButton").css("color", "grey");
-        $("#castleButton").prop("disabled", true);
-        $("#castleButton").css("color", "grey");
-        $("input:radio").prop("disabled", true);
-
-        const destinationTown = TownLoader.getTownById(destinationTownId as string)!;
-        MessageBoard.publishMessage("目的地城市：<span style='color:greenyellow'>" + destinationTown.name + "</span>");
-        MessageBoard.publishMessage("目的地坐标：<span style='color:greenyellow'>" + destinationTown.coordinate.asText() + "</span>");
-
-        const bank = new TownBank(credential);
-        // 支取10万城门税
-        bank.withdraw(10)
-            .then(success => {
-                if (!success) {
-                    MessageBoard.publishWarning("因为没有足够的保证金，旅途被中断！");
-                    MessageBoard.publishMessage("回去吧，没钱就别来了。");
-                    $("#returnButton").prop("disabled", false);
-                    return;
-                }
-
-                // 更新现金栏
-                bank.loadBankAccount()
-                    .then(account => {
-                        $("#roleCash").text(account.cash + " GOLD");
-                    });
-
-                const entrance = new TownEntrance(credential);
-                // 离开当前城市
-                entrance.leave()
-                    .then(plan => {
-                        plan.destination = destinationTown.coordinate;
-                        const executor = new TravelPlanExecutor(plan);
-                        // 执行旅途计划
-                        executor.execute()
-                            .then(() => {
-                                // 进入目标城市
-                                entrance.enter(destinationTown.id)
-                                    .then(() => {
-                                        // 把身上现金全部存入
-                                        bank.deposit(undefined)
-                                            .then(() => {
-                                                // 更新现金栏
-                                                bank.loadBankAccount()
-                                                    .then(account => {
-                                                        $("#roleCash").text(account.cash + " GOLD");
-                                                    });
-
-                                                MessageBoard.publishMessage("旅途愉快，下次再见。");
-                                                $("#returnButton").val(destinationTown.name + "欢迎您");
-                                                $("#returnButton").prop("disabled", false);
-                                            });
-                                    });
-                            });
-                    });
-            });
-    });
+    const entrance = new TownEntrance(credential);
+    entrance.leave()
+        .then(plan => {
+            plan.destination = castle.coordinate;
+            const executor = new TravelPlanExecutor(plan);
+            executor.execute()
+                .then(() => {
+                    const entrance = new CastleEntrance(credential);
+                    entrance.enter()
+                        .then(() => {
+                            $("form[action='status.cgi']").attr("action", "castlestatus.cgi");
+                            $("input:hidden[value='STATUS']").attr("value", "CASTLESTATUS");
+                            MessageBoard.publishMessage("旅途愉快，下次再见。");
+                            $("#returnButton").val("欢迎您回到" + castle.name);
+                            $("#returnButton").prop("disabled", false);
+                        });
+                });
+        });
 }
 
-function doBindCastleButton(credential: Credential, castle: Castle) {
-    $("#castleButton").on("click", function () {
-        MessageBoard.resetMessageBoard("我们将实时为你播报旅途的动态：<br>");
-        $("#lodgeButton").parent().remove();
-        $("#returnButton").prop("disabled", true);
-        $("#townButton").prop("disabled", true);
-        $("#townButton").css("color", "grey");
-        $("#castleButton").prop("disabled", true);
-        $("#castleButton").css("color", "grey");
-        $("input:radio").prop("disabled", true);
+function doTravelToLocation(credential: Credential, location: Coordinate) {
 
-        MessageBoard.publishMessage("目的地城堡：<span style='color:greenyellow'>" + castle.name + "</span>");
-        MessageBoard.publishMessage("目的地坐标：<span style='color:greenyellow'>" + castle.coordinate!.asText() + "</span>");
-
-        const entrance = new TownEntrance(credential);
-        entrance.leave()
-            .then(plan => {
-                plan.destination = castle.coordinate;
-                const executor = new TravelPlanExecutor(plan);
-                executor.execute()
-                    .then(() => {
-                        const entrance = new CastleEntrance(credential);
-                        entrance.enter()
-                            .then(() => {
-                                $("form[action='status.cgi']").attr("action", "castlestatus.cgi");
-                                $("input:hidden[value='STATUS']").attr("value", "CASTLESTATUS");
-                                MessageBoard.publishMessage("旅途愉快，下次再见。");
-                                $("#returnButton").val("欢迎您回到" + castle.name);
-                                $("#returnButton").prop("disabled", false);
-                            });
-                    });
-            });
-    });
 }
 
 export = TownPostHouseProcessor;
