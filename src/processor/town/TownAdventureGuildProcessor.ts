@@ -7,6 +7,7 @@ import NpcLoader from "../../pocket/NpcLoader";
 import MessageBoard from "../../util/MessageBoard";
 import NetworkUtils from "../../util/NetworkUtils";
 import TownBank from "../../pocket/TownBank";
+import MapBuilder from "../../pocket/MapBuilder";
 
 class TownAdventureGuildProcessor extends PageProcessor {
 
@@ -73,12 +74,6 @@ function doProcess(credential: Credential, treasureHintList: TreasureHint[]) {
             "</tr>" +
             "<tr>" +
             "<td id='menu' style='width:100%;background-color:#E8E8D0;text-align:center'></td>" +
-            "</tr>" +
-            "<tr style='display:none'>" +
-            "<td id='treasure' style='width:100%;background-color:#E8E8D0;text-align:center'></td>" +
-            "</tr>" +
-            "<tr style='display:none'>" +
-            "<td id='map' style='width:100%;background-color:#E8E8D0;text-align:center'></td>" +
             "</tr>"
         ));
 
@@ -88,9 +83,6 @@ function doProcess(credential: Credential, treasureHintList: TreasureHint[]) {
     doRenderEden(credential);
     doRenderMenu();
     doRenderTreasureHint(credential, treasureHintList);
-
-    console.log(PageUtils.currentPageHtml());
-
 }
 
 function doRenderEden(credential: Credential) {
@@ -108,6 +100,7 @@ function doRenderEden(credential: Credential) {
 function doRenderMenu() {
     let html = "";
     html += "<input type='button' value='更换藏宝图' id='exchangeButton'>";
+    html += "<input type='button' value='带上藏宝图开始探险' id='treasureButton'>";
     html += "<input type='button' value='重置消息面板' id='resetButton'>";
     html += "<input type='button' value='离开冒险家公会' id='returnButton'>";
     $("#menu").html(html);
@@ -125,9 +118,16 @@ function doRenderTreasureHint(credential: Credential, treasureHintList: Treasure
         $("#exchangeButton")
             .prop("disabled", true)
             .hide();
+        $("#treasureButton")
+            .prop("disabled", true)
+            .hide();
         return;
     }
     let html = "";
+    html += "<table style='border-width:0;text-align:center'>";
+    html += "<tbody>";
+    html += "<tr>";
+    html += "<td style='width:100%'>";
     html += "<table style='background-color:#888888;margin:auto;border-width:0;text-align:center'>";
     html += "<tbody style='background-color:#F8F0E0'>";
     html += "<tr>";
@@ -148,19 +148,30 @@ function doRenderTreasureHint(credential: Credential, treasureHintList: Treasure
     }
     html += "</tbody>";
     html += "</table>";
+    html += "</td>";
+    html += "<td>";
+    html += MapBuilder.buildMapTable();
+    html += "</td>";
+    html += "</tr>";
+    html += "</tbody>";
+    html += "</table>";
 
     $("#treasureHint")
         .html(html)
         .parent()
         .show();
+
     $("#exchangeButton")
         .prop("disabled", false)
         .show();
+    $("#treasureButton")
+        .prop("disabled", false)
+        .show();
     doBindExchangeButton(credential);
+    doBindTreasureButton(credential);
 }
 
 function doBindExchangeButton(credential: Credential) {
-
     $("#exchangeButton").on("click", function () {
         const request = credential.asRequest();
         let checkedCount = 0;
@@ -197,9 +208,16 @@ function doBindExchangeButton(credential: Credential) {
     });
 }
 
+function doBindTreasureButton(credential: Credential) {
+    $("#treasureButton").on("click", function () {
+
+    });
+}
+
 function doRefresh(credential: Credential) {
     $("#treasureHint").parent().hide();
     $("#exchangeButton").off("click");
+    $("#treasureButton").off("click");
     const request = credential.asRequest();
     // @ts-ignore
     request["con_str"] = "50";
