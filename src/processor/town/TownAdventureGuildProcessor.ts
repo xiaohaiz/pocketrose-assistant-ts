@@ -100,8 +100,6 @@ function doRenderEden(credential: Credential) {
 
 function doRenderMenu() {
     let html = "";
-    html += "<input type='button' value='更换藏宝图' id='exchangeButton'>";
-    html += "<input type='button' value='带上藏宝图开始探险' id='treasureButton'>";
     html += "<input type='button' value='重置消息面板' id='resetButton'>";
     html += "<input type='button' value='离开冒险家公会' id='returnButton'>";
     $("#menu").html(html);
@@ -116,12 +114,6 @@ function doRenderMenu() {
 
 function doRenderTreasureHint(credential: Credential, treasureHintList: TreasureHint[]) {
     if (treasureHintList.length === 0) {
-        $("#exchangeButton")
-            .prop("disabled", true)
-            .hide();
-        $("#treasureButton")
-            .prop("disabled", true)
-            .hide();
         return;
     }
     let html = "";
@@ -148,6 +140,12 @@ function doRenderTreasureHint(credential: Credential, treasureHintList: Treasure
         html += "<td style='background-color:#EFE0C0'>" + treasureHint.commentHtml + "</td>";
         html += "</tr>";
     }
+    html += "<tr>";
+    html += "<td colspan='5'>";
+    html += "<input type='button' value='更换藏宝图' id='exchangeButton'>";
+    html += "<input type='button' value='藏宝图探险' id='treasureButton'>";
+    html += "</td>";
+    html += "</tr>";
     html += "</tbody>";
     html += "</table>";
     html += "</td>";
@@ -183,12 +181,6 @@ function doRenderTreasureHint(credential: Credential, treasureHintList: Treasure
             }
         });
 
-    $("#exchangeButton")
-        .prop("disabled", false)
-        .show();
-    $("#treasureButton")
-        .prop("disabled", false)
-        .show();
     doBindExchangeButton(credential);
     doBindTreasureButton(credential);
 }
