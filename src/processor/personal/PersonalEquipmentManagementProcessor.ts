@@ -9,6 +9,8 @@ import EquipmentSet from "../../pocket/EquipmentSet";
 import EquipmentSetLoader from "../../pocket/EquipmentSetLoader";
 import TownBank from "../../pocket/TownBank";
 import SetupLoader from "../../pocket/SetupLoader";
+import CommentBoard from "../../util/CommentBoard";
+import NpcLoader from "../../pocket/NpcLoader";
 
 class PersonalEquipmentManagementProcessor extends PageProcessor {
 
@@ -73,13 +75,22 @@ function doProcess(credential: Credential, equipmentList: Equipment[]) {
         $("#eden_form_submit").trigger("click");
     });
 
+    CommentBoard.createCommentBoard(NpcLoader.getNpcImageHtml("饭饭")!);
+    CommentBoard.writeMessage("我就要一键祭奠，就要，就要！");
+    CommentBoard.writeMessage("<input type='button' id='consecrateButton' value='祭奠选择的装备'>");
+    $("#consecrateButton").hide();
+    doBindConsecrateButton(credential);
+
+    $("#p_3139").on("click", function () {
+        $("#consecrateButton").toggle();
+    });
 
     doRender(credential, equipmentList);
 }
 
 function doRender(credential: Credential, equipmentList: Equipment[]) {
     let html = "";
-    html += "<table style='background-color:#888888;width:100%;text-align:center'>";
+    html += "<table style='background-color:#888888;width:100%;text-align:center' id='personalEquipments'>";
     html += "   <tbody style='background-color:#F8F0E0'>";
     html += "       <tr>";
     html += "           <th style='background-color:#E8E8D0'>选择</th>";
@@ -580,6 +591,53 @@ function doBindRefreshButton(credential: Credential) {
     $("#refreshButton").on("click", function () {
         MessageBoard.resetMessageBoard("");
         doRefresh(credential);
+    });
+}
+
+function doBindConsecrateButton(credential: Credential) {
+    $("#consecrateButton").on("click", function () {
+        const consecrateCandidates: number[] = [];
+        const consecrateCandidateNames: string[] = [];
+
+        $("#personalEquipments")
+            .find("input:checkbox:checked")
+            .each(function (_idx, checkbox) {
+                const c0 = $(checkbox).parent();
+                const c1 = $(c0).next();
+                const c2 = $(c1).next();
+                const c3 = $(c2).next();
+
+                let s = $(c3).text().trim();
+                if (s === "武器" || s === "防具" || s === "饰品") {
+                    s = $(c1).text().trim();
+                    if (s !== "★") {
+                        s = $(c2).text().trim();
+                        consecrateCandidates.push(parseInt($(checkbox).val() as string));
+                        consecrateCandidateNames.push(s);
+                    }
+                }
+            });
+
+        if (consecrateCandidates.length === 0) {
+            MessageBoard.publishWarning("没有选择能够祭奠的装备！");
+            return;
+        }
+        if (!confirm("请务必确认你将要祭奠的这些装备：" + consecrateCandidateNames.join())) {
+            return;
+        }
+        new TownBank(credential).withdraw(100)
+            .then(success => {
+                if (!success) {
+                    MessageBoard.publishWarning("没钱学别人玩什么祭奠！");
+                    return;
+                }
+                let html = "";
+                consecrateCandidates.forEach(it => {
+                    html += "<input type='hidden' name='item" + it + "' value='" + it + "'>";
+                });
+                $("#consecrateFormPayload").html(html);
+                $("#consecrateSubmit").trigger("click");
+            });
     });
 }
 
