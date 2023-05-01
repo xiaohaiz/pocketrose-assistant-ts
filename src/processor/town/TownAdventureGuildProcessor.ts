@@ -6,6 +6,7 @@ import TreasureHint from "../../pocket/TreasureHint";
 import NpcLoader from "../../pocket/NpcLoader";
 import MessageBoard from "../../util/MessageBoard";
 import NetworkUtils from "../../util/NetworkUtils";
+import TownBank from "../../pocket/TownBank";
 
 class TownAdventureGuildProcessor extends PageProcessor {
 
@@ -107,9 +108,13 @@ function doRenderEden(credential: Credential) {
 function doRenderMenu() {
     let html = "";
     html += "<input type='button' value='更换藏宝图' id='exchangeButton'>";
+    html += "<input type='button' value='重置消息面板' id='resetButton'>";
     html += "<input type='button' value='离开冒险家公会' id='returnButton'>";
     $("#menu").html(html);
 
+    $("#resetButton").on("click", function () {
+        MessageBoard.resetMessageBoard("");
+    });
     $("#returnButton").on("click", function () {
         $("#returnSubmit").trigger("click");
     });
@@ -156,6 +161,40 @@ function doRenderTreasureHint(credential: Credential, treasureHintList: Treasure
 
 function doBindExchangeButton(credential: Credential) {
 
+    $("#exchangeButton").on("click", function () {
+        const request = credential.asRequest();
+        let checkedCount = 0;
+        $("input:checkbox:checked").each(function (_idx, checkbox) {
+            const name = $(checkbox).attr("name") as string;
+            const value = $(checkbox).val() as string;
+            checkedCount++;
+            // @ts-ignore
+            request[name] = value;
+        });
+        if (checkedCount === 0) {
+            MessageBoard.publishWarning("没有选择藏宝图！");
+            return;
+        }
+        // @ts-ignore
+        request["mode"] = "CHANGEMAP2";
+        const bank = new TownBank(credential);
+        bank.withdraw(10)
+            .then(success => {
+                if (!success) {
+                    MessageBoard.publishWarning("没钱你就回吧，晦气！");
+                    return;
+                }
+                doUpdateRoleCash(credential);
+                NetworkUtils.sendPostRequest("town.cgi", request, function () {
+                    MessageBoard.publishMessage("交换藏宝图成功。");
+                    bank.deposit(undefined)
+                        .then(() => {
+                            doUpdateRoleCash(credential);
+                            doRefresh(credential);
+                        });
+                });
+            });
+    });
 }
 
 function doRefresh(credential: Credential) {
@@ -170,6 +209,13 @@ function doRefresh(credential: Credential) {
         const hints = TreasureHintParser.parseTreasureHintList(html);
         doRenderTreasureHint(credential, hints);
     });
+}
+
+function doUpdateRoleCash(credential: Credential) {
+    new TownBank(credential).loadBankAccount()
+        .then(account => {
+            $("#roleCash").text(account.cash + " GOLD");
+        });
 }
 
 export = TownAdventureGuildProcessor;
