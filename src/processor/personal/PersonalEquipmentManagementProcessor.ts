@@ -52,6 +52,14 @@ function doProcess(credential: Credential, equipmentList: Equipment[]) {
         "        <input type='hidden' name='pass' value='" + credential.pass + "'>" +
         "        <div id='eden_form_payload' style='display:none'></div>" +
         "        <input type='submit' id='eden_form_submit'>" +
+        "</form>" +
+        "<form action='mydata.cgi' method='post' id='consecrateForm'>" +
+        "<input type='hidden' name='id' value='" + credential.id + "'>" +
+        "<input type='hidden' name='pass' value='" + credential.pass + "'>" +
+        "<input type='hidden' name='chara' value='1'>" +
+        "<input type='hidden' name='mode' value='CONSECRATE'>" +
+        "<div id='consecrateFormPayload' style='display:none'></div>" +
+        "<input type='submit' id='consecrateSubmit'>" +
         "</form>");
 
     // 将返回按钮调整到页面中间，并且删除不需要的内容
@@ -64,6 +72,7 @@ function doProcess(credential: Credential, equipmentList: Equipment[]) {
         $("#eden_form_payload").html("<input type='hidden' name='mode' value='STATUS'>");
         $("#eden_form_submit").trigger("click");
     });
+
 
     doRender(credential, equipmentList);
 }
