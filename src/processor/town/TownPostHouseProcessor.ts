@@ -13,6 +13,7 @@ import RoleLoader from "../../pocket/RoleLoader";
 import Role from "../../pocket/Role";
 import StringUtils from "../../util/StringUtils";
 import CastleLoader from "../../pocket/CastleLoader";
+import Coordinate from "../../util/Coordinate";
 
 class TownPostHouseProcessor extends PageProcessor {
 
@@ -202,7 +203,34 @@ function doRenderMap(credential: Credential, player: string) {
                         .attr("title", "城堡" + coordinate.asText() + " " + castle.name)
                         .attr("class", "color_fuchsia");
                 });
+
+            // 绑定地图按钮事件
+            doBindMapButton(credential);
         });
+}
+
+function doBindMapButton(credential: Credential) {
+    $(".location_button_class").on("click", function () {
+        const title = $(this).parent().attr("title")!;
+        const ss = ($(this).attr("id") as string).split("_");
+        const x = parseInt(ss[1]);
+        const y = parseInt(ss[2]);
+        const coordinate = new Coordinate(x, y);
+
+        let confirmation;
+        if (title.startsWith("城市")) {
+            const townName = StringUtils.substringAfterLast(title, " ");
+            confirmation = confirm("确认移动到" + townName + "？");
+        } else if (title.startsWith("城堡")) {
+            const castleName = StringUtils.substringAfterLast(title, " ");
+            confirmation = confirm("确认回到" + castleName + "？");
+        } else {
+            confirmation = confirm("确认移动到坐标" + coordinate.asText() + "？");
+        }
+        if (!confirmation) {
+            return;
+        }
+    });
 }
 
 function doBindTownButton(credential: Credential) {
