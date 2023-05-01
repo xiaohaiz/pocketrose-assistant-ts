@@ -63,6 +63,19 @@ function doProcess(credential: Credential, petList: Pet[], studyStatus: number[]
         });
 
     doRender(credential, petList, studyStatus);
+
+    const request = credential.asRequest();
+    // @ts-ignore
+    request["mode"] = "USE_ITEM";
+    NetworkUtils.sendPostRequest("mydata.cgi", request, function (html) {
+        const equipmentList = EquipmentParser.parsePersonalItemList(html);
+        const cage = EquipmentParser.findGoldenCage(equipmentList);
+        if (cage !== null) {
+            $("#goldenCageIndex").text(cage.index!);
+            $("#openCageButton").show();
+            $("#closeCageButton").show();
+        }
+    });
 }
 
 function doRender(credential: Credential, petList: Pet[], studyStatus: number[]) {
@@ -180,12 +193,20 @@ function doRender(credential: Credential, petList: Pet[], studyStatus: number[])
     html += "</td></tr>";
     html += "<tr><td style='background-color:#E8E8D0;text-align:center' colspan='19'>";
     html += "<input type='button' class='PetUIButton' value='刷新宠物管理' id='refreshButton'>";
-    html += "<input type='button' class='PetUIButton' value='打开黄金笼子' id='goldenCageButton'>";
+    html += "<input type='button' class='PetUIButton' value='打开黄金笼子' id='openCageButton'>";
+    html += "<input type='button' class='PetUIButton' value='关闭黄金笼子' id='closeCageButton'>";
+    html += "</td></tr>";
+    html += "<tr style='display:none'><td id='goldenCageContainer' style='background-color:#E8E8D0;text-align:center' colspan='19'>";
     html += "</td></tr>";
     html += "</tbody>";
     html += "</table>";
 
     $("#pet_management_container").html(html);
+
+    if ($("#goldenCageIndex").text() === "none") {
+        $("#openCageButton").hide();
+        $("#closeCageButton").hide();
+    }
 
     // 根据宠物状态修改按钮的样式
     for (let i = 0; i < petList.length; i++) {
@@ -288,6 +309,68 @@ function doRender(credential: Credential, petList: Pet[], studyStatus: number[])
 
     // 绑定按钮点击事件处理
     doBind(credential, petList);
+
+    if ($("#goldenCageStatus").text() === "on") {
+        doRenderGoldenCage(credential);
+    }
+}
+
+function doRenderGoldenCage(credential: Credential) {
+    const s = $("#goldenCageIndex").text();
+    if (s === "none") {
+        return;
+    }
+    const index = parseInt(s);
+    const request = credential.asRequest();
+    // @ts-ignore
+    request["chara"] = "1";
+    // @ts-ignore
+    request["item" + index] = index;
+    // @ts-ignore
+    request["mode"] = "USE";
+    NetworkUtils.sendPostRequest("mydata.cgi", request, function (pageHtml) {
+        const cagePetList = PetParser.parseGoldenCagePetList(pageHtml);
+
+        let html = "";
+        html += "<table style='border-width:0;background-color:#888888;text-align:center;width:100%'>";
+        html += "<tbody style='background-color:#F8F0E0'>";
+        html += "<tr>";
+        html += "<td style='background-color:#E8E8D0'>宠物名</td>";
+        html += "<td style='background-color:#E8E8D0'>Ｌｖ</td>";
+        html += "<td style='background-color:#E8E8D0'>ＨＰ</td>";
+        html += "<td style='background-color:#E8E8D0'>攻击力</td>";
+        html += "<td style='background-color:#E8E8D0'>防御力</td>";
+        html += "<td style='background-color:#E8E8D0'>智力</td>";
+        html += "<td style='background-color:#E8E8D0'>精神力</td>";
+        html += "<td style='background-color:#E8E8D0'>速度</td>";
+        html += "<td style='background-color:#E8E8D0'>经验</td>";
+        html += "<td style='background-color:#E8E8D0'>性别</td>";
+        html += "<td style='background-color:#E8E8D0'>取出</td>";
+        html += "</tr>";
+        for (const pet of cagePetList) {
+            html += "<tr>";
+            html += "<td style='background-color:#E8E8D0'>" + pet.name + "</td>";
+            html += "<td style='background-color:#E8E8D0'>" + pet.level + "</td>";
+            html += "<td style='background-color:#E8E8D0'>" + pet.health + "/" + pet.maxHealth + "</td>";
+            html += "<td style='background-color:#E8E8D0'>" + pet.attack + "</td>";
+            html += "<td style='background-color:#E8E8D0'>" + pet.defense + "</td>";
+            html += "<td style='background-color:#E8E8D0'>" + pet.specialAttack + "</td>";
+            html += "<td style='background-color:#E8E8D0'>" + pet.specialDefense + "</td>";
+            html += "<td style='background-color:#E8E8D0'>" + pet.speed + "</td>";
+            html += "<td style='background-color:#E8E8D0'>" + pet.experience + "</td>";
+            html += "<td style='background-color:#E8E8D0'>" + pet.gender + "</td>";
+            html += "<td style='background-color:#E8E8D0'></td>";
+            html += "</tr>";
+        }
+        html += "</tbody>";
+        html += "</table>";
+
+        $("#goldenCageContainer")
+            .html(html)
+            .parent()
+            .show();
+        $("#goldenCageStatus").text("on");
+    });
 }
 
 function doBind(credential: Credential, petList: Pet[]) {
@@ -756,21 +839,21 @@ async function consecratePet(credential: Credential, petIndex: number) {
 }
 
 function doBindGoldenCageButton(credential: Credential) {
-    $("#goldenCageButton").on("click", function () {
-        const request = credential.asRequest();
-        // @ts-ignore
-        request["mode"] = "USE_ITEM";
-        NetworkUtils.sendPostRequest("mydata.cgi", request, function (html) {
-            const equipmentList = EquipmentParser.parsePersonalItemList(html);
-            const cage = EquipmentParser.findGoldenCage(equipmentList);
-            if (cage !== null) {
-                $("form[action='status.cgi']").attr("action", "mydata.cgi");
-                $("input:hidden[value='STATUS']").attr("value", "USE");
-                $("#returnButton").prepend("<input type='hidden' name='chara' value='1'>");
-                $("#returnButton").prepend("<input type='hidden' name='item" + cage.index + "' value='" + cage.index + "'>");
-                $("#returnButton").trigger("click");
-            }
-        });
+    $("#openCageButton").on("click", function () {
+        if ($("#goldenCageStatus").text() === "on") {
+            return;
+        }
+        doRenderGoldenCage(credential);
+    });
+    $("#closeCageButton").on("click", function () {
+        if ($("#goldenCageStatus").text() === "off") {
+            return;
+        }
+        $("#goldenCageContainer")
+            .html("")
+            .parent()
+            .hide();
+        $("#goldenCageStatus").text("off");
     });
 }
 
