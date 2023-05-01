@@ -230,7 +230,7 @@ function determinePostBattleBehaviour(pageText: string, endure: number): number 
 }
 
 function doRenderBattleHarvestPrompt() {
-    const prompt = SetupLoader.getNormalBattlePrompt();
+    const prompt = SetupLoader.getBattleHarvestPrompt();
     if (prompt["person"] !== undefined && prompt["person"] !== "NONE") {
         const candidates: string[] = [];
         $("p").each(function (_idx, p) {

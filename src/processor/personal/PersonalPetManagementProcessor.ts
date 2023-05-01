@@ -359,7 +359,9 @@ function doRenderGoldenCage(credential: Credential) {
             html += "<td style='background-color:#E8E8D0'>" + pet.speed + "</td>";
             html += "<td style='background-color:#E8E8D0'>" + pet.experience + "</td>";
             html += "<td style='background-color:#E8E8D0'>" + pet.gender + "</td>";
-            html += "<td style='background-color:#E8E8D0'></td>";
+            html += "<td style='background-color:#E8E8D0'>";
+            html += "<input type='button' class='PetUIButton' id='takeOutButton_" + pet.index + "' value='取出'>";
+            html += "</td>";
             html += "</tr>";
         }
         html += "</tbody>";
@@ -370,6 +372,10 @@ function doRenderGoldenCage(credential: Credential) {
             .parent()
             .show();
         $("#goldenCageStatus").text("on");
+
+        for (const pet of cagePetList) {
+            doBindTakeOutButton(credential, pet.index!);
+        }
     });
 }
 
@@ -854,6 +860,12 @@ function doBindGoldenCageButton(credential: Credential) {
             .parent()
             .hide();
         $("#goldenCageStatus").text("off");
+    });
+}
+
+function doBindTakeOutButton(credential: Credential, index: number) {
+    $("#takeOutButton_" + index).on("click", function () {
+
     });
 }
 
