@@ -7,11 +7,11 @@ class PersonalStatusProcessor extends PageProcessor {
         PageUtils.removeUnusedHyperLinks();
         PageUtils.removeGoogleAnalyticsScript();
 
-        reRenderHonor();
+        doRenderHonor();
     }
 }
 
-function reRenderHonor() {
+function doRenderHonor() {
     const td = $("table:eq(1) tr:eq(24) td:first");
     let html = $(td).html();
     html = html.replace(/<br>/g, '');
