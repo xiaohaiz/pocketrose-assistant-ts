@@ -47,6 +47,8 @@ function doProcess(credential: Credential, equipmentList: Equipment[]) {
     $("table:first tr:first").next().next()
         .html("<td style='background-color:#F8F0E0'>" +
             "<div id='ItemUI'></div><div id='Eden' style='display:none'></div>" +
+            "<div id='treasureBagIndex' style='display:none'>none</div>" +
+            "<div id='treasureBagStatus' style='display:none'>off</div>" +
             "</td>");
     // 在Eden里面添加预制的表单
     $("#Eden").html("" +
@@ -237,6 +239,12 @@ function doRender(credential: Credential, equipmentList: Equipment[]) {
     html += "       <tr>";
     html += "           <td style='background-color:#E8E8D0;text-align:center' colspan='19'>";
     html += "           <input type='button' class='ItemUIButton' id='refreshButton' value='刷新装备管理界面'>";
+    html += "           <input type='button' class='ItemUIButton' id='openBagButton' value='打开百宝袋'>";
+    html += "           <input type='button' class='ItemUIButton' id='closeBugButton' value='关闭百宝袋'>";
+    html += "           </td>"
+    html += "       </tr>";
+    html += "       <tr style='display:none'>";
+    html += "           <td id='treasureBagContainer' style='background-color:#E8E8D0;text-align:center' colspan='19'>";
     html += "           </td>"
     html += "       </tr>";
     html += "   </tbody>";
@@ -254,7 +262,12 @@ function doRender(credential: Credential, equipmentList: Equipment[]) {
         $("#treasureBagButton").css("display", "none");
         $("#putAllIntoBagButton").prop("disabled", true);
         $("#putAllIntoBagButton").css("display", "none");
+        $("#openBagButton").prop("disabled", "true").hide();
+        $("#closeBugButton").prop("disabled", "true").hide();
+    } else {
+        $("#treasureBagIndex").text(treasureBag.index!);
     }
+
     const goldenCage = EquipmentParser.findGoldenCage(equipmentList);
     if (goldenCage === null) {
         $("#goldenCageButton").prop("disabled", true);
@@ -299,6 +312,34 @@ function doRender(credential: Credential, equipmentList: Equipment[]) {
     doBindSendButton(credential);
     doBindStoreButton(credential, treasureBag);
     doBindRefreshButton(credential);
+    doBindOpenCloseTreasureBagButton(credential);
+
+    if ($("#treasureBagStatus").text() === "on") {
+        doRenderTreasureBag(credential);
+    }
+}
+
+function doRenderTreasureBag(credential: Credential) {
+    const s = $("#treasureBagIndex").text();
+    if (s === "none") {
+        return;
+    }
+    const index = parseInt(s);
+    const request = credential.asRequest();
+    // @ts-ignore
+    request["chara"] = "1";
+    // @ts-ignore
+    request["item" + index] = index;
+    // @ts-ignore
+    request["mode"] = "USE";
+    NetworkUtils.sendPostRequest("mydata.cgi", request, function (pageHtml) {
+        const bagEquipmentList = EquipmentParser.parseTreasureBagItemList(pageHtml);
+
+        let html = "xxx";
+
+        $("#treasureBagContainer").html(html).parent().show();
+        $("#treasureBagStatus").text("on");
+    });
 }
 
 function doRefresh(credential: Credential) {
@@ -609,6 +650,26 @@ function doBindRefreshButton(credential: Credential) {
         MessageBoard.resetMessageBoard("");
         doRefresh(credential);
     });
+}
+
+function doBindOpenCloseTreasureBagButton(credential: Credential) {
+    if (!$("#openBagButton").prop("disabled")) {
+        $("#openBagButton").on("click", function () {
+            if ($("#treasureBagStatus").text() === "on") {
+                return;
+            }
+            doRenderTreasureBag(credential);
+        });
+    }
+    if (!$("#closeBugButton").prop("disabled")) {
+        $("#closeBugButton").on("click", function () {
+            if ($("#treasureBagStatus").text() === "off") {
+                return;
+            }
+            $("#treasureBagContainer").html("").parent().hide();
+            $("#treasureBagStatus").text("off");
+        });
+    }
 }
 
 function doBindConsecrateButton(credential: Credential) {
