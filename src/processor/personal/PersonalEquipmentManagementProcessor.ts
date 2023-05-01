@@ -403,10 +403,12 @@ function doBindUseButton(credential: Credential) {
         let checkedCount = 0;
         $(".personal_checkbox")
             .each(function (_idx, checkbox) {
-                checkedCount++;
-                const name = $(checkbox).attr("name");
-                // @ts-ignore
-                request[name] = $(checkbox).val();
+                if ($(checkbox).prop("checked")) {
+                    checkedCount++;
+                    const name = $(checkbox).attr("name");
+                    // @ts-ignore
+                    request[name] = $(checkbox).val();
+                }
             });
         if (checkedCount === 0) {
             MessageBoard.publishWarning("没有选择任何装备！");
@@ -432,11 +434,13 @@ function doBindPutIntoBagButton(credential: Credential) {
         let checkedCount = 0;
         $(".personal_checkbox")
             .each(function (_idx, checkbox) {
-                if (!$(checkbox).parent().next().text().includes("★")) {
-                    checkedCount++;
-                    const name = $(checkbox).attr("name");
-                    // @ts-ignore
-                    request[name] = $(checkbox).val();
+                if ($(checkbox).prop("checked")) {
+                    if (!$(checkbox).parent().next().text().includes("★")) {
+                        checkedCount++;
+                        const name = $(checkbox).attr("name");
+                        // @ts-ignore
+                        request[name] = $(checkbox).val();
+                    }
                 }
             });
         if (checkedCount === 0) {
@@ -616,10 +620,12 @@ function doBindSendButton(credential: Credential) {
         let checkedCount = 0;
         $(".personal_checkbox")
             .each(function (_idx, checkbox) {
-                checkedCount++;
-                const name = $(checkbox).attr("name");
-                // @ts-ignore
-                request[name] = $(checkbox).val();
+                if ($(checkbox).prop("checked")) {
+                    checkedCount++;
+                    const name = $(checkbox).attr("name");
+                    // @ts-ignore
+                    request[name] = $(checkbox).val();
+                }
             });
         if (checkedCount === 0) {
             MessageBoard.publishWarning("没有选择要发送的装备！");
@@ -713,10 +719,12 @@ function doBindTakeOutButton(credential: Credential) {
         let checkedCount = 0;
         $(".bag_checkbox")
             .each(function (_idx, checkbox) {
-                checkedCount++;
-                const name = $(checkbox).attr("name")!;
-                // @ts-ignore
-                request[name] = $(checkbox).val();
+                if ($(checkbox).prop("checked")) {
+                    checkedCount++;
+                    const name = $(checkbox).attr("name")!;
+                    // @ts-ignore
+                    request[name] = $(checkbox).val();
+                }
             });
         if (checkedCount === 0) {
             MessageBoard.publishWarning("没有选择要从百宝袋中取出的装备！");
@@ -738,18 +746,20 @@ function doBindConsecrateButton(credential: Credential) {
 
         $(".personal_checkbox")
             .each(function (_idx, checkbox) {
-                const c0 = $(checkbox).parent();
-                const c1 = $(c0).next();
-                const c2 = $(c1).next();
-                const c3 = $(c2).next();
+                if ($(checkbox).prop("checked")) {
+                    const c0 = $(checkbox).parent();
+                    const c1 = $(c0).next();
+                    const c2 = $(c1).next();
+                    const c3 = $(c2).next();
 
-                let s = $(c3).text().trim();
-                if (s === "武器" || s === "防具" || s === "饰品") {
-                    s = $(c1).text().trim();
-                    if (s !== "★") {
-                        s = $(c2).text().trim();
-                        consecrateCandidates.push(parseInt($(checkbox).val() as string));
-                        consecrateCandidateNames.push(s);
+                    let s = $(c3).text().trim();
+                    if (s === "武器" || s === "防具" || s === "饰品") {
+                        s = $(c1).text().trim();
+                        if (s !== "★") {
+                            s = $(c2).text().trim();
+                            consecrateCandidates.push(parseInt($(checkbox).val() as string));
+                            consecrateCandidateNames.push(s);
+                        }
                     }
                 }
             });
