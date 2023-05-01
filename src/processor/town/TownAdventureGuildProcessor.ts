@@ -15,6 +15,7 @@ import Town from "../../pocket/Town";
 import TownEntrance from "../../pocket/TownEntrance";
 import TravelPlan from "../../pocket/TravelPlan";
 import TravelPlanExecutor from "../../pocket/TravelPlanExecutor";
+import MapExplorer from "../../pocket/MapExplorer";
 
 class TownAdventureGuildProcessor extends PageProcessor {
 
@@ -333,11 +334,11 @@ function doSeekTreasure(credential: Credential,
         if (from.x === to.x && from.y === to.y) {
             // 下一张图在原地
             MessageBoard.publishMessage("运气真好，原地可以继续探险。");
-            // map.explore(credential).then(found => {
-            //     foundList.push(found);
-            //     inst.#seekTreasure(credential, player, town, scope, mode, locationList, locationIndex + 1, foundList);
-            // });
-            doSeekTreasure(credential, town, scope, mode, locationList, locationIndex + 1, foundList);
+            new MapExplorer(credential).explore()
+                .then(found => {
+                    foundList.push(found);
+                    doSeekTreasure(credential, town, scope, mode, locationList, locationIndex + 1, foundList);
+                });
         } else {
             const plan = new TravelPlan();
             plan.credential = credential;
@@ -347,11 +348,11 @@ function doSeekTreasure(credential: Credential,
             plan.mode = mode;
             new TravelPlanExecutor(plan).execute()
                 .then(() => {
-                    // map.explore(credential).then(found => {
-                    //     foundList.push(found);
-                    //     inst.#seekTreasure(credential, player, town, scope, mode, locationList, locationIndex + 1, foundList);
-                    // });
-                    doSeekTreasure(credential, town, scope, mode, locationList, locationIndex + 1, foundList);
+                    new MapExplorer(credential).explore()
+                        .then(found => {
+                            foundList.push(found);
+                            doSeekTreasure(credential, town, scope, mode, locationList, locationIndex + 1, foundList);
+                        });
                 });
         }
     } else {
