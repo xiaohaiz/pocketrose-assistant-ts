@@ -10,6 +10,11 @@ import TownBank from "../../pocket/TownBank";
 import MapBuilder from "../../pocket/MapBuilder";
 import StringUtils from "../../util/StringUtils";
 import Coordinate from "../../util/Coordinate";
+import RoleLoader from "../../pocket/RoleLoader";
+import Town from "../../pocket/Town";
+import TownEntrance from "../../pocket/TownEntrance";
+import TravelPlan from "../../pocket/TravelPlan";
+import TravelPlanExecutor from "../../pocket/TravelPlanExecutor";
 
 class TownAdventureGuildProcessor extends PageProcessor {
 
@@ -255,7 +260,129 @@ function doBindTreasureButton(credential: Credential) {
             .off("mouseleave");
 
         // 页面渲染完毕，开始探险
+        new TownBank(credential).withdraw(110)
+            .then(success => {
+                if (!success) {
+                    MessageBoard.publishWarning("没钱还学别人探险？");
+                    return;
+                }
+                doUpdateRoleCash(credential);
+                new RoleLoader(credential).load()
+                    .then(role => {
+                        const town = role.town!;
+                        doStartTreasureSeeking(credential, candidates, town);
+                    });
+            });
     });
+}
+
+function doStartTreasureSeeking(credential: Credential, candidates: Coordinate[], town: Town) {
+    for (const it of candidates) {
+        const mapId = "location_" + it.x + "_" + it.y;
+        $("#" + mapId)
+            .css("background-color", "blue")
+            .css("color", "yellow")
+            .val("宝");
+    }
+
+    candidates.sort((a, b) => {
+        let ret = a.x - b.x;
+        if (ret === 0) {
+            ret = a.y - b.y;
+        }
+        return ret;
+    });
+    MessageBoard.publishMessage("藏宝图整理完毕。");
+
+    // 这个是要探索的完整路线，从本城开始，回到本城。
+    const locationList: Coordinate[] = [];
+    locationList.push(town.coordinate);
+    locationList.push(...candidates);
+    locationList.push(town.coordinate);
+    if (locationList.length !== 0) {
+        let msg = "探险顺序：";
+        for (let i = 0; i < locationList.length; i++) {
+            const it = locationList[i];
+            msg += it.asText();
+            if (i !== locationList.length - 1) {
+                msg += "=>";
+            }
+        }
+        MessageBoard.publishMessage(msg);
+    }
+
+    const foundList: string[] = [];
+
+    new TownEntrance(credential).leave()
+        .then(plan => {
+            doSeekTreasure(credential, town, plan.scope!, plan.mode!, locationList, 0, foundList);
+        });
+}
+
+function doSeekTreasure(credential: Credential,
+                        town: Town,
+                        scope: number,
+                        mode: string,
+                        locationList: Coordinate[],
+                        locationIndex: number,
+                        foundList: string[]) {
+    const from = locationList[locationIndex];
+    const to = locationList[locationIndex + 1];
+
+    if (locationIndex !== locationList.length - 2) {
+        if (from.x === to.x && from.y === to.y) {
+            // 下一张图在原地
+            MessageBoard.publishMessage("运气真好，原地可以继续探险。");
+            // map.explore(credential).then(found => {
+            //     foundList.push(found);
+            //     inst.#seekTreasure(credential, player, town, scope, mode, locationList, locationIndex + 1, foundList);
+            // });
+            doSeekTreasure(credential, town, scope, mode, locationList, locationIndex + 1, foundList);
+        } else {
+            const plan = new TravelPlan();
+            plan.credential = credential;
+            plan.source = from;
+            plan.destination = to;
+            plan.scope = scope;
+            plan.mode = mode;
+            new TravelPlanExecutor(plan).execute()
+                .then(() => {
+                    // map.explore(credential).then(found => {
+                    //     foundList.push(found);
+                    //     inst.#seekTreasure(credential, player, town, scope, mode, locationList, locationIndex + 1, foundList);
+                    // });
+                    doSeekTreasure(credential, town, scope, mode, locationList, locationIndex + 1, foundList);
+                });
+        }
+    } else {
+        // 最后一个坐标已经完成了探险。现在可以回城了
+        MessageBoard.publishMessage("藏宝图已经用完，准备回城。");
+        const plan = new TravelPlan();
+        plan.credential = credential;
+        plan.source = from;
+        plan.destination = to;
+        plan.scope = scope;
+        plan.mode = mode;
+        new TravelPlanExecutor(plan).execute()
+            .then(() => {
+                new TownEntrance(credential).enter(town.id)
+                    .then(() => {
+                        new TownBank(credential).deposit(undefined)
+                            .then(() => {
+                                MessageBoard.publishMessage("探险完成。");
+                                if (foundList.length > 0) {
+                                    MessageBoard.publishMessage("在无人处，悄悄检视了下探险的收入：");
+                                    for (let i = 0; i < foundList.length; i++) {
+                                        MessageBoard.publishMessage("<b style='color: yellow'>" + foundList[i] + "</b>");
+                                    }
+                                }
+                                $("#returnButton")
+                                    .prop("disabled", false)
+                                    .attr("value", town.name + "欢迎您的归来");
+                            });
+                    });
+            });
+    }
 }
 
 function doRefresh(credential: Credential) {
