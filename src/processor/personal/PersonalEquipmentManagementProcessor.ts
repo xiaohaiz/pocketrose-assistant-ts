@@ -11,6 +11,7 @@ import TownBank from "../../pocket/TownBank";
 import SetupLoader from "../../pocket/SetupLoader";
 import CommentBoard from "../../util/CommentBoard";
 import NpcLoader from "../../pocket/NpcLoader";
+import RoleStatusLoader from "../../pocket/RoleStatusLoader";
 
 class PersonalEquipmentManagementProcessor extends PageProcessor {
 
@@ -82,7 +83,15 @@ function doProcess(credential: Credential, equipmentList: Equipment[]) {
     doBindConsecrateButton(credential);
 
     $("#p_3139").on("click", function () {
-        $("#consecrateButton").toggle();
+        $("#p_3139").off("click");
+        new RoleStatusLoader(credential).loadRoleStatus()
+            .then(status => {
+                if (status.canConsecrate) {
+                    $("#consecrateButton").show();
+                } else {
+                    MessageBoard.publishWarning("祭奠还在冷却中！");
+                }
+            });
     });
 
     doRender(credential, equipmentList);
