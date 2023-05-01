@@ -1,5 +1,6 @@
 import Town from "./Town";
 import Constants from "../util/Constants";
+import Castle from "./Castle";
 
 class Role {
     name?: string;               // 姓名
@@ -23,6 +24,7 @@ class Role {
     attribute?: string;
     location?: string;           // 所在位置(TOWN|CASTLE|WILD)
     town?: Town;
+    castle?: Castle;
     task?: string;
     battleCount?: number;
     experience?: number;

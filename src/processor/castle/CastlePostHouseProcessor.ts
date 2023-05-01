@@ -2,13 +2,15 @@ import PageProcessor from "../PageProcessor";
 import Credential from "../../util/Credential";
 import MessageBoard from "../../util/MessageBoard";
 import PageUtils from "../../util/PageUtils";
-import TownSelectionBuilder from "../../pocket/TownSelectionBuilder";
 import TownLoader from "../../pocket/TownLoader";
 import CastleBank from "../../pocket/CastleBank";
 import CastleEntrance from "../../pocket/CastleEntrance";
 import TravelPlanExecutor from "../../pocket/TravelPlanExecutor";
 import TownEntrance from "../../pocket/TownEntrance";
 import TownBank from "../../pocket/TownBank";
+import MapBuilder from "../../pocket/MapBuilder";
+import RoleLoader from "../../pocket/RoleLoader";
+import StringUtils from "../../util/StringUtils";
 
 class CastlePostHouseProcessor extends PageProcessor {
     process() {
@@ -36,6 +38,7 @@ function doProcess(credential: Credential) {
     $(td).css("font-weight", "bold");
     $(td).css("background-color", "navy");
     $(td).css("color", "yellowgreen");
+    $(td).attr("id", "title");
     $(td).text("＜＜  城 堡 驿 站  ＞＞");
 
     // 现金栏、坐标点、计时器
@@ -62,48 +65,75 @@ function doProcess(credential: Credential) {
     tr = $(t3).parent().parent();
     $(tr).next().remove();
 
-    $(tr).after($(doGenerate(credential)));
+    // 绘制驿站的新页面
+    $(tr).after($("" +
+        "<tr style='display:none'>" +
+        "<td id='eden'></td>" +
+        "</tr>" +
+        "<tr>" +
+        "<td id='menu' style='background-color:#F8F0E0;text-align:center'></td>" +
+        "</tr>" +
+        "<tr style='display:none'>" +
+        "<td id='map' style='background-color:#F8F0E0;text-align:center'></td>" +
+        "</tr>" +
+        ""));
 
-    doBindReturnButton();
-    doBindTownButton(credential);
+    doRenderEden(credential);
+    doRenderMenu();
+    doRenderMap(credential);
 }
 
-function doGenerate(credential: Credential): string {
+function doRenderEden(credential: Credential) {
     let html = "";
-    html += "<tr style='display:none'>";
-    html += "<td>";
-    html += "<form action='castlestatus.cgi' method='post' id='eden_form'>"
+    // noinspection HtmlUnknownTarget
+    html += "<form action='castlestatus.cgi' method='post' id='returnForm'>"
     html += "<input type='hidden' name='id' value='" + credential.id + "'>";
     html += "<input type='hidden' name='pass' value='" + credential.pass + "'>";
-    html += "<div id='eden_form_payload' style='display:none'>";
     html += "<input type='hidden' name='mode' value='CASTLESTATUS'>";
-    html += "</div>";
-    html += "<input type='submit' id='eden_form_submit'>";
-    html += "</form>"
-    html += "</td>";
-    html += "</tr>";
-    html += "<tr style='background-color:#F8F0E0;text-align:center'>";
-    html += "<td>";
-    html += "<input type='button' id='returnButton' value='返回城堡'>";
-    html += "</td>";
-    html += "</tr>";
-    html += "<tr style='background-color:#F8F0E0;text-align:center'>";
-    html += "<td>";
-    html += TownSelectionBuilder.buildTownSelectionTable();
-    html += "</td>";
-    html += "</tr>";
-    html += "<tr style='background-color:#F8F0E0;text-align:center'>";
-    html += "<td>";
-    html += "<input type='button' id='townButton' value='开始旅途' style='color:blue'>";
-    html += "</td>";
-    html += "</tr>";
-    return html;
+    html += "<input type='submit' id='returnSubmit'>";
+    $("#eden").html(html);
 }
 
-function doBindReturnButton() {
+function doRenderMenu() {
+    $("#menu").html("" +
+        "<input type='button' id='returnButton' value='返回城堡'>"
+    );
     $("#returnButton").on("click", function () {
-        $("#eden_form_submit").trigger("click");
+        $("#returnSubmit").trigger("click");
     });
+}
+
+function doRenderMap(credential: Credential) {
+    const html = MapBuilder.buildMapTable();
+    $("#map").html(html);
+
+    new RoleLoader(credential).load()
+        .then(role => {
+            const castle = role.castle!;
+            const buttonId = "location_" + castle.coordinate!.x + "_" + castle.coordinate!.y;
+            $("#" + buttonId)
+                .closest("td")
+                .css("background-color", "black")
+                .css("color", "white")
+                .css("text-align", "center")
+                .html("堡");
+
+            $(".location_button_class")
+                .on("mouseenter", function () {
+                    $(this).css("background-color", "red");
+                })
+                .on("mouseleave", function () {
+                    const s = $(this).parent().attr("class")!;
+                    const c = StringUtils.substringAfter(s, "_");
+                    if (c !== "none") {
+                        $(this).css("background-color", c);
+                    } else {
+                        $(this).removeAttr("style");
+                    }
+                });
+
+            $("#map").parent().show();
+        });
 }
 
 function doBindTownButton(credential: Credential) {

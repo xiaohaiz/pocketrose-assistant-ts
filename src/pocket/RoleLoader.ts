@@ -3,6 +3,8 @@ import NetworkUtils from "../util/NetworkUtils";
 import Role from "./Role";
 import StringUtils from "../util/StringUtils";
 import TownLoader from "./TownLoader";
+import Castle from "./Castle";
+import Coordinate from "../util/Coordinate";
 
 class RoleLoader {
 
@@ -96,6 +98,16 @@ function doParseRole(html: string): Role {
     s = $(td).text();
     if (s === "野外") {
         role.location = "WILD";
+    } else if (s.includes("(") && s.includes(")")) {
+        role.location = "CASTLE";
+        const castle = new Castle();
+        castle.name = StringUtils.substringBefore(s, " (");
+        castle.owner = role.name;
+        s = StringUtils.substringBetween(s, "(", ")");
+        const x = parseInt(StringUtils.substringBefore(s, ","));
+        const y = parseInt(StringUtils.substringAfter(s, ","));
+        castle.coordinate = new Coordinate(x, y);
+        role.castle = castle;
     } else {
         const town = TownLoader.getTownByName(s);
         if (town !== null) {
