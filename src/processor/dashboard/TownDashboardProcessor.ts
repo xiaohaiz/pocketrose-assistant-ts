@@ -26,6 +26,7 @@ function doProcess(credential: Credential) {
     doRenderEquipmentManagementMenu();
     doRenderPetManagementMenu();
     doRenderCareerManagementMenu();
+    doRenderAdventureGuildMenu();
 
     const role = doParseRole();
     doRenderBattleCount(role);
@@ -229,26 +230,35 @@ function doRenderSetupMenu() {
 
 function doRenderEquipmentManagementMenu() {
     if (SetupLoader.isEquipmentManagementUIEnabled()) {
-        $("option[value='USE_ITEM']").text("装备管理");
-        $("option[value='USE_ITEM']").css("background-color", "yellow");
+        $("option[value='USE_ITEM']")
+            .css("background-color", "yellow")
+            .text("装备管理");
         $("option[value='ITEM_SEND']").remove();
     }
 }
 
 function doRenderPetManagementMenu() {
     if (SetupLoader.isPetManagementUIEnabled()) {
-        $("option[value='PETSTATUS']").text("宠物管理");
-        $("option[value='PETSTATUS']").css("background-color", "yellow");
+        $("option[value='PETSTATUS']")
+            .css("background-color", "yellow")
+            .text("宠物管理");
         $("option[value='PET_SEND']").remove();
     }
 }
 
 function doRenderCareerManagementMenu() {
     if (SetupLoader.isCareerManagementUIEnabled()) {
-        $("option[value='CHANGE_OCCUPATION']").text("职业管理");
-        $("option[value='CHANGE_OCCUPATION']").css("background-color", "yellow");
+        $("option[value='CHANGE_OCCUPATION']")
+            .css("background-color", "yellow")
+            .text("职业管理");
         $("option[value='MAGIC']").remove();
     }
+}
+
+function doRenderAdventureGuildMenu() {
+    $("option[value='CHANGEMAP']")
+        .css("background-color", "yellow")
+        .text("冒险家公会");
 }
 
 function doRenderBattleCount(role: Role) {
