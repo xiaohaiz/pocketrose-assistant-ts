@@ -321,12 +321,14 @@ function doBindUseButton(credential: Credential) {
     $("#useButton").on("click", function () {
         const request = credential.asRequest();
         let checkedCount = 0;
-        $("input:checkbox:checked").each(function (_idx, checkbox) {
-            checkedCount++;
-            const name = $(checkbox).attr("name");
-            // @ts-ignore
-            request[name] = $(checkbox).val();
-        });
+        $("#personalEquipments")
+            .find("input:checkbox:checked")
+            .each(function (_idx, checkbox) {
+                checkedCount++;
+                const name = $(checkbox).attr("name");
+                // @ts-ignore
+                request[name] = $(checkbox).val();
+            });
         if (checkedCount === 0) {
             MessageBoard.publishWarning("没有选择任何装备！");
             return;
@@ -349,14 +351,16 @@ function doBindPutIntoBagButton(credential: Credential) {
     $("#putIntoBagButton").on("click", function () {
         const request = credential.asRequest();
         let checkedCount = 0;
-        $("input:checkbox:checked").each(function (_idx, checkbox) {
-            if (!$(checkbox).parent().next().text().includes("★")) {
-                checkedCount++;
-                const name = $(checkbox).attr("name");
-                // @ts-ignore
-                request[name] = $(checkbox).val();
-            }
-        });
+        $("#personalEquipments")
+            .find("input:checkbox:checked")
+            .each(function (_idx, checkbox) {
+                if (!$(checkbox).parent().next().text().includes("★")) {
+                    checkedCount++;
+                    const name = $(checkbox).attr("name");
+                    // @ts-ignore
+                    request[name] = $(checkbox).val();
+                }
+            });
         if (checkedCount === 0) {
             MessageBoard.publishWarning("没有选择任何装备！");
             return;
@@ -407,14 +411,16 @@ function doBindPutAllIntoBagButton(credential: Credential) {
     $("#putAllIntoBagButton").on("click", function () {
         const request = credential.asRequest();
         let checkedCount = 0;
-        $("input:checkbox").each(function (_idx, checkbox) {
-            if (!$(checkbox).parent().next().text().includes("★")) {
-                checkedCount++;
-                const name = $(checkbox).attr("name");
-                // @ts-ignore
-                request[name] = $(checkbox).val();
-            }
-        });
+        $("#personalEquipments")
+            .find("input:checkbox")
+            .each(function (_idx, checkbox) {
+                if (!$(checkbox).parent().next().text().includes("★")) {
+                    checkedCount++;
+                    const name = $(checkbox).attr("name");
+                    // @ts-ignore
+                    request[name] = $(checkbox).val();
+                }
+            });
         if (checkedCount === 0) {
             MessageBoard.publishWarning("目前没有任何装备可以放入百宝袋。");
             return;
@@ -531,12 +537,14 @@ function doBindSendButton(credential: Credential) {
         // @ts-ignore
         request["eid"] = receiver;
         let checkedCount = 0;
-        $("input:checkbox:checked").each(function (_idx, checkbox) {
-            checkedCount++;
-            const name = $(checkbox).attr("name");
-            // @ts-ignore
-            request[name] = $(checkbox).val();
-        });
+        $("#personalEquipments")
+            .find("input:checkbox:checked")
+            .each(function (_idx, checkbox) {
+                checkedCount++;
+                const name = $(checkbox).attr("name");
+                // @ts-ignore
+                request[name] = $(checkbox).val();
+            });
         if (checkedCount === 0) {
             MessageBoard.publishWarning("没有选择要发送的装备！");
             return;
