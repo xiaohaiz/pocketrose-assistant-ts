@@ -11,6 +11,8 @@ import TownBank from "../../pocket/TownBank";
 import MapBuilder from "../../pocket/MapBuilder";
 import RoleLoader from "../../pocket/RoleLoader";
 import StringUtils from "../../util/StringUtils";
+import Coordinate from "../../util/Coordinate";
+import Town from "../../pocket/Town";
 
 class CastlePostHouseProcessor extends PageProcessor {
     process() {
@@ -133,68 +135,101 @@ function doRenderMap(credential: Credential) {
                 });
 
             $("#map").parent().show();
+
+            doBindMapButton(credential);
         });
 }
 
-function doBindTownButton(credential: Credential) {
-    $("#townButton").on("click", function () {
-        const destinationTownId = $("input:radio:checked").val();
-        if (destinationTownId === undefined) {
-            MessageBoard.publishWarning("没有选择目的地城市！");
+function doBindMapButton(credential: Credential) {
+    $(".location_button_class").on("click", function () {
+        const title = $(this).parent().attr("title")!;
+        const ss = ($(this).attr("id") as string).split("_");
+        const x = parseInt(ss[1]);
+        const y = parseInt(ss[2]);
+        const coordinate = new Coordinate(x, y);
+
+        let townName = "";
+        let confirmation = false;
+        if (title.startsWith("城市")) {
+            townName = StringUtils.substringAfterLast(title, " ");
+            confirmation = confirm("确认移动到" + townName + "？");
+        } else if (title.startsWith("坐标")) {
+            confirmation = confirm("确认移动到坐标" + coordinate.asText() + "？");
+        }
+        if (!confirmation) {
             return;
         }
 
+        // 准备切换到移动模式
+        document.getElementById("title")?.scrollIntoView();
         MessageBoard.resetMessageBoard("我们将实时为你播报旅途的动态：<br>");
-        $("#returnButton").prop("disabled", true);
-        $("#townButton").prop("disabled", true);
-        $("#townButton").css("color", "grey");
-        $("input:radio").prop("disabled", true);
+        $("#returnButton")
+            .prop("disabled", true)
+            .val("旅途中请耐心等候......");
+        $(".location_button_class")
+            .prop("disabled", true)
+            .off("mouseenter")
+            .off("mouseleave");
 
-        const destinationTown = TownLoader.getTownById(destinationTownId as string)!;
-        MessageBoard.publishMessage("目的地城市：<span style='color:greenyellow'>" + destinationTown.name + "</span>");
-        MessageBoard.publishMessage("目的地坐标：<span style='color:greenyellow'>" + destinationTown.coordinate.asText() + "</span>");
-
-        const castleBank = new CastleBank(credential);
-        castleBank.withdraw(10)
-            .then(success => {
-                if (!success) {
-                    MessageBoard.publishWarning("因为没有足够的保证金，旅途被中断！");
-                    MessageBoard.publishMessage("回去吧，没钱就别来了。");
-                    $("#returnButton").prop("disabled", false);
-                    return;
-                }
-
-                castleBank.loadBankAccount()
-                    .then(account => {
-                        $("#roleCash").text(account.cash + " GOLD");
-                    });
-
-                new CastleEntrance(credential).leave()
-                    .then(plan => {
-                        plan.destination = destinationTown.coordinate;
-                        new TravelPlanExecutor(plan).execute()
-                            .then(() => {
-                                new TownEntrance(credential).enter(destinationTown.id)
-                                    .then(() => {
-                                        const townBank = new TownBank(credential);
-                                        townBank.deposit(undefined)
-                                            .then(() => {
-                                                townBank.loadBankAccount()
-                                                    .then(account => {
-                                                        $("#roleCash").text(account.cash + " GOLD");
-                                                    });
-
-                                                MessageBoard.publishMessage("旅途愉快，下次再见。");
-                                                $("#eden_form").attr("action", "status.cgi");
-                                                $("#eden_form_payload").html("<input type='hidden' name='mode' value='STATUS'>");
-                                                $("#returnButton").val(destinationTown.name + "欢迎您");
-                                                $("#returnButton").prop("disabled", false);
-                                            });
-                                    });
-                            });
-                    });
-            });
+        if (townName !== "") {
+            const town = TownLoader.getTownByCoordinate(coordinate)!;
+            doTravelToTown(credential, town);
+        } else {
+            //doTravelToLocation(credential, coordinate);
+        }
     });
+}
+
+function doTravelToTown(credential: Credential, town: Town) {
+    MessageBoard.publishMessage("目的地城市：<span style='color:greenyellow'>" + town.name + "</span>");
+    MessageBoard.publishMessage("目的地坐标：<span style='color:greenyellow'>" + town.coordinate.asText() + "</span>");
+
+    const castleBank = new CastleBank(credential);
+    castleBank.withdraw(10)
+        .then(success => {
+            if (!success) {
+                MessageBoard.publishWarning("因为没有足够的保证金，旅途被中断！");
+                MessageBoard.publishMessage("回去吧，没钱就别来了。");
+                $("#returnButton")
+                    .prop("disabled", false)
+                    .val("真可怜钱不够");
+                return;
+            }
+
+            castleBank.loadBankAccount()
+                .then(account => {
+                    $("#roleCash").text(account.cash + " GOLD");
+                });
+
+            new CastleEntrance(credential).leave()
+                .then(plan => {
+                    plan.destination = town.coordinate;
+                    new TravelPlanExecutor(plan).execute()
+                        .then(() => {
+                            new TownEntrance(credential).enter(town.id)
+                                .then(() => {
+                                    const townBank = new TownBank(credential);
+                                    townBank.deposit(undefined)
+                                        .then(() => {
+                                            townBank.loadBankAccount()
+                                                .then(account => {
+                                                    $("#roleCash").text(account.cash + " GOLD");
+                                                });
+
+                                            MessageBoard.publishMessage("旅途愉快，下次再见。");
+                                            $("#returnForm")
+                                                .attr("action", "status.cgi")
+                                                .find("input:hidden[name='mode']")
+                                                .val("STATUS");
+                                            $("#eden_form_payload").html("<input type='hidden' name='mode' value='STATUS'>");
+                                            $("#returnButton")
+                                                .prop("disabled", false)
+                                                .val(town.name + "欢迎您");
+                                        });
+                                });
+                        });
+                });
+        });
 }
 
 export = CastlePostHouseProcessor;
