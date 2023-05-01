@@ -14,6 +14,7 @@ import Role from "../../pocket/Role";
 import StringUtils from "../../util/StringUtils";
 import CastleLoader from "../../pocket/CastleLoader";
 import Coordinate from "../../util/Coordinate";
+import Town from "../../pocket/Town";
 
 class TownPostHouseProcessor extends PageProcessor {
 
@@ -43,6 +44,7 @@ function doProcess(credential: Credential): void {
     $(td).css("font-weight", "bold");
     $(td).css("background-color", "navy");
     $(td).css("color", "yellowgreen");
+    $(td).attr("id", "title");
     $(td).text("＜＜  宿 屋 & 驿 站  ＞＞");
 
     // 标记现金栏、增加坐标栏和计时器
@@ -217,12 +219,14 @@ function doBindMapButton(credential: Credential) {
         const y = parseInt(ss[2]);
         const coordinate = new Coordinate(x, y);
 
+        let townName = "";
+        let castleName = "";
         let confirmation;
         if (title.startsWith("城市")) {
-            const townName = StringUtils.substringAfterLast(title, " ");
+            townName = StringUtils.substringAfterLast(title, " ");
             confirmation = confirm("确认移动到" + townName + "？");
         } else if (title.startsWith("城堡")) {
-            const castleName = StringUtils.substringAfterLast(title, " ");
+            castleName = StringUtils.substringAfterLast(title, " ");
             confirmation = confirm("确认回到" + castleName + "？");
         } else {
             confirmation = confirm("确认移动到坐标" + coordinate.asText() + "？");
@@ -230,7 +234,78 @@ function doBindMapButton(credential: Credential) {
         if (!confirmation) {
             return;
         }
+
+        // 准备切换到移动模式
+        document.getElementById("title")?.scrollIntoView();
+        MessageBoard.resetMessageBoard("我们将实时为你播报旅途的动态：<br>");
+        $("#lodgeButton").prop("disabled", true);
+        $("#lodgeButton").hide();
+        $("#returnButton").prop("disabled", true);
+        $("#returnButton").val("旅途中请耐心等候......");
+        $(".location_button_class").prop("disabled", true);
+
+        if (townName !== "") {
+            const town = TownLoader.getTownByCoordinate(coordinate)!;
+            doTravelToTown(credential, town);
+        } else if (castleName !== "") {
+
+        } else {
+
+        }
     });
+}
+
+function doTravelToTown(credential: Credential, town: Town) {
+    MessageBoard.publishMessage("目的地城市：<span style='color:greenyellow'>" + town.name + "</span>");
+    MessageBoard.publishMessage("目的地坐标：<span style='color:greenyellow'>" + town.coordinate.asText() + "</span>");
+
+    const bank = new TownBank(credential);
+    // 支取10万城门税
+    bank.withdraw(10)
+        .then(success => {
+            if (!success) {
+                MessageBoard.publishWarning("因为没有足够的保证金，旅途被中断！");
+                MessageBoard.publishMessage("回去吧，没钱就别来了。");
+                $("#returnButton").val("请攒够钱再来");
+                $("#returnButton").prop("disabled", false);
+                return;
+            }
+
+            // 更新现金栏
+            bank.loadBankAccount()
+                .then(account => {
+                    $("#roleCash").text(account.cash + " GOLD");
+                });
+
+            const entrance = new TownEntrance(credential);
+            // 离开当前城市
+            entrance.leave()
+                .then(plan => {
+                    plan.destination = town.coordinate;
+                    const executor = new TravelPlanExecutor(plan);
+                    // 执行旅途计划
+                    executor.execute()
+                        .then(() => {
+                            // 进入目标城市
+                            entrance.enter(town.id)
+                                .then(() => {
+                                    // 把身上现金全部存入
+                                    bank.deposit(undefined)
+                                        .then(() => {
+                                            // 更新现金栏
+                                            bank.loadBankAccount()
+                                                .then(account => {
+                                                    $("#roleCash").text(account.cash + " GOLD");
+                                                });
+
+                                            MessageBoard.publishMessage("旅途愉快，下次再见。");
+                                            $("#returnButton").val(town.name + "欢迎您");
+                                            $("#returnButton").prop("disabled", false);
+                                        });
+                                });
+                        });
+                });
+        });
 }
 
 function doBindTownButton(credential: Credential) {
