@@ -175,7 +175,7 @@ function doBindMapButton(credential: Credential) {
             const town = TownLoader.getTownByCoordinate(coordinate)!;
             doTravelToTown(credential, town);
         } else {
-            //doTravelToLocation(credential, coordinate);
+            doTravelToLocation(credential, coordinate);
         }
     });
 }
@@ -221,13 +221,33 @@ function doTravelToTown(credential: Credential, town: Town) {
                                                 .attr("action", "status.cgi")
                                                 .find("input:hidden[name='mode']")
                                                 .val("STATUS");
-                                            $("#eden_form_payload").html("<input type='hidden' name='mode' value='STATUS'>");
                                             $("#returnButton")
                                                 .prop("disabled", false)
                                                 .val(town.name + "欢迎您");
                                         });
                                 });
                         });
+                });
+        });
+}
+
+function doTravelToLocation(credential: Credential, location: Coordinate) {
+    MessageBoard.publishMessage("目的地坐标：<span style='color:greenyellow'>" + location.asText() + "</span>");
+
+    new CastleEntrance(credential).leave()
+        .then(plan => {
+            plan.destination = location;
+            const executor = new TravelPlanExecutor(plan);
+            executor.execute()
+                .then(() => {
+                    MessageBoard.publishMessage("旅途愉快，下次再见。");
+                    $("#returnForm")
+                        .attr("action", "status.cgi")
+                        .find("input:hidden[name='mode']")
+                        .val("STATUS");
+                    $("#returnButton")
+                        .prop("disabled", false)
+                        .val("到达了目的地" + location.asText());
                 });
         });
 }

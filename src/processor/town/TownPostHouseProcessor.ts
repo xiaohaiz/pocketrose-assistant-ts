@@ -316,14 +316,10 @@ function doTravelToLocation(credential: Credential, location: Coordinate) {
             const executor = new TravelPlanExecutor(plan);
             executor.execute()
                 .then(() => {
-                    const entrance = new CastleEntrance(credential);
-                    entrance.enter()
-                        .then(() => {
-                            MessageBoard.publishMessage("旅途愉快，下次再见。");
-                            $("#returnButton")
-                                .prop("disabled", false)
-                                .val("到达了目的地" + location.asText());
-                        });
+                    MessageBoard.publishMessage("旅途愉快，下次再见。");
+                    $("#returnButton")
+                        .prop("disabled", false)
+                        .val("到达了目的地" + location.asText());
                 });
         });
 }
