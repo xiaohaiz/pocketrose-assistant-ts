@@ -282,7 +282,9 @@ function doStartTreasureSeeking(credential: Credential, candidates: Coordinate[]
         $("#" + mapId)
             .css("background-color", "blue")
             .css("color", "yellow")
-            .val("宝");
+            .attr("value", "宝")
+            .parent()
+            .attr("class", "color_blue");
     }
 
     candidates.sort((a, b) => {
