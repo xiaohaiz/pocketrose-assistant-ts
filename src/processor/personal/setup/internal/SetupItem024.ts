@@ -42,7 +42,7 @@ function doGenerateSetupItem() {
     html += "<option class='option_class_" + code + "' value='NONE'>禁用</option>";
     html += "<option class='option_class_" + code + "' value='SELF'>自己</option>";
     html += "<option class='option_class_" + code + "' value='RANDOM'>随机</option>";
-    for (const name of NpcLoader.getNpcNames()) {
+    for (const name of NpcLoader.playerNpcNames()) {
         html += "<option class='option_class_" + code + "' value='" + name + "'>" + name + "</option>";
     }
     html += "</select>";

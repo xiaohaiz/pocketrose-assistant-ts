@@ -2,7 +2,6 @@ import PageUtils from "../../util/PageUtils";
 import SetupLoader from "../../pocket/SetupLoader";
 import StringUtils from "../../util/StringUtils";
 import NpcLoader from "../../pocket/NpcLoader";
-import RandomUtils from "../../util/RandomUtils";
 import CommentBoard from "../../util/CommentBoard";
 import Processor from "../Processor";
 
@@ -263,10 +262,7 @@ function doRenderBattleHarvestPrompt() {
             if (person === "SELF") {
                 imageHTML = PageUtils.findFirstRoleImageHtml()!;
             } else if (person === "RANDOM") {
-                const persons = NpcLoader.getNpcNames();
-                const idx = RandomUtils.randomInt(0, persons.length - 1);
-                person = persons[idx];
-                imageHTML = NpcLoader.getNpcImageHtml(person)!;
+                imageHTML = NpcLoader.randomPlayerImageHtml()!;
             } else {
                 imageHTML = NpcLoader.getNpcImageHtml(person)!;
             }
@@ -290,10 +286,7 @@ function doRenderNormalBattlePrompt() {
         if (person === "SELF") {
             imageHTML = PageUtils.findFirstRoleImageHtml()!;
         } else if (person === "RANDOM") {
-            const persons = NpcLoader.getNpcNames();
-            const idx = RandomUtils.randomInt(0, persons.length - 1);
-            person = persons[idx];
-            imageHTML = NpcLoader.getNpcImageHtml(person)!;
+            imageHTML = NpcLoader.randomPlayerImageHtml()!;
         } else {
             imageHTML = NpcLoader.getNpcImageHtml(person)!;
         }

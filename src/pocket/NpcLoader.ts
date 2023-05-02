@@ -1,5 +1,6 @@
 import StringUtils from "../util/StringUtils";
 import Constants from "../util/Constants";
+import RandomUtils from "../util/RandomUtils";
 
 class NpcLoader {
 
@@ -20,17 +21,47 @@ class NpcLoader {
         return "<img src='" + image + "' width='64' height='64' alt='" + name + "' id='" + id + "'>";
     }
 
-    static getNpcNames(): string[] {
+    static randomMaleNpcImageHtml() {
         const names: string[] = [];
-        const allNames = Object.keys(POCKET_NPC_IMAGES);
-        for (let i = 0; i < allNames.length; i++) {
-            const name = allNames[i];
-            // @ts-ignore
-            const image = POCKET_NPC_IMAGES[name];
-            if (image.includes("/image/head/")) {
-                names.push(name);
-            }
-        }
+        Object.keys(POCKET_NPC_IMAGES)
+            .filter(value => value.startsWith("M_"))
+            .forEach(value => names.push(value));
+        const name = RandomUtils.randomElement(names)!;
+        return NpcLoader.getNpcImageHtml(name);
+    }
+
+    static randomFemaleNpcImageHtml() {
+        const names: string[] = [];
+        Object.keys(POCKET_NPC_IMAGES)
+            .filter(value => value.startsWith("F_"))
+            .forEach(value => names.push(value));
+        const name = RandomUtils.randomElement(names)!;
+        return NpcLoader.getNpcImageHtml(name);
+    }
+
+    static randomNpcImageHtml() {
+        const names: string[] = [];
+        Object.keys(POCKET_NPC_IMAGES)
+            .filter(value => value.startsWith("M_") || value.startsWith("F_") || value.startsWith("U_"))
+            .forEach(value => names.push(value));
+        const name = RandomUtils.randomElement(names)!;
+        return NpcLoader.getNpcImageHtml(name);
+    }
+
+    static randomPlayerImageHtml() {
+        const names: string[] = [];
+        Object.keys(POCKET_NPC_IMAGES)
+            .filter(value => !value.startsWith("M_") && !value.startsWith("F_") && !value.startsWith("U_"))
+            .forEach(value => names.push(value));
+        const name = RandomUtils.randomElement(names)!;
+        return NpcLoader.getNpcImageHtml(name);
+    }
+
+    static playerNpcNames(): string[] {
+        const names: string[] = [];
+        Object.keys(POCKET_NPC_IMAGES)
+            .filter(value => !value.startsWith("M_") && !value.startsWith("F_") && !value.startsWith("U_"))
+            .forEach(value => names.push(value));
         return names;
     }
 
@@ -80,13 +111,15 @@ const POCKET_NPC_IMAGES = {
     "七七": Constants.POCKET_DOMAIN + "/image/head/1368.gif",
     "豚豚": Constants.POCKET_DOMAIN + "/image/head/1389.gif",
     "夜九": Constants.POCKET_DOMAIN + "/image/head/1561.gif",
+    "剑心": Constants.POCKET_DOMAIN + "/image/head/2184.gif",
     "路路": Constants.POCKET_DOMAIN + "/image/head/2201.gif",
     "饭饭": Constants.POCKET_DOMAIN + "/image/head/3139.gif",
     "亲戚": Constants.POCKET_DOMAIN + "/image/head/3188.gif",
     "莫莫": Constants.POCKET_DOMAIN + "/image/head/4200.gif",
     "青鸟": Constants.POCKET_DOMAIN + "/image/head/7184.gif",
     "末末": Constants.POCKET_DOMAIN + "/image/head/8173.gif",
-    "白皇": Constants.POCKET_DOMAIN + "/image/head/11134.gif"
+    "白皇": Constants.POCKET_DOMAIN + "/image/head/11134.gif",
+
 };
 
 export = NpcLoader;
