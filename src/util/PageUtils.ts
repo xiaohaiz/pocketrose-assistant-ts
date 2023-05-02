@@ -1,5 +1,6 @@
 import Credential from "./Credential";
 import Constants from "./Constants";
+import StringUtils from "./StringUtils";
 
 class PageUtils {
 
@@ -72,6 +73,23 @@ class PageUtils {
     static isColorGrey(id: string) {
         const color = $("#" + id).css("color");
         return color.toString() === "rgb(128, 128, 128)"
+    }
+
+    static fixCurrentPageBrokerImages() {
+        if ($("img").length === 0) {
+            return;
+        }
+        $("img")
+            .filter(function () {
+                const src = $(this).attr("src") as string;
+                return src.startsWith("http://pocketrose.21sun.net:81/pocketrose");
+            })
+            .each(function (_idx, img) {
+                const src = $(img).attr("src") as string;
+                let s = StringUtils.substringAfter(src, "http://pocketrose.21sun.net:81/pocketrose");
+                s = Constants.POCKET_DOMAIN + s;
+                $(img).attr("src", s);
+            });
     }
 }
 

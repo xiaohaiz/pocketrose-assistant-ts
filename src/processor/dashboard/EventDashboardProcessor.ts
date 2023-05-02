@@ -13,9 +13,14 @@ class EventDashboardProcessor implements Processor {
     process(): void {
         PageUtils.removeUnusedHyperLinks();
         PageUtils.removeGoogleAnalyticsScript();
+        PageUtils.fixCurrentPageBrokerImages();
+        doProcess();
     }
 
-
 }
+
+function doProcess() {
+}
+
 
 export = EventDashboardProcessor;
