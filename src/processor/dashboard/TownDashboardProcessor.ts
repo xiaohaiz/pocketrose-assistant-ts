@@ -169,8 +169,9 @@ function doRenderBattleMenu(credential: Credential) {
 }
 
 function doRenderPostHouseMenu() {
-    $("option[value='INN']").text("客栈·驿站");
-    $("option[value='INN']").css("background-color", "yellow");
+    $("option[value='INN']")
+        .css("background-color", "yellow")
+        .text("客栈·驿站");
 }
 
 function doRenderSetupMenu() {
