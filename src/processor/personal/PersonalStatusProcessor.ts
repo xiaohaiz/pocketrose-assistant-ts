@@ -36,6 +36,26 @@ function doRenderExperience(role: Role) {
         $(td).html("<span title='" + exp + "'>" + progressBar + "</span>");
     }
 
+    $("th:contains('分身类别')")
+        .filter(function () {
+            return $(this).text() === "分身类别";
+        })
+        .closest("table")
+        .find("tr")
+        .each(function (_idx, tr) {
+            if (_idx > 0) {
+                const td = $(tr).find("td:last");
+                const exp = parseInt($(td).text());
+                const level = Math.floor(exp / 100) + 1;
+                if (level === 150) {
+                    $(td).attr("style", "color: blue").text("MAX");
+                } else {
+                    const ratio = level / 150;
+                    const progressBar = PageUtils.generateProgressBarHTML(ratio);
+                    $(td).html("<span title='" + (exp + " EX") + "'>" + progressBar + "</span>");
+                }
+            }
+        });
 }
 
 function doRenderHonor() {
