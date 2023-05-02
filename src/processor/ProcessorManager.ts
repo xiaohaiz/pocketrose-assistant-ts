@@ -36,7 +36,7 @@ class ProcessorManager {
     }
 
     lookupProcessor(cgi: string): Processor | null {
-        const pageText = document.documentElement.outerText;
+        const pageText = $("body:first").text();
         for (const processor of this.#processors) {
             if (processor.accept(cgi, pageText)) {
                 return processor;

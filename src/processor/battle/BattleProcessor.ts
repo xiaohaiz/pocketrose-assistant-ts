@@ -23,7 +23,7 @@ class BattleProcessor implements Processor {
         PageUtils.removeUnusedHyperLinks();
         PageUtils.removeGoogleAnalyticsScript();
 
-        const pageText = document.documentElement.outerText;
+        const pageText = $("body:first").text();
         doRenderPrompt(pageText);
 
         $('input[value="返回住宿"]').attr('id', 'lodgeButton');

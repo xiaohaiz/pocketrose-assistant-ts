@@ -8,10 +8,6 @@ class PageUtils {
         return document.documentElement.outerHTML;
     }
 
-    static currentPageText(): string {
-        return document.documentElement.outerText;
-    }
-
     /**
      * Remove unused hyper links from last div element.
      */
