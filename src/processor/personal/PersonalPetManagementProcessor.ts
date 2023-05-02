@@ -64,7 +64,7 @@ function doProcess(credential: Credential, petList: Pet[], studyStatus: number[]
     html += "</table>";
     html += "<center>已登陆宠物联赛的宠物一览";
 
-    const leftHtml = StringUtils.substringAfter(PageUtils.currentPageHtml(), "<center>已登陆宠物联赛的宠物一览");
+    const leftHtml = StringUtils.substringAfter($("body:first").html(), "<center>已登陆宠物联赛的宠物一览");
 
     $("body:first").html(html + leftHtml);
 

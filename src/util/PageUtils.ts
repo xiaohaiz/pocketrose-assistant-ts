@@ -4,11 +4,11 @@ import Constants from "./Constants";
 class PageUtils {
 
     static currentPageHtml(): string {
-        return $("body:first").html();
+        return document.documentElement.outerHTML;
     }
 
     static currentPageText(): string {
-        return $("body:first").text();
+        return document.documentElement.outerText;
     }
 
     /**
