@@ -207,7 +207,6 @@ function doRender(credential: Credential, equipmentList: Equipment[]) {
     html += "                               <input type='button' class='ItemUIButton' id='putIntoBagButton' value='入袋'>";
     html += "                           </td>";
     html += "                           <td style='text-align:right'>";
-    html += "                               <input type='button' class='ItemUIButton' id='treasureBagButton' value='百宝袋'>";
     html += "                               <input type='button' class='ItemUIButton' id='putAllIntoBagButton' value='全部入袋'>";
     html += "                               <input type='button' class='ItemUIButton' id='luckCharmButton' value='千与千寻' style='color:blue'>";
     html += "                               <input type='button' class='ItemUIButton' id='dontForgetMeButton' value='勿忘我' style='color:red'>";
@@ -257,8 +256,6 @@ function doRender(credential: Credential, equipmentList: Equipment[]) {
     if (treasureBag === null) {
         $("#putIntoBagButton").prop("disabled", true);
         $("#putIntoBagButton").css("display", "none");
-        $("#treasureBagButton").prop("disabled", true);
-        $("#treasureBagButton").css("display", "none");
         $("#putAllIntoBagButton").prop("disabled", true);
         $("#putAllIntoBagButton").css("display", "none");
         $("#openBagButton").prop("disabled", "true").hide();
@@ -290,7 +287,6 @@ function doRender(credential: Credential, equipmentList: Equipment[]) {
 
     doBindUseButton(credential);
     doBindPutIntoBagButton(credential);
-    doBindTreasureBagButton(credential, treasureBag);
     doBindPutAllIntoBagButton(credential);
     doBindLuckCharmButton(credential, equipmentList);
     doBindDontForgetMeButton(credential, equipmentList);
@@ -304,7 +300,7 @@ function doRender(credential: Credential, equipmentList: Equipment[]) {
     doBindSendButton(credential);
     doBindStoreButton(credential, treasureBag);
     doBindRefreshButton(credential);
-    doBindOpenCloseTreasureBagButton(credential);
+    doBindTreasureBagButton(credential);
 
     if ($("#treasureBagStatus").text() === "on") {
         doRenderTreasureBag(credential);
@@ -447,20 +443,6 @@ function doBindPutIntoBagButton(credential: Credential) {
             MessageBoard.processResponseMessage(html);
             doRefresh(credential);
         });
-    });
-}
-
-function doBindTreasureBagButton(credential: Credential, treasureBag: Equipment | null) {
-    if (treasureBag === null) {
-        return;
-    }
-    $("#treasureBagButton").on("click", function () {
-        $("#eden_form").attr("action", "mydata.cgi");
-        $("#eden_form_payload").html("" +
-            "<input type='hidden' name='chara' value='1'>" +
-            "<input type='hidden' name='item" + treasureBag.index + "' value='" + treasureBag.index + "'>" +
-            "<input type='hidden' name='mode' value='USE'>");
-        $("#eden_form_submit").trigger("click");
     });
 }
 
@@ -671,7 +653,7 @@ function doBindRefreshButton(credential: Credential) {
     });
 }
 
-function doBindOpenCloseTreasureBagButton(credential: Credential) {
+function doBindTreasureBagButton(credential: Credential) {
     if (!$("#openBagButton").prop("disabled")) {
         $("#openBagButton").on("click", function () {
             if ($("#treasureBagStatus").text() === "on") {
