@@ -1,9 +1,12 @@
+import MessageBoard from "./MessageBoard";
+
 class NetworkUtils {
 
     static sendGetRequest(cgi: string, handler?: (html: string) => void) {
         fetch(cgi, {method: "GET"})
             .then((response) => {
                 if (!response.ok) {
+                    MessageBoard.publishWarning("网络请求发生错误，请自行重试！");
                     throw new Error("RESPONSE was not ok");
                 }
                 return response.arrayBuffer();
@@ -30,6 +33,7 @@ class NetworkUtils {
         })
             .then((response) => {
                 if (!response.ok) {
+                    MessageBoard.publishWarning("网络请求发生错误，请自行重试！");
                     throw new Error("RESPONSE was not ok");
                 }
                 return response.arrayBuffer();
