@@ -1,10 +1,18 @@
-import RequestInterceptorManager from "./interceptor/RequestInterceptorManager";
+import ProcessorManager from "./processor/ProcessorManager";
+import StringUtils from "./util/StringUtils";
 
-const interceptorManager = new RequestInterceptorManager();
+const processorManager = new ProcessorManager();
 
 $(function () {
     const href = location.href;
     if (href.includes("pocketrose")) {
-        interceptorManager.lookupInterceptor(href)?.process();
+        let cgi = href;
+        if (cgi.includes("/")) {
+            cgi = StringUtils.substringAfterLast(location.href, "/");
+        }
+        if (cgi.includes("?")) {
+            cgi = StringUtils.substringBefore(cgi, "?");
+        }
+        processorManager.lookupProcessor(cgi)?.process();
     }
 });
