@@ -208,7 +208,6 @@ function doRender(credential: Credential, equipmentList: Equipment[]) {
     html += "                           </td>";
     html += "                           <td style='text-align:right'>";
     html += "                               <input type='button' class='ItemUIButton' id='treasureBagButton' value='百宝袋'>";
-    html += "                               <input type='button' class='ItemUIButton' id='goldenCageButton' value='黄金笼子'>";
     html += "                               <input type='button' class='ItemUIButton' id='putAllIntoBagButton' value='全部入袋'>";
     html += "                               <input type='button' class='ItemUIButton' id='luckCharmButton' value='千与千寻' style='color:blue'>";
     html += "                               <input type='button' class='ItemUIButton' id='dontForgetMeButton' value='勿忘我' style='color:red'>";
@@ -268,12 +267,6 @@ function doRender(credential: Credential, equipmentList: Equipment[]) {
         $("#treasureBagIndex").text(treasureBag.index!);
     }
 
-    const goldenCage = EquipmentParser.findGoldenCage(equipmentList);
-    if (goldenCage === null) {
-        $("#goldenCageButton").prop("disabled", true);
-        $("#goldenCageButton").css("display", "none");
-    }
-
     const config_a = SetupLoader.loadEquipmentSet_A(credential.id);
     if (!isSetConfigAvailable(config_a)) {
         $("#setButton_A").prop("disabled", true);
@@ -298,7 +291,6 @@ function doRender(credential: Credential, equipmentList: Equipment[]) {
     doBindUseButton(credential);
     doBindPutIntoBagButton(credential);
     doBindTreasureBagButton(credential, treasureBag);
-    doBindGoldenCageButton(credential, goldenCage);
     doBindPutAllIntoBagButton(credential);
     doBindLuckCharmButton(credential, equipmentList);
     doBindDontForgetMeButton(credential, equipmentList);
@@ -467,20 +459,6 @@ function doBindTreasureBagButton(credential: Credential, treasureBag: Equipment 
         $("#eden_form_payload").html("" +
             "<input type='hidden' name='chara' value='1'>" +
             "<input type='hidden' name='item" + treasureBag.index + "' value='" + treasureBag.index + "'>" +
-            "<input type='hidden' name='mode' value='USE'>");
-        $("#eden_form_submit").trigger("click");
-    });
-}
-
-function doBindGoldenCageButton(credential: Credential, goldenCage: Equipment | null) {
-    if (goldenCage === null) {
-        return;
-    }
-    $("#goldenCageButton").on("click", function () {
-        $("#eden_form").attr("action", "mydata.cgi");
-        $("#eden_form_payload").html("" +
-            "<input type='hidden' name='chara' value='1'>" +
-            "<input type='hidden' name='item" + goldenCage.index + "' value='" + goldenCage.index + "'>" +
             "<input type='hidden' name='mode' value='USE'>");
         $("#eden_form_submit").trigger("click");
     });
