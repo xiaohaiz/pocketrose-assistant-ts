@@ -5,6 +5,7 @@ import StringUtils from "../../util/StringUtils";
 import RoleStatusParser from "../../pocket/RoleStatusParser";
 import RoleStatus from "../../pocket/RoleStatus";
 import Processor from "../Processor";
+import EventHandler from "../../pocket/EventHandler";
 
 class TownDashboardProcessor implements Processor {
 
@@ -298,6 +299,9 @@ function doRenderEventBoard() {
         .map(function (it) {
             const header = "<font color=\"navy\">●</font>";
             return StringUtils.substringAfter(it, header);
+        })
+        .map(function (it) {
+            return EventHandler.handleWithEventHtml(it);
         })
         .forEach(it => eventHtmlList.push(it));
 

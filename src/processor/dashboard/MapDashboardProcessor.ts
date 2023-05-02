@@ -2,6 +2,7 @@ import Processor from "../Processor";
 import PageUtils from "../../util/PageUtils";
 import StringUtils from "../../util/StringUtils";
 import SetupLoader from "../../pocket/SetupLoader";
+import EventHandler from "../../pocket/EventHandler";
 
 class MapDashboardProcessor implements Processor {
 
@@ -66,6 +67,9 @@ function doRenderEventBoard() {
         .map(function (it) {
             const header = "<font color=\"navy\">●</font>";
             return StringUtils.substringAfter(it, header);
+        })
+        .map(function (it) {
+            return EventHandler.handleWithEventHtml(it);
         })
         .forEach(it => eventHtmlList.push(it));
 

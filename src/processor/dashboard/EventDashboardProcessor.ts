@@ -1,6 +1,7 @@
 import Processor from "../Processor";
 import PageUtils from "../../util/PageUtils";
 import StringUtils from "../../util/StringUtils";
+import EventHandler from "../../pocket/EventHandler";
 
 class EventDashboardProcessor implements Processor {
 
@@ -21,13 +22,14 @@ class EventDashboardProcessor implements Processor {
 }
 
 function doProcess() {
-    $("table:eq(3) tr:eq(1) td:first")
-        .attr("id", "eventBoard");
-    const eventHtmlList = doParseEventHtmlList();
-    doRenderEventBoard(eventHtmlList);
+
+    doRenderEventBoard();
 }
 
-function doParseEventHtmlList(): string[] {
+function doRenderEventBoard() {
+    $("table:eq(3) tr:eq(1) td:first")
+        .attr("id", "eventBoard");
+
     const eventHtmlList: string[] = [];
     $("#eventBoard").html()
         .split("<br>")
@@ -36,11 +38,11 @@ function doParseEventHtmlList(): string[] {
             const header = "<font color=\"green\">●</font>";
             return StringUtils.substringAfter(it, header);
         })
+        .map(function (it) {
+            return EventHandler.handleWithEventHtml(it);
+        })
         .forEach(it => eventHtmlList.push(it));
-    return eventHtmlList;
-}
 
-function doRenderEventBoard(eventHtmlList: string[]) {
     let html = "";
     html += "<table style='border-width:0;width:100%;height:100%;margin:auto'>";
     html += "<tbody>";
