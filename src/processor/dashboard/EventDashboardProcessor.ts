@@ -42,7 +42,7 @@ function doParseEventHtmlList(): string[] {
 
 function doRenderEventBoard(eventHtmlList: string[]) {
     let html = "";
-    html += "<table style='border-width:0;width:100%;margin:auto'>";
+    html += "<table style='border-width:0;width:100%;height:100%;margin:auto'>";
     html += "<tbody>";
     eventHtmlList.forEach(it => {
         html += "<tr>";
