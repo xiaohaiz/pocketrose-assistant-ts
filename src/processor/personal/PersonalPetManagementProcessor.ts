@@ -3,13 +3,13 @@ import PetParser from "../../pocket/PetParser";
 import Credential from "../../util/Credential";
 import Pet from "../../pocket/Pet";
 import StringUtils from "../../util/StringUtils";
-import RoleLoader from "../../pocket/RoleLoader";
 import MessageBoard from "../../util/MessageBoard";
 import NetworkUtils from "../../util/NetworkUtils";
 import TownBank from "../../pocket/TownBank";
 import EquipmentParser from "../../pocket/EquipmentParser";
 import Processor from "../Processor";
 import SetupLoader from "../../pocket/SetupLoader";
+import NpcLoader from "../../pocket/NpcLoader";
 
 class PersonalPetManagementProcessor implements Processor {
 
@@ -68,11 +68,8 @@ function doProcess(credential: Credential, petList: Pet[], studyStatus: number[]
 
     $("body:first").html(html + leftHtml);
 
-    new RoleLoader(credential).load()
-        .then(role => {
-            MessageBoard.createMessageBoard("message_board_container", role.imageHtml);
-            MessageBoard.resetMessageBoard("全新的宠物管理UI为您带来不一样的感受。");
-        });
+    MessageBoard.createMessageBoard("message_board_container", NpcLoader.randomFemaleNpcImageHtml());
+    MessageBoard.resetMessageBoard("全新的宠物管理UI为您带来不一样的感受。");
 
     doRender(credential, petList, studyStatus);
 

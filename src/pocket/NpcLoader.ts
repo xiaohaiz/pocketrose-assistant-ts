@@ -27,7 +27,7 @@ class NpcLoader {
             .filter(value => value.startsWith("M_"))
             .forEach(value => names.push(value));
         const name = RandomUtils.randomElement(names)!;
-        return NpcLoader.getNpcImageHtml(name);
+        return NpcLoader.getNpcImageHtml(name)!;
     }
 
     static randomFemaleNpcImageHtml() {
@@ -36,7 +36,7 @@ class NpcLoader {
             .filter(value => value.startsWith("F_"))
             .forEach(value => names.push(value));
         const name = RandomUtils.randomElement(names)!;
-        return NpcLoader.getNpcImageHtml(name);
+        return NpcLoader.getNpcImageHtml(name)!;
     }
 
     static randomNpcImageHtml() {
@@ -45,7 +45,7 @@ class NpcLoader {
             .filter(value => value.startsWith("M_") || value.startsWith("F_") || value.startsWith("U_"))
             .forEach(value => names.push(value));
         const name = RandomUtils.randomElement(names)!;
-        return NpcLoader.getNpcImageHtml(name);
+        return NpcLoader.getNpcImageHtml(name)!;
     }
 
     static randomPlayerImageHtml() {
@@ -54,7 +54,7 @@ class NpcLoader {
             .filter(value => !value.startsWith("M_") && !value.startsWith("F_") && !value.startsWith("U_"))
             .forEach(value => names.push(value));
         const name = RandomUtils.randomElement(names)!;
-        return NpcLoader.getNpcImageHtml(name);
+        return NpcLoader.getNpcImageHtml(name)!;
     }
 
     static playerNpcNames(): string[] {
