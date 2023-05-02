@@ -1,4 +1,3 @@
-import PageProcessor from "../PageProcessor";
 import PageUtils from "../../util/PageUtils";
 import Credential from "../../util/Credential";
 import TreasureHintParser from "../../pocket/TreasureHintParser";
@@ -16,8 +15,9 @@ import TownEntrance from "../../pocket/TownEntrance";
 import TravelPlan from "../../pocket/TravelPlan";
 import TravelPlanExecutor from "../../pocket/TravelPlanExecutor";
 import MapExplorer from "../../pocket/MapExplorer";
+import Processor from "../Processor";
 
-class TownAdventureGuildProcessor extends PageProcessor {
+class TownAdventureGuildProcessor implements Processor {
 
     process() {
         PageUtils.removeUnusedHyperLinks();

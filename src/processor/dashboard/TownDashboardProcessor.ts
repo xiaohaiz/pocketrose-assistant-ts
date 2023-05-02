@@ -1,12 +1,12 @@
-import PageProcessor from "../PageProcessor";
 import PageUtils from "../../util/PageUtils";
 import Credential from "../../util/Credential";
 import SetupLoader from "../../pocket/SetupLoader";
 import StringUtils from "../../util/StringUtils";
 import RoleStatusParser from "../../pocket/RoleStatusParser";
 import RoleStatus from "../../pocket/RoleStatus";
+import Processor from "../Processor";
 
-class TownDashboardProcessor extends PageProcessor {
+class TownDashboardProcessor implements Processor {
 
     process() {
         PageUtils.removeUnusedHyperLinks();

@@ -1,4 +1,3 @@
-import PageProcessor from "../PageProcessor";
 import PageUtils from "../../util/PageUtils";
 import PetParser from "../../pocket/PetParser";
 import Credential from "../../util/Credential";
@@ -9,8 +8,9 @@ import MessageBoard from "../../util/MessageBoard";
 import NetworkUtils from "../../util/NetworkUtils";
 import TownBank from "../../pocket/TownBank";
 import EquipmentParser from "../../pocket/EquipmentParser";
+import Processor from "../Processor";
 
-class PersonalPetManagementProcessor extends PageProcessor {
+class PersonalPetManagementProcessor implements Processor {
 
     process() {
         PageUtils.removeUnusedHyperLinks();

@@ -1,4 +1,3 @@
-import PageProcessor from "../PageProcessor";
 import PageUtils from "../../util/PageUtils";
 import CareerParser from "../../pocket/CareerParser";
 import Credential from "../../util/Credential";
@@ -12,8 +11,9 @@ import Spell from "../../pocket/Spell";
 import SpellLoader from "../../pocket/SpellLoader";
 import NetworkUtils from "../../util/NetworkUtils";
 import MessageBoard from "../../util/MessageBoard";
+import Processor from "../Processor";
 
-class PersonalCareerManagementProcessor extends PageProcessor {
+class PersonalCareerManagementProcessor implements Processor {
 
     process() {
         PageUtils.removeUnusedHyperLinks();

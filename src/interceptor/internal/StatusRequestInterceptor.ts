@@ -1,4 +1,3 @@
-import PageUtils from "../../util/PageUtils";
 import TownDashboardProcessor from "../../processor/dashboard/TownDashboardProcessor";
 import RequestInterceptor from "../RequestInterceptor";
 
@@ -7,10 +6,9 @@ class StatusRequestInterceptor implements RequestInterceptor {
     readonly cgi: string = "status.cgi";
 
     process(): void {
-        const pageHtml = PageUtils.currentPageHtml();
-        const pageText = PageUtils.currentPageText();
+        const pageText = document.documentElement.outerText;
         if (pageText.includes("城市支配率")) {
-            new TownDashboardProcessor(pageHtml, pageText).process();
+            new TownDashboardProcessor().process();
         }
     }
 

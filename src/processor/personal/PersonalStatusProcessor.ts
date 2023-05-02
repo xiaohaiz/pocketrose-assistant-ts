@@ -1,11 +1,11 @@
 import PageUtils from "../../util/PageUtils";
-import PageProcessor from "../PageProcessor";
 import RoleParser from "../../pocket/RoleParser";
 import Role from "../../pocket/Role";
 import SetupLoader from "../../pocket/SetupLoader";
 import StringUtils from "../../util/StringUtils";
+import Processor from "../Processor";
 
-class PersonalStatusProcessor extends PageProcessor {
+class PersonalStatusProcessor implements Processor {
 
     process() {
         PageUtils.removeUnusedHyperLinks();

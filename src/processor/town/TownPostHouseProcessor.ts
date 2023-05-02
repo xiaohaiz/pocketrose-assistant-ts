@@ -1,4 +1,3 @@
-import PageProcessor from "../PageProcessor";
 import PageUtils from "../../util/PageUtils";
 import Credential from "../../util/Credential";
 import MessageBoard from "../../util/MessageBoard";
@@ -15,8 +14,9 @@ import StringUtils from "../../util/StringUtils";
 import CastleLoader from "../../pocket/CastleLoader";
 import Coordinate from "../../util/Coordinate";
 import Town from "../../pocket/Town";
+import Processor from "../Processor";
 
-class TownPostHouseProcessor extends PageProcessor {
+class TownPostHouseProcessor implements Processor {
 
     process() {
         PageUtils.removeUnusedHyperLinks();

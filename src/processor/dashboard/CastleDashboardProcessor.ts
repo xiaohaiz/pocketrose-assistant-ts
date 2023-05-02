@@ -1,7 +1,7 @@
-import PageProcessor from "../PageProcessor";
 import PageUtils from "../../util/PageUtils";
+import Processor from "../Processor";
 
-class CastleDashboardProcessor extends PageProcessor {
+class CastleDashboardProcessor implements Processor {
 
     process() {
         PageUtils.removeUnusedHyperLinks();

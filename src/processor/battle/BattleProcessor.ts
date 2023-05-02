@@ -1,12 +1,12 @@
-import PageProcessor from "../PageProcessor";
 import PageUtils from "../../util/PageUtils";
 import SetupLoader from "../../pocket/SetupLoader";
 import StringUtils from "../../util/StringUtils";
 import NpcLoader from "../../pocket/NpcLoader";
 import RandomUtils from "../../util/RandomUtils";
 import CommentBoard from "../../util/CommentBoard";
+import Processor from "../Processor";
 
-class BattleProcessor extends PageProcessor {
+class BattleProcessor implements Processor {
 
     process(): void {
         PageUtils.removeUnusedHyperLinks();

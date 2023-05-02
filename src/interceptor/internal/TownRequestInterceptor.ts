@@ -1,4 +1,3 @@
-import PageUtils from "../../util/PageUtils";
 import TownDashboardProcessor from "../../processor/dashboard/TownDashboardProcessor";
 import TownPostHouseProcessor from "../../processor/town/TownPostHouseProcessor";
 import RequestInterceptor from "../RequestInterceptor";
@@ -9,18 +8,17 @@ class TownRequestInterceptor implements RequestInterceptor {
     readonly cgi: string = "town.cgi";
 
     process(): void {
-        const pageHtml = PageUtils.currentPageHtml();
-        const pageText = PageUtils.currentPageText();
+        const pageText = document.documentElement.outerText;
         if (pageText.includes("城市支配率")) {
-            new TownDashboardProcessor(pageHtml, pageText).process();
+            new TownDashboardProcessor().process();
             return;
         }
         if (pageText.includes("* 宿 屋 *")) {
-            new TownPostHouseProcessor(pageHtml, pageText).process();
+            new TownPostHouseProcessor().process();
             return;
         }
         if (pageText.includes("*  藏宝图以旧换新业务 *")) {
-            new TownAdventureGuildProcessor(pageHtml, pageText).process();
+            new TownAdventureGuildProcessor().process();
         }
     }
 }

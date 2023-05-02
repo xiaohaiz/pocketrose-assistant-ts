@@ -1,4 +1,3 @@
-import PageProcessor from "../PageProcessor";
 import PageUtils from "../../util/PageUtils";
 import EquipmentParser from "../../pocket/EquipmentParser";
 import Credential from "../../util/Credential";
@@ -12,8 +11,9 @@ import SetupLoader from "../../pocket/SetupLoader";
 import CommentBoard from "../../util/CommentBoard";
 import NpcLoader from "../../pocket/NpcLoader";
 import RoleStatusLoader from "../../pocket/RoleStatusLoader";
+import Processor from "../Processor";
 
-class PersonalEquipmentManagementProcessor extends PageProcessor {
+class PersonalEquipmentManagementProcessor implements Processor {
 
     process() {
         PageUtils.removeUnusedHyperLinks();

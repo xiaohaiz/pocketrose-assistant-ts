@@ -1,4 +1,3 @@
-import PageProcessor from "../PageProcessor";
 import Credential from "../../util/Credential";
 import MessageBoard from "../../util/MessageBoard";
 import PageUtils from "../../util/PageUtils";
@@ -13,8 +12,9 @@ import RoleLoader from "../../pocket/RoleLoader";
 import StringUtils from "../../util/StringUtils";
 import Coordinate from "../../util/Coordinate";
 import Town from "../../pocket/Town";
+import Processor from "../Processor";
 
-class CastlePostHouseProcessor extends PageProcessor {
+class CastlePostHouseProcessor implements Processor {
     process() {
         PageUtils.removeUnusedHyperLinks();
         PageUtils.removeGoogleAnalyticsScript();

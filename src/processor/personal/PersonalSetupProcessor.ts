@@ -1,4 +1,3 @@
-import PageProcessor from "../PageProcessor";
 import PageUtils from "../../util/PageUtils";
 import Credential from "../../util/Credential";
 import RoleLoader from "../../pocket/RoleLoader";
@@ -9,8 +8,9 @@ import Equipment from "../../pocket/Equipment";
 import EquipmentParser from "../../pocket/EquipmentParser";
 import TreasureBag from "../../pocket/TreasureBag";
 import SetupItemManager from "./setup/SetupItemManager";
+import Processor from "../Processor";
 
-class PersonalSetupProcessor extends PageProcessor {
+class PersonalSetupProcessor implements Processor {
 
     process() {
         PageUtils.removeUnusedHyperLinks();
