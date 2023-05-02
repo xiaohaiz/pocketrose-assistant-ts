@@ -1,14 +1,15 @@
 import Processor from "./Processor";
 import BattleProcessor from "./battle/BattleProcessor";
-import CastlePostHouseProcessor from "./castle/CastlePostHouseProcessor";
 import CastleDashboardProcessor from "./dashboard/CastleDashboardProcessor";
-import TownDashboardProcessor from "./dashboard/TownDashboardProcessor";
+import CastlePostHouseProcessor from "./castle/CastlePostHouseProcessor";
+import EventDashboardProcessor from "./dashboard/EventDashboardProcessor";
 import PersonalCareerManagementProcessor from "./personal/PersonalCareerManagementProcessor";
 import PersonalEquipmentManagementProcessor from "./personal/PersonalEquipmentManagementProcessor";
 import PersonalPetManagementProcessor from "./personal/PersonalPetManagementProcessor";
 import PersonalSetupProcessor from "./personal/PersonalSetupProcessor";
 import PersonalStatusProcessor from "./personal/PersonalStatusProcessor";
 import TownAdventureGuildProcessor from "./town/TownAdventureGuildProcessor";
+import TownDashboardProcessor from "./dashboard/TownDashboardProcessor";
 import TownPostHouseProcessor from "./town/TownPostHouseProcessor";
 
 class ProcessorManager {
@@ -20,6 +21,7 @@ class ProcessorManager {
             new BattleProcessor(),
             new CastleDashboardProcessor(),
             new CastlePostHouseProcessor(),
+            new EventDashboardProcessor(),
             new PersonalCareerManagementProcessor(),
             new PersonalEquipmentManagementProcessor(),
             new PersonalPetManagementProcessor(),
