@@ -16,8 +16,9 @@ class PersonalPetManagementProcessor extends PageProcessor {
         PageUtils.removeUnusedHyperLinks();
         PageUtils.removeGoogleAnalyticsScript();
         const credential = PageUtils.currentCredential();
-        const petList = PetParser.parsePersonalPetList(this.pageHtml);
-        const studyStatus = PetParser.parsePersonalPetStudyStatus(this.pageHtml);
+        const pageHtml = document.documentElement.outerHTML;
+        const petList = PetParser.parsePersonalPetList(pageHtml);
+        const studyStatus = PetParser.parsePersonalPetStudyStatus(pageHtml);
         doProcess(credential, petList, studyStatus);
     }
 }
