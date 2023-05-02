@@ -9,9 +9,15 @@ class NpcLoader {
         if (image === undefined) {
             return null;
         }
-        let s = StringUtils.substringAfterLast(image, "/");
-        s = StringUtils.substringBefore(s, ".gif");
-        return "<img src='" + image + "' width='64' height='64' alt='" + name + "' id='p_" + s + "'>";
+        let id;
+        if (name.startsWith("M_") || name.startsWith("F_") || name.startsWith("U_")) {
+            id = name;
+        } else {
+            let s = StringUtils.substringAfterLast(image, "/");
+            id = StringUtils.substringBefore(s, ".gif");
+            id = "p_" + id;
+        }
+        return "<img src='" + image + "' width='64' height='64' alt='" + name + "' id='" + id + "'>";
     }
 
     static getNpcNames(): string[] {
