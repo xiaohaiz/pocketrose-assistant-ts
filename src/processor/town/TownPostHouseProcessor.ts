@@ -18,6 +18,13 @@ import Processor from "../Processor";
 
 class TownPostHouseProcessor implements Processor {
 
+    accept(cgi: string, pageText: string): boolean {
+        if (cgi === "town.cgi") {
+            return pageText.includes("* 宿 屋 *");
+        }
+        return false;
+    }
+
     process() {
         PageUtils.removeUnusedHyperLinks();
         PageUtils.removeGoogleAnalyticsScript();

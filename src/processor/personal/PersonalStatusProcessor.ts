@@ -7,6 +7,13 @@ import Processor from "../Processor";
 
 class PersonalStatusProcessor implements Processor {
 
+    accept(cgi: string, pageText: string): boolean {
+        if (cgi === "mydata.cgi") {
+            return pageText.includes("仙人的宝物");
+        }
+        return false;
+    }
+
     process() {
         PageUtils.removeUnusedHyperLinks();
         PageUtils.removeGoogleAnalyticsScript();

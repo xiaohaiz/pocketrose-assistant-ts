@@ -8,7 +8,19 @@ import Processor from "../Processor";
 
 class BattleProcessor implements Processor {
 
+    accept(cgi: string, pageText: string): boolean {
+        if (cgi === "battle.cgi") {
+            return pageText.includes("＜＜ - 秘宝之岛 - ＞＞") ||
+                pageText.includes("＜＜ - 初级之森 - ＞＞") ||
+                pageText.includes("＜＜ - 中级之塔 - ＞＞") ||
+                pageText.includes("＜＜ - 上级之洞窟 - ＞＞") ||
+                pageText.includes("＜＜ - 十二神殿 - ＞＞");
+        }
+        return false;
+    }
+
     process(): void {
+        $('a[target="_blank"]').attr('tabIndex', -1);
         PageUtils.removeUnusedHyperLinks();
         PageUtils.removeGoogleAnalyticsScript();
 

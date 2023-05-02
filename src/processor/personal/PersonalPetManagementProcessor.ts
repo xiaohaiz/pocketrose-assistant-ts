@@ -9,8 +9,19 @@ import NetworkUtils from "../../util/NetworkUtils";
 import TownBank from "../../pocket/TownBank";
 import EquipmentParser from "../../pocket/EquipmentParser";
 import Processor from "../Processor";
+import SetupLoader from "../../pocket/SetupLoader";
 
 class PersonalPetManagementProcessor implements Processor {
+
+    accept(cgi: string, pageText: string): boolean {
+        if (!SetupLoader.isPetManagementUIEnabled()) {
+            return false;
+        }
+        if (cgi === "mydata.cgi") {
+            return pageText.includes("宠物现在升级时学习新技能情况一览");
+        }
+        return false;
+    }
 
     process() {
         PageUtils.removeUnusedHyperLinks();

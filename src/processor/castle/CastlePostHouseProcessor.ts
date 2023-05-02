@@ -15,6 +15,14 @@ import Town from "../../pocket/Town";
 import Processor from "../Processor";
 
 class CastlePostHouseProcessor implements Processor {
+
+    accept(cgi: string, pageText: string): boolean {
+        if (cgi === "castle.cgi") {
+            return pageText.includes("＜＜ * 机车建造厂 *＞＞");
+        }
+        return false;
+    }
+
     process() {
         PageUtils.removeUnusedHyperLinks();
         PageUtils.removeGoogleAnalyticsScript();

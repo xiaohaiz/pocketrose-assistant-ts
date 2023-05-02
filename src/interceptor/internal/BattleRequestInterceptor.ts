@@ -12,7 +12,7 @@ class BattleRequestInterceptor implements RequestInterceptor {
             pageText.includes("＜＜ - 中级之塔 - ＞＞") ||
             pageText.includes("＜＜ - 上级之洞窟 - ＞＞") ||
             pageText.includes("＜＜ - 十二神殿 - ＞＞")) {
-            $('a[target="_blank"]').attr('tabIndex', -1);
+
             new BattleProcessor().process();
         }
     }

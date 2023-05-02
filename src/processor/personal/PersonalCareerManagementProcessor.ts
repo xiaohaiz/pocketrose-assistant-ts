@@ -15,6 +15,16 @@ import Processor from "../Processor";
 
 class PersonalCareerManagementProcessor implements Processor {
 
+    accept(cgi: string, pageText: string): boolean {
+        if (!SetupLoader.isCareerManagementUIEnabled()) {
+            return false;
+        }
+        if (cgi === "mydata.cgi") {
+            return pageText.includes("* 转职神殿 *");
+        }
+        return false;
+    }
+
     process() {
         PageUtils.removeUnusedHyperLinks();
         PageUtils.removeGoogleAnalyticsScript();

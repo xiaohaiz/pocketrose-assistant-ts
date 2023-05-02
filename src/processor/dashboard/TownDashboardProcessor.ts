@@ -8,6 +8,13 @@ import Processor from "../Processor";
 
 class TownDashboardProcessor implements Processor {
 
+    accept(cgi: string, pageText: string): boolean {
+        if (cgi === "status.cgi" || cgi === "town.cgi") {
+            return pageText.includes("城市支配率");
+        }
+        return false;
+    }
+
     process() {
         PageUtils.removeUnusedHyperLinks();
         PageUtils.removeGoogleAnalyticsScript();

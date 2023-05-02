@@ -12,6 +12,13 @@ import Processor from "../Processor";
 
 class PersonalSetupProcessor implements Processor {
 
+    accept(cgi: string, pageText: string): boolean {
+        if (cgi === "mydata.cgi") {
+            return pageText.includes("给其他人发送消息");
+        }
+        return false;
+    }
+
     process() {
         PageUtils.removeUnusedHyperLinks();
         PageUtils.removeGoogleAnalyticsScript();

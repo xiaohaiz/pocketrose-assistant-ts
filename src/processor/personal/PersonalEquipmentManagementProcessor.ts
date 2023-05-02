@@ -15,6 +15,16 @@ import Processor from "../Processor";
 
 class PersonalEquipmentManagementProcessor implements Processor {
 
+    accept(cgi: string, pageText: string): boolean {
+        if (!SetupLoader.isEquipmentManagementUIEnabled()) {
+            return false;
+        }
+        if (cgi === "mydata.cgi") {
+            return pageText.includes("＜＜　|||　物品使用．装备　|||　＞＞");
+        }
+        return false;
+    }
+
     process() {
         PageUtils.removeUnusedHyperLinks();
         PageUtils.removeGoogleAnalyticsScript();

@@ -19,6 +19,13 @@ import Processor from "../Processor";
 
 class TownAdventureGuildProcessor implements Processor {
 
+    accept(cgi: string, pageText: string): boolean {
+        if (cgi === "town.cgi") {
+            return pageText.includes("*  藏宝图以旧换新业务 *");
+        }
+        return false;
+    }
+
     process() {
         PageUtils.removeUnusedHyperLinks();
         PageUtils.removeGoogleAnalyticsScript();
