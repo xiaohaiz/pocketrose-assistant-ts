@@ -4,33 +4,16 @@ import StringUtils from "../util/StringUtils";
 class RoleStatusParser {
 
     static parseRoleStatus(pageHtml: string) {
-        const status = new RoleStatus();
-
-        const text = $(pageHtml).text();
-        status.canConsecrate = text.includes("可以进行下次祭奠了");
-
-        let s = $("option[value='LOCAL_RULE']").text();
-        status.country = StringUtils.substringBefore(s, "国法");
-
-        status.townCountry = $("th:contains('支配下')")
-            .filter(function () {
-                return $(this).text() === "支配下";
-            })
-            .next()
-            .text();
-
-        status.townId = $("input:hidden[name='townid']").val() as string;
-
-        doParseRoleStatus(status, pageHtml);
-
-        return status;
+        return doParseRoleStatus(pageHtml);
     }
 
 }
 
-function doParseRoleStatus(status: RoleStatus, pageHtml: string) {
+function doParseRoleStatus(pageHtml: string) {
+    const page = $(pageHtml);
+
     // 读取角色当前的能力值
-    const text = $(pageHtml)
+    const text = page
         .find("#c_001")
         .find("table:last")
         .find("td:first")
@@ -53,8 +36,12 @@ function doParseRoleStatus(status: RoleStatus, pageHtml: string) {
     idx = s.indexOf("速度：");
     s = s.substring(idx);
     const speed = parseInt(s.substring(3));
-    const battleCount = parseInt($("input:hidden[name='ktotal']").val() as string);
+    s = page
+        .find("input:hidden[name='ktotal']")
+        .val() as string;
+    const battleCount = parseInt(s);
 
+    const status = new RoleStatus();
     status.level = level;
     status.attack = attack;
     status.defense = defense;
@@ -62,6 +49,23 @@ function doParseRoleStatus(status: RoleStatus, pageHtml: string) {
     status.specialDefense = specialDefense;
     status.speed = speed;
     status.battleCount = battleCount;
+
+    status.canConsecrate = page.text().includes("可以进行下次祭奠了");
+
+    s = page.find("option[value='LOCAL_RULE']").text();
+    status.country = StringUtils.substringBefore(s, "国法");
+
+    status.townCountry = page
+        .find("th:contains('支配下')")
+        .filter(function () {
+            return $(this).text() === "支配下";
+        })
+        .next()
+        .text();
+
+    status.townId = page.find("input:hidden[name='townid']").val() as string;
+
+    return status;
 }
 
 export = RoleStatusParser;
