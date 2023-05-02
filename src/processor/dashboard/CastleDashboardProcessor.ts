@@ -18,8 +18,9 @@ class CastleDashboardProcessor implements Processor {
 }
 
 function doRenderPostHouseMenu() {
-    $("option[value='CASTLE_BUILDMACHINE']").text("城堡驿站");
-    $("option[value='CASTLE_BUILDMACHINE']").css("background-color", "yellow");
+    $("option[value='CASTLE_BUILDMACHINE']")
+        .css("background-color", "yellow")
+        .text("城堡驿站");
 }
 
 export = CastleDashboardProcessor;
