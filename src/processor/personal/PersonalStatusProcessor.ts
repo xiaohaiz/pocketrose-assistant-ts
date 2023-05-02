@@ -6,9 +6,12 @@ class PersonalStatusProcessor extends PageProcessor {
     process() {
         PageUtils.removeUnusedHyperLinks();
         PageUtils.removeGoogleAnalyticsScript();
-
-        doRenderHonor();
+        doProcess();
     }
+}
+
+function doProcess() {
+    doRenderHonor();
 }
 
 function doRenderHonor() {
