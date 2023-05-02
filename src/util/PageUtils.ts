@@ -87,6 +87,11 @@ class PageUtils {
                 $(img).attr("src", s);
             });
     }
+
+    static convertHtmlToText(html: string) {
+        const s = "<td>" + html + "</td>";
+        return $(s).text();
+    }
 }
 
 export = PageUtils;

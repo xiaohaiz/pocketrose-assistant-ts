@@ -22,6 +22,7 @@ class BattleProcessor implements Processor {
         $('a[target="_blank"]').attr('tabIndex', -1);
         PageUtils.removeUnusedHyperLinks();
         PageUtils.removeGoogleAnalyticsScript();
+        PageUtils.fixCurrentPageBrokerImages();
 
         const pageText = $("body:first").text();
         doRenderPrompt(pageText);
@@ -273,7 +274,7 @@ function doRenderBattleHarvestPrompt() {
                 CommentBoard.writeMessage("<b style='font-size:150%'>" + it + "</b><br>");
             }
             // @ts-ignore
-            CommentBoard.writeMessage($("<td>" + prompt["text"] + "</td>").text());
+            CommentBoard.writeMessage(PageUtils.convertHtmlToText(prompt["text"]));
         }
     }
 }
@@ -295,7 +296,7 @@ function doRenderNormalBattlePrompt() {
             .css("text-align", "center")
             .css("background-color", "black")
             .css("color", "greenyellow");
-        CommentBoard.writeMessage($("<td>" + prompt["text"] + "</td>").text());
+        CommentBoard.writeMessage(PageUtils.convertHtmlToText(prompt["text"]));
     }
 }
 
