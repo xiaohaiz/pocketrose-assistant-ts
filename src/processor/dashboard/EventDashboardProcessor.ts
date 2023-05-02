@@ -16,30 +16,46 @@ class EventDashboardProcessor implements Processor {
         PageUtils.removeGoogleAnalyticsScript();
         PageUtils.fixCurrentPageBrokerImages();
         doProcess();
-        console.log(PageUtils.currentPageHtml());
     }
 
 }
 
 function doProcess() {
     $("table:eq(3) tr:eq(1) td:first")
-        .attr("id", "event_container");
-
-    const originalEventHtmlList = doParseOriginalEventHtmlList();
-    originalEventHtmlList.forEach(it => console.log(it));
+        .attr("id", "eventBoard");
+    const eventHtmlList = doParseEventHtmlList();
+    doRenderEventBoard(eventHtmlList);
 }
 
-function doParseOriginalEventHtmlList(): string[] {
-    const originalEventHtmlList: string[] = [];
-    $("#event_container").html()
+function doParseEventHtmlList(): string[] {
+    const eventHtmlList: string[] = [];
+    $("#eventBoard").html()
         .split("<br>")
         .filter(it => it.endsWith(")"))
         .map(function (it) {
             const header = "<font color=\"green\">●</font>";
             return StringUtils.substringAfter(it, header);
         })
-        .forEach(it => originalEventHtmlList.push(it));
-    return originalEventHtmlList;
+        .forEach(it => eventHtmlList.push(it));
+    return eventHtmlList;
+}
+
+function doRenderEventBoard(eventHtmlList: string[]) {
+    let html = "";
+    html += "<table style='border-width:0;width:100%;margin:auto'>";
+    html += "<tbody>";
+    eventHtmlList.forEach(it => {
+        html += "<tr>";
+        html += "<th style='color:green;vertical-align:top'>●</th>";
+        html += "<td style='width:100%'>";
+        html += it;
+        html += "</td>";
+        html += "</tr>";
+    });
+    html += "</tbody>";
+    html += "</table>";
+
+    $("#eventBoard").html(html);
 }
 
 
