@@ -23,7 +23,8 @@ class TownAdventureGuildProcessor extends PageProcessor {
         PageUtils.removeUnusedHyperLinks();
         PageUtils.removeGoogleAnalyticsScript();
         const credential = PageUtils.currentCredential();
-        const treasureHintList = TreasureHintParser.parseTreasureHintList(this.pageHtml);
+        const pageHtml = document.documentElement.outerHTML;
+        const treasureHintList = TreasureHintParser.parseTreasureHintList(pageHtml);
         doProcess(credential, treasureHintList);
     }
 
