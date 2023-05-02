@@ -2,8 +2,9 @@ import PageProcessor from "../PageProcessor";
 import PageUtils from "../../util/PageUtils";
 import Credential from "../../util/Credential";
 import SetupLoader from "../../pocket/SetupLoader";
-import Role from "../../pocket/Role";
 import StringUtils from "../../util/StringUtils";
+import RoleStatusParser from "../../pocket/RoleStatusParser";
+import RoleStatus from "../../pocket/RoleStatus";
 
 class TownDashboardProcessor extends PageProcessor {
 
@@ -28,44 +29,10 @@ function doProcess(credential: Credential) {
     doRenderCareerManagementMenu();
     doRenderAdventureGuildMenu();
 
-    const role = doParseRole();
-    doRenderBattleCount(role);
-    doRenderCareerTransferWarning(credential, role);
-    doRenderRoleStatus(role);
-}
-
-function doParseRole(): Role {
-    // 读取角色当前的能力值
-    const text = $("#c_001").find("table:last").find("td:first").text();
-    let idx = text.indexOf("Lv：");
-    let s = text.substring(idx);
-    const level = parseInt(s.substring(3, s.indexOf(" ")));
-    idx = text.indexOf("攻击力：");
-    s = text.substring(idx);
-    const attack = parseInt(s.substring(4, s.indexOf(" ")));
-    idx = s.indexOf("防御力：");
-    s = s.substring(idx);
-    const defense = parseInt(s.substring(4, s.indexOf(" ")));
-    idx = s.indexOf("智力：");
-    s = s.substring(idx);
-    const specialAttack = parseInt(s.substring(3, s.indexOf(" ")));
-    idx = s.indexOf("精神力：");
-    s = s.substring(idx);
-    const specialDefense = parseInt(s.substring(4, s.indexOf(" ")));
-    idx = s.indexOf("速度：");
-    s = s.substring(idx);
-    const speed = parseInt(s.substring(3));
-    const battleCount = parseInt($("input:hidden[name='ktotal']").val() as string);
-
-    const role = new Role();
-    role.level = level;
-    role.attack = attack;
-    role.defense = defense;
-    role.specialAttack = specialAttack;
-    role.specialDefense = specialDefense;
-    role.speed = speed;
-    role.battleCount = battleCount;
-    return role;
+    const roleStatus = RoleStatusParser.parseRoleStatus(document.documentElement.outerHTML);
+    doRenderBattleCount(roleStatus);
+    doRenderCareerTransferWarning(credential, roleStatus);
+    doRenderRoleStatus(roleStatus);
 }
 
 function doRenderBattleMenu(credential: Credential) {
@@ -238,7 +205,7 @@ function doRenderAdventureGuildMenu() {
         .text("冒险家公会");
 }
 
-function doRenderBattleCount(role: Role) {
+function doRenderBattleCount(roleStatus: RoleStatus) {
     $("td:contains('贡献度')")
         .filter(function () {
             return $(this).text() === "贡献度";
@@ -250,16 +217,16 @@ function doRenderBattleCount(role: Role) {
             const name = StringUtils.substringBefore(text, "(");
             const unit = StringUtils.substringBetween(text, "(", "军)");
             if (unit.includes("无所属")) {
-                return name + "&nbsp;&nbsp;&nbsp;" + role.battleCount + "战";
+                return name + "&nbsp;&nbsp;&nbsp;" + roleStatus.battleCount + "战";
             } else {
-                return name + "(" + unit + ")" + "&nbsp;&nbsp;&nbsp;" + role.battleCount + "战";
+                return name + "(" + unit + ")" + "&nbsp;&nbsp;&nbsp;" + roleStatus.battleCount + "战";
             }
         });
 }
 
-function doRenderCareerTransferWarning(credential: Credential, role: Role) {
+function doRenderCareerTransferWarning(credential: Credential, roleStatus: RoleStatus) {
     // 如果满级并且没有关闭转职入口，则战斗前标签用红色显示
-    if (role.level === 150) {
+    if (roleStatus.level === 150) {
         if (!SetupLoader.isCareerTransferEntranceDisabled(credential.id)) {
             $("#refreshButton")
                 .closest("td")
@@ -269,17 +236,17 @@ function doRenderCareerTransferWarning(credential: Credential, role: Role) {
     }
 }
 
-function doRenderRoleStatus(role: Role) {
+function doRenderRoleStatus(roleStatus: RoleStatus) {
     $("td:parent").each(function (_idx, td) {
         const text = $(td).text();
         if (text === "经验值") {
             if (SetupLoader.isExperienceProgressBarEnabled()) {
-                if (role.level === 150) {
+                if (roleStatus.level === 150) {
                     $(td).next()
                         .attr("style", "color: blue")
                         .text("MAX");
                 } else {
-                    const ratio = role.level! / 150;
+                    const ratio = roleStatus.level! / 150;
                     const progressBar = PageUtils.generateProgressBarHTML(ratio);
                     const exp = $(td).next().text();
                     $(td).next()
@@ -288,8 +255,8 @@ function doRenderRoleStatus(role: Role) {
             }
         }
         if (text === "身份") {
-            if (role.level !== 150 && (role.attack === 375 || role.defense === 375
-                || role.specialAttack === 375 || role.specialDefense === 375 || role.speed === 375)) {
+            if (roleStatus.level !== 150 && (roleStatus.attack === 375 || roleStatus.defense === 375
+                || roleStatus.specialAttack === 375 || roleStatus.specialDefense === 375 || roleStatus.speed === 375)) {
                 $(td).next().css("color", "red");
             }
         }
