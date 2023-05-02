@@ -19,7 +19,8 @@ class PersonalCareerManagementProcessor extends PageProcessor {
         PageUtils.removeUnusedHyperLinks();
         PageUtils.removeGoogleAnalyticsScript();
         const credential = PageUtils.currentCredential();
-        const candidateList = CareerParser.parseCareerTransferCandidateList(this.pageHtml);
+        const pageHtml = document.documentElement.outerHTML;
+        const candidateList = CareerParser.parseCareerTransferCandidateList(pageHtml);
         doProcess(credential, candidateList);
     }
 
