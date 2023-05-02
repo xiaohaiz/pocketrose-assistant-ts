@@ -26,7 +26,7 @@ function doParseRoleStatus(pageHtml: string) {
 
     // 读取角色当前的能力值
     // 奇怪了，读不到指定id的div元素？但是可以读到里面的td子元素
-    page.find("td[bgcolor='#006000']:last")
+    page.find("td:last")
         .each(function (_idx, td) {
             const text = $(td).text();
             let idx = text.indexOf("Lv：");
