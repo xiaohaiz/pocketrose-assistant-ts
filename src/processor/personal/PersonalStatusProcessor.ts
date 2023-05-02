@@ -3,6 +3,7 @@ import PageProcessor from "../PageProcessor";
 import RoleParser from "../../pocket/RoleParser";
 import Role from "../../pocket/Role";
 import SetupLoader from "../../pocket/SetupLoader";
+import StringUtils from "../../util/StringUtils";
 
 class PersonalStatusProcessor extends PageProcessor {
 
@@ -54,6 +55,28 @@ function doRenderExperience(role: Role) {
                     const progressBar = PageUtils.generateProgressBarHTML(ratio);
                     $(td).html("<span title='" + (exp + " EX") + "'>" + progressBar + "</span>");
                 }
+            }
+        });
+
+    $("td:contains('宠物名 ：')")
+        .filter(function () {
+            return $(this).text().startsWith("宠物名 ：");
+        })
+        .closest("table")
+        .each(function (_idx, table) {
+            let s = $(table).find("tr:eq(1) td:first").text();
+            const level = parseInt(StringUtils.substringAfter(s, "Ｌｖ"));
+
+            const td = $(table).find("tr:last td:eq(1)");
+            if (level === 100) {
+                $(td).attr("style", "color: blue").text("MAX");
+            } else {
+                s = $(td).text();
+                const a = parseInt(StringUtils.substringBeforeSlash(s));
+                const b = parseInt(StringUtils.substringAfterSlash(s));
+                const ratio = a / b;
+                const progressBar = PageUtils.generateProgressBarHTML(ratio);
+                $(td).html("<span title='" + s + "'>" + progressBar + "</span>");
             }
         });
 }
