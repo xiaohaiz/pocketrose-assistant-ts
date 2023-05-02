@@ -19,7 +19,9 @@ class PersonalEquipmentManagementProcessor extends PageProcessor {
         PageUtils.removeUnusedHyperLinks();
         PageUtils.removeGoogleAnalyticsScript();
         const credential = PageUtils.currentCredential();
-        const equipmentList = EquipmentParser.parsePersonalItemList(this.pageHtml);
+        const pageHtml = document.documentElement.outerHTML;
+        const equipmentList = EquipmentParser.parsePersonalItemList(pageHtml);
+        console.log(JSON.stringify(equipmentList));
         doProcess(credential, equipmentList);
     }
 
