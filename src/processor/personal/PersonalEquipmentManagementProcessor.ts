@@ -21,7 +21,6 @@ class PersonalEquipmentManagementProcessor extends PageProcessor {
         const credential = PageUtils.currentCredential();
         const pageHtml = document.documentElement.outerHTML;
         const equipmentList = EquipmentParser.parsePersonalItemList(pageHtml);
-        console.log(JSON.stringify(equipmentList));
         doProcess(credential, equipmentList);
     }
 
