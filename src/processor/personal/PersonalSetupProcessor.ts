@@ -3,38 +3,12 @@ import PageUtils from "../../util/PageUtils";
 import Credential from "../../util/Credential";
 import RoleLoader from "../../pocket/RoleLoader";
 import MessageBoard from "../../util/MessageBoard";
-import SetupItem001 from "./setup/internal/SetupItem001";
-import SetupItem002 from "./setup/internal/SetupItem002";
-import SetupItem003 from "./setup/internal/SetupItem003";
-import SetupItem004 from "./setup/internal/SetupItem004";
-import SetupItem005 from "./setup/internal/SetupItem005";
-import SetupItem006 from "./setup/internal/SetupItem006";
-import SetupItem007 from "./setup/internal/SetupItem007";
-import SetupItem008 from "./setup/internal/SetupItem008";
-import SetupItem009 from "./setup/internal/SetupItem009";
-import SetupItem010 from "./setup/internal/SetupItem010";
-import SetupItem011 from "./setup/internal/SetupItem011";
-import SetupItem012 from "./setup/internal/SetupItem012";
-import SetupItem013 from "./setup/internal/SetupItem013";
-import SetupItem014 from "./setup/internal/SetupItem014";
-import SetupItem015 from "./setup/internal/SetupItem015";
-import SetupItem016 from "./setup/internal/SetupItem016";
-import SetupItem017 from "./setup/internal/SetupItem017";
-import SetupItem018 from "./setup/internal/SetupItem018";
 import EquipmentLoader from "../../pocket/EquipmentLoader";
-import SetupItem019 from "./setup/internal/SetupItem019";
 import NetworkUtils from "../../util/NetworkUtils";
 import Equipment from "../../pocket/Equipment";
 import EquipmentParser from "../../pocket/EquipmentParser";
 import TreasureBag from "../../pocket/TreasureBag";
-import SetupItem020 from "./setup/internal/SetupItem020";
-import SetupItem021 from "./setup/internal/SetupItem021";
-import SetupItem022 from "./setup/internal/SetupItem022";
-import SetupItem023 from "./setup/internal/SetupItem023";
-import SetupItem from "./setup/SetupItem";
-import SetupItem024 from "./setup/internal/SetupItem024";
-import SetupItem025 from "./setup/internal/SetupItem025";
-import SetupItem026 from "./setup/internal/SetupItem026";
+import SetupItemManager from "./setup/SetupItemManager";
 
 class PersonalSetupProcessor extends PageProcessor {
 
@@ -47,34 +21,7 @@ class PersonalSetupProcessor extends PageProcessor {
 
 }
 
-const setupItemList: SetupItem[] = [
-    new SetupItem001(),
-    new SetupItem002(),
-    new SetupItem003(),
-    new SetupItem004(),
-    new SetupItem005(),
-    new SetupItem006(),
-    new SetupItem007(),
-    new SetupItem008(),
-    new SetupItem009(),
-    new SetupItem010(),
-    new SetupItem011(),
-    new SetupItem012(),
-    new SetupItem013(),
-    new SetupItem014(),
-    new SetupItem015(),
-    new SetupItem016(),
-    new SetupItem017(),
-    new SetupItem018(),
-    new SetupItem019(),
-    new SetupItem020(),
-    new SetupItem021(),
-    new SetupItem022(),
-    new SetupItem023(),
-    new SetupItem024(),
-    new SetupItem025(),
-    new SetupItem026()
-];
+const setupItemManager = new SetupItemManager();
 
 function doInitialize(credential: Credential) {
     // 整个页面是放在一个大form里面，删除重组
@@ -172,7 +119,7 @@ function doRender(credential: Credential) {
     html += "</table>";
     $("#setup_item_container").html(html);
 
-    for (const it of setupItemList) {
+    for (const it of setupItemManager.getSetupItem()) {
         it.render(credential.id);
     }
 
