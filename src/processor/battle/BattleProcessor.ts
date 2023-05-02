@@ -12,7 +12,8 @@ class BattleProcessor extends PageProcessor {
         PageUtils.removeUnusedHyperLinks();
         PageUtils.removeGoogleAnalyticsScript();
 
-        doRenderPrompt(this.pageText);
+        const pageText = document.documentElement.outerText;
+        doRenderPrompt(pageText);
 
         $('input[value="返回住宿"]').attr('id', 'lodgeButton');
         $('input[value="返回修理"]').attr('id', 'repairButton');
@@ -46,7 +47,7 @@ class BattleProcessor extends PageProcessor {
         $('#depositButton').parent().prepend($('<input type="hidden" name="azukeru" value="all">'));
         $('input[value="BANK"]').attr('value', 'BANK_SELL');
 
-        doPostBattle(this.pageText);
+        doPostBattle(pageText);
 
         // 如果强制推荐启用，则删除其余所有的按钮
         if (SetupLoader.isBattleForceRecommendationEnabled()) {
@@ -65,7 +66,7 @@ class BattleProcessor extends PageProcessor {
             document.getElementById(buttonId!)?.scrollIntoView();
         }
         // 十二宫极速战斗
-        if (this.pageText.includes("＜＜ - 十二神殿 - ＞＞") && SetupLoader.isZodiacFlashBattleEnabled()) {
+        if (pageText.includes("＜＜ - 十二神殿 - ＞＞") && SetupLoader.isZodiacFlashBattleEnabled()) {
             $("input:submit[tabindex='1']").trigger("click");
         }
     }
