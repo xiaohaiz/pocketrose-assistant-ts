@@ -196,6 +196,10 @@ class SetupLoader {
             return JSON.parse(s);
         }
     }
+
+    static isExperienceProgressBarEnabled(): boolean {
+        return StorageUtils.getBoolean("_pa_026");
+    }
 }
 
 export = SetupLoader;

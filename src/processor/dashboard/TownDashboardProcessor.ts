@@ -273,16 +273,18 @@ function doRenderRoleStatus(role: Role) {
     $("td:parent").each(function (_idx, td) {
         const text = $(td).text();
         if (text === "经验值") {
-            if (role.level === 150) {
-                $(td).next()
-                    .attr("style", "color: blue")
-                    .text("MAX");
-            } else {
-                const ratio = role.level! / 150;
-                const progressBar = PageUtils.generateProgressBarHTML(ratio);
-                const exp = $(td).next().text();
-                $(td).next()
-                    .html("<span title='" + exp + "'>" + progressBar + "</span>");
+            if (SetupLoader.isExperienceProgressBarEnabled()) {
+                if (role.level === 150) {
+                    $(td).next()
+                        .attr("style", "color: blue")
+                        .text("MAX");
+                } else {
+                    const ratio = role.level! / 150;
+                    const progressBar = PageUtils.generateProgressBarHTML(ratio);
+                    const exp = $(td).next().text();
+                    $(td).next()
+                        .html("<span title='" + exp + "'>" + progressBar + "</span>");
+                }
             }
         }
         if (text === "身份") {
