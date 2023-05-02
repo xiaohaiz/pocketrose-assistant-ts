@@ -10,13 +10,12 @@ class PersonalStatusProcessor extends PageProcessor {
     process() {
         PageUtils.removeUnusedHyperLinks();
         PageUtils.removeGoogleAnalyticsScript();
-        doProcess(this.pageHtml);
+        doProcess();
     }
 }
 
-function doProcess(pageHtml: string) {
-    const role = RoleParser.parseRole(pageHtml);
-
+function doProcess() {
+    const role = RoleParser.parseRole(document.documentElement.outerHTML);
     doRenderExperience(role);
     doRenderHonor();
 }
