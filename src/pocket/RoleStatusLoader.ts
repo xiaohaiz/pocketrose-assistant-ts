@@ -1,6 +1,7 @@
 import Credential from "../util/Credential";
 import RoleStatus from "./RoleStatus";
 import NetworkUtils from "../util/NetworkUtils";
+import RoleStatusParser from "./RoleStatusParser";
 
 class RoleStatusLoader {
 
@@ -17,9 +18,7 @@ class RoleStatusLoader {
                 // @ts-ignore
                 request["mode"] = "STATUS";
                 NetworkUtils.sendPostRequest("status.cgi", request, function (html) {
-                    const status = new RoleStatus();
-                    const text = $(html).text();
-                    status.canConsecrate = text.includes("可以进行下次祭奠了");
+                    const status = RoleStatusParser.parseRoleStatus(html);
                     resolve(status);
                 });
             });
