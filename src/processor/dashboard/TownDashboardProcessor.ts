@@ -25,7 +25,7 @@ class TownDashboardProcessor implements Processor {
 }
 
 function doProcess(credential: Credential) {
-    $("input:text:first").attr("id", "messageInputText");
+    $("input:text:last").attr("id", "messageInputText");
     $("input:submit[value='更新']").attr("id", "refreshButton");
 
     doRenderBattleMenu(credential);
