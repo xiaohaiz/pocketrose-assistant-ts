@@ -22,9 +22,16 @@ class CastleDashboardProcessor implements Processor {
 }
 
 function doProcess() {
+    doRenderSetupMenu();
     doRenderPostHouseMenu();
     doRenderExperienceProgressBar();
     doRenderEventBoard();
+}
+
+function doRenderSetupMenu() {
+    $("option[value='LETTER']")
+        .css("background-color", "yellow")
+        .text("口袋助手设置");
 }
 
 function doRenderPostHouseMenu() {
