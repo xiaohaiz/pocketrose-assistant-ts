@@ -78,11 +78,17 @@ class PageUtils {
         $("img")
             .filter(function () {
                 const src = $(this).attr("src") as string;
-                return src.startsWith("http://pocketrose.21sun.net:81/pocketrose");
+                return src.startsWith("http://pocketrose.21sun.net:81/pocketrose") ||
+                    src.startsWith("http://pocketrose.21sun.net/pocketrose");
             })
             .each(function (_idx, img) {
                 const src = $(img).attr("src") as string;
-                let s = StringUtils.substringAfter(src, "http://pocketrose.21sun.net:81/pocketrose");
+                let s = src;
+                if (src.includes("http://pocketrose.21sun.net:81/pocketrose")) {
+                    s = StringUtils.substringAfter(s, "http://pocketrose.21sun.net:81/pocketrose");
+                } else if (src.includes("http://pocketrose.21sun.net/pocketrose")) {
+                    s = StringUtils.substringAfter(s, "http://pocketrose.21sun.net/pocketrose");
+                }
                 s = Constants.POCKET_DOMAIN + s;
                 $(img).attr("src", s);
             });
