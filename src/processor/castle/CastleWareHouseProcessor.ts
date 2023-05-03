@@ -279,6 +279,8 @@ function doRenderPersonalEquipmentList(credential: Credential, personalEquipment
         .html(html)
         .parent()
         .show();
+
+    doBindPutIntoWareHouseButton(credential, personalEquipmentList);
 }
 
 function doRenderStorageEquipmentList(credential: Credential, storageEquipmentList: Equipment[]) {
@@ -425,6 +427,29 @@ function doRenderStorageEquipmentList(credential: Credential, storageEquipmentLi
         .show();
 
     doBindTakeFromWareHouseButton(credential, storageEquipmentList);
+}
+
+function doBindPutIntoWareHouseButton(credential: Credential, personalEquipmentList: Equipment[]) {
+    for (const equipment of personalEquipmentList) {
+        const buttonId = "putIntoWareHouseButton_" + equipment.index;
+        if ($("#" + buttonId).length === 0) {
+            continue;
+        }
+        $("#" + buttonId).on("click", function () {
+            const index = ($(this).attr("id") as string).split("_")[1];
+            const request = credential.asRequest();
+            // @ts-ignore
+            request["item" + index] = index;
+            // @ts-ignore
+            request.chara = "1";
+            // @ts-ignore
+            request.mode = "CASTLE_ITEMSTORE";
+            NetworkUtils.sendPostRequest("castle.cgi", request, function (pageHtml) {
+                MessageBoard.processResponseMessage(pageHtml);
+                doRefresh(credential);
+            });
+        });
+    }
 }
 
 function doBindTakeFromWareHouseButton(credential: Credential, storageEquipmentList: Equipment[]) {
