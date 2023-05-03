@@ -452,6 +452,32 @@ function doBindPutIntoWareHouseButton(credential: Credential, personalEquipmentL
             });
         });
     }
+    if ($("#putIntoWareHouseButton").length > 0) {
+        $("#putIntoWareHouseButton").on("click", function () {
+            let checkedCount = 0;
+            const request = credential.asRequest();
+            $(".personal_checkbox_class:checked")
+                .each(function (_idx, checkbox) {
+                    checkedCount++;
+                    const name = $(checkbox).attr("name")!;
+                    // @ts-ignore
+                    request[name] = $(checkbox).val();
+                });
+            if (checkedCount === 0) {
+                MessageBoard.publishWarning("请先选择要放入城堡仓库的装备！");
+                document.getElementById("title")?.scrollIntoView();
+                return;
+            }
+            // @ts-ignore
+            request.chara = "1";
+            // @ts-ignore
+            request.mode = "CASTLE_ITEMSTORE";
+            NetworkUtils.sendPostRequest("castle.cgi", request, function (pageHtml) {
+                MessageBoard.processResponseMessage(pageHtml);
+                doRefresh(credential);
+            });
+        });
+    }
 }
 
 function doBindTakeFromWareHouseButton(credential: Credential, storageEquipmentList: Equipment[]) {
@@ -520,6 +546,7 @@ function doRefresh(credential: Credential) {
         const personalEquipmentList = EquipmentParser.parseCastleWareHousePersonalEquipmentList(pageHtml);
         const storageEquipmentList = EquipmentParser.parseCastleWareHouseStorageEquipmentList(pageHtml);
         doRender(credential, personalEquipmentList, storageEquipmentList);
+        document.getElementById("title")?.scrollIntoView();
     });
 }
 
