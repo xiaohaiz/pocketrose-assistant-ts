@@ -423,6 +423,28 @@ function doRenderStorageEquipmentList(credential: Credential, storageEquipmentLi
         .html(html)
         .parent()
         .show();
+
+    doBindTakeFromWareHouseButton(credential, storageEquipmentList);
+}
+
+function doBindTakeFromWareHouseButton(credential: Credential, storageEquipmentList: Equipment[]) {
+    for (const equipment of storageEquipmentList) {
+        const buttonId = "takeFromWareHouseButton_" + equipment.index;
+        $("#" + buttonId).on("click", function () {
+            const index = ($(this).attr("id") as string).split("_")[1];
+            const request = credential.asRequest();
+            // @ts-ignore
+            request["item" + index] = index;
+            // @ts-ignore
+            request.chara = "1";
+            // @ts-ignore
+            request.mode = "CASTLE_ITEMWITHDRAW";
+            NetworkUtils.sendPostRequest("castle.cgi", request, function (pageHtml) {
+                MessageBoard.processResponseMessage(pageHtml);
+                doRefresh(credential);
+            });
+        });
+    }
 }
 
 function doRefresh(credential: Credential) {
