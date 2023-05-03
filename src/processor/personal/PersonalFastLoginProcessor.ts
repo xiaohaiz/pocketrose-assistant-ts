@@ -1,6 +1,8 @@
 import Processor from "../Processor";
 import PageUtils from "../../util/PageUtils";
 import Credential from "../../util/Credential";
+import FastLoginLoader from "../../pocket/FastLoginLoader";
+import MessageBoard from "../../util/MessageBoard";
 
 class PersonalFastLoginProcessor implements Processor {
 
@@ -31,7 +33,7 @@ function doProcess(credential: Credential) {
         .css("background-color", "navy")
         .css("color", "greenyellow")
         .attr("id", "title")
-        .text("＜＜　 快 速 登 陆 　＞＞");
+        .text("＜＜　 快 速 登 陆 设 置 　＞＞");
 
     $("table:eq(4)")
         .find("td:first")
@@ -72,9 +74,7 @@ function doProcess(credential: Credential) {
     doGenerateEdenForm(credential);
     doBindReturnButton();
 
-    doRender(credential);
-
-    console.log(PageUtils.currentPageHtml());
+    doRender();
 }
 
 function doGenerateEdenForm(credential: Credential) {
@@ -95,7 +95,7 @@ function doBindReturnButton() {
     });
 }
 
-function doRender(credential: Credential) {
+function doRender() {
     let html = "";
     html += "<table style='border-width:0;width:100%;background-color:#888888'>";
     html += "<tbody style='background-color:#F8F0E0;text-align:center'>";
@@ -136,6 +136,65 @@ function doRender(credential: Credential) {
 
     $("#fastLoginSetup").html(html);
 
+    for (let i = 0; i < 10; i++) {
+        const config = FastLoginLoader.loadFastLoginConfig(i);
+        // @ts-ignore
+        let s = config.name;
+        if (s !== undefined) {
+            $("#name_" + i).val(s);
+        }
+        // @ts-ignore
+        s = config.id;
+        if (s !== undefined) {
+            $("#id_" + i).val(s);
+        }
+        // @ts-ignore
+        s = config.pass;
+        if (s !== undefined) {
+            $("#pass1_" + i).val(s);
+            $("#pass2_" + i).val(s);
+        }
+    }
+
+    doBindFastLoginButton();
+}
+
+function doBindFastLoginButton() {
+    $(".button_class").on("click", function () {
+        const code = parseInt(($(this).attr("id") as string).split("_")[1]);
+        let s = $("#name_" + code).val();
+        if (s === undefined || (s as string).trim().length === 0) {
+            MessageBoard.publishWarning("角色名字不能为空");
+            return;
+        }
+        const name = (s as string).trim();
+
+        s = $("#id_" + code).val();
+        if (s === undefined || (s as string).trim().length === 0) {
+            MessageBoard.publishWarning("登陆名不能为空");
+            return;
+        }
+        const id = (s as string).trim();
+
+        s = $("#pass1_" + code).val();
+        if (s === undefined || (s as string).trim().length === 0) {
+            MessageBoard.publishWarning("密码不能为空");
+            return;
+        }
+        const pass1 = (s as string).trim();
+
+        s = $("#pass2_" + code).val();
+        if (s === undefined || (s as string).trim().length === 0) {
+            MessageBoard.publishWarning("密码不能为空");
+            return;
+        }
+        const pass2 = (s as string).trim();
+
+        if (pass1 !== pass2) {
+            MessageBoard.publishWarning("两次输入的密码不匹配");
+            return;
+        }
+    });
 }
 
 export = PersonalFastLoginProcessor;

@@ -225,7 +225,7 @@ function doRenderFastLoginMenu() {
     if (SetupLoader.isFastLoginEnabled()) {
         $("option[value='CHUJIA']")
             .css("background-color", "yellow")
-            .text("快速登陆");
+            .text("快速登陆设置");
     }
 }
 
