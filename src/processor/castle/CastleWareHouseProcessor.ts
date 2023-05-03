@@ -455,6 +455,9 @@ function doBindPutIntoWareHouseButton(credential: Credential, personalEquipmentL
 function doBindTakeFromWareHouseButton(credential: Credential, storageEquipmentList: Equipment[]) {
     for (const equipment of storageEquipmentList) {
         const buttonId = "takeFromWareHouseButton_" + equipment.index;
+        if ($("#" + buttonId).length === 0) {
+            continue;
+        }
         $("#" + buttonId).on("click", function () {
             const index = ($(this).attr("id") as string).split("_")[1];
             const request = credential.asRequest();
