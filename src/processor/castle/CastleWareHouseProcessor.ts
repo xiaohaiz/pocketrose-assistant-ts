@@ -24,9 +24,7 @@ function doProcess() {
     const credential = PageUtils.currentCredential();
     const pageHtml = PageUtils.currentPageHtml();
     const personalEquipmentList = EquipmentParser.parseCastleWareHousePersonalEquipmentList(pageHtml);
-    //const storageEquipmentList = EquipmentParser.parseCastleWareHouseStorageEquipmentList(pageHtml);
-    console.log(JSON.stringify(personalEquipmentList));
-    //console.log(JSON.stringify(storageEquipmentList));
+    const storageEquipmentList = EquipmentParser.parseCastleWareHouseStorageEquipmentList(pageHtml);
 
     // 修改标题
     $("td:first")
