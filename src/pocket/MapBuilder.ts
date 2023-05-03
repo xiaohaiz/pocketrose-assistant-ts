@@ -1,5 +1,6 @@
 import Coordinate from "../util/Coordinate";
 import TownLoader from "./TownLoader";
+import TownStatusLoader from "./TownStatusLoader";
 
 class MapBuilder {
 
@@ -65,6 +66,22 @@ class MapBuilder {
         return html;
     }
 
+    static updateTownBackgroundColor() {
+        TownStatusLoader.loadTownStatusList()
+            .then(statusList => {
+                for (const status of statusList) {
+                    const town = TownLoader.getTownByName(status.name!)!;
+                    const x = town.coordinate!.x;
+                    const y = town.coordinate!.y;
+                    const buttonId = "location_" + x + "_" + y;
+                    $("#" + buttonId)
+                        .css("background-color", status.color!)
+                        .css("color", "white")
+                        .parent()
+                        .attr("class", "color_" + status.color);
+                }
+            });
+    }
 }
 
 export = MapBuilder;

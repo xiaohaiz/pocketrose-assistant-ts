@@ -132,6 +132,7 @@ function doRenderMenu() {
 function doRenderMap(credential: Credential, player: string) {
     const html = MapBuilder.buildMapTable();
     $("#map").html(html);
+    MapBuilder.updateTownBackgroundColor();
 
     new RoleLoader(credential).load()
         .then((role: Role) => {
@@ -140,7 +141,7 @@ function doRenderMap(credential: Credential, player: string) {
             $("#" + buttonId)
                 .closest("td")
                 .css("background-color", "black")
-                .css("color", "white")
+                .css("color", "yellow")
                 .css("text-align", "center")
                 .html($("#" + buttonId).val() as string);
 
