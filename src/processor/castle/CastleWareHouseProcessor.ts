@@ -117,7 +117,14 @@ function doBindReturnButton() {
 function doRender(credential: Credential,
                   personalEquipmentList: Equipment[],
                   storageEquipmentList: Equipment[]) {
+    doRenderPersonalEquipmentList(credential, personalEquipmentList);
+    doRenderStorageEquipmentList(credential, storageEquipmentList);
+}
 
+function doRenderPersonalEquipmentList(credential: Credential, personalEquipmentList: Equipment[]) {
+}
+
+function doRenderStorageEquipmentList(credential: Credential, personalEquipmentList: Equipment[]) {
 }
 
 function doRefresh(credential: Credential) {
