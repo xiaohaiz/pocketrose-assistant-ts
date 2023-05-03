@@ -25,6 +25,7 @@ function doProcess() {
     doRenderPostHouseMenu();
     doRenderSetupMenu();
     doRenderEquipmentManagementMenu();
+    doRenderPetManagementMenu();
 
     doRenderExperienceProgressBar();
     doRenderEventBoard();
@@ -48,6 +49,15 @@ function doRenderEquipmentManagementMenu() {
             .css("background-color", "yellow")
             .text("装备管理");
         $("option[value='CASTLE_SENDITEM']").remove();
+    }
+}
+
+function doRenderPetManagementMenu() {
+    if (SetupLoader.isPetManagementUIEnabled()) {
+        $("option[value='PETSTATUS']")
+            .css("background-color", "yellow")
+            .text("宠物管理");
+        $("option[value='CASTLE_SENDPET']").remove();
     }
 }
 
