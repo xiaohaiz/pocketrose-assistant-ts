@@ -28,7 +28,6 @@ class PersonalEquipmentManagementProcessor implements Processor {
     process() {
         PageUtils.removeUnusedHyperLinks();
         PageUtils.removeGoogleAnalyticsScript();
-        PageUtils.fixCurrentPageBrokerImages();
         const credential = PageUtils.currentCredential();
         const pageHtml = document.documentElement.outerHTML;
         const equipmentList = EquipmentParser.parsePersonalItemList(pageHtml);
@@ -317,6 +316,8 @@ function doRender(credential: Credential, equipmentList: Equipment[]) {
     if ($("#treasureBagStatus").text() === "on") {
         doRenderTreasureBag(credential);
     }
+
+    PageUtils.fixCurrentPageBrokerImages();
 }
 
 function doRenderTreasureBag(credential: Credential) {
