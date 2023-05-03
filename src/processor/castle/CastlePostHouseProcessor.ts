@@ -116,6 +116,7 @@ function doRenderMenu() {
 function doRenderMap(credential: Credential) {
     const html = MapBuilder.buildMapTable();
     $("#map").html(html);
+    MapBuilder.updateTownBackgroundColor();
 
     new RoleLoader(credential).load()
         .then(role => {
