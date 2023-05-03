@@ -5,6 +5,7 @@ import CastleEntranceProcessor from "./castle/CastleEntranceProcessor";
 import CastlePostHouseProcessor from "./castle/CastlePostHouseProcessor";
 import CastleWareHouseProcessor from "./castle/CastleWareHouseProcessor";
 import EventDashboardProcessor from "./dashboard/EventDashboardProcessor";
+import LoginDashboardProcessor from "./dashboard/LoginDashboardProcessor";
 import MapDashboardProcessor from "./dashboard/MapDashboardProcessor";
 import PersonalCareerManagementProcessor from "./personal/PersonalCareerManagementProcessor";
 import PersonalEquipmentManagementProcessor from "./personal/PersonalEquipmentManagementProcessor";
@@ -28,6 +29,7 @@ class ProcessorManager {
             new CastlePostHouseProcessor(),
             new CastleWareHouseProcessor(),
             new EventDashboardProcessor(),
+            new LoginDashboardProcessor(),
             new MapDashboardProcessor(),
             new PersonalCareerManagementProcessor(),
             new PersonalEquipmentManagementProcessor(),
