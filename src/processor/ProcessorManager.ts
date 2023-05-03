@@ -1,6 +1,7 @@
 import Processor from "./Processor";
 import BattleProcessor from "./battle/BattleProcessor";
 import CastleDashboardProcessor from "./dashboard/CastleDashboardProcessor";
+import CastleEntranceProcessor from "./castle/CastleEntranceProcessor";
 import CastlePostHouseProcessor from "./castle/CastlePostHouseProcessor";
 import EventDashboardProcessor from "./dashboard/EventDashboardProcessor";
 import MapDashboardProcessor from "./dashboard/MapDashboardProcessor";
@@ -22,6 +23,7 @@ class ProcessorManager {
         this.#processors = [
             new BattleProcessor(),
             new CastleDashboardProcessor(),
+            new CastleEntranceProcessor(),
             new CastlePostHouseProcessor(),
             new EventDashboardProcessor(),
             new MapDashboardProcessor(),
