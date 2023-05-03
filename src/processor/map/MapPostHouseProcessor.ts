@@ -1,4 +1,6 @@
 import Processor from "../Processor";
+import PageUtils from "../../util/PageUtils";
+import Credential from "../../util/Credential";
 
 class MapPostHouseProcessor implements Processor {
 
@@ -10,7 +12,15 @@ class MapPostHouseProcessor implements Processor {
     }
 
     process(): void {
+        PageUtils.removeUnusedHyperLinks();
+        PageUtils.removeGoogleAnalyticsScript();
+        const credential = PageUtils.currentCredential();
+        doProcess(credential);
     }
+
+}
+
+function doProcess(credential: Credential) {
 
 }
 
