@@ -5,6 +5,7 @@ import Credential from "../../util/Credential";
 import Equipment from "../../pocket/Equipment";
 import MessageBoard from "../../util/MessageBoard";
 import NpcLoader from "../../pocket/NpcLoader";
+import NetworkUtils from "../../util/NetworkUtils";
 
 class CastleWareHouseProcessor implements Processor {
 
@@ -76,13 +77,7 @@ function doProcess() {
     html += "<td id='personalEquipmentList'></td>";
     html += "</tr>";
     html += "<tr style='display:none'>";
-    html += "<td id='personalMenu' style='background-color:#F8F0E0'></td>";
-    html += "</tr>";
-    html += "<tr style='display:none'>";
     html += "<td id='storageEquipmentList'></td>";
-    html += "</tr>";
-    html += "<tr style='display:none'>";
-    html += "<td id='storageMenu' style='background-color:#F8F0E0'></td>";
     html += "</tr>";
     html += "<tr>";
     html += "<td style='background-color:#F8F0E0;text-align:center'>";
@@ -123,6 +118,26 @@ function doRender(credential: Credential,
                   personalEquipmentList: Equipment[],
                   storageEquipmentList: Equipment[]) {
 
+}
+
+function doRefresh(credential: Credential) {
+    const request = credential.asRequest();
+    // @ts-ignore
+    request.mode = "CASTLE_ITEM";
+    NetworkUtils.sendPostRequest("castle.cgi", request, function (pageHtml) {
+        $("#personalEquipmentList")
+            .html("")
+            .parent()
+            .hide();
+        $("#storageEquipmentList")
+            .html("")
+            .parent()
+            .hide();
+
+        const personalEquipmentList = EquipmentParser.parseCastleWareHousePersonalEquipmentList(pageHtml);
+        const storageEquipmentList = EquipmentParser.parseCastleWareHouseStorageEquipmentList(pageHtml);
+        doRender(credential, personalEquipmentList, storageEquipmentList);
+    });
 }
 
 export = CastleWareHouseProcessor;
