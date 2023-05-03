@@ -48,7 +48,7 @@ function doProcess() {
         .next()
         .after("" +
             "<tr><td id='messageBoardContainer' style='background-color:#E8E8D0'></td></tr>" +
-            "<tr style='display:none'><td></td></tr>" +
+            "<tr style='display:none'><td id='eden'></td></tr>" +
             "<tr style='display:none'><td></td></tr>");
     MessageBoard.createMessageBoardStyleB("messageBoardContainer", NpcLoader.randomNpcImageHtml());
     $("#messageBoard")
@@ -56,7 +56,67 @@ function doProcess() {
         .css("color", "white")
         .text("请管理您的城堡仓库。");
 
+    // 重新布局页面
+    // 删除之前的全部表单，会连带删除表单内的表格
+    $("form").remove();
+    $("h3").remove();
+    $("hr")
+        .filter(function (_idx) {
+            return _idx !== 3;
+        })
+        .each(function (_idx, hr) {
+            hr.remove();
+        });
+
+    // 准备新的界面
+    let html = "";
+    html += "<table style='width:100%;border-width:0;background-color:#888888'>";
+    html += "<tbody>";
+    html += "<tr style='display:none'>";
+    html += "<td id='personalEquipmentList'></td>";
+    html += "</tr>";
+    html += "<tr style='display:none'>";
+    html += "<td id='personalMenu' style='background-color:#F8F0E0'></td>";
+    html += "</tr>";
+    html += "<tr style='display:none'>";
+    html += "<td id='storageEquipmentList'></td>";
+    html += "</tr>";
+    html += "<tr style='display:none'>";
+    html += "<td id='storageMenu' style='background-color:#F8F0E0'></td>";
+    html += "</tr>";
+    html += "<tr>";
+    html += "<td style='background-color:#F8F0E0;text-align:center'>";
+    html += "<input type='button' id='returnButton' value='离开城堡仓库'>";
+    html += "</td>";
+    html += "</tr>";
+    html += "</tbody>";
+    html += "</table>";
+    $("table:first").after($(html));
+
+    doGenerateEdenForm(credential);
+    doBindReturnButton();
+
+    console.log(PageUtils.currentPageHtml());
+
     doRender(credential, personalEquipmentList, storageEquipmentList);
+}
+
+function doGenerateEdenForm(credential: Credential) {
+    let html = "";
+    // noinspection HtmlUnknownTarget
+    html += "<form action='castlestatus.cgi' method='post' id='returnForm'>";
+    html += "<input type='hidden' name='id' value='" + credential.id + "'>";
+    html += "<input type='hidden' name='pass' value='" + credential.pass + "'>";
+    html += "<input type='hidden' name='mode' value='CASTLESTATUS'>";
+    html += "<input type='submit' id='returnSubmit'>";
+    html += "</form>";
+    $("#eden").html(html);
+}
+
+function doBindReturnButton() {
+    $("#returnButton").on("click", function () {
+        $("#returnSubmit").trigger("click");
+    });
 }
 
 function doRender(credential: Credential,
