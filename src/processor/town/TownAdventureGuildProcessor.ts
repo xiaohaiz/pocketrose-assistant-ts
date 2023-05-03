@@ -176,6 +176,8 @@ function doRenderTreasureHint(credential: Credential, treasureHintList: Treasure
         .parent()
         .show();
 
+    MapBuilder.updateTownBackgroundColor();
+
     $(".treasure_hint_class")
         .on("mouseenter", function () {
             const x = parseInt($(this).find("td:eq(2)").text());
