@@ -119,10 +119,11 @@ function doRender(credential: Credential,
                   personalEquipmentList: Equipment[],
                   storageEquipmentList: Equipment[]) {
     doRenderPersonalEquipmentList(credential, personalEquipmentList);
-    doRenderStorageEquipmentList(credential, storageEquipmentList);
+    doRenderStorageEquipmentList(credential, storageEquipmentList, 20 - personalEquipmentList.length);
 }
 
-function doRenderPersonalEquipmentList(credential: Credential, personalEquipmentList: Equipment[]) {
+function doRenderPersonalEquipmentList(credential: Credential,
+                                       personalEquipmentList: Equipment[]) {
     let html = "";
     html += "<table style='border-width:0;width:100%;background-color:#888888'>";
     html += "<tbody style='background-color:#F8F0E0;text-align:center'>";
@@ -283,7 +284,9 @@ function doRenderPersonalEquipmentList(credential: Credential, personalEquipment
     doBindPutIntoWareHouseButton(credential, personalEquipmentList);
 }
 
-function doRenderStorageEquipmentList(credential: Credential, storageEquipmentList: Equipment[]) {
+function doRenderStorageEquipmentList(credential: Credential,
+                                      storageEquipmentList: Equipment[],
+                                      personalSpace: number) {
     if (storageEquipmentList.length === 0) {
         return;
     }
@@ -402,7 +405,7 @@ function doRenderStorageEquipmentList(credential: Credential, storageEquipmentLi
         }
         html += "</td>";
         html += "<td style='background-color:#E0D0B0'>";
-        if (equipment.selectable) {
+        if (personalSpace > 0) {
             html += "<input type='button' class='button_class' " +
                 "id='takeFromWareHouseButton_" + equipment.index + "' value='出库'>";
         } else {
@@ -412,12 +415,14 @@ function doRenderStorageEquipmentList(credential: Credential, storageEquipmentLi
         html += "</td>";
         html += "</tr>";
     }
-    html += "<tr>";
-    html += "<td colspan='18' style='text-align:left'>";
-    html += "<input type='button' class='button_class' " +
-        "id='takeFromWareHouseButton' value='从城堡仓库中取出'>";
-    html += "</td>";
-    html += "</tr>";
+    if (personalSpace > 0) {
+        html += "<tr>";
+        html += "<td colspan='18' style='text-align:left'>";
+        html += "<input type='button' class='button_class' " +
+            "id='takeFromWareHouseButton' value='从城堡仓库中取出'>";
+        html += "</td>";
+        html += "</tr>";
+    }
     html += "</tbody>";
     html += "</table>"
 
