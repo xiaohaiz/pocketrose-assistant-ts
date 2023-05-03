@@ -1,5 +1,6 @@
 import Processor from "../Processor";
 import PageUtils from "../../util/PageUtils";
+import EquipmentParser from "../../pocket/EquipmentParser";
 
 class CastleWareHouseProcessor implements Processor {
 
@@ -20,6 +21,13 @@ class CastleWareHouseProcessor implements Processor {
 }
 
 function doProcess() {
+    const credential = PageUtils.currentCredential();
+    const pageHtml = PageUtils.currentPageHtml();
+    const personalEquipmentList = EquipmentParser.parseCastleWareHousePersonalEquipmentList(pageHtml);
+    //const storageEquipmentList = EquipmentParser.parseCastleWareHouseStorageEquipmentList(pageHtml);
+    console.log(JSON.stringify(personalEquipmentList));
+    //console.log(JSON.stringify(storageEquipmentList));
+
     // 修改标题
     $("td:first")
         .attr("id", "title")
@@ -34,7 +42,6 @@ function doProcess() {
         .text("＜＜  城 堡 仓 库  ＞＞");
 
 
-    console.log(PageUtils.currentPageHtml());
 }
 
 export = CastleWareHouseProcessor;
