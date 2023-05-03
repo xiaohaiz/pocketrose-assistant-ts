@@ -22,10 +22,18 @@ class CastleDashboardProcessor implements Processor {
 }
 
 function doProcess() {
-    doRenderSetupMenu();
     doRenderPostHouseMenu();
+    doRenderSetupMenu();
+    doRenderEquipmentManagementMenu();
+
     doRenderExperienceProgressBar();
     doRenderEventBoard();
+}
+
+function doRenderPostHouseMenu() {
+    $("option[value='CASTLE_BUILDMACHINE']")
+        .css("background-color", "yellow")
+        .text("城堡驿站");
 }
 
 function doRenderSetupMenu() {
@@ -34,10 +42,13 @@ function doRenderSetupMenu() {
         .text("口袋助手设置");
 }
 
-function doRenderPostHouseMenu() {
-    $("option[value='CASTLE_BUILDMACHINE']")
-        .css("background-color", "yellow")
-        .text("城堡驿站");
+function doRenderEquipmentManagementMenu() {
+    if (SetupLoader.isEquipmentManagementUIEnabled()) {
+        $("option[value='USE_ITEM']")
+            .css("background-color", "yellow")
+            .text("装备管理");
+        $("option[value='CASTLE_SENDITEM']").remove();
+    }
 }
 
 function doRenderExperienceProgressBar() {
