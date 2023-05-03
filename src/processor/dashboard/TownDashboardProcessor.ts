@@ -7,6 +7,7 @@ import RoleStatus from "../../pocket/RoleStatus";
 import Processor from "../Processor";
 import EventHandler from "../../pocket/EventHandler";
 import TownLoader from "../../pocket/TownLoader";
+import NetworkUtils from "../../util/NetworkUtils";
 
 class TownDashboardProcessor implements Processor {
 
@@ -43,7 +44,7 @@ function doProcess(credential: Credential) {
     doRenderBattleCount(roleStatus);
     doRenderCareerTransferWarning(credential, roleStatus);
     doRenderRoleStatus(roleStatus);
-    doRenderTownTax(roleStatus);
+    doRenderTownTax(credential, roleStatus);
 
     doRenderEventBoard();
 }
@@ -284,7 +285,7 @@ function doRenderRoleStatus(roleStatus: RoleStatus) {
     });
 }
 
-function doRenderTownTax(roleStatus: RoleStatus) {
+function doRenderTownTax(credential: Credential, roleStatus: RoleStatus) {
     let td: JQuery<HTMLElement> | null = null;
     const town = TownLoader.getTownById(roleStatus.townId!);
     if (town !== null && town.name === "枫丹") {
@@ -296,6 +297,23 @@ function doRenderTownTax(roleStatus: RoleStatus) {
             .removeAttr("align")
             .css("text-align", "right")
             .html("<span style='color:red' title='枫丹的收益不需要关心'>PRIVACY</span>");
+    }
+    if (roleStatus.country !== "在野" && roleStatus.country === roleStatus.townCountry) {
+        if (td === null) {
+            td = $("th:contains('收益')")
+                .filter(function () {
+                    return $(this).text() === "收益";
+                })
+                .next();
+        }
+        const tax = parseInt(td!.text());
+        if (tax >= 50000) {
+            td!.css("color", "white")
+                .css("background-color", "red")
+                .css("font-weight", "bold")
+                .attr("id", "tax_" + roleStatus.townId);
+            doBindTownTaxButton(credential, "tax_" + roleStatus.townId);
+        }
     }
 }
 
@@ -337,6 +355,20 @@ function doRenderEventBoard() {
     html += "</table>";
 
     $("#eventBoard").html(html);
+}
+
+function doBindTownTaxButton(credential: Credential, cellId: string) {
+    $("#" + cellId).on("dblclick", function () {
+        const townId = StringUtils.substringAfterLast($(this).attr("id") as string, "_");
+        const request = credential.asRequest();
+        // @ts-ignore
+        request.town = townId;
+        // @ts-ignore
+        request.mode = "MAKE_TOWN";
+        NetworkUtils.sendPostRequest("country.cgi", request, function () {
+            $("#refreshButton").trigger("click");
+        });
+    });
 }
 
 export = TownDashboardProcessor;
