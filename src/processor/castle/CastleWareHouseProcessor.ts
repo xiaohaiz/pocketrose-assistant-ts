@@ -91,10 +91,7 @@ function doProcess() {
 
     doGenerateEdenForm(credential);
     doBindReturnButton();
-
     doRender(credential, personalEquipmentList, storageEquipmentList);
-
-    console.log(PageUtils.currentPageHtml());
 }
 
 function doGenerateEdenForm(credential: Credential) {
@@ -468,6 +465,32 @@ function doBindTakeFromWareHouseButton(credential: Credential, storageEquipmentL
             const request = credential.asRequest();
             // @ts-ignore
             request["item" + index] = index;
+            // @ts-ignore
+            request.chara = "1";
+            // @ts-ignore
+            request.mode = "CASTLE_ITEMWITHDRAW";
+            NetworkUtils.sendPostRequest("castle.cgi", request, function (pageHtml) {
+                MessageBoard.processResponseMessage(pageHtml);
+                doRefresh(credential);
+            });
+        });
+    }
+    if ($("#takeFromWareHouseButton").length > 0) {
+        $("#takeFromWareHouseButton").on("click", function () {
+            let checkedCount = 0;
+            const request = credential.asRequest();
+            $(".storage_checkbox_class:checked")
+                .each(function (_idx, checkbox) {
+                    checkedCount++;
+                    const name = $(checkbox).attr("name")!;
+                    // @ts-ignore
+                    request[name] = $(checkbox).val();
+                });
+            if (checkedCount === 0) {
+                MessageBoard.publishWarning("请先选择要从城堡仓库取出的装备！");
+                document.getElementById("title")?.scrollIntoView();
+                return;
+            }
             // @ts-ignore
             request.chara = "1";
             // @ts-ignore
