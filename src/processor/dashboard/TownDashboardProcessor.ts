@@ -39,7 +39,7 @@ function doProcess(credential: Credential) {
     doRenderPetManagementMenu();
     doRenderCareerManagementMenu();
     doRenderAdventureGuildMenu();
-    doRenderFastLoginSetupMenu();
+    doRenderFastLoginMenu();
 
     const roleStatus = RoleStatusParser.parseRoleStatus(document.documentElement.outerHTML);
     doRenderBattleCount(roleStatus);
@@ -221,11 +221,11 @@ function doRenderAdventureGuildMenu() {
         .text("冒险家公会");
 }
 
-function doRenderFastLoginSetupMenu() {
+function doRenderFastLoginMenu() {
     if (SetupLoader.isFastLoginEnabled()) {
         $("option[value='CHUJIA']")
             .css("background-color", "yellow")
-            .text("快速登陆设置");
+            .text("快速登陆");
     }
 }
 

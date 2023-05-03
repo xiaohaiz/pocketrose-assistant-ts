@@ -9,6 +9,7 @@ import LoginDashboardProcessor from "./dashboard/LoginDashboardProcessor";
 import MapDashboardProcessor from "./dashboard/MapDashboardProcessor";
 import PersonalCareerManagementProcessor from "./personal/PersonalCareerManagementProcessor";
 import PersonalEquipmentManagementProcessor from "./personal/PersonalEquipmentManagementProcessor";
+import PersonalFastLoginProcessor from "./personal/PersonalFastLoginProcessor";
 import PersonalPetManagementProcessor from "./personal/PersonalPetManagementProcessor";
 import PersonalSetupProcessor from "./personal/PersonalSetupProcessor";
 import PersonalStatusProcessor from "./personal/PersonalStatusProcessor";
@@ -33,6 +34,7 @@ class ProcessorManager {
             new MapDashboardProcessor(),
             new PersonalCareerManagementProcessor(),
             new PersonalEquipmentManagementProcessor(),
+            new PersonalFastLoginProcessor(),
             new PersonalPetManagementProcessor(),
             new PersonalSetupProcessor(),
             new PersonalStatusProcessor(),
