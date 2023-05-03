@@ -203,6 +203,14 @@ class Equipment {
             return this.name!;
         }
     }
+
+    get endureHtml() {
+        if (this.isItem && !this.name!.includes("自动")) {
+            return "-";
+        } else {
+            return this.endure!;
+        }
+    }
 }
 
 function isAttributeHeavyArmor(name: string) {

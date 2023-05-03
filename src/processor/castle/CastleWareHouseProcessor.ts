@@ -148,10 +148,12 @@ function doRenderPersonalEquipmentList(credential: Credential, personalEquipment
     html += "<th style='background-color:#E0D0B0'>入库</th>";
     html += "</tr>";
 
+    let selectableCount = 0;
     for (const equipment of personalEquipmentList) {
         html += "<tr>";
         html += "<td style='background-color:#E8E8D0'>";
         if (equipment.selectable) {
+            selectableCount++;
             html += "<input type='checkbox' class='personal_checkbox_class' " +
                 "name='item" + equipment.index + "' value='" + equipment.index + "'>";
         }
@@ -166,11 +168,7 @@ function doRenderPersonalEquipmentList(credential: Credential, personalEquipment
         html += "<td style='background-color:#E0D0B0'>" + equipment.power + "</td>";
         html += "<td style='background-color:#EFE0C0'>" + equipment.weight + "</td>";
         html += "<td style='background-color:#EFE0C0'>";
-        if (equipment.endure === 1) {
-            html += "-";
-        } else {
-            html += equipment.endure;
-        }
+        html += equipment.endureHtml;
         html += "</td>";
         html += "<td style='background-color:#E0D0B0'>";
         if (equipment.requiredCareer === "所有职业") {
@@ -261,6 +259,19 @@ function doRenderPersonalEquipmentList(credential: Credential, personalEquipment
         html += "</tr>";
     }
 
+    html += "<tr>";
+    html += "<td colspan='19' style='text-align:left'>";
+    html += "<b style='color:navy'>目前剩余空位数：</b><b style='color:red'>" + (20 - personalEquipmentList.length) + "</b>";
+    html += "</td>";
+    html += "</tr>";
+    if (selectableCount > 0) {
+        html += "<tr>";
+        html += "<td colspan='19' style='text-align:left'>";
+        html += "<input type='button' class='button_class' " +
+            "id='putIntoWareHouseButton' value='放入城堡仓库'>";
+        html += "</td>";
+        html += "</tr>";
+    }
     html += "</tbody>";
     html += "</table>"
 
