@@ -200,6 +200,10 @@ class SetupLoader {
     static isExperienceProgressBarEnabled(): boolean {
         return StorageUtils.getBoolean("_pa_026");
     }
+
+    static isFastLoginEnabled(): boolean {
+        return StorageUtils.getBoolean("_pa_027");
+    }
 }
 
 export = SetupLoader;

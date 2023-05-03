@@ -25,6 +25,7 @@ import SetupItem023 from "./internal/SetupItem023";
 import SetupItem024 from "./internal/SetupItem024";
 import SetupItem025 from "./internal/SetupItem025";
 import SetupItem026 from "./internal/SetupItem026";
+import SetupItem027 from "./internal/SetupItem027";
 
 class SetupItemManager {
 
@@ -57,7 +58,8 @@ class SetupItemManager {
             new SetupItem023(),
             new SetupItem024(),
             new SetupItem025(),
-            new SetupItem026()
+            new SetupItem026(),
+            new SetupItem027(),
         ];
     }
 
