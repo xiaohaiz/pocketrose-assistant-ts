@@ -1,12 +1,12 @@
 import Processor from "./Processor";
 import BattleProcessor from "./battle/BattleProcessor";
-import CastleDashboardProcessor from "./dashboard/CastleDashboardProcessor";
+import CastleDashboardProcessor from "./castle/CastleDashboardProcessor";
 import CastleEntranceProcessor from "./castle/CastleEntranceProcessor";
 import CastlePostHouseProcessor from "./castle/CastlePostHouseProcessor";
 import CastleWareHouseProcessor from "./castle/CastleWareHouseProcessor";
-import EventDashboardProcessor from "./dashboard/EventDashboardProcessor";
-import LoginDashboardProcessor from "./dashboard/LoginDashboardProcessor";
-import MapDashboardProcessor from "./dashboard/MapDashboardProcessor";
+import EventDashboardProcessor from "./common/EventDashboardProcessor";
+import LoginDashboardProcessor from "./common/LoginDashboardProcessor";
+import MapDashboardProcessor from "./map/MapDashboardProcessor";
 import MapPostHouseProcessor from "./map/MapPostHouseProcessor";
 import PersonalCareerManagementProcessor from "./personal/PersonalCareerManagementProcessor";
 import PersonalEquipmentManagementProcessor from "./personal/PersonalEquipmentManagementProcessor";
@@ -15,8 +15,8 @@ import PersonalPetManagementProcessor from "./personal/PersonalPetManagementProc
 import PersonalSetupProcessor from "./personal/PersonalSetupProcessor";
 import PersonalStatusProcessor from "./personal/PersonalStatusProcessor";
 import TownAdventureGuildProcessor from "./town/TownAdventureGuildProcessor";
-import TownDashboardProcessor from "./dashboard/TownDashboardProcessor";
-import TownListDashboardProcessor from "./dashboard/TownListDashboardProcessor";
+import TownDashboardProcessor from "./town/TownDashboardProcessor";
+import TownListDashboardProcessor from "./common/TownListDashboardProcessor";
 import TownPostHouseProcessor from "./town/TownPostHouseProcessor";
 
 class ProcessorManager {
