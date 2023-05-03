@@ -125,7 +125,7 @@ function doRenderMap(credential: Credential) {
             $("#" + buttonId)
                 .closest("td")
                 .css("background-color", "black")
-                .css("color", "white")
+                .css("color", "yellow")
                 .css("text-align", "center")
                 .html("堡");
 
