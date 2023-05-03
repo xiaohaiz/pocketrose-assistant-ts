@@ -38,6 +38,7 @@ function doProcess() {
     $("input:text[name='id']").attr("id", "loginId");
     $("input:password[name='pass']").attr("id", "loginPass");
     $("input:submit[value='登陆']").attr("id", "loginButton");
+    $("form").attr("id", "loginForm");
 
     let html = "";
     html += "<tr>";
@@ -113,6 +114,7 @@ function doBindFastLoginButton() {
             // @ts-ignore
             $("#loginPass").val(config.pass);
 
+            $("#loginForm").removeAttr("onsubmit");
             $("#loginButton").trigger("click");
         });
     }
