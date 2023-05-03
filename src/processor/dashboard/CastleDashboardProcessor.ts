@@ -26,6 +26,7 @@ function doProcess() {
     doRenderSetupMenu();
     doRenderEquipmentManagementMenu();
     doRenderPetManagementMenu();
+    doRenderCareerManagementMenu();
 
     doRenderExperienceProgressBar();
     doRenderEventBoard();
@@ -58,6 +59,15 @@ function doRenderPetManagementMenu() {
             .css("background-color", "yellow")
             .text("宠物管理");
         $("option[value='CASTLE_SENDPET']").remove();
+    }
+}
+
+function doRenderCareerManagementMenu() {
+    if (SetupLoader.isCareerManagementUIEnabled()) {
+        $("option[value='CHANGE_OCCUPATION']")
+            .css("background-color", "yellow")
+            .text("职业管理");
+        $("option[value='MAGIC']").remove();
     }
 }
 
