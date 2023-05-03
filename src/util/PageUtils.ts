@@ -22,6 +22,14 @@ class PageUtils {
      */
     static removeGoogleAnalyticsScript() {
         $("script:last").remove();
+        $("script")
+            .filter(function () {
+                const src = $(this).attr("src");
+                return src !== undefined && src.includes("google-analytics");
+            })
+            .each(function (_idx, script) {
+                script.remove();
+            });
     }
 
     static currentCredential() {
