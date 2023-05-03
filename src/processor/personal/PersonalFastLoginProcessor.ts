@@ -3,6 +3,7 @@ import PageUtils from "../../util/PageUtils";
 import Credential from "../../util/Credential";
 import FastLoginLoader from "../../pocket/FastLoginLoader";
 import MessageBoard from "../../util/MessageBoard";
+import StorageUtils from "../../util/StorageUtils";
 
 class PersonalFastLoginProcessor implements Processor {
 
@@ -194,7 +195,23 @@ function doBindFastLoginButton() {
             MessageBoard.publishWarning("两次输入的密码不匹配");
             return;
         }
+
+        const value = {
+            "name": name,
+            "id": id,
+            "pass": pass1
+        };
+        StorageUtils.set("_fl_" + code, JSON.stringify(value));
+        MessageBoard.publishMessage("设置已经保存。");
+
+        doRefresh();
     });
+}
+
+function doRefresh() {
+    $("#fastLoginSetup").html("");
+    $(".button_class").off("click");
+    doRender();
 }
 
 export = PersonalFastLoginProcessor;

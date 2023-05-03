@@ -7,7 +7,7 @@ class FastLoginLoader {
             return {};
         }
         const key = "_fl_" + code;
-        const s = StorageUtils.getString("_pa_025");
+        const s = StorageUtils.getString(key);
         if (s === "") {
             return {};
         } else {
