@@ -6,6 +6,7 @@ import RoleStatusParser from "../../pocket/RoleStatusParser";
 import RoleStatus from "../../pocket/RoleStatus";
 import Processor from "../Processor";
 import EventHandler from "../../pocket/EventHandler";
+import TownLoader from "../../pocket/TownLoader";
 
 class TownDashboardProcessor implements Processor {
 
@@ -42,6 +43,7 @@ function doProcess(credential: Credential) {
     doRenderBattleCount(roleStatus);
     doRenderCareerTransferWarning(credential, roleStatus);
     doRenderRoleStatus(roleStatus);
+    doRenderTownTax(roleStatus);
 
     doRenderEventBoard();
 }
@@ -280,6 +282,21 @@ function doRenderRoleStatus(roleStatus: RoleStatus) {
             }
         }
     });
+}
+
+function doRenderTownTax(roleStatus: RoleStatus) {
+    let td: JQuery<HTMLElement> | null = null;
+    const town = TownLoader.getTownById(roleStatus.townId!);
+    if (town !== null && town.name === "枫丹") {
+        td = $("th:contains('收益')")
+            .filter(function () {
+                return $(this).text() === "收益";
+            })
+            .next()
+            .removeAttr("align")
+            .css("text-align", "right")
+            .html("<span style='color:red' title='枫丹的收益不需要关心'>PRIVACY</span>");
+    }
 }
 
 function doRenderEventBoard() {
