@@ -28,6 +28,15 @@ class TownWeaponStore {
         }
         page.discount = discount;
 
+        // Parse role cash
+        const s = $(pageHtml).find("td:contains('所持金')")
+            .filter(function () {
+                return $(this).text() === "所持金";
+            })
+            .next()
+            .text();
+        page.roleCash = parseInt(StringUtils.substringBefore(s, " GOLD"));
+
         // Parse personal equipment list
 
         // Parse weapon merchandise list
