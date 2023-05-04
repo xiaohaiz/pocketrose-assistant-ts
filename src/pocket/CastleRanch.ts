@@ -2,6 +2,7 @@ import Pet from "./Pet";
 import StringUtils from "../util/StringUtils";
 import Credential from "../util/Credential";
 import CastleRanchPets from "./CastleRanchPets";
+import NetworkUtils from "../util/NetworkUtils";
 
 class CastleRanch {
 
@@ -101,6 +102,21 @@ class CastleRanch {
                 petList.push(pet);
             });
         return petList;
+    }
+
+    async enter(): Promise<CastleRanchPets> {
+        const action = (credential: Credential) => {
+            return new Promise<CastleRanchPets>(resolve => {
+                const request = credential.asRequest();
+                // @ts-ignore
+                request.mode = "CASTLE_PET";
+                NetworkUtils.sendPostRequest("castle.cgi", request, function (pageHtml) {
+                    const pets = CastleRanch.parsePets(pageHtml);
+                    resolve(pets);
+                });
+            });
+        };
+        return await action(this.#credential);
     }
 
 }
