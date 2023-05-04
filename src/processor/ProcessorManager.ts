@@ -17,6 +17,7 @@ import PersonalStatusProcessor from "./personal/PersonalStatusProcessor";
 import TownAdventureGuildProcessor from "./town/TownAdventureGuildProcessor";
 import TownDashboardProcessor from "./town/TownDashboardProcessor";
 import TownListDashboardProcessor from "./common/TownListDashboardProcessor";
+import TownPetMapProcessor from "./town/TownPetMapProcessor";
 import TownPostHouseProcessor from "./town/TownPostHouseProcessor";
 
 class ProcessorManager {
@@ -43,6 +44,7 @@ class ProcessorManager {
             new TownAdventureGuildProcessor(),
             new TownDashboardProcessor(),
             new TownListDashboardProcessor(),
+            new TownPetMapProcessor(),
             new TownPostHouseProcessor(),
         ];
     }
