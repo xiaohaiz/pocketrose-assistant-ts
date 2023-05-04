@@ -1,6 +1,6 @@
 import Pet from "./Pet";
 
-class CastleRanchPets {
+class CastleRanchStatus {
 
     readonly personalPetList: Pet[];
     readonly ranchPetList: Pet[];
@@ -12,4 +12,4 @@ class CastleRanchPets {
 
 }
 
-export = CastleRanchPets;
+export = CastleRanchStatus;

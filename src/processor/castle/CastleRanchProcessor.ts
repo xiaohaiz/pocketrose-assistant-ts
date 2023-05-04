@@ -4,7 +4,7 @@ import PageUtils from "../../util/PageUtils";
 import CastleRanch from "../../pocket/CastleRanch";
 import MessageBoard from "../../util/MessageBoard";
 import NpcLoader from "../../pocket/NpcLoader";
-import CastleRanchPets from "../../pocket/CastleRanchPets";
+import CastleRanchStatus from "../../pocket/CastleRanchStatus";
 
 class CastleRanchProcessor implements Processor {
 
@@ -27,7 +27,7 @@ class CastleRanchProcessor implements Processor {
 function doProcess(credential: Credential) {
     // 解析原有页面的宠物列表
     const pageHtml = PageUtils.currentPageHtml();
-    const pets = CastleRanch.parsePets(pageHtml);
+    const pets = CastleRanch.parseCastleRanchStatus(pageHtml);
 
     // 重组页面的基础结构
     // 标题(id: title_cell)
@@ -138,7 +138,7 @@ function doCreateMessageBoard() {
     MessageBoard.resetMessageBoard("开心牧场，纯天然放养空间，富含大自然灵动因子，好心情成就健康。")
 }
 
-function doRender(credential: Credential, pets: CastleRanchPets) {
+function doRender(credential: Credential, pets: CastleRanchStatus) {
 }
 
 export = CastleRanchProcessor;
