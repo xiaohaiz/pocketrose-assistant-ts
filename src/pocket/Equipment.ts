@@ -1,6 +1,7 @@
 import Coordinate from "../util/Coordinate";
 import TownLoader from "./TownLoader";
 import PageUtils from "../util/PageUtils";
+import StringUtils from "../util/StringUtils";
 
 const PROHIBIT_SELLING_ITEM_LIST = [
     "千与千寻",
@@ -79,6 +80,38 @@ class Equipment {
     price?: number;                      // 价格
     priceHTML?: string;                  // 价格HTML代码
 
+    parseName(nameHtml: string) {
+        this.nameHTML = nameHtml;
+        const s = PageUtils.convertHtmlToText(nameHtml);
+        if (s.startsWith("齐心★")) {
+            this.star = true;
+            this.name = StringUtils.substringAfter(s, "齐心★");
+        } else {
+            this.star = false;
+            this.name = s;
+        }
+    }
+
+    parseEndure(endureText: string) {
+        if (endureText.includes("/")) {
+            const a = StringUtils.substringBeforeSlash(endureText);
+            const b = StringUtils.substringAfterSlash(endureText);
+            this.endure = parseInt(a);
+            this.maxEndure = parseInt(b);
+        } else {
+            this.endure = parseInt(endureText);
+        }
+    }
+
+    parsePrice(priceHtml: string) {
+        this.priceHTML = priceHtml;
+        let s = PageUtils.convertHtmlToText(priceHtml);
+        if (s.includes(" ")) {
+            s = StringUtils.substringBefore(s, " ");
+        }
+        this.price = parseInt(s);
+    }
+
     get isWeapon() {
         return this.category === "武器";
     }
@@ -101,6 +134,21 @@ class Equipment {
 
     get isGoldenCage(): boolean {
         return this.isItem && this.name === "黄金笼子";
+    }
+
+    get isSellable() {
+        if (this.selectable !== undefined && !this.selectable) {
+            return false;
+        }
+        if (this.using !== undefined && this.using) {
+            return false;
+        }
+        for (const it of PROHIBIT_SELLING_ITEM_LIST) {
+            if (this.name!.endsWith(it)) {
+                return false;
+            }
+        }
+        return true;
     }
 
     get isRepairable() {
@@ -207,8 +255,11 @@ class Equipment {
     get endureHtml() {
         if (this.isItem && !this.name!.includes("自动")) {
             return "-";
-        } else {
+        }
+        if (this.maxEndure === undefined) {
             return this.endure!;
+        } else {
+            return this.endure! + "/" + this.maxEndure!;
         }
     }
 }
