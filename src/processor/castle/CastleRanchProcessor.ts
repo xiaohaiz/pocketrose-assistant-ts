@@ -5,6 +5,7 @@ import CastleRanch from "../../pocket/CastleRanch";
 import MessageBoard from "../../util/MessageBoard";
 import NpcLoader from "../../pocket/NpcLoader";
 import CastleRanchStatus from "../../pocket/CastleRanchStatus";
+import Constants from "../../util/Constants";
 
 class CastleRanchProcessor implements Processor {
 
@@ -175,8 +176,9 @@ function doRender(credential: Credential, ranchStatus: CastleRanchStatus) {
             html += "<tr>";
             html += "<td style='background-color:#E8E8D0'>";
             if (!pet.using!) {
-                html += "<input type='button' class='dynamic_button_class' " +
-                    "value='放牧' id='graze_" + pet.index! + "'>";
+                html += "<img alt='放牧' id='graze_" + pet.index! + "' " +
+                    "class='dynamic_button_class' title='放牧' " +
+                    "src='" + (Constants.POCKET_DOMAIN + "/image/country/7.gif") + "'>";
                 indexList.push(pet.index!);
             }
             html += "</td>";
@@ -242,8 +244,9 @@ function doRender(credential: Credential, ranchStatus: CastleRanchStatus) {
             html += "<td style='background-color:#E8E8D0'>";
             if (ranchStatus.personalPetList.length < 3) {
                 indexList.push(pet.index!);
-                html += "<input type='button' class='dynamic_button_class' " +
-                    "value='召唤' id='summon_" + pet.index! + "'>";
+                html += "<img alt='召唤' id='summon_" + pet.index! + "' " +
+                    "class='dynamic_button_class' title='召唤' " +
+                    "src='" + (Constants.POCKET_DOMAIN + "/image/country/6.gif") + "'>";
             }
             html += "</td>"
             html += "<td style='background-color:#E0D0B0'>" + pet.name + "</td>";
