@@ -10,6 +10,7 @@ import EquipmentParser from "../../pocket/EquipmentParser";
 import Processor from "../Processor";
 import SetupLoader from "../../pocket/SetupLoader";
 import NpcLoader from "../../pocket/NpcLoader";
+import RoleLoader from "../../pocket/RoleLoader";
 
 class PersonalPetManagementProcessor implements Processor {
 
@@ -54,6 +55,12 @@ function doProcess(credential: Credential, petList: Pet[], studyStatus: number[]
     html += "<tr style='display:none'>";
     html += "<td id='goldenCageStatus'>off</td>";
     html += "</tr>";
+    html += "<tr style='display:none'>";
+    html += "<td id='hasGoldenCage'>false</td>";
+    html += "</tr>";
+    html += "<tr style='display:none'>";
+    html += "<td id='roleLocation'></td>";
+    html += "</tr>";
     html += "<tr>";
     html += "<td id='message_board_container'></td>";
     html += "</tr>";
@@ -71,20 +78,29 @@ function doProcess(credential: Credential, petList: Pet[], studyStatus: number[]
     MessageBoard.createMessageBoard("message_board_container", NpcLoader.randomFemaleNpcImageHtml());
     MessageBoard.resetMessageBoard("全新的宠物管理UI为您带来不一样的感受。");
 
-    doRender(credential, petList, studyStatus);
+    new RoleLoader(credential).load()
+        .then(role => {
+            if (role.masterCareerList!.includes("贤者") || role.hasMirror!) {
+                $("#hasGoldenCage").text("true");
+            }
+            $("#roleLocation").text(role.location!);
 
-    const request = credential.asRequest();
-    // @ts-ignore
-    request["mode"] = "USE_ITEM";
-    NetworkUtils.sendPostRequest("mydata.cgi", request, function (html) {
-        const equipmentList = EquipmentParser.parsePersonalItemList(html);
-        const cage = EquipmentParser.findGoldenCage(equipmentList);
-        if (cage !== null) {
-            $("#goldenCageIndex").text(cage.index!);
-            $("#openCageButton").show();
-            $("#closeCageButton").show();
-        }
-    });
+            doRender(credential, petList, studyStatus);
+
+            const request = credential.asRequest();
+            // @ts-ignore
+            request["mode"] = "USE_ITEM";
+            NetworkUtils.sendPostRequest("mydata.cgi", request, function (html) {
+                const equipmentList = EquipmentParser.parsePersonalItemList(html);
+                const cage = EquipmentParser.findGoldenCage(equipmentList);
+                if (cage !== null) {
+                    $("#goldenCageIndex").text(cage.index!);
+                    $("#openCageButton").show();
+                    $("#closeCageButton").show();
+                }
+            });
+        });
+
 }
 
 function doRender(credential: Credential, petList: Pet[], studyStatus: number[]) {
@@ -235,6 +251,13 @@ function doRender(credential: Credential, petList: Pet[], studyStatus: number[])
             $("#" + buttonId).css("color", "grey");
 
             buttonId = "pet_" + pet.index + "_cage";
+            $("#" + buttonId).prop("disabled", true);
+            $("#" + buttonId).css("color", "grey");
+        }
+
+        if ($("#hasGoldenCage").text() !== "true" && !pet.using) {
+            // 没有黄金笼子的不应该有入笼选项
+            let buttonId = "pet_" + pet.index + "_cage";
             $("#" + buttonId).prop("disabled", true);
             $("#" + buttonId).css("color", "grey");
         }
