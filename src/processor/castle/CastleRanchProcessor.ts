@@ -127,6 +127,7 @@ function doBindRefreshButton(credential: Credential) {
 }
 
 function doRefresh(credential: Credential) {
+    document.getElementById("title_cell")?.scrollIntoView();
     $("#personal_pet_list_cell").parent().hide();
     $("#ranch_pet_list_cell").parent().hide();
     $(".dynamic_button_class").off("click");
