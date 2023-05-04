@@ -12,6 +12,7 @@ import CommentBoard from "../../util/CommentBoard";
 import NpcLoader from "../../pocket/NpcLoader";
 import RoleStatusLoader from "../../pocket/RoleStatusLoader";
 import Processor from "../Processor";
+import RoleLoader from "../../pocket/RoleLoader";
 
 class PersonalEquipmentManagementProcessor implements Processor {
 
@@ -60,6 +61,8 @@ function doProcess(credential: Credential, equipmentList: Equipment[]) {
             "<div id='ItemUI'></div><div id='Eden' style='display:none'></div>" +
             "<div id='treasureBagIndex' style='display:none'>none</div>" +
             "<div id='treasureBagStatus' style='display:none'>off</div>" +
+            "<div id='hasTreasureBag' style='display:none'>false</div>" +
+            "<div id='roleLocation' style='display:none'></div>" +
             "</td>");
     // 在Eden里面添加预制的表单
     $("#Eden").html("" +
@@ -107,7 +110,18 @@ function doProcess(credential: Credential, equipmentList: Equipment[]) {
             });
     });
 
-    doRender(credential, equipmentList);
+    new RoleLoader(credential).load()
+        .then(role => {
+            // 已经掌握了剑圣职业，说明应该有百宝袋，但是因为某些bug导致百宝袋不可见了，
+            // 还是提供有限的百宝袋功能吧，能够放入、取出，但是不能浏览了。
+            // 至于分身在练的时候，没有剑圣职业了，怎么样？那就管不到了。
+            if (role.masterCareerList!.includes("剑圣")) {
+                $("#hasTreasureBag").text("true");
+            }
+            $("#roleLocation").text(role.location!);
+
+            doRender(credential, equipmentList);
+        });
 }
 
 function doRender(credential: Credential, equipmentList: Equipment[]) {
@@ -266,10 +280,13 @@ function doRender(credential: Credential, equipmentList: Equipment[]) {
     // 修改按钮的状态，如果有必要的话
     const treasureBag = EquipmentParser.findTreasureBag(equipmentList);
     if (treasureBag === null) {
-        $("#putIntoBagButton").prop("disabled", true);
-        $("#putIntoBagButton").css("display", "none");
-        $("#putAllIntoBagButton").prop("disabled", true);
-        $("#putAllIntoBagButton").css("display", "none");
+        if ($("#hasTreasureBag").text() !== "true") {
+            // 那是真没有百宝袋了，完全不能提供百宝袋的功能
+            $("#putIntoBagButton").prop("disabled", true);
+            $("#putIntoBagButton").css("display", "none");
+            $("#putAllIntoBagButton").prop("disabled", true);
+            $("#putAllIntoBagButton").css("display", "none");
+        }
         $("#openBagButton").prop("disabled", "true").hide();
         $("#closeBugButton").prop("disabled", "true").hide();
     } else {
