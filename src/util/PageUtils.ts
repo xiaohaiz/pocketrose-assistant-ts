@@ -38,6 +38,12 @@ class PageUtils {
         return new Credential(id!.toString(), pass!.toString());
     }
 
+    static parseCredential(pageHtml: string) {
+        const id = $(pageHtml).find("input:hidden[name='id']:first").val() as string;
+        const pass = $(pageHtml).find("input:hidden[name='pass']:first").val() as string;
+        return new Credential(id, pass);
+    }
+
     static generateProgressBarHTML(ratio: number) {
         if (ratio === 0) {
             return "<img src='" + Constants.POCKET_DOMAIN + "/image/bg/bar2.gif'  height='7' width='50' alt=''>";
