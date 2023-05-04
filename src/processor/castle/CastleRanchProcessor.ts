@@ -191,6 +191,61 @@ function doRender(credential: Credential, ranchStatus: CastleRanchStatus) {
             .parent()
             .show();
     }
+
+    if (ranchStatus.ranchPetList.length > 0) {
+        let html = "";
+        html += "<table style='border-width:0;width:100%;background-color:#888888'>";
+        html += "<tbody style='background-color:#F8F0E0;text-align:center'>";
+        html += "<tr>";
+        html += "<td style='background-color:darkgreen;color:wheat;font-weight:bold' colspan='11'>";
+        html += "＜ 牧 场 宠 物 ＞";
+        html += "</td>";
+        html += "</tr>";
+        html += "<tr>";
+        html += "<th style='background-color:#E8E8D0'>操作</th>";
+        html += "<th style='background-color:#E0D0B0'>名字</th>";
+        html += "<th style='background-color:#EFE0C0'>等级</th>";
+        html += "<th style='background-color:#E0D0B0'>生命</th>";
+        html += "<th style='background-color:#EFE0C0'>攻击</th>";
+        html += "<th style='background-color:#EFE0C0'>防御</th>";
+        html += "<th style='background-color:#E0D0B0'>智力</th>";
+        html += "<th style='background-color:#E0D0B0'>精神</th>";
+        html += "<th style='background-color:#E0D0B0'>速度</th>";
+        html += "<th style='background-color:#E0D0B0'>经验</th>";
+        html += "<th style='background-color:#E0D0B0'>性别</th>";
+        html += "</tr>";
+        const petList = ranchStatus.ranchPetList;
+        petList.sort((a, b) => {
+            const ret = b.level! - a.level!;
+            if (ret !== 0) {
+                return ret;
+            }
+            return a.name!.localeCompare(b.name!);
+        });
+        for (const pet of petList) {
+            html += "<tr>";
+            html += "<td style='background-color:#E8E8D0'>操作</td>";
+            html += "<td style='background-color:#E0D0B0'>" + pet.name + "</td>";
+            html += "<td style='background-color:#EFE0C0'>" + pet.levelHtml + "</td>";
+            html += "<td style='background-color:#E0D0B0'>" + pet.healthHtml + "</td>";
+            html += "<td style='background-color:#EFE0C0'>" + pet.attackHtml + "</td>";
+            html += "<td style='background-color:#EFE0C0'>" + pet.defenseHtml + "</td>";
+            html += "<td style='background-color:#E0D0B0'>" + pet.specialAttackHtml + "</td>";
+            html += "<td style='background-color:#E0D0B0'>" + pet.specialDefenseHtml + "</td>";
+            html += "<td style='background-color:#E0D0B0'>" + pet.speedHtml + "</td>";
+            html += "<td style='background-color:#E0D0B0'>" + pet.experienceHtml + "</td>";
+            html += "<td style='background-color:#E0D0B0'>" + pet.gender + "</td>";
+            html += "</tr>";
+        }
+
+        html += "</tbody>";
+        html += "</table>";
+
+        $("#ranch_pet_list_cell")
+            .html(html)
+            .parent()
+            .show();
+    }
 }
 
 export = CastleRanchProcessor;
