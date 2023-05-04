@@ -114,8 +114,8 @@ function doProcess(credential: Credential, equipmentList: Equipment[]) {
         .then(role => {
             // 已经掌握了剑圣职业，说明应该有百宝袋，但是因为某些bug导致百宝袋不可见了，
             // 还是提供有限的百宝袋功能吧，能够放入、取出，但是不能浏览了。
-            // 至于分身在练的时候，没有剑圣职业了，怎么样？那就管不到了。
-            if (role.masterCareerList!.includes("剑圣")) {
+            // 如果有分身了，那也说明曾经掌握过剑圣职业，就算有百宝袋了
+            if (role.masterCareerList!.includes("剑圣") || role.hasMirror!) {
                 $("#hasTreasureBag").text("true");
             }
             $("#roleLocation").text(role.location!);

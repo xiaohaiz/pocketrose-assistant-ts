@@ -128,6 +128,8 @@ class RoleParser {
             }
         }
 
+        role.hasMirror = pageHtml.includes("所有其他分身");
+
         return role;
     }
 }
