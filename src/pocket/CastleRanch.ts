@@ -25,8 +25,8 @@ class CastleRanch {
                 // @ts-ignore
                 request.mode = "CASTLE_PET";
                 NetworkUtils.sendPostRequest("castle.cgi", request, function (pageHtml) {
-                    const pets = CastleRanch.parseCastleRanchStatus(pageHtml);
-                    resolve(pets);
+                    const ranchStatus = CastleRanch.parseCastleRanchStatus(pageHtml);
+                    resolve(ranchStatus);
                 });
             });
         };

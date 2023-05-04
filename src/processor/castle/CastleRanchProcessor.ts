@@ -27,7 +27,7 @@ class CastleRanchProcessor implements Processor {
 function doProcess(credential: Credential) {
     // 解析原有页面的宠物列表
     const pageHtml = PageUtils.currentPageHtml();
-    const pets = CastleRanch.parseCastleRanchStatus(pageHtml);
+    const ranchStatus = CastleRanch.parseCastleRanchStatus(pageHtml);
 
     // 重组页面的基础结构
     // 标题(id: title_cell)
@@ -96,7 +96,7 @@ function doProcess(credential: Credential) {
     doCreateMessageBoard();
 
     // 渲染动态页面
-    doRender(credential, pets);
+    doRender(credential, ranchStatus);
 }
 
 function doGenerateHiddenForm(credential: Credential) {
@@ -122,6 +122,8 @@ function doBindRefreshButton(credential: Credential) {
         const imageHtml = NpcLoader.randomNpcImageHtml();
         $("#messageBoardManager").html(imageHtml);
         MessageBoard.resetMessageBoard("开心牧场，纯天然放养空间，富含大自然灵动因子，好心情成就健康。");
+        $("#personal_pet_list_cell").parent().hide();
+        $("#ranch_pet_list_cell").parent().hide();
         new CastleRanch(credential).enter()
             .then(pets => {
                 doRender(credential, pets);
@@ -138,7 +140,57 @@ function doCreateMessageBoard() {
     MessageBoard.resetMessageBoard("开心牧场，纯天然放养空间，富含大自然灵动因子，好心情成就健康。")
 }
 
-function doRender(credential: Credential, pets: CastleRanchStatus) {
+function doRender(credential: Credential, ranchStatus: CastleRanchStatus) {
+
+    if (ranchStatus.personalPetList.length > 0) {
+        let html = "";
+        html += "<table style='border-width:0;width:100%;background-color:#888888'>";
+        html += "<tbody style='background-color:#F8F0E0;text-align:center'>";
+        html += "<tr>";
+        html += "<td style='background-color:darkred;color:wheat;font-weight:bold' colspan='12'>";
+        html += "＜ 随 身 宠 物 ＞";
+        html += "</td>";
+        html += "</tr>";
+        html += "<tr>";
+        html += "<th style='background-color:#E8E8D0'>操作</th>";
+        html += "<th style='background-color:#EFE0C0'>使用</th>";
+        html += "<th style='background-color:#E0D0B0'>名字</th>";
+        html += "<th style='background-color:#EFE0C0'>等级</th>";
+        html += "<th style='background-color:#E0D0B0'>生命</th>";
+        html += "<th style='background-color:#EFE0C0'>攻击</th>";
+        html += "<th style='background-color:#EFE0C0'>防御</th>";
+        html += "<th style='background-color:#E0D0B0'>智力</th>";
+        html += "<th style='background-color:#E0D0B0'>精神</th>";
+        html += "<th style='background-color:#E0D0B0'>速度</th>";
+        html += "<th style='background-color:#E0D0B0'>经验</th>";
+        html += "<th style='background-color:#E0D0B0'>性别</th>";
+        html += "</tr>";
+
+        for (const pet of ranchStatus.personalPetList) {
+            html += "<tr>";
+            html += "<td style='background-color:#E8E8D0'>操作</td>";
+            html += "<td style='background-color:#EFE0C0'>" + pet.usingHtml + "</td>";
+            html += "<td style='background-color:#E0D0B0'>" + pet.name + "</td>";
+            html += "<td style='background-color:#EFE0C0'>" + pet.levelHtml + "</td>";
+            html += "<td style='background-color:#E0D0B0'>" + pet.healthHtml + "</td>";
+            html += "<td style='background-color:#EFE0C0'>" + pet.attackHtml + "</td>";
+            html += "<td style='background-color:#EFE0C0'>" + pet.defenseHtml + "</td>";
+            html += "<td style='background-color:#E0D0B0'>" + pet.specialAttackHtml + "</td>";
+            html += "<td style='background-color:#E0D0B0'>" + pet.specialDefenseHtml + "</td>";
+            html += "<td style='background-color:#E0D0B0'>" + pet.speedHtml + "</td>";
+            html += "<td style='background-color:#E0D0B0'>" + pet.experienceHtml + "</td>";
+            html += "<td style='background-color:#E0D0B0'>" + pet.gender + "</td>";
+            html += "</tr>";
+        }
+
+        html += "</tbody>";
+        html += "</table>";
+
+        $("#personal_pet_list_cell")
+            .html(html)
+            .parent()
+            .show();
+    }
 }
 
 export = CastleRanchProcessor;
