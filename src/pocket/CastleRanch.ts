@@ -1,7 +1,21 @@
 import Pet from "./Pet";
 import StringUtils from "../util/StringUtils";
+import Credential from "../util/Credential";
+import CastleRanchPets from "./CastleRanchPets";
 
 class CastleRanch {
+
+    readonly #credential: Credential;
+
+    constructor(credential: Credential) {
+        this.#credential = credential;
+    }
+
+    static parsePets(pageHtml: string): CastleRanchPets {
+        const personalPetList = CastleRanch.parsePersonalPetList(pageHtml);
+        const ranchPetList = CastleRanch.parseRanchPetList(pageHtml);
+        return new CastleRanchPets(personalPetList, ranchPetList);
+    }
 
     static parsePersonalPetList(pageHtml: string): Pet[] {
         const petList: Pet[] = [];

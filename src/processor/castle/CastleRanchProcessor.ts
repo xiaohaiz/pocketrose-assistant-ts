@@ -24,11 +24,10 @@ class CastleRanchProcessor implements Processor {
 function doProcess(credential: Credential) {
     // 解析原有页面的宠物列表
     const pageHtml = PageUtils.currentPageHtml();
-    const personalPetList = CastleRanch.parsePersonalPetList(pageHtml);
-    const ranchPetList = CastleRanch.parseRanchPetList(pageHtml);
+    const pets = CastleRanch.parsePets(pageHtml);
 
     // 重组页面
-    console.log(JSON.stringify(ranchPetList));
+    console.log(JSON.stringify(pets));
 }
 
 export = CastleRanchProcessor;
