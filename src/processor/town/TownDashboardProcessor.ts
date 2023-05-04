@@ -318,7 +318,7 @@ function doRenderTownTax(credential: Credential, roleStatus: RoleStatus) {
         const tax = parseInt(td!.text());
         if (tax >= 50000) {
             td!.css("color", "white")
-                .css("background-color", "red")
+                .css("background-color", "green")
                 .css("font-weight", "bold")
                 .attr("id", "tax_" + roleStatus.townId);
             doBindTownTaxButton(credential, "tax_" + roleStatus.townId);
