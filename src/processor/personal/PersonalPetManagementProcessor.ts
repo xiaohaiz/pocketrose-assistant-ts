@@ -220,6 +220,7 @@ function doRender(credential: Credential, petList: Pet[], studyStatus: number[])
     html += "<input type='button' class='PetUIButton' value='刷新宠物管理' id='refreshButton'>";
     html += "<input type='button' class='PetUIButton' value='打开黄金笼子' id='openCageButton'>";
     html += "<input type='button' class='PetUIButton' value='关闭黄金笼子' id='closeCageButton'>";
+    html += "<input type='button' class='PetUIButton' value='从黄金笼子盲取' id='takeOutFirstFromCageButton' disabled style='display:none'>";
     html += "</td></tr>";
     html += "<tr style='display:none'><td id='goldenCageContainer' style='background-color:#E8E8D0;text-align:center' colspan='19'>";
     html += "</td></tr>";
@@ -344,7 +345,29 @@ function doRender(credential: Credential, petList: Pet[], studyStatus: number[])
 
     if ($("#goldenCageStatus").text() === "on") {
         doRenderGoldenCage(credential);
+    } else {
+        // 由于某些bug造成某些号黄金笼子消失
+        if ($("#hasGoldenCage").text() === "true") {
+            // 身上没有发现黄金笼子，但是掌握了贤者或者开了分身
+            // 应该有笼子的，能提供限制版笼子功能，取出第一个宠物
+            $("#takeOutFirstFromCageButton")
+                .prop("disabled", false)
+                .show()
+                .on("click", function () {
+                    const request = credential.asRequest();
+                    // @ts-ignore
+                    request["select"] = "0";
+                    // @ts-ignore
+                    request["mode"] = "GETOUTLONGZI";
+                    NetworkUtils.sendPostRequest("mydata.cgi", request, function (html) {
+                        MessageBoard.processResponseMessage(html);
+                        doRefresh(credential);
+                    });
+                });
+        }
     }
+
+
 }
 
 function doRenderGoldenCage(credential: Credential) {
