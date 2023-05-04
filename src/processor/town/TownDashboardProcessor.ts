@@ -75,9 +75,11 @@ function doRenderBattleMenu(credential: Credential) {
     }
 
     // 设置了战斗场所偏好
+    let treasureIslandFound = false;
     $("select[name='level']").find("option").each(function (_idx, option) {
         const text = $(option).text();
         if (text.startsWith("秘宝之岛")) {
+            treasureIslandFound = true;
             // do nothing, keep
         } else if (text.startsWith("初级之森")) {
             // do nothing, keep
@@ -97,22 +99,22 @@ function doRenderBattleMenu(credential: Credential) {
         const text = $(option).text();
         if (text.startsWith("初级之森")) {
             // @ts-ignore
-            if (!preference["primary"]) {
+            if (treasureIslandFound || !preference["primary"]) {
                 $(option).remove();
             }
         } else if (text.startsWith("中级之塔")) {
             // @ts-ignore
-            if (!preference["junior"]) {
+            if (treasureIslandFound || !preference["junior"]) {
                 $(option).remove();
             }
         } else if (text.startsWith("上级之洞")) {
             // @ts-ignore
-            if (!preference["senior"]) {
+            if (treasureIslandFound || !preference["senior"]) {
                 $(option).remove();
             }
         } else if (text.startsWith("十二神殿")) {
             // @ts-ignore
-            if (!preference["zodiac"]) {
+            if (treasureIslandFound || !preference["zodiac"]) {
                 $(option).remove();
             }
         }
