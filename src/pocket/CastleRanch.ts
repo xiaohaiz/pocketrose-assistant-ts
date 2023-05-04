@@ -3,6 +3,7 @@ import StringUtils from "../util/StringUtils";
 import Credential from "../util/Credential";
 import CastleRanchStatus from "./CastleRanchStatus";
 import NetworkUtils from "../util/NetworkUtils";
+import MessageBoard from "../util/MessageBoard";
 
 class CastleRanch {
 
@@ -31,6 +32,40 @@ class CastleRanch {
             });
         };
         return await action(this.#credential);
+    }
+
+    async graze(index: number): Promise<void> {
+        const action = (credential: Credential, index: number) => {
+            return new Promise<void>(resolve => {
+                const request = credential.asRequest();
+                // @ts-ignore
+                request.select = index;
+                // @ts-ignore
+                request.mode = "CASTLE_PETSTORE";
+                NetworkUtils.sendPostRequest("castle.cgi", request, function (pageHtml) {
+                    MessageBoard.processResponseMessage(pageHtml);
+                    resolve();
+                });
+            });
+        };
+        return await action(this.#credential, index);
+    }
+
+    async summon(index: number): Promise<void> {
+        const action = (credential: Credential, index: number) => {
+            return new Promise<void>(resolve => {
+                const request = credential.asRequest();
+                // @ts-ignore
+                request.select = index;
+                // @ts-ignore
+                request.mode = "CASTLE_PETWITHDRAW";
+                NetworkUtils.sendPostRequest("castle.cgi", request, function (pageHtml) {
+                    MessageBoard.processResponseMessage(pageHtml);
+                    resolve();
+                });
+            });
+        };
+        return await action(this.#credential, index);
     }
 
 }

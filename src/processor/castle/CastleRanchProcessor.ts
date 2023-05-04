@@ -119,16 +119,20 @@ function doBindReturnButton() {
 
 function doBindRefreshButton(credential: Credential) {
     $("#refresh_button").on("click", function () {
-        const imageHtml = NpcLoader.randomNpcImageHtml();
-        $("#messageBoardManager").html(imageHtml);
+        $("#messageBoardManager").html(NpcLoader.randomNpcImageHtml());
         MessageBoard.resetMessageBoard("开心牧场，纯天然放养空间，富含大自然灵动因子，好心情成就健康。");
-        $("#personal_pet_list_cell").parent().hide();
-        $("#ranch_pet_list_cell").parent().hide();
-        new CastleRanch(credential).enter()
-            .then(pets => {
-                doRender(credential, pets);
-            });
+        doRefresh(credential);
     });
+}
+
+function doRefresh(credential: Credential) {
+    $("#personal_pet_list_cell").parent().hide();
+    $("#ranch_pet_list_cell").parent().hide();
+    $(".dynamic_button_class").off("click");
+    new CastleRanch(credential).enter()
+        .then(pets => {
+            doRender(credential, pets);
+        });
 }
 
 function doCreateMessageBoard() {
@@ -166,9 +170,16 @@ function doRender(credential: Credential, ranchStatus: CastleRanchStatus) {
         html += "<th style='background-color:#E0D0B0'>性别</th>";
         html += "</tr>";
 
+        const indexList: number[] = [];
         for (const pet of ranchStatus.personalPetList) {
             html += "<tr>";
-            html += "<td style='background-color:#E8E8D0'>操作</td>";
+            html += "<td style='background-color:#E8E8D0'>";
+            if (!pet.using!) {
+                html += "<input type='button' class='dynamic_button_class' " +
+                    "value='放牧' id='graze_" + pet.index! + "'>";
+                indexList.push(pet.index!);
+            }
+            html += "</td>";
             html += "<td style='background-color:#EFE0C0'>" + pet.usingHtml + "</td>";
             html += "<td style='background-color:#E0D0B0'>" + pet.name + "</td>";
             html += "<td style='background-color:#EFE0C0'>" + pet.levelHtml + "</td>";
@@ -190,6 +201,8 @@ function doRender(credential: Credential, ranchStatus: CastleRanchStatus) {
             .html(html)
             .parent()
             .show();
+
+        doBindGrazeButton(credential, indexList);
     }
 
     if (ranchStatus.ranchPetList.length > 0) {
@@ -222,9 +235,17 @@ function doRender(credential: Credential, ranchStatus: CastleRanchStatus) {
             }
             return a.name!.localeCompare(b.name!);
         });
+
+        const indexList: number[] = [];
         for (const pet of petList) {
             html += "<tr>";
-            html += "<td style='background-color:#E8E8D0'>操作</td>";
+            html += "<td style='background-color:#E8E8D0'>";
+            if (ranchStatus.personalPetList.length < 3) {
+                indexList.push(pet.index!);
+                html += "<input type='button' class='dynamic_button_class' " +
+                    "value='召唤' id='summon_" + pet.index! + "'>";
+            }
+            html += "</td>"
             html += "<td style='background-color:#E0D0B0'>" + pet.name + "</td>";
             html += "<td style='background-color:#EFE0C0'>" + pet.levelHtml + "</td>";
             html += "<td style='background-color:#E0D0B0'>" + pet.healthHtml + "</td>";
@@ -245,6 +266,34 @@ function doRender(credential: Credential, ranchStatus: CastleRanchStatus) {
             .html(html)
             .parent()
             .show();
+
+        doBindSummonButton(credential, indexList);
+    }
+}
+
+function doBindGrazeButton(credential: Credential, indexList: number[]) {
+    for (const index of indexList) {
+        const buttonId = "graze_" + index;
+        $("#" + buttonId).on("click", function () {
+            const index = parseInt(($(this).attr("id") as string).split("_")[1]);
+            new CastleRanch(credential).graze(index)
+                .then(() => {
+                    doRefresh(credential);
+                });
+        });
+    }
+}
+
+function doBindSummonButton(credential: Credential, indexList: number[]) {
+    for (const index of indexList) {
+        const buttonId = "summon_" + index;
+        $("#" + buttonId).on("click", function () {
+            const index = parseInt(($(this).attr("id") as string).split("_")[1]);
+            new CastleRanch(credential).summon(index)
+                .then(() => {
+                    doRefresh(credential);
+                });
+        });
     }
 }
 
