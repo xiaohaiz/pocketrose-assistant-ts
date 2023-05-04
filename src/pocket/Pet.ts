@@ -3,6 +3,7 @@ import Constants from "../util/Constants";
 class Pet {
 
     index?: number;                  // 下标（唯一性）
+    selectable?: boolean;
     name?: string;
     gender?: string;
     using?: boolean;
