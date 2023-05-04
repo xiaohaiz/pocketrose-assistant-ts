@@ -147,7 +147,6 @@ function doRender(credential: Credential, equipmentList: Equipment[]) {
     html += "           <th style='background-color:#E0D0B0'>幸运</th>";
     html += "           <th style='background-color:#E0D0B0'>经验</th>";
     html += "           <th style='background-color:#EFE0C0'>属性</th>";
-    html += "           <th style='background-color:#EFE0C0'>收藏</th>";
     html += "       </tr>";
     for (const equipment of equipmentList) {
         if (equipment.isTreasureBag || equipment.isGoldenCage) {
@@ -209,21 +208,15 @@ function doRender(credential: Credential, equipmentList: Equipment[]) {
         html += "    <td style='background-color:#EFE0C0'>";
         html += "    " + (equipment.attribute === "无" ? "-" : equipment.attribute);
         html += "    </td>";
-        html += "    <td style='background-color:#EFE0C0'>" +
-            (equipment.isStorable ?
-                "<input type='button' class='ItemUIButton' " +
-                "id='storeItem_" + equipment.index + "' value='&nbsp;&nbsp;' " +
-                "style='height:15px;background-color:goldenrod;border-color:#888888;border-width:medium'>" : "");
-        html += "    </td>";
         html += "</tr>";
     }
     html += "       <tr>";
-    html += "           <td style='background-color:#E8E8D0;text-align:left;font-weight:bold' colspan='19'>";
+    html += "           <td style='background-color:#E8E8D0;text-align:left;font-weight:bold' colspan='18'>";
     html += "               <span style='color:navy'>目前剩余空位数：</span><span style='color:red'>" + (20 - equipmentList.length) + "</span>";
     html += "           </td>";
     html += "       </tr>";
     html += "       <tr>";
-    html += "           <td style='background-color:#E8E8D0;text-align:center' colspan='19'>";
+    html += "           <td style='background-color:#E8E8D0;text-align:center' colspan='18'>";
     html += "               <table style='background-color:#E8E8D0;border-width:0;width:100%'>";
     html += "                   <tbody style='background-color:#E8E8D0'>";
     html += "                       <tr style='background-color:#E8E8D0'>";
@@ -244,7 +237,7 @@ function doRender(credential: Credential, equipmentList: Equipment[]) {
     html += "           </td>";
     html += "       </tr>";
     html += "       <tr>";
-    html += "           <td style='background-color:#E8E8D0;text-align:right' colspan='19'>";
+    html += "           <td style='background-color:#E8E8D0;text-align:right' colspan='18'>";
     html += "               <input type='button' class='ItemUIButton' id='setButton_A' value='套装Ａ'>";
     html += "               <input type='button' class='ItemUIButton' id='setButton_B' value='套装Ｂ'>";
     html += "               <input type='button' class='ItemUIButton' id='setButton_C' value='套装Ｃ'>";
@@ -253,7 +246,7 @@ function doRender(credential: Credential, equipmentList: Equipment[]) {
     html += "           </td>";
     html += "       </tr>";
     html += "       <tr>";
-    html += "          <td style='background-color:#E8E8D0;text-align:right' colspan='19'>";
+    html += "          <td style='background-color:#E8E8D0;text-align:right' colspan='18'>";
     html += "              <input type='text' id='receiver' size='15' maxlength='20'>";
     html += "              <input type='button' class='ItemUIButton' id='searchButton' value='找人'>";
     html += "              <select id='receiverSelect'><option value=''>选择发送对象</select>";
@@ -261,14 +254,14 @@ function doRender(credential: Credential, equipmentList: Equipment[]) {
     html += "          </td>"
     html += "       </tr>";
     html += "       <tr>";
-    html += "           <td style='background-color:#E8E8D0;text-align:center' colspan='19'>";
+    html += "           <td style='background-color:#E8E8D0;text-align:center' colspan='18'>";
     html += "           <input type='button' class='ItemUIButton' id='refreshButton' value='刷新装备管理界面'>";
     html += "           <input type='button' class='ItemUIButton' id='openBagButton' value='打开百宝袋'>";
     html += "           <input type='button' class='ItemUIButton' id='closeBugButton' value='关闭百宝袋'>";
     html += "           </td>"
     html += "       </tr>";
     html += "       <tr style='display:none'>";
-    html += "           <td id='treasureBagContainer' style='background-color:#E8E8D0;text-align:center' colspan='19'>";
+    html += "           <td id='treasureBagContainer' style='background-color:#E8E8D0;text-align:center' colspan='18'>";
     html += "           </td>"
     html += "       </tr>";
     html += "   </tbody>";
@@ -350,7 +343,6 @@ function doRender(credential: Credential, equipmentList: Equipment[]) {
     doBindSetButton(credential, equipmentList, "E", config_e);
     doBindSearchButton(credential);
     doBindSendButton(credential);
-    doBindStoreButton(credential, treasureBag);
     doBindRefreshButton(credential);
     doBindTreasureBagButton(credential);
 
@@ -662,41 +654,6 @@ function doBindSendButton(credential: Credential) {
                 }
             });
     });
-}
-
-function doBindStoreButton(credential: Credential, treasureBag: Equipment | null) {
-    for (let i = 0; i < 20; i++) {
-        const buttonId = "storeItem_" + i;
-        if ($("#" + buttonId).length === 0) {
-            continue;
-        }
-        $("#" + buttonId).on("click", function () {
-            const index = ($(this).attr("id") as string).split("_")[1];
-            const request = credential.asRequest();
-            // @ts-ignore
-            request["select"] = index;
-            // @ts-ignore
-            request["mode"] = "MY_ARM2";
-            NetworkUtils.sendPostRequest("town.cgi", request, function () {
-                MessageBoard.publishMessage("待收藏装备完成了修理。");
-                if (treasureBag !== null) {
-                    const request = credential.asRequest();
-                    // @ts-ignore
-                    request["item" + index] = index;
-                    // @ts-ignore
-                    request["chara"] = "1";
-                    // @ts-ignore
-                    request["mode"] = "PUTINBAG";
-                    NetworkUtils.sendPostRequest("mydata.cgi", request, function (html) {
-                        MessageBoard.processResponseMessage(html);
-                        doRefresh(credential);
-                    });
-                } else {
-                    doRefresh(credential);
-                }
-            });
-        });
-    }
 }
 
 function doBindRefreshButton(credential: Credential) {
