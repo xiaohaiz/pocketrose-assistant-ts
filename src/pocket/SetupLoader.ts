@@ -204,6 +204,10 @@ class SetupLoader {
     static isFastLoginEnabled(): boolean {
         return StorageUtils.getBoolean("_pa_027");
     }
+
+    static isHiddenLeaveTownButtonEnabled(): boolean {
+        return StorageUtils.getBoolean("_pa_028");
+    }
 }
 
 export = SetupLoader;
