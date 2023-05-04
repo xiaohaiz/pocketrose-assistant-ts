@@ -48,8 +48,6 @@ function doProcess(credential: Credential) {
     doRenderTownTax(credential, roleStatus);
     doRenderLeaveTown();
     doRenderEventBoard();
-
-    console.log(PageUtils.currentPageHtml());
 }
 
 function doRenderBattleMenu(credential: Credential) {

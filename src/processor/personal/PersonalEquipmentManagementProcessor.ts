@@ -232,6 +232,7 @@ function doRender(credential: Credential, equipmentList: Equipment[]) {
     html += "                               <input type='button' class='ItemUIButton' id='putIntoBagButton' value='入袋'>";
     html += "                           </td>";
     html += "                           <td style='text-align:right'>";
+    html += "                               <input type='button' class='ItemUIButton' id='takeAllOutFromBagButton_" + (20 - equipmentList.length) + "' style='display:none' disabled value='从百宝袋盲取'>";
     html += "                               <input type='button' class='ItemUIButton' id='putAllIntoBagButton' value='全部入袋'>";
     html += "                               <input type='button' class='ItemUIButton' id='luckCharmButton' value='千与千寻' style='color:blue'>";
     html += "                               <input type='button' class='ItemUIButton' id='dontForgetMeButton' value='勿忘我' style='color:red'>";
@@ -286,6 +287,28 @@ function doRender(credential: Credential, equipmentList: Equipment[]) {
             $("#putIntoBagButton").css("display", "none");
             $("#putAllIntoBagButton").prop("disabled", true);
             $("#putAllIntoBagButton").css("display", "none");
+        } else {
+            // 提供从百宝袋盲取的功能
+            if (20 - equipmentList.length > 0) {
+                // 身上还有空间
+                const buttonId = "takeAllOutFromBagButton_" + (20 - equipmentList.length);
+                $("#" + buttonId).prop("disabled", false).show();
+
+                $("#" + buttonId).on("click", function () {
+                    const space = parseInt(($(this).attr("id") as string).split("_")[1]);
+                    const request = credential.asRequest();
+                    // @ts-ignore
+                    request.mode = "GETOUTBAG";
+                    for (let i = 0; i < space; i++) {
+                        // @ts-ignore
+                        request["item" + i] = i;
+                    }
+                    NetworkUtils.sendPostRequest("mydata.cgi", request, function (html) {
+                        MessageBoard.processResponseMessage(html);
+                        doRefresh(credential);
+                    });
+                });
+            }
         }
         $("#openBagButton").prop("disabled", "true").hide();
         $("#closeBugButton").prop("disabled", "true").hide();

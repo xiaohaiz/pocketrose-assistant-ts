@@ -52,7 +52,6 @@ function doProcess(credential: Credential) {
         .next()
         .find("td:first")
         .text();
-    console.log(player);
 
     $("table:eq(4)")
         .find("tr:last")
