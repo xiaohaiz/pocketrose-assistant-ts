@@ -22,7 +22,6 @@ class TownWeaponStoreProcessor implements Processor {
 function doProcess() {
     const page = TownWeaponStore.parsePage(PageUtils.currentPageHtml());
 
-    console.log(JSON.stringify(page));
 }
 
 export = TownWeaponStoreProcessor;
