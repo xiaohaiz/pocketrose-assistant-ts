@@ -25,9 +25,10 @@ function doProcess(credential: Credential) {
     // 解析原有页面的宠物列表
     const pageHtml = PageUtils.currentPageHtml();
     const personalPetList = CastleRanch.parsePersonalPetList(pageHtml);
+    const ranchPetList = CastleRanch.parseRanchPetList(pageHtml);
 
     // 重组页面
-    console.log(JSON.stringify(personalPetList));
+    console.log(JSON.stringify(ranchPetList));
 }
 
 export = CastleRanchProcessor;
