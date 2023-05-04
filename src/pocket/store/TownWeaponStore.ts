@@ -15,13 +15,10 @@ class TownWeaponStore {
     }
 
     static parsePage(pageHtml: string): TownWeaponStorePage {
-        const page = new TownWeaponStorePage();
-
-        // Parse credential
-        page.credential = PageUtils.parseCredential(pageHtml);
-
-        // Parse townId
-        page.townId = $(pageHtml).find("input:hidden[name='townid']").val() as string;
+        // Parse credential and townId
+        const credential = PageUtils.parseCredential(pageHtml);
+        const townId = $(pageHtml).find("input:hidden[name='townid']").val() as string;
+        const page = new TownWeaponStorePage(credential, townId);
 
         // Parse discount
         let discount = 1;
@@ -30,6 +27,8 @@ class TownWeaponStore {
             discount = parseFloat(input.val() as string);
         }
         page.discount = discount;
+
+        // Parse personal equipment list
 
         // Parse weapon merchandise list
         page.weaponMerchandiseList = doParseWeaponMerchandiseList(pageHtml);

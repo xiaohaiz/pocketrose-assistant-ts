@@ -7,12 +7,18 @@ import Merchandise from "../../common/Merchandise";
  */
 class TownWeaponStorePage {
 
-    credential?: Credential;
-    townId?: string;
+    readonly credential: Credential;
+    readonly townId: string;
+
     personalEquipmentList?: Equipment[];
     weaponMerchandiseList?: Merchandise[];
     discount?: number;
+    roleCash?: number;
 
+    constructor(credential: Credential, townId: string) {
+        this.credential = credential;
+        this.townId = townId;
+    }
 }
 
 export = TownWeaponStorePage;
