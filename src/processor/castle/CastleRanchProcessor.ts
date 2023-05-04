@@ -80,7 +80,9 @@ function doProcess(credential: Credential) {
     html += "<tr style='display:none'>";
     html += "<td id='personal_pet_list_cell'></td>";
     html += "</tr>";
+    // ------------------------------------------------------------------------
     // 牧场宠物栏
+    // ------------------------------------------------------------------------
     html += "<tr style='display:none'>";
     html += "<td id='ranch_pet_list_cell'></td>";
     html += "</tr>";
