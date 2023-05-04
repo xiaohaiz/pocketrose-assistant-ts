@@ -46,8 +46,10 @@ function doProcess(credential: Credential) {
     doRenderCareerTransferWarning(credential, roleStatus);
     doRenderRoleStatus(roleStatus);
     doRenderTownTax(credential, roleStatus);
-
+    doRenderLeaveTown();
     doRenderEventBoard();
+
+    console.log(PageUtils.currentPageHtml());
 }
 
 function doRenderBattleMenu(credential: Credential) {
@@ -326,6 +328,24 @@ function doRenderTownTax(credential: Credential, roleStatus: RoleStatus) {
             doBindTownTaxButton(credential, "tax_" + roleStatus.townId);
         }
     }
+}
+
+function doRenderLeaveTown() {
+    if (!SetupLoader.isHiddenLeaveTownButtonEnabled()) {
+        return;
+    }
+    $("th:contains('出城')")
+        .filter(function () {
+            return $(this).text() === "出城";
+        })
+        .parent()
+        .attr("id", "leaveTownRow");
+    $("#leaveTownRow").hide();
+
+    $("img:first").attr("id", "townImage");
+    $("#townImage").on("click", function () {
+        $("#leaveTownRow").toggle();
+    });
 }
 
 function doRenderEventBoard() {
