@@ -9,10 +9,14 @@ import TownWeaponStorePage from "../../pocket/store/TownWeaponStorePage";
 import Constants from "../../util/Constants";
 import BankUtils from "../../util/BankUtils";
 import TownBank from "../../pocket/bank/TownBank";
+import SetupLoader from "../../pocket/SetupLoader";
 
 class TownWeaponStoreProcessor implements Processor {
 
     accept(cgi: string, pageText: string): boolean {
+        if (!SetupLoader.isPocketSuperMarketEnabled()) {
+            return false;
+        }
         if (cgi === "town.cgi") {
             return pageText.includes("＜＜　□　武器屋　□　＞＞");
         }

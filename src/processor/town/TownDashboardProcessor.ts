@@ -39,6 +39,7 @@ function doProcess(credential: Credential) {
     doRenderPetManagementMenu();
     doRenderCareerManagementMenu();
     doRenderAdventureGuildMenu();
+    doRenderSuperMarketMenu();
     doRenderFastLoginMenu();
 
     const roleStatus = RoleStatusParser.parseRoleStatus(document.documentElement.outerHTML);
@@ -214,6 +215,13 @@ function doRenderCareerManagementMenu() {
             .css("background-color", "yellow")
             .text("职业管理");
         $("option[value='MAGIC']").remove();
+    }
+}
+
+function doRenderSuperMarketMenu() {
+    if (SetupLoader.isPocketSuperMarketEnabled()) {
+        $("option[value='ARM_SHOP']")
+            .css("background-color", "yellow");
     }
 }
 
