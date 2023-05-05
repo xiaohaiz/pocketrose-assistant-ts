@@ -7,6 +7,7 @@ import NpcLoader from "../../pocket/NpcLoader";
 import MessageBoard from "../../util/MessageBoard";
 import TownWeaponStorePage from "../../pocket/store/TownWeaponStorePage";
 import Constants from "../../util/Constants";
+import BankUtils from "../../util/BankUtils";
 
 class TownWeaponStoreProcessor implements Processor {
 
@@ -247,7 +248,7 @@ function doRender(page: TownWeaponStorePage) {
             html += "<tr>";
             html += "<td style='background-color:#E8E8D0'>";
             if (page.spaceCount! > 0) {
-                html += "<select name='space_count_" + merchandise.index + "'>";
+                html += "<select id='count_" + merchandise.index + "'>";
                 for (let i = 1; i <= page.spaceCount!; i++) {
                     html += "<option value='" + i + "'>" + i + "</option>";
                 }
@@ -296,7 +297,20 @@ function doBindSellButton(page: TownWeaponStorePage, indexList: number[]) {
 }
 
 function doBindBuyButton(page: TownWeaponStorePage, indexList: number[]) {
+    for (const index of indexList) {
+        const buttonId = "buy_" + index;
+        $("#" + buttonId).on("click", function () {
+            const count = parseInt($("#count_" + index).val() as string);
+            const merchandise = page.findMerchandise(index)!;
+            const totalPrice = merchandise.price! * count;
+            const amount = BankUtils.calculateCashDifferenceAmount(page.roleCash!, totalPrice);
+            if (!confirm("确认要购买" + count + "把“" + merchandise.name + "”？大约需要再支取" + amount + "万GOLD。")) {
+                return;
+            }
 
+
+        });
+    }
 }
 
 export = TownWeaponStoreProcessor;

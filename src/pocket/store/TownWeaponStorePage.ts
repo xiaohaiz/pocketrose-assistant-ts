@@ -20,6 +20,15 @@ class TownWeaponStorePage {
         this.credential = credential;
         this.townId = townId;
     }
+
+    findMerchandise(index: number) {
+        for (const merchandise of this.weaponMerchandiseList!) {
+            if (merchandise.index === index) {
+                return merchandise;
+            }
+        }
+        return null;
+    }
 }
 
 export = TownWeaponStorePage;
