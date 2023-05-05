@@ -6,6 +6,7 @@ import Credential from "../../util/Credential";
 import NpcLoader from "../../pocket/NpcLoader";
 import MessageBoard from "../../util/MessageBoard";
 import TownWeaponStorePage from "../../pocket/store/TownWeaponStorePage";
+import Constants from "../../util/Constants";
 
 class TownWeaponStoreProcessor implements Processor {
 
@@ -153,6 +154,56 @@ function doBindRefreshButton(page: TownWeaponStorePage) {
 }
 
 function doRender(page: TownWeaponStorePage) {
+    const equipmentList = page.personalEquipmentList!;
+    if (equipmentList.length > 0) {
+        let html = "";
+        html += "<table style='border-width:0;width:100%;background-color:#888888'>";
+        html += "<tbody style='background-color:#F8F0E0;text-align:center'>";
+        html += "<tr>";
+        html += "<td style='background-color:darkred;color:wheat;font-weight:bold' colspan='12'>";
+        html += "＜ 随 身 装 备 ＞";
+        html += "</td>";
+        html += "</tr>";
+        html += "<tr>";
+        html += "<th style='background-color:#E8E8D0'>操作</th>";
+        html += "<th style='background-color:#EFE0C0'>装备</th>";
+        html += "<th style='background-color:#E0D0B0'>名字</th>";
+        html += "<th style='background-color:#EFE0C0'>种类</th>";
+        html += "<th style='background-color:#E0D0B0'>效果</th>";
+        html += "<th style='background-color:#EFE0C0'>重量</th>";
+        html += "<th style='background-color:#EFE0C0'>耐久</th>";
+        html += "<th style='background-color:#E0D0B0'>价值</th>";
+        html += "</tr>";
+
+        const indexList: number[] = [];
+        for (const equipment of equipmentList) {
+            html += "<tr>";
+            html += "<td style='background-color:#E8E8D0'>";
+            if (equipment.isSellable) {
+                html += "<img alt='出售' id='graze_" + equipment.index! + "' " +
+                    "class='dynamic_button_class' title='出售' " +
+                    "src='" + (Constants.POCKET_DOMAIN + "/image/country/7.gif") + "'>";
+                indexList.push(equipment.index!);
+            }
+            html += "</td>";
+            html += "<td style='background-color:#EFE0C0'>" + equipment.usingHTML + "</td>";
+            html += "<td style='background-color:#E0D0B0'>" + equipment.nameHTML + "</td>";
+            html += "<td style='background-color:#EFE0C0'>" + equipment.category + "</td>";
+            html += "<td style='background-color:#E0D0B0'>" + equipment.power + "</td>";
+            html += "<td style='background-color:#EFE0C0'>" + equipment.weight + "</td>";
+            html += "<td style='background-color:#EFE0C0'>" + equipment.endureHtml + "</td>";
+            html += "<td style='background-color:#E0D0B0'>" + equipment.priceHTML + "</td>";
+            html += "</tr>";
+        }
+
+        html += "</tbody>";
+        html += "</table>";
+
+        $("#personal_equipment_list_cell")
+            .html(html)
+            .parent()
+            .show();
+    }
 }
 
 export = TownWeaponStoreProcessor;

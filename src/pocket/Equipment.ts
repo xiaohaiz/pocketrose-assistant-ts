@@ -208,6 +208,9 @@ class Equipment {
         if (!this.using) {
             return "";
         }
+        if (this.experience === undefined) {
+            return "★";
+        }
         const ratio = this.fullExperienceRatio;
         if (ratio === 1 || ratio < 0) {
             return "<span title='装备中' style='color:red'>★</span>";
