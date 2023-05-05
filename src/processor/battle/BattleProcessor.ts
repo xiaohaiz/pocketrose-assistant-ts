@@ -77,6 +77,9 @@ class BattleProcessor implements Processor {
             const buttonId = $("input:submit[tabindex='1']").attr("id");
             document.getElementById(buttonId!)?.scrollIntoView();
         }
+
+        doCheckIfPetUpgrade();
+
         // 十二宫极速战斗
         if (pageText.includes("＜＜ - 十二神殿 - ＞＞") && SetupLoader.isZodiacFlashBattleEnabled()) {
             $("input:submit[tabindex='1']").trigger("click");
@@ -298,6 +301,28 @@ function doRenderNormalBattlePrompt() {
             .css("color", "greenyellow");
         CommentBoard.writeMessage(PageUtils.convertHtmlToText(prompt["text"]));
     }
+}
+
+function doCheckIfPetUpgrade() {
+    const reportText = $("#ueqtweixin").text();
+    let petName = "";
+    let petUpgrade = false;
+    for (const s of reportText.split("\n")) {
+        if (s.includes(" 获得 ") && s.includes(" 经验值.")) {
+            // 这一行是宠物获得经验值的那一行
+            // 记录下宠物名
+            petName = StringUtils.substringBefore(s, " 获得 ");
+        }
+        if (petName !== "") {
+            const searchString = petName + "等级上升！";
+            if (s.includes(searchString)) {
+                petUpgrade = true;
+                break;
+            }
+        }
+    }
+    console.log(petName + " -> " + petUpgrade);
+    return petUpgrade;
 }
 
 export = BattleProcessor;
