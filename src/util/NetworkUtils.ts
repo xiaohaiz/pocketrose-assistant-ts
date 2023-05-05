@@ -51,7 +51,7 @@ class NetworkUtils {
             });
     }
 
-    static async post(cgi: string, request: Map<string, string>) {
+    static async post(cgi: string, request: Map<string, string>): Promise<string> {
         const action = (cgi: string, request: Map<string, string>) => {
             return new Promise<string>(resolve => {
                 const body = ObjectUtils.convertMapToObject(request);
