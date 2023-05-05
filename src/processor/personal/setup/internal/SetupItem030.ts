@@ -12,7 +12,7 @@ class SetupItem030 implements SetupItem {
 }
 
 const code: string = "030";
-const name: string = "尽可能保持在线";
+const name: string = "关闭收益的入口";
 const key: string = "_pa_" + code;
 
 function doRender() {
@@ -26,7 +26,7 @@ function doRender() {
 
     $("#setup_item_table").append($(html));
 
-    const value = SetupLoader.isTryKeepAliveEnabled();
+    const value = SetupLoader.isCollectTownTaxDisabled();
     $(".option_class_" + code + "[value='" + Number(value) + "']").prop("selected", true);
 
     $("#setup_" + code).on("click", function () {

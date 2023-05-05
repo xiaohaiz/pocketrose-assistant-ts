@@ -213,7 +213,7 @@ class SetupLoader {
         return StorageUtils.getBoolean("_pa_028");
     }
 
-    static isTryKeepAliveEnabled(): boolean {
+    static isCollectTownTaxDisabled(): boolean {
         return StorageUtils.getBoolean("_pa_030");
     }
 }
