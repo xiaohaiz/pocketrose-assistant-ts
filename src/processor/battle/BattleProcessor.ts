@@ -78,11 +78,18 @@ class BattleProcessor implements Processor {
             document.getElementById(buttonId!)?.scrollIntoView();
         }
 
-        doCheckIfPetUpgrade();
-
         // 十二宫极速战斗
-        if (pageText.includes("＜＜ - 十二神殿 - ＞＞") && SetupLoader.isZodiacFlashBattleEnabled()) {
-            $("input:submit[tabindex='1']").trigger("click");
+        if (pageText.includes("＜＜ - 十二神殿 - ＞＞")) {
+            if (SetupLoader.isZodiacFlashBattleEnabled()) {
+                $("input:submit[tabindex='1']").trigger("click");
+            }
+        } else {
+            if (SetupLoader.isNormalFlashBattleEnabled()) {
+                const petUpgrade = doCheckIfPetUpgrade();
+                if (!petUpgrade) {
+                    $("input:submit[tabindex='1']").trigger("click");
+                }
+            }
         }
     }
 }
@@ -321,7 +328,6 @@ function doCheckIfPetUpgrade() {
             }
         }
     }
-    console.log(petName + " -> " + petUpgrade);
     return petUpgrade;
 }
 
