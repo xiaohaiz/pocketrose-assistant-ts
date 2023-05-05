@@ -9,6 +9,7 @@ import Constants from "../../util/Constants";
 import NetworkUtils from "../../util/NetworkUtils";
 import BankUtils from "../../util/BankUtils";
 import TownBank from "../../pocket/bank/TownBank";
+import StringUtils from "../../util/StringUtils";
 
 class TownGemHouseProcessor implements Processor {
 
@@ -88,6 +89,14 @@ function doProcess(page: TownGemHousePage) {
     html += "<td id='hidden_form_cell'></td>";
     html += "</tr>";
     // ------------------------------------------------------------------------
+    // 记录最后一次合成装备的信息
+    // 不能用下标来记录，因为宝石的消耗可能造成下标的变化
+    // 因此需要记录的是装备的全名及其在物品栏出现的序号。
+    // ------------------------------------------------------------------------
+    html += "<tr style='display:none'>";
+    html += "<td id='last_fuse_cell'>none</td>";
+    html += "</tr>";
+    // ------------------------------------------------------------------------
     // 主菜单
     // ------------------------------------------------------------------------
     html += "<tr>";
@@ -154,6 +163,7 @@ function doBindRefreshButton(credential: Credential) {
     $("#refresh_button").on("click", function () {
         $("#messageBoardManager").html(NpcLoader.randomNpcImageHtml());
         MessageBoard.resetMessageBoard("钻石恒久远，一颗永流传。");
+        $("#last_fuse_cell").text("none");
         doRefresh(credential);
     });
 }
@@ -191,7 +201,10 @@ function doRender(page: TownGemHousePage) {
             html += "<tr>";
             html += "<td style='background-color:#E8E8D0'>";
             if (canFuse) {
-                html += "<input type='radio' value='" + equipment.index + "' name='equipment_radio'>";
+                html += "<input type='button' value='选择' " +
+                    "class='dynamic_button_class' " +
+                    "id='select_" + equipment.index + "' " +
+                    "style='color:grey'>";
             }
             html += "</td>";
             html += "<td style='background-color:#EFE0C0'>" + equipment.usingHTML + "</td>";
@@ -220,7 +233,34 @@ function doRender(page: TownGemHousePage) {
             .parent()
             .show();
 
+        doBindSelectButton(page);
         doBindMeltButton(page, indexList);
+
+        const lastFuse = $("#last_fuse_cell").text();
+        if (lastFuse !== "none" && lastFuse.includes("/")) {
+            const equipmentName = StringUtils.substringBefore(lastFuse, "/");
+            const equipmentSequence = parseInt(StringUtils.substringAfter(lastFuse, "/"));
+
+            // 查找装备
+            let equipmentIndex = -1;
+            let sequence = 0;
+            for (const equipment of page.equipmentList!) {
+                if (equipment.fullName === equipmentName) {
+                    sequence++;
+                    if (sequence === equipmentSequence) {
+                        equipmentIndex = equipment.index!;
+                        break;
+                    }
+                }
+            }
+            if (equipmentIndex >= 0) {
+                // 找到对应的装备，修改对应按钮的状态
+                const buttonId = "select_" + equipmentIndex;
+                if ($("#" + buttonId).length > 0) {
+                    $("#" + buttonId).css("color", "blue");
+                }
+            }
+        }
     }
 
     if (page.gemList!.length > 0) {
@@ -259,6 +299,34 @@ function doRender(page: TownGemHousePage) {
             .show();
 
         doBindFuseButton(page, indexList);
+    }
+}
+
+function doBindSelectButton(page: TownGemHousePage) {
+    for (let index = 0; index < 20; index++) {
+        const buttonId = "select_" + index;
+        if ($("#" + buttonId).length === 0) {
+            continue;
+        }
+        $("#" + buttonId).on("click", function () {
+            if (PageUtils.isColorBlue(buttonId)) {
+                // 当前按钮是蓝色，是已经选中状态。将其变为灰色即可
+                $("#" + buttonId).css("color", "grey");
+            } else if (PageUtils.isColorGrey(buttonId)) {
+                // 当前按钮是灰色，将其变成选中状态，并且取消其他所有的按钮
+                $("#" + buttonId).css("color", "blue");
+                for (let i = 0; i < 20; i++) {
+                    if (i === index) {
+                        continue;
+                    }
+                    const otherButtonId = "select_" + i;
+                    if ($("#" + otherButtonId).length === 0) {
+                        continue;
+                    }
+                    $("#" + otherButtonId).css("color", "grey");
+                }
+            }
+        });
     }
 }
 
