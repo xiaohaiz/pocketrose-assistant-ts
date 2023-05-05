@@ -9,6 +9,7 @@ import NetworkUtils from "../../util/NetworkUtils";
 import BankUtils from "../../util/BankUtils";
 import TownBank from "../../pocket/bank/TownBank";
 import StringUtils from "../../util/StringUtils";
+import EquipmentManagement from "../../pocket/personal/EquipmentManagement";
 
 class TownGemHouseProcessor implements Processor {
 
@@ -67,6 +68,11 @@ function doProcess(page: TownGemHousePage) {
         .css("color", "white")
         .next()
         .attr("id", "messageBoardManager");
+
+    MessageBoard.resetMessageBoard("<b style='color:yellow'>宝石屋改造的一些说明：</b><br>" +
+        "正在使用中的装备除了宠物蛋之外不允许镶嵌；<br>" +
+        "鼠标停留在装备名字上可以显示当前装备的宝石附加状态。<br>" +
+        "（鼠标停留功能请慎用，会对服务器发出额外的请求）")
 
     // 清空原来的页面内容，准备重新绘制
     t1.find("tr:first")
@@ -150,6 +156,7 @@ function doRefresh(credential: Credential) {
     $("#equipment_list_cell").parent().hide();
     $("#gem_list_cell").parent().hide();
     $(".dynamic_button_class").off("click");
+    $(".equipment_detail_class").off("mouseenter").off("mouseleave");
     new TownGemHouse(credential).enter()
         .then(page => {
             const roleCash = page.roleCash!;
@@ -176,7 +183,6 @@ function doRender(page: TownGemHousePage) {
         html += "<td style='background-color:darkred;color:wheat;font-weight:bold' colspan='9'>";
         html += "＜ 随 身 装 备 ＞";
         html += "</td>";
-        html += "</tr>";
         html += "<tr>";
         html += "<th style='background-color:#E8E8D0'>选择</th>";
         html += "<th style='background-color:#EFE0C0'>装备</th>";
@@ -207,7 +213,7 @@ function doRender(page: TownGemHousePage) {
             }
             html += "</td>";
             html += "<td style='background-color:#EFE0C0'>" + equipment.usingHTML + "</td>";
-            html += "<td style='background-color:#E0D0B0'>" + equipment.nameHTML + "</td>";
+            html += "<td style='background-color:#E0D0B0' id='name_" + equipment.index + "' class='equipment_detail_class'>" + equipment.nameHTML + "</td>";
             html += "<td style='background-color:#EFE0C0'>" + equipment.category + "</td>";
             html += "<td style='background-color:#E0D0B0'>" + equipment.power + "</td>";
             html += "<td style='background-color:#EFE0C0'>" + equipment.weight + "</td>";
@@ -224,6 +230,10 @@ function doRender(page: TownGemHousePage) {
             html += "</tr>";
         }
 
+        html += "</tr>";
+        html += "<tr style='display:none'>";
+        html += "<td id='equipment_detail' style='background-color:navy;color:greenyellow;font-weight:bold' colspan='9'></td>";
+        html += "</tr>";
         html += "</tbody>";
         html += "</table>";
 
@@ -232,6 +242,7 @@ function doRender(page: TownGemHousePage) {
             .parent()
             .show();
 
+        doBindEquipmentDetail(page.credential);
         doBindSelectButton();
         doBindMeltButton(page, indexList);
 
@@ -301,6 +312,32 @@ function doRender(page: TownGemHousePage) {
     }
 
     PageUtils.fixCurrentPageBrokerImages();
+}
+
+function doBindEquipmentDetail(credential: Credential) {
+    $(".equipment_detail_class")
+        .on("mouseenter", function () {
+            const index = parseInt(($(this).attr("id") as string).split("_")[1]);
+            new EquipmentManagement(credential).load()
+                .then(page => {
+                    const equipment = page.findEquipment(index);
+                    if (equipment !== null) {
+                        let s = "";
+                        s += equipment.fullName;
+                        s += " ";
+                        s += "附加威力:" + equipment.additionalPower;
+                        s += " ";
+                        s += "附加重量:" + equipment.additionalWeight;
+                        s += " ";
+                        s += "附加幸运:" + equipment.additionalLuck;
+                        $("#equipment_detail").text(s);
+                        $("#equipment_detail").parent().show();
+                    }
+                });
+        })
+        .on("mouseleave", function () {
+            $("#equipment_detail").parent().hide();
+        });
 }
 
 function doBindSelectButton() {
