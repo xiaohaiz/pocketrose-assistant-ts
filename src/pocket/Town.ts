@@ -1,6 +1,7 @@
 import Coordinate from "../util/Coordinate";
 
 class Town {
+
     readonly id: string;
     readonly name: string;
     readonly description: string;
@@ -15,6 +16,17 @@ class Town {
 
     asText(): string {
         return "(" + this.id + ") " + this.name + " " + this.coordinate.asText();
+    }
+
+    get nameTitle(): string {
+        let title = "";
+        for (let i = 0; i < this.name.length; i++) {
+            title += this.name.charAt(i);
+            if (i !== this.name.length - 1) {
+                title += " ";
+            }
+        }
+        return title;
     }
 }
 
