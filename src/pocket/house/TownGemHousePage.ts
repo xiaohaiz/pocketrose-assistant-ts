@@ -5,6 +5,7 @@ import Equipment from "../Equipment";
 class TownGemHousePage {
 
     readonly credential: Credential;
+    roleCash?: number;
     equipmentList?: Equipment[];
     gemList?: Equipment[];
     townGemMeltHousePage?: TownGemMeltHousePage;

@@ -3,6 +3,8 @@ import PageUtils from "../../util/PageUtils";
 import TownGemHousePage from "./TownGemHousePage";
 import TownGemMeltHouse from "./TownGemMeltHouse";
 import Equipment from "../Equipment";
+import NetworkUtils from "../../util/NetworkUtils";
+import StringUtils from "../../util/StringUtils";
 
 class TownGemHouse {
 
@@ -15,6 +17,25 @@ class TownGemHouse {
     static async parsePage(pageHtml: string) {
         return doParsePage(pageHtml);
     }
+
+    async enter() {
+        const action = (credential: Credential) => {
+            return new Promise<TownGemHousePage>(resolve => {
+                const request = credential.asRequest();
+                // @ts-ignore
+                request.con_str = "50";
+                // @ts-ignore
+                request.mode = "BAOSHI_SHOP";
+                NetworkUtils.sendPostRequest("town.cgi", request, function (pageHtml) {
+                    TownGemHouse.parsePage(pageHtml)
+                        .then(page => {
+                            resolve(page);
+                        });
+                });
+            });
+        };
+        return await action(this.#credential);
+    }
 }
 
 async function doParsePage(pageHtml: string) {
@@ -22,6 +43,17 @@ async function doParsePage(pageHtml: string) {
         return new Promise<TownGemHousePage>(resolve => {
             const credential = PageUtils.parseCredential(pageHtml);
             const page = new TownGemHousePage(credential);
+
+            $(pageHtml).find("td:contains('所持金')")
+                .filter(function () {
+                    return $(this).text() === "所持金";
+                })
+                .next()
+                .each(function (_idx, td) {
+                    let s = $(td).text();
+                    s = StringUtils.substringBefore(s, " GOLD");
+                    page.roleCash = parseInt(s);
+                });
 
             const equipmentList: Equipment[] = [];
             $(pageHtml).find("td:contains('选择要合成的装备')")
