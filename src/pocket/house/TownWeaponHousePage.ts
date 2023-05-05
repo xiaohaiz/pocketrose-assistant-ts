@@ -5,7 +5,7 @@ import Merchandise from "../../common/Merchandise";
 /**
  * 城市武器屋页面数据结构的描述
  */
-class TownWeaponStorePage {
+class TownWeaponHousePage {
 
     readonly credential: Credential;
     readonly townId: string;
@@ -40,4 +40,4 @@ class TownWeaponStorePage {
     }
 }
 
-export = TownWeaponStorePage;
+export = TownWeaponHousePage;

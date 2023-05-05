@@ -1,5 +1,5 @@
 import Credential from "../../util/Credential";
-import TownWeaponStorePage from "./TownWeaponStorePage";
+import TownWeaponHousePage from "./TownWeaponHousePage";
 import PageUtils from "../../util/PageUtils";
 import Merchandise from "../../common/Merchandise";
 import StringUtils from "../../util/StringUtils";
@@ -7,7 +7,7 @@ import Equipment from "../Equipment";
 import NetworkUtils from "../../util/NetworkUtils";
 import MessageBoard from "../../util/MessageBoard";
 
-class TownWeaponStore {
+class TownWeaponHouse {
 
     readonly #credential: Credential;
     readonly #townId: string;
@@ -17,11 +17,11 @@ class TownWeaponStore {
         this.#townId = townId;
     }
 
-    static parsePage(pageHtml: string): TownWeaponStorePage {
+    static parsePage(pageHtml: string): TownWeaponHousePage {
         // Parse credential and townId
         const credential = PageUtils.parseCredential(pageHtml);
         const townId = $(pageHtml).find("input:hidden[name='townid']").val() as string;
-        const page = new TownWeaponStorePage(credential, townId);
+        const page = new TownWeaponHousePage(credential, townId);
 
         // Parse discount
         let discount = 1;
@@ -59,9 +59,9 @@ class TownWeaponStore {
         return page;
     }
 
-    async enter(): Promise<TownWeaponStorePage> {
+    async enter(): Promise<TownWeaponHousePage> {
         const action = (credential: Credential, townId: string) => {
-            return new Promise<TownWeaponStorePage>(resolve => {
+            return new Promise<TownWeaponHousePage>(resolve => {
                 const request = credential.asRequest();
                 // @ts-ignore
                 request.town = townId;
@@ -70,7 +70,7 @@ class TownWeaponStore {
                 // @ts-ignore
                 request.mode = "ARM_SHOP";
                 NetworkUtils.sendPostRequest("town.cgi", request, function (pageHtml) {
-                    const page = TownWeaponStore.parsePage(pageHtml);
+                    const page = TownWeaponHouse.parsePage(pageHtml);
                     resolve(page);
                 });
             });
@@ -218,4 +218,4 @@ function doParseWeaponMerchandiseList(pageHtml: string) {
     return weaponMerchandiseList;
 }
 
-export = TownWeaponStore;
+export = TownWeaponHouse;

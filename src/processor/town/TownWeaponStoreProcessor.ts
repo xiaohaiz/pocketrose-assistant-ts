@@ -1,11 +1,11 @@
 import Processor from "../Processor";
 import PageUtils from "../../util/PageUtils";
-import TownWeaponStore from "../../pocket/house/TownWeaponStore";
+import TownWeaponHouse from "../../pocket/house/TownWeaponHouse";
 import TownLoader from "../../pocket/TownLoader";
 import Credential from "../../util/Credential";
 import NpcLoader from "../../pocket/NpcLoader";
 import MessageBoard from "../../util/MessageBoard";
-import TownWeaponStorePage from "../../pocket/house/TownWeaponStorePage";
+import TownWeaponHousePage from "../../pocket/house/TownWeaponHousePage";
 import Constants from "../../util/Constants";
 import BankUtils from "../../util/BankUtils";
 import TownBank from "../../pocket/bank/TownBank";
@@ -32,7 +32,7 @@ class TownWeaponStoreProcessor implements Processor {
 }
 
 function doProcess() {
-    const page = TownWeaponStore.parsePage(PageUtils.currentPageHtml());
+    const page = TownWeaponHouse.parsePage(PageUtils.currentPageHtml());
     const town = TownLoader.getTownById(page.townId)!;
 
     // 重新绘制页面框架
@@ -138,12 +138,12 @@ function doBindReturnButton() {
     });
 }
 
-function doRefresh(page: TownWeaponStorePage) {
+function doRefresh(page: TownWeaponHousePage) {
     document.getElementById("title_cell")?.scrollIntoView();
     $("#personal_equipment_list_cell").parent().hide();
     $("#weapon_merchandise_list_cell").parent().hide();
     $(".dynamic_button_class").off("click");
-    new TownWeaponStore(page.credential, page.townId).enter()
+    new TownWeaponHouse(page.credential, page.townId).enter()
         .then(page => {
             const roleCash = page.roleCash!;
             $("#roleCash").text(roleCash + " GOLD");
@@ -151,7 +151,7 @@ function doRefresh(page: TownWeaponStorePage) {
         });
 }
 
-function doBindRefreshButton(page: TownWeaponStorePage) {
+function doBindRefreshButton(page: TownWeaponHousePage) {
     $("#refresh_button").on("click", function () {
         $("#messageBoardManager").html(NpcLoader.randomNpcImageHtml());
         MessageBoard.resetMessageBoard("倍“锋”来袭,特“利”独行。");
@@ -159,7 +159,7 @@ function doBindRefreshButton(page: TownWeaponStorePage) {
     });
 }
 
-function doRender(page: TownWeaponStorePage) {
+function doRender(page: TownWeaponHousePage) {
     // ------------------------------------------------------------------------
     // 渲染随身装备
     // ------------------------------------------------------------------------
@@ -297,7 +297,7 @@ function doRender(page: TownWeaponStorePage) {
     }
 }
 
-function doBindSellButton(page: TownWeaponStorePage, indexList: number[]) {
+function doBindSellButton(page: TownWeaponHousePage, indexList: number[]) {
     for (const index of indexList) {
         const buttonId = "sell_" + index;
         $("#" + buttonId).on("click", function () {
@@ -305,7 +305,7 @@ function doBindSellButton(page: TownWeaponStorePage, indexList: number[]) {
             if (!confirm("确认要出售“" + equipment.fullName + "”？")) {
                 return;
             }
-            new TownWeaponStore(page.credential, page.townId)
+            new TownWeaponHouse(page.credential, page.townId)
                 .sell(index, page.discount!)
                 .then(() => {
                     new TownBank(page.credential)
@@ -318,7 +318,7 @@ function doBindSellButton(page: TownWeaponStorePage, indexList: number[]) {
     }
 }
 
-function doBindBuyButton(page: TownWeaponStorePage, indexList: number[]) {
+function doBindBuyButton(page: TownWeaponHousePage, indexList: number[]) {
     for (const index of indexList) {
         const buttonId = "buy_" + index;
         $("#" + buttonId).on("click", function () {
@@ -332,7 +332,7 @@ function doBindBuyButton(page: TownWeaponStorePage, indexList: number[]) {
             const bank = new TownBank(page.credential);
             bank.withdraw(amount)
                 .then(() => {
-                    new TownWeaponStore(page.credential, page.townId)
+                    new TownWeaponHouse(page.credential, page.townId)
                         .buy(index, count, page.discount!)
                         .then(() => {
                             bank.depositAll()
