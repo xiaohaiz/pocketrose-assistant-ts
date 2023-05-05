@@ -5,6 +5,8 @@ import TownGemHousePage from "../../pocket/house/TownGemHousePage";
 import Credential from "../../util/Credential";
 import NpcLoader from "../../pocket/NpcLoader";
 import MessageBoard from "../../util/MessageBoard";
+import Constants from "../../util/Constants";
+import NetworkUtils from "../../util/NetworkUtils";
 
 class TownGemHouseProcessor implements Processor {
 
@@ -95,13 +97,13 @@ function doProcess(page: TownGemHousePage) {
     // 个人物品栏
     // ------------------------------------------------------------------------
     html += "<tr style='display:none'>";
-    html += "<td id='equipment_list_cell'></td>";
+    html += "<td id='equipment_list_cell' style='background-color:#F8F0E0;text-align:center'></td>";
     html += "</tr>";
     // ------------------------------------------------------------------------
     // 宝石栏
     // ------------------------------------------------------------------------
     html += "<tr style='display:none'>";
-    html += "<td id='gem_list_cell'></td>";
+    html += "<td id='gem_list_cell' style='background-color:#F8F0E0;text-align:center'></td>";
     html += "</tr>";
     html += "</tbody>";
     html += "</table>";
@@ -157,7 +159,7 @@ function doBindRefreshButton(credential: Credential) {
 function doRender(page: TownGemHousePage) {
     if (page.equipmentList!.length > 0) {
         let html = "";
-        html += "<table style='border-width:0;width:100%;background-color:#888888;margin:auto'>";
+        html += "<table style='border-width:0;background-color:#888888;margin:auto'>";
         html += "<tbody style='background-color:#F8F0E0;text-align:center'>";
         html += "<tr>";
         html += "<td style='background-color:darkred;color:wheat;font-weight:bold' colspan='9'>";
@@ -186,7 +188,7 @@ function doRender(page: TownGemHousePage) {
             html += "<tr>";
             html += "<td style='background-color:#E8E8D0'>";
             if (canFuse) {
-                html += "选择";
+                html += "<input type='radio' value='" + equipment.index + "' name='equipment_radio'>";
             }
             html += "</td>";
             html += "<td style='background-color:#EFE0C0'>" + equipment.usingHTML + "</td>";
@@ -211,6 +213,80 @@ function doRender(page: TownGemHousePage) {
             .html(html)
             .parent()
             .show();
+    }
+
+    if (page.gemList!.length > 0) {
+        let html = "";
+        html += "<table style='border-width:0;background-color:#888888;margin:auto'>";
+        html += "<tbody style='background-color:#F8F0E0;text-align:center'>";
+        html += "<tr>";
+        html += "<td style='background-color:darkgreen;color:wheat;font-weight:bold' colspan='2'>";
+        html += "＜ 可 用 宝 石 ＞";
+        html += "</td>";
+        html += "</tr>";
+        html += "<tr>";
+        html += "<th style='background-color:#E8E8D0'>宝石</th>";
+        html += "<th style='background-color:#EFE0C0'>镶嵌</th>";
+        html += "</tr>";
+
+        const indexList: number[] = [];
+        for (const gem of page.gemList!) {
+            indexList.push(gem.index!);
+            html += "<tr>";
+            html += "<td style='background-color:#E8E8D0'>" + gem.nameHTML + "</td>";
+            html += "<td style='background-color:#EFE0C0'>";
+            html += "<img alt='镶嵌' id='fuse_" + gem.index + "' " +
+                "class='dynamic_button_class' title='镶嵌' " +
+                "src='" + (Constants.POCKET_DOMAIN + "/image/country/6.gif") + "'>";
+            html += "</td>";
+            html += "</tr>";
+        }
+
+        html += "</tbody>";
+        html += "</table>";
+
+        $("#gem_list_cell")
+            .html(html)
+            .parent()
+            .show();
+
+        doBindFuseButton(page, indexList);
+    }
+}
+
+function doBindFuseButton(page: TownGemHousePage, indexList: number[]) {
+    for (const index of indexList) {
+        const buttonId = "fuse_" + index;
+        $("#" + buttonId).on("click", function () {
+            const checked = $("input:radio:checked").val();
+            if (checked === undefined) {
+                document.getElementById("title_cell")?.scrollIntoView();
+                MessageBoard.publishWarning("没有选择要镶嵌的装备！");
+                return;
+            }
+
+            const equipment = page.findEquipment(parseInt(checked as string));
+            const gem = page.findGem(index);
+            if (!confirm("确认为“" + equipment?.nameHTML + "”镶嵌“" + gem?.name + "”？")) {
+                document.getElementById("title_cell")?.scrollIntoView();
+                return;
+            }
+
+            const request = page.credential.asRequest();
+            // @ts-ignore
+            request.select = checked as string;
+            // @ts-ignore
+            request.baoshi = index;
+            // @ts-ignore
+            request.azukeru = "0";
+            // @ts-ignore
+            request.mode = "BAOSHI_MAKE";
+
+            NetworkUtils.sendPostRequest("town.cgi", request, function (pageHtml) {
+                MessageBoard.processResponseMessage(pageHtml);
+                doRefresh(page.credential);
+            });
+        });
     }
 }
 
