@@ -317,6 +317,10 @@ function doRenderTownTax(credential: Credential, roleStatus: RoleStatus) {
             .css("text-align", "right")
             .html("<span style='color:red' title='枫丹的收益不需要关心'>PRIVACY</span>");
     }
+    if (SetupLoader.isCollectTownTaxDisabled()) {
+        $("option[value='MAKE_TOWN']").remove();
+        return;
+    }
     if (roleStatus.country !== "在野" && roleStatus.country === roleStatus.townCountry) {
         if (td === null) {
             td = $("th:contains('收益')")
