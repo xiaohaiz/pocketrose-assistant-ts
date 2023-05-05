@@ -4,6 +4,7 @@ import PageUtils from "../../util/PageUtils";
 import Merchandise from "../../common/Merchandise";
 import StringUtils from "../../util/StringUtils";
 import Equipment from "../Equipment";
+import NetworkUtils from "../../util/NetworkUtils";
 
 class TownWeaponStore {
 
@@ -38,6 +39,16 @@ class TownWeaponStore {
             .text();
         page.roleCash = parseInt(StringUtils.substringBefore(s, " GOLD"));
 
+        // Parse space count
+        const option = $(pageHtml)
+            .find("select[name='num']")
+            .find("option:last");
+        if (option.length === 0) {
+            page.spaceCount = 0;
+        } else {
+            page.spaceCount = parseInt($(option).val() as string);
+        }
+
         // Parse personal equipment list
         page.personalEquipmentList = doParsePersonalEquipmentList(pageHtml);
 
@@ -45,6 +56,25 @@ class TownWeaponStore {
         page.weaponMerchandiseList = doParseWeaponMerchandiseList(pageHtml);
 
         return page;
+    }
+
+    async enter(): Promise<TownWeaponStorePage> {
+        const action = (credential: Credential, townId: string) => {
+            return new Promise<TownWeaponStorePage>(resolve => {
+                const request = credential.asRequest();
+                // @ts-ignore
+                request.town = townId;
+                // @ts-ignore
+                request.con_str = "50";
+                // @ts-ignore
+                request.mode = "ARM_SHOP";
+                NetworkUtils.sendPostRequest("town.cgi", request, function (pageHtml) {
+                    const page = TownWeaponStore.parsePage(pageHtml);
+                    resolve(page);
+                });
+            });
+        };
+        return await action(this.#credential, this.#townId);
     }
 
 }
