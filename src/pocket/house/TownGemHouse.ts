@@ -55,6 +55,25 @@ async function doParsePage(pageHtml: string) {
                 });
             page.equipmentList = equipmentList;
 
+            const gemList: Equipment[] = [];
+            $(pageHtml).find("td:contains('选择要使用的宝石')")
+                .filter(function () {
+                    return $(this).text().startsWith("\n选择要使用的宝石");
+                })
+                .find("table:first")
+                .find("input:radio")
+                .each(function (_idx, radio) {
+                    const c0 = $(radio).parent();
+                    const c1 = c0.next();
+
+                    const gem = new Equipment();
+                    gem.index = parseInt($(radio).val() as string);
+                    gem.selectable = true;
+                    gem.parseName(c1.html());
+                    gemList.push(gem);
+                });
+            page.gemList = gemList;
+
             new TownGemMeltHouse(credential).enter()
                 .then(townGemMeltHousePage => {
                     page.townGemMeltHousePage = townGemMeltHousePage;

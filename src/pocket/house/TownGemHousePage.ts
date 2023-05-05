@@ -6,6 +6,7 @@ class TownGemHousePage {
 
     readonly credential: Credential;
     equipmentList?: Equipment[];
+    gemList?: Equipment[];
     townGemMeltHousePage?: TownGemMeltHousePage;
 
     constructor(credential: Credential) {

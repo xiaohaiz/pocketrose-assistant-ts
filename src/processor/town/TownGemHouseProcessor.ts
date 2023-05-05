@@ -24,7 +24,6 @@ class TownGemHouseProcessor implements Processor {
 }
 
 function doProcess(page: TownGemHousePage) {
-
 }
 
 export = TownGemHouseProcessor;
