@@ -7,6 +7,8 @@ import NpcLoader from "../../pocket/NpcLoader";
 import MessageBoard from "../../util/MessageBoard";
 import Constants from "../../util/Constants";
 import NetworkUtils from "../../util/NetworkUtils";
+import BankUtils from "../../util/BankUtils";
+import TownBank from "../../pocket/bank/TownBank";
 
 class TownGemHouseProcessor implements Processor {
 
@@ -178,6 +180,7 @@ function doRender(page: TownGemHousePage) {
         html += "<th style='background-color:#E0D0B0'>销毁</th>";
         html += "</tr>";
 
+        const indexList: number[] = [];
         for (const equipment of page.equipmentList!) {
             const canFuse = equipment.selectable! && (!equipment.using! || (equipment.using! && equipment.name === "宠物蛋"));
             const canMelt = !equipment.using! && page.townGemMeltHousePage!.canMelt(equipment.index!);
@@ -200,7 +203,10 @@ function doRender(page: TownGemHousePage) {
             html += "<td style='background-color:#E0D0B0'>" + equipment.gemCountHtml + "</td>";
             html += "<td style='background-color:#E0D0B0'>";
             if (canMelt) {
-                html += "销毁";
+                indexList.push(equipment.index!);
+                html += "<img alt='销毁' id='melt_" + equipment.index + "' " +
+                    "class='dynamic_button_class' title='销毁' " +
+                    "src='" + (Constants.POCKET_DOMAIN + "/image/country/7.gif") + "'>";
             }
             html += "</td>";
             html += "</tr>";
@@ -213,6 +219,8 @@ function doRender(page: TownGemHousePage) {
             .html(html)
             .parent()
             .show();
+
+        doBindMeltButton(page, indexList);
     }
 
     if (page.gemList!.length > 0) {
@@ -251,6 +259,39 @@ function doRender(page: TownGemHousePage) {
             .show();
 
         doBindFuseButton(page, indexList);
+    }
+}
+
+function doBindMeltButton(page: TownGemHousePage, indexList: number[]) {
+    for (const index of indexList) {
+        const buttonId = "melt_" + index;
+        $("#" + buttonId).on("click", function () {
+            const equipment = page.findEquipment(index);
+            if (!confirm("确认销毁“" + equipment?.nameHTML + "”的宝石？")) {
+                document.getElementById("title_cell")?.scrollIntoView();
+                return;
+            }
+            const amount = BankUtils.calculateCashDifferenceAmount(page.roleCash!, 5000000);
+            const bank = new TownBank(page.credential);
+            bank.withdraw(amount)
+                .then(() => {
+                    const request = page.credential.asRequest();
+                    // @ts-ignore
+                    request.select = index;
+                    // @ts-ignore
+                    request.azukeru = "0";
+                    // @ts-ignore
+                    request.mode = "BAOSHI_DELETE";
+
+                    NetworkUtils.sendPostRequest("town.cgi", request, function (pageHtml) {
+                        MessageBoard.processResponseMessage(pageHtml);
+                        bank.depositAll()
+                            .then(() => {
+                                doRefresh(page.credential);
+                            });
+                    });
+                });
+        });
     }
 }
 
