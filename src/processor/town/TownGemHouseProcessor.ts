@@ -299,6 +299,8 @@ function doRender(page: TownGemHousePage) {
 
         doBindFuseButton(page, indexList);
     }
+
+    PageUtils.fixCurrentPageBrokerImages();
 }
 
 function doBindSelectButton() {
