@@ -154,6 +154,9 @@ function doBindRefreshButton(page: TownWeaponStorePage) {
 }
 
 function doRender(page: TownWeaponStorePage) {
+    // ------------------------------------------------------------------------
+    // 渲染随身装备
+    // ------------------------------------------------------------------------
     const equipmentList = page.personalEquipmentList!;
     if (equipmentList.length > 0) {
         let html = "";
@@ -165,7 +168,7 @@ function doRender(page: TownWeaponStorePage) {
         html += "</td>";
         html += "</tr>";
         html += "<tr>";
-        html += "<th style='background-color:#E8E8D0'>操作</th>";
+        html += "<th style='background-color:#E8E8D0'>出售</th>";
         html += "<th style='background-color:#EFE0C0'>装备</th>";
         html += "<th style='background-color:#E0D0B0'>名字</th>";
         html += "<th style='background-color:#EFE0C0'>种类</th>";
@@ -180,7 +183,7 @@ function doRender(page: TownWeaponStorePage) {
             html += "<tr>";
             html += "<td style='background-color:#E8E8D0'>";
             if (equipment.isSellable) {
-                html += "<img alt='出售' id='graze_" + equipment.index! + "' " +
+                html += "<img alt='出售' id='sell_" + equipment.index! + "' " +
                     "class='dynamic_button_class' title='出售' " +
                     "src='" + (Constants.POCKET_DOMAIN + "/image/country/7.gif") + "'>";
                 indexList.push(equipment.index!);
@@ -192,7 +195,7 @@ function doRender(page: TownWeaponStorePage) {
             html += "<td style='background-color:#E0D0B0'>" + equipment.power + "</td>";
             html += "<td style='background-color:#EFE0C0'>" + equipment.weight + "</td>";
             html += "<td style='background-color:#EFE0C0'>" + equipment.endureHtml + "</td>";
-            html += "<td style='background-color:#E0D0B0'>" + equipment.priceHTML + "</td>";
+            html += "<td style='background-color:#E0D0B0;text-align:right'>" + equipment.priceHTML + "</td>";
             html += "</tr>";
         }
 
@@ -203,7 +206,75 @@ function doRender(page: TownWeaponStorePage) {
             .html(html)
             .parent()
             .show();
+
+        doBindSellButton(page, indexList);
     }
+
+    // ------------------------------------------------------------------------
+    // 渲染武器店商品
+    // ------------------------------------------------------------------------
+    const merchandiseList = page.weaponMerchandiseList!;
+    if (merchandiseList.length > 0 && page.spaceCount! > 0) {
+        let html = "";
+        html += "<table style='border-width:0;width:100%;background-color:#888888'>";
+        html += "<tbody style='background-color:#F8F0E0;text-align:center'>";
+        html += "<tr>";
+        html += "<td style='background-color:darkgreen;color:wheat;font-weight:bold' colspan='16'>";
+        html += "＜ 商 品 列 表 ＞";
+        html += "</td>";
+        html += "</tr>";
+        html += "<tr>";
+        html += "<th style='background-color:#E8E8D0'>数量</th>";
+        html += "<th style='background-color:#E8E8D0'>购买</th>";
+        html += "<th style='background-color:#EFE0C0'>特产</th>";
+        html += "<th style='background-color:#E0D0B0'>名字</th>";
+        html += "<th style='background-color:#EFE0C0'>价格</th>";
+        html += "<th style='background-color:#E0D0B0'>威力</th>";
+        html += "<th style='background-color:#EFE0C0'>重量</th>";
+        html += "<th style='background-color:#EFE0C0'>耐久</th>";
+        html += "<th style='background-color:#E0D0B0'>职业</th>";
+        html += "<th style='background-color:#E0D0B0'>攻击</th>";
+        html += "<th style='background-color:#E0D0B0'>防御</th>";
+        html += "<th style='background-color:#E0D0B0'>智力</th>";
+        html += "<th style='background-color:#E0D0B0'>精神</th>";
+        html += "<th style='background-color:#E0D0B0'>速度</th>";
+        html += "<th style='background-color:#E0D0B0'>类型</th>";
+        html += "<th style='background-color:#E0D0B0'>宝石</th>";
+        html += "</tr>";
+
+        for (const merchandise of merchandiseList) {
+            html += "<tr>";
+            html += "<td style='background-color:#E8E8D0'>数量</td>";
+            html += "<td style='background-color:#E8E8D0'>购买</td>";
+            html += "<td style='background-color:#EFE0C0'>" + merchandise.specialityHtml + "</td>";
+            html += "<td style='background-color:#E0D0B0'>" + merchandise.nameHtml + "</td>";
+            html += "<td style='background-color:#EFE0C0;text-align:right'>" + merchandise.priceHtml + "</td>";
+            html += "<td style='background-color:#E0D0B0'>" + merchandise.power + "</td>";
+            html += "<td style='background-color:#EFE0C0'>" + merchandise.weaponCategory + "</td>";
+            html += "<td style='background-color:#EFE0C0'>" + merchandise.endureHtml + "</td>";
+            html += "<td style='background-color:#E0D0B0'>职业</td>";
+            html += "<td style='background-color:#E0D0B0'>攻击</td>";
+            html += "<td style='background-color:#E0D0B0'>防御</td>";
+            html += "<td style='background-color:#E0D0B0'>智力</td>";
+            html += "<td style='background-color:#E0D0B0'>精神</td>";
+            html += "<td style='background-color:#E0D0B0'>速度</td>";
+            html += "<td style='background-color:#E0D0B0'>" + merchandise.weaponCategory + "</td>";
+            html += "<td style='background-color:#E0D0B0'>" + merchandise.gemCountHtml + "</td>";
+            html += "</tr>";
+        }
+
+        html += "</tbody>";
+        html += "</table>";
+
+        $("#weapon_merchandise_list_cell")
+            .html(html)
+            .parent()
+            .show();
+    }
+}
+
+function doBindSellButton(page: TownWeaponStorePage, indexList: number[]) {
+
 }
 
 export = TownWeaponStoreProcessor;

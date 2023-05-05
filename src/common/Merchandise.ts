@@ -37,6 +37,41 @@ class Merchandise {
             return this.category!;
         }
     }
+
+    get priceHtml() {
+        if (this.price === undefined) {
+            return "-";
+        }
+        if (this.price >= 10000000) {
+            return "<span style='color:gold;background-color:darkblue'>" + this.price + "</span> GOLD";
+        } else {
+            return this.price + " GOLD";
+        }
+    }
+
+    get endureHtml() {
+        if (this.endure === undefined || this.endure === 1) {
+            return "-";
+        } else {
+            return this.endure.toString();
+        }
+    }
+
+    get gemCountHtml() {
+        if (this.gemCount === undefined || this.gemCount === 0) {
+            return "-";
+        } else {
+            return this.gemCount.toString();
+        }
+    }
+
+    get specialityHtml() {
+        if (this.speciality === undefined || !this.speciality) {
+            return "";
+        } else {
+            return "★";
+        }
+    }
 }
 
 export = Merchandise;

@@ -158,7 +158,7 @@ function doRender(credential: Credential, ranchStatus: CastleRanchStatus) {
         html += "</td>";
         html += "</tr>";
         html += "<tr>";
-        html += "<th style='background-color:#E8E8D0'>操作</th>";
+        html += "<th style='background-color:#E8E8D0'>放牧</th>";
         html += "<th style='background-color:#EFE0C0'>使用</th>";
         html += "<th style='background-color:#E0D0B0'>名字</th>";
         html += "<th style='background-color:#EFE0C0'>等级</th>";
@@ -218,7 +218,7 @@ function doRender(credential: Credential, ranchStatus: CastleRanchStatus) {
         html += "</td>";
         html += "</tr>";
         html += "<tr>";
-        html += "<th style='background-color:#E8E8D0'>操作</th>";
+        html += "<th style='background-color:#E8E8D0'>召唤</th>";
         html += "<th style='background-color:#E0D0B0'>名字</th>";
         html += "<th style='background-color:#EFE0C0'>等级</th>";
         html += "<th style='background-color:#E0D0B0'>生命</th>";
