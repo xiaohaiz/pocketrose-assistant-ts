@@ -5,7 +5,6 @@ import TownGemHousePage from "../../pocket/house/TownGemHousePage";
 import Credential from "../../util/Credential";
 import NpcLoader from "../../pocket/NpcLoader";
 import MessageBoard from "../../util/MessageBoard";
-import Constants from "../../util/Constants";
 import NetworkUtils from "../../util/NetworkUtils";
 import BankUtils from "../../util/BankUtils";
 import TownBank from "../../pocket/bank/TownBank";
@@ -217,9 +216,9 @@ function doRender(page: TownGemHousePage) {
             html += "<td style='background-color:#E0D0B0'>";
             if (canMelt) {
                 indexList.push(equipment.index!);
-                html += "<img alt='销毁' id='melt_" + equipment.index + "' " +
-                    "class='dynamic_button_class' title='销毁' " +
-                    "src='" + (Constants.POCKET_DOMAIN + "/image/country/7.gif") + "'>";
+                html += "<input type='button' value='销毁' " +
+                    "class='dynamic_button_class' " +
+                    "id='melt_" + equipment.index + "'>";
             }
             html += "</td>";
             html += "</tr>";
@@ -283,9 +282,9 @@ function doRender(page: TownGemHousePage) {
             html += "<tr>";
             html += "<td style='background-color:#E8E8D0'>" + gem.nameHTML + "</td>";
             html += "<td style='background-color:#EFE0C0'>";
-            html += "<img alt='镶嵌' id='fuse_" + gem.index + "' " +
-                "class='dynamic_button_class' title='镶嵌' " +
-                "src='" + (Constants.POCKET_DOMAIN + "/image/country/6.gif") + "'>";
+            html += "<input type='button' value='镶嵌' " +
+                "class='dynamic_button_class' " +
+                "id='fuse_" + gem.index + "'>";
             html += "</td>";
             html += "</tr>";
         }
