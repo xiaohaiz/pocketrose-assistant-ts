@@ -5,6 +5,7 @@ import Merchandise from "../../common/Merchandise";
 import StringUtils from "../../util/StringUtils";
 import Equipment from "../Equipment";
 import NetworkUtils from "../../util/NetworkUtils";
+import MessageBoard from "../../util/MessageBoard";
 
 class TownWeaponStore {
 
@@ -75,6 +76,32 @@ class TownWeaponStore {
             });
         };
         return await action(this.#credential, this.#townId);
+    }
+
+    async buy(index: number, count: number, discount: number) {
+        const action = (credential: Credential, townId: string, index: number, count: number, discount: number) => {
+            return new Promise<void>(resolve => {
+                const request = credential.asRequest();
+                // @ts-ignore
+                request.select = index;
+                // @ts-ignore
+                request.townid = townId;
+                // @ts-ignore
+                request.val_off = discount;
+                // @ts-ignore
+                request.mark = 0;
+                // @ts-ignore
+                request.mode = "BUY";
+                // @ts-ignore
+                request.num = count;
+
+                NetworkUtils.sendPostRequest("town.cgi", request, function (pageHtml: string) {
+                    MessageBoard.processResponseMessage(pageHtml);
+                    resolve();
+                });
+            });
+        };
+        return await action(this.#credential, this.#townId, index, count, discount);
     }
 
 }

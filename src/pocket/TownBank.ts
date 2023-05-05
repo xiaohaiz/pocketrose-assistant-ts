@@ -4,6 +4,9 @@ import MessageBoard from "../util/MessageBoard";
 import BankAccount from "./BankAccount";
 import StringUtils from "../util/StringUtils";
 
+/**
+ * @deprecated
+ */
 class TownBank {
 
     readonly #credential: Credential;

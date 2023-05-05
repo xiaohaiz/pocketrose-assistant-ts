@@ -8,6 +8,7 @@ import MessageBoard from "../../util/MessageBoard";
 import TownWeaponStorePage from "../../pocket/store/TownWeaponStorePage";
 import Constants from "../../util/Constants";
 import BankUtils from "../../util/BankUtils";
+import TownBank from "../../pocket/bank/TownBank";
 
 class TownWeaponStoreProcessor implements Processor {
 
@@ -307,8 +308,21 @@ function doBindBuyButton(page: TownWeaponStorePage, indexList: number[]) {
             if (!confirm("确认要购买" + count + "把“" + merchandise.name + "”？大约需要再支取" + amount + "万GOLD。")) {
                 return;
             }
-
-
+            const bank = new TownBank(page.credential);
+            bank.withdraw(amount)
+                .then(() => {
+                    new TownWeaponStore(page.credential, page.townId)
+                        .buy(index, count, page.discount!)
+                        .then(() => {
+                            bank.depositAll()
+                                .then(() => {
+                                    doRefresh(page);
+                                });
+                        });
+                })
+                .catch(() => {
+                    // Nothing changed, ignore.
+                });
         });
     }
 }
