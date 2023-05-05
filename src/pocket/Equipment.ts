@@ -105,6 +105,17 @@ class Equipment {
         }
     }
 
+    parseGemCount(gemCountText: string) {
+        if (gemCountText.includes("/")) {
+            const a = StringUtils.substringBeforeSlash(gemCountText);
+            const b = StringUtils.substringAfterSlash(gemCountText);
+            this.gemCount = parseInt(a);
+            this.maxGemCount = parseInt(b);
+        } else {
+            this.endure = parseInt(gemCountText);
+        }
+    }
+
     parsePrice(priceHtml: string) {
         this.priceHTML = priceHtml;
         let s = PageUtils.convertHtmlToText(priceHtml);

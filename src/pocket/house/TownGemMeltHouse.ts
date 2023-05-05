@@ -3,7 +3,6 @@ import PageUtils from "../../util/PageUtils";
 import TownGemMeltHousePage from "./TownGemMeltHousePage";
 import NetworkUtils from "../../util/NetworkUtils";
 import Equipment from "../Equipment";
-import StringUtils from "../../util/StringUtils";
 
 class TownGemMeltHouse {
 
@@ -61,15 +60,12 @@ function doParsePage(pageHtml: string) {
             equipment.additionalPower = parseInt(c4.text());
             equipment.additionalWeight = parseInt(c5.text());
             equipment.additionalLuck = parseInt(c6.text());
-            const s = c7.text();
-            equipment.gemCount = parseInt(StringUtils.substringBeforeSlash(s));
-            equipment.maxGemCount = parseInt(StringUtils.substringAfterSlash(s));
+            equipment.parseGemCount(c7.text());
 
             equipmentList.push(equipment);
         });
     page.equipmentList = equipmentList;
 
-    console.log(JSON.stringify(page));
     return page;
 }
 
