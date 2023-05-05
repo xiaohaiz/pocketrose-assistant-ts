@@ -216,6 +216,10 @@ class SetupLoader {
     static isCollectTownTaxDisabled(): boolean {
         return StorageUtils.getBoolean("_pa_030");
     }
+
+    static isGemHouseUIEnabled(): boolean {
+        return StorageUtils.getBoolean("_pa_031");
+    }
 }
 
 export = SetupLoader;
