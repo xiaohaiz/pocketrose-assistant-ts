@@ -40,6 +40,7 @@ function doProcess(credential: Credential) {
     doRenderCareerManagementMenu();
     doRenderAdventureGuildMenu();
     doRenderSuperMarketMenu();
+    doRenderGemHouseMenu();
     doRenderFastLoginMenu();
 
     const roleStatus = RoleStatusParser.parseRoleStatus(document.documentElement.outerHTML);
@@ -222,6 +223,16 @@ function doRenderSuperMarketMenu() {
     if (SetupLoader.isPocketSuperMarketEnabled()) {
         $("option[value='ARM_SHOP']")
             .css("background-color", "yellow");
+    }
+}
+
+function doRenderGemHouseMenu() {
+    if (SetupLoader.isGemHouseUIEnabled()) {
+        $("option[value='BAOSHI_SHOP']")
+            .css("background-color", "yellow")
+            .text("宝石屋");
+        $("option[value='BAOSHI_DELSHOP']")
+            .remove();
     }
 }
 

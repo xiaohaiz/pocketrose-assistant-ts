@@ -10,10 +10,14 @@ import BankUtils from "../../util/BankUtils";
 import TownBank from "../../pocket/bank/TownBank";
 import StringUtils from "../../util/StringUtils";
 import EquipmentManagement from "../../pocket/personal/EquipmentManagement";
+import SetupLoader from "../../pocket/SetupLoader";
 
 class TownGemHouseProcessor implements Processor {
 
     accept(cgi: string, pageText: string): boolean {
+        if (!SetupLoader.isGemHouseUIEnabled()) {
+            return false;
+        }
         if (cgi === "town.cgi") {
             return pageText.includes("＜＜ * 合 成 屋 *＞＞");
         }
