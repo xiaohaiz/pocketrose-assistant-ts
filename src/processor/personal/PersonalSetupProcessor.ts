@@ -106,6 +106,8 @@ function doInitialize(credential: Credential) {
                         $("#battle_field_setup").toggle();
                     }
                 }
+
+                $(".hidden_setup_item").toggle();
             });
         });
 

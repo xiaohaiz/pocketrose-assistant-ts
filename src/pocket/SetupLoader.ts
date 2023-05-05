@@ -34,6 +34,10 @@ class SetupLoader {
         return StorageUtils.getBoolean("_pa_008");
     }
 
+    static isNormalFlashBattleEnabled(): boolean {
+        return StorageUtils.getBoolean("_pa_029");
+    }
+
     static isPetManagementUIEnabled(): boolean {
         return StorageUtils.getBoolean("_pa_009");
     }
