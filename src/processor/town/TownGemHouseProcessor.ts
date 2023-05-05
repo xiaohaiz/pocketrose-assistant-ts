@@ -1,7 +1,9 @@
 import Processor from "../Processor";
 import PageUtils from "../../util/PageUtils";
+import TownGemHouse from "../../pocket/house/TownGemHouse";
+import TownGemHousePage from "../../pocket/house/TownGemHousePage";
 
-class TownGemStoreProcessor implements Processor {
+class TownGemHouseProcessor implements Processor {
 
     accept(cgi: string, pageText: string): boolean {
         if (cgi === "town.cgi") {
@@ -13,13 +15,16 @@ class TownGemStoreProcessor implements Processor {
     process(): void {
         PageUtils.removeUnusedHyperLinks();
         PageUtils.removeGoogleAnalyticsScript();
-        doProcess();
+        TownGemHouse.parsePage(PageUtils.currentPageHtml())
+            .then(page => {
+                doProcess(page);
+            });
     }
 
 }
 
-function doProcess() {
+function doProcess(page: TownGemHousePage) {
 
 }
 
-export = TownGemStoreProcessor;
+export = TownGemHouseProcessor;

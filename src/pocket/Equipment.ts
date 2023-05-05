@@ -79,6 +79,8 @@ class Equipment {
     attribute?: string;                  // 属性
     price?: number;                      // 价格
     priceHTML?: string;                  // 价格HTML代码
+    gemCount?: number;
+    maxGemCount?: number;
 
     parseName(nameHtml: string) {
         this.nameHTML = nameHtml;
