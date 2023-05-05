@@ -21,6 +21,15 @@ class TownWeaponStorePage {
         this.townId = townId;
     }
 
+    findEquipment(index: number) {
+        for (const equipment of this.personalEquipmentList!) {
+            if (equipment.index === index) {
+                return equipment;
+            }
+        }
+        return null;
+    }
+
     findMerchandise(index: number) {
         for (const merchandise of this.weaponMerchandiseList!) {
             if (merchandise.index === index) {

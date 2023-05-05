@@ -294,7 +294,24 @@ function doRender(page: TownWeaponStorePage) {
 }
 
 function doBindSellButton(page: TownWeaponStorePage, indexList: number[]) {
-
+    for (const index of indexList) {
+        const buttonId = "sell_" + index;
+        $("#" + buttonId).on("click", function () {
+            const equipment = page.findEquipment(index)!;
+            if (!confirm("确认要出售“" + equipment.fullName + "”？")) {
+                return;
+            }
+            new TownWeaponStore(page.credential, page.townId)
+                .sell(index, page.discount!)
+                .then(() => {
+                    new TownBank(page.credential)
+                        .depositAll()
+                        .then(() => {
+                            doRefresh(page);
+                        });
+                });
+        });
+    }
 }
 
 function doBindBuyButton(page: TownWeaponStorePage, indexList: number[]) {
