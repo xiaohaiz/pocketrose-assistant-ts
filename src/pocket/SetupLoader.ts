@@ -212,6 +212,10 @@ class SetupLoader {
     static isHiddenLeaveTownButtonEnabled(): boolean {
         return StorageUtils.getBoolean("_pa_028");
     }
+
+    static isTryKeepAliveEnabled(): boolean {
+        return StorageUtils.getBoolean("_pa_030");
+    }
 }
 
 export = SetupLoader;
