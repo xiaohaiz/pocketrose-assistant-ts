@@ -57,6 +57,74 @@ class Merchandise {
         }
     }
 
+    get requiredCareerHtml() {
+        if (this.requiredCareer === undefined || this.requiredCareer === "所有职业") {
+            return "-";
+        } else {
+            return this.requiredCareer;
+        }
+    }
+
+    get requiredAttackHtml() {
+        if (this.requiredAttack === undefined || this.requiredAttack === 0) {
+            return "-";
+        } else {
+            if (this.requiredAttack >= 375) {
+                return "<span title='倚天' style='color:red'>" + this.requiredAttack + "</span>";
+            } else {
+                return this.requiredAttack.toString();
+            }
+        }
+    }
+
+    get requiredDefenseHtml() {
+        if (this.requiredDefense === undefined || this.requiredDefense === 0) {
+            return "-";
+        } else {
+            if (this.requiredDefense >= 375) {
+                return "<span title='磐石' style='color:red'>" + this.requiredDefense + "</span>";
+            } else {
+                return this.requiredDefense.toString();
+            }
+        }
+    }
+
+    get requiredSpecialAttackHtml() {
+        if (this.requiredSpecialAttack === undefined || this.requiredSpecialAttack === 0) {
+            return "-";
+        } else {
+            if (this.requiredSpecialAttack >= 375) {
+                return "<span title='仙人' style='color:red'>" + this.requiredSpecialAttack + "</span>";
+            } else {
+                return this.requiredSpecialAttack.toString();
+            }
+        }
+    }
+
+    get requiredSpecialDefenseHtml() {
+        if (this.requiredSpecialDefense === undefined || this.requiredSpecialDefense === 0) {
+            return "-";
+        } else {
+            if (this.requiredSpecialDefense >= 375) {
+                return "<span title='军神' style='color:red'>" + this.requiredSpecialDefense + "</span>";
+            } else {
+                return this.requiredSpecialDefense.toString();
+            }
+        }
+    }
+
+    get requiredSpeedHtml() {
+        if (this.requiredSpecialDefense === undefined || this.requiredSpeed === 0) {
+            return "-";
+        } else {
+            if (this.requiredSpecialDefense >= 375) {
+                return "<span title='疾风' style='color:red'>" + this.requiredSpecialDefense + "</span>";
+            } else {
+                return this.requiredSpecialDefense.toString();
+            }
+        }
+    }
+
     get gemCountHtml() {
         if (this.gemCount === undefined || this.gemCount === 0) {
             return "-";
