@@ -233,7 +233,7 @@ function doRender(page: TownGemHousePage) {
             .parent()
             .show();
 
-        doBindSelectButton(page);
+        doBindSelectButton();
         doBindMeltButton(page, indexList);
 
         const lastFuse = $("#last_fuse_cell").text();
@@ -302,7 +302,7 @@ function doRender(page: TownGemHousePage) {
     }
 }
 
-function doBindSelectButton(page: TownGemHousePage) {
+function doBindSelectButton() {
     for (let index = 0; index < 20; index++) {
         const buttonId = "select_" + index;
         if ($("#" + buttonId).length === 0) {
@@ -367,23 +367,47 @@ function doBindFuseButton(page: TownGemHousePage, indexList: number[]) {
     for (const index of indexList) {
         const buttonId = "fuse_" + index;
         $("#" + buttonId).on("click", function () {
-            const checked = $("input:radio:checked").val();
-            if (checked === undefined) {
+            let checkedIndex: number | undefined = undefined;
+            $("input:button[value='选择']")
+                .filter(function () {
+                    const buttonId = $(this).attr("id") as string;
+                    return PageUtils.isColorBlue(buttonId);
+                })
+                .each(function (_idx, button) {
+                    if (checkedIndex === undefined) {
+                        const buttonId = $(button).attr("id") as string;
+                        checkedIndex = parseInt(StringUtils.substringAfter(buttonId, "_"));
+                    }
+                });
+            if (checkedIndex === undefined) {
                 document.getElementById("title_cell")?.scrollIntoView();
                 MessageBoard.publishWarning("没有选择要镶嵌的装备！");
                 return;
             }
 
-            const equipment = page.findEquipment(parseInt(checked as string));
+            const equipment = page.findEquipment(checkedIndex);
             const gem = page.findGem(index);
             if (!confirm("确认为“" + equipment?.nameHTML + "”镶嵌“" + gem?.name + "”？")) {
                 document.getElementById("title_cell")?.scrollIntoView();
                 return;
             }
 
+            // 找这件装备的序号是多少
+            let lastFuse = "none";
+            let sequence = 0;
+            for (const it of page.equipmentList!) {
+                if (it.fullName === equipment!.fullName) {
+                    sequence++;
+                }
+                if (it.index! === equipment!.index!) {
+                    lastFuse = equipment!.fullName + "/" + sequence;
+                    break;
+                }
+            }
+
             const request = page.credential.asRequest();
             // @ts-ignore
-            request.select = checked as string;
+            request.select = checkedIndex;
             // @ts-ignore
             request.baoshi = index;
             // @ts-ignore
@@ -393,6 +417,8 @@ function doBindFuseButton(page: TownGemHousePage, indexList: number[]) {
 
             NetworkUtils.sendPostRequest("town.cgi", request, function (pageHtml) {
                 MessageBoard.processResponseMessage(pageHtml);
+                // 合成装备之后，设置最后一次合成的信息
+                $("#last_fuse_cell").text(lastFuse);
                 doRefresh(page.credential);
             });
         });
