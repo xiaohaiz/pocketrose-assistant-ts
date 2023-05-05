@@ -13,7 +13,7 @@ class TownGemMeltHousePage {
     canMelt(index: number) {
         for (const equipment of this.equipmentList!) {
             if (equipment.index === index) {
-                return equipment.selectable;
+                return equipment.selectable!;
             }
         }
         return false;

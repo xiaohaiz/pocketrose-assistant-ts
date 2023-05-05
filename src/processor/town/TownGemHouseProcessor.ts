@@ -155,7 +155,63 @@ function doBindRefreshButton(credential: Credential) {
 }
 
 function doRender(page: TownGemHousePage) {
+    if (page.equipmentList!.length > 0) {
+        let html = "";
+        html += "<table style='border-width:0;width:100%;background-color:#888888;margin:auto'>";
+        html += "<tbody style='background-color:#F8F0E0;text-align:center'>";
+        html += "<tr>";
+        html += "<td style='background-color:darkred;color:wheat;font-weight:bold' colspan='9'>";
+        html += "＜ 随 身 装 备 ＞";
+        html += "</td>";
+        html += "</tr>";
+        html += "<tr>";
+        html += "<th style='background-color:#E8E8D0'>选择</th>";
+        html += "<th style='background-color:#EFE0C0'>装备</th>";
+        html += "<th style='background-color:#E0D0B0'>名字</th>";
+        html += "<th style='background-color:#EFE0C0'>种类</th>";
+        html += "<th style='background-color:#E0D0B0'>威力</th>";
+        html += "<th style='background-color:#EFE0C0'>重量</th>";
+        html += "<th style='background-color:#EFE0C0'>耐久</th>";
+        html += "<th style='background-color:#E0D0B0'>宝石</th>";
+        html += "<th style='background-color:#E0D0B0'>销毁</th>";
+        html += "</tr>";
 
+        for (const equipment of page.equipmentList!) {
+            const canFuse = equipment.selectable! && (!equipment.using! || (equipment.using! && equipment.name === "宠物蛋"));
+            const canMelt = !equipment.using! && page.townGemMeltHousePage!.canMelt(equipment.index!);
+            if (!canFuse && !canMelt) {
+                continue;
+            }
+
+            html += "<tr>";
+            html += "<td style='background-color:#E8E8D0'>";
+            if (canFuse) {
+                html += "选择";
+            }
+            html += "</td>";
+            html += "<td style='background-color:#EFE0C0'>" + equipment.usingHTML + "</td>";
+            html += "<td style='background-color:#E0D0B0'>" + equipment.nameHTML + "</td>";
+            html += "<td style='background-color:#EFE0C0'>" + equipment.category + "</td>";
+            html += "<td style='background-color:#E0D0B0'>" + equipment.power + "</td>";
+            html += "<td style='background-color:#EFE0C0'>" + equipment.weight + "</td>";
+            html += "<td style='background-color:#EFE0C0'>" + equipment.endureHtml + "</td>";
+            html += "<td style='background-color:#E0D0B0'>" + equipment.gemCountHtml + "</td>";
+            html += "<td style='background-color:#E0D0B0'>";
+            if (canMelt) {
+                html += "销毁";
+            }
+            html += "</td>";
+            html += "</tr>";
+        }
+
+        html += "</tbody>";
+        html += "</table>";
+
+        $("#equipment_list_cell")
+            .html(html)
+            .parent()
+            .show();
+    }
 }
 
 export = TownGemHouseProcessor;

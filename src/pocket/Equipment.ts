@@ -273,9 +273,21 @@ class Equipment {
             return "-";
         }
         if (this.maxEndure === undefined) {
-            return this.endure!;
+            return this.endure!.toString();
         } else {
             return this.endure! + "/" + this.maxEndure!;
+        }
+    }
+
+    get gemCountHtml() {
+        if (this.maxGemCount === undefined) {
+            if (this.gemCount === undefined || this.gemCount === 0) {
+                return "-";
+            } else {
+                return this.gemCount.toString();
+            }
+        } else {
+            return "<span style='color:red'>" + this.gemCount + "</span> / <span style='color:red'>" + this.maxGemCount + "</span>"
         }
     }
 }
