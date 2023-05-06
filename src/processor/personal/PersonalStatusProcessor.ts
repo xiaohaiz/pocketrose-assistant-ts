@@ -1,9 +1,9 @@
 import PageUtils from "../../util/PageUtils";
-import RoleParser from "../../pocket/RoleParser";
 import Role from "../../pocket/Role";
 import SetupLoader from "../../pocket/SetupLoader";
 import StringUtils from "../../util/StringUtils";
 import Processor from "../Processor";
+import PersonalStatus from "../../pocket/PersonalStatus";
 
 class PersonalStatusProcessor implements Processor {
 
@@ -22,9 +22,58 @@ class PersonalStatusProcessor implements Processor {
 }
 
 function doProcess() {
-    const role = RoleParser.parseRole(document.documentElement.outerHTML);
-    doRenderExperience(role);
+    const page = PersonalStatus.parsePage(PageUtils.currentPageHtml());
+
+    // 调整表格的宽度
+    $("table:first")
+        .attr("id", "t0")
+        .css("width", "100%");
+
+    doRenderExperience(page.role!);
     doRenderHonor();
+
+    // 页面渲染完成，现在可以添加内容
+    let html = "";
+    html += "<tr style='display:none'>";
+    html += "<td id='hiddenForm'></td>";
+    html += "</tr>";
+    html += "<tr style='display:none'>";
+    html += "<td id='roleLocation'>none</td>";      // 如果当前位于城市内，设置此字段。
+    html += "</tr>";
+    $("#t0")
+        .find("tr:first")
+        .before($(html));
+
+    html = "";
+    html += PageUtils.generateReturnTownForm(page.credential);
+    html += PageUtils.generateReturnCastleForm(page.credential);
+    $("#hiddenForm").html(html);
+    $("#roleLocation").text(page.role!.location!);
+
+    // 删除旧的表单并且新建全新的智能返回按钮
+    $("form:last").remove();
+    let returnButtonValue;
+    if (page.role!.location === "TOWN") {
+        returnButtonValue = "返回" + page.role!.town!.name;
+    } else if (page.role!.location === "CASTLE") {
+        returnButtonValue = "返回" + page.role!.castle!.name;
+    } else {
+        returnButtonValue = "返回";
+    }
+    html = "";
+    html += "<input type='button' id='returnButton' value='" + returnButtonValue + "'>";
+    $("p:last").html(html);
+    doBindReturnButton();
+}
+
+function doBindReturnButton() {
+    $("#returnButton").on("click", function () {
+        if ($("#roleLocation").text() === "CASTLE") {
+            $("#returnCastle").trigger("click");
+        } else {
+            $("#returnTown").trigger("click");
+        }
+    });
 }
 
 function doRenderExperience(role: Role) {

@@ -8,6 +8,7 @@ import Processor from "../Processor";
 import EventHandler from "../../pocket/EventHandler";
 import TownLoader from "../../pocket/TownLoader";
 import NetworkUtils from "../../util/NetworkUtils";
+import StorageUtils from "../../util/StorageUtils";
 
 class TownDashboardProcessor implements Processor {
 
@@ -23,6 +24,10 @@ class TownDashboardProcessor implements Processor {
         PageUtils.removeGoogleAnalyticsScript();
         PageUtils.fixCurrentPageBrokenImages();
         const credential = PageUtils.currentCredential();
+
+        const key = "_lc_" + credential.id;
+        StorageUtils.set(key, "TOWN");
+
         doProcess(credential);
     }
 

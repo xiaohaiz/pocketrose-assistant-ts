@@ -150,7 +150,7 @@ function doRender(title: string, petList: PetProfile[]) {
     html += "<table style='border-width:0;background-color:#888888;margin:auto;width:100%'>";
     html += "<tbody style='background-color:#F8F0E0;text-align:center'>";
     html += "<tr>";
-    html += "<td style='background-color:darkred;color:wheat;font-weight:bold' colspan='18'>";
+    html += "<td style='background-color:darkred;color:wheat;font-weight:bold' colspan='19'>";
     html += "＜ " + title + " ＞";
     html += "</td>";
     html += "<tr>";
@@ -160,6 +160,7 @@ function doRender(title: string, petList: PetProfile[]) {
     html += "<th style='background-color:#E0D0B0'>总族值</th>";
     html += "<th style='background-color:#EFE0C0'>生命族值</th>";
     html += "<th style='background-color:#E0D0B0'>攻击族值</th>";
+    html += "<th style='background-color:#E0D0B0'>防御族值</th>";
     html += "<th style='background-color:#EFE0C0'>智力族值</th>";
     html += "<th style='background-color:#EFE0C0'>精神族值</th>";
     html += "<th style='background-color:#E0D0B0'>速度族值</th>";
@@ -185,6 +186,7 @@ function doRender(title: string, petList: PetProfile[]) {
         html += "<td style='background-color:#E0D0B0;font-weight:bold;color:blue'>" + pet.totalBaseStats + "</td>";
         html += "<td style='background-color:#EFE0C0'>" + pet.healthBaseStats + "</td>";
         html += "<td style='background-color:#E0D0B0'>" + pet.attackBaseStats + "</td>";
+        html += "<td style='background-color:#E0D0B0'>" + pet.defenseBaseStats + "</td>";
         html += "<td style='background-color:#EFE0C0'>" + pet.specialAttackBaseStats + "</td>";
         html += "<td style='background-color:#EFE0C0'>" + pet.specialDefenseBaseStats + "</td>";
         html += "<td style='background-color:#E0D0B0'>" + pet.speedBaseStats + "</td>";

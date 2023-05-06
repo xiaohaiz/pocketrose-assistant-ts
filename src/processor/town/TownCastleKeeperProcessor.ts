@@ -192,11 +192,11 @@ function doRender(credential: Credential, castle: Castle) {
                 if (ret !== 0) {
                     return ret;
                 }
-                ret = b.additionalPower! - a.additionalPower!;
+                ret = a.fullName!.localeCompare(b.fullName);
                 if (ret !== 0) {
                     return ret;
                 }
-                return a.fullName!.localeCompare(b.fullName);
+                return b.additionalPower! - a.additionalPower!;
             });
 
             let html = "";
