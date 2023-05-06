@@ -85,7 +85,7 @@ class PageUtils {
         return color.toString() === "rgb(128, 128, 128)"
     }
 
-    static fixCurrentPageBrokerImages() {
+    static fixCurrentPageBrokenImages() {
         if ($("img").length === 0) {
             return;
         }
@@ -108,9 +108,24 @@ class PageUtils {
             });
     }
 
+    static fixBrokenImageIfNecessary(s: string): string {
+        let t = s;
+        if (t.includes("http://pocketrose.21sun.net:81/pocketrose")) {
+            t = t.replace("http://pocketrose.21sun.net:81/pocketrose", Constants.POCKET_DOMAIN);
+        }
+        if (t.includes("http://pocketrose.21sun.net/pocketrose")) {
+            t = t.replace("http://pocketrose.21sun.net/pocketrose", Constants.POCKET_DOMAIN);
+        }
+        return t;
+    }
+
     static convertHtmlToText(html: string) {
         const s = "<td>" + html + "</td>";
         return $(s).text();
+    }
+
+    static scrollIntoView(elementId: string) {
+        document.getElementById(elementId)?.scrollIntoView();
     }
 }
 

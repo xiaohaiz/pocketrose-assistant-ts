@@ -16,7 +16,7 @@ class CastleDashboardProcessor implements Processor {
     process() {
         PageUtils.removeUnusedHyperLinks();
         PageUtils.removeGoogleAnalyticsScript();
-        PageUtils.fixCurrentPageBrokerImages();
+        PageUtils.fixCurrentPageBrokenImages();
         doProcess();
     }
 }

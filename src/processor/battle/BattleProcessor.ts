@@ -22,7 +22,7 @@ class BattleProcessor implements Processor {
         $('a[target="_blank"]').attr('tabIndex', -1);
         PageUtils.removeUnusedHyperLinks();
         PageUtils.removeGoogleAnalyticsScript();
-        PageUtils.fixCurrentPageBrokerImages();
+        PageUtils.fixCurrentPageBrokenImages();
 
         const pageText = $("body:first").text();
         doRenderPrompt(pageText);

@@ -15,7 +15,7 @@ class EventDashboardProcessor implements Processor {
     process(): void {
         PageUtils.removeUnusedHyperLinks();
         PageUtils.removeGoogleAnalyticsScript();
-        PageUtils.fixCurrentPageBrokerImages();
+        PageUtils.fixCurrentPageBrokenImages();
         doProcess();
     }
 

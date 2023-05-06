@@ -220,6 +220,10 @@ class SetupLoader {
     static isGemHouseUIEnabled(): boolean {
         return StorageUtils.getBoolean("_pa_031");
     }
+
+    static isCastleKeeperEnabled(): boolean {
+        return StorageUtils.getBoolean("_pa_032");
+    }
 }
 
 export = SetupLoader;

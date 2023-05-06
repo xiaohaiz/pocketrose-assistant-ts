@@ -269,7 +269,7 @@ function doRender(credential: Credential, equipmentList: Equipment[]) {
 
     // 渲染装备管理界面
     $("#ItemUI").html(html);
-    PageUtils.fixCurrentPageBrokerImages();
+    PageUtils.fixCurrentPageBrokenImages();
 
     // 修改按钮的状态，如果有必要的话
     const treasureBag = EquipmentParser.findTreasureBag(equipmentList);
@@ -408,7 +408,7 @@ function doRenderTreasureBag(credential: Credential) {
 
         $("#treasureBagContainer").html(html).parent().show();
         $("#treasureBagStatus").text("on");
-        PageUtils.fixCurrentPageBrokerImages();
+        PageUtils.fixCurrentPageBrokenImages();
 
         doBindTakeOutButton(credential);
     });

@@ -1,8 +1,8 @@
 import Processor from "../Processor";
 import PageUtils from "../../util/PageUtils";
 import Credential from "../../util/Credential";
-import PetFutureLoader from "../../pocket/pet/PetFutureLoader";
-import PetFuture from "../../common/PetFuture";
+import PetProfileLoader from "../../pocket/pet/PetProfileLoader";
+import PetProfile from "../../common/PetProfile";
 
 class TownPetRankHouseProcessor implements Processor {
 
@@ -109,43 +109,43 @@ function doBindReturnButton() {
 
 function doBindRankButton() {
     $("#total_base_stats_rank").on("click", function () {
-        let petList = PetFutureLoader.loadAll();
+        let petList = PetProfileLoader.loadAll();
         petList = sortByTotalBaseStats(petList);
         doRender("族 值 排 行 榜", petList);
     });
     $("#health_rank").on("click", function () {
-        let petList = PetFutureLoader.loadAll();
+        let petList = PetProfileLoader.loadAll();
         petList = sortByHealth(petList);
         doRender("生 命 排 行 榜", petList);
     });
     $("#attack_rank").on("click", function () {
-        let petList = PetFutureLoader.loadAll();
+        let petList = PetProfileLoader.loadAll();
         petList = sortByAttack(petList);
         doRender("攻 击 排 行 榜", petList);
     });
     $("#defense_rank").on("click", function () {
-        let petList = PetFutureLoader.loadAll();
+        let petList = PetProfileLoader.loadAll();
         petList = sortByDefense(petList);
         doRender("防 御 排 行 榜", petList);
     });
     $("#special_attack_rank").on("click", function () {
-        let petList = PetFutureLoader.loadAll();
+        let petList = PetProfileLoader.loadAll();
         petList = sortBySpecialAttack(petList);
         doRender("智 力 排 行 榜", petList);
     });
     $("#special_defense_rank").on("click", function () {
-        let petList = PetFutureLoader.loadAll();
+        let petList = PetProfileLoader.loadAll();
         petList = sortBySpecialDefense(petList);
         doRender("精 神 排 行 榜", petList);
     });
     $("#speed_rank").on("click", function () {
-        let petList = PetFutureLoader.loadAll();
+        let petList = PetProfileLoader.loadAll();
         petList = sortBySpeed(petList);
         doRender("速 度 排 行 榜", petList);
     });
 }
 
-function doRender(title: string, petList: PetFuture[]) {
+function doRender(title: string, petList: PetProfile[]) {
     let html = "";
     html += "<table style='border-width:0;background-color:#888888;margin:auto;width:100%'>";
     html += "<tbody style='background-color:#F8F0E0;text-align:center'>";
@@ -205,8 +205,8 @@ function doRender(title: string, petList: PetFuture[]) {
     $("#pet_rank_cell").html(html).parent().show();
 }
 
-function sortByTotalBaseStats(petList: PetFuture[]): PetFuture[] {
-    const result: PetFuture[] = [];
+function sortByTotalBaseStats(petList: PetProfile[]): PetProfile[] {
+    const result: PetProfile[] = [];
     result.push(...petList);
     result.sort((a, b) => {
         let ret = b.totalBaseStats - a.totalBaseStats;
@@ -222,8 +222,8 @@ function sortByTotalBaseStats(petList: PetFuture[]): PetFuture[] {
     return result;
 }
 
-function sortByHealth(petList: PetFuture[]): PetFuture[] {
-    const result: PetFuture[] = [];
+function sortByHealth(petList: PetProfile[]): PetProfile[] {
+    const result: PetProfile[] = [];
     result.push(...petList);
     result.sort((a, b) => {
         let ret = b.perfectHealth - a.perfectHealth;
@@ -239,8 +239,8 @@ function sortByHealth(petList: PetFuture[]): PetFuture[] {
     return result;
 }
 
-function sortByAttack(petList: PetFuture[]): PetFuture[] {
-    const result: PetFuture[] = [];
+function sortByAttack(petList: PetProfile[]): PetProfile[] {
+    const result: PetProfile[] = [];
     result.push(...petList);
     result.sort((a, b) => {
         let ret = b.perfectAttack - a.perfectAttack;
@@ -256,8 +256,8 @@ function sortByAttack(petList: PetFuture[]): PetFuture[] {
     return result;
 }
 
-function sortByDefense(petList: PetFuture[]): PetFuture[] {
-    const result: PetFuture[] = [];
+function sortByDefense(petList: PetProfile[]): PetProfile[] {
+    const result: PetProfile[] = [];
     result.push(...petList);
     result.sort((a, b) => {
         let ret = b.perfectDefense - a.perfectDefense;
@@ -273,8 +273,8 @@ function sortByDefense(petList: PetFuture[]): PetFuture[] {
     return result;
 }
 
-function sortBySpecialAttack(petList: PetFuture[]): PetFuture[] {
-    const result: PetFuture[] = [];
+function sortBySpecialAttack(petList: PetProfile[]): PetProfile[] {
+    const result: PetProfile[] = [];
     result.push(...petList);
     result.sort((a, b) => {
         let ret = b.perfectSpecialAttack - a.perfectSpecialAttack;
@@ -290,8 +290,8 @@ function sortBySpecialAttack(petList: PetFuture[]): PetFuture[] {
     return result;
 }
 
-function sortBySpecialDefense(petList: PetFuture[]): PetFuture[] {
-    const result: PetFuture[] = [];
+function sortBySpecialDefense(petList: PetProfile[]): PetProfile[] {
+    const result: PetProfile[] = [];
     result.push(...petList);
     result.sort((a, b) => {
         let ret = b.perfectSpecialDefense - a.perfectSpecialDefense;
@@ -307,8 +307,8 @@ function sortBySpecialDefense(petList: PetFuture[]): PetFuture[] {
     return result;
 }
 
-function sortBySpeed(petList: PetFuture[]): PetFuture[] {
-    const result: PetFuture[] = [];
+function sortBySpeed(petList: PetProfile[]): PetProfile[] {
+    const result: PetProfile[] = [];
     result.push(...petList);
     result.sort((a, b) => {
         let ret = b.perfectSpeed - a.perfectSpeed;
