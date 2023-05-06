@@ -30,6 +30,18 @@ function doProcess() {
 
     doRenderExperience(page.role!);
     doRenderHonor();
+
+    // 页面渲染完成，现在可以添加内容
+    let html = "";
+    html += "<tr style='display:none'>";
+    html += "<td id='hiddenFormContainer'></td>";
+    html += "</tr>";
+    html += "<tr style='display:none'>";
+    html += "<td id='townLocationContainer'>none</td>";      // 如果当前位于城市内，设置此字段。
+    html += "</tr>";
+    $("#t0")
+        .find("tr:first")
+        .before($(html));
 }
 
 function doRenderExperience(role: Role) {
