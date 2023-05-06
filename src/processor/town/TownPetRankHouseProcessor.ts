@@ -118,6 +118,31 @@ function doBindRankButton() {
         petList = sortByHealth(petList);
         doRender("生 命 排 行 榜", petList);
     });
+    $("#attack_rank").on("click", function () {
+        let petList = PetFutureLoader.loadAll();
+        petList = sortByAttack(petList);
+        doRender("攻 击 排 行 榜", petList);
+    });
+    $("#defense_rank").on("click", function () {
+        let petList = PetFutureLoader.loadAll();
+        petList = sortByDefense(petList);
+        doRender("防 御 排 行 榜", petList);
+    });
+    $("#special_attack_rank").on("click", function () {
+        let petList = PetFutureLoader.loadAll();
+        petList = sortBySpecialAttack(petList);
+        doRender("智 力 排 行 榜", petList);
+    });
+    $("#special_defense_rank").on("click", function () {
+        let petList = PetFutureLoader.loadAll();
+        petList = sortBySpecialDefense(petList);
+        doRender("精 神 排 行 榜", petList);
+    });
+    $("#speed_rank").on("click", function () {
+        let petList = PetFutureLoader.loadAll();
+        petList = sortBySpeed(petList);
+        doRender("速 度 排 行 榜", petList);
+    });
 }
 
 function doRender(title: string, petList: PetFuture[]) {
@@ -202,6 +227,91 @@ function sortByHealth(petList: PetFuture[]): PetFuture[] {
     result.push(...petList);
     result.sort((a, b) => {
         let ret = b.perfectHealth - a.perfectHealth;
+        if (ret !== 0) {
+            return ret;
+        }
+        ret = b.totalBaseStats - a.totalBaseStats;
+        if (ret !== 0) {
+            return ret;
+        }
+        return a.code!.localeCompare(b.code!);
+    });
+    return result;
+}
+
+function sortByAttack(petList: PetFuture[]): PetFuture[] {
+    const result: PetFuture[] = [];
+    result.push(...petList);
+    result.sort((a, b) => {
+        let ret = b.perfectAttack - a.perfectAttack;
+        if (ret !== 0) {
+            return ret;
+        }
+        ret = b.totalBaseStats - a.totalBaseStats;
+        if (ret !== 0) {
+            return ret;
+        }
+        return a.code!.localeCompare(b.code!);
+    });
+    return result;
+}
+
+function sortByDefense(petList: PetFuture[]): PetFuture[] {
+    const result: PetFuture[] = [];
+    result.push(...petList);
+    result.sort((a, b) => {
+        let ret = b.perfectDefense - a.perfectDefense;
+        if (ret !== 0) {
+            return ret;
+        }
+        ret = b.totalBaseStats - a.totalBaseStats;
+        if (ret !== 0) {
+            return ret;
+        }
+        return a.code!.localeCompare(b.code!);
+    });
+    return result;
+}
+
+function sortBySpecialAttack(petList: PetFuture[]): PetFuture[] {
+    const result: PetFuture[] = [];
+    result.push(...petList);
+    result.sort((a, b) => {
+        let ret = b.perfectSpecialAttack - a.perfectSpecialAttack;
+        if (ret !== 0) {
+            return ret;
+        }
+        ret = b.totalBaseStats - a.totalBaseStats;
+        if (ret !== 0) {
+            return ret;
+        }
+        return a.code!.localeCompare(b.code!);
+    });
+    return result;
+}
+
+function sortBySpecialDefense(petList: PetFuture[]): PetFuture[] {
+    const result: PetFuture[] = [];
+    result.push(...petList);
+    result.sort((a, b) => {
+        let ret = b.perfectSpecialDefense - a.perfectSpecialDefense;
+        if (ret !== 0) {
+            return ret;
+        }
+        ret = b.totalBaseStats - a.totalBaseStats;
+        if (ret !== 0) {
+            return ret;
+        }
+        return a.code!.localeCompare(b.code!);
+    });
+    return result;
+}
+
+function sortBySpeed(petList: PetFuture[]): PetFuture[] {
+    const result: PetFuture[] = [];
+    result.push(...petList);
+    result.sort((a, b) => {
+        let ret = b.perfectSpeed - a.perfectSpeed;
         if (ret !== 0) {
             return ret;
         }
