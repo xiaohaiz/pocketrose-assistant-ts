@@ -83,8 +83,8 @@ class Equipment {
     maxGemCount?: number;
 
     parseName(nameHtml: string) {
-        this.nameHTML = nameHtml;
-        const s = PageUtils.convertHtmlToText(nameHtml);
+        this.nameHTML = PageUtils.fixBrokenImageIfNecessary(nameHtml);
+        const s = PageUtils.convertHtmlToText(this.nameHTML);
         if (s.startsWith("齐心★")) {
             this.star = true;
             this.name = StringUtils.substringAfter(s, "齐心★");
