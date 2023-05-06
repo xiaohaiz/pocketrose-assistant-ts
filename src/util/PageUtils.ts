@@ -127,6 +127,30 @@ class PageUtils {
     static scrollIntoView(elementId: string) {
         document.getElementById(elementId)?.scrollIntoView();
     }
+
+    static generateReturnTownForm(credential: Credential) {
+        let html = "";
+        // noinspection HtmlUnknownTarget
+        html += "<form action='status.cgi' method='post'>";
+        html += "<input type='hidden' name='id' value='" + credential.id + "'>";
+        html += "<input type='hidden' name='pass' value='" + credential.pass + "'>"
+        html += "<input type='hidden' name='mode' value='STATUS'>";
+        html += "<input type='submit' id='returnTown'>";
+        html += "</form>";
+        return html;
+    }
+
+    static generateReturnCastleForm(credential: Credential) {
+        let html = "";
+        // noinspection HtmlUnknownTarget
+        html += "<form action='castlestatus.cgi' method='post'>";
+        html += "<input type='hidden' name='id' value='" + credential.id + "'>";
+        html += "<input type='hidden' name='pass' value='" + credential.pass + "'>"
+        html += "<input type='hidden' name='mode' value='CASTLESTATUS'>";
+        html += "<input type='submit' id='returnCastle'>";
+        html += "</form>";
+        return html;
+    }
 }
 
 export = PageUtils;

@@ -3,12 +3,12 @@ import Role from "./Role";
 
 class PersonalStatusPage {
 
-    readonly #credential: Credential;
+    readonly credential: Credential;
 
     role?: Role;
 
     constructor(credential: Credential) {
-        this.#credential = credential;
+        this.credential = credential;
     }
 
 
