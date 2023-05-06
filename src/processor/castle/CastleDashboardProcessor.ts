@@ -3,6 +3,7 @@ import Processor from "../Processor";
 import StringUtils from "../../util/StringUtils";
 import SetupLoader from "../../pocket/SetupLoader";
 import EventHandler from "../../pocket/EventHandler";
+import StorageUtils from "../../util/StorageUtils";
 
 class CastleDashboardProcessor implements Processor {
 
@@ -17,6 +18,11 @@ class CastleDashboardProcessor implements Processor {
         PageUtils.removeUnusedHyperLinks();
         PageUtils.removeGoogleAnalyticsScript();
         PageUtils.fixCurrentPageBrokenImages();
+
+        const credential = PageUtils.currentCredential();
+        const key = "_lc_" + credential.id;
+        StorageUtils.set(key, "CASTLE");
+
         doProcess();
     }
 }

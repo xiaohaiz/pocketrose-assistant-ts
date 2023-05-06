@@ -13,6 +13,7 @@ import NpcLoader from "../../pocket/NpcLoader";
 import RoleStatusLoader from "../../pocket/RoleStatusLoader";
 import Processor from "../Processor";
 import RoleLoader from "../../pocket/RoleLoader";
+import StorageUtils from "../../util/StorageUtils";
 
 class PersonalEquipmentManagementProcessor implements Processor {
 
@@ -30,6 +31,13 @@ class PersonalEquipmentManagementProcessor implements Processor {
         PageUtils.removeUnusedHyperLinks();
         PageUtils.removeGoogleAnalyticsScript();
         const credential = PageUtils.currentCredential();
+
+        const key = "_lc_" + credential.id;
+        const location = StorageUtils.get(key);
+        if (location === "WILD") {
+            return;
+        }
+
         const pageHtml = document.documentElement.outerHTML;
         const equipmentList = EquipmentParser.parsePersonalItemList(pageHtml);
         doProcess(credential, equipmentList);
