@@ -211,19 +211,11 @@ class EquipmentParser {
                         equipment.index = parseInt($(checkbox).val() as string);
                         equipment.selectable = !$(checkbox).prop("disabled");
                         equipment.using = c1.text() === "★";
-                        equipment.nameHTML = c2.html();
-                        let s = c2.text();
-                        if (s.startsWith("齐心★")) {
-                            equipment.star = true;
-                            equipment.name = StringUtils.substringAfter(s, "齐心★");
-                        } else {
-                            equipment.star = false;
-                            equipment.name = s;
-                        }
+                        equipment.parseName(c2.html());
                         equipment.category = c3.text();
                         equipment.power = parseInt(c4.text());
                         equipment.weight = parseInt(c5.text());
-                        equipment.endure = parseInt(c6.text());
+                        equipment.parseEndure(c6.text());
                         equipment.requiredCareer = c7.text();
                         equipment.requiredAttack = parseInt(c8.text());
                         equipment.requiredDefense = parseInt(c9.text());
@@ -279,19 +271,11 @@ class EquipmentParser {
                         equipment.index = parseInt($(checkbox).val() as string);
                         equipment.selectable = true;
                         equipment.using = false;
-                        let s = $(c3).text();
-                        if (s.startsWith("齐心★")) {
-                            equipment.name = StringUtils.substringAfter(s, "齐心★");
-                            equipment.star = true;
-                        } else {
-                            equipment.name = s;
-                            equipment.star = false;
-                        }
-                        equipment.nameHTML = $(c3).html();
+                        equipment.parseName($(c3).html());
                         equipment.category = $(c4).text();
                         equipment.power = parseInt($(c5).text());
                         equipment.weight = parseInt($(c6).text());
-                        equipment.endure = parseInt($(c7).text());
+                        equipment.parseEndure($(c7).text());
                         equipment.requiredCareer = $(c8).text();
                         equipment.requiredAttack = parseInt($(c9).text());
                         equipment.requiredDefense = parseInt($(c10).text());
