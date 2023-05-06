@@ -4,6 +4,7 @@ import SetupLoader from "../../pocket/SetupLoader";
 import StringUtils from "../../util/StringUtils";
 import Processor from "../Processor";
 import PersonalStatus from "../../pocket/PersonalStatus";
+import Credential from "../../util/Credential";
 
 class PersonalStatusProcessor implements Processor {
 
@@ -22,6 +23,10 @@ class PersonalStatusProcessor implements Processor {
 }
 
 function doProcess() {
+    const id = $("input:hidden[name='id']:last").val();
+    const pass = $("input:hidden[name='pass']:last").val();
+    const credential = new Credential(id!.toString(), pass!.toString());
+
     const page = PersonalStatus.parsePage(PageUtils.currentPageHtml());
 
     // 调整表格的宽度
@@ -45,8 +50,8 @@ function doProcess() {
         .before($(html));
 
     html = "";
-    html += PageUtils.generateReturnTownForm(page.credential);
-    html += PageUtils.generateReturnCastleForm(page.credential);
+    html += PageUtils.generateReturnTownForm(credential);
+    html += PageUtils.generateReturnCastleForm(credential);
     $("#hiddenForm").html(html);
     $("#roleLocation").text(page.role!.location!);
 
