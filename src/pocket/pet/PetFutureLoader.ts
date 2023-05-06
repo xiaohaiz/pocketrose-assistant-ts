@@ -11,6 +11,18 @@ class PetFutureLoader {
         return doParse(code, config);
     }
 
+    static loadAll(): PetFuture[] {
+        const futureList: PetFuture[] = [];
+        const codes = Object.keys(PET_FUTURES);
+        for (let i = 0; i < codes.length; i++) {
+            const code = codes[i];
+            // @ts-ignore
+            const config = PET_FUTURES[code];
+            const future = doParse(code, config)!;
+            futureList.push(future);
+        }
+        return futureList;
+    }
 }
 
 function doParse(code: string, config: {}) {
