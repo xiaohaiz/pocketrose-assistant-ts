@@ -24,6 +24,7 @@ class PersonalStatusProcessor implements Processor {
 function doProcess() {
     const page = PersonalStatus.parsePage(PageUtils.currentPageHtml());
 
+    // 调整表格的宽度
     $("table:first")
         .attr("id", "t0")
         .css("width", "100%");
