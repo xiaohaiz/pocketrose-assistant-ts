@@ -11,6 +11,7 @@ import Processor from "../Processor";
 import SetupLoader from "../../pocket/SetupLoader";
 import NpcLoader from "../../pocket/NpcLoader";
 import RoleLoader from "../../pocket/RoleLoader";
+import PetFutureLoader from "../../pocket/pet/PetFutureLoader";
 
 class PersonalPetManagementProcessor implements Processor {
 
@@ -127,6 +128,7 @@ function doRender(credential: Credential, petList: Pet[], studyStatus: number[])
     html += "<td style='background-color:#E8E8D0'>种类</td>";
     html += "<td style='background-color:#E8E8D0'>属性1</td>";
     html += "<td style='background-color:#E8E8D0'>属性2</td>";
+    html += "<td style='background-color:#E8E8D0'>成长</td>";
     html += "</tr>";
     for (const pet of petList) {
         html += "<tr>";
@@ -187,9 +189,15 @@ function doRender(credential: Credential, petList: Pet[], studyStatus: number[])
         html += "<td style='background-color:#E8E8D0'>" +
             (pet.attribute2 === "无" ? "-" : pet.attribute2) +
             "</td>";
+        html += "<td style='background-color:#E8E8D0'>";
+        const petFuture = PetFutureLoader.load(pet.code!);
+        if (petFuture !== null) {
+            html += petFuture.growExperience;
+        }
+        html += "</td>";
         html += "</tr>";
         html += "<tr>";
-        html += "<td colspan='17' style='text-align: left'>";        // 当前宠物的操作位置
+        html += "<td colspan='18' style='text-align: left'>";        // 当前宠物的操作位置
         html += "<input type='button' class='PetUIButton' value='卸下' id='pet_" + pet.index + "_uninstall'>";
         html += "<input type='button' class='PetUIButton' value='使用' id='pet_" + pet.index + "_install'>";
         html += "<input type='button' class='PetUIButton' value='入笼' id='pet_" + pet.index + "_cage'>";
@@ -202,27 +210,27 @@ function doRender(credential: Credential, petList: Pet[], studyStatus: number[])
         html += "</td>";
         html += "</tr>";
     }
-    html += "<tr><td style='background-color:#EFE0C0;text-align:right' colspan='19'>";
+    html += "<tr><td style='background-color:#EFE0C0;text-align:right' colspan='20'>";
     html += "<input type='text' id='receiverName' size='15' maxlength='20'>";
     html += "<input type='button' class='PetUIButton' id='searchReceiverButton' value='找人'>";
     html += "<select name='eid' id='receiverCandidates'><option value=''>选择发送对象</select>";
     html += "</td></tr>";
-    html += "<tr><td style='background-color:#EFE0C0;text-align:center' colspan='19'>";
+    html += "<tr><td style='background-color:#EFE0C0;text-align:center' colspan='20'>";
     html += "<b style='color:navy'>设置宠物升级时学习技能情况</b>";
     html += "</td></tr>";
-    html += "<tr><td style='background-color:#E8E8D0;text-align:center' colspan='19'>";
+    html += "<tr><td style='background-color:#E8E8D0;text-align:center' colspan='20'>";
     html += "<input type='button' class='PetUIButton' value='第１技能位' id='pet_spell_study_1'>";
     html += "<input type='button' class='PetUIButton' value='第２技能位' id='pet_spell_study_2'>";
     html += "<input type='button' class='PetUIButton' value='第３技能位' id='pet_spell_study_3'>";
     html += "<input type='button' class='PetUIButton' value='第４技能位' id='pet_spell_study_4'>";
     html += "</td></tr>";
-    html += "<tr><td style='background-color:#E8E8D0;text-align:center' colspan='19'>";
+    html += "<tr><td style='background-color:#E8E8D0;text-align:center' colspan='20'>";
     html += "<input type='button' class='PetUIButton' value='刷新宠物管理' id='refreshButton'>";
     html += "<input type='button' class='PetUIButton' value='打开黄金笼子' id='openCageButton'>";
     html += "<input type='button' class='PetUIButton' value='关闭黄金笼子' id='closeCageButton'>";
     html += "<input type='button' class='PetUIButton' value='从黄金笼子盲取' id='takeOutFirstFromCageButton' disabled style='display:none'>";
     html += "</td></tr>";
-    html += "<tr style='display:none'><td id='goldenCageContainer' style='background-color:#E8E8D0;text-align:center' colspan='19'>";
+    html += "<tr style='display:none'><td id='goldenCageContainer' style='background-color:#E8E8D0;text-align:center' colspan='20'>";
     html += "</td></tr>";
     html += "</tbody>";
     html += "</table>";
