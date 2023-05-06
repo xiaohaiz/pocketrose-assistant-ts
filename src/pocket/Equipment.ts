@@ -125,6 +125,22 @@ class Equipment {
         this.price = parseInt(s);
     }
 
+    get categoryOrder() {
+        if (this.isWeapon) {
+            return 1;
+        }
+        if (this.isArmor) {
+            return 2;
+        }
+        if (this.isAccessory) {
+            return 3;
+        }
+        if (this.isItem) {
+            return 4;
+        }
+        return 0;
+    }
+
     get isWeapon() {
         return this.category === "武器";
     }

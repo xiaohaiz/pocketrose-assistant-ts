@@ -7,6 +7,9 @@ import Castle from "../../pocket/Castle";
 import Credential from "../../util/Credential";
 import CastleWarehouse from "../../pocket/castle/CastleWarehouse";
 import Equipment from "../../pocket/Equipment";
+import CastleRanch from "../../pocket/CastleRanch";
+import Pet from "../../pocket/Pet";
+import StringUtils from "../../util/StringUtils";
 
 class TownCastleKeeperProcessor implements Processor {
 
@@ -170,6 +173,28 @@ function doRender(credential: Credential, castle: Castle) {
             const equipmentList: Equipment[] = [];
             equipmentList.push(...page.storageEquipmentList);
 
+            equipmentList.sort((a, b) => {
+                let ret = a.categoryOrder - b.categoryOrder;
+                if (ret !== 0) {
+                    return ret;
+                }
+                let a1 = a.star! ? 1 : 0;
+                let b1 = b.star! ? 1 : 0;
+                ret = a1 - b1;
+                if (ret !== 0) {
+                    return ret;
+                }
+                ret = b.power! - a.power!;
+                if (ret !== 0) {
+                    return ret;
+                }
+                ret = b.additionalPower! - a.additionalPower!;
+                if (ret !== 0) {
+                    return ret;
+                }
+                return a.fullName!.localeCompare(b.fullName);
+            });
+
             let html = "";
             html += "<table style='border-width:0;background-color:#888888;margin:auto;width:100%'>";
             html += "<tbody style='background-color:#F8F0E0;text-align:center'>";
@@ -221,6 +246,72 @@ function doRender(credential: Credential, castle: Castle) {
             html += "</table>";
 
             $("#castle_warehouse_cell").html(html).parent().show();
+        }
+    });
+
+    new CastleRanch(credential).enter().then(page => {
+        if (page.ranchPetList.length > 0) {
+            const petList: Pet[] = [];
+            petList.push(...page.ranchPetList);
+
+            petList.sort((a, b) => {
+                let ret = b.level! - a.level!;
+                if (ret !== 0) {
+                    return ret;
+                }
+                let a1 = (a.name!.includes("(") && a.name!.includes(")")) ? 0 : 1;
+                let b1 = (b.name!.includes("(") && b.name!.includes(")")) ? 0 : 1;
+                ret = a1 - b1;
+                if (ret !== 0) {
+                    return ret;
+                }
+
+                let a2 = (a.name!.includes("(") && a.name!.includes(")")) ?
+                    StringUtils.substringBetween(a.name!, "(", ")") : a.name!;
+                let b2 = (b.name!.includes("(") && b.name!.includes(")")) ?
+                    StringUtils.substringBetween(b.name!, "(", ")") : b.name!;
+                return a2.localeCompare(b2);
+            });
+
+            let html = "";
+            html += "<table style='border-width:0;background-color:#888888;margin:auto;width:100%'>";
+            html += "<tbody style='background-color:#F8F0E0;text-align:center'>";
+            html += "<tr>";
+            html += "<td style='background-color:darkgreen;color:wheat;font-weight:bold' colspan='10'>";
+            html += "＜ 城 堡 牧 场 ＞";
+            html += "</td>";
+            html += "<tr>";
+            html += "<th style='background-color:#E8E8D0'>名字</th>";
+            html += "<th style='background-color:#EFE0C0'>等级</th>";
+            html += "<th style='background-color:#E0D0B0'>生命</th>";
+            html += "<th style='background-color:#E0D0B0'>攻击</th>";
+            html += "<th style='background-color:#E0D0B0'>防御</th>";
+            html += "<th style='background-color:#E0D0B0'>智力</th>";
+            html += "<th style='background-color:#E0D0B0'>精神</th>";
+            html += "<th style='background-color:#E0D0B0'>速度</th>";
+            html += "<th style='background-color:#EFE0C0'>经验</th>";
+            html += "<th style='background-color:#EFE0C0'>性别</th>";
+            html += "</tr>";
+
+            for (const pet of petList) {
+                html += "<tr>";
+                html += "<td style='background-color:#E8E8D0'>" + pet.name + "</td>";
+                html += "<td style='background-color:#EFE0C0'>" + pet.levelHtml + "</td>";
+                html += "<td style='background-color:#E0D0B0'>" + pet.healthHtml + "</td>";
+                html += "<td style='background-color:#E0D0B0'>" + pet.attackHtml + "</td>";
+                html += "<td style='background-color:#E0D0B0'>" + pet.defenseHtml + "</td>";
+                html += "<td style='background-color:#E0D0B0'>" + pet.specialAttackHtml + "</td>";
+                html += "<td style='background-color:#E0D0B0'>" + pet.specialDefenseHtml + "</td>";
+                html += "<td style='background-color:#E0D0B0'>" + pet.speedHtml + "</td>";
+                html += "<td style='background-color:#EFE0C0'>" + pet.experienceHtml + "</td>";
+                html += "<td style='background-color:#EFE0C0'>" + pet.gender + "</td>";
+                html += "</tr>";
+            }
+
+            html += "</tbody>";
+            html += "</table>";
+
+            $("#castle_ranch_cell").html(html).parent().show();
         }
     });
 }
