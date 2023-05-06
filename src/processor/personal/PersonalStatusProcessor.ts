@@ -1,9 +1,9 @@
 import PageUtils from "../../util/PageUtils";
-import RoleParser from "../../pocket/RoleParser";
 import Role from "../../pocket/Role";
 import SetupLoader from "../../pocket/SetupLoader";
 import StringUtils from "../../util/StringUtils";
 import Processor from "../Processor";
+import PersonalStatus from "../../pocket/PersonalStatus";
 
 class PersonalStatusProcessor implements Processor {
 
@@ -22,8 +22,13 @@ class PersonalStatusProcessor implements Processor {
 }
 
 function doProcess() {
-    const role = RoleParser.parseRole(document.documentElement.outerHTML);
-    doRenderExperience(role);
+    const page = PersonalStatus.parsePage(PageUtils.currentPageHtml());
+
+    $("table:first")
+        .attr("id", "t0")
+        .css("width", "100%");
+
+    doRenderExperience(page.role!);
     doRenderHonor();
 }
 
