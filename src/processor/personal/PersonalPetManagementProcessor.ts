@@ -77,7 +77,11 @@ function doProcess(credential: Credential, petList: Pet[], studyStatus: number[]
     $("body:first").html(html + leftHtml);
 
     MessageBoard.createMessageBoard("message_board_container", NpcLoader.randomFemaleNpcImageHtml());
-    MessageBoard.resetMessageBoard("全新的宠物管理UI为您带来不一样的感受。");
+    $("#messageBoard")
+        .css("background-color", "black")
+        .css("color", "white")
+        .css("height", "80");
+    MessageBoard.resetMessageBoard("全新的宠物管理UI为您带来不一样的感受，试试把鼠标停留在宠物图片上有惊喜。");
 
     new RoleLoader(credential).load()
         .then(role => {
@@ -132,7 +136,7 @@ function doRender(credential: Credential, petList: Pet[], studyStatus: number[])
     html += "</tr>";
     for (const pet of petList) {
         html += "<tr>";
-        html += "<td style='background-color:#EFE0C0' rowspan='2'>" +
+        html += "<td style='background-color:#EFE0C0' rowspan='2' id='pet_picture_" + pet.code + "' class='pet_picture_class'>" +
             pet.imageHtml +
             "</td>";
         html += "<td style='background-color:#EFE0C0' rowspan='2'>" +
@@ -348,6 +352,7 @@ function doRender(credential: Credential, petList: Pet[], studyStatus: number[])
         $("#pet_spell_study_4").css("color", "grey");
     }
 
+    doBindPetFuture(petList);
     // 绑定按钮点击事件处理
     doBind(credential, petList);
 
@@ -374,8 +379,65 @@ function doRender(credential: Credential, petList: Pet[], studyStatus: number[])
                 });
         }
     }
+}
 
-
+function doBindPetFuture(petList: Pet[]) {
+    for (const pet of petList) {
+        const code = pet.code!;
+        if ($("#pet_picture_" + code).length === 0) {
+            continue;
+        }
+        $("#pet_picture_" + code)
+            .on("mouseenter", function () {
+                const petFuture = PetFutureLoader.load(code)!;
+                let html = "";
+                html += "<table style='width:100%;border-width:0;background-color:wheat;margin:auto'>";
+                html += "<tbody>";
+                html += "<tr style='background-color:black;color:wheat'>";
+                html += "<th>名字</th>";
+                html += "<th>总族</th>";
+                html += "<th>命族</th>";
+                html += "<th>攻族</th>";
+                html += "<th>防族</th>";
+                html += "<th>智族</th>";
+                html += "<th>精族</th>";
+                html += "<th>速族</th>";
+                html += "<th>命努</th>";
+                html += "<th>攻努</th>";
+                html += "<th>防努</th>";
+                html += "<th>智努</th>";
+                html += "<th>精努</th>";
+                html += "<th>速努</th>";
+                html += "<th>捕获</th>";
+                html += "<th>成长</th>";
+                html += "<td rowspan='2' style='text-align:center'>" + petFuture.imageHtml + "</td>";
+                html += "</tr>";
+                html += "<tr style='background-color:black;color:wheat;font-weight:bold;text-align:center'>";
+                html += "<td>" + petFuture.name + "</td>";
+                html += "<td>" + petFuture.totalBaseStats + "</td>";
+                html += "<td>" + petFuture.healthBaseStats + "</td>";
+                html += "<td>" + petFuture.attackBaseStats + "</td>";
+                html += "<td>" + petFuture.defenseBaseStats + "</td>";
+                html += "<td>" + petFuture.specialAttackBaseStats + "</td>";
+                html += "<td>" + petFuture.specialDefenseBaseStats + "</td>";
+                html += "<td>" + petFuture.speedBaseStats + "</td>";
+                html += "<td>" + petFuture.healthEffort + "</td>";
+                html += "<td>" + petFuture.attackEffort + "</td>";
+                html += "<td>" + petFuture.defenseEffort + "</td>";
+                html += "<td>" + petFuture.specialAttackEffort + "</td>";
+                html += "<td>" + petFuture.specialDefenseEffort + "</td>";
+                html += "<td>" + petFuture.speedEffort + "</td>";
+                html += "<td>" + petFuture.catchRatio + "</td>";
+                html += "<td>" + petFuture.growExperience + "</td>";
+                html += "</tr>";
+                html += "</tbody>";
+                html += "</table>";
+                $("#messageBoard").html(html);
+            })
+            .on("mouseleave", function () {
+                MessageBoard.resetMessageBoard("全新的宠物管理UI为您带来不一样的感受，试试把鼠标停留在宠物图片上有惊喜。");
+            });
+    }
 }
 
 function doRenderGoldenCage(credential: Credential) {
@@ -505,6 +567,8 @@ function doRefresh(credential: Credential) {
         // 从新的宠物界面中重新解析宠物状态
         const petList = PetParser.parsePersonalPetList(html);
         const petStudyStatus = PetParser.parsePersonalPetStudyStatus(html);
+
+        $(".pet_picture_class").off("mouseenter").off("mouseleave");
         // 解除当前所有的按钮
         $(".PetUIButton").off("click");
         // 清除PetUI的内容
