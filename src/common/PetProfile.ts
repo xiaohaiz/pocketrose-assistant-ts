@@ -1,6 +1,6 @@
 import Constants from "../util/Constants";
 
-class PetFuture {
+class PetProfile {
 
     code?: string;
     name?: string;
@@ -88,4 +88,4 @@ class PetFuture {
 
 }
 
-export = PetFuture;
+export = PetProfile;

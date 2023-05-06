@@ -11,7 +11,7 @@ import Processor from "../Processor";
 import SetupLoader from "../../pocket/SetupLoader";
 import NpcLoader from "../../pocket/NpcLoader";
 import RoleLoader from "../../pocket/RoleLoader";
-import PetFutureLoader from "../../pocket/pet/PetFutureLoader";
+import PetProfileLoader from "../../pocket/pet/PetProfileLoader";
 
 class PersonalPetManagementProcessor implements Processor {
 
@@ -198,7 +198,7 @@ function doRender(credential: Credential, petList: Pet[], studyStatus: number[])
             (pet.attribute2 === "无" ? "-" : pet.attribute2) +
             "</td>";
         html += "<td style='background-color:#E8E8D0'>";
-        const petFuture = PetFutureLoader.load(pet.code!);
+        const petFuture = PetProfileLoader.load(pet.code!);
         if (petFuture !== null) {
             html += petFuture.growExperience;
         }
@@ -391,7 +391,7 @@ function doBindPetFuture(petList: Pet[]) {
         if ($("#pet_name_" + code).length > 0) {
             $("#pet_name_" + code)
                 .on("click", function () {
-                    const petFuture = PetFutureLoader.load(code)!;
+                    const petFuture = PetProfileLoader.load(code)!;
                     let html = "";
                     html += "<table style='width:100%;border-width:0;background-color:wheat;margin:auto'>";
                     html += "<tbody>";
@@ -440,7 +440,7 @@ function doBindPetFuture(petList: Pet[]) {
         if ($("#pet_picture_" + code).length > 0) {
             $("#pet_picture_" + code)
                 .on("mouseenter", function () {
-                    const petFuture = PetFutureLoader.load(code)!;
+                    const petFuture = PetProfileLoader.load(code)!;
                     let html = "";
                     html += "<table style='width:100%;border-width:0;background-color:wheat;margin:auto'>";
                     html += "<tbody>";

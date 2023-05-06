@@ -1,8 +1,8 @@
-import PetFuture from "../../common/PetFuture";
+import PetProfile from "../../common/PetProfile";
 
-class PetFutureLoader {
+class PetProfileLoader {
 
-    static load(code: string): PetFuture | null {
+    static load(code: string): PetProfile | null {
         // @ts-ignore
         const config = PET_FUTURES[code];
         if (config === undefined) {
@@ -11,8 +11,8 @@ class PetFutureLoader {
         return doParse(code, config);
     }
 
-    static loadAll(): PetFuture[] {
-        const futureList: PetFuture[] = [];
+    static loadAll(): PetProfile[] {
+        const futureList: PetProfile[] = [];
         const codes = Object.keys(PET_FUTURES);
         for (let i = 0; i < codes.length; i++) {
             const code = codes[i];
@@ -26,7 +26,7 @@ class PetFutureLoader {
 }
 
 function doParse(code: string, config: {}) {
-    const future = new PetFuture();
+    const future = new PetProfile();
     future.code = code;
     // @ts-ignore
     future.name = config.name;
@@ -8940,4 +8940,4 @@ const PET_FUTURES = {
     },
 };
 
-export = PetFutureLoader;
+export = PetProfileLoader;
