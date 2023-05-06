@@ -3,6 +3,7 @@ import PageUtils from "../../util/PageUtils";
 import CastleWarehousePage from "./CastleWarehousePage";
 import EquipmentParser from "../EquipmentParser";
 import StringUtils from "../../util/StringUtils";
+import NetworkUtils from "../../util/NetworkUtils";
 
 class CastleWarehouse {
 
@@ -15,6 +16,22 @@ class CastleWarehouse {
     static parsePage(pageHtml: string) {
         return doParsePage(pageHtml);
     }
+
+    async open(): Promise<CastleWarehousePage> {
+        const action = (credential: Credential) => {
+            return new Promise<CastleWarehousePage>(resolve => {
+                const request = credential.asRequestMap();
+                request.set("mode", "CASTLE_ITEM");
+                NetworkUtils.post("castle.cgi", request)
+                    .then(pageHtml => {
+                        const page = CastleWarehouse.parsePage(pageHtml);
+                        resolve(page);
+                    });
+            });
+        };
+        return await action(this.#credential);
+    }
+
 }
 
 function doParsePage(pageHtml: string) {
