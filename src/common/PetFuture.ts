@@ -46,7 +46,7 @@ class PetFuture {
 
     get perfectHealth(): number {
         const max = 20 + (this.healthEffort! * 10);
-        const init = (this.healthBaseStats! * 2) + 40;
+        const init = (this.healthBaseStats! * 20) + 40;
         const incr = (max / 2) * 99;
         return Math.ceil(init + incr);
     }

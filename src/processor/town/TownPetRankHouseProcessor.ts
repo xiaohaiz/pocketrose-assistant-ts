@@ -48,7 +48,8 @@ function doProcess(credential: Credential) {
         .css("width", "100%")
         .css("background-color", "black")
         .css("color", "white")
-        .text("全新宠物排行榜，帮助您更好了解口袋的宠物。")
+        .text("全新宠物排行榜，帮助您更好了解口袋的宠物。<br>" +
+            "目前宠物初始值和族值的关系是我们推测的，不一定准确。等白猫如果有反馈再修正。")
         .next()
         .attr("id", "messageBoardManager");
 
@@ -109,8 +110,13 @@ function doBindReturnButton() {
 function doBindRankButton() {
     $("#total_base_stats_rank").on("click", function () {
         let petList = PetFutureLoader.loadAll();
-        petList = doSortByTotalBaseStats(petList);
+        petList = sortByTotalBaseStats(petList);
         doRender("族 值 排 行 榜", petList);
+    });
+    $("#health_rank").on("click", function () {
+        let petList = PetFutureLoader.loadAll();
+        petList = sortByHealth(petList);
+        doRender("生 命 排 行 榜", petList);
     });
 }
 
@@ -174,7 +180,7 @@ function doRender(title: string, petList: PetFuture[]) {
     $("#pet_rank_cell").html(html).parent().show();
 }
 
-function doSortByTotalBaseStats(petList: PetFuture[]): PetFuture[] {
+function sortByTotalBaseStats(petList: PetFuture[]): PetFuture[] {
     const result: PetFuture[] = [];
     result.push(...petList);
     result.sort((a, b) => {
@@ -186,7 +192,24 @@ function doSortByTotalBaseStats(petList: PetFuture[]): PetFuture[] {
         if (ret !== 0) {
             return ret;
         }
-        return a.name!.localeCompare(b.name!);
+        return a.code!.localeCompare(b.code!);
+    });
+    return result;
+}
+
+function sortByHealth(petList: PetFuture[]): PetFuture[] {
+    const result: PetFuture[] = [];
+    result.push(...petList);
+    result.sort((a, b) => {
+        let ret = b.perfectHealth - a.perfectHealth;
+        if (ret !== 0) {
+            return ret;
+        }
+        ret = b.totalBaseStats - a.totalBaseStats;
+        if (ret !== 0) {
+            return ret;
+        }
+        return a.code!.localeCompare(b.code!);
     });
     return result;
 }
