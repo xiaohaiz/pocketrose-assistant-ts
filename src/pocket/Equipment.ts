@@ -297,6 +297,69 @@ class Equipment {
         }
         return this.requiredCareer;
     }
+
+    get requiredAttackHtml() {
+        if (this.requiredAttack === undefined || this.requiredAttack === 0) {
+            return "-";
+        }
+        return this.requiredAttack.toString();
+    }
+
+    get requiredDefenseHtml() {
+        if (this.requiredDefense === undefined || this.requiredDefense === 0) {
+            return "-";
+        }
+        return this.requiredDefense.toString();
+    }
+
+    get requiredSpecialAttackHtml() {
+        if (this.requiredSpecialAttack === undefined || this.requiredSpecialAttack === 0) {
+            return "-";
+        }
+        return this.requiredSpecialAttack.toString();
+    }
+
+    get requiredSpecialDefenseHtml() {
+        if (this.requiredSpecialDefense === undefined || this.requiredSpecialDefense === 0) {
+            return "-";
+        }
+        return this.requiredSpecialDefense.toString();
+    }
+
+    get requiredSpeedHtml() {
+        if (this.requiredSpeed === undefined || this.requiredSpeed === 0) {
+            return "-";
+        }
+        return this.requiredSpeed.toString();
+    }
+
+    get additionalPowerHtml() {
+        if (this.additionalPower === undefined || this.additionalPower === 0) {
+            return "-";
+        }
+        return this.additionalPower.toString();
+    }
+
+    get additionalWeightHtml() {
+        if (this.additionalWeight === undefined || this.additionalWeight === 0) {
+            return "-";
+        }
+        return this.additionalWeight.toString();
+    }
+
+    get additionalLuckHtml() {
+        if (this.additionalLuck === undefined || this.additionalLuck === 0) {
+            return "-";
+        }
+        return this.additionalLuck.toString();
+    }
+
+    get attributeHtml() {
+        if (this.attribute === undefined || this.attribute === "无") {
+            return "-";
+        }
+        return this.attribute;
+    }
 }
 
 function isAttributeHeavyArmor(name: string) {

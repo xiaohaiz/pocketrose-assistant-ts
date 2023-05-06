@@ -204,16 +204,16 @@ function doRender(credential: Credential, castle: Castle) {
                 html += "<td style='background-color:#EFE0C0'>" + equipment.weight + "</td>";
                 html += "<td style='background-color:#E0D0B0'>" + equipment.endureHtml + "</td>";
                 html += "<td style='background-color:#EFE0C0'>" + equipment.requiredCareerHtml + "</td>";
-                html += "<td style='background-color:#E0D0B0'>" + equipment.requiredAttack + "</td>";
-                html += "<td style='background-color:#E0D0B0'>" + equipment.requiredDefense + "</td>";
-                html += "<td style='background-color:#E0D0B0'>" + equipment.requiredSpecialAttack + "</td>";
-                html += "<td style='background-color:#E0D0B0'>" + equipment.requiredSpecialDefense + "</td>";
-                html += "<td style='background-color:#E0D0B0'>" + equipment.requiredSpeed + "</td>";
-                html += "<td style='background-color:#EFE0C0'>" + equipment.additionalPower + "</td>";
-                html += "<td style='background-color:#EFE0C0'>" + equipment.additionalWeight + "</td>";
-                html += "<td style='background-color:#EFE0C0'>" + equipment.additionalLuck + "</td>";
+                html += "<td style='background-color:#E0D0B0'>" + equipment.requiredAttackHtml + "</td>";
+                html += "<td style='background-color:#E0D0B0'>" + equipment.requiredDefenseHtml + "</td>";
+                html += "<td style='background-color:#E0D0B0'>" + equipment.requiredSpecialAttackHtml + "</td>";
+                html += "<td style='background-color:#E0D0B0'>" + equipment.requiredSpecialDefenseHtml + "</td>";
+                html += "<td style='background-color:#E0D0B0'>" + equipment.requiredSpeedHtml + "</td>";
+                html += "<td style='background-color:#EFE0C0'>" + equipment.additionalPowerHtml + "</td>";
+                html += "<td style='background-color:#EFE0C0'>" + equipment.additionalWeightHtml + "</td>";
+                html += "<td style='background-color:#EFE0C0'>" + equipment.additionalLuckHtml + "</td>";
                 html += "<td style='background-color:#E0D0B0'>" + equipment.experienceHTML + "</td>";
-                html += "<td style='background-color:#E0D0B0'>" + equipment.attribute + "</td>";
+                html += "<td style='background-color:#E0D0B0'>" + equipment.attributeHtml + "</td>";
                 html += "</tr>";
             }
 
