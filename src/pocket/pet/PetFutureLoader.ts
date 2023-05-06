@@ -2,6 +2,15 @@ import PetFuture from "../../common/PetFuture";
 
 class PetFutureLoader {
 
+    static load(code: string): PetFuture | null {
+        // @ts-ignore
+        const config = PET_FUTURES[code];
+        if (config === undefined) {
+            return null;
+        }
+        return doParse(code, config);
+    }
+
 }
 
 function doParse(code: string, config: {}) {
