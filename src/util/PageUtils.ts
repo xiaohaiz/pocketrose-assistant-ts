@@ -108,6 +108,17 @@ class PageUtils {
             });
     }
 
+    static fixBrokenImageIfNecessary(s: string): string {
+        let t = s;
+        if (t.includes("http://pocketrose.21sun.net:81/pocketrose")) {
+            t = t.replace("http://pocketrose.21sun.net:81/pocketrose", Constants.POCKET_DOMAIN);
+        }
+        if (t.includes("http://pocketrose.21sun.net/pocketrose")) {
+            t = t.replace("http://pocketrose.21sun.net/pocketrose", Constants.POCKET_DOMAIN);
+        }
+        return t;
+    }
+
     static convertHtmlToText(html: string) {
         const s = "<td>" + html + "</td>";
         return $(s).text();
