@@ -21,7 +21,7 @@ class TownDashboardProcessor implements Processor {
     process() {
         PageUtils.removeUnusedHyperLinks();
         PageUtils.removeGoogleAnalyticsScript();
-        PageUtils.fixCurrentPageBrokerImages();
+        PageUtils.fixCurrentPageBrokenImages();
         const credential = PageUtils.currentCredential();
         doProcess(credential);
     }

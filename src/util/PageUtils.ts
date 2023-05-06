@@ -85,7 +85,7 @@ class PageUtils {
         return color.toString() === "rgb(128, 128, 128)"
     }
 
-    static fixCurrentPageBrokerImages() {
+    static fixCurrentPageBrokenImages() {
         if ($("img").length === 0) {
             return;
         }

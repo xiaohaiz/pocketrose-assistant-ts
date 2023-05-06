@@ -315,7 +315,7 @@ function doRender(page: TownGemHousePage) {
         doBindFuseButton(page, indexList);
     }
 
-    PageUtils.fixCurrentPageBrokerImages();
+    PageUtils.fixCurrentPageBrokenImages();
 }
 
 function doBindEquipmentDetail(credential: Credential) {
