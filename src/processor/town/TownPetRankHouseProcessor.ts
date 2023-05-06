@@ -48,7 +48,7 @@ function doProcess(credential: Credential) {
         .css("width", "100%")
         .css("background-color", "black")
         .css("color", "white")
-        .text("全新宠物排行榜，帮助您更好了解口袋的宠物。<br>" +
+        .html("全新宠物排行榜，帮助您更好了解口袋的宠物。<br>" +
             "目前宠物初始值和族值的关系是我们推测的，不一定准确。等白猫如果有反馈再修正。")
         .next()
         .attr("id", "messageBoardManager");
