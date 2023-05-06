@@ -1,8 +1,46 @@
+import PetFuture from "../../common/PetFuture";
+
 class PetFutureLoader {
 
 }
 
-export = PetFutureLoader;
+function doParse(code: string, config: {}) {
+    const future = new PetFuture();
+    future.code = code;
+    // @ts-ignore
+    future.name = config.name;
+    // @ts-ignore
+    future.picture = config.picture;
+    // @ts-ignore
+    future.healthBaseStats = config.healthBaseStats;
+    // @ts-ignore
+    future.attackBaseStats = config.attackBaseStats;
+    // @ts-ignore
+    future.defenseBaseStats = config.defenseBaseStats;
+    // @ts-ignore
+    future.specialAttackBaseStats = config.specialAttackBaseStats;
+    // @ts-ignore
+    future.specialDefenseBaseStats = config.specialDefenseBaseStats;
+    // @ts-ignore
+    future.speedBaseStats = config.speedBaseStats;
+    // @ts-ignore
+    future.healthEffort = config.healthEffort;
+    // @ts-ignore
+    future.attackEffort = config.attackEffort;
+    // @ts-ignore
+    future.defenseEffort = config.defenseEffort;
+    // @ts-ignore
+    future.specialAttackEffort = config.specialAttackEffort;
+    // @ts-ignore
+    future.specialDefenseEffort = config.specialDefenseEffort;
+    // @ts-ignore
+    future.speedEffort = config.speedEffort;
+    // @ts-ignore
+    future.catchRatio = config.catchRatio;
+    // @ts-ignore
+    future.growExperience = config.growExperience;
+    return future;
+}
 
 const PET_FUTURES = {
     "001": {
@@ -21,7 +59,7 @@ const PET_FUTURES = {
         "specialDefenseEffort": 0,
         "speedEffort": 0,
         "catchRatio": 45,
-        "growExp": 64
+        "growExperience": 64
     },
     "002": {
         "name": "妙蛙草(002)",
@@ -39,7 +77,7 @@ const PET_FUTURES = {
         "specialDefenseEffort": 1,
         "speedEffort": 0,
         "catchRatio": 45,
-        "growExp": 141
+        "growExperience": 141
     },
     "003": {
         "name": "妙蛙花(003)",
@@ -57,7 +95,7 @@ const PET_FUTURES = {
         "specialDefenseEffort": 1,
         "speedEffort": 0,
         "catchRatio": 45,
-        "growExp": 208
+        "growExperience": 208
     },
     "004": {
         "name": "小火龙(004)",
@@ -75,7 +113,7 @@ const PET_FUTURES = {
         "specialDefenseEffort": 0,
         "speedEffort": 1,
         "catchRatio": 45,
-        "growExp": 65
+        "growExperience": 65
     },
     "005": {
         "name": "火恐龙(005)",
@@ -93,7 +131,7 @@ const PET_FUTURES = {
         "specialDefenseEffort": 0,
         "speedEffort": 1,
         "catchRatio": 45,
-        "growExp": 142
+        "growExperience": 142
     },
     "006": {
         "name": "喷火龙(006)",
@@ -111,7 +149,7 @@ const PET_FUTURES = {
         "specialDefenseEffort": 0,
         "speedEffort": 0,
         "catchRatio": 45,
-        "growExp": 209
+        "growExperience": 209
     },
     "007": {
         "name": "杰尼龟(007)",
@@ -129,7 +167,7 @@ const PET_FUTURES = {
         "specialDefenseEffort": 0,
         "speedEffort": 0,
         "catchRatio": 45,
-        "growExp": 66
+        "growExperience": 66
     },
     "008": {
         "name": "卡咪龟(008)",
@@ -147,7 +185,7 @@ const PET_FUTURES = {
         "specialDefenseEffort": 1,
         "speedEffort": 0,
         "catchRatio": 45,
-        "growExp": 143
+        "growExperience": 143
     },
     "009": {
         "name": "水箭龟(009)",
@@ -165,7 +203,7 @@ const PET_FUTURES = {
         "specialDefenseEffort": 3,
         "speedEffort": 0,
         "catchRatio": 45,
-        "growExp": 210
+        "growExperience": 210
     },
     "010": {
         "name": "绿毛虫(010)",
@@ -183,7 +221,7 @@ const PET_FUTURES = {
         "specialDefenseEffort": 0,
         "speedEffort": 0,
         "catchRatio": 255,
-        "growExp": 53
+        "growExperience": 53
     },
     "011": {
         "name": "铁甲蛹(011)",
@@ -201,7 +239,7 @@ const PET_FUTURES = {
         "specialDefenseEffort": 0,
         "speedEffort": 0,
         "catchRatio": 120,
-        "growExp": 72
+        "growExperience": 72
     },
     "012": {
         "name": "巴大蝴(012)",
@@ -219,7 +257,7 @@ const PET_FUTURES = {
         "specialDefenseEffort": 1,
         "speedEffort": 0,
         "catchRatio": 45,
-        "growExp": 160
+        "growExperience": 160
     },
     "013": {
         "name": "独角虫(013)",
@@ -237,7 +275,7 @@ const PET_FUTURES = {
         "specialDefenseEffort": 0,
         "speedEffort": 1,
         "catchRatio": 255,
-        "growExp": 52
+        "growExperience": 52
     },
     "014": {
         "name": "铁壳昆(014)",
@@ -255,7 +293,7 @@ const PET_FUTURES = {
         "specialDefenseEffort": 0,
         "speedEffort": 0,
         "catchRatio": 120,
-        "growExp": 71
+        "growExperience": 71
     },
     "015": {
         "name": "大针蜂(015)",
@@ -273,7 +311,7 @@ const PET_FUTURES = {
         "specialDefenseEffort": 0,
         "speedEffort": 0,
         "catchRatio": 45,
-        "growExp": 159
+        "growExperience": 159
     },
     "016": {
         "name": "波波(016)",
@@ -291,7 +329,7 @@ const PET_FUTURES = {
         "specialDefenseEffort": 0,
         "speedEffort": 1,
         "catchRatio": 255,
-        "growExp": 55
+        "growExperience": 55
     },
     "017": {
         "name": "比比鸟(017)",
@@ -309,7 +347,7 @@ const PET_FUTURES = {
         "specialDefenseEffort": 0,
         "speedEffort": 2,
         "catchRatio": 120,
-        "growExp": 113
+        "growExperience": 113
     },
     "018": {
         "name": "比雕(018)",
@@ -327,7 +365,7 @@ const PET_FUTURES = {
         "specialDefenseEffort": 0,
         "speedEffort": 3,
         "catchRatio": 45,
-        "growExp": 172
+        "growExperience": 172
     },
     "019": {
         "name": "小拉达(019)",
@@ -345,7 +383,7 @@ const PET_FUTURES = {
         "specialDefenseEffort": 0,
         "speedEffort": 1,
         "catchRatio": 255,
-        "growExp": 57
+        "growExperience": 57
     },
     "020": {
         "name": "拉达(020)",
@@ -363,7 +401,7 @@ const PET_FUTURES = {
         "specialDefenseEffort": 0,
         "speedEffort": 2,
         "catchRatio": 127,
-        "growExp": 116
+        "growExperience": 116
     },
     "021": {
         "name": "烈雀(021)",
@@ -381,7 +419,7 @@ const PET_FUTURES = {
         "specialDefenseEffort": 0,
         "speedEffort": 1,
         "catchRatio": 255,
-        "growExp": 58
+        "growExperience": 58
     },
     "022": {
         "name": "尖嘴鸟(022)",
@@ -399,7 +437,7 @@ const PET_FUTURES = {
         "specialDefenseEffort": 0,
         "speedEffort": 2,
         "catchRatio": 90,
-        "growExp": 162
+        "growExperience": 162
     },
     "023": {
         "name": "阿柏蛇(023)",
@@ -417,7 +455,7 @@ const PET_FUTURES = {
         "specialDefenseEffort": 0,
         "speedEffort": 0,
         "catchRatio": 255,
-        "growExp": 62
+        "growExperience": 62
     },
     "024": {
         "name": "阿柏怪(024)",
@@ -435,7 +473,7 @@ const PET_FUTURES = {
         "specialDefenseEffort": 0,
         "speedEffort": 0,
         "catchRatio": 90,
-        "growExp": 147
+        "growExperience": 147
     },
     "025": {
         "name": "皮卡丘(025)",
@@ -453,7 +491,7 @@ const PET_FUTURES = {
         "specialDefenseEffort": 0,
         "speedEffort": 2,
         "catchRatio": 190,
-        "growExp": 82
+        "growExperience": 82
     },
     "026": {
         "name": "雷丘(026)",
@@ -471,7 +509,7 @@ const PET_FUTURES = {
         "specialDefenseEffort": 0,
         "speedEffort": 3,
         "catchRatio": 75,
-        "growExp": 122
+        "growExperience": 122
     },
     "027": {
         "name": "穿山鼠(027)",
@@ -489,7 +527,7 @@ const PET_FUTURES = {
         "specialDefenseEffort": 0,
         "speedEffort": 0,
         "catchRatio": 255,
-        "growExp": 93
+        "growExperience": 93
     },
     "028": {
         "name": "穿山王(028)",
@@ -507,7 +545,7 @@ const PET_FUTURES = {
         "specialDefenseEffort": 0,
         "speedEffort": 0,
         "catchRatio": 90,
-        "growExp": 163
+        "growExperience": 163
     },
     "029": {
         "name": "尼多兰(029)",
@@ -525,7 +563,7 @@ const PET_FUTURES = {
         "specialDefenseEffort": 0,
         "speedEffort": 0,
         "catchRatio": 235,
-        "growExp": 59
+        "growExperience": 59
     },
     "030": {
         "name": "尼多莉娜(030)",
@@ -543,7 +581,7 @@ const PET_FUTURES = {
         "specialDefenseEffort": 0,
         "speedEffort": 0,
         "catchRatio": 120,
-        "growExp": 117
+        "growExperience": 117
     },
     "031": {
         "name": "尼多后(031)",
@@ -561,7 +599,7 @@ const PET_FUTURES = {
         "specialDefenseEffort": 0,
         "speedEffort": 0,
         "catchRatio": 45,
-        "growExp": 194
+        "growExperience": 194
     },
     "032": {
         "name": "尼多朗(032)",
@@ -579,7 +617,7 @@ const PET_FUTURES = {
         "specialDefenseEffort": 0,
         "speedEffort": 0,
         "catchRatio": 235,
-        "growExp": 60
+        "growExperience": 60
     },
     "033": {
         "name": "尼多利诺(033)",
@@ -597,7 +635,7 @@ const PET_FUTURES = {
         "specialDefenseEffort": 0,
         "speedEffort": 0,
         "catchRatio": 120,
-        "growExp": 118
+        "growExperience": 118
     },
     "034": {
         "name": "尼多王(034)",
@@ -615,7 +653,7 @@ const PET_FUTURES = {
         "specialDefenseEffort": 0,
         "speedEffort": 0,
         "catchRatio": 45,
-        "growExp": 195
+        "growExperience": 195
     },
     "035": {
         "name": "皮皮(035)",
@@ -633,7 +671,7 @@ const PET_FUTURES = {
         "specialDefenseEffort": 0,
         "speedEffort": 0,
         "catchRatio": 150,
-        "growExp": 68
+        "growExperience": 68
     },
     "036": {
         "name": "皮可西(036)",
@@ -651,7 +689,7 @@ const PET_FUTURES = {
         "specialDefenseEffort": 0,
         "speedEffort": 0,
         "catchRatio": 25,
-        "growExp": 129
+        "growExperience": 129
     },
     "037": {
         "name": "六尾(037)",
@@ -669,7 +707,7 @@ const PET_FUTURES = {
         "specialDefenseEffort": 0,
         "speedEffort": 1,
         "catchRatio": 190,
-        "growExp": 63
+        "growExperience": 63
     },
     "038": {
         "name": "九尾(038)",
@@ -687,7 +725,7 @@ const PET_FUTURES = {
         "specialDefenseEffort": 1,
         "speedEffort": 1,
         "catchRatio": 75,
-        "growExp": 178
+        "growExperience": 178
     },
     "039": {
         "name": "胖丁(039)",
@@ -705,7 +743,7 @@ const PET_FUTURES = {
         "specialDefenseEffort": 0,
         "speedEffort": 0,
         "catchRatio": 170,
-        "growExp": 76
+        "growExperience": 76
     },
     "040": {
         "name": "胖可丁(040)",
@@ -723,7 +761,7 @@ const PET_FUTURES = {
         "specialDefenseEffort": 0,
         "speedEffort": 0,
         "catchRatio": 50,
-        "growExp": 109
+        "growExperience": 109
     },
     "041": {
         "name": "超音蝠(041)",
@@ -741,7 +779,7 @@ const PET_FUTURES = {
         "specialDefenseEffort": 0,
         "speedEffort": 1,
         "catchRatio": 255,
-        "growExp": 54
+        "growExperience": 54
     },
     "042": {
         "name": "大嘴蝠(042)",
@@ -759,7 +797,7 @@ const PET_FUTURES = {
         "specialDefenseEffort": 0,
         "speedEffort": 2,
         "catchRatio": 90,
-        "growExp": 171
+        "growExperience": 171
     },
     "043": {
         "name": "走路草(043)",
@@ -777,7 +815,7 @@ const PET_FUTURES = {
         "specialDefenseEffort": 0,
         "speedEffort": 0,
         "catchRatio": 255,
-        "growExp": 78
+        "growExperience": 78
     },
     "044": {
         "name": "臭臭花(044)",
@@ -795,7 +833,7 @@ const PET_FUTURES = {
         "specialDefenseEffort": 0,
         "speedEffort": 0,
         "catchRatio": 120,
-        "growExp": 132
+        "growExperience": 132
     },
     "045": {
         "name": "霸王花(045)",
@@ -813,7 +851,7 @@ const PET_FUTURES = {
         "specialDefenseEffort": 0,
         "speedEffort": 0,
         "catchRatio": 45,
-        "growExp": 184
+        "growExperience": 184
     },
     "046": {
         "name": "派拉斯(046)",
@@ -831,7 +869,7 @@ const PET_FUTURES = {
         "specialDefenseEffort": 0,
         "speedEffort": 0,
         "catchRatio": 190,
-        "growExp": 70
+        "growExperience": 70
     },
     "047": {
         "name": "派拉斯特(047)",
@@ -849,7 +887,7 @@ const PET_FUTURES = {
         "specialDefenseEffort": 0,
         "speedEffort": 0,
         "catchRatio": 75,
-        "growExp": 128
+        "growExperience": 128
     },
     "048": {
         "name": "毛球(048)",
@@ -867,7 +905,7 @@ const PET_FUTURES = {
         "specialDefenseEffort": 1,
         "speedEffort": 0,
         "catchRatio": 190,
-        "growExp": 75
+        "growExperience": 75
     },
     "049": {
         "name": "末入蛾(049)",
@@ -885,7 +923,7 @@ const PET_FUTURES = {
         "specialDefenseEffort": 0,
         "speedEffort": 1,
         "catchRatio": 75,
-        "growExp": 138
+        "growExperience": 138
     },
     "050": {
         "name": "地鼠(050)",
@@ -903,7 +941,7 @@ const PET_FUTURES = {
         "specialDefenseEffort": 0,
         "speedEffort": 1,
         "catchRatio": 255,
-        "growExp": 81
+        "growExperience": 81
     },
     "051": {
         "name": "三地鼠(051)",
@@ -921,7 +959,7 @@ const PET_FUTURES = {
         "specialDefenseEffort": 0,
         "speedEffort": 2,
         "catchRatio": 50,
-        "growExp": 153
+        "growExperience": 153
     },
     "052": {
         "name": "喵喵(052)",
@@ -939,7 +977,7 @@ const PET_FUTURES = {
         "specialDefenseEffort": 0,
         "speedEffort": 1,
         "catchRatio": 255,
-        "growExp": 69
+        "growExperience": 69
     },
     "053": {
         "name": "猫老大(053)",
@@ -957,7 +995,7 @@ const PET_FUTURES = {
         "specialDefenseEffort": 0,
         "speedEffort": 2,
         "catchRatio": 90,
-        "growExp": 148
+        "growExperience": 148
     },
     "054": {
         "name": "可达鸭(054)",
@@ -975,7 +1013,7 @@ const PET_FUTURES = {
         "specialDefenseEffort": 0,
         "speedEffort": 0,
         "catchRatio": 190,
-        "growExp": 80
+        "growExperience": 80
     },
     "055": {
         "name": "哥达鸭(055)",
@@ -993,7 +1031,7 @@ const PET_FUTURES = {
         "specialDefenseEffort": 0,
         "speedEffort": 0,
         "catchRatio": 75,
-        "growExp": 174
+        "growExperience": 174
     },
     "056": {
         "name": "猴怪(056)",
@@ -1011,7 +1049,7 @@ const PET_FUTURES = {
         "specialDefenseEffort": 0,
         "speedEffort": 0,
         "catchRatio": 190,
-        "growExp": 74
+        "growExperience": 74
     },
     "057": {
         "name": "火爆猴(057)",
@@ -1029,7 +1067,7 @@ const PET_FUTURES = {
         "specialDefenseEffort": 0,
         "speedEffort": 0,
         "catchRatio": 75,
-        "growExp": 149
+        "growExperience": 149
     },
     "058": {
         "name": "卡蒂狗(058)",
@@ -1047,7 +1085,7 @@ const PET_FUTURES = {
         "specialDefenseEffort": 0,
         "speedEffort": 0,
         "catchRatio": 190,
-        "growExp": 91
+        "growExperience": 91
     },
     "059": {
         "name": "风速狗(059)",
@@ -1065,7 +1103,7 @@ const PET_FUTURES = {
         "specialDefenseEffort": 0,
         "speedEffort": 0,
         "catchRatio": 75,
-        "growExp": 213
+        "growExperience": 213
     },
     "060": {
         "name": "蚊香蝌蚪(060)",
@@ -1083,7 +1121,7 @@ const PET_FUTURES = {
         "specialDefenseEffort": 0,
         "speedEffort": 1,
         "catchRatio": 255,
-        "growExp": 77
+        "growExperience": 77
     },
     "061": {
         "name": "蚊香蛙(061)",
@@ -1101,7 +1139,7 @@ const PET_FUTURES = {
         "specialDefenseEffort": 0,
         "speedEffort": 2,
         "catchRatio": 120,
-        "growExp": 131
+        "growExperience": 131
     },
     "062": {
         "name": "快泳蛙(062)",
@@ -1119,7 +1157,7 @@ const PET_FUTURES = {
         "specialDefenseEffort": 0,
         "speedEffort": 0,
         "catchRatio": 45,
-        "growExp": 185
+        "growExperience": 185
     },
     "063": {
         "name": "凯西(063)",
@@ -1137,7 +1175,7 @@ const PET_FUTURES = {
         "specialDefenseEffort": 0,
         "speedEffort": 0,
         "catchRatio": 200,
-        "growExp": 73
+        "growExperience": 73
     },
     "064": {
         "name": "勇吉拉(064)",
@@ -1155,7 +1193,7 @@ const PET_FUTURES = {
         "specialDefenseEffort": 0,
         "speedEffort": 0,
         "catchRatio": 100,
-        "growExp": 145
+        "growExperience": 145
     },
     "065": {
         "name": "胡地(065)",
@@ -1173,7 +1211,7 @@ const PET_FUTURES = {
         "specialDefenseEffort": 0,
         "speedEffort": 0,
         "catchRatio": 50,
-        "growExp": 186
+        "growExperience": 186
     },
     "066": {
         "name": "腕力(066)",
@@ -1191,7 +1229,7 @@ const PET_FUTURES = {
         "specialDefenseEffort": 0,
         "speedEffort": 0,
         "catchRatio": 180,
-        "growExp": 88
+        "growExperience": 88
     },
     "067": {
         "name": "豪力(067)",
@@ -1209,7 +1247,7 @@ const PET_FUTURES = {
         "specialDefenseEffort": 0,
         "speedEffort": 0,
         "catchRatio": 90,
-        "growExp": 146
+        "growExperience": 146
     },
     "068": {
         "name": "怪力(068)",
@@ -1227,7 +1265,7 @@ const PET_FUTURES = {
         "specialDefenseEffort": 0,
         "speedEffort": 0,
         "catchRatio": 45,
-        "growExp": 193
+        "growExperience": 193
     },
     "069": {
         "name": "喇叭芽(069)",
@@ -1245,7 +1283,7 @@ const PET_FUTURES = {
         "specialDefenseEffort": 0,
         "speedEffort": 0,
         "catchRatio": 255,
-        "growExp": 84
+        "growExperience": 84
     },
     "070": {
         "name": "口朵花(070)",
@@ -1263,7 +1301,7 @@ const PET_FUTURES = {
         "specialDefenseEffort": 0,
         "speedEffort": 0,
         "catchRatio": 120,
-        "growExp": 151
+        "growExperience": 151
     },
     "071": {
         "name": "大食花(071)",
@@ -1281,7 +1319,7 @@ const PET_FUTURES = {
         "specialDefenseEffort": 0,
         "speedEffort": 0,
         "catchRatio": 45,
-        "growExp": 191
+        "growExperience": 191
     },
     "072": {
         "name": "玛瑙水母(072)",
@@ -1299,7 +1337,7 @@ const PET_FUTURES = {
         "specialDefenseEffort": 1,
         "speedEffort": 0,
         "catchRatio": 190,
-        "growExp": 105
+        "growExperience": 105
     },
     "073": {
         "name": "毒刺水母(073)",
@@ -1317,7 +1355,7 @@ const PET_FUTURES = {
         "specialDefenseEffort": 2,
         "speedEffort": 0,
         "catchRatio": 60,
-        "growExp": 205
+        "growExperience": 205
     },
     "074": {
         "name": "小拳石(074)",
@@ -1335,7 +1373,7 @@ const PET_FUTURES = {
         "specialDefenseEffort": 0,
         "speedEffort": 0,
         "catchRatio": 255,
-        "growExp": 86
+        "growExperience": 86
     },
     "075": {
         "name": "隆隆石(075)",
@@ -1353,7 +1391,7 @@ const PET_FUTURES = {
         "specialDefenseEffort": 0,
         "speedEffort": 0,
         "catchRatio": 120,
-        "growExp": 134
+        "growExperience": 134
     },
     "076": {
         "name": "隆隆岩(076)",
@@ -1371,7 +1409,7 @@ const PET_FUTURES = {
         "specialDefenseEffort": 0,
         "speedEffort": 0,
         "catchRatio": 45,
-        "growExp": 177
+        "growExperience": 177
     },
     "077": {
         "name": "小火马(077)",
@@ -1389,7 +1427,7 @@ const PET_FUTURES = {
         "specialDefenseEffort": 0,
         "speedEffort": 1,
         "catchRatio": 190,
-        "growExp": 152
+        "growExperience": 152
     },
     "078": {
         "name": "烈焰马(078)",
@@ -1407,7 +1445,7 @@ const PET_FUTURES = {
         "specialDefenseEffort": 0,
         "speedEffort": 2,
         "catchRatio": 60,
-        "growExp": 192
+        "growExperience": 192
     },
     "079": {
         "name": "呆呆兽(079)",
@@ -1425,7 +1463,7 @@ const PET_FUTURES = {
         "specialDefenseEffort": 0,
         "speedEffort": 0,
         "catchRatio": 190,
-        "growExp": 99
+        "growExperience": 99
     },
     "080": {
         "name": "呆河马(080)",
@@ -1443,7 +1481,7 @@ const PET_FUTURES = {
         "specialDefenseEffort": 0,
         "speedEffort": 0,
         "catchRatio": 75,
-        "growExp": 164
+        "growExperience": 164
     },
     "081": {
         "name": "小磁怪(081)",
@@ -1461,7 +1499,7 @@ const PET_FUTURES = {
         "specialDefenseEffort": 0,
         "speedEffort": 0,
         "catchRatio": 190,
-        "growExp": 89
+        "growExperience": 89
     },
     "082": {
         "name": "三合一磁怪(082)",
@@ -1479,7 +1517,7 @@ const PET_FUTURES = {
         "specialDefenseEffort": 0,
         "speedEffort": 0,
         "catchRatio": 60,
-        "growExp": 161
+        "growExperience": 161
     },
     "083": {
         "name": "大葱鸭(083)",
@@ -1497,7 +1535,7 @@ const PET_FUTURES = {
         "specialDefenseEffort": 0,
         "speedEffort": 0,
         "catchRatio": 45,
-        "growExp": 94
+        "growExperience": 94
     },
     "084": {
         "name": "嘟嘟(084)",
@@ -1515,7 +1553,7 @@ const PET_FUTURES = {
         "specialDefenseEffort": 0,
         "speedEffort": 0,
         "catchRatio": 190,
-        "growExp": 96
+        "growExperience": 96
     },
     "085": {
         "name": "嘟嘟利(085)",
@@ -1533,7 +1571,7 @@ const PET_FUTURES = {
         "specialDefenseEffort": 0,
         "speedEffort": 0,
         "catchRatio": 45,
-        "growExp": 158
+        "growExperience": 158
     },
     "086": {
         "name": "小海狮(086)",
@@ -1551,7 +1589,7 @@ const PET_FUTURES = {
         "specialDefenseEffort": 1,
         "speedEffort": 0,
         "catchRatio": 190,
-        "growExp": 100
+        "growExperience": 100
     },
     "087": {
         "name": "白海狮(087)",
@@ -1569,7 +1607,7 @@ const PET_FUTURES = {
         "specialDefenseEffort": 2,
         "speedEffort": 0,
         "catchRatio": 75,
-        "growExp": 176
+        "growExperience": 176
     },
     "088": {
         "name": "臭泥(088)",
@@ -1587,7 +1625,7 @@ const PET_FUTURES = {
         "specialDefenseEffort": 0,
         "speedEffort": 0,
         "catchRatio": 190,
-        "growExp": 90
+        "growExperience": 90
     },
     "089": {
         "name": "臭臭泥(089)",
@@ -1605,7 +1643,7 @@ const PET_FUTURES = {
         "specialDefenseEffort": 0,
         "speedEffort": 0,
         "catchRatio": 75,
-        "growExp": 157
+        "growExperience": 157
     },
     "090": {
         "name": "大舌贝(090)",
@@ -1623,7 +1661,7 @@ const PET_FUTURES = {
         "specialDefenseEffort": 0,
         "speedEffort": 0,
         "catchRatio": 190,
-        "growExp": 97
+        "growExperience": 97
     },
     "091": {
         "name": "铁甲贝(091)",
@@ -1641,7 +1679,7 @@ const PET_FUTURES = {
         "specialDefenseEffort": 0,
         "speedEffort": 0,
         "catchRatio": 60,
-        "growExp": 203
+        "growExperience": 203
     },
     "092": {
         "name": "鬼斯(092)",
@@ -1659,7 +1697,7 @@ const PET_FUTURES = {
         "specialDefenseEffort": 0,
         "speedEffort": 0,
         "catchRatio": 190,
-        "growExp": 95
+        "growExperience": 95
     },
     "093": {
         "name": "鬼斯通(093)",
@@ -1677,7 +1715,7 @@ const PET_FUTURES = {
         "specialDefenseEffort": 0,
         "speedEffort": 0,
         "catchRatio": 90,
-        "growExp": 126
+        "growExperience": 126
     },
     "094": {
         "name": "耿鬼(094)",
@@ -1695,7 +1733,7 @@ const PET_FUTURES = {
         "specialDefenseEffort": 0,
         "speedEffort": 0,
         "catchRatio": 45,
-        "growExp": 190
+        "growExperience": 190
     },
     "095": {
         "name": "大岩蛇(095)",
@@ -1713,7 +1751,7 @@ const PET_FUTURES = {
         "specialDefenseEffort": 0,
         "speedEffort": 0,
         "catchRatio": 45,
-        "growExp": 108
+        "growExperience": 108
     },
     "096": {
         "name": "素利普(096)",
@@ -1731,7 +1769,7 @@ const PET_FUTURES = {
         "specialDefenseEffort": 1,
         "speedEffort": 0,
         "catchRatio": 190,
-        "growExp": 102
+        "growExperience": 102
     },
     "097": {
         "name": "素利柏(097)",
@@ -1749,7 +1787,7 @@ const PET_FUTURES = {
         "specialDefenseEffort": 2,
         "speedEffort": 0,
         "catchRatio": 75,
-        "growExp": 165
+        "growExperience": 165
     },
     "098": {
         "name": "大钳蟹(098)",
@@ -1767,7 +1805,7 @@ const PET_FUTURES = {
         "specialDefenseEffort": 0,
         "speedEffort": 0,
         "catchRatio": 225,
-        "growExp": 115
+        "growExperience": 115
     },
     "099": {
         "name": "巨钳蟹(099)",
@@ -1785,7 +1823,7 @@ const PET_FUTURES = {
         "specialDefenseEffort": 0,
         "speedEffort": 0,
         "catchRatio": 60,
-        "growExp": 206
+        "growExperience": 206
     },
     "100": {
         "name": "雷电球(100)",
@@ -1803,7 +1841,7 @@ const PET_FUTURES = {
         "specialDefenseEffort": 0,
         "speedEffort": 1,
         "catchRatio": 190,
-        "growExp": 103
+        "growExperience": 103
     },
     "101": {
         "name": "顽皮蛋(101)",
@@ -1821,7 +1859,7 @@ const PET_FUTURES = {
         "specialDefenseEffort": 0,
         "speedEffort": 2,
         "catchRatio": 60,
-        "growExp": 150
+        "growExperience": 150
     },
     "102": {
         "name": "蛋蛋(102)",
@@ -1839,7 +1877,7 @@ const PET_FUTURES = {
         "specialDefenseEffort": 0,
         "speedEffort": 0,
         "catchRatio": 90,
-        "growExp": 98
+        "growExperience": 98
     },
     "103": {
         "name": "椰蛋树(103)",
@@ -1857,7 +1895,7 @@ const PET_FUTURES = {
         "specialDefenseEffort": 0,
         "speedEffort": 0,
         "catchRatio": 45,
-        "growExp": 212
+        "growExperience": 212
     },
     "104": {
         "name": "可拉可拉(104)",
@@ -1875,7 +1913,7 @@ const PET_FUTURES = {
         "specialDefenseEffort": 0,
         "speedEffort": 0,
         "catchRatio": 190,
-        "growExp": 87
+        "growExperience": 87
     },
     "105": {
         "name": "嘎拉嘎拉(105)",
@@ -1893,7 +1931,7 @@ const PET_FUTURES = {
         "specialDefenseEffort": 0,
         "speedEffort": 0,
         "catchRatio": 75,
-        "growExp": 124
+        "growExperience": 124
     },
     "106": {
         "name": "沙瓦郎(106)",
@@ -1911,7 +1949,7 @@ const PET_FUTURES = {
         "specialDefenseEffort": 0,
         "speedEffort": 0,
         "catchRatio": 45,
-        "growExp": 139
+        "growExperience": 139
     },
     "107": {
         "name": "艾比郎(107)",
@@ -1929,7 +1967,7 @@ const PET_FUTURES = {
         "specialDefenseEffort": 2,
         "speedEffort": 0,
         "catchRatio": 45,
-        "growExp": 140
+        "growExperience": 140
     },
     "108": {
         "name": "大舌头(108)",
@@ -1947,7 +1985,7 @@ const PET_FUTURES = {
         "specialDefenseEffort": 0,
         "speedEffort": 0,
         "catchRatio": 45,
-        "growExp": 127
+        "growExperience": 127
     },
     "109": {
         "name": "瓦斯弹(109)",
@@ -1965,7 +2003,7 @@ const PET_FUTURES = {
         "specialDefenseEffort": 0,
         "speedEffort": 0,
         "catchRatio": 190,
-        "growExp": 114
+        "growExperience": 114
     },
     "110": {
         "name": "双弹瓦斯(110)",
@@ -1983,7 +2021,7 @@ const PET_FUTURES = {
         "specialDefenseEffort": 0,
         "speedEffort": 0,
         "catchRatio": 60,
-        "growExp": 173
+        "growExperience": 173
     },
     "111": {
         "name": "铁甲犀牛(111)",
@@ -2001,7 +2039,7 @@ const PET_FUTURES = {
         "specialDefenseEffort": 0,
         "speedEffort": 0,
         "catchRatio": 120,
-        "growExp": 135
+        "growExperience": 135
     },
     "112": {
         "name": "铁甲暴龙(112)",
@@ -2019,7 +2057,7 @@ const PET_FUTURES = {
         "specialDefenseEffort": 0,
         "speedEffort": 0,
         "catchRatio": 60,
-        "growExp": 204
+        "growExperience": 204
     },
     "113": {
         "name": "吉利蛋(113)",
@@ -2037,7 +2075,7 @@ const PET_FUTURES = {
         "specialDefenseEffort": 0,
         "speedEffort": 0,
         "catchRatio": 30,
-        "growExp": 255
+        "growExperience": 255
     },
     "114": {
         "name": "蔓藤怪(114)",
@@ -2055,7 +2093,7 @@ const PET_FUTURES = {
         "specialDefenseEffort": 0,
         "speedEffort": 0,
         "catchRatio": 45,
-        "growExp": 166
+        "growExperience": 166
     },
     "115": {
         "name": "袋龙(115)",
@@ -2073,7 +2111,7 @@ const PET_FUTURES = {
         "specialDefenseEffort": 0,
         "speedEffort": 0,
         "catchRatio": 45,
-        "growExp": 175
+        "growExperience": 175
     },
     "116": {
         "name": "墨海马(116)",
@@ -2091,7 +2129,7 @@ const PET_FUTURES = {
         "specialDefenseEffort": 0,
         "speedEffort": 0,
         "catchRatio": 225,
-        "growExp": 83
+        "growExperience": 83
     },
     "117": {
         "name": "海刺龙(117)",
@@ -2109,7 +2147,7 @@ const PET_FUTURES = {
         "specialDefenseEffort": 0,
         "speedEffort": 0,
         "catchRatio": 75,
-        "growExp": 155
+        "growExperience": 155
     },
     "118": {
         "name": "角金鱼(118)",
@@ -2127,7 +2165,7 @@ const PET_FUTURES = {
         "specialDefenseEffort": 0,
         "speedEffort": 0,
         "catchRatio": 225,
-        "growExp": 111
+        "growExperience": 111
     },
     "119": {
         "name": "金鱼王(119)",
@@ -2145,7 +2183,7 @@ const PET_FUTURES = {
         "specialDefenseEffort": 0,
         "speedEffort": 0,
         "catchRatio": 60,
-        "growExp": 170
+        "growExperience": 170
     },
     "120": {
         "name": "海星星(120)",
@@ -2163,7 +2201,7 @@ const PET_FUTURES = {
         "specialDefenseEffort": 0,
         "speedEffort": 1,
         "catchRatio": 225,
-        "growExp": 106
+        "growExperience": 106
     },
     "121": {
         "name": "宝石海星(121)",
@@ -2181,7 +2219,7 @@ const PET_FUTURES = {
         "specialDefenseEffort": 0,
         "speedEffort": 2,
         "catchRatio": 60,
-        "growExp": 207
+        "growExperience": 207
     },
     "122": {
         "name": "吸盘魔偶(122)",
@@ -2199,7 +2237,7 @@ const PET_FUTURES = {
         "specialDefenseEffort": 2,
         "speedEffort": 0,
         "catchRatio": 45,
-        "growExp": 136
+        "growExperience": 136
     },
     "123": {
         "name": "飞天螳螂(123)",
@@ -2217,7 +2255,7 @@ const PET_FUTURES = {
         "specialDefenseEffort": 0,
         "speedEffort": 0,
         "catchRatio": 45,
-        "growExp": 187
+        "growExperience": 187
     },
     "124": {
         "name": "迷唇姐(124)",
@@ -2235,7 +2273,7 @@ const PET_FUTURES = {
         "specialDefenseEffort": 0,
         "speedEffort": 0,
         "catchRatio": 45,
-        "growExp": 137
+        "growExperience": 137
     },
     "125": {
         "name": "电击兽(125)",
@@ -2253,7 +2291,7 @@ const PET_FUTURES = {
         "specialDefenseEffort": 0,
         "speedEffort": 2,
         "catchRatio": 45,
-        "growExp": 156
+        "growExperience": 156
     },
     "126": {
         "name": "鸭嘴火龙(126)",
@@ -2271,7 +2309,7 @@ const PET_FUTURES = {
         "specialDefenseEffort": 0,
         "speedEffort": 0,
         "catchRatio": 45,
-        "growExp": 167
+        "growExperience": 167
     },
     "127": {
         "name": "大甲(127)",
@@ -2289,7 +2327,7 @@ const PET_FUTURES = {
         "specialDefenseEffort": 0,
         "speedEffort": 0,
         "catchRatio": 45,
-        "growExp": 200
+        "growExperience": 200
     },
     "128": {
         "name": "肯泰罗(128)",
@@ -2307,7 +2345,7 @@ const PET_FUTURES = {
         "specialDefenseEffort": 0,
         "speedEffort": 1,
         "catchRatio": 45,
-        "growExp": 211
+        "growExperience": 211
     },
     "129": {
         "name": "鲤鱼王(129)",
@@ -2325,7 +2363,7 @@ const PET_FUTURES = {
         "specialDefenseEffort": 0,
         "speedEffort": 1,
         "catchRatio": 255,
-        "growExp": 20
+        "growExperience": 20
     },
     "130": {
         "name": "暴鲤龙(130)",
@@ -2343,7 +2381,7 @@ const PET_FUTURES = {
         "specialDefenseEffort": 0,
         "speedEffort": 0,
         "catchRatio": 45,
-        "growExp": 214
+        "growExperience": 214
     },
     "131": {
         "name": "拉普拉斯(131)",
@@ -2361,7 +2399,7 @@ const PET_FUTURES = {
         "specialDefenseEffort": 0,
         "speedEffort": 0,
         "catchRatio": 45,
-        "growExp": 219
+        "growExperience": 219
     },
     "132": {
         "name": "百变怪(132)",
@@ -2379,7 +2417,7 @@ const PET_FUTURES = {
         "specialDefenseEffort": 0,
         "speedEffort": 0,
         "catchRatio": 35,
-        "growExp": 61
+        "growExperience": 61
     },
     "133": {
         "name": "伊布(133)",
@@ -2397,7 +2435,7 @@ const PET_FUTURES = {
         "specialDefenseEffort": 1,
         "speedEffort": 0,
         "catchRatio": 45,
-        "growExp": 92
+        "growExperience": 92
     },
     "134": {
         "name": "水精灵(134)",
@@ -2415,7 +2453,7 @@ const PET_FUTURES = {
         "specialDefenseEffort": 0,
         "speedEffort": 0,
         "catchRatio": 45,
-        "growExp": 196
+        "growExperience": 196
     },
     "135": {
         "name": "雷精灵(135)",
@@ -2433,7 +2471,7 @@ const PET_FUTURES = {
         "specialDefenseEffort": 0,
         "speedEffort": 2,
         "catchRatio": 45,
-        "growExp": 197
+        "growExperience": 197
     },
     "136": {
         "name": "火精灵(136)",
@@ -2451,7 +2489,7 @@ const PET_FUTURES = {
         "specialDefenseEffort": 0,
         "speedEffort": 0,
         "catchRatio": 45,
-        "growExp": 198
+        "growExperience": 198
     },
     "137": {
         "name": "3D龙(137)",
@@ -2469,7 +2507,7 @@ const PET_FUTURES = {
         "specialDefenseEffort": 0,
         "speedEffort": 0,
         "catchRatio": 45,
-        "growExp": 130
+        "growExperience": 130
     },
     "138": {
         "name": "菊石兽(138)",
@@ -2487,7 +2525,7 @@ const PET_FUTURES = {
         "specialDefenseEffort": 0,
         "speedEffort": 0,
         "catchRatio": 45,
-        "growExp": 120
+        "growExperience": 120
     },
     "139": {
         "name": "多刺菊石兽(139)",
@@ -2505,7 +2543,7 @@ const PET_FUTURES = {
         "specialDefenseEffort": 0,
         "speedEffort": 0,
         "catchRatio": 45,
-        "growExp": 199
+        "growExperience": 199
     },
     "140": {
         "name": "化石盔(140)",
@@ -2523,7 +2561,7 @@ const PET_FUTURES = {
         "specialDefenseEffort": 0,
         "speedEffort": 0,
         "catchRatio": 45,
-        "growExp": 119
+        "growExperience": 119
     },
     "141": {
         "name": "镰刀盔(141)",
@@ -2541,7 +2579,7 @@ const PET_FUTURES = {
         "specialDefenseEffort": 0,
         "speedEffort": 0,
         "catchRatio": 45,
-        "growExp": 201
+        "growExperience": 201
     },
     "142": {
         "name": "化石翼龙(142)",
@@ -2559,7 +2597,7 @@ const PET_FUTURES = {
         "specialDefenseEffort": 0,
         "speedEffort": 2,
         "catchRatio": 45,
-        "growExp": 202
+        "growExperience": 202
     },
     "143": {
         "name": "卡比兽(143)",
@@ -2577,7 +2615,7 @@ const PET_FUTURES = {
         "specialDefenseEffort": 0,
         "speedEffort": 0,
         "catchRatio": 25,
-        "growExp": 154
+        "growExperience": 154
     },
     "144": {
         "name": "冷冻鸟(144)",
@@ -2595,7 +2633,7 @@ const PET_FUTURES = {
         "specialDefenseEffort": 3,
         "speedEffort": 0,
         "catchRatio": 3,
-        "growExp": 215
+        "growExperience": 215
     },
     "145": {
         "name": "闪电鸟(145)",
@@ -2613,7 +2651,7 @@ const PET_FUTURES = {
         "specialDefenseEffort": 0,
         "speedEffort": 0,
         "catchRatio": 3,
-        "growExp": 216
+        "growExperience": 216
     },
     "146": {
         "name": "火焰鸟(146)",
@@ -2631,7 +2669,7 @@ const PET_FUTURES = {
         "specialDefenseEffort": 0,
         "speedEffort": 0,
         "catchRatio": 3,
-        "growExp": 217
+        "growExperience": 217
     },
     "147": {
         "name": "迷你龙(147)",
@@ -2649,7 +2687,7 @@ const PET_FUTURES = {
         "specialDefenseEffort": 0,
         "speedEffort": 0,
         "catchRatio": 45,
-        "growExp": 67
+        "growExperience": 67
     },
     "148": {
         "name": "哈克龙(148)",
@@ -2667,7 +2705,7 @@ const PET_FUTURES = {
         "specialDefenseEffort": 0,
         "speedEffort": 0,
         "catchRatio": 45,
-        "growExp": 144
+        "growExperience": 144
     },
     "149": {
         "name": "快龙(149)",
@@ -2685,7 +2723,7 @@ const PET_FUTURES = {
         "specialDefenseEffort": 0,
         "speedEffort": 0,
         "catchRatio": 45,
-        "growExp": 218
+        "growExperience": 218
     },
     "150": {
         "name": "超梦(150)",
@@ -2703,7 +2741,7 @@ const PET_FUTURES = {
         "specialDefenseEffort": 0,
         "speedEffort": 0,
         "catchRatio": 3,
-        "growExp": 220
+        "growExperience": 220
     },
     "151": {
         "name": "梦幻(151)",
@@ -2721,7 +2759,7 @@ const PET_FUTURES = {
         "specialDefenseEffort": 0,
         "speedEffort": 0,
         "catchRatio": 45,
-        "growExp": 64
+        "growExperience": 64
     },
     "152": {
         "name": "奇科莉塔(152)",
@@ -2739,7 +2777,7 @@ const PET_FUTURES = {
         "specialDefenseEffort": 1,
         "speedEffort": 0,
         "catchRatio": 45,
-        "growExp": 64
+        "growExperience": 64
     },
     "153": {
         "name": "小花兽(153)",
@@ -2757,7 +2795,7 @@ const PET_FUTURES = {
         "specialDefenseEffort": 1,
         "speedEffort": 0,
         "catchRatio": 45,
-        "growExp": 141
+        "growExperience": 141
     },
     "154": {
         "name": "巨花兽(154)",
@@ -2775,7 +2813,7 @@ const PET_FUTURES = {
         "specialDefenseEffort": 2,
         "speedEffort": 0,
         "catchRatio": 45,
-        "growExp": 208
+        "growExperience": 208
     },
     "155": {
         "name": "火岚兽(155)",
@@ -2793,7 +2831,7 @@ const PET_FUTURES = {
         "specialDefenseEffort": 0,
         "speedEffort": 1,
         "catchRatio": 45,
-        "growExp": 65
+        "growExperience": 65
     },
     "156": {
         "name": "熔岩兽(156)",
@@ -2811,7 +2849,7 @@ const PET_FUTURES = {
         "specialDefenseEffort": 0,
         "speedEffort": 1,
         "catchRatio": 45,
-        "growExp": 142
+        "growExperience": 142
     },
     "157": {
         "name": "爆风兽(157)",
@@ -2829,7 +2867,7 @@ const PET_FUTURES = {
         "specialDefenseEffort": 0,
         "speedEffort": 0,
         "catchRatio": 45,
-        "growExp": 209
+        "growExperience": 209
     },
     "158": {
         "name": "诺可鳄(158)",
@@ -2847,7 +2885,7 @@ const PET_FUTURES = {
         "specialDefenseEffort": 0,
         "speedEffort": 0,
         "catchRatio": 45,
-        "growExp": 66
+        "growExperience": 66
     },
     "159": {
         "name": "艾莉鳄(159)",
@@ -2865,7 +2903,7 @@ const PET_FUTURES = {
         "specialDefenseEffort": 0,
         "speedEffort": 0,
         "catchRatio": 45,
-        "growExp": 143
+        "growExperience": 143
     },
     "160": {
         "name": "大丹鳄(160)",
@@ -2883,7 +2921,7 @@ const PET_FUTURES = {
         "specialDefenseEffort": 0,
         "speedEffort": 0,
         "catchRatio": 45,
-        "growExp": 210
+        "growExperience": 210
     },
     "161": {
         "name": "立尾鼠(161)",
@@ -2901,7 +2939,7 @@ const PET_FUTURES = {
         "specialDefenseEffort": 0,
         "speedEffort": 0,
         "catchRatio": 255,
-        "growExp": 57
+        "growExperience": 57
     },
     "162": {
         "name": "大立尾鼠(162)",
@@ -2919,7 +2957,7 @@ const PET_FUTURES = {
         "specialDefenseEffort": 0,
         "speedEffort": 2,
         "catchRatio": 90,
-        "growExp": 116
+        "growExperience": 116
     },
     "163": {
         "name": "呵呵鹰(163)",
@@ -2937,7 +2975,7 @@ const PET_FUTURES = {
         "specialDefenseEffort": 0,
         "speedEffort": 0,
         "catchRatio": 255,
-        "growExp": 58
+        "growExperience": 58
     },
     "164": {
         "name": "夜鹰(164)",
@@ -2955,7 +2993,7 @@ const PET_FUTURES = {
         "specialDefenseEffort": 0,
         "speedEffort": 0,
         "catchRatio": 90,
-        "growExp": 162
+        "growExperience": 162
     },
     "165": {
         "name": "金龟虫(165)",
@@ -2973,7 +3011,7 @@ const PET_FUTURES = {
         "specialDefenseEffort": 1,
         "speedEffort": 0,
         "catchRatio": 255,
-        "growExp": 54
+        "growExperience": 54
     },
     "166": {
         "name": "金龟战士(166)",
@@ -2991,7 +3029,7 @@ const PET_FUTURES = {
         "specialDefenseEffort": 2,
         "speedEffort": 0,
         "catchRatio": 90,
-        "growExp": 134
+        "growExperience": 134
     },
     "167": {
         "name": "独角蛛(167)",
@@ -3009,7 +3047,7 @@ const PET_FUTURES = {
         "specialDefenseEffort": 0,
         "speedEffort": 0,
         "catchRatio": 255,
-        "growExp": 54
+        "growExperience": 54
     },
     "168": {
         "name": "大独角蛛(168)",
@@ -3027,7 +3065,7 @@ const PET_FUTURES = {
         "specialDefenseEffort": 0,
         "speedEffort": 0,
         "catchRatio": 90,
-        "growExp": 134
+        "growExperience": 134
     },
     "169": {
         "name": "双翼蝙蝠(169)",
@@ -3045,7 +3083,7 @@ const PET_FUTURES = {
         "specialDefenseEffort": 0,
         "speedEffort": 3,
         "catchRatio": 90,
-        "growExp": 204
+        "growExperience": 204
     },
     "170": {
         "name": "双灯鱼(170)",
@@ -3063,7 +3101,7 @@ const PET_FUTURES = {
         "specialDefenseEffort": 0,
         "speedEffort": 0,
         "catchRatio": 190,
-        "growExp": 90
+        "growExperience": 90
     },
     "171": {
         "name": "大双灯鱼(171)",
@@ -3081,7 +3119,7 @@ const PET_FUTURES = {
         "specialDefenseEffort": 0,
         "speedEffort": 0,
         "catchRatio": 75,
-        "growExp": 156
+        "growExperience": 156
     },
     "172": {
         "name": "皮丘(172)",
@@ -3099,7 +3137,7 @@ const PET_FUTURES = {
         "specialDefenseEffort": 0,
         "speedEffort": 1,
         "catchRatio": 190,
-        "growExp": 42
+        "growExperience": 42
     },
     "173": {
         "name": "皮(173)",
@@ -3117,7 +3155,7 @@ const PET_FUTURES = {
         "specialDefenseEffort": 1,
         "speedEffort": 0,
         "catchRatio": 150,
-        "growExp": 37
+        "growExperience": 37
     },
     "174": {
         "name": "布布林(174)",
@@ -3135,7 +3173,7 @@ const PET_FUTURES = {
         "specialDefenseEffort": 0,
         "speedEffort": 0,
         "catchRatio": 170,
-        "growExp": 39
+        "growExperience": 39
     },
     "175": {
         "name": "波克比(175)",
@@ -3153,7 +3191,7 @@ const PET_FUTURES = {
         "specialDefenseEffort": 1,
         "speedEffort": 0,
         "catchRatio": 190,
-        "growExp": 74
+        "growExperience": 74
     },
     "176": {
         "name": "飞翼兽(176)",
@@ -3171,7 +3209,7 @@ const PET_FUTURES = {
         "specialDefenseEffort": 2,
         "speedEffort": 0,
         "catchRatio": 75,
-        "growExp": 114
+        "growExperience": 114
     },
     "177": {
         "name": "玩偶鸟(177)",
@@ -3189,7 +3227,7 @@ const PET_FUTURES = {
         "specialDefenseEffort": 0,
         "speedEffort": 0,
         "catchRatio": 190,
-        "growExp": 73
+        "growExperience": 73
     },
     "178": {
         "name": "预言鸟(178)",
@@ -3207,7 +3245,7 @@ const PET_FUTURES = {
         "specialDefenseEffort": 0,
         "speedEffort": 1,
         "catchRatio": 75,
-        "growExp": 171
+        "growExperience": 171
     },
     "179": {
         "name": "电电羊(179)",
@@ -3225,7 +3263,7 @@ const PET_FUTURES = {
         "specialDefenseEffort": 0,
         "speedEffort": 0,
         "catchRatio": 235,
-        "growExp": 59
+        "growExperience": 59
     },
     "180": {
         "name": "羊咩咩(180)",
@@ -3243,7 +3281,7 @@ const PET_FUTURES = {
         "specialDefenseEffort": 0,
         "speedEffort": 0,
         "catchRatio": 120,
-        "growExp": 117
+        "growExperience": 117
     },
     "181": {
         "name": "电龙(181)",
@@ -3261,7 +3299,7 @@ const PET_FUTURES = {
         "specialDefenseEffort": 0,
         "speedEffort": 0,
         "catchRatio": 45,
-        "growExp": 194
+        "growExperience": 194
     },
     "182": {
         "name": "美丽花(182)",
@@ -3279,7 +3317,7 @@ const PET_FUTURES = {
         "specialDefenseEffort": 3,
         "speedEffort": 0,
         "catchRatio": 45,
-        "growExp": 184
+        "growExperience": 184
     },
     "183": {
         "name": "水鼠(183)",
@@ -3297,7 +3335,7 @@ const PET_FUTURES = {
         "specialDefenseEffort": 0,
         "speedEffort": 0,
         "catchRatio": 190,
-        "growExp": 58
+        "growExperience": 58
     },
     "184": {
         "name": "大水鼠(184)",
@@ -3315,7 +3353,7 @@ const PET_FUTURES = {
         "specialDefenseEffort": 0,
         "speedEffort": 0,
         "catchRatio": 75,
-        "growExp": 153
+        "growExperience": 153
     },
     "185": {
         "name": "骗人树(185)",
@@ -3333,7 +3371,7 @@ const PET_FUTURES = {
         "specialDefenseEffort": 0,
         "speedEffort": 0,
         "catchRatio": 65,
-        "growExp": 135
+        "growExperience": 135
     },
     "186": {
         "name": "蚊香蛙王(186)",
@@ -3351,7 +3389,7 @@ const PET_FUTURES = {
         "specialDefenseEffort": 3,
         "speedEffort": 0,
         "catchRatio": 45,
-        "growExp": 185
+        "growExperience": 185
     },
     "187": {
         "name": "羽毛树(187)",
@@ -3369,7 +3407,7 @@ const PET_FUTURES = {
         "specialDefenseEffort": 1,
         "speedEffort": 0,
         "catchRatio": 255,
-        "growExp": 74
+        "growExperience": 74
     },
     "188": {
         "name": "波波树(188)",
@@ -3387,7 +3425,7 @@ const PET_FUTURES = {
         "specialDefenseEffort": 0,
         "speedEffort": 2,
         "catchRatio": 120,
-        "growExp": 136
+        "growExperience": 136
     },
     "189": {
         "name": "棉花树(189)",
@@ -3405,7 +3443,7 @@ const PET_FUTURES = {
         "specialDefenseEffort": 0,
         "speedEffort": 3,
         "catchRatio": 45,
-        "growExp": 176
+        "growExperience": 176
     },
     "190": {
         "name": "长尾猴(190)",
@@ -3423,7 +3461,7 @@ const PET_FUTURES = {
         "specialDefenseEffort": 0,
         "speedEffort": 1,
         "catchRatio": 45,
-        "growExp": 94
+        "growExperience": 94
     },
     "191": {
         "name": "悠闲种子(191)",
@@ -3441,7 +3479,7 @@ const PET_FUTURES = {
         "specialDefenseEffort": 0,
         "speedEffort": 0,
         "catchRatio": 235,
-        "growExp": 52
+        "growExperience": 52
     },
     "192": {
         "name": "向日葵(192)",
@@ -3459,7 +3497,7 @@ const PET_FUTURES = {
         "specialDefenseEffort": 0,
         "speedEffort": 0,
         "catchRatio": 120,
-        "growExp": 146
+        "growExperience": 146
     },
     "193": {
         "name": "花羽蜻蜓(193)",
@@ -3477,7 +3515,7 @@ const PET_FUTURES = {
         "specialDefenseEffort": 0,
         "speedEffort": 2,
         "catchRatio": 75,
-        "growExp": 147
+        "growExperience": 147
     },
     "194": {
         "name": "小嵘(194)",
@@ -3495,7 +3533,7 @@ const PET_FUTURES = {
         "specialDefenseEffort": 0,
         "speedEffort": 0,
         "catchRatio": 255,
-        "growExp": 52
+        "growExperience": 52
     },
     "195": {
         "name": "呆呆嵘(195)",
@@ -3513,7 +3551,7 @@ const PET_FUTURES = {
         "specialDefenseEffort": 0,
         "speedEffort": 0,
         "catchRatio": 90,
-        "growExp": 137
+        "growExperience": 137
     },
     "196": {
         "name": "艾菲狐(196)",
@@ -3531,7 +3569,7 @@ const PET_FUTURES = {
         "specialDefenseEffort": 0,
         "speedEffort": 0,
         "catchRatio": 45,
-        "growExp": 197
+        "growExperience": 197
     },
     "197": {
         "name": "小黑兔(197)",
@@ -3549,7 +3587,7 @@ const PET_FUTURES = {
         "specialDefenseEffort": 2,
         "speedEffort": 0,
         "catchRatio": 45,
-        "growExp": 197
+        "growExperience": 197
     },
     "198": {
         "name": "夜乌鸦(198)",
@@ -3567,7 +3605,7 @@ const PET_FUTURES = {
         "specialDefenseEffort": 0,
         "speedEffort": 1,
         "catchRatio": 30,
-        "growExp": 107
+        "growExperience": 107
     },
     "199": {
         "name": "河马国王(199)",
@@ -3585,7 +3623,7 @@ const PET_FUTURES = {
         "specialDefenseEffort": 3,
         "speedEffort": 0,
         "catchRatio": 70,
-        "growExp": 164
+        "growExperience": 164
     },
     "200": {
         "name": "梦魔(200)",
@@ -3603,7 +3641,7 @@ const PET_FUTURES = {
         "specialDefenseEffort": 1,
         "speedEffort": 0,
         "catchRatio": 45,
-        "growExp": 147
+        "growExperience": 147
     },
     "201": {
         "name": "未知(201)",
@@ -3621,7 +3659,7 @@ const PET_FUTURES = {
         "specialDefenseEffort": 0,
         "speedEffort": 0,
         "catchRatio": 225,
-        "growExp": 61
+        "growExperience": 61
     },
     "202": {
         "name": "忍耐龙(202)",
@@ -3639,7 +3677,7 @@ const PET_FUTURES = {
         "specialDefenseEffort": 0,
         "speedEffort": 0,
         "catchRatio": 45,
-        "growExp": 177
+        "growExperience": 177
     },
     "203": {
         "name": "麒麟奇(203)",
@@ -3657,7 +3695,7 @@ const PET_FUTURES = {
         "specialDefenseEffort": 0,
         "speedEffort": 0,
         "catchRatio": 60,
-        "growExp": 149
+        "growExperience": 149
     },
     "204": {
         "name": "松果怪(204)",
@@ -3675,7 +3713,7 @@ const PET_FUTURES = {
         "specialDefenseEffort": 0,
         "speedEffort": 0,
         "catchRatio": 190,
-        "growExp": 60
+        "growExperience": 60
     },
     "205": {
         "name": "具壳怪(205)",
@@ -3693,7 +3731,7 @@ const PET_FUTURES = {
         "specialDefenseEffort": 0,
         "speedEffort": 0,
         "catchRatio": 75,
-        "growExp": 118
+        "growExperience": 118
     },
     "206": {
         "name": "土龙(206)",
@@ -3711,7 +3749,7 @@ const PET_FUTURES = {
         "specialDefenseEffort": 0,
         "speedEffort": 0,
         "catchRatio": 190,
-        "growExp": 75
+        "growExperience": 75
     },
     "207": {
         "name": "大钳虫(207)",
@@ -3729,7 +3767,7 @@ const PET_FUTURES = {
         "specialDefenseEffort": 0,
         "speedEffort": 1,
         "catchRatio": 60,
-        "growExp": 108
+        "growExperience": 108
     },
     "208": {
         "name": "钢牙龙(208)",
@@ -3747,7 +3785,7 @@ const PET_FUTURES = {
         "specialDefenseEffort": 0,
         "speedEffort": 0,
         "catchRatio": 25,
-        "growExp": 196
+        "growExperience": 196
     },
     "209": {
         "name": "布鲁(209)",
@@ -3765,7 +3803,7 @@ const PET_FUTURES = {
         "specialDefenseEffort": 0,
         "speedEffort": 0,
         "catchRatio": 190,
-        "growExp": 63
+        "growExperience": 63
     },
     "210": {
         "name": "大布鲁(210)",
@@ -3783,7 +3821,7 @@ const PET_FUTURES = {
         "specialDefenseEffort": 0,
         "speedEffort": 0,
         "catchRatio": 75,
-        "growExp": 178
+        "growExperience": 178
     },
     "211": {
         "name": "千针豚(211)",
@@ -3801,7 +3839,7 @@ const PET_FUTURES = {
         "specialDefenseEffort": 0,
         "speedEffort": 0,
         "catchRatio": 45,
-        "growExp": 100
+        "growExperience": 100
     },
     "212": {
         "name": "哈萨姆(212)",
@@ -3819,7 +3857,7 @@ const PET_FUTURES = {
         "specialDefenseEffort": 0,
         "speedEffort": 0,
         "catchRatio": 25,
-        "growExp": 200
+        "growExperience": 200
     },
     "213": {
         "name": "洞洞龟(213)",
@@ -3837,7 +3875,7 @@ const PET_FUTURES = {
         "specialDefenseEffort": 1,
         "speedEffort": 0,
         "catchRatio": 190,
-        "growExp": 80
+        "growExperience": 80
     },
     "214": {
         "name": "大力甲虫(214)",
@@ -3855,7 +3893,7 @@ const PET_FUTURES = {
         "specialDefenseEffort": 0,
         "speedEffort": 0,
         "catchRatio": 45,
-        "growExp": 200
+        "growExperience": 200
     },
     "215": {
         "name": "梦拉(215)",
@@ -3873,7 +3911,7 @@ const PET_FUTURES = {
         "specialDefenseEffort": 0,
         "speedEffort": 1,
         "catchRatio": 60,
-        "growExp": 132
+        "growExperience": 132
     },
     "216": {
         "name": "公主熊(216)",
@@ -3891,7 +3929,7 @@ const PET_FUTURES = {
         "specialDefenseEffort": 0,
         "speedEffort": 0,
         "catchRatio": 120,
-        "growExp": 124
+        "growExperience": 124
     },
     "217": {
         "name": "圈圈熊(217)",
@@ -3909,7 +3947,7 @@ const PET_FUTURES = {
         "specialDefenseEffort": 0,
         "speedEffort": 0,
         "catchRatio": 60,
-        "growExp": 189
+        "growExperience": 189
     },
     "218": {
         "name": "无壳蜗牛(218)",
@@ -3927,7 +3965,7 @@ const PET_FUTURES = {
         "specialDefenseEffort": 0,
         "speedEffort": 0,
         "catchRatio": 190,
-        "growExp": 78
+        "growExperience": 78
     },
     "219": {
         "name": "粘液蜗牛(219)",
@@ -3945,7 +3983,7 @@ const PET_FUTURES = {
         "specialDefenseEffort": 0,
         "speedEffort": 0,
         "catchRatio": 75,
-        "growExp": 154
+        "growExperience": 154
     },
     "220": {
         "name": "乌利猪(220)",
@@ -3963,7 +4001,7 @@ const PET_FUTURES = {
         "specialDefenseEffort": 0,
         "speedEffort": 0,
         "catchRatio": 225,
-        "growExp": 78
+        "growExperience": 78
     },
     "221": {
         "name": "伊诺猪(221)",
@@ -3981,7 +4019,7 @@ const PET_FUTURES = {
         "specialDefenseEffort": 0,
         "speedEffort": 0,
         "catchRatio": 75,
-        "growExp": 160
+        "growExperience": 160
     },
     "222": {
         "name": "赛尼珊瑚(222)",
@@ -3999,7 +4037,7 @@ const PET_FUTURES = {
         "specialDefenseEffort": 1,
         "speedEffort": 0,
         "catchRatio": 60,
-        "growExp": 113
+        "growExperience": 113
     },
     "223": {
         "name": "怪蛙鱼(223)",
@@ -4017,7 +4055,7 @@ const PET_FUTURES = {
         "specialDefenseEffort": 0,
         "speedEffort": 0,
         "catchRatio": 190,
-        "growExp": 78
+        "growExperience": 78
     },
     "224": {
         "name": "石章鱼(224)",
@@ -4035,7 +4073,7 @@ const PET_FUTURES = {
         "specialDefenseEffort": 0,
         "speedEffort": 0,
         "catchRatio": 75,
-        "growExp": 164
+        "growExperience": 164
     },
     "225": {
         "name": "吉利鸟(225)",
@@ -4053,7 +4091,7 @@ const PET_FUTURES = {
         "specialDefenseEffort": 0,
         "speedEffort": 1,
         "catchRatio": 45,
-        "growExp": 183
+        "growExperience": 183
     },
     "226": {
         "name": "阿扁鱼(226)",
@@ -4071,7 +4109,7 @@ const PET_FUTURES = {
         "specialDefenseEffort": 2,
         "speedEffort": 0,
         "catchRatio": 25,
-        "growExp": 168
+        "growExperience": 168
     },
     "227": {
         "name": "巨鸟(227)",
@@ -4089,7 +4127,7 @@ const PET_FUTURES = {
         "specialDefenseEffort": 0,
         "speedEffort": 0,
         "catchRatio": 120,
-        "growExp": 114
+        "growExperience": 114
     },
     "228": {
         "name": "恶魔犬(228)",
@@ -4107,7 +4145,7 @@ const PET_FUTURES = {
         "specialDefenseEffort": 0,
         "speedEffort": 0,
         "catchRatio": 25,
-        "growExp": 168
+        "growExperience": 168
     },
     "229": {
         "name": "地狱犬(229)",
@@ -4125,7 +4163,7 @@ const PET_FUTURES = {
         "specialDefenseEffort": 0,
         "speedEffort": 0,
         "catchRatio": 45,
-        "growExp": 204
+        "growExperience": 204
     },
     "230": {
         "name": "海马龙(230)",
@@ -4143,7 +4181,7 @@ const PET_FUTURES = {
         "specialDefenseEffort": 1,
         "speedEffort": 0,
         "catchRatio": 45,
-        "growExp": 207
+        "growExperience": 207
     },
     "231": {
         "name": "芝麻象(231)",
@@ -4161,7 +4199,7 @@ const PET_FUTURES = {
         "specialDefenseEffort": 0,
         "speedEffort": 0,
         "catchRatio": 120,
-        "growExp": 124
+        "growExperience": 124
     },
     "232": {
         "name": "大牙象(232)",
@@ -4179,7 +4217,7 @@ const PET_FUTURES = {
         "specialDefenseEffort": 0,
         "speedEffort": 0,
         "catchRatio": 60,
-        "growExp": 189
+        "growExperience": 189
     },
     "233": {
         "name": "3D龙2(233)",
@@ -4197,7 +4235,7 @@ const PET_FUTURES = {
         "specialDefenseEffort": 0,
         "speedEffort": 0,
         "catchRatio": 45,
-        "growExp": 180
+        "growExperience": 180
     },
     "234": {
         "name": "惊角鹿(234)",
@@ -4215,7 +4253,7 @@ const PET_FUTURES = {
         "specialDefenseEffort": 0,
         "speedEffort": 0,
         "catchRatio": 45,
-        "growExp": 165
+        "growExperience": 165
     },
     "235": {
         "name": "画画犬(235)",
@@ -4233,7 +4271,7 @@ const PET_FUTURES = {
         "specialDefenseEffort": 0,
         "speedEffort": 1,
         "catchRatio": 45,
-        "growExp": 106
+        "growExperience": 106
     },
     "236": {
         "name": "巴路奇(236)",
@@ -4251,7 +4289,7 @@ const PET_FUTURES = {
         "specialDefenseEffort": 0,
         "speedEffort": 0,
         "catchRatio": 75,
-        "growExp": 91
+        "growExperience": 91
     },
     "237": {
         "name": "卡波耶拉(237)",
@@ -4269,7 +4307,7 @@ const PET_FUTURES = {
         "specialDefenseEffort": 2,
         "speedEffort": 0,
         "catchRatio": 45,
-        "growExp": 138
+        "growExperience": 138
     },
     "238": {
         "name": "大眼娃(238)",
@@ -4287,7 +4325,7 @@ const PET_FUTURES = {
         "specialDefenseEffort": 0,
         "speedEffort": 0,
         "catchRatio": 45,
-        "growExp": 87
+        "growExperience": 87
     },
     "239": {
         "name": "电力兽(239)",
@@ -4305,7 +4343,7 @@ const PET_FUTURES = {
         "specialDefenseEffort": 0,
         "speedEffort": 1,
         "catchRatio": 45,
-        "growExp": 106
+        "growExperience": 106
     },
     "240": {
         "name": "布比(240)",
@@ -4323,7 +4361,7 @@ const PET_FUTURES = {
         "specialDefenseEffort": 0,
         "speedEffort": 1,
         "catchRatio": 45,
-        "growExp": 117
+        "growExperience": 117
     },
     "241": {
         "name": "牛奶坦克(241)",
@@ -4341,7 +4379,7 @@ const PET_FUTURES = {
         "specialDefenseEffort": 0,
         "speedEffort": 0,
         "catchRatio": 45,
-        "growExp": 200
+        "growExperience": 200
     },
     "242": {
         "name": "快乐(242)",
@@ -4359,7 +4397,7 @@ const PET_FUTURES = {
         "specialDefenseEffort": 0,
         "speedEffort": 0,
         "catchRatio": 30,
-        "growExp": 255
+        "growExperience": 255
     },
     "243": {
         "name": "雷虎(243)",
@@ -4377,7 +4415,7 @@ const PET_FUTURES = {
         "specialDefenseEffort": 0,
         "speedEffort": 2,
         "catchRatio": 3,
-        "growExp": 216
+        "growExperience": 216
     },
     "244": {
         "name": "火狮(244)",
@@ -4395,7 +4433,7 @@ const PET_FUTURES = {
         "specialDefenseEffort": 0,
         "speedEffort": 0,
         "catchRatio": 3,
-        "growExp": 217
+        "growExperience": 217
     },
     "245": {
         "name": "水狼(245)",
@@ -4413,7 +4451,7 @@ const PET_FUTURES = {
         "specialDefenseEffort": 2,
         "speedEffort": 0,
         "catchRatio": 3,
-        "growExp": 215
+        "growExperience": 215
     },
     "246": {
         "name": "幼甲龙(246)",
@@ -4431,7 +4469,7 @@ const PET_FUTURES = {
         "specialDefenseEffort": 0,
         "speedEffort": 0,
         "catchRatio": 45,
-        "growExp": 67
+        "growExperience": 67
     },
     "247": {
         "name": "小甲龙(247)",
@@ -4449,7 +4487,7 @@ const PET_FUTURES = {
         "specialDefenseEffort": 0,
         "speedEffort": 0,
         "catchRatio": 45,
-        "growExp": 144
+        "growExperience": 144
     },
     "248": {
         "name": "巨大甲龙(248)",
@@ -4467,7 +4505,7 @@ const PET_FUTURES = {
         "specialDefenseEffort": 0,
         "speedEffort": 0,
         "catchRatio": 45,
-        "growExp": 218
+        "growExperience": 218
     },
     "249": {
         "name": "路基亚(249)",
@@ -4485,7 +4523,7 @@ const PET_FUTURES = {
         "specialDefenseEffort": 3,
         "speedEffort": 0,
         "catchRatio": 3,
-        "growExp": 220
+        "growExperience": 220
     },
     "250": {
         "name": "凤凰(250)",
@@ -4503,7 +4541,7 @@ const PET_FUTURES = {
         "specialDefenseEffort": 3,
         "speedEffort": 0,
         "catchRatio": 3,
-        "growExp": 220
+        "growExperience": 220
     },
     "251": {
         "name": "雪拉比(251)",
@@ -4521,7 +4559,7 @@ const PET_FUTURES = {
         "specialDefenseEffort": 0,
         "speedEffort": 0,
         "catchRatio": 45,
-        "growExp": 64
+        "growExperience": 64
     },
     "252": {
         "name": "草蜥蜴(252)",
@@ -4539,7 +4577,7 @@ const PET_FUTURES = {
         "specialDefenseEffort": 0,
         "speedEffort": 1,
         "catchRatio": 45,
-        "growExp": 65
+        "growExperience": 65
     },
     "253": {
         "name": "草青蛙(253)",
@@ -4557,7 +4595,7 @@ const PET_FUTURES = {
         "specialDefenseEffort": 0,
         "speedEffort": 2,
         "catchRatio": 45,
-        "growExp": 141
+        "growExperience": 141
     },
     "254": {
         "name": "针叶王(254)",
@@ -4575,7 +4613,7 @@ const PET_FUTURES = {
         "specialDefenseEffort": 0,
         "speedEffort": 3,
         "catchRatio": 45,
-        "growExp": 208
+        "growExperience": 208
     },
     "255": {
         "name": "小火鸡(255)",
@@ -4593,7 +4631,7 @@ const PET_FUTURES = {
         "specialDefenseEffort": 0,
         "speedEffort": 0,
         "catchRatio": 45,
-        "growExp": 65
+        "growExperience": 65
     },
     "256": {
         "name": "瓦卡火鸡(256)",
@@ -4611,7 +4649,7 @@ const PET_FUTURES = {
         "specialDefenseEffort": 0,
         "speedEffort": 0,
         "catchRatio": 45,
-        "growExp": 142
+        "growExperience": 142
     },
     "257": {
         "name": "火鸡战士(257)",
@@ -4629,7 +4667,7 @@ const PET_FUTURES = {
         "specialDefenseEffort": 0,
         "speedEffort": 0,
         "catchRatio": 45,
-        "growExp": 209
+        "growExperience": 209
     },
     "258": {
         "name": "小水狗(258)",
@@ -4647,7 +4685,7 @@ const PET_FUTURES = {
         "specialDefenseEffort": 0,
         "speedEffort": 0,
         "catchRatio": 45,
-        "growExp": 65
+        "growExperience": 65
     },
     "259": {
         "name": "水狗(259)",
@@ -4665,7 +4703,7 @@ const PET_FUTURES = {
         "specialDefenseEffort": 0,
         "speedEffort": 0,
         "catchRatio": 45,
-        "growExp": 143
+        "growExperience": 143
     },
     "260": {
         "name": "水狗王(260)",
@@ -4683,7 +4721,7 @@ const PET_FUTURES = {
         "specialDefenseEffort": 0,
         "speedEffort": 0,
         "catchRatio": 45,
-        "growExp": 210
+        "growExperience": 210
     },
     "261": {
         "name": "伯秋狗(261)",
@@ -4701,7 +4739,7 @@ const PET_FUTURES = {
         "specialDefenseEffort": 0,
         "speedEffort": 0,
         "catchRatio": 255,
-        "growExp": 55
+        "growExperience": 55
     },
     "262": {
         "name": "恶啸狼(262)",
@@ -4719,7 +4757,7 @@ const PET_FUTURES = {
         "specialDefenseEffort": 0,
         "speedEffort": 0,
         "catchRatio": 127,
-        "growExp": 128
+        "growExperience": 128
     },
     "263": {
         "name": "小浣熊(263)",
@@ -4737,7 +4775,7 @@ const PET_FUTURES = {
         "specialDefenseEffort": 0,
         "speedEffort": 1,
         "catchRatio": 255,
-        "growExp": 60
+        "growExperience": 60
     },
     "264": {
         "name": "小臭釉(264)",
@@ -4755,7 +4793,7 @@ const PET_FUTURES = {
         "specialDefenseEffort": 0,
         "speedEffort": 2,
         "catchRatio": 90,
-        "growExp": 128
+        "growExperience": 128
     },
     "265": {
         "name": "红毛虫(265)",
@@ -4773,7 +4811,7 @@ const PET_FUTURES = {
         "specialDefenseEffort": 0,
         "speedEffort": 0,
         "catchRatio": 255,
-        "growExp": 54
+        "growExperience": 54
     },
     "266": {
         "name": "刺角蛹(266)",
@@ -4791,7 +4829,7 @@ const PET_FUTURES = {
         "specialDefenseEffort": 0,
         "speedEffort": 0,
         "catchRatio": 120,
-        "growExp": 71
+        "growExperience": 71
     },
     "267": {
         "name": "吸管蝶(267)",
@@ -4809,7 +4847,7 @@ const PET_FUTURES = {
         "specialDefenseEffort": 0,
         "speedEffort": 0,
         "catchRatio": 45,
-        "growExp": 161
+        "growExperience": 161
     },
     "268": {
         "name": "刺角昆(268)",
@@ -4827,7 +4865,7 @@ const PET_FUTURES = {
         "specialDefenseEffort": 0,
         "speedEffort": 0,
         "catchRatio": 120,
-        "growExp": 72
+        "growExperience": 72
     },
     "269": {
         "name": "半莲毒蛾(269)",
@@ -4845,7 +4883,7 @@ const PET_FUTURES = {
         "specialDefenseEffort": 3,
         "speedEffort": 0,
         "catchRatio": 45,
-        "growExp": 160
+        "growExperience": 160
     },
     "270": {
         "name": "哈斯荷叶(270)",
@@ -4863,7 +4901,7 @@ const PET_FUTURES = {
         "specialDefenseEffort": 1,
         "speedEffort": 0,
         "catchRatio": 255,
-        "growExp": 74
+        "growExperience": 74
     },
     "271": {
         "name": "哈斯荷童(271)",
@@ -4881,7 +4919,7 @@ const PET_FUTURES = {
         "specialDefenseEffort": 2,
         "speedEffort": 0,
         "catchRatio": 120,
-        "growExp": 141
+        "growExperience": 141
     },
     "272": {
         "name": "荷叶鸭(272)",
@@ -4899,7 +4937,7 @@ const PET_FUTURES = {
         "specialDefenseEffort": 3,
         "speedEffort": 0,
         "catchRatio": 45,
-        "growExp": 181
+        "growExperience": 181
     },
     "273": {
         "name": "坚果球(273)",
@@ -4917,7 +4955,7 @@ const PET_FUTURES = {
         "specialDefenseEffort": 0,
         "speedEffort": 0,
         "catchRatio": 255,
-        "growExp": 74
+        "growExperience": 74
     },
     "274": {
         "name": "坚果怪(274)",
@@ -4935,7 +4973,7 @@ const PET_FUTURES = {
         "specialDefenseEffort": 0,
         "speedEffort": 0,
         "catchRatio": 120,
-        "growExp": 141
+        "growExperience": 141
     },
     "275": {
         "name": "木天狗(275)",
@@ -4953,7 +4991,7 @@ const PET_FUTURES = {
         "specialDefenseEffort": 0,
         "speedEffort": 0,
         "catchRatio": 45,
-        "growExp": 181
+        "growExperience": 181
     },
     "276": {
         "name": "思巴燕(276)",
@@ -4971,7 +5009,7 @@ const PET_FUTURES = {
         "specialDefenseEffort": 0,
         "speedEffort": 1,
         "catchRatio": 200,
-        "growExp": 59
+        "growExperience": 59
     },
     "277": {
         "name": "奥思巴燕(277)",
@@ -4989,7 +5027,7 @@ const PET_FUTURES = {
         "specialDefenseEffort": 0,
         "speedEffort": 2,
         "catchRatio": 45,
-        "growExp": 162
+        "growExperience": 162
     },
     "278": {
         "name": "小海鸥(278)",
@@ -5007,7 +5045,7 @@ const PET_FUTURES = {
         "specialDefenseEffort": 0,
         "speedEffort": 1,
         "catchRatio": 190,
-        "growExp": 64
+        "growExperience": 64
     },
     "279": {
         "name": "大嘴鹈鹕(279)",
@@ -5025,7 +5063,7 @@ const PET_FUTURES = {
         "specialDefenseEffort": 0,
         "speedEffort": 0,
         "catchRatio": 45,
-        "growExp": 164
+        "growExperience": 164
     },
     "280": {
         "name": "拉托斯(280)",
@@ -5043,7 +5081,7 @@ const PET_FUTURES = {
         "specialDefenseEffort": 0,
         "speedEffort": 0,
         "catchRatio": 235,
-        "growExp": 70
+        "growExperience": 70
     },
     "281": {
         "name": "凯利阿(281)",
@@ -5061,7 +5099,7 @@ const PET_FUTURES = {
         "specialDefenseEffort": 0,
         "speedEffort": 0,
         "catchRatio": 120,
-        "growExp": 140
+        "growExperience": 140
     },
     "282": {
         "name": "超能女皇(282)",
@@ -5079,7 +5117,7 @@ const PET_FUTURES = {
         "specialDefenseEffort": 0,
         "speedEffort": 0,
         "catchRatio": 45,
-        "growExp": 208
+        "growExperience": 208
     },
     "283": {
         "name": "阿美蛛(283)",
@@ -5097,7 +5135,7 @@ const PET_FUTURES = {
         "specialDefenseEffort": 0,
         "speedEffort": 1,
         "catchRatio": 200,
-        "growExp": 63
+        "growExperience": 63
     },
     "284": {
         "name": "阿美蝶(284)",
@@ -5115,7 +5153,7 @@ const PET_FUTURES = {
         "specialDefenseEffort": 1,
         "speedEffort": 0,
         "catchRatio": 75,
-        "growExp": 128
+        "growExperience": 128
     },
     "285": {
         "name": "凯诺菇(285)",
@@ -5133,7 +5171,7 @@ const PET_FUTURES = {
         "specialDefenseEffort": 0,
         "speedEffort": 0,
         "catchRatio": 255,
-        "growExp": 65
+        "growExperience": 65
     },
     "286": {
         "name": "凯诺战士(286)",
@@ -5151,7 +5189,7 @@ const PET_FUTURES = {
         "specialDefenseEffort": 0,
         "speedEffort": 0,
         "catchRatio": 90,
-        "growExp": 165
+        "growExperience": 165
     },
     "287": {
         "name": "小懒熊(287)",
@@ -5169,7 +5207,7 @@ const PET_FUTURES = {
         "specialDefenseEffort": 0,
         "speedEffort": 0,
         "catchRatio": 255,
-        "growExp": 83
+        "growExperience": 83
     },
     "288": {
         "name": "长臂猿(288)",
@@ -5187,7 +5225,7 @@ const PET_FUTURES = {
         "specialDefenseEffort": 0,
         "speedEffort": 2,
         "catchRatio": 120,
-        "growExp": 126
+        "growExperience": 126
     },
     "289": {
         "name": "大猩猩(289)",
@@ -5205,7 +5243,7 @@ const PET_FUTURES = {
         "specialDefenseEffort": 0,
         "speedEffort": 0,
         "catchRatio": 45,
-        "growExp": 210
+        "growExperience": 210
     },
     "290": {
         "name": "掘地虫(290)",
@@ -5223,7 +5261,7 @@ const PET_FUTURES = {
         "specialDefenseEffort": 0,
         "speedEffort": 0,
         "catchRatio": 255,
-        "growExp": 65
+        "growExperience": 65
     },
     "291": {
         "name": "巨翅蝉(291)",
@@ -5241,7 +5279,7 @@ const PET_FUTURES = {
         "specialDefenseEffort": 0,
         "speedEffort": 2,
         "catchRatio": 120,
-        "growExp": 155
+        "growExperience": 155
     },
     "292": {
         "name": "鬼蝉蛹(292)",
@@ -5259,7 +5297,7 @@ const PET_FUTURES = {
         "specialDefenseEffort": 0,
         "speedEffort": 0,
         "catchRatio": 45,
-        "growExp": 95
+        "growExperience": 95
     },
     "293": {
         "name": "音波兔(293)",
@@ -5277,7 +5315,7 @@ const PET_FUTURES = {
         "specialDefenseEffort": 0,
         "speedEffort": 0,
         "catchRatio": 190,
-        "growExp": 68
+        "growExperience": 68
     },
     "294": {
         "name": "圆耳兔(294)",
@@ -5295,7 +5333,7 @@ const PET_FUTURES = {
         "specialDefenseEffort": 0,
         "speedEffort": 0,
         "catchRatio": 120,
-        "growExp": 126
+        "growExperience": 126
     },
     "295": {
         "name": "噪音王(295)",
@@ -5313,7 +5351,7 @@ const PET_FUTURES = {
         "specialDefenseEffort": 0,
         "speedEffort": 0,
         "catchRatio": 45,
-        "growExp": 184
+        "growExperience": 184
     },
     "296": {
         "name": "拳击兔(296)",
@@ -5331,7 +5369,7 @@ const PET_FUTURES = {
         "specialDefenseEffort": 0,
         "speedEffort": 0,
         "catchRatio": 180,
-        "growExp": 87
+        "growExperience": 87
     },
     "297": {
         "name": "相扑兔(297)",
@@ -5349,7 +5387,7 @@ const PET_FUTURES = {
         "specialDefenseEffort": 0,
         "speedEffort": 0,
         "catchRatio": 200,
-        "growExp": 184
+        "growExperience": 184
     },
     "298": {
         "name": "小水鼠(298)",
@@ -5367,7 +5405,7 @@ const PET_FUTURES = {
         "specialDefenseEffort": 0,
         "speedEffort": 0,
         "catchRatio": 150,
-        "growExp": 33
+        "growExperience": 33
     },
     "299": {
         "name": "磁石怪(299)",
@@ -5385,7 +5423,7 @@ const PET_FUTURES = {
         "specialDefenseEffort": 0,
         "speedEffort": 0,
         "catchRatio": 255,
-        "growExp": 108
+        "growExperience": 108
     },
     "300": {
         "name": "手尾猫(300)",
@@ -5403,7 +5441,7 @@ const PET_FUTURES = {
         "specialDefenseEffort": 0,
         "speedEffort": 1,
         "catchRatio": 255,
-        "growExp": 65
+        "growExperience": 65
     },
     "301": {
         "name": "圆环猫(301)",
@@ -5421,7 +5459,7 @@ const PET_FUTURES = {
         "specialDefenseEffort": 0,
         "speedEffort": 1,
         "catchRatio": 60,
-        "growExp": 138
+        "growExperience": 138
     },
     "302": {
         "name": "地狱超人(302)",
@@ -5439,7 +5477,7 @@ const PET_FUTURES = {
         "specialDefenseEffort": 0,
         "speedEffort": 0,
         "catchRatio": 45,
-        "growExp": 98
+        "growExperience": 98
     },
     "303": {
         "name": "巨嘴秋(303)",
@@ -5457,7 +5495,7 @@ const PET_FUTURES = {
         "specialDefenseEffort": 0,
         "speedEffort": 0,
         "catchRatio": 45,
-        "growExp": 98
+        "growExperience": 98
     },
     "304": {
         "name": "钢甲小子(304)",
@@ -5475,7 +5513,7 @@ const PET_FUTURES = {
         "specialDefenseEffort": 0,
         "speedEffort": 0,
         "catchRatio": 180,
-        "growExp": 96
+        "growExperience": 96
     },
     "305": {
         "name": "钢甲犀牛(305)",
@@ -5493,7 +5531,7 @@ const PET_FUTURES = {
         "specialDefenseEffort": 0,
         "speedEffort": 0,
         "catchRatio": 90,
-        "growExp": 152
+        "growExperience": 152
     },
     "306": {
         "name": "钢甲暴龙(306)",
@@ -5511,7 +5549,7 @@ const PET_FUTURES = {
         "specialDefenseEffort": 0,
         "speedEffort": 0,
         "catchRatio": 45,
-        "growExp": 205
+        "growExperience": 205
     },
     "307": {
         "name": "阿萨那恩(307)",
@@ -5529,7 +5567,7 @@ const PET_FUTURES = {
         "specialDefenseEffort": 0,
         "speedEffort": 1,
         "catchRatio": 180,
-        "growExp": 91
+        "growExperience": 91
     },
     "308": {
         "name": "丘雷姆(308)",
@@ -5547,7 +5585,7 @@ const PET_FUTURES = {
         "specialDefenseEffort": 0,
         "speedEffort": 2,
         "catchRatio": 90,
-        "growExp": 153
+        "growExperience": 153
     },
     "309": {
         "name": "疾电狗(309)",
@@ -5565,7 +5603,7 @@ const PET_FUTURES = {
         "specialDefenseEffort": 0,
         "speedEffort": 1,
         "catchRatio": 120,
-        "growExp": 104
+        "growExperience": 104
     },
     "310": {
         "name": "电气狗(310)",
@@ -5583,7 +5621,7 @@ const PET_FUTURES = {
         "specialDefenseEffort": 0,
         "speedEffort": 2,
         "catchRatio": 45,
-        "growExp": 168
+        "growExperience": 168
     },
     "311": {
         "name": "正电兔(311)",
@@ -5601,7 +5639,7 @@ const PET_FUTURES = {
         "specialDefenseEffort": 0,
         "speedEffort": 1,
         "catchRatio": 200,
-        "growExp": 120
+        "growExperience": 120
     },
     "312": {
         "name": "负电兔(312)",
@@ -5619,7 +5657,7 @@ const PET_FUTURES = {
         "specialDefenseEffort": 0,
         "speedEffort": 1,
         "catchRatio": 200,
-        "growExp": 120
+        "growExperience": 120
     },
     "313": {
         "name": "巴鲁胖蜂(313)",
@@ -5637,7 +5675,7 @@ const PET_FUTURES = {
         "specialDefenseEffort": 0,
         "speedEffort": 1,
         "catchRatio": 150,
-        "growExp": 146
+        "growExperience": 146
     },
     "314": {
         "name": "伊露胖蜂(314)",
@@ -5655,7 +5693,7 @@ const PET_FUTURES = {
         "specialDefenseEffort": 0,
         "speedEffort": 1,
         "catchRatio": 150,
-        "growExp": 146
+        "growExperience": 146
     },
     "315": {
         "name": "芭蕾玫瑰(315)",
@@ -5673,7 +5711,7 @@ const PET_FUTURES = {
         "specialDefenseEffort": 0,
         "speedEffort": 0,
         "catchRatio": 150,
-        "growExp": 152
+        "growExperience": 152
     },
     "316": {
         "name": "吞食兽(316)",
@@ -5691,7 +5729,7 @@ const PET_FUTURES = {
         "specialDefenseEffort": 0,
         "speedEffort": 0,
         "catchRatio": 225,
-        "growExp": 75
+        "growExperience": 75
     },
     "317": {
         "name": "吞食王(317)",
@@ -5709,7 +5747,7 @@ const PET_FUTURES = {
         "specialDefenseEffort": 0,
         "speedEffort": 0,
         "catchRatio": 75,
-        "growExp": 168
+        "growExperience": 168
     },
     "318": {
         "name": "三色食人鱼(318)",
@@ -5727,7 +5765,7 @@ const PET_FUTURES = {
         "specialDefenseEffort": 0,
         "speedEffort": 0,
         "catchRatio": 225,
-        "growExp": 88
+        "growExperience": 88
     },
     "319": {
         "name": "大口食人鲨(319)",
@@ -5745,7 +5783,7 @@ const PET_FUTURES = {
         "specialDefenseEffort": 0,
         "speedEffort": 0,
         "catchRatio": 60,
-        "growExp": 175
+        "growExperience": 175
     },
     "320": {
         "name": "肥波鲸(320)",
@@ -5763,7 +5801,7 @@ const PET_FUTURES = {
         "specialDefenseEffort": 0,
         "speedEffort": 0,
         "catchRatio": 125,
-        "growExp": 137
+        "growExperience": 137
     },
     "321": {
         "name": "鲸鱼王(321)",
@@ -5781,7 +5819,7 @@ const PET_FUTURES = {
         "specialDefenseEffort": 0,
         "speedEffort": 0,
         "catchRatio": 60,
-        "growExp": 206
+        "growExperience": 206
     },
     "322": {
         "name": "沙漠骆驼(322)",
@@ -5799,7 +5837,7 @@ const PET_FUTURES = {
         "specialDefenseEffort": 0,
         "speedEffort": 0,
         "catchRatio": 255,
-        "growExp": 88
+        "growExperience": 88
     },
     "323": {
         "name": "火山骆驼(323)",
@@ -5817,7 +5855,7 @@ const PET_FUTURES = {
         "specialDefenseEffort": 0,
         "speedEffort": 0,
         "catchRatio": 150,
-        "growExp": 175
+        "growExperience": 175
     },
     "324": {
         "name": "熔岩乌龟(324)",
@@ -5835,7 +5873,7 @@ const PET_FUTURES = {
         "specialDefenseEffort": 0,
         "speedEffort": 0,
         "catchRatio": 90,
-        "growExp": 161
+        "growExperience": 161
     },
     "325": {
         "name": "弹簧小猪(325)",
@@ -5853,7 +5891,7 @@ const PET_FUTURES = {
         "specialDefenseEffort": 1,
         "speedEffort": 0,
         "catchRatio": 255,
-        "growExp": 89
+        "growExperience": 89
     },
     "326": {
         "name": "布比猪(326)",
@@ -5871,7 +5909,7 @@ const PET_FUTURES = {
         "specialDefenseEffort": 2,
         "speedEffort": 0,
         "catchRatio": 60,
-        "growExp": 164
+        "growExperience": 164
     },
     "327": {
         "name": "圈圈兔(327)",
@@ -5889,7 +5927,7 @@ const PET_FUTURES = {
         "specialDefenseEffort": 0,
         "speedEffort": 0,
         "catchRatio": 255,
-        "growExp": 85
+        "growExperience": 85
     },
     "328": {
         "name": "拿古拉(328)",
@@ -5907,7 +5945,7 @@ const PET_FUTURES = {
         "specialDefenseEffort": 0,
         "speedEffort": 0,
         "catchRatio": 255,
-        "growExp": 73
+        "growExperience": 73
     },
     "329": {
         "name": "拉巴蜻蜓(329)",
@@ -5925,7 +5963,7 @@ const PET_FUTURES = {
         "specialDefenseEffort": 0,
         "speedEffort": 1,
         "catchRatio": 120,
-        "growExp": 126
+        "growExperience": 126
     },
     "330": {
         "name": "拉巴飞龙(330)",
@@ -5943,7 +5981,7 @@ const PET_FUTURES = {
         "specialDefenseEffort": 0,
         "speedEffort": 2,
         "catchRatio": 45,
-        "growExp": 197
+        "growExperience": 197
     },
     "331": {
         "name": "南瓜仙人球(331)",
@@ -5961,7 +5999,7 @@ const PET_FUTURES = {
         "specialDefenseEffort": 0,
         "speedEffort": 0,
         "catchRatio": 190,
-        "growExp": 97
+        "growExperience": 97
     },
     "332": {
         "name": "塔斯仙人掌(332)",
@@ -5979,7 +6017,7 @@ const PET_FUTURES = {
         "specialDefenseEffort": 0,
         "speedEffort": 0,
         "catchRatio": 60,
-        "growExp": 177
+        "growExperience": 177
     },
     "333": {
         "name": "云彩雀(333)",
@@ -5997,7 +6035,7 @@ const PET_FUTURES = {
         "specialDefenseEffort": 1,
         "speedEffort": 0,
         "catchRatio": 255,
-        "growExp": 74
+        "growExperience": 74
     },
     "334": {
         "name": "碧云龙(334)",
@@ -6015,7 +6053,7 @@ const PET_FUTURES = {
         "specialDefenseEffort": 2,
         "speedEffort": 0,
         "catchRatio": 45,
-        "growExp": 188
+        "growExperience": 188
     },
     "335": {
         "name": "雪山狐猫(335)",
@@ -6033,7 +6071,7 @@ const PET_FUTURES = {
         "specialDefenseEffort": 0,
         "speedEffort": 0,
         "catchRatio": 90,
-        "growExp": 165
+        "growExperience": 165
     },
     "336": {
         "name": "红牙响尾蛇(336)",
@@ -6051,7 +6089,7 @@ const PET_FUTURES = {
         "specialDefenseEffort": 0,
         "speedEffort": 0,
         "catchRatio": 90,
-        "growExp": 165
+        "growExperience": 165
     },
     "337": {
         "name": "月亮神石(337)",
@@ -6069,7 +6107,7 @@ const PET_FUTURES = {
         "specialDefenseEffort": 0,
         "speedEffort": 0,
         "catchRatio": 45,
-        "growExp": 150
+        "growExperience": 150
     },
     "338": {
         "name": "太阳神石(338)",
@@ -6087,7 +6125,7 @@ const PET_FUTURES = {
         "specialDefenseEffort": 0,
         "speedEffort": 0,
         "catchRatio": 45,
-        "growExp": 150
+        "growExperience": 150
     },
     "339": {
         "name": "小鲶鱼(339)",
@@ -6105,7 +6143,7 @@ const PET_FUTURES = {
         "specialDefenseEffort": 0,
         "speedEffort": 0,
         "catchRatio": 190,
-        "growExp": 92
+        "growExperience": 92
     },
     "340": {
         "name": "地震鲶鱼(340)",
@@ -6123,7 +6161,7 @@ const PET_FUTURES = {
         "specialDefenseEffort": 0,
         "speedEffort": 0,
         "catchRatio": 75,
-        "growExp": 158
+        "growExperience": 158
     },
     "341": {
         "name": "双钳龙虾(341)",
@@ -6141,7 +6179,7 @@ const PET_FUTURES = {
         "specialDefenseEffort": 0,
         "speedEffort": 0,
         "catchRatio": 205,
-        "growExp": 111
+        "growExperience": 111
     },
     "342": {
         "name": "钢钳龙虾(342)",
@@ -6159,7 +6197,7 @@ const PET_FUTURES = {
         "specialDefenseEffort": 0,
         "speedEffort": 0,
         "catchRatio": 155,
-        "growExp": 161
+        "growExperience": 161
     },
     "343": {
         "name": "土偶怪(343)",
@@ -6177,7 +6215,7 @@ const PET_FUTURES = {
         "specialDefenseEffort": 1,
         "speedEffort": 0,
         "catchRatio": 255,
-        "growExp": 58
+        "growExperience": 58
     },
     "344": {
         "name": "三合一土偶(344)",
@@ -6195,7 +6233,7 @@ const PET_FUTURES = {
         "specialDefenseEffort": 2,
         "speedEffort": 0,
         "catchRatio": 90,
-        "growExp": 189
+        "growExperience": 189
     },
     "345": {
         "name": "向日古花(345)",
@@ -6213,7 +6251,7 @@ const PET_FUTURES = {
         "specialDefenseEffort": 1,
         "speedEffort": 0,
         "catchRatio": 45,
-        "growExp": 121
+        "growExperience": 121
     },
     "346": {
         "name": "噬人古花(346)",
@@ -6231,7 +6269,7 @@ const PET_FUTURES = {
         "specialDefenseEffort": 2,
         "speedEffort": 0,
         "catchRatio": 45,
-        "growExp": 201
+        "growExperience": 201
     },
     "347": {
         "name": "硬甲古蝎(347)",
@@ -6249,7 +6287,7 @@ const PET_FUTURES = {
         "specialDefenseEffort": 0,
         "speedEffort": 0,
         "catchRatio": 45,
-        "growExp": 119
+        "growExperience": 119
     },
     "348": {
         "name": "盔甲蝎(348)",
@@ -6267,7 +6305,7 @@ const PET_FUTURES = {
         "specialDefenseEffort": 0,
         "speedEffort": 0,
         "catchRatio": 45,
-        "growExp": 200
+        "growExperience": 200
     },
     "349": {
         "name": "丑鲤鱼(349)",
@@ -6285,7 +6323,7 @@ const PET_FUTURES = {
         "specialDefenseEffort": 0,
         "speedEffort": 1,
         "catchRatio": 255,
-        "growExp": 61
+        "growExperience": 61
     },
     "350": {
         "name": "美丽龙(350)",
@@ -6303,7 +6341,7 @@ const PET_FUTURES = {
         "specialDefenseEffort": 2,
         "speedEffort": 0,
         "catchRatio": 60,
-        "growExp": 213
+        "growExperience": 213
     },
     "351": {
         "name": "天气小子(351)",
@@ -6321,7 +6359,7 @@ const PET_FUTURES = {
         "specialDefenseEffort": 0,
         "speedEffort": 0,
         "catchRatio": 45,
-        "growExp": 145
+        "growExperience": 145
     },
     "352": {
         "name": "隐身龙(352)",
@@ -6339,7 +6377,7 @@ const PET_FUTURES = {
         "specialDefenseEffort": 1,
         "speedEffort": 0,
         "catchRatio": 200,
-        "growExp": 132
+        "growExperience": 132
     },
     "353": {
         "name": "鬼影娃娃(353)",
@@ -6357,7 +6395,7 @@ const PET_FUTURES = {
         "specialDefenseEffort": 0,
         "speedEffort": 0,
         "catchRatio": 225,
-        "growExp": 97
+        "growExperience": 97
     },
     "354": {
         "name": "链嘴幽魂(354)",
@@ -6375,7 +6413,7 @@ const PET_FUTURES = {
         "specialDefenseEffort": 0,
         "speedEffort": 0,
         "catchRatio": 45,
-        "growExp": 179
+        "growExperience": 179
     },
     "355": {
         "name": "夜游灵(355)",
@@ -6393,7 +6431,7 @@ const PET_FUTURES = {
         "specialDefenseEffort": 1,
         "speedEffort": 0,
         "catchRatio": 190,
-        "growExp": 97
+        "growExperience": 97
     },
     "356": {
         "name": "黑乃伊(356)",
@@ -6411,7 +6449,7 @@ const PET_FUTURES = {
         "specialDefenseEffort": 2,
         "speedEffort": 0,
         "catchRatio": 90,
-        "growExp": 179
+        "growExperience": 179
     },
     "357": {
         "name": "热带雷龙(357)",
@@ -6429,7 +6467,7 @@ const PET_FUTURES = {
         "specialDefenseEffort": 0,
         "speedEffort": 0,
         "catchRatio": 200,
-        "growExp": 169
+        "growExperience": 169
     },
     "358": {
         "name": "蓝风铃(358)",
@@ -6447,7 +6485,7 @@ const PET_FUTURES = {
         "specialDefenseEffort": 1,
         "speedEffort": 0,
         "catchRatio": 45,
-        "growExp": 147
+        "growExperience": 147
     },
     "359": {
         "name": "黑面雪狐(359)",
@@ -6465,7 +6503,7 @@ const PET_FUTURES = {
         "specialDefenseEffort": 0,
         "speedEffort": 0,
         "catchRatio": 30,
-        "growExp": 174
+        "growExperience": 174
     },
     "360": {
         "name": "小忍耐龙(360)",
@@ -6483,7 +6521,7 @@ const PET_FUTURES = {
         "specialDefenseEffort": 0,
         "speedEffort": 0,
         "catchRatio": 125,
-        "growExp": 44
+        "growExperience": 44
     },
     "361": {
         "name": "由基瓦拉(361)",
@@ -6501,7 +6539,7 @@ const PET_FUTURES = {
         "specialDefenseEffort": 0,
         "speedEffort": 0,
         "catchRatio": 190,
-        "growExp": 74
+        "growExperience": 74
     },
     "362": {
         "name": "巨头冰怪(362)",
@@ -6519,7 +6557,7 @@ const PET_FUTURES = {
         "specialDefenseEffort": 0,
         "speedEffort": 0,
         "catchRatio": 75,
-        "growExp": 187
+        "growExperience": 187
     },
     "363": {
         "name": "波波海象(363)",
@@ -6537,7 +6575,7 @@ const PET_FUTURES = {
         "specialDefenseEffort": 0,
         "speedEffort": 0,
         "catchRatio": 255,
-        "growExp": 75
+        "growExperience": 75
     },
     "364": {
         "name": "古拉海象(364)",
@@ -6555,7 +6593,7 @@ const PET_FUTURES = {
         "specialDefenseEffort": 0,
         "speedEffort": 0,
         "catchRatio": 120,
-        "growExp": 128
+        "growExperience": 128
     },
     "365": {
         "name": "海象牙王(365)",
@@ -6573,7 +6611,7 @@ const PET_FUTURES = {
         "specialDefenseEffort": 0,
         "speedEffort": 0,
         "catchRatio": 45,
-        "growExp": 192
+        "growExperience": 192
     },
     "366": {
         "name": "帕鲁蚌(366)",
@@ -6591,7 +6629,7 @@ const PET_FUTURES = {
         "specialDefenseEffort": 0,
         "speedEffort": 0,
         "catchRatio": 255,
-        "growExp": 142
+        "growExperience": 142
     },
     "367": {
         "name": "巨嘴鳗(367)",
@@ -6609,7 +6647,7 @@ const PET_FUTURES = {
         "specialDefenseEffort": 0,
         "speedEffort": 0,
         "catchRatio": 60,
-        "growExp": 178
+        "growExperience": 178
     },
     "368": {
         "name": "尖头鳗(368)",
@@ -6627,7 +6665,7 @@ const PET_FUTURES = {
         "specialDefenseEffort": 0,
         "speedEffort": 0,
         "catchRatio": 60,
-        "growExp": 178
+        "growExperience": 178
     },
     "369": {
         "name": "地图石鱼(369)",
@@ -6645,7 +6683,7 @@ const PET_FUTURES = {
         "specialDefenseEffort": 0,
         "speedEffort": 0,
         "catchRatio": 25,
-        "growExp": 198
+        "growExperience": 198
     },
     "370": {
         "name": "心形鱼(370)",
@@ -6663,7 +6701,7 @@ const PET_FUTURES = {
         "specialDefenseEffort": 0,
         "speedEffort": 1,
         "catchRatio": 225,
-        "growExp": 110
+        "growExperience": 110
     },
     "371": {
         "name": "塔祖贝龙(371)",
@@ -6681,7 +6719,7 @@ const PET_FUTURES = {
         "specialDefenseEffort": 0,
         "speedEffort": 0,
         "catchRatio": 45,
-        "growExp": 89
+        "growExperience": 89
     },
     "372": {
         "name": "龙龙贝(372)",
@@ -6699,7 +6737,7 @@ const PET_FUTURES = {
         "specialDefenseEffort": 0,
         "speedEffort": 0,
         "catchRatio": 45,
-        "growExp": 144
+        "growExperience": 144
     },
     "373": {
         "name": "血翼飞龙(373)",
@@ -6717,7 +6755,7 @@ const PET_FUTURES = {
         "specialDefenseEffort": 0,
         "speedEffort": 0,
         "catchRatio": 45,
-        "growExp": 218
+        "growExperience": 218
     },
     "374": {
         "name": "独眼达恩(374)",
@@ -6735,7 +6773,7 @@ const PET_FUTURES = {
         "specialDefenseEffort": 0,
         "speedEffort": 0,
         "catchRatio": 3,
-        "growExp": 103
+        "growExperience": 103
     },
     "375": {
         "name": "双臂恩古(375)",
@@ -6753,7 +6791,7 @@ const PET_FUTURES = {
         "specialDefenseEffort": 0,
         "speedEffort": 0,
         "catchRatio": 3,
-        "growExp": 153
+        "growExperience": 153
     },
     "376": {
         "name": "钢铁螃蟹(376)",
@@ -6771,7 +6809,7 @@ const PET_FUTURES = {
         "specialDefenseEffort": 0,
         "speedEffort": 0,
         "catchRatio": 3,
-        "growExp": 210
+        "growExperience": 210
     },
     "377": {
         "name": "岩神柱(377)",
@@ -6789,7 +6827,7 @@ const PET_FUTURES = {
         "specialDefenseEffort": 0,
         "speedEffort": 0,
         "catchRatio": 3,
-        "growExp": 217
+        "growExperience": 217
     },
     "378": {
         "name": "冰神柱(378)",
@@ -6807,7 +6845,7 @@ const PET_FUTURES = {
         "specialDefenseEffort": 3,
         "speedEffort": 0,
         "catchRatio": 3,
-        "growExp": 216
+        "growExperience": 216
     },
     "379": {
         "name": "钢神柱(379)",
@@ -6825,7 +6863,7 @@ const PET_FUTURES = {
         "specialDefenseEffort": 2,
         "speedEffort": 0,
         "catchRatio": 3,
-        "growExp": 215
+        "growExperience": 215
     },
     "380": {
         "name": "拉迪阿斯(380)",
@@ -6843,7 +6881,7 @@ const PET_FUTURES = {
         "specialDefenseEffort": 3,
         "speedEffort": 0,
         "catchRatio": 3,
-        "growExp": 211
+        "growExperience": 211
     },
     "381": {
         "name": "拉迪奥斯(381)",
@@ -6861,7 +6899,7 @@ const PET_FUTURES = {
         "specialDefenseEffort": 0,
         "speedEffort": 0,
         "catchRatio": 3,
-        "growExp": 211
+        "growExperience": 211
     },
     "382": {
         "name": "海皇牙(382)",
@@ -6879,7 +6917,7 @@ const PET_FUTURES = {
         "specialDefenseEffort": 0,
         "speedEffort": 0,
         "catchRatio": 5,
-        "growExp": 218
+        "growExperience": 218
     },
     "383": {
         "name": "古拉顿(383)",
@@ -6897,7 +6935,7 @@ const PET_FUTURES = {
         "specialDefenseEffort": 0,
         "speedEffort": 0,
         "catchRatio": 5,
-        "growExp": 218
+        "growExperience": 218
     },
     "384": {
         "name": "天空之龙(384)",
@@ -6915,7 +6953,7 @@ const PET_FUTURES = {
         "specialDefenseEffort": 0,
         "speedEffort": 0,
         "catchRatio": 3,
-        "growExp": 220
+        "growExperience": 220
     },
     "385": {
         "name": "月映兽(385)",
@@ -6933,7 +6971,7 @@ const PET_FUTURES = {
         "specialDefenseEffort": 0,
         "speedEffort": 0,
         "catchRatio": 3,
-        "growExp": 215
+        "growExperience": 215
     },
     "386": {
         "name": "迪奥西斯(386)",
@@ -6951,7 +6989,7 @@ const PET_FUTURES = {
         "specialDefenseEffort": 0,
         "speedEffort": 1,
         "catchRatio": 3,
-        "growExp": 215
+        "growExperience": 215
     },
     "387": {
         "name": "树苗龟(387)",
@@ -6969,7 +7007,7 @@ const PET_FUTURES = {
         "specialDefenseEffort": 0,
         "speedEffort": 0,
         "catchRatio": 45,
-        "growExp": 64
+        "growExperience": 64
     },
     "388": {
         "name": "树林龟(388)",
@@ -6987,7 +7025,7 @@ const PET_FUTURES = {
         "specialDefenseEffort": 0,
         "speedEffort": 0,
         "catchRatio": 45,
-        "growExp": 141
+        "growExperience": 141
     },
     "389": {
         "name": "地壳龟(389)",
@@ -7005,7 +7043,7 @@ const PET_FUTURES = {
         "specialDefenseEffort": 0,
         "speedEffort": 0,
         "catchRatio": 45,
-        "growExp": 208
+        "growExperience": 208
     },
     "390": {
         "name": "火苗猴(390)",
@@ -7023,7 +7061,7 @@ const PET_FUTURES = {
         "specialDefenseEffort": 0,
         "speedEffort": 1,
         "catchRatio": 45,
-        "growExp": 65
+        "growExperience": 65
     },
     "391": {
         "name": "猛火猴(391)",
@@ -7041,7 +7079,7 @@ const PET_FUTURES = {
         "specialDefenseEffort": 0,
         "speedEffort": 1,
         "catchRatio": 45,
-        "growExp": 142
+        "growExperience": 142
     },
     "392": {
         "name": "豪火猴(392)",
@@ -7059,7 +7097,7 @@ const PET_FUTURES = {
         "specialDefenseEffort": 0,
         "speedEffort": 1,
         "catchRatio": 45,
-        "growExp": 209
+        "growExperience": 209
     },
     "393": {
         "name": "侯企鹅(393)",
@@ -7077,7 +7115,7 @@ const PET_FUTURES = {
         "specialDefenseEffort": 0,
         "speedEffort": 0,
         "catchRatio": 45,
-        "growExp": 66
+        "growExperience": 66
     },
     "394": {
         "name": "王企鹅(394)",
@@ -7095,7 +7133,7 @@ const PET_FUTURES = {
         "specialDefenseEffort": 2,
         "speedEffort": 0,
         "catchRatio": 45,
-        "growExp": 143
+        "growExperience": 143
     },
     "395": {
         "name": "皇帝企鹅(395)",
@@ -7113,7 +7151,7 @@ const PET_FUTURES = {
         "specialDefenseEffort": 0,
         "speedEffort": 0,
         "catchRatio": 45,
-        "growExp": 210
+        "growExperience": 210
     },
     "396": {
         "name": "胖胖翁(396)",
@@ -7131,7 +7169,7 @@ const PET_FUTURES = {
         "specialDefenseEffort": 0,
         "speedEffort": 1,
         "catchRatio": 255,
-        "growExp": 56
+        "growExperience": 56
     },
     "397": {
         "name": "大胖翁(397)",
@@ -7149,7 +7187,7 @@ const PET_FUTURES = {
         "specialDefenseEffort": 0,
         "speedEffort": 2,
         "catchRatio": 120,
-        "growExp": 113
+        "growExperience": 113
     },
     "398": {
         "name": "长冠翁(398)",
@@ -7167,7 +7205,7 @@ const PET_FUTURES = {
         "specialDefenseEffort": 0,
         "speedEffort": 0,
         "catchRatio": 45,
-        "growExp": 172
+        "growExperience": 172
     },
     "399": {
         "name": "钝河狸(399)",
@@ -7185,7 +7223,7 @@ const PET_FUTURES = {
         "specialDefenseEffort": 0,
         "speedEffort": 0,
         "catchRatio": 255,
-        "growExp": 58
+        "growExperience": 58
     },
     "400": {
         "name": "河狸精灵(400)",
@@ -7203,7 +7241,7 @@ const PET_FUTURES = {
         "specialDefenseEffort": 0,
         "speedEffort": 0,
         "catchRatio": 127,
-        "growExp": 116
+        "growExperience": 116
     },
     "401": {
         "name": "胖蟋蟀(401)",
@@ -7221,7 +7259,7 @@ const PET_FUTURES = {
         "specialDefenseEffort": 0,
         "speedEffort": 0,
         "catchRatio": 255,
-        "growExp": 54
+        "growExperience": 54
     },
     "402": {
         "name": "蟋蟀战士(402)",
@@ -7239,7 +7277,7 @@ const PET_FUTURES = {
         "specialDefenseEffort": 0,
         "speedEffort": 0,
         "catchRatio": 45,
-        "growExp": 159
+        "growExperience": 159
     },
     "403": {
         "name": "小电狮(403)",
@@ -7257,7 +7295,7 @@ const PET_FUTURES = {
         "specialDefenseEffort": 0,
         "speedEffort": 0,
         "catchRatio": 235,
-        "growExp": 60
+        "growExperience": 60
     },
     "404": {
         "name": "电光狮(404)",
@@ -7275,7 +7313,7 @@ const PET_FUTURES = {
         "specialDefenseEffort": 0,
         "speedEffort": 0,
         "catchRatio": 120,
-        "growExp": 117
+        "growExperience": 117
     },
     "405": {
         "name": "雷鸣狮(405)",
@@ -7293,7 +7331,7 @@ const PET_FUTURES = {
         "specialDefenseEffort": 0,
         "speedEffort": 0,
         "catchRatio": 45,
-        "growExp": 194
+        "growExperience": 194
     },
     "406": {
         "name": "玫瑰花苞(406)",
@@ -7311,7 +7349,7 @@ const PET_FUTURES = {
         "specialDefenseEffort": 0,
         "speedEffort": 0,
         "catchRatio": 255,
-        "growExp": 68
+        "growExperience": 68
     },
     "407": {
         "name": "万花蔷薇(407)",
@@ -7329,7 +7367,7 @@ const PET_FUTURES = {
         "specialDefenseEffort": 0,
         "speedEffort": 0,
         "catchRatio": 75,
-        "growExp": 204
+        "growExperience": 204
     },
     "408": {
         "name": "小骨龙(408)",
@@ -7347,7 +7385,7 @@ const PET_FUTURES = {
         "specialDefenseEffort": 0,
         "speedEffort": 0,
         "catchRatio": 45,
-        "growExp": 99
+        "growExperience": 99
     },
     "409": {
         "name": "暴骨龙(409)",
@@ -7365,7 +7403,7 @@ const PET_FUTURES = {
         "specialDefenseEffort": 0,
         "speedEffort": 0,
         "catchRatio": 45,
-        "growExp": 199
+        "growExperience": 199
     },
     "410": {
         "name": "甲盾兽(410)",
@@ -7383,7 +7421,7 @@ const PET_FUTURES = {
         "specialDefenseEffort": 0,
         "speedEffort": 0,
         "catchRatio": 45,
-        "growExp": 99
+        "growExperience": 99
     },
     "411": {
         "name": "钢盾兽(411)",
@@ -7401,7 +7439,7 @@ const PET_FUTURES = {
         "specialDefenseEffort": 0,
         "speedEffort": 0,
         "catchRatio": 45,
-        "growExp": 199
+        "growExperience": 199
     },
     "412": {
         "name": "蓑衣虫(412)",
@@ -7419,7 +7457,7 @@ const PET_FUTURES = {
         "specialDefenseEffort": 1,
         "speedEffort": 0,
         "catchRatio": 120,
-        "growExp": 61
+        "growExperience": 61
     },
     "413": {
         "name": "叶衣虫(413)",
@@ -7437,7 +7475,7 @@ const PET_FUTURES = {
         "specialDefenseEffort": 0,
         "speedEffort": 0,
         "catchRatio": 45,
-        "growExp": 159
+        "growExperience": 159
     },
     "414": {
         "name": "亮翅蛾(414)",
@@ -7455,7 +7493,7 @@ const PET_FUTURES = {
         "specialDefenseEffort": 0,
         "speedEffort": 0,
         "catchRatio": 45,
-        "growExp": 159
+        "growExperience": 159
     },
     "415": {
         "name": "三合一蜂巢(415)",
@@ -7473,7 +7511,7 @@ const PET_FUTURES = {
         "specialDefenseEffort": 0,
         "speedEffort": 1,
         "catchRatio": 120,
-        "growExp": 63
+        "growExperience": 63
     },
     "416": {
         "name": "蜂女皇(416)",
@@ -7491,7 +7529,7 @@ const PET_FUTURES = {
         "specialDefenseEffort": 1,
         "speedEffort": 0,
         "catchRatio": 45,
-        "growExp": 188
+        "growExperience": 188
     },
     "417": {
         "name": "电松鼠(417)",
@@ -7509,7 +7547,7 @@ const PET_FUTURES = {
         "specialDefenseEffort": 0,
         "speedEffort": 0,
         "catchRatio": 200,
-        "growExp": 120
+        "growExperience": 120
     },
     "418": {
         "name": "叉尾鼬(418)",
@@ -7527,7 +7565,7 @@ const PET_FUTURES = {
         "specialDefenseEffort": 0,
         "speedEffort": 1,
         "catchRatio": 190,
-        "growExp": 75
+        "growExperience": 75
     },
     "419": {
         "name": "海鼬王(419)",
@@ -7545,7 +7583,7 @@ const PET_FUTURES = {
         "specialDefenseEffort": 0,
         "speedEffort": 2,
         "catchRatio": 75,
-        "growExp": 178
+        "growExperience": 178
     },
     "420": {
         "name": "樱桃芽(420)",
@@ -7563,7 +7601,7 @@ const PET_FUTURES = {
         "specialDefenseEffort": 0,
         "speedEffort": 0,
         "catchRatio": 190,
-        "growExp": 68
+        "growExperience": 68
     },
     "421": {
         "name": "樱桃花(421)",
@@ -7581,7 +7619,7 @@ const PET_FUTURES = {
         "specialDefenseEffort": 0,
         "speedEffort": 0,
         "catchRatio": 75,
-        "growExp": 133
+        "growExperience": 133
     },
     "422": {
         "name": "无壳龙(422)",
@@ -7599,7 +7637,7 @@ const PET_FUTURES = {
         "specialDefenseEffort": 0,
         "speedEffort": 0,
         "catchRatio": 190,
-        "growExp": 73
+        "growExperience": 73
     },
     "423": {
         "name": "地贝龙(423)",
@@ -7617,7 +7655,7 @@ const PET_FUTURES = {
         "specialDefenseEffort": 0,
         "speedEffort": 0,
         "catchRatio": 75,
-        "growExp": 176
+        "growExperience": 176
     },
     "424": {
         "name": "双尾猴(424)",
@@ -7635,7 +7673,7 @@ const PET_FUTURES = {
         "specialDefenseEffort": 0,
         "speedEffort": 2,
         "catchRatio": 45,
-        "growExp": 186
+        "growExperience": 186
     },
     "425": {
         "name": "气球仔(425)",
@@ -7653,7 +7691,7 @@ const PET_FUTURES = {
         "specialDefenseEffort": 0,
         "speedEffort": 0,
         "catchRatio": 125,
-        "growExp": 127
+        "growExperience": 127
     },
     "426": {
         "name": "幽灵气球(426)",
@@ -7671,7 +7709,7 @@ const PET_FUTURES = {
         "specialDefenseEffort": 0,
         "speedEffort": 0,
         "catchRatio": 60,
-        "growExp": 204
+        "growExperience": 204
     },
     "427": {
         "name": "棉花兔(427)",
@@ -7689,7 +7727,7 @@ const PET_FUTURES = {
         "specialDefenseEffort": 0,
         "speedEffort": 1,
         "catchRatio": 190,
-        "growExp": 84
+        "growExperience": 84
     },
     "428": {
         "name": "女郎兔(428)",
@@ -7707,7 +7745,7 @@ const PET_FUTURES = {
         "specialDefenseEffort": 0,
         "speedEffort": 2,
         "catchRatio": 60,
-        "growExp": 178
+        "growExperience": 178
     },
     "429": {
         "name": "梦巫(429)",
@@ -7725,7 +7763,7 @@ const PET_FUTURES = {
         "specialDefenseEffort": 1,
         "speedEffort": 0,
         "catchRatio": 45,
-        "growExp": 187
+        "growExperience": 187
     },
     "430": {
         "name": "绅士鸦(430)",
@@ -7743,7 +7781,7 @@ const PET_FUTURES = {
         "specialDefenseEffort": 0,
         "speedEffort": 0,
         "catchRatio": 30,
-        "growExp": 187
+        "growExperience": 187
     },
     "431": {
         "name": "旋尾猫(431)",
@@ -7761,7 +7799,7 @@ const PET_FUTURES = {
         "specialDefenseEffort": 0,
         "speedEffort": 1,
         "catchRatio": 190,
-        "growExp": 71
+        "growExperience": 71
     },
     "432": {
         "name": "胖胖猫(432)",
@@ -7779,7 +7817,7 @@ const PET_FUTURES = {
         "specialDefenseEffort": 0,
         "speedEffort": 2,
         "catchRatio": 75,
-        "growExp": 183
+        "growExperience": 183
     },
     "433": {
         "name": "金铃(433)",
@@ -7797,7 +7835,7 @@ const PET_FUTURES = {
         "specialDefenseEffort": 0,
         "speedEffort": 0,
         "catchRatio": 120,
-        "growExp": 74
+        "growExperience": 74
     },
     "434": {
         "name": "毒臭釉(434)",
@@ -7815,7 +7853,7 @@ const PET_FUTURES = {
         "specialDefenseEffort": 0,
         "speedEffort": 1,
         "catchRatio": 225,
-        "growExp": 79
+        "growExperience": 79
     },
     "435": {
         "name": "恶毒釉(435)",
@@ -7833,7 +7871,7 @@ const PET_FUTURES = {
         "specialDefenseEffort": 0,
         "speedEffort": 0,
         "catchRatio": 60,
-        "growExp": 209
+        "growExperience": 209
     },
     "436": {
         "name": "镜面偶(436)",
@@ -7851,7 +7889,7 @@ const PET_FUTURES = {
         "specialDefenseEffort": 0,
         "speedEffort": 0,
         "catchRatio": 255,
-        "growExp": 72
+        "growExperience": 72
     },
     "437": {
         "name": "镜面图腾(437)",
@@ -7869,7 +7907,7 @@ const PET_FUTURES = {
         "specialDefenseEffort": 0,
         "speedEffort": 1,
         "catchRatio": 90,
-        "growExp": 188
+        "growExperience": 188
     },
     "438": {
         "name": "胡说盆栽(438)",
@@ -7887,7 +7925,7 @@ const PET_FUTURES = {
         "specialDefenseEffort": 0,
         "speedEffort": 0,
         "catchRatio": 255,
-        "growExp": 68
+        "growExperience": 68
     },
     "439": {
         "name": "魔尼小丑(439)",
@@ -7905,7 +7943,7 @@ const PET_FUTURES = {
         "specialDefenseEffort": 1,
         "speedEffort": 0,
         "catchRatio": 145,
-        "growExp": 78
+        "growExperience": 78
     },
     "440": {
         "name": "兜兜蛋(440)",
@@ -7923,7 +7961,7 @@ const PET_FUTURES = {
         "specialDefenseEffort": 0,
         "speedEffort": 0,
         "catchRatio": 130,
-        "growExp": 255
+        "growExperience": 255
     },
     "441": {
         "name": "音符鹉(441)",
@@ -7941,7 +7979,7 @@ const PET_FUTURES = {
         "specialDefenseEffort": 0,
         "speedEffort": 0,
         "catchRatio": 30,
-        "growExp": 107
+        "growExperience": 107
     },
     "442": {
         "name": "鬼盆栽(442)",
@@ -7959,7 +7997,7 @@ const PET_FUTURES = {
         "specialDefenseEffort": 1,
         "speedEffort": 0,
         "catchRatio": 100,
-        "growExp": 168
+        "growExperience": 168
     },
     "443": {
         "name": "地龙宝宝(443)",
@@ -7977,7 +8015,7 @@ const PET_FUTURES = {
         "specialDefenseEffort": 0,
         "speedEffort": 0,
         "catchRatio": 45,
-        "growExp": 67
+        "growExperience": 67
     },
     "444": {
         "name": "利爪地龙(444)",
@@ -7995,7 +8033,7 @@ const PET_FUTURES = {
         "specialDefenseEffort": 0,
         "speedEffort": 0,
         "catchRatio": 45,
-        "growExp": 144
+        "growExperience": 144
     },
     "445": {
         "name": "暴地龙(445)",
@@ -8013,7 +8051,7 @@ const PET_FUTURES = {
         "specialDefenseEffort": 0,
         "speedEffort": 0,
         "catchRatio": 45,
-        "growExp": 445
+        "growExperience": 445
     },
     "446": {
         "name": "刚比兽(446)",
@@ -8031,7 +8069,7 @@ const PET_FUTURES = {
         "specialDefenseEffort": 0,
         "speedEffort": 0,
         "catchRatio": 50,
-        "growExp": 94
+        "growExperience": 94
     },
     "447": {
         "name": "鲁力欧(447)",
@@ -8049,7 +8087,7 @@ const PET_FUTURES = {
         "specialDefenseEffort": 0,
         "speedEffort": 0,
         "catchRatio": 75,
-        "growExp": 72
+        "growExperience": 72
     },
     "448": {
         "name": "鲁卡力欧(448)",
@@ -8067,7 +8105,7 @@ const PET_FUTURES = {
         "specialDefenseEffort": 0,
         "speedEffort": 0,
         "catchRatio": 45,
-        "growExp": 204
+        "growExperience": 204
     },
     "449": {
         "name": "沼泽河马(449)",
@@ -8085,7 +8123,7 @@ const PET_FUTURES = {
         "specialDefenseEffort": 0,
         "speedEffort": 0,
         "catchRatio": 140,
-        "growExp": 95
+        "growExperience": 95
     },
     "450": {
         "name": "沙河马(450)",
@@ -8103,7 +8141,7 @@ const PET_FUTURES = {
         "specialDefenseEffort": 0,
         "speedEffort": 0,
         "catchRatio": 60,
-        "growExp": 198
+        "growExperience": 198
     },
     "451": {
         "name": "幼龙蝎(451)",
@@ -8121,7 +8159,7 @@ const PET_FUTURES = {
         "specialDefenseEffort": 0,
         "speedEffort": 0,
         "catchRatio": 120,
-        "growExp": 114
+        "growExperience": 114
     },
     "452": {
         "name": "毒龙蝎(452)",
@@ -8139,7 +8177,7 @@ const PET_FUTURES = {
         "specialDefenseEffort": 0,
         "speedEffort": 0,
         "catchRatio": 45,
-        "growExp": 204
+        "growExperience": 204
     },
     "453": {
         "name": "毒蟾斗士(453)",
@@ -8157,7 +8195,7 @@ const PET_FUTURES = {
         "specialDefenseEffort": 0,
         "speedEffort": 0,
         "catchRatio": 140,
-        "growExp": 83
+        "growExperience": 83
     },
     "454": {
         "name": "毒蟾王(454)",
@@ -8175,7 +8213,7 @@ const PET_FUTURES = {
         "specialDefenseEffort": 0,
         "speedEffort": 0,
         "catchRatio": 75,
-        "growExp": 181
+        "growExperience": 181
     },
     "455": {
         "name": "噬人怪草(455)",
@@ -8193,7 +8231,7 @@ const PET_FUTURES = {
         "specialDefenseEffort": 0,
         "speedEffort": 0,
         "catchRatio": 200,
-        "growExp": 164
+        "growExperience": 164
     },
     "456": {
         "name": "蝶尾鱼(456)",
@@ -8211,7 +8249,7 @@ const PET_FUTURES = {
         "specialDefenseEffort": 0,
         "speedEffort": 1,
         "catchRatio": 190,
-        "growExp": 90
+        "growExperience": 90
     },
     "457": {
         "name": "蝶翅鱼(457)",
@@ -8229,7 +8267,7 @@ const PET_FUTURES = {
         "specialDefenseEffort": 0,
         "speedEffort": 2,
         "catchRatio": 75,
-        "growExp": 156
+        "growExperience": 156
     },
     "458": {
         "name": "小球飞鱼(458)",
@@ -8247,7 +8285,7 @@ const PET_FUTURES = {
         "specialDefenseEffort": 1,
         "speedEffort": 0,
         "catchRatio": 25,
-        "growExp": 108
+        "growExperience": 108
     },
     "459": {
         "name": "森林雪人(459)",
@@ -8265,7 +8303,7 @@ const PET_FUTURES = {
         "specialDefenseEffort": 0,
         "speedEffort": 0,
         "catchRatio": 120,
-        "growExp": 131
+        "growExperience": 131
     },
     "460": {
         "name": "巨雪人(460)",
@@ -8283,7 +8321,7 @@ const PET_FUTURES = {
         "specialDefenseEffort": 0,
         "speedEffort": 0,
         "catchRatio": 60,
-        "growExp": 214
+        "growExperience": 214
     },
     "461": {
         "name": "玛纽拉(461)",
@@ -8301,7 +8339,7 @@ const PET_FUTURES = {
         "specialDefenseEffort": 0,
         "speedEffort": 1,
         "catchRatio": 45,
-        "growExp": 199
+        "growExperience": 199
     },
     "462": {
         "name": "飞碟磁怪(462)",
@@ -8319,7 +8357,7 @@ const PET_FUTURES = {
         "specialDefenseEffort": 3,
         "speedEffort": 0,
         "catchRatio": 30,
-        "growExp": 211
+        "growExperience": 211
     },
     "463": {
         "name": "长舌怪(463)",
@@ -8337,7 +8375,7 @@ const PET_FUTURES = {
         "specialDefenseEffort": 0,
         "speedEffort": 0,
         "catchRatio": 30,
-        "growExp": 193
+        "growExperience": 193
     },
     "464": {
         "name": "钻甲暴龙(464)",
@@ -8355,7 +8393,7 @@ const PET_FUTURES = {
         "specialDefenseEffort": 0,
         "speedEffort": 0,
         "catchRatio": 30,
-        "growExp": 217
+        "growExperience": 217
     },
     "465": {
         "name": "树藤怪(465)",
@@ -8373,7 +8411,7 @@ const PET_FUTURES = {
         "specialDefenseEffort": 0,
         "speedEffort": 0,
         "catchRatio": 30,
-        "growExp": 211
+        "growExperience": 211
     },
     "466": {
         "name": "电击魔(466)",
@@ -8391,7 +8429,7 @@ const PET_FUTURES = {
         "specialDefenseEffort": 0,
         "speedEffort": 0,
         "catchRatio": 30,
-        "growExp": 199
+        "growExperience": 199
     },
     "467": {
         "name": "鸭嘴炎龙(467)",
@@ -8409,7 +8447,7 @@ const PET_FUTURES = {
         "specialDefenseEffort": 0,
         "speedEffort": 0,
         "catchRatio": 30,
-        "growExp": 199
+        "growExperience": 199
     },
     "468": {
         "name": "波克鸟(468)",
@@ -8427,7 +8465,7 @@ const PET_FUTURES = {
         "specialDefenseEffort": 1,
         "speedEffort": 0,
         "catchRatio": 30,
-        "growExp": 220
+        "growExperience": 220
     },
     "469": {
         "name": "古蜻蜓(469)",
@@ -8445,7 +8483,7 @@ const PET_FUTURES = {
         "specialDefenseEffort": 0,
         "speedEffort": 0,
         "catchRatio": 30,
-        "growExp": 198
+        "growExperience": 198
     },
     "470": {
         "name": "叶精灵(470)",
@@ -8463,7 +8501,7 @@ const PET_FUTURES = {
         "specialDefenseEffort": 0,
         "speedEffort": 0,
         "catchRatio": 45,
-        "growExp": 196
+        "growExperience": 196
     },
     "471": {
         "name": "冰精灵(471)",
@@ -8481,7 +8519,7 @@ const PET_FUTURES = {
         "specialDefenseEffort": 0,
         "speedEffort": 0,
         "catchRatio": 45,
-        "growExp": 196
+        "growExperience": 196
     },
     "472": {
         "name": "巨飞蝎(472)",
@@ -8499,7 +8537,7 @@ const PET_FUTURES = {
         "specialDefenseEffort": 0,
         "speedEffort": 0,
         "catchRatio": 30,
-        "growExp": 192
+        "growExperience": 192
     },
     "473": {
         "name": "獠牙猪(473)",
@@ -8517,7 +8555,7 @@ const PET_FUTURES = {
         "specialDefenseEffort": 0,
         "speedEffort": 0,
         "catchRatio": 50,
-        "growExp": 207
+        "growExperience": 207
     },
     "474": {
         "name": "3D龙Z(474)",
@@ -8535,7 +8573,7 @@ const PET_FUTURES = {
         "specialDefenseEffort": 0,
         "speedEffort": 0,
         "catchRatio": 30,
-        "growExp": 158
+        "growExperience": 158
     },
     "475": {
         "name": "超能战士(475)",
@@ -8553,7 +8591,7 @@ const PET_FUTURES = {
         "specialDefenseEffort": 0,
         "speedEffort": 0,
         "catchRatio": 45,
-        "growExp": 208
+        "growExperience": 208
     },
     "476": {
         "name": "红鼻钢(476)",
@@ -8571,7 +8609,7 @@ const PET_FUTURES = {
         "specialDefenseEffort": 2,
         "speedEffort": 0,
         "catchRatio": 60,
-        "growExp": 198
+        "growExperience": 198
     },
     "477": {
         "name": "夜魔人(477)",
@@ -8589,7 +8627,7 @@ const PET_FUTURES = {
         "specialDefenseEffort": 2,
         "speedEffort": 0,
         "catchRatio": 45,
-        "growExp": 210
+        "growExperience": 210
     },
     "478": {
         "name": "雪魔女(478)",
@@ -8607,7 +8645,7 @@ const PET_FUTURES = {
         "specialDefenseEffort": 0,
         "speedEffort": 2,
         "catchRatio": 75,
-        "growExp": 187
+        "growExperience": 187
     },
     "479": {
         "name": "电磁鬼(479)",
@@ -8625,7 +8663,7 @@ const PET_FUTURES = {
         "specialDefenseEffort": 0,
         "speedEffort": 1,
         "catchRatio": 45,
-        "growExp": 132
+        "growExperience": 132
     },
     "480": {
         "name": "黄圣菇(480)",
@@ -8643,7 +8681,7 @@ const PET_FUTURES = {
         "specialDefenseEffort": 1,
         "speedEffort": 0,
         "catchRatio": 3,
-        "growExp": 210
+        "growExperience": 210
     },
     "481": {
         "name": "红圣菇(481)",
@@ -8661,7 +8699,7 @@ const PET_FUTURES = {
         "specialDefenseEffort": 1,
         "speedEffort": 0,
         "catchRatio": 3,
-        "growExp": 210
+        "growExperience": 210
     },
     "482": {
         "name": "蓝圣菇(482)",
@@ -8679,7 +8717,7 @@ const PET_FUTURES = {
         "specialDefenseEffort": 0,
         "speedEffort": 0,
         "catchRatio": 3,
-        "growExp": 210
+        "growExperience": 210
     },
     "483": {
         "name": "迪奥鲁加(483)",
@@ -8697,7 +8735,7 @@ const PET_FUTURES = {
         "specialDefenseEffort": 0,
         "speedEffort": 0,
         "catchRatio": 30,
-        "growExp": 220
+        "growExperience": 220
     },
     "484": {
         "name": "帕鲁其亚(484)",
@@ -8715,7 +8753,7 @@ const PET_FUTURES = {
         "specialDefenseEffort": 0,
         "speedEffort": 0,
         "catchRatio": 30,
-        "growExp": 220
+        "growExperience": 220
     },
     "485": {
         "name": "岩浆巨兽(485)",
@@ -8733,7 +8771,7 @@ const PET_FUTURES = {
         "specialDefenseEffort": 0,
         "speedEffort": 0,
         "catchRatio": 3,
-        "growExp": 215
+        "growExperience": 215
     },
     "486": {
         "name": "恩神柱(486)",
@@ -8751,7 +8789,7 @@ const PET_FUTURES = {
         "specialDefenseEffort": 0,
         "speedEffort": 0,
         "catchRatio": 3,
-        "growExp": 220
+        "growExperience": 220
     },
     "487": {
         "name": "鬼龙(487)",
@@ -8769,7 +8807,7 @@ const PET_FUTURES = {
         "specialDefenseEffort": 0,
         "speedEffort": 0,
         "catchRatio": 3,
-        "growExp": 220
+        "growExperience": 220
     },
     "488": {
         "name": "梦兽(488)",
@@ -8787,7 +8825,7 @@ const PET_FUTURES = {
         "specialDefenseEffort": 3,
         "speedEffort": 0,
         "catchRatio": 3,
-        "growExp": 210
+        "growExperience": 210
     },
     "489": {
         "name": "菲奥奈(489)",
@@ -8805,7 +8843,7 @@ const PET_FUTURES = {
         "specialDefenseEffort": 0,
         "speedEffort": 0,
         "catchRatio": 3,
-        "growExp": 165
+        "growExperience": 165
     },
     "490": {
         "name": "玛娜菲(490)",
@@ -8823,7 +8861,7 @@ const PET_FUTURES = {
         "specialDefenseEffort": 0,
         "speedEffort": 0,
         "catchRatio": 3,
-        "growExp": 215
+        "growExperience": 215
     },
     "491": {
         "name": "暗裂魔(491)",
@@ -8841,7 +8879,7 @@ const PET_FUTURES = {
         "specialDefenseEffort": 0,
         "speedEffort": 1,
         "catchRatio": 3,
-        "growExp": 210
+        "growExperience": 210
     },
     "492": {
         "name": "草刺猬(492)",
@@ -8859,7 +8897,7 @@ const PET_FUTURES = {
         "specialDefenseEffort": 0,
         "speedEffort": 0,
         "catchRatio": 45,
-        "growExp": 64
+        "growExperience": 64
     },
     "493": {
         "name": "圣灵兽(493)",
@@ -8877,6 +8915,8 @@ const PET_FUTURES = {
         "specialDefenseEffort": 0,
         "speedEffort": 0,
         "catchRatio": 3,
-        "growExp": 255
+        "growExperience": 255
     },
 };
+
+export = PetFutureLoader;
