@@ -13,13 +13,19 @@ class RoleLoader {
 
     async load() {
         const action = (credential: Credential) => {
-            return new Promise<Role>(resolve => {
+            return new Promise<Role>((resolve, reject) => {
                 const request = credential.asRequest();
                 // @ts-ignore
                 request["mode"] = "STATUS_PRINT";
                 NetworkUtils.sendPostRequest("mydata.cgi", request, function (html: string) {
-                    const role = RoleParser.parseRole(html);
-                    resolve(role);
+                    // 有点难办了，在野外无法查询个人状态
+                    if (html.includes("非法访问")) {
+                        // 先临时试试这样解决
+                        reject();
+                    } else {
+                        const role = RoleParser.parseRole(html);
+                        resolve(role);
+                    }
                 });
             });
         };

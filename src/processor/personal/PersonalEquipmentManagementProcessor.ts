@@ -121,6 +121,10 @@ function doProcess(credential: Credential, equipmentList: Equipment[]) {
             $("#roleLocation").text(role.location!);
 
             doRender(credential, equipmentList);
+        })
+        .catch(() => {
+            // 在野外无法查询个人状态，会返回非法访问9的错误，先临时这样解决
+            doRender(credential, equipmentList);
         });
 }
 
