@@ -1,4 +1,5 @@
 import MessageBoard from "./MessageBoard";
+import ObjectUtils from "./ObjectUtils";
 
 class NetworkUtils {
 
@@ -48,6 +49,18 @@ class NetworkUtils {
             .catch((error) => {
                 console.error("Error raised:", error);
             });
+    }
+
+    static async post(cgi: string, request: Map<string, string>): Promise<string> {
+        const action = (cgi: string, request: Map<string, string>) => {
+            return new Promise<string>(resolve => {
+                const body = ObjectUtils.convertMapToObject(request);
+                NetworkUtils.sendPostRequest(cgi, body, function (html) {
+                    resolve(html);
+                });
+            });
+        };
+        return await action(cgi, request);
     }
 }
 

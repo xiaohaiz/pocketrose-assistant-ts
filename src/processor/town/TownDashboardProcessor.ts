@@ -41,6 +41,7 @@ function doProcess(credential: Credential) {
     doRenderAdventureGuildMenu();
     doRenderSuperMarketMenu();
     doRenderGemHouseMenu();
+    doRenderPetRankMenu();
     doRenderFastLoginMenu();
 
     const roleStatus = RoleStatusParser.parseRoleStatus(document.documentElement.outerHTML);
@@ -234,6 +235,12 @@ function doRenderGemHouseMenu() {
         $("option[value='BAOSHI_DELSHOP']")
             .remove();
     }
+}
+
+function doRenderPetRankMenu() {
+    $("option[value='PETPROFILE']")
+        .css("background-color", "yellow")
+        .text("宠物排行榜");
 }
 
 function doRenderAdventureGuildMenu() {

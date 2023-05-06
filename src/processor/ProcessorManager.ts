@@ -22,6 +22,7 @@ import TownPetMapProcessor from "./town/TownPetMapProcessor";
 import TownPostHouseProcessor from "./town/TownPostHouseProcessor";
 import TownWeaponStoreProcessor from "./town/TownWeaponStoreProcessor";
 import TownGemHouseProcessor from "./town/TownGemHouseProcessor";
+import TownPetRankHouseProcessor from "./town/TownPetRankHouseProcessor";
 
 class ProcessorManager {
 
@@ -50,6 +51,7 @@ class ProcessorManager {
             new TownGemHouseProcessor(),
             new TownListDashboardProcessor(),
             new TownPetMapProcessor(),
+            new TownPetRankHouseProcessor(),
             new TownPostHouseProcessor(),
             new TownWeaponStoreProcessor()
         ];
