@@ -42,6 +42,7 @@ function doProcess(credential: Credential) {
     doRenderSuperMarketMenu();
     doRenderGemHouseMenu();
     doRenderPetRankMenu();
+    doRenderCastleKeeperMenu();
     doRenderFastLoginMenu();
 
     const roleStatus = RoleStatusParser.parseRoleStatus(document.documentElement.outerHTML);
@@ -241,6 +242,14 @@ function doRenderPetRankMenu() {
     $("option[value='PETPROFILE']")
         .css("background-color", "yellow")
         .text("宠物排行榜");
+}
+
+function doRenderCastleKeeperMenu() {
+    if (SetupLoader.isCastleKeeperEnabled()) {
+        $("option[value='TENNIS']")
+            .css("background-color", "yellow")
+            .text("城堡管家");
+    }
 }
 
 function doRenderAdventureGuildMenu() {

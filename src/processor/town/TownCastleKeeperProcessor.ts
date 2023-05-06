@@ -10,10 +10,14 @@ import Equipment from "../../pocket/Equipment";
 import CastleRanch from "../../pocket/CastleRanch";
 import Pet from "../../pocket/Pet";
 import StringUtils from "../../util/StringUtils";
+import SetupLoader from "../../pocket/SetupLoader";
 
 class TownCastleKeeperProcessor implements Processor {
 
     accept(cgi: string, pageText: string): boolean {
+        if (!SetupLoader.isCastleKeeperEnabled()) {
+            return false;
+        }
         if (cgi === "town.cgi") {
             return pageText.includes("＜＜ * 网 球 场 *＞＞");
         }
