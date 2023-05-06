@@ -2,6 +2,7 @@ import Credential from "../util/Credential";
 import PageUtils from "../util/PageUtils";
 import PersonalStatusPage from "./PersonalStatusPage";
 import RoleParser from "./RoleParser";
+import NetworkUtils from "../util/NetworkUtils";
 
 class PersonalStatus {
 
@@ -13,6 +14,21 @@ class PersonalStatus {
 
     static parsePage(pageHtml: string): PersonalStatusPage {
         return doParsePage(pageHtml);
+    }
+
+    async open(): Promise<PersonalStatusPage> {
+        const action = (credential: Credential) => {
+            return new Promise<PersonalStatusPage>(resolve => {
+                const request = credential.asRequestMap();
+                request.set("mode", "STATUS_PRINT");
+                NetworkUtils.post("mydata.cgi", request)
+                    .then(pageHtml => {
+                        const page = PersonalStatus.parsePage(pageHtml);
+                        resolve(page);
+                    });
+            });
+        };
+        return await action(this.#credential);
     }
 }
 
