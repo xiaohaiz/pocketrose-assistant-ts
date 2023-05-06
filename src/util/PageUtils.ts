@@ -123,6 +123,10 @@ class PageUtils {
         const s = "<td>" + html + "</td>";
         return $(s).text();
     }
+
+    static scrollIntoView(elementId: string) {
+        document.getElementById(elementId)?.scrollIntoView();
+    }
 }
 
 export = PageUtils;

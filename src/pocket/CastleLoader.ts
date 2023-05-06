@@ -34,6 +34,10 @@ class CastleLoader {
         return await action();
     }
 
+    /**
+     * @param player
+     * @deprecated
+     */
     static async loadCastle(player: string): Promise<Castle | null> {
         const action = (player: string) => {
             return new Promise<Castle | null>(resolve => {
@@ -54,6 +58,28 @@ class CastleLoader {
             });
         };
         return await action(player);
+    }
+
+    static async loadCastle2(roleName: string): Promise<Castle> {
+        const action = (roleName: string) => {
+            return new Promise<Castle>((resolve, reject) => {
+                CastleLoader.getCastleList()
+                    .then(castleList => {
+                        let found = false;
+                        for (const castle of castleList) {
+                            if (castle.owner === roleName) {
+                                found = true;
+                                resolve(castle);
+                                break;
+                            }
+                        }
+                        if (!found) {
+                            reject();
+                        }
+                    });
+            });
+        };
+        return await action(roleName);
     }
 
 }

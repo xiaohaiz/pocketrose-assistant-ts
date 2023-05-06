@@ -290,6 +290,13 @@ class Equipment {
             return "<span style='color:red'>" + this.gemCount + "</span> / <span style='color:red'>" + this.maxGemCount + "</span>"
         }
     }
+
+    get requiredCareerHtml() {
+        if (this.requiredCareer === undefined || this.requiredCareer === "所有职业") {
+            return "-";
+        }
+        return this.requiredCareer;
+    }
 }
 
 function isAttributeHeavyArmor(name: string) {
