@@ -420,17 +420,22 @@ function doRenderStorageEquipmentList(page: PersonalEquipmentManagementPage, tre
 
             for (const equipment of equipmentList) {
                 html += "<tr>";
-                html += "<td style='background-color:#E8E8D0'>选择</td>"
-                html += "<td style='background-color:#E0D0B0'>" + equipment.nameHTML + "</td>"
-                html += "<td style='background-color:#EFE0C0'>" + equipment.category + "</td>"
-                html += "<td style='background-color:#E0D0B0'>" + equipment.power + "</td>"
-                html += "<td style='background-color:#EFE0C0'>" + equipment.weight + "</td>"
-                html += "<td style='background-color:#EFE0C0'>" + equipment.endureHtml + "</td>"
-                html += "<td style='background-color:#EFE0C0'>" + equipment.additionalPowerHtml + "</td>"
-                html += "<td style='background-color:#EFE0C0'>" + equipment.additionalWeightHtml + "</td>"
-                html += "<td style='background-color:#EFE0C0'>" + equipment.additionalLuckHtml + "</td>"
-                html += "<td style='background-color:#E0D0B0'>" + equipment.experienceHTML + "</td>"
-                html += "<td style='background-color:#E8E8D0'>取出</td>"
+                html += "<td style='background-color:#E8E8D0'>选择</td>";
+                html += "<td style='background-color:#E0D0B0'>" + equipment.nameHTML + "</td>";
+                html += "<td style='background-color:#EFE0C0'>" + equipment.category + "</td>";
+                html += "<td style='background-color:#E0D0B0'>" + equipment.power + "</td>";
+                html += "<td style='background-color:#EFE0C0'>" + equipment.weight + "</td>";
+                html += "<td style='background-color:#EFE0C0'>" + equipment.endureHtml + "</td>";
+                html += "<td style='background-color:#EFE0C0'>" + equipment.additionalPowerHtml + "</td>";
+                html += "<td style='background-color:#EFE0C0'>" + equipment.additionalWeightHtml + "</td>";
+                html += "<td style='background-color:#EFE0C0'>" + equipment.additionalLuckHtml + "</td>";
+                html += "<td style='background-color:#E0D0B0'>" + equipment.experienceHTML + "</td>";
+                html += "<td style='background-color:#E8E8D0'>";
+                html += "<input type='button' " +
+                    "value='取出' " +
+                    "id='takeOut_" + equipment.index + "' " +
+                    "class='mutableElement'>";
+                html += "</td>";
                 html += "</tr>";
             }
 
@@ -438,7 +443,21 @@ function doRenderStorageEquipmentList(page: PersonalEquipmentManagementPage, tre
             html += "</table>";
 
             $("#storageEquipmentList").html(html).parent().show();
+
+            bindTakeOutButton(page.credential, treasureBag);
         });
+}
+
+function bindTakeOutButton(credential: Credential, treasureBag: Equipment) {
+    $("input:button[value='取出']").on("click", function () {
+        const buttonId = $(this).attr("id") as string;
+        const index = parseInt(StringUtils.substringAfter(buttonId, "_"));
+        new TreasureBag(credential, treasureBag.index!)
+            .takeOut([index])
+            .then(() => {
+                doRefresh(credential);
+            });
+    });
 }
 
 export = MapPersonalEquipmentManagementProcessor;
