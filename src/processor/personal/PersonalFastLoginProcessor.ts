@@ -5,6 +5,9 @@ import FastLoginLoader from "../../pocket/FastLoginLoader";
 import MessageBoard from "../../util/MessageBoard";
 import StorageUtils from "../../util/StorageUtils";
 
+/**
+ * @deprecated
+ */
 class PersonalFastLoginProcessor implements Processor {
 
     accept(cgi: string, pageText: string): boolean {

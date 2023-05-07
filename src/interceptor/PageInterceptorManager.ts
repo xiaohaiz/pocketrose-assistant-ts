@@ -20,6 +20,7 @@ import TownDashboardPageInterceptor from "./internal/TownDashboardPageIntercepto
 import TownAdventureGuildPageInterceptor from "./internal/TownAdventureGuildPageInterceptor";
 import PersonalStatusPageInterceptor from "./internal/PersonalStatusPageInterceptor";
 import PersonalPetManagementPageInterceptor from "./internal/PersonalPetManagementPageInterceptor";
+import PersonalFastLoginPageInterceptor from "./internal/PersonalFastLoginPageInterceptor";
 
 class PageInterceptorManager {
 
@@ -48,6 +49,7 @@ class PageInterceptorManager {
             new TownAdventureGuildPageInterceptor(),
             new PersonalStatusPageInterceptor(),
             new PersonalPetManagementPageInterceptor(),
+            new PersonalFastLoginPageInterceptor(),
         ];
     }
 
