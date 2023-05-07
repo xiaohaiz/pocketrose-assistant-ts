@@ -5,6 +5,7 @@ import BattlePageInterceptor from "./internal/BattlePageInterceptor";
 import TownWeaponHousePageInterceptor from "./internal/TownWeaponHousePageInterceptor";
 import TownPostHousePageInterceptor from "./internal/TownPostHousePageInterceptor";
 import TownPetRankHousePageInterceptor from "./internal/TownPetRankHousePageInterceptor";
+import TownPetMapHousePageInterceptor from "./internal/TownPetMapHousePageInterceptor";
 
 class PageInterceptorManager {
 
@@ -15,6 +16,7 @@ class PageInterceptorManager {
             new BattlePageInterceptor(),
             new CastleDashboardPageInterceptor(),
             new PersonalSetupPageInterceptor(),
+            new TownPetMapHousePageInterceptor(),
             new TownPetRankHousePageInterceptor(),
             new TownPostHousePageInterceptor(),
             new TownWeaponHousePageInterceptor(),

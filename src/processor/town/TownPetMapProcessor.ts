@@ -2,6 +2,9 @@ import Processor from "../Processor";
 import PageUtils from "../../util/PageUtils";
 import Constants from "../../util/Constants";
 
+/**
+ * @deprecated
+ */
 class TownPetMapProcessor implements Processor {
 
     accept(cgi: string, pageText: string): boolean {
