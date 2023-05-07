@@ -25,7 +25,17 @@ class LocationStateMachine {
     }
 
     inCastle() {
-        StorageUtils.set(this.#storageKey, "CASTLE");
+        const castleName = $("table:first")
+            .find("tr:first")
+            .next()
+            .find("td:first")
+            .find("table:first")
+            .find("tr:eq(2)")
+            .find("td:first")
+            .find("table:first")
+            .find("th:first")
+            .text().trim();
+        StorageUtils.set(this.#storageKey, "CASTLE/" + castleName);
     }
 
     inMap() {
