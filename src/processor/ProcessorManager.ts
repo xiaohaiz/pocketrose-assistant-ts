@@ -22,6 +22,9 @@ import TownGemHouseProcessor from "./town/TownGemHouseProcessor";
 import TownPetRankHouseProcessor from "./town/TownPetRankHouseProcessor";
 import TownCastleKeeperProcessor from "./town/TownCastleKeeperProcessor";
 
+/**
+ * @deprecated
+ */
 class ProcessorManager {
 
     readonly #processors: Processor[];
