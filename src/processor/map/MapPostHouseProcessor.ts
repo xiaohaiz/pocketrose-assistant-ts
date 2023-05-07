@@ -12,6 +12,9 @@ import NetworkUtils from "../../util/NetworkUtils";
 import TravelPlanBuilder from "../../pocket/TravelPlanBuilder";
 import TravelPlanExecutor from "../../pocket/TravelPlanExecutor";
 
+/**
+ * @deprecated
+ */
 class MapPostHouseProcessor implements Processor {
 
     accept(cgi: string, pageText: string): boolean {

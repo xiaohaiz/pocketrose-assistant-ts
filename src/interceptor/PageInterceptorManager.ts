@@ -13,6 +13,7 @@ import NationInformationPageInterceptor from "./internal/NationInformationPageIn
 import CastleRanchPageInterceptor from "./internal/CastleRanchPageInterceptor";
 import CastleWarehousePageInterceptor from "./internal/CastleWarehousePageInterceptor";
 import MapDashboardPageInterceptor from "./internal/MapDashboardPageInterceptor";
+import MapPostHousePageInterceptor from "./internal/MapPostHousePageInterceptor";
 
 class PageInterceptorManager {
 
@@ -34,6 +35,7 @@ class PageInterceptorManager {
             new CastleRanchPageInterceptor(),
             new CastleWarehousePageInterceptor(),
             new MapDashboardPageInterceptor(),
+            new MapPostHousePageInterceptor(),
         ];
     }
 
