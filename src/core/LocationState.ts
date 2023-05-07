@@ -5,7 +5,7 @@ class LocationState {
     readonly #location: string | null;
 
     #inTownHandler?: (townId?: string) => void;
-    #inCastleHandler?: () => void;
+    #inCastleHandler?: (castleName?: string) => void;
     #inMapHandler?: (coordinate?: Coordinate) => void;
 
     constructor(location: string | null) {
@@ -17,7 +17,7 @@ class LocationState {
         return this;
     }
 
-    whenInCastle(handler: () => void): LocationState {
+    whenInCastle(handler: (castleName?: string) => void): LocationState {
         this.#inCastleHandler = handler;
         return this;
     }
@@ -37,7 +37,7 @@ class LocationState {
             this.#inTownHandler?.(ss[1]);
         }
         if (ss[0] === "CASTLE") {
-            this.#inCastleHandler?.();
+            this.#inCastleHandler?.(ss[1]);
         }
         if (ss[0] === "WILD") {
             const coordinate = Coordinate.parse(ss[1]);
