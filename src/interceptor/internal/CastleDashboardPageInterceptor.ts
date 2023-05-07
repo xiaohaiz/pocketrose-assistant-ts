@@ -12,6 +12,7 @@ class CastleDashboardPageInterceptor implements PageInterceptor {
     }
 
     intercept(): void {
+        // Set current location state to CASTLE.
         LocationStateMachine.currentLocationStateMachine().inCastle();
         new CastleDashboardPageProcessor().process();
     }

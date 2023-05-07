@@ -2,6 +2,7 @@ import PageProcessor from "../PageProcessor";
 import PageUtils from "../../util/PageUtils";
 import StringUtils from "../../util/StringUtils";
 import EventHandler from "../../pocket/EventHandler";
+import SetupLoader from "../../pocket/SetupLoader";
 
 class CastleDashboardPageProcessor implements PageProcessor {
 
@@ -10,7 +11,58 @@ class CastleDashboardPageProcessor implements PageProcessor {
         PageUtils.removeUnusedHyperLinks();
         PageUtils.removeGoogleAnalyticsScript();
 
+        this.#renderMenu();
+        this.#renderExperience();
         this.#renderEventBoard();
+    }
+
+    #renderMenu() {
+        $("option[value='CASTLE_BUILDMACHINE']")
+            .css("background-color", "yellow")
+            .text("城堡驿站");
+        $("option[value='LETTER']")
+            .css("background-color", "yellow")
+            .text("口袋助手设置");
+        if (SetupLoader.isEquipmentManagementUIEnabled()) {
+            $("option[value='USE_ITEM']")
+                .css("background-color", "yellow")
+                .text("装备管理");
+            $("option[value='CASTLE_SENDITEM']").remove();
+        }
+        if (SetupLoader.isPetManagementUIEnabled()) {
+            $("option[value='PETSTATUS']")
+                .css("background-color", "yellow")
+                .text("宠物管理");
+            $("option[value='CASTLE_SENDPET']").remove();
+        }
+        if (SetupLoader.isCareerManagementUIEnabled()) {
+            $("option[value='CHANGE_OCCUPATION']")
+                .css("background-color", "yellow")
+                .text("职业管理");
+            $("option[value='MAGIC']").remove();
+        }
+    }
+
+    #renderExperience() {
+        if (SetupLoader.isExperienceProgressBarEnabled()) {
+            $("td:contains('经验值')")
+                .filter(function () {
+                    return $(this).text() === "经验值";
+                })
+                .next()
+                .each(function (_idx, th) {
+                    const expText = $(th).text();
+                    const experience = parseInt(StringUtils.substringBefore(expText, " EX"));
+                    if (experience >= 14900) {
+                        $(th).css("color", "blue").text("MAX");
+                    } else {
+                        const level = Math.ceil(experience / 100) + 1;
+                        const ratio = level / 150;
+                        const progressBar = PageUtils.generateProgressBarHTML(ratio);
+                        $(th).html("<span title='" + expText + "'>" + progressBar + "</span>");
+                    }
+                });
+        }
     }
 
     #renderEventBoard() {
