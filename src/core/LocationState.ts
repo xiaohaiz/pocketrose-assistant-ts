@@ -1,10 +1,12 @@
+import Coordinate from "../util/Coordinate";
+
 class LocationState {
 
     readonly #location: string | null;
 
     #inTownHandler?: (townId?: string) => void;
     #inCastleHandler?: () => void;
-    #inMapHandler?: () => void;
+    #inMapHandler?: (coordinate?: Coordinate) => void;
 
     constructor(location: string | null) {
         this.#location = location;
@@ -20,7 +22,7 @@ class LocationState {
         return this;
     }
 
-    whenInMap(handler: () => void): LocationState {
+    whenInMap(handler: (coordinate?: Coordinate) => void): LocationState {
         this.#inMapHandler = handler;
         return this;
     }
@@ -38,7 +40,8 @@ class LocationState {
             this.#inCastleHandler?.();
         }
         if (ss[0] === "WILD") {
-            this.#inMapHandler?.();
+            const coordinate = Coordinate.parse(ss[1]);
+            this.#inMapHandler?.(coordinate);
         }
     }
 }
