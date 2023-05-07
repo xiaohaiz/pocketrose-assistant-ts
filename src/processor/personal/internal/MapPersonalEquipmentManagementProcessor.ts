@@ -6,6 +6,7 @@ import Coordinate from "../../../util/Coordinate";
 import PersonalEquipmentManagementPage from "../../../pocket/PersonalEquipmentManagementPage";
 import Credential from "../../../util/Credential";
 import NetworkUtils from "../../../util/NetworkUtils";
+import Role from "../../../pocket/Role";
 
 class MapPersonalEquipmentManagementProcessor {
 
@@ -56,7 +57,15 @@ function doProcess(coordinate: Coordinate) {
         .find("table:first")
         .find("tr:first")
         .next()
+        .find("td:eq(2)")
+        .attr("id", "roleHealth")
         .next()
+        .attr("id", "roleMana")
+        .parent()
+        .next()
+        .find("td:last")
+        .attr("id", "roleCash")
+        .parent()
         .after($("" +
             "<tr>" +
             "<td style='background-color:#E0D0B0'>坐标点</td>" +
@@ -139,6 +148,8 @@ function doProcess(coordinate: Coordinate) {
 
     // 渲染装备栏
     doRender(page);
+
+    console.log(PageUtils.currentPageHtml());
 }
 
 function doRefresh(credential: Credential) {
@@ -148,8 +159,17 @@ function doRefresh(credential: Credential) {
     new PersonalEquipmentManagement(credential)
         .open()
         .then(page => {
+            doRenderRole(page.role);
             doRender(page);
         });
+}
+
+function doRenderRole(role: Role | undefined) {
+    if (role !== undefined) {
+        $("#roleHealth").text(role.health + "/" + role.maxHealth);
+        $("#roleMana").text(role.mana + "/" + role.maxMana);
+        $("#roleCash").text(role.cash + " GOLD");
+    }
 }
 
 function doRender(page: PersonalEquipmentManagementPage) {
