@@ -3,6 +3,7 @@ import PageUtils from "../util/PageUtils";
 import PersonalEquipmentManagementPage from "./PersonalEquipmentManagementPage";
 import Role from "./Role";
 import StringUtils from "../util/StringUtils";
+import EquipmentParser from "./EquipmentParser";
 
 class PersonalEquipmentManagement {
 
@@ -79,6 +80,7 @@ function doParseRole(pageHtml: string, page: PersonalEquipmentManagementPage) {
 }
 
 function doParseEquipmentList(pageHtml: string, page: PersonalEquipmentManagementPage) {
+    page.equipmentList = EquipmentParser.parsePersonalItemList(pageHtml);
 }
 
 export = PersonalEquipmentManagement;
