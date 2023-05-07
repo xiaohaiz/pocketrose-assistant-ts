@@ -1,6 +1,9 @@
 import Processor from "../Processor";
 import PageUtils from "../../util/PageUtils";
 
+/**
+ * @deprecated
+ */
 class TownListDashboardProcessor implements Processor {
 
     accept(cgi: string, pageText: string): boolean {
