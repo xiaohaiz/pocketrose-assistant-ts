@@ -186,9 +186,13 @@ function doRender(page: PersonalEquipmentManagementPage) {
         html += "<tr>";
         html += "<td style='background-color:#E8E8D0'>"
         if (equipment.selectable) {
-            html += "<input type='button' value='选择' style='color:grey'>";
+            html += "<input type='button' " +
+                "value='选择' " +
+                "style='color:grey' " +
+                "id='select_" + equipment.index + "' " +
+                "class='mutableElement'>";
         } else {
-            html += "<input type='button' value='　　' style='background-color:#E8E8D0;border-width:0'>";
+            html += PageUtils.generateInvisibleButton("#E8E8D0");
         }
         html += "</td>";
         html += "<td style='background-color:#EFE0C0'>" + equipment.usingHTML + "</td>"
@@ -215,6 +219,19 @@ function doRender(page: PersonalEquipmentManagementPage) {
     html += "</table>";
 
     $("#equipmentList").html(html).parent().show();
+
+    doBindSelectButton();
+}
+
+function doBindSelectButton() {
+    $("input:button[value='选择']").on("click", function () {
+        const buttonId = $(this).attr("id") as string;
+        if (PageUtils.isColorGrey(buttonId)) {
+            $(this).css("color", "blue");
+        } else if (PageUtils.isColorBlue(buttonId)) {
+            $(this).css("color", "grey");
+        }
+    });
 }
 
 export = MapPersonalEquipmentManagementProcessor;

@@ -85,6 +85,12 @@ class PageUtils {
         return color.toString() === "rgb(128, 128, 128)"
     }
 
+    static generateInvisibleButton(backgroundColor: string) {
+        return "<input type='button' " +
+            "value='　' " +
+            "style='background-color:" + backgroundColor + ";border-width:0'>";
+    }
+
     static fixCurrentPageBrokenImages() {
         if ($("img").length === 0) {
             return;
