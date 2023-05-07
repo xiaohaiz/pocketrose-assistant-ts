@@ -307,6 +307,7 @@ function doRenderEquipmentList(page: PersonalEquipmentManagementPage) {
 
     doBindSelectPersonalButton();
     doBindUseButton(page.credential);
+    doBindStoreButton(page.credential, treasureBag);
     doBindOpenBagButton(page.credential);
     doBindCloseBagButton(page.credential);
 
@@ -362,6 +363,21 @@ function doBindUseButton(credential: Credential) {
         }
         new PersonalEquipmentManagement(credential)
             .use(indexList)
+            .then(() => {
+                doRefresh(credential);
+            });
+    });
+}
+
+function doBindStoreButton(credential: Credential, treasureBag: Equipment | null) {
+    if (treasureBag === null) {
+        return;
+    }
+    $("input:button[value='收藏']").on("click", function () {
+        const buttonId = $(this).attr("id") as string;
+        const index = parseInt(StringUtils.substringAfter(buttonId, "_"));
+        new TreasureBag(credential, treasureBag.index!)
+            .putInto([index])
             .then(() => {
                 doRefresh(credential);
             });
