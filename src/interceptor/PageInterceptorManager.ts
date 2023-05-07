@@ -15,6 +15,7 @@ import CastleWarehousePageInterceptor from "./internal/CastleWarehousePageInterc
 import MapDashboardPageInterceptor from "./internal/MapDashboardPageInterceptor";
 import MapPostHousePageInterceptor from "./internal/MapPostHousePageInterceptor";
 import TownGemHousePageInterceptor from "./internal/TownGemHousePageInterceptor";
+import TownCastleKeeperPageInterceptor from "./internal/TownCastleKeeperPageInterceptor";
 
 class PageInterceptorManager {
 
@@ -38,6 +39,7 @@ class PageInterceptorManager {
             new MapDashboardPageInterceptor(),
             new MapPostHousePageInterceptor(),
             new TownGemHousePageInterceptor(),
+            new TownCastleKeeperPageInterceptor(),
         ];
     }
 

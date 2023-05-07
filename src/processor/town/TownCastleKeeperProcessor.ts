@@ -12,6 +12,9 @@ import Pet from "../../pocket/Pet";
 import StringUtils from "../../util/StringUtils";
 import SetupLoader from "../../pocket/SetupLoader";
 
+/**
+ * @deprecated
+ */
 class TownCastleKeeperProcessor implements Processor {
 
     accept(cgi: string, pageText: string): boolean {
