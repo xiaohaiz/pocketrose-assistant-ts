@@ -7,18 +7,20 @@ import Coordinate from "../../../util/Coordinate";
 class MapPersonalEquipmentManagementProcessor {
 
     process(coordinate: Coordinate) {
-        PageUtils.removeUnusedHyperLinks();
-        PageUtils.removeGoogleAnalyticsScript();
         doProcess(coordinate);
     }
 
 }
 
 function doProcess(coordinate: Coordinate) {
+    // 解析原始的页面信息
     const page = PersonalEquipmentManagement.parsePage(PageUtils.currentPageHtml());
 
     // 重组旧的页面
+    PageUtils.removeUnusedHyperLinks();
+    PageUtils.removeGoogleAnalyticsScript();
     $("table[height='100%']").removeAttr("height");
+
     $("td:first")
         .attr("id", "pageTitle")
         .removeAttr("width")
@@ -58,19 +60,23 @@ function doProcess(coordinate: Coordinate) {
             "</tr>" +
             ""));
 
-
+    // ------------------------------------------------------------------------
+    // 消息面板栏
+    // ------------------------------------------------------------------------
     $("#tr1")
         .next()
         .attr("id", "tr2")
         .find("td:first")
         .attr("id", "messageBoardContainer")
         .removeAttr("height");
-
     MessageBoard.createMessageBoardStyleB("messageBoardContainer", NpcLoader.randomNpcImageHtml());
     $("#messageBoard")
         .css("background-color", "black")
         .css("color", "wheat");
 
+    // ------------------------------------------------------------------------
+    // 隐藏表单栏
+    // ------------------------------------------------------------------------
     let html = "";
     html += "<tr id='tr3' style='display:none'>";
     html += "<td>";
@@ -79,6 +85,9 @@ function doProcess(coordinate: Coordinate) {
     html += "</tr>"
     $("#tr2").after($(html));
 
+    // ------------------------------------------------------------------------
+    // 主菜单栏
+    // ------------------------------------------------------------------------
     html = "";
     html += "<tr id='tr4'>";
     html += "<td style='background-color:#F8F0E0;text-align:center'>";
@@ -89,6 +98,23 @@ function doProcess(coordinate: Coordinate) {
     $("#returnButton").on("click", function () {
         $("#returnMap").trigger("click");
     });
+
+    // ------------------------------------------------------------------------
+    // 用于保存百宝袋的状态
+    // none - 没有发现百宝袋
+    // index/on|off - 百宝袋下标/状态
+    // ------------------------------------------------------------------------
+    html = "";
+    html += "<tr id='tr5' style='display:none'>";
+    html += "<td id='treasureBag'></td>";
+    html += "</tr>"
+    $("#tr4").after($(html));
+    const treasureBag = page.findTreasureBag();
+    if (treasureBag === null) {
+        $("#treasureBag").text("none");
+    } else {
+        $("#treasureBag").text(treasureBag.index + "/off");
+    }
 
     console.log(PageUtils.currentPageHtml());
 }

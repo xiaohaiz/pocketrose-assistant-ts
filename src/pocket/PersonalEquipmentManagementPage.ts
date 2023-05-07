@@ -1,6 +1,7 @@
 import Credential from "../util/Credential";
 import Role from "./Role";
 import Equipment from "./Equipment";
+import EquipmentParser from "./EquipmentParser";
 
 class PersonalEquipmentManagementPage {
 
@@ -11,6 +12,10 @@ class PersonalEquipmentManagementPage {
 
     constructor(credential: Credential) {
         this.credential = credential;
+    }
+
+    findTreasureBag(): Equipment | null {
+        return EquipmentParser.findTreasureBag(this.equipmentList);
     }
 }
 

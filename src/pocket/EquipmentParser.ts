@@ -286,7 +286,10 @@ class EquipmentParser {
         return equipmentList;
     }
 
-    static findTreasureBag(equipmentList: Equipment[]): Equipment | null {
+    static findTreasureBag(equipmentList: Equipment[] | undefined): Equipment | null {
+        if (equipmentList === undefined) {
+            return null;
+        }
         for (const equipment of equipmentList) {
             if (equipment.isTreasureBag) {
                 return equipment;
@@ -295,7 +298,10 @@ class EquipmentParser {
         return null;
     }
 
-    static findGoldenCage(equipmentList: Equipment[]): Equipment | null {
+    static findGoldenCage(equipmentList: Equipment[] | undefined): Equipment | null {
+        if (equipmentList === undefined) {
+            return null;
+        }
         for (const equipment of equipmentList) {
             if (equipment.isGoldenCage) {
                 return equipment;
