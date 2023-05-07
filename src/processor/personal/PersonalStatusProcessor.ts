@@ -5,6 +5,7 @@ import StringUtils from "../../util/StringUtils";
 import Processor from "../Processor";
 import PersonalStatus from "../../pocket/PersonalStatus";
 import Credential from "../../util/Credential";
+import LocationStateMachine from "../../core/LocationStateMachine";
 
 class PersonalStatusProcessor implements Processor {
 
@@ -16,13 +17,21 @@ class PersonalStatusProcessor implements Processor {
     }
 
     process() {
-        PageUtils.removeUnusedHyperLinks();
-        PageUtils.removeGoogleAnalyticsScript();
-        doProcess();
+        LocationStateMachine.currentLocationStateMachine()
+            .load()
+            .whenInTown(() => {
+                doProcess();
+            })
+            .whenInCastle(() => {
+                doProcess();
+            })
+            .fork();
     }
 }
 
 function doProcess() {
+    PageUtils.removeUnusedHyperLinks();
+    PageUtils.removeGoogleAnalyticsScript();
     const id = $("input:hidden[name='id']:last").val();
     const pass = $("input:hidden[name='pass']:last").val();
     const credential = new Credential(id!.toString(), pass!.toString());
