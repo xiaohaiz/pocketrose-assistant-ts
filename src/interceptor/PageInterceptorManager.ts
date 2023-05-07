@@ -3,6 +3,7 @@ import CastleDashboardPageInterceptor from "./internal/CastleDashboardPageInterc
 import PersonalSetupPageInterceptor from "./internal/PersonalSetupPageInterceptor";
 import BattlePageInterceptor from "./internal/BattlePageInterceptor";
 import TownWeaponHousePageInterceptor from "./internal/TownWeaponHousePageInterceptor";
+import TownPostHousePageInterceptor from "./internal/TownPostHousePageInterceptor";
 
 class PageInterceptorManager {
 
@@ -13,6 +14,7 @@ class PageInterceptorManager {
             new BattlePageInterceptor(),
             new CastleDashboardPageInterceptor(),
             new PersonalSetupPageInterceptor(),
+            new TownPostHousePageInterceptor(),
             new TownWeaponHousePageInterceptor(),
         ];
     }
