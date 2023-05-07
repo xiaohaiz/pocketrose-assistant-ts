@@ -14,7 +14,7 @@ import RoleStatusLoader from "../../pocket/RoleStatusLoader";
 import Processor from "../Processor";
 import RoleLoader from "../../pocket/RoleLoader";
 import LocationStateMachine from "../../core/LocationStateMachine";
-import WildPersonalEquipmentManagementProcessor from "./internal/WildPersonalEquipmentManagementProcessor";
+import MapPersonalEquipmentManagementProcessor from "./internal/MapPersonalEquipmentManagementProcessor";
 
 class PersonalEquipmentManagementProcessor implements Processor {
 
@@ -47,8 +47,8 @@ class PersonalEquipmentManagementProcessor implements Processor {
                 const equipmentList = EquipmentParser.parsePersonalItemList(pageHtml);
                 doProcess(credential, equipmentList);
             })
-            .whenInWild(() => {
-                new WildPersonalEquipmentManagementProcessor().process();
+            .whenInMap(() => {
+                new MapPersonalEquipmentManagementProcessor().process();
             })
             .fork();
     }

@@ -140,6 +140,18 @@ class PageUtils {
         return html;
     }
 
+    static generateReturnMapForm(credential: Credential) {
+        let html = "";
+        // noinspection HtmlUnknownTarget
+        html += "<form action='status.cgi' method='post'>";
+        html += "<input type='hidden' name='id' value='" + credential.id + "'>";
+        html += "<input type='hidden' name='pass' value='" + credential.pass + "'>"
+        html += "<input type='hidden' name='mode' value='STATUS'>";
+        html += "<input type='submit' id='returnMap'>";
+        html += "</form>";
+        return html;
+    }
+
     static generateReturnCastleForm(credential: Credential) {
         let html = "";
         // noinspection HtmlUnknownTarget

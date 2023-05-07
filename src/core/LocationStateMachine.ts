@@ -27,7 +27,7 @@ class LocationStateMachine {
         StorageUtils.set(this.#storageKey, "CASTLE");
     }
 
-    inWild() {
+    inMap() {
         StorageUtils.set(this.#storageKey, "WILD");
     }
 
