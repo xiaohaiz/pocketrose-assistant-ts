@@ -13,9 +13,10 @@ import NpcLoader from "../../pocket/NpcLoader";
 import RoleStatusLoader from "../../pocket/RoleStatusLoader";
 import Processor from "../Processor";
 import RoleLoader from "../../pocket/RoleLoader";
-import LocationStateMachine from "../../core/LocationStateMachine";
-import MapPersonalEquipmentManagementProcessor from "./internal/MapPersonalEquipmentManagementProcessor";
 
+/**
+ * @deprecated
+ */
 class PersonalEquipmentManagementProcessor implements Processor {
 
     accept(cgi: string, pageText: string): boolean {
@@ -29,28 +30,12 @@ class PersonalEquipmentManagementProcessor implements Processor {
     }
 
     process() {
-        LocationStateMachine.currentLocationStateMachine()
-            .load()
-            .whenInTown(() => {
-                PageUtils.removeUnusedHyperLinks();
-                PageUtils.removeGoogleAnalyticsScript();
-                const credential = PageUtils.currentCredential();
-                const pageHtml = document.documentElement.outerHTML;
-                const equipmentList = EquipmentParser.parsePersonalItemList(pageHtml);
-                doProcess(credential, equipmentList);
-            })
-            .whenInCastle(() => {
-                PageUtils.removeUnusedHyperLinks();
-                PageUtils.removeGoogleAnalyticsScript();
-                const credential = PageUtils.currentCredential();
-                const pageHtml = document.documentElement.outerHTML;
-                const equipmentList = EquipmentParser.parsePersonalItemList(pageHtml);
-                doProcess(credential, equipmentList);
-            })
-            .whenInMap(coordinate => {
-                new MapPersonalEquipmentManagementProcessor().process(coordinate!);
-            })
-            .fork();
+        PageUtils.removeUnusedHyperLinks();
+        PageUtils.removeGoogleAnalyticsScript();
+        const credential = PageUtils.currentCredential();
+        const pageHtml = document.documentElement.outerHTML;
+        const equipmentList = EquipmentParser.parsePersonalItemList(pageHtml);
+        doProcess(credential, equipmentList);
     }
 
 }

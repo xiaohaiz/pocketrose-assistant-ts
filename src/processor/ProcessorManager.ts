@@ -1,6 +1,5 @@
 import Processor from "./Processor";
 import CastleEntranceProcessor from "./castle/CastleEntranceProcessor";
-import PersonalEquipmentManagementProcessor from "./personal/PersonalEquipmentManagementProcessor";
 
 /**
  * @deprecated
@@ -12,7 +11,6 @@ class ProcessorManager {
     constructor() {
         this.#processors = [
             new CastleEntranceProcessor(),
-            new PersonalEquipmentManagementProcessor(),
         ];
     }
 

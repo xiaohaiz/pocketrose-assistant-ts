@@ -10,6 +10,9 @@ import StringUtils from "../../../util/StringUtils";
 import Equipment from "../../../pocket/Equipment";
 import TreasureBag from "../../../pocket/TreasureBag";
 
+/**
+ * @deprecated
+ */
 class MapPersonalEquipmentManagementProcessor {
 
     process(coordinate: Coordinate) {

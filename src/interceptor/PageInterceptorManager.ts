@@ -22,6 +22,7 @@ import PersonalStatusPageInterceptor from "./internal/PersonalStatusPageIntercep
 import PersonalPetManagementPageInterceptor from "./internal/PersonalPetManagementPageInterceptor";
 import PersonalFastLoginPageInterceptor from "./internal/PersonalFastLoginPageInterceptor";
 import PersonalCareerManagementPageInterceptor from "./internal/PersonalCareerManagementPageInterceptor";
+import PersonalEquipmentManagementPageInterceptor from "./internal/PersonalEquipmentManagementPageInterceptor";
 
 class PageInterceptorManager {
 
@@ -52,6 +53,7 @@ class PageInterceptorManager {
             new PersonalPetManagementPageInterceptor(),
             new PersonalFastLoginPageInterceptor(),
             new PersonalCareerManagementPageInterceptor(),
+            new PersonalEquipmentManagementPageInterceptor(),
         ];
     }
 
