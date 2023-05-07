@@ -11,6 +11,9 @@ import BankUtils from "../../util/BankUtils";
 import TownBank from "../../pocket/bank/TownBank";
 import SetupLoader from "../../pocket/SetupLoader";
 
+/**
+ * @deprecated
+ */
 class TownWeaponStoreProcessor implements Processor {
 
     accept(cgi: string, pageText: string): boolean {

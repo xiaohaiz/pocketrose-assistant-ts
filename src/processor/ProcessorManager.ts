@@ -17,7 +17,6 @@ import TownDashboardProcessor from "./town/TownDashboardProcessor";
 import TownListDashboardProcessor from "./common/TownListDashboardProcessor";
 import TownPetMapProcessor from "./town/TownPetMapProcessor";
 import TownPostHouseProcessor from "./town/TownPostHouseProcessor";
-import TownWeaponStoreProcessor from "./town/TownWeaponStoreProcessor";
 import TownGemHouseProcessor from "./town/TownGemHouseProcessor";
 import TownPetRankHouseProcessor from "./town/TownPetRankHouseProcessor";
 import TownCastleKeeperProcessor from "./town/TownCastleKeeperProcessor";
@@ -52,7 +51,6 @@ class ProcessorManager {
             new TownPetMapProcessor(),
             new TownPetRankHouseProcessor(),
             new TownPostHouseProcessor(),
-            new TownWeaponStoreProcessor()
         ];
     }
 
