@@ -12,7 +12,6 @@ import PersonalCareerManagementProcessor from "./personal/PersonalCareerManageme
 import PersonalEquipmentManagementProcessor from "./personal/PersonalEquipmentManagementProcessor";
 import PersonalFastLoginProcessor from "./personal/PersonalFastLoginProcessor";
 import PersonalPetManagementProcessor from "./personal/PersonalPetManagementProcessor";
-import PersonalSetupProcessor from "./personal/PersonalSetupProcessor";
 import PersonalStatusProcessor from "./personal/PersonalStatusProcessor";
 import TownAdventureGuildProcessor from "./town/TownAdventureGuildProcessor";
 import TownDashboardProcessor from "./town/TownDashboardProcessor";
@@ -43,7 +42,6 @@ class ProcessorManager {
             new PersonalEquipmentManagementProcessor(),
             new PersonalFastLoginProcessor(),
             new PersonalPetManagementProcessor(),
-            new PersonalSetupProcessor(),
             new PersonalStatusProcessor(),
             new TownAdventureGuildProcessor(),
             new TownCastleKeeperProcessor(),

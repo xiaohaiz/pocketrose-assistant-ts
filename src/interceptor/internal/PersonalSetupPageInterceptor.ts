@@ -1,6 +1,7 @@
 import PageInterceptor from "../PageInterceptor";
 import LocationStateMachine from "../../core/LocationStateMachine";
 import PersonalSetupPageProcessor_Castle from "../../processor/internal/PersonalSetupPageProcessor_Castle";
+import PersonalSetupProcessor from "../../processor/personal/PersonalSetupProcessor";
 
 class PersonalSetupPageInterceptor implements PageInterceptor {
 
@@ -14,6 +15,9 @@ class PersonalSetupPageInterceptor implements PageInterceptor {
     intercept(): void {
         LocationStateMachine.currentLocationStateMachine()
             .load()
+            .whenInTown(() => {
+                new PersonalSetupProcessor().process();
+            })
             .whenInCastle(() => {
                 new PersonalSetupPageProcessor_Castle().process();
             })

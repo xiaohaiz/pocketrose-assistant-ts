@@ -10,6 +10,9 @@ import TreasureBag from "../../pocket/TreasureBag";
 import SetupItemManager from "./setup/SetupItemManager";
 import Processor from "../Processor";
 
+/**
+ * @deprecated
+ */
 class PersonalSetupProcessor implements Processor {
 
     accept(cgi: string, pageText: string): boolean {
