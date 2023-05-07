@@ -3,7 +3,7 @@ import PageUtils from "../../util/PageUtils";
 import StringUtils from "../../util/StringUtils";
 import SetupLoader from "../../pocket/SetupLoader";
 import EventHandler from "../../pocket/EventHandler";
-import StorageUtils from "../../util/StorageUtils";
+import LocationStateMachine from "../../core/LocationStateMachine";
 
 class MapDashboardProcessor implements Processor {
 
@@ -15,14 +15,10 @@ class MapDashboardProcessor implements Processor {
     }
 
     process(): void {
+        LocationStateMachine.currentLocationStateMachine().inTown();
         PageUtils.removeUnusedHyperLinks();
         PageUtils.removeGoogleAnalyticsScript();
         PageUtils.fixCurrentPageBrokenImages();
-
-        const credential = PageUtils.currentCredential();
-        const key = "_lc_" + credential.id;
-        StorageUtils.set(key, "WILD");
-
         doProcess();
     }
 
