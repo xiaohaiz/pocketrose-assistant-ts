@@ -178,6 +178,39 @@ function doRender(page: PersonalEquipmentManagementPage) {
     html += "<th style='background-color:#E0D0B0'>经验</th>"
     html += "<th style='background-color:#EFE0C0'>属性</th>"
     html += "</tr>";
+
+    for (const equipment of page.equipmentList!) {
+        if (equipment.isGoldenCage || equipment.isTreasureBag) {
+            continue;
+        }
+        html += "<tr>";
+        html += "<td style='background-color:#E8E8D0'>"
+        if (equipment.selectable) {
+            html += "<input type='button' value='选择' style='color:grey'>";
+        } else {
+            html += "<input type='button' value='　　' style='background-color:#E8E8D0;border-width:0'>";
+        }
+        html += "</td>";
+        html += "<td style='background-color:#EFE0C0'>" + equipment.usingHTML + "</td>"
+        html += "<td style='background-color:#E0D0B0'>" + equipment.nameHTML + "</td>"
+        html += "<td style='background-color:#EFE0C0'>" + equipment.category + "</td>"
+        html += "<td style='background-color:#E0D0B0'>" + equipment.power + "</td>"
+        html += "<td style='background-color:#EFE0C0'>" + equipment.weight + "</td>"
+        html += "<td style='background-color:#EFE0C0'>" + equipment.endureHtml + "</td>"
+        html += "<td style='background-color:#E0D0B0'>" + equipment.requiredCareerHtml + "</td>"
+        html += "<td style='background-color:#E0D0B0'>" + equipment.requiredAttackHtml + "</td>"
+        html += "<td style='background-color:#E0D0B0'>" + equipment.requiredDefenseHtml + "</td>"
+        html += "<td style='background-color:#E0D0B0'>" + equipment.requiredSpecialAttackHtml + "</td>"
+        html += "<td style='background-color:#E0D0B0'>" + equipment.requiredSpecialDefenseHtml + "</td>"
+        html += "<td style='background-color:#E0D0B0'>" + equipment.requiredSpeedHtml + "</td>"
+        html += "<td style='background-color:#EFE0C0'>" + equipment.additionalPowerHtml + "</td>"
+        html += "<td style='background-color:#EFE0C0'>" + equipment.additionalWeightHtml + "</td>"
+        html += "<td style='background-color:#EFE0C0'>" + equipment.additionalLuckHtml + "</td>"
+        html += "<td style='background-color:#E0D0B0'>" + equipment.experienceHTML + "</td>"
+        html += "<td style='background-color:#EFE0C0'>" + equipment.attributeHtml + "</td>"
+        html += "</tr>";
+    }
+
     html += "</tbody>";
     html += "</table>";
 
