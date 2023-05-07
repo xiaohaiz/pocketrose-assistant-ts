@@ -26,16 +26,20 @@ class LocationState {
     }
 
     fork() {
-        if (this.#location === "TOWN") {
+        const ss = this.#location?.split("/");
+        if (ss === undefined || ss.length === 0) {
+            // Do nothing in case of location is null.
+            return;
+        }
+        if (ss[0] === "TOWN") {
             this.#inTownHandler?.();
         }
-        if (this.#location === "CASTLE") {
+        if (ss[0] === "CASTLE") {
             this.#inCastleHandler?.();
         }
-        if (this.#location === "WILD") {
+        if (ss[0] === "WILD") {
             this.#inWildHandler?.();
         }
-        // Do nothing in case of location is null.
     }
 }
 
