@@ -3,8 +3,10 @@ import PageUtils from "../../util/PageUtils";
 import StringUtils from "../../util/StringUtils";
 import SetupLoader from "../../pocket/SetupLoader";
 import EventHandler from "../../pocket/EventHandler";
-import LocationStateMachine from "../../core/LocationStateMachine";
 
+/**
+ * @deprecated
+ */
 class MapDashboardProcessor implements Processor {
 
     accept(cgi: string, pageText: string): boolean {
@@ -15,7 +17,7 @@ class MapDashboardProcessor implements Processor {
     }
 
     process(): void {
-        LocationStateMachine.currentLocationStateMachine().inMap();
+
         PageUtils.removeUnusedHyperLinks();
         PageUtils.removeGoogleAnalyticsScript();
         PageUtils.fixCurrentPageBrokenImages();

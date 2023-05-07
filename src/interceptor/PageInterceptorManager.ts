@@ -12,6 +12,7 @@ import LoginDashboardPageInterceptor from "./internal/LoginDashboardPageIntercep
 import NationInformationPageInterceptor from "./internal/NationInformationPageInterceptor";
 import CastleRanchPageInterceptor from "./internal/CastleRanchPageInterceptor";
 import CastleWarehousePageInterceptor from "./internal/CastleWarehousePageInterceptor";
+import MapDashboardPageInterceptor from "./internal/MapDashboardPageInterceptor";
 
 class PageInterceptorManager {
 
@@ -32,6 +33,7 @@ class PageInterceptorManager {
             new NationInformationPageInterceptor(),
             new CastleRanchPageInterceptor(),
             new CastleWarehousePageInterceptor(),
+            new MapDashboardPageInterceptor(),
         ];
     }
 
