@@ -3,6 +3,9 @@ import PageUtils from "../../util/PageUtils";
 import StringUtils from "../../util/StringUtils";
 import EventHandler from "../../pocket/EventHandler";
 
+/**
+ * @deprecated
+ */
 class EventDashboardProcessor implements Processor {
 
     accept(cgi: string, pageText: string): boolean {

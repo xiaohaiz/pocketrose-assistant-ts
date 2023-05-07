@@ -9,6 +9,7 @@ import TownPetMapHousePageInterceptor from "./internal/TownPetMapHousePageInterc
 import CastlePostHousePageInterceptor from "./internal/CastlePostHousePageInterceptor";
 import TownInformationPageInterceptor from "./internal/TownInformationPageInterceptor";
 import LoginDashboardPageInterceptor from "./internal/LoginDashboardPageInterceptor";
+import NationInformationPageInterceptor from "./internal/NationInformationPageInterceptor";
 
 class PageInterceptorManager {
 
@@ -26,6 +27,7 @@ class PageInterceptorManager {
             new TownWeaponHousePageInterceptor(),
             new TownInformationPageInterceptor(),
             new LoginDashboardPageInterceptor(),
+            new NationInformationPageInterceptor(),
         ];
     }
 
