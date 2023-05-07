@@ -14,6 +14,14 @@ class PersonalEquipmentManagementPage {
         this.credential = credential;
     }
 
+    get equipmentCount() {
+        if (this.equipmentList === undefined) {
+            return 0;
+        } else {
+            return this.equipmentList.length;
+        }
+    }
+
     findTreasureBag(): Equipment | null {
         return EquipmentParser.findTreasureBag(this.equipmentList);
     }
