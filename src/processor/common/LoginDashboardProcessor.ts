@@ -3,6 +3,9 @@ import PageUtils from "../../util/PageUtils";
 import SetupLoader from "../../pocket/SetupLoader";
 import FastLoginLoader from "../../pocket/FastLoginLoader";
 
+/**
+ * @deprecated
+ */
 class LoginDashboardProcessor implements Processor {
 
     accept(cgi: string, pageText: string): boolean {
