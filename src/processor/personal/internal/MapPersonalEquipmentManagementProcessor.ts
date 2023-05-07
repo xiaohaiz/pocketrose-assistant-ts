@@ -17,7 +17,7 @@ class MapPersonalEquipmentManagementProcessor {
 
 }
 
-const welcomeMessage = "<b style='font-size:120%;color:wheat'>真是难为您了，在野外还不忘捯饬您这些破烂。</b>";
+const welcomeMessage: string = "<b style='font-size:120%;color:wheat'>真是难为您了，在野外还不忘捯饬您这些破烂。</b>";
 
 function doProcess(coordinate: Coordinate) {
     // 解析原始的页面信息
@@ -340,6 +340,17 @@ function doBindUseButton(credential: Credential) {
             MessageBoard.publishWarning("没有选择装备或者物品！");
             return;
         }
+        const request = credential.asRequestMap();
+        request.set("chara", "1");
+        request.set("mode", "USE");
+        for (const index of indexList) {
+            request.set("item" + index, index.toString());
+        }
+        NetworkUtils.post("mydata.cgi", request)
+            .then(html => {
+                MessageBoard.processResponseMessage(html);
+                doRefresh(credential);
+            });
     });
 }
 
