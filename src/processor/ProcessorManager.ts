@@ -6,7 +6,6 @@ import PersonalFastLoginProcessor from "./personal/PersonalFastLoginProcessor";
 import PersonalPetManagementProcessor from "./personal/PersonalPetManagementProcessor";
 import PersonalStatusProcessor from "./personal/PersonalStatusProcessor";
 import TownAdventureGuildProcessor from "./town/TownAdventureGuildProcessor";
-import TownDashboardProcessor from "./town/TownDashboardProcessor";
 
 /**
  * @deprecated
@@ -24,7 +23,6 @@ class ProcessorManager {
             new PersonalPetManagementProcessor(),
             new PersonalStatusProcessor(),
             new TownAdventureGuildProcessor(),
-            new TownDashboardProcessor(),
         ];
     }
 
