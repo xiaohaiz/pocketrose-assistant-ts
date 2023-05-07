@@ -349,6 +349,10 @@ function doBindUseButton(credential: Credential) {
     $("#use").on("click", function () {
         const indexList: number[] = [];
         $("input:button[value='选择']")
+            .filter(function () {
+                const buttonId = $(this).attr("id") as string;
+                return buttonId.startsWith("selectPersonal_");
+            })
             .each(function (_idx, input) {
                 const buttonId = $(input).attr("id") as string;
                 if (PageUtils.isColorBlue(buttonId)) {
@@ -385,6 +389,10 @@ function doBindStoreButton(credential: Credential, treasureBag: Equipment | null
     $("#bag").on("click", function () {
         const indexList: number[] = [];
         $("input:button[value='选择']")
+            .filter(function () {
+                const buttonId = $(this).attr("id") as string;
+                return buttonId.startsWith("selectPersonal_");
+            })
             .each(function (_idx, input) {
                 const buttonId = $(input).attr("id") as string;
                 if (PageUtils.isColorBlue(buttonId)) {
@@ -481,7 +489,22 @@ function doRenderStorageEquipmentList(page: PersonalEquipmentManagementPage, tre
                 html += "</td>";
                 html += "</tr>";
             }
-
+            // ----------------------------------------------------------------
+            // 百宝袋菜单栏
+            // ----------------------------------------------------------------
+            html += "<tr>";
+            html += "<td style='background-color:#F8F0E0;text-align:center' colspan='11'>";
+            html += "<table style='border-width:0;background-color:#F8F0E0;width:100%;margin:auto'>";
+            html += "<tbody>";
+            html += "<tr>";
+            html += "<td style='text-align:left'>";
+            html += "<input type='button' id='takeOut' class='mutableElement' value='出百宝袋'>";
+            html += "</td>";
+            html += "</tr>";
+            html += "</tbody>";
+            html += "</table>";
+            html += "</td>";
+            html += "</tr>";
             html += "</tbody>";
             html += "</table>";
 
@@ -514,6 +537,31 @@ function doBindTakeOutButton(credential: Credential, treasureBag: Equipment) {
         const index = parseInt(StringUtils.substringAfter(buttonId, "_"));
         new TreasureBag(credential, treasureBag.index!)
             .takeOut([index])
+            .then(() => {
+                doRefresh(credential);
+            });
+    });
+    $("#takeOut").on("click", function () {
+        const indexList: number[] = [];
+        $("input:button[value='选择']")
+            .filter(function () {
+                const buttonId = $(this).attr("id") as string;
+                return buttonId.startsWith("selectStorage_");
+            })
+            .each(function (_idx, input) {
+                const buttonId = $(input).attr("id") as string;
+                if (PageUtils.isColorBlue(buttonId)) {
+                    const index = parseInt(StringUtils.substringAfter(buttonId, "_"));
+                    indexList.push(index);
+                }
+            });
+        if (indexList.length === 0) {
+            PageUtils.scrollIntoView("pageTitle");
+            MessageBoard.publishWarning("没有选择装备或者物品！");
+            return;
+        }
+        new TreasureBag(credential, treasureBag.index!)
+            .takeOut(indexList)
             .then(() => {
                 doRefresh(credential);
             });
