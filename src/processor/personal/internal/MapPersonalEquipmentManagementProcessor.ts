@@ -5,6 +5,7 @@ import NpcLoader from "../../../pocket/NpcLoader";
 import Coordinate from "../../../util/Coordinate";
 import PersonalEquipmentManagementPage from "../../../pocket/PersonalEquipmentManagementPage";
 import Credential from "../../../util/Credential";
+import NetworkUtils from "../../../util/NetworkUtils";
 
 class MapPersonalEquipmentManagementProcessor {
 
@@ -273,6 +274,7 @@ function doRender(page: PersonalEquipmentManagementPage) {
     }
 
     doBindSelectButton();
+    doBindUseButton(page.credential);
 }
 
 function doBindSelectButton() {
@@ -284,6 +286,26 @@ function doBindSelectButton() {
             $(this).css("color", "grey");
         }
     });
+}
+
+function doBindUseButton(credential: Credential) {
+    for (let i = 0; i < 20; i++) {
+        const buttonId = "use_" + i;
+        if ($("#" + buttonId).length === 0) {
+            continue;
+        }
+        $("#" + buttonId).on("click", function () {
+            const request = credential.asRequestMap();
+            request.set("chara", "1");
+            request.set("item" + i, i.toString());
+            request.set("mode", "USE");
+            NetworkUtils.post("mydata.cgi", request)
+                .then(html => {
+                    MessageBoard.processResponseMessage(html);
+                    doRefresh(credential);
+                });
+        });
+    }
 }
 
 export = MapPersonalEquipmentManagementProcessor;
