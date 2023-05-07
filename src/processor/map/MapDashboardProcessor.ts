@@ -15,7 +15,7 @@ class MapDashboardProcessor implements Processor {
     }
 
     process(): void {
-        LocationStateMachine.currentLocationStateMachine().inTown();
+        LocationStateMachine.currentLocationStateMachine().inWild();
         PageUtils.removeUnusedHyperLinks();
         PageUtils.removeGoogleAnalyticsScript();
         PageUtils.fixCurrentPageBrokenImages();
