@@ -87,7 +87,7 @@ class PageUtils {
 
     static generateInvisibleButton(backgroundColor: string) {
         return "<input type='button' " +
-            "value='　' " +
+            "value='　　' " +
             "style='background-color:" + backgroundColor + ";border-width:0'>";
     }
 

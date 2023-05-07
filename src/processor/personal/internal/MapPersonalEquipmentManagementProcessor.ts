@@ -155,6 +155,9 @@ function doRender(page: PersonalEquipmentManagementPage) {
     if (page.equipmentCount === 0) {
         return;
     }
+
+    const treasureBag = page.findTreasureBag();
+
     let html = "";
     html += "<table style='border-width:0;background-color:#888888;text-align:center;width:100%;margin:auto'>";
     html += "<tbody>";
@@ -177,6 +180,8 @@ function doRender(page: PersonalEquipmentManagementPage) {
     html += "<th style='background-color:#EFE0C0'>幸＋</th>"
     html += "<th style='background-color:#E0D0B0'>经验</th>"
     html += "<th style='background-color:#EFE0C0'>属性</th>"
+    html += "<th style='background-color:#E8E8D0'>使用</th>"
+    html += "<th style='background-color:#E8E8D0'>收藏</th>"
     html += "</tr>";
 
     for (const equipment of page.equipmentList!) {
@@ -212,13 +217,60 @@ function doRender(page: PersonalEquipmentManagementPage) {
         html += "<td style='background-color:#EFE0C0'>" + equipment.additionalLuckHtml + "</td>"
         html += "<td style='background-color:#E0D0B0'>" + equipment.experienceHTML + "</td>"
         html += "<td style='background-color:#EFE0C0'>" + equipment.attributeHtml + "</td>"
+        html += "<td style='background-color:#E8E8D0'>"
+        if (equipment.selectable) {
+            html += "<input type='button' " +
+                "value='" + equipment.buttonTitle + "' " +
+                "id='use_" + equipment.index + "' " +
+                "class='mutableElement'>";
+        } else {
+            html += PageUtils.generateInvisibleButton("#E8E8D0");
+        }
+        html += "</td>";
+        html += "<td style='background-color:#E8E8D0'>"
+        if (treasureBag !== null && equipment.selectable && !equipment.using) {
+            html += "<input type='button' " +
+                "value='收藏' " +
+                "id='store_" + equipment.index + "' " +
+                "class='mutableElement'>";
+        } else {
+            html += PageUtils.generateInvisibleButton("#E8E8D0");
+        }
+        html += "</td>";
         html += "</tr>";
     }
+    // ------------------------------------------------------------------------
+    // 装备菜单栏
+    // ------------------------------------------------------------------------
+    html += "<tr>";
+    html += "<td style='background-color:#F8F0E0;text-align:center' colspan='20'>";
+    html += "<table style='border-width:0;background-color:#F8F0E0;width:100%;margin:auto'>";
+    html += "<tbody>";
+    html += "<tr>";
+    html += "<td style='text-align:left'>";
+    html += "<input type='button' id='use' class='mutableElement' value='使用装备'>";
+    html += "<input type='button' id='bag' class='mutableElement' value='入百宝袋'>";
+    html += "</td>";
+    html += "<td style='text-align:right'>";
+    html += "<input type='button' id='openBag' class='mutableElement' value='打开百宝袋'>";
+    html += "<input type='button' id='closeBag' class='mutableElement' value='关闭百宝袋'>";
+    html += "</td>";
+    html += "</tr>";
+    html += "</tbody>";
+    html += "</table>";
+    html += "</td>";
+    html += "</tr>";
 
     html += "</tbody>";
     html += "</table>";
 
     $("#equipmentList").html(html).parent().show();
+
+    if (treasureBag === null) {
+        $("#bag").prop("disabled", true).hide();
+        $("#openBag").prop("disabled", true).hide();
+        $("#closeBag").prop("disabled", true).hide();
+    }
 
     doBindSelectButton();
 }

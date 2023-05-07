@@ -376,6 +376,17 @@ class Equipment {
         }
         return this.attribute;
     }
+
+    get buttonTitle() {
+        if (this.isItem) {
+            return "使用";
+        }
+        let title = "装备";
+        if (this.using) {
+            title = "卸下";
+        }
+        return title;
+    }
 }
 
 function isAttributeHeavyArmor(name: string) {
