@@ -8,6 +8,9 @@ import NpcLoader from "../../pocket/NpcLoader";
 import NetworkUtils from "../../util/NetworkUtils";
 import SetupLoader from "../../pocket/SetupLoader";
 
+/**
+ * @deprecated
+ */
 class CastleWareHouseProcessor implements Processor {
 
     accept(cgi: string, pageText: string): boolean {
