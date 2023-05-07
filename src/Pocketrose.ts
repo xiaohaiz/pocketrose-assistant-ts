@@ -1,6 +1,8 @@
 import ProcessorManager from "./processor/ProcessorManager";
 import StringUtils from "./util/StringUtils";
+import PageInterceptorManager from "./interceptor/PageInterceptorManager";
 
+const pageInterceptorManager = new PageInterceptorManager();
 const processorManager = new ProcessorManager();
 
 $(function () {
@@ -13,6 +15,11 @@ $(function () {
         if (cgi.includes("?")) {
             cgi = StringUtils.substringBefore(cgi, "?");
         }
-        processorManager.lookupProcessor(cgi)?.process();
+        const interceptor = pageInterceptorManager.lookupInterceptor(cgi);
+        if (interceptor != null) {
+            interceptor.intercept();
+        } else {
+            processorManager.lookupProcessor(cgi)?.process();
+        }
     }
 });
