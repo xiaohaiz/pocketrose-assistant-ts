@@ -5,6 +5,7 @@ import Role from "./Role";
 import StringUtils from "../util/StringUtils";
 import EquipmentParser from "./EquipmentParser";
 import NetworkUtils from "../util/NetworkUtils";
+import MessageBoard from "../util/MessageBoard";
 
 class PersonalEquipmentManagement {
 
@@ -31,6 +32,29 @@ class PersonalEquipmentManagement {
             });
         };
         return await action(this.#credential);
+    }
+
+    async use(indexList: number[]): Promise<void> {
+        const action = (credential: Credential, indexList: number[]) => {
+            return new Promise<void>((resolve, reject) => {
+                if (indexList.length === 0) {
+                    reject();
+                } else {
+                    const request = credential.asRequestMap();
+                    request.set("chara", "1");
+                    request.set("mode", "USE");
+                    for (const index of indexList) {
+                        request.set("item" + index, index.toString());
+                    }
+                    NetworkUtils.post("mydata.cgi", request)
+                        .then(html => {
+                            MessageBoard.processResponseMessage(html);
+                            resolve();
+                        });
+                }
+            });
+        };
+        return await action(this.#credential, indexList);
     }
 }
 

@@ -5,7 +5,6 @@ import NpcLoader from "../../../pocket/NpcLoader";
 import Coordinate from "../../../util/Coordinate";
 import PersonalEquipmentManagementPage from "../../../pocket/PersonalEquipmentManagementPage";
 import Credential from "../../../util/Credential";
-import NetworkUtils from "../../../util/NetworkUtils";
 import Role from "../../../pocket/Role";
 import StringUtils from "../../../util/StringUtils";
 
@@ -314,13 +313,9 @@ function doBindUseButton(credential: Credential) {
             continue;
         }
         $("#" + buttonId).on("click", function () {
-            const request = credential.asRequestMap();
-            request.set("chara", "1");
-            request.set("item" + i, i.toString());
-            request.set("mode", "USE");
-            NetworkUtils.post("mydata.cgi", request)
-                .then(html => {
-                    MessageBoard.processResponseMessage(html);
+            new PersonalEquipmentManagement(credential)
+                .use([i])
+                .then(() => {
                     doRefresh(credential);
                 });
         });
@@ -340,15 +335,9 @@ function doBindUseButton(credential: Credential) {
             MessageBoard.publishWarning("没有选择装备或者物品！");
             return;
         }
-        const request = credential.asRequestMap();
-        request.set("chara", "1");
-        request.set("mode", "USE");
-        for (const index of indexList) {
-            request.set("item" + index, index.toString());
-        }
-        NetworkUtils.post("mydata.cgi", request)
-            .then(html => {
-                MessageBoard.processResponseMessage(html);
+        new PersonalEquipmentManagement(credential)
+            .use(indexList)
+            .then(() => {
                 doRefresh(credential);
             });
     });
