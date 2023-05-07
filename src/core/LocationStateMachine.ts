@@ -19,7 +19,8 @@ class LocationStateMachine {
     }
 
     inTown() {
-        StorageUtils.set(this.#storageKey, "TOWN");
+        const townId = $("input:hidden[name='townid']:last").val() as string;
+        StorageUtils.set(this.#storageKey, "TOWN/" + townId);
     }
 
     inCastle() {
