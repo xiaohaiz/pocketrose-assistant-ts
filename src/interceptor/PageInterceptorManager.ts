@@ -21,6 +21,7 @@ import TownAdventureGuildPageInterceptor from "./internal/TownAdventureGuildPage
 import PersonalStatusPageInterceptor from "./internal/PersonalStatusPageInterceptor";
 import PersonalPetManagementPageInterceptor from "./internal/PersonalPetManagementPageInterceptor";
 import PersonalFastLoginPageInterceptor from "./internal/PersonalFastLoginPageInterceptor";
+import PersonalCareerManagementPageInterceptor from "./internal/PersonalCareerManagementPageInterceptor";
 
 class PageInterceptorManager {
 
@@ -50,6 +51,7 @@ class PageInterceptorManager {
             new PersonalStatusPageInterceptor(),
             new PersonalPetManagementPageInterceptor(),
             new PersonalFastLoginPageInterceptor(),
+            new PersonalCareerManagementPageInterceptor(),
         ];
     }
 

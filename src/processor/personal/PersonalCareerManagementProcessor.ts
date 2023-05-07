@@ -13,6 +13,9 @@ import NetworkUtils from "../../util/NetworkUtils";
 import MessageBoard from "../../util/MessageBoard";
 import Processor from "../Processor";
 
+/**
+ * @deprecated
+ */
 class PersonalCareerManagementProcessor implements Processor {
 
     accept(cgi: string, pageText: string): boolean {
