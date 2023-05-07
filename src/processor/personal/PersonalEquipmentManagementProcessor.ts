@@ -14,6 +14,7 @@ import RoleStatusLoader from "../../pocket/RoleStatusLoader";
 import Processor from "../Processor";
 import RoleLoader from "../../pocket/RoleLoader";
 import LocationStateMachine from "../../core/LocationStateMachine";
+import WildPersonalEquipmentManagementProcessor from "./internal/WildPersonalEquipmentManagementProcessor";
 
 class PersonalEquipmentManagementProcessor implements Processor {
 
@@ -47,6 +48,7 @@ class PersonalEquipmentManagementProcessor implements Processor {
                 doProcess(credential, equipmentList);
             })
             .whenInWild(() => {
+                new WildPersonalEquipmentManagementProcessor().process();
             })
             .fork();
     }

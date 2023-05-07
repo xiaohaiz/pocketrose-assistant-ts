@@ -33,14 +33,14 @@ class PageUtils {
     }
 
     static currentCredential() {
-        const id = $("input:hidden[name='id']:first").val();
-        const pass = $("input:hidden[name='pass']:first").val();
+        const id = $("input:hidden[name='id']:last").val();
+        const pass = $("input:hidden[name='pass']:last").val();
         return new Credential(id!.toString(), pass!.toString());
     }
 
     static parseCredential(pageHtml: string) {
-        const id = $(pageHtml).find("input:hidden[name='id']:first").val() as string;
-        const pass = $(pageHtml).find("input:hidden[name='pass']:first").val() as string;
+        const id = $(pageHtml).find("input:hidden[name='id']:last").val() as string;
+        const pass = $(pageHtml).find("input:hidden[name='pass']:last").val() as string;
         return new Credential(id, pass);
     }
 
