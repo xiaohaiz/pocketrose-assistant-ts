@@ -4,6 +4,7 @@ import PersonalEquipmentManagementPage from "./PersonalEquipmentManagementPage";
 import Role from "./Role";
 import StringUtils from "../util/StringUtils";
 import EquipmentParser from "./EquipmentParser";
+import NetworkUtils from "../util/NetworkUtils";
 
 class PersonalEquipmentManagement {
 
@@ -15,6 +16,21 @@ class PersonalEquipmentManagement {
 
     static parsePage(pageHtml: string) {
         return doParsePage(pageHtml);
+    }
+
+    async open(): Promise<PersonalEquipmentManagementPage> {
+        const action = (credential: Credential) => {
+            return new Promise<PersonalEquipmentManagementPage>(resolve => {
+                const request = credential.asRequestMap();
+                request.set("mode", "USE_ITEM");
+                NetworkUtils.post("mydata.cgi", request)
+                    .then(pageHtml => {
+                        const page = PersonalEquipmentManagement.parsePage(pageHtml);
+                        resolve(page);
+                    });
+            });
+        };
+        return await action(this.#credential);
     }
 }
 

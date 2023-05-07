@@ -3,6 +3,8 @@ import PersonalEquipmentManagement from "../../../pocket/PersonalEquipmentManage
 import MessageBoard from "../../../util/MessageBoard";
 import NpcLoader from "../../../pocket/NpcLoader";
 import Coordinate from "../../../util/Coordinate";
+import PersonalEquipmentManagementPage from "../../../pocket/PersonalEquipmentManagementPage";
+import Credential from "../../../util/Credential";
 
 class MapPersonalEquipmentManagementProcessor {
 
@@ -11,6 +13,8 @@ class MapPersonalEquipmentManagementProcessor {
     }
 
 }
+
+const welcomeMessage = "<b style='font-size:120%;color:yellow'>真是难为您了，在野外还不忘捯饬您这些破烂。</b>";
 
 function doProcess(coordinate: Coordinate) {
     // 解析原始的页面信息
@@ -73,6 +77,7 @@ function doProcess(coordinate: Coordinate) {
     $("#messageBoard")
         .css("background-color", "black")
         .css("color", "wheat");
+    MessageBoard.resetMessageBoard(welcomeMessage);
 
     // ------------------------------------------------------------------------
     // 隐藏表单栏
@@ -91,10 +96,16 @@ function doProcess(coordinate: Coordinate) {
     html = "";
     html += "<tr id='tr4'>";
     html += "<td style='background-color:#F8F0E0;text-align:center'>";
+    html += "<input type='button' id='refreshButton' value='刷新装备管理'>";
     html += "<input type='button' id='returnButton' value='退出装备管理'>";
     html += "</td>";
     html += "</tr>"
     $("#tr3").after($(html));
+    $("#refreshButton").on("click", function () {
+        $("#messageBoardManager").html(NpcLoader.randomNpcImageHtml);
+        MessageBoard.resetMessageBoard(welcomeMessage);
+        doRefresh(page.credential);
+    });
     $("#returnButton").on("click", function () {
         $("#returnMap").trigger("click");
     });
@@ -116,7 +127,32 @@ function doProcess(coordinate: Coordinate) {
         $("#treasureBag").text(treasureBag.index + "/off");
     }
 
-    console.log(PageUtils.currentPageHtml());
+    // ------------------------------------------------------------------------
+    // 装备栏目
+    // ------------------------------------------------------------------------
+    html = "";
+    html += "<tr id='tr6' style='display:none'>";
+    html += "<td id='equipmentList'></td>";
+    html += "</tr>"
+    $("#tr5").after($(html));
+
+    // 渲染装备栏
+    doRender(page);
+}
+
+function doRefresh(credential: Credential) {
+    PageUtils.scrollIntoView("pageTitle");
+    $(".mutableElement").off("click");
+    $("#equipmentList").html("").parent().hide();
+    new PersonalEquipmentManagement(credential)
+        .open()
+        .then(page => {
+            doRender(page);
+        });
+}
+
+function doRender(page: PersonalEquipmentManagementPage) {
+
 }
 
 export = MapPersonalEquipmentManagementProcessor;
