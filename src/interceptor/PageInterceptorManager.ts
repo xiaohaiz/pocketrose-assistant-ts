@@ -10,6 +10,7 @@ import CastlePostHousePageInterceptor from "./internal/CastlePostHousePageInterc
 import TownInformationPageInterceptor from "./internal/TownInformationPageInterceptor";
 import LoginDashboardPageInterceptor from "./internal/LoginDashboardPageInterceptor";
 import NationInformationPageInterceptor from "./internal/NationInformationPageInterceptor";
+import CastleRanchPageInterceptor from "./internal/CastleRanchPageInterceptor";
 
 class PageInterceptorManager {
 
@@ -28,6 +29,7 @@ class PageInterceptorManager {
             new TownInformationPageInterceptor(),
             new LoginDashboardPageInterceptor(),
             new NationInformationPageInterceptor(),
+            new CastleRanchPageInterceptor(),
         ];
     }
 

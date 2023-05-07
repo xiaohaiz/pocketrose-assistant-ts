@@ -1,6 +1,5 @@
 import Processor from "./Processor";
 import CastleEntranceProcessor from "./castle/CastleEntranceProcessor";
-import CastleRanchProcessor from "./castle/CastleRanchProcessor";
 import CastleWareHouseProcessor from "./castle/CastleWareHouseProcessor";
 import MapDashboardProcessor from "./map/MapDashboardProcessor";
 import MapPostHouseProcessor from "./map/MapPostHouseProcessor";
@@ -24,7 +23,6 @@ class ProcessorManager {
     constructor() {
         this.#processors = [
             new CastleEntranceProcessor(),
-            new CastleRanchProcessor(),
             new CastleWareHouseProcessor(),
             new MapDashboardProcessor(),
             new MapPostHouseProcessor(),
