@@ -7,7 +7,6 @@ import PersonalPetManagementProcessor from "./personal/PersonalPetManagementProc
 import PersonalStatusProcessor from "./personal/PersonalStatusProcessor";
 import TownAdventureGuildProcessor from "./town/TownAdventureGuildProcessor";
 import TownDashboardProcessor from "./town/TownDashboardProcessor";
-import TownGemHouseProcessor from "./town/TownGemHouseProcessor";
 import TownCastleKeeperProcessor from "./town/TownCastleKeeperProcessor";
 
 /**
@@ -28,7 +27,6 @@ class ProcessorManager {
             new TownAdventureGuildProcessor(),
             new TownCastleKeeperProcessor(),
             new TownDashboardProcessor(),
-            new TownGemHouseProcessor(),
         ];
     }
 

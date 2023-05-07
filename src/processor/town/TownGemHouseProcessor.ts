@@ -12,6 +12,9 @@ import StringUtils from "../../util/StringUtils";
 import EquipmentManagement from "../../pocket/personal/EquipmentManagement";
 import SetupLoader from "../../pocket/SetupLoader";
 
+/**
+ * @deprecated
+ */
 class TownGemHouseProcessor implements Processor {
 
     accept(cgi: string, pageText: string): boolean {
