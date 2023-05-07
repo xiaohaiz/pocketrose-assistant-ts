@@ -7,6 +7,7 @@ import PersonalEquipmentManagementPage from "../../../pocket/PersonalEquipmentMa
 import Credential from "../../../util/Credential";
 import NetworkUtils from "../../../util/NetworkUtils";
 import Role from "../../../pocket/Role";
+import StringUtils from "../../../util/StringUtils";
 
 class MapPersonalEquipmentManagementProcessor {
 
@@ -148,8 +149,6 @@ function doProcess(coordinate: Coordinate) {
 
     // 渲染装备栏
     doRender(page);
-
-    console.log(PageUtils.currentPageHtml());
 }
 
 function doRefresh(credential: Credential) {
@@ -326,6 +325,22 @@ function doBindUseButton(credential: Credential) {
                 });
         });
     }
+    $("#use").on("click", function () {
+        const indexList: number[] = [];
+        $("input:button[value='选择']")
+            .each(function (_idx, input) {
+                const buttonId = $(input).attr("id") as string;
+                if (PageUtils.isColorBlue(buttonId)) {
+                    const index = parseInt(StringUtils.substringAfter(buttonId, "_"));
+                    indexList.push(index);
+                }
+            });
+        if (indexList.length === 0) {
+            PageUtils.scrollIntoView("pageTitle");
+            MessageBoard.publishWarning("没有选择装备或者物品！");
+            return;
+        }
+    });
 }
 
 export = MapPersonalEquipmentManagementProcessor;
