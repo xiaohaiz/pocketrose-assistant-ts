@@ -382,6 +382,27 @@ function doBindStoreButton(credential: Credential, treasureBag: Equipment | null
                 doRefresh(credential);
             });
     });
+    $("#bag").on("click", function () {
+        const indexList: number[] = [];
+        $("input:button[value='选择']")
+            .each(function (_idx, input) {
+                const buttonId = $(input).attr("id") as string;
+                if (PageUtils.isColorBlue(buttonId)) {
+                    const index = parseInt(StringUtils.substringAfter(buttonId, "_"));
+                    indexList.push(index);
+                }
+            });
+        if (indexList.length === 0) {
+            PageUtils.scrollIntoView("pageTitle");
+            MessageBoard.publishWarning("没有选择装备或者物品！");
+            return;
+        }
+        new TreasureBag(credential, treasureBag.index!)
+            .putInto(indexList)
+            .then(() => {
+                doRefresh(credential);
+            });
+    });
 }
 
 function doBindOpenBagButton(credential: Credential) {
