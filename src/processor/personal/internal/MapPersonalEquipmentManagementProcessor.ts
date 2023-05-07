@@ -7,6 +7,8 @@ import PersonalEquipmentManagementPage from "../../../pocket/PersonalEquipmentMa
 import Credential from "../../../util/Credential";
 import Role from "../../../pocket/Role";
 import StringUtils from "../../../util/StringUtils";
+import Equipment from "../../../pocket/Equipment";
+import TreasureBag from "../../../pocket/TreasureBag";
 
 class MapPersonalEquipmentManagementProcessor {
 
@@ -122,20 +124,13 @@ function doProcess(coordinate: Coordinate) {
 
     // ------------------------------------------------------------------------
     // 用于保存百宝袋的状态
-    // none - 没有发现百宝袋
-    // index/on|off - 百宝袋下标/状态
     // ------------------------------------------------------------------------
     html = "";
     html += "<tr id='tr5' style='display:none'>";
     html += "<td id='treasureBag'></td>";
     html += "</tr>"
     $("#tr4").after($(html));
-    const treasureBag = page.findTreasureBag();
-    if (treasureBag === null) {
-        $("#treasureBag").text("none");
-    } else {
-        $("#treasureBag").text(treasureBag.index + "/off");
-    }
+    $("#treasureBag").text("off");
 
     // ------------------------------------------------------------------------
     // 装备栏目
@@ -146,19 +141,29 @@ function doProcess(coordinate: Coordinate) {
     html += "</tr>"
     $("#tr5").after($(html));
 
+    // ------------------------------------------------------------------------
+    // 百宝袋栏目
+    // ------------------------------------------------------------------------
+    html = "";
+    html += "<tr id='tr7' style='display:none'>";
+    html += "<td id='storageEquipmentList'></td>";
+    html += "</tr>"
+    $("#tr6").after($(html));
+
     // 渲染装备栏
-    doRender(page);
+    doRenderEquipmentList(page);
 }
 
 function doRefresh(credential: Credential) {
     PageUtils.scrollIntoView("pageTitle");
     $(".mutableElement").off("click");
     $("#equipmentList").html("").parent().hide();
+    $("#storageEquipmentList").html("").parent().hide();
     new PersonalEquipmentManagement(credential)
         .open()
         .then(page => {
             doRenderRole(page.role);
-            doRender(page);
+            doRenderEquipmentList(page);
         });
 }
 
@@ -170,7 +175,7 @@ function doRenderRole(role: Role | undefined) {
     }
 }
 
-function doRender(page: PersonalEquipmentManagementPage) {
+function doRenderEquipmentList(page: PersonalEquipmentManagementPage) {
     if (page.equipmentCount === 0) {
         return;
     }
@@ -180,6 +185,9 @@ function doRender(page: PersonalEquipmentManagementPage) {
     let html = "";
     html += "<table style='border-width:0;background-color:#888888;text-align:center;width:100%;margin:auto'>";
     html += "<tbody>";
+    html += "<tr>";
+    html += "<td style='background-color:darkred;color:wheat;font-weight:bold;font-size:120%;text-align:center' colspan='20'>＜ 随 身 装 备 ＞</td>";
+    html += "</tr>";
     html += "<tr>";
     html += "<th style='background-color:#E8E8D0'>选择</th>"
     html += "<th style='background-color:#EFE0C0'>装备</th>"
@@ -213,7 +221,7 @@ function doRender(page: PersonalEquipmentManagementPage) {
             html += "<input type='button' " +
                 "value='选择' " +
                 "style='color:grey' " +
-                "id='select_" + equipment.index + "' " +
+                "id='selectPersonal_" + equipment.index + "' " +
                 "class='mutableElement'>";
         } else {
             html += PageUtils.generateInvisibleButton("#E8E8D0");
@@ -289,21 +297,38 @@ function doRender(page: PersonalEquipmentManagementPage) {
         $("#bag").prop("disabled", true).hide();
         $("#openBag").prop("disabled", true).hide();
         $("#closeBag").prop("disabled", true).hide();
+    } else {
+        if ($("#treasureBag").text() === "on") {
+            $("#openBag").prop("disabled", true);
+        } else {
+            $("#closeBag").prop("disabled", true);
+        }
     }
 
-    doBindSelectButton();
+    doBindSelectPersonalButton();
     doBindUseButton(page.credential);
+    doBindOpenBagButton(page.credential);
+    doBindCloseBagButton(page.credential);
+
+    if (treasureBag !== null && $("#treasureBag").text() === "on") {
+        doRenderStorageEquipmentList(page, treasureBag);
+    }
 }
 
-function doBindSelectButton() {
-    $("input:button[value='选择']").on("click", function () {
-        const buttonId = $(this).attr("id") as string;
-        if (PageUtils.isColorGrey(buttonId)) {
-            $(this).css("color", "blue");
-        } else if (PageUtils.isColorBlue(buttonId)) {
-            $(this).css("color", "grey");
-        }
-    });
+function doBindSelectPersonalButton() {
+    $("input:button[value='选择']")
+        .filter(function () {
+            const buttonId = $(this).attr("id") as string;
+            return buttonId.startsWith("selectPersonal_");
+        })
+        .on("click", function () {
+            const buttonId = $(this).attr("id") as string;
+            if (PageUtils.isColorGrey(buttonId)) {
+                $(this).css("color", "blue");
+            } else if (PageUtils.isColorBlue(buttonId)) {
+                $(this).css("color", "grey");
+            }
+        });
 }
 
 function doBindUseButton(credential: Credential) {
@@ -341,6 +366,79 @@ function doBindUseButton(credential: Credential) {
                 doRefresh(credential);
             });
     });
+}
+
+function doBindOpenBagButton(credential: Credential) {
+    if ($("#openBag").prop("disabled")) {
+        return;
+    }
+    $("#openBag").on("click", function () {
+        $("#treasureBag").text("on");
+        doRefresh(credential);
+    });
+}
+
+function doBindCloseBagButton(credential: Credential) {
+    if ($("#closeBag").prop("disabled")) {
+        return;
+    }
+    $("#closeBag").on("click", function () {
+        $("#treasureBag").text("off");
+        doRefresh(credential);
+    });
+}
+
+function doRenderStorageEquipmentList(page: PersonalEquipmentManagementPage, treasureBag: Equipment) {
+    new TreasureBag(page.credential, treasureBag.index!)
+        .open()
+        .then(equipmentList => {
+
+            if (equipmentList.length === 0) {
+                // Nothing found in bag.
+                return;
+            }
+
+            let html = "";
+            html += "<table style='border-width:0;background-color:#888888;text-align:center;width:100%;margin:auto'>";
+            html += "<tbody>";
+            html += "<tr>";
+            html += "<td style='background-color:darkgreen;color:wheat;font-weight:bold;font-size:120%;text-align:center' colspan='11'>＜ 百 宝 袋 ＞</td>";
+            html += "</tr>";
+            html += "<tr>";
+            html += "<th style='background-color:#E8E8D0'>选择</th>"
+            html += "<th style='background-color:#E0D0B0'>名字</th>"
+            html += "<th style='background-color:#EFE0C0'>种类</th>"
+            html += "<th style='background-color:#E0D0B0'>效果</th>"
+            html += "<th style='background-color:#EFE0C0'>重量</th>"
+            html += "<th style='background-color:#EFE0C0'>耐久</th>"
+            html += "<th style='background-color:#EFE0C0'>威＋</th>"
+            html += "<th style='background-color:#EFE0C0'>重＋</th>"
+            html += "<th style='background-color:#EFE0C0'>幸＋</th>"
+            html += "<th style='background-color:#E0D0B0'>经验</th>"
+            html += "<th style='background-color:#E8E8D0'>取出</th>"
+            html += "</tr>";
+
+            for (const equipment of equipmentList) {
+                html += "<tr>";
+                html += "<td style='background-color:#E8E8D0'>选择</td>"
+                html += "<td style='background-color:#E0D0B0'>" + equipment.nameHTML + "</td>"
+                html += "<td style='background-color:#EFE0C0'>" + equipment.category + "</td>"
+                html += "<td style='background-color:#E0D0B0'>" + equipment.power + "</td>"
+                html += "<td style='background-color:#EFE0C0'>" + equipment.weight + "</td>"
+                html += "<td style='background-color:#EFE0C0'>" + equipment.endureHtml + "</td>"
+                html += "<td style='background-color:#EFE0C0'>" + equipment.additionalPowerHtml + "</td>"
+                html += "<td style='background-color:#EFE0C0'>" + equipment.additionalWeightHtml + "</td>"
+                html += "<td style='background-color:#EFE0C0'>" + equipment.additionalLuckHtml + "</td>"
+                html += "<td style='background-color:#E0D0B0'>" + equipment.experienceHTML + "</td>"
+                html += "<td style='background-color:#E8E8D0'>取出</td>"
+                html += "</tr>";
+            }
+
+            html += "</tbody>";
+            html += "</table>";
+
+            $("#storageEquipmentList").html(html).parent().show();
+        });
 }
 
 export = MapPersonalEquipmentManagementProcessor;

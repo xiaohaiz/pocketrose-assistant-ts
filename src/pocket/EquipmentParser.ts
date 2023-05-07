@@ -80,18 +80,10 @@ class EquipmentParser {
             equipment.selectable = true;
 
             // name & star
-            let s = $(tr).find("td:eq(1)").text();
-            if (s.startsWith("齐心★")) {
-                equipment.star = true;
-                equipment.name = StringUtils.substringAfter(s, "齐心★");
-            } else {
-                equipment.star = false;
-                equipment.name = s;
-            }
-            equipment.nameHTML = $(tr).find("td:eq(1)").html();
+            equipment.parseName($(tr).find("td:eq(1)").html());
 
             // category
-            s = $(tr).find("td:eq(2)").text();
+            let s = $(tr).find("td:eq(2)").text();
             equipment.category = s;
 
             // power & weight & endure
