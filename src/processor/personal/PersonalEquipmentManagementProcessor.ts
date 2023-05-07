@@ -47,8 +47,8 @@ class PersonalEquipmentManagementProcessor implements Processor {
                 const equipmentList = EquipmentParser.parsePersonalItemList(pageHtml);
                 doProcess(credential, equipmentList);
             })
-            .whenInMap(() => {
-                new MapPersonalEquipmentManagementProcessor().process();
+            .whenInMap(coordinate => {
+                new MapPersonalEquipmentManagementProcessor().process(coordinate!);
             })
             .fork();
     }

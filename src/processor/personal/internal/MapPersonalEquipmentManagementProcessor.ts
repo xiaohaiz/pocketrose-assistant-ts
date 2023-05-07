@@ -2,18 +2,19 @@ import PageUtils from "../../../util/PageUtils";
 import PersonalEquipmentManagement from "../../../pocket/PersonalEquipmentManagement";
 import MessageBoard from "../../../util/MessageBoard";
 import NpcLoader from "../../../pocket/NpcLoader";
+import Coordinate from "../../../util/Coordinate";
 
 class MapPersonalEquipmentManagementProcessor {
 
-    process() {
+    process(coordinate: Coordinate) {
         PageUtils.removeUnusedHyperLinks();
         PageUtils.removeGoogleAnalyticsScript();
-        doProcess();
+        doProcess(coordinate);
     }
 
 }
 
-function doProcess() {
+function doProcess(coordinate: Coordinate) {
     const page = PersonalEquipmentManagement.parsePage(PageUtils.currentPageHtml());
 
     // 重组旧的页面
@@ -28,7 +29,7 @@ function doProcess() {
         .css("font-weight", "bold")
         .css("background-color", "navy")
         .css("color", "yellowgreen")
-        .text("＜＜  装 备 管 理 （ 野 外 ）  ＞＞")
+        .text("＜＜  装 备 管 理 （ 地 图 模 式 ）  ＞＞")
         .parent()
         .attr("id", "tr0")
         .next()
@@ -42,6 +43,21 @@ function doProcess() {
         .removeAttr("width")
         .css("width", "100%")
         .next().remove();
+
+    $("#roleImage")
+        .next()
+        .find("table:first")
+        .find("tr:first")
+        .next()
+        .next()
+        .after($("" +
+            "<tr>" +
+            "<td style='background-color:#E0D0B0'>坐标点</td>" +
+            "<td style='background-color:#E8E8D0;text-align:right;font-weight:bold;color:red' " +
+            "colspan='5'>" + coordinate.asText() + "</td>" +
+            "</tr>" +
+            ""));
+
 
     $("#tr1")
         .next()
