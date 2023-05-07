@@ -2,7 +2,7 @@ class LocationState {
 
     readonly #location: string | null;
 
-    #inTownHandler?: () => void;
+    #inTownHandler?: (townId?: string) => void;
     #inCastleHandler?: () => void;
     #inWildHandler?: () => void;
 
@@ -10,7 +10,7 @@ class LocationState {
         this.#location = location;
     }
 
-    whenInTown(handler: () => void): LocationState {
+    whenInTown(handler: (townId?: string) => void): LocationState {
         this.#inTownHandler = handler;
         return this;
     }
@@ -32,7 +32,7 @@ class LocationState {
             return;
         }
         if (ss[0] === "TOWN") {
-            this.#inTownHandler?.();
+            this.#inTownHandler?.(ss[1]);
         }
         if (ss[0] === "CASTLE") {
             this.#inCastleHandler?.();
