@@ -5,8 +5,10 @@ import StringUtils from "../../util/StringUtils";
 import Processor from "../Processor";
 import PersonalStatus from "../../pocket/PersonalStatus";
 import Credential from "../../util/Credential";
-import LocationStateMachine from "../../core/LocationStateMachine";
 
+/**
+ * @deprecated
+ */
 class PersonalStatusProcessor implements Processor {
 
     accept(cgi: string, pageText: string): boolean {
@@ -17,15 +19,7 @@ class PersonalStatusProcessor implements Processor {
     }
 
     process() {
-        LocationStateMachine.currentLocationStateMachine()
-            .load()
-            .whenInTown(() => {
-                doProcess();
-            })
-            .whenInCastle(() => {
-                doProcess();
-            })
-            .fork();
+        doProcess();
     }
 }
 

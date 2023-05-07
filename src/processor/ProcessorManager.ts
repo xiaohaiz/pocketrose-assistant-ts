@@ -4,7 +4,6 @@ import PersonalCareerManagementProcessor from "./personal/PersonalCareerManageme
 import PersonalEquipmentManagementProcessor from "./personal/PersonalEquipmentManagementProcessor";
 import PersonalFastLoginProcessor from "./personal/PersonalFastLoginProcessor";
 import PersonalPetManagementProcessor from "./personal/PersonalPetManagementProcessor";
-import PersonalStatusProcessor from "./personal/PersonalStatusProcessor";
 
 /**
  * @deprecated
@@ -20,7 +19,6 @@ class ProcessorManager {
             new PersonalEquipmentManagementProcessor(),
             new PersonalFastLoginProcessor(),
             new PersonalPetManagementProcessor(),
-            new PersonalStatusProcessor(),
         ];
     }
 
