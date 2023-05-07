@@ -5,6 +5,9 @@ import NpcLoader from "../../pocket/NpcLoader";
 import CommentBoard from "../../util/CommentBoard";
 import Processor from "../Processor";
 
+/**
+ * @deprecated
+ */
 class BattleProcessor implements Processor {
 
     accept(cgi: string, pageText: string): boolean {
