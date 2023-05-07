@@ -13,6 +13,9 @@ import NpcLoader from "../../pocket/NpcLoader";
 import RoleLoader from "../../pocket/RoleLoader";
 import PetProfileLoader from "../../pocket/pet/PetProfileLoader";
 
+/**
+ * @deprecated
+ */
 class PersonalPetManagementProcessor implements Processor {
 
     accept(cgi: string, pageText: string): boolean {

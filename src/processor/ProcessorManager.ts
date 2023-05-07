@@ -3,7 +3,6 @@ import CastleEntranceProcessor from "./castle/CastleEntranceProcessor";
 import PersonalCareerManagementProcessor from "./personal/PersonalCareerManagementProcessor";
 import PersonalEquipmentManagementProcessor from "./personal/PersonalEquipmentManagementProcessor";
 import PersonalFastLoginProcessor from "./personal/PersonalFastLoginProcessor";
-import PersonalPetManagementProcessor from "./personal/PersonalPetManagementProcessor";
 
 /**
  * @deprecated
@@ -18,7 +17,6 @@ class ProcessorManager {
             new PersonalCareerManagementProcessor(),
             new PersonalEquipmentManagementProcessor(),
             new PersonalFastLoginProcessor(),
-            new PersonalPetManagementProcessor(),
         ];
     }
 
