@@ -457,7 +457,13 @@ function doRenderStorageEquipmentList(page: PersonalEquipmentManagementPage, tre
 
             for (const equipment of equipmentList) {
                 html += "<tr>";
-                html += "<td style='background-color:#E8E8D0'>选择</td>";
+                html += "<td style='background-color:#E8E8D0'>";
+                html += "<input type='button' " +
+                    "value='选择' " +
+                    "style='color:grey' " +
+                    "id='selectStorage_" + equipment.index + "' " +
+                    "class='mutableElement'>";
+                html += "</td>";
                 html += "<td style='background-color:#E0D0B0'>" + equipment.nameHTML + "</td>";
                 html += "<td style='background-color:#EFE0C0'>" + equipment.category + "</td>";
                 html += "<td style='background-color:#E0D0B0'>" + equipment.power + "</td>";
@@ -481,11 +487,28 @@ function doRenderStorageEquipmentList(page: PersonalEquipmentManagementPage, tre
 
             $("#storageEquipmentList").html(html).parent().show();
 
-            bindTakeOutButton(page.credential, treasureBag);
+            doBindSelectStorageButton();
+            doBindTakeOutButton(page.credential, treasureBag);
         });
 }
 
-function bindTakeOutButton(credential: Credential, treasureBag: Equipment) {
+function doBindSelectStorageButton() {
+    $("input:button[value='选择']")
+        .filter(function () {
+            const buttonId = $(this).attr("id") as string;
+            return buttonId.startsWith("selectStorage_");
+        })
+        .on("click", function () {
+            const buttonId = $(this).attr("id") as string;
+            if (PageUtils.isColorGrey(buttonId)) {
+                $(this).css("color", "blue");
+            } else if (PageUtils.isColorBlue(buttonId)) {
+                $(this).css("color", "grey");
+            }
+        });
+}
+
+function doBindTakeOutButton(credential: Credential, treasureBag: Equipment) {
     $("input:button[value='取出']").on("click", function () {
         const buttonId = $(this).attr("id") as string;
         const index = parseInt(StringUtils.substringAfter(buttonId, "_"));
