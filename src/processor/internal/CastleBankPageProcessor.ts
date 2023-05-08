@@ -8,6 +8,8 @@ import MessageBoard from "../../util/MessageBoard";
 import NpcLoader from "../../pocket/NpcLoader";
 import BankAccount from "../../common/BankAccount";
 import CastleBankPage from "../../pocketrose/CastleBankPage";
+import NetworkUtils from "../../util/NetworkUtils";
+import BankUtils from "../../util/BankUtils";
 
 class CastleBankPageProcessor extends PageProcessorSupport {
 
@@ -116,6 +118,18 @@ class CastleBankPageProcessor extends PageProcessorSupport {
             .next()
             .attr("id", "accountSaving");
 
+        html = "";
+        html += "<tr id='tr6'>";
+        html += "<td style='background-color:#F8F0E0;width:100%;text-align:center'>";
+        html += "<input type='text' id='searchName' size='15' maxlength='20'>";
+        html += "<input type='button' id='searchButton' value='找人'>";
+        html += "<select id='peopleSelect'><option value=''>选择发送对象</select>";
+        html += "<input type='text' id='transferAmount' value='' size='3' style='text-align:right'>0000 Gold&nbsp;&nbsp;&nbsp;";
+        html += "<input type='button' id='transferButton' value='转账' class='dynamicButton'>";
+        html += "</td>";
+        html += "</tr>";
+        $("#tr5").after($(html));
+
         // Bind immutable buttons
         $("#refreshButton").on("click", () => {
             MessageBoard.resetMessageBoard("请管理您的账户吧！");
@@ -125,12 +139,30 @@ class CastleBankPageProcessor extends PageProcessorSupport {
         $("#returnButton").on("click", () => {
             $("#returnCastle").trigger("click");
         });
+        $("#searchButton").on("click", () => {
+            const s = $("#searchName").val();
+            if (s === undefined || (s as string).trim() === "") {
+                PageUtils.scrollIntoView("pageTitle");
+                MessageBoard.publishWarning("请正确输入人名！");
+                return;
+            }
+            const searchName = (s as string).trim();
+            const request = credential.asRequestMap();
+            request.set("mode", "CASTLE_SENDMONEY");
+            // noinspection JSDeprecatedSymbols
+            request.set("serch", escape(searchName));
+            NetworkUtils.post("castle.cgi", request).then(html => {
+                const options = $(html).find("select[name='eid']").html();
+                $("#peopleSelect").html(options);
+            });
+        });
     }
 
     #renderMutablePage(credential: Credential, page: CastleBankPage) {
         this.#bindDepositAllButton(credential, page.account!);
         this.#bindDepositButton(credential, page.account!);
         this.#bindWithdrawButton(credential, page.account!);
+        this.#bindTransferButton(credential, page.account!);
     }
 
     #refresh(credential: Credential) {
@@ -141,6 +173,7 @@ class CastleBankPageProcessor extends PageProcessorSupport {
             $("#accountSaving").text(page.account!.saving!.toString());
             $("#depositAmount").val("");
             $("#withdrawAmount").val("");
+            $("#transferAmount").val("");
             $(".dynamicButton").off("click");
             this.#renderMutablePage(credential, page);
         });
@@ -162,7 +195,7 @@ class CastleBankPageProcessor extends PageProcessorSupport {
     #bindDepositButton(credential: Credential, account: BankAccount) {
         $("#depositButton").on("click", () => {
             const text = $("#depositAmount").val();
-            if (text === undefined || text === "") {
+            if (text === undefined || (text as string).trim() === "") {
                 PageUtils.scrollIntoView("pageTitle");
                 MessageBoard.publishWarning("没有输入存入的金额！");
                 return;
@@ -187,7 +220,7 @@ class CastleBankPageProcessor extends PageProcessorSupport {
     #bindWithdrawButton(credential: Credential, account: BankAccount) {
         $("#withdrawButton").on("click", () => {
             const text = $("#withdrawAmount").val();
-            if (text === undefined || text === "") {
+            if (text === undefined || (text as string).trim() === "") {
                 PageUtils.scrollIntoView("pageTitle");
                 MessageBoard.publishWarning("没有输入取出的金额！");
                 return;
@@ -205,6 +238,54 @@ class CastleBankPageProcessor extends PageProcessorSupport {
             }
             new CastleBank(credential).withdraw(amount).then(() => {
                 this.#refresh(credential);
+            });
+        });
+    }
+
+    #bindTransferButton(credential: Credential, account: BankAccount) {
+        $("#transferButton").on("click", () => {
+            const s = $("#peopleSelect").val();
+            if (s === undefined || (s as string).trim() === "") {
+                PageUtils.scrollIntoView("pageTitle");
+                MessageBoard.publishWarning("没有选择转账对象！");
+                return;
+            }
+            const text = $("#transferAmount").val();
+            if (text === undefined || (text as string).trim() === "") {
+                PageUtils.scrollIntoView("pageTitle");
+                MessageBoard.publishWarning("没有输入取出的金额！");
+                return;
+            }
+            const amount = parseInt((text as string).trim());
+            if (isNaN(amount) || !Number.isInteger(amount) || amount <= 0) {
+                PageUtils.scrollIntoView("pageTitle");
+                MessageBoard.publishWarning("非法输入金额！");
+                return;
+            }
+            if ((amount + 10) * 10000 > account.total) {
+                PageUtils.scrollIntoView("pageTitle");
+                MessageBoard.publishWarning("很遗憾，你压根就没有这么多钱！");
+                return;
+            }
+
+            const target = $("#peopleSelect").find("option:selected").text();
+            if (!confirm("请您确认向" + target + "转账" + amount + "万GOLD？")) {
+                return;
+            }
+
+            const delta = BankUtils.calculateCashDifferenceAmount(account.cash!, (amount + 10) * 10000);
+            const bank = new CastleBank(credential);
+            bank.withdraw(delta).then(() => {
+                const request = credential.asRequestMap();
+                request.set("gold", (amount * 10).toString());  // 送钱的接口单位是K
+                request.set("eid", (s as string).trim());
+                request.set("mode", "CASTLE_SENDMONEY2");
+                NetworkUtils.post("castle.cgi", request).then(html => {
+                    MessageBoard.processResponseMessage(html);
+                    bank.depositAll().then(() => {
+                        this.#refresh(credential);
+                    });
+                });
             });
         });
     }
