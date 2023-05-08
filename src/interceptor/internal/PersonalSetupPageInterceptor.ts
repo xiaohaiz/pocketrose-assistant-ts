@@ -5,6 +5,9 @@ import PersonalSetupPageProcessor_Town from "../../processor/internal/PersonalSe
 
 class PersonalSetupPageInterceptor implements PageInterceptor {
 
+    readonly #inTownProcessor = new PersonalSetupPageProcessor_Town();
+    readonly #inCastleProcessor = new PersonalSetupPageProcessor_Castle();
+
     accept(cgi: string, pageText: string): boolean {
         if (cgi === "mydata.cgi") {
             return pageText.includes("给其他人发送消息");
@@ -16,10 +19,10 @@ class PersonalSetupPageInterceptor implements PageInterceptor {
         LocationStateMachine.currentLocationStateMachine()
             .load()
             .whenInTown(() => {
-                new PersonalSetupPageProcessor_Town().process();
+                this.#inTownProcessor.process();
             })
             .whenInCastle(() => {
-                new PersonalSetupPageProcessor_Castle().process();
+                this.#inCastleProcessor.process();
             })
             .fork();
     }
