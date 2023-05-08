@@ -1,4 +1,3 @@
-import Processor from "../Processor";
 import PageUtils from "../../util/PageUtils";
 import EquipmentParser from "../../pocket/EquipmentParser";
 import Credential from "../../util/Credential";
@@ -7,23 +6,16 @@ import MessageBoard from "../../util/MessageBoard";
 import NpcLoader from "../../pocket/NpcLoader";
 import NetworkUtils from "../../util/NetworkUtils";
 import SetupLoader from "../../pocket/SetupLoader";
+import PageProcessorSupport from "../PageProcessorSupport";
+import PageProcessorContext from "../PageProcessorContext";
 
-/**
- * @deprecated
- */
-class CastleWareHouseProcessor implements Processor {
+class CastleWarehousePageProcessor extends PageProcessorSupport {
 
-    accept(cgi: string, pageText: string): boolean {
-        if (cgi === "castle.cgi") {
-            return pageText.includes("＜＜　|||　城堡仓库　|||　＞＞");
-        }
-        return false;
+    constructor() {
+        super();
     }
 
-    process(): void {
-        PageUtils.removeUnusedHyperLinks();
-        PageUtils.removeGoogleAnalyticsScript();
-        PageUtils.fixCurrentPageBrokenImages();
+    doProcess(credential: Credential, context?: PageProcessorContext): void {
         doProcess();
     }
 
@@ -553,4 +545,4 @@ function doRefresh(credential: Credential) {
     });
 }
 
-export = CastleWareHouseProcessor;
+export = CastleWarehousePageProcessor;

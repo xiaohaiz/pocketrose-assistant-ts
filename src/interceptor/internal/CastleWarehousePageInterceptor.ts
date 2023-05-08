@@ -1,8 +1,11 @@
 import PageInterceptor from "../PageInterceptor";
 import LocationStateMachine from "../../core/LocationStateMachine";
-import CastleWareHouseProcessor from "../../processor/castle/CastleWareHouseProcessor";
+import CastleWarehousePageProcessor from "../../processor/internal/CastleWarehousePageProcessor";
 
 class CastleWarehousePageInterceptor implements PageInterceptor {
+
+    readonly #processor = new CastleWarehousePageProcessor();
+
     accept(cgi: string, pageText: string): boolean {
         if (cgi === "castle.cgi") {
             return pageText.includes("＜＜　|||　城堡仓库　|||　＞＞");
@@ -14,7 +17,7 @@ class CastleWarehousePageInterceptor implements PageInterceptor {
         LocationStateMachine.currentLocationStateMachine()
             .load()
             .whenInCastle(() => {
-                new CastleWareHouseProcessor().process();
+                this.#processor.process();
             })
             .fork();
     }
