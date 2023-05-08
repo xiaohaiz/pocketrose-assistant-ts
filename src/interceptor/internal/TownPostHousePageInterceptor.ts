@@ -1,8 +1,10 @@
 import PageInterceptor from "../PageInterceptor";
 import LocationStateMachine from "../../core/LocationStateMachine";
-import TownPostHouseProcessor from "../../processor/town/TownPostHouseProcessor";
+import TownPostHousePageProcessor from "../../processor/internal/TownPostHousePageProcessor";
 
 class TownPostHousePageInterceptor implements PageInterceptor {
+
+    readonly #processor = new TownPostHousePageProcessor();
 
     accept(cgi: string, pageText: string): boolean {
         if (cgi === "town.cgi") {
@@ -15,7 +17,7 @@ class TownPostHousePageInterceptor implements PageInterceptor {
         LocationStateMachine.currentLocationStateMachine()
             .load()
             .whenInTown(() => {
-                new TownPostHouseProcessor().process();
+                this.#processor.process();
             })
             .fork();
     }

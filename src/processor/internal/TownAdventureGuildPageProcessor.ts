@@ -1,4 +1,3 @@
-import PageUtils from "../../util/PageUtils";
 import Credential from "../../util/Credential";
 import TreasureHintParser from "../../pocket/TreasureHintParser";
 import TreasureHint from "../../pocket/TreasureHint";
@@ -15,24 +14,16 @@ import TownEntrance from "../../pocket/TownEntrance";
 import TravelPlan from "../../pocket/TravelPlan";
 import TravelPlanExecutor from "../../pocket/TravelPlanExecutor";
 import MapExplorer from "../../pocket/MapExplorer";
-import Processor from "../Processor";
+import PageProcessorSupport from "../PageProcessorSupport";
+import PageProcessorContext from "../PageProcessorContext";
 
-/**
- * @deprecated
- */
-class TownAdventureGuildProcessor implements Processor {
+class TownAdventureGuildPageProcessor extends PageProcessorSupport {
 
-    accept(cgi: string, pageText: string): boolean {
-        if (cgi === "town.cgi") {
-            return pageText.includes("*  藏宝图以旧换新业务 *");
-        }
-        return false;
+    constructor() {
+        super();
     }
 
-    process() {
-        PageUtils.removeUnusedHyperLinks();
-        PageUtils.removeGoogleAnalyticsScript();
-        const credential = PageUtils.currentCredential();
+    doProcess(credential: Credential, context?: PageProcessorContext): void {
         const pageHtml = document.documentElement.outerHTML;
         const treasureHintList = TreasureHintParser.parseTreasureHintList(pageHtml);
         doProcess(credential, treasureHintList);
@@ -417,4 +408,4 @@ function doRefresh(credential: Credential) {
     });
 }
 
-export = TownAdventureGuildProcessor;
+export = TownAdventureGuildPageProcessor;

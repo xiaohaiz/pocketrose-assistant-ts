@@ -1,10 +1,10 @@
 import PageInterceptor from "../PageInterceptor";
 import LocationStateMachine from "../../core/LocationStateMachine";
-import TownPostHousePageProcessor from "../../processor/internal/TownPostHousePageProcessor";
+import TownAdventureGuildPageProcessor from "../../processor/internal/TownAdventureGuildPageProcessor";
 
 class TownAdventureGuildPageInterceptor implements PageInterceptor {
 
-    readonly #processor = new TownPostHousePageProcessor();
+    readonly #processor = new TownAdventureGuildPageProcessor();
 
     accept(cgi: string, pageText: string): boolean {
         if (cgi === "town.cgi") {
