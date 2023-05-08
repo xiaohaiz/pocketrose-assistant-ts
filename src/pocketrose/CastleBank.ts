@@ -18,6 +18,21 @@ class CastleBank {
         return doParsePage(html);
     }
 
+    async open(): Promise<CastleBankPage> {
+        const action = () => {
+            return new Promise<CastleBankPage>(resolve => {
+                const request = this.#credential.asRequestMap();
+                request.set("mode", "CASTLE_BANK");
+                NetworkUtils.post("castle.cgi", request)
+                    .then(html => {
+                        const page = CastleBank.parsePage(html);
+                        resolve(page);
+                    });
+            });
+        };
+        return await action();
+    }
+
     async depositAll(): Promise<void> {
         const action = () => {
             return new Promise<void>(resolve => {
