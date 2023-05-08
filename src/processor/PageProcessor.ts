@@ -1,6 +1,8 @@
+import PageProcessorContext from "./PageProcessorContext";
+
 interface PageProcessor {
 
-    process(): void;
+    process(context?: PageProcessorContext): void;
 
 }
 

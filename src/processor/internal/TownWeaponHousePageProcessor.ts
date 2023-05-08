@@ -9,6 +9,7 @@ import Constants from "../../util/Constants";
 import BankUtils from "../../util/BankUtils";
 import TownBank from "../../pocket/bank/TownBank";
 import PageProcessorSupport from "../PageProcessorSupport";
+import PageProcessorContext from "../PageProcessorContext";
 
 class TownWeaponHousePageProcessor extends PageProcessorSupport {
 
@@ -16,15 +17,15 @@ class TownWeaponHousePageProcessor extends PageProcessorSupport {
         super();
     }
 
-    doProcess(credential: Credential): void {
-        doProcess();
+    doProcess(credential: Credential, context?: PageProcessorContext): void {
+        processPage(context!.get("townId")!);
     }
 
 }
 
-function doProcess() {
+function processPage(townId: string) {
     const page = TownWeaponHouse.parsePage(PageUtils.currentPageHtml());
-    const town = TownLoader.getTownById(page.townId)!;
+    const town = TownLoader.getTownById(townId)!;
 
     // 重新绘制页面框架
     const t1 = $("table:eq(1)");
