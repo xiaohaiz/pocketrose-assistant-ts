@@ -1,7 +1,11 @@
 import PageInterceptor from "../PageInterceptor";
-import LoginDashboardProcessor from "../../processor/common/LoginDashboardProcessor";
+import SetupLoader from "../../pocket/SetupLoader";
+import LoginDashboardPageProcessor from "../../processor/internal/LoginDashboardPageProcessor";
 
 class LoginDashboardPageInterceptor implements PageInterceptor {
+
+    readonly #processor = new LoginDashboardPageProcessor();
+
     accept(cgi: string, pageText: string): boolean {
         if (cgi === "contnue.cgi") {
             return pageText.includes("继续游戏");
@@ -10,7 +14,10 @@ class LoginDashboardPageInterceptor implements PageInterceptor {
     }
 
     intercept(): void {
-        new LoginDashboardProcessor().process();
+        if (!SetupLoader.isFastLoginEnabled()) {
+            return;
+        }
+        this.#processor.process();
     }
 }
 

@@ -1,32 +1,15 @@
-import Processor from "../Processor";
-import PageUtils from "../../util/PageUtils";
-import SetupLoader from "../../pocket/SetupLoader";
 import FastLoginLoader from "../../pocket/FastLoginLoader";
+import PageProcessor from "../PageProcessor";
 
-/**
- * @deprecated
- */
-class LoginDashboardProcessor implements Processor {
-
-    accept(cgi: string, pageText: string): boolean {
-        if (cgi === "contnue.cgi") {
-            return pageText.includes("继续游戏");
-        }
-        return false;
-    }
+class LoginDashboardPageProcessor implements PageProcessor {
 
     process(): void {
-        PageUtils.removeUnusedHyperLinks();
-        PageUtils.removeGoogleAnalyticsScript();
         doProcess();
     }
 
 }
 
 function doProcess() {
-    if (!SetupLoader.isFastLoginEnabled()) {
-        return;
-    }
     const configs = new Map<number, {}>();
     for (let i = 0; i < 10; i++) {
         const config = FastLoginLoader.loadFastLoginConfig(i);
@@ -123,4 +106,4 @@ function doBindFastLoginButton() {
     }
 }
 
-export = LoginDashboardProcessor;
+export = LoginDashboardPageProcessor;

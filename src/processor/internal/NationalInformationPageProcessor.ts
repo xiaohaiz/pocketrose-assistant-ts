@@ -1,15 +1,10 @@
 import StringUtils from "../../util/StringUtils";
 import EventHandler from "../../pocket/EventHandler";
-import PageProcessorSupport from "../PageProcessorSupport";
-import Credential from "../../util/Credential";
+import PageProcessor from "../PageProcessor";
 
-class NationalInformationPageProcessor extends PageProcessorSupport {
+class NationalInformationPageProcessor implements PageProcessor {
 
-    constructor() {
-        super();
-    }
-
-    doProcess(credential: Credential): void {
+    process(): void {
         this.#renderEventBoard();
     }
 
