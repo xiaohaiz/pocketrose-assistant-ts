@@ -1,7 +1,8 @@
-import PageInterceptor from "../PageInterceptor";
-import CastleBankPageProcessor from "../../processor/internal/CastleBankPageProcessor";
 import LocationStateMachine from "../../core/LocationStateMachine";
+import SetupLoader from "../../core/SetupLoader";
+import CastleBankPageProcessor from "../../processor/internal/CastleBankPageProcessor";
 import PageProcessorContext from "../../processor/PageProcessorContext";
+import PageInterceptor from "../PageInterceptor";
 
 class CastleBankPageInterceptor implements PageInterceptor {
 
@@ -15,6 +16,9 @@ class CastleBankPageInterceptor implements PageInterceptor {
     }
 
     intercept(): void {
+        if (!SetupLoader.isPocketBankEnabled()) {
+            return;
+        }
         LocationStateMachine.create()
             .load()
             .whenInCastle(castleName => {
