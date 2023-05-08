@@ -1,8 +1,9 @@
 import PageInterceptor from "../PageInterceptor";
 import LocationStateMachine from "../../core/LocationStateMachine";
-import MapDashboardProcessor from "../../processor/map/MapDashboardProcessor";
+import MapDashboardPageProcessor from "../../processor/internal/MapDashboardPageProcessor";
 
 class MapDashboardPageInterceptor implements PageInterceptor {
+
     accept(cgi: string, pageText: string): boolean {
         if (cgi === "map.cgi" || cgi === "status.cgi") {
             return pageText.includes("请选择移动的格数");
@@ -13,7 +14,7 @@ class MapDashboardPageInterceptor implements PageInterceptor {
     intercept(): void {
         // Set current location state to MAP.
         LocationStateMachine.currentLocationStateMachine().inMap();
-        new MapDashboardProcessor().process();
+        new MapDashboardPageProcessor().process();
     }
 
 
