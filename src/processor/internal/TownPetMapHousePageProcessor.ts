@@ -1,22 +1,15 @@
-import Processor from "../Processor";
-import PageUtils from "../../util/PageUtils";
 import Constants from "../../util/Constants";
+import PageProcessorSupport from "../PageProcessorSupport";
+import PageProcessorContext from "../PageProcessorContext";
+import Credential from "../../util/Credential";
 
-/**
- * @deprecated
- */
-class TownPetMapProcessor implements Processor {
+class TownPetMapHousePageProcessor extends PageProcessorSupport {
 
-    accept(cgi: string, pageText: string): boolean {
-        if (cgi === "town.cgi") {
-            return pageText.includes("* 宠物图鉴 *");
-        }
-        return false;
+    constructor() {
+        super();
     }
 
-    process(): void {
-        PageUtils.removeUnusedHyperLinks();
-        PageUtils.removeGoogleAnalyticsScript();
+    doProcess(credential: Credential, context?: PageProcessorContext): void {
         doProcess();
     }
 
@@ -51,4 +44,4 @@ function doProcess() {
     }
 }
 
-export = TownPetMapProcessor;
+export = TownPetMapHousePageProcessor;
