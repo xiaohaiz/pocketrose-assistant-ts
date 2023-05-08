@@ -11,28 +11,16 @@ import SetupLoader from "../../pocket/SetupLoader";
 import CommentBoard from "../../util/CommentBoard";
 import NpcLoader from "../../pocket/NpcLoader";
 import RoleStatusLoader from "../../pocket/RoleStatusLoader";
-import Processor from "../Processor";
 import RoleLoader from "../../pocket/RoleLoader";
+import PageProcessorSupport from "../PageProcessorSupport";
+import PageProcessorContext from "../PageProcessorContext";
 
 /**
  * @deprecated
  */
-class PersonalEquipmentManagementProcessor implements Processor {
+class PersonalEquipmentManagementPageProcessor extends PageProcessorSupport {
 
-    accept(cgi: string, pageText: string): boolean {
-        if (!SetupLoader.isEquipmentManagementUIEnabled()) {
-            return false;
-        }
-        if (cgi === "mydata.cgi") {
-            return pageText.includes("＜＜　|||　物品使用．装备　|||　＞＞");
-        }
-        return false;
-    }
-
-    process() {
-        PageUtils.removeUnusedHyperLinks();
-        PageUtils.removeGoogleAnalyticsScript();
-        const credential = PageUtils.currentCredential();
+    doProcess(credential: Credential, context?: PageProcessorContext): void {
         const pageHtml = document.documentElement.outerHTML;
         const equipmentList = EquipmentParser.parsePersonalItemList(pageHtml);
         doProcess(credential, equipmentList);
@@ -774,4 +762,4 @@ function isSetConfigAvailable(config: {}) {
     return (a !== undefined && a !== "NONE") || (b !== undefined && b !== "NONE") || (c !== undefined && c !== "NONE");
 }
 
-export = PersonalEquipmentManagementProcessor;
+export = PersonalEquipmentManagementPageProcessor;

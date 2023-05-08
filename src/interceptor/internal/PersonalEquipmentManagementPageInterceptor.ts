@@ -3,8 +3,9 @@ import SetupLoader from "../../pocket/SetupLoader";
 import LocationStateMachine from "../../core/LocationStateMachine";
 import PersonalEquipmentManagementPageProcessor_Map
     from "../../processor/internal/PersonalEquipmentManagementPageProcessor_Map";
-import PersonalEquipmentManagementProcessor from "../../processor/personal/PersonalEquipmentManagementProcessor";
 import PageProcessorContext from "../../processor/PageProcessorContext";
+import PersonalEquipmentManagementPageProcessor
+    from "../../processor/internal/PersonalEquipmentManagementPageProcessor";
 
 class PersonalEquipmentManagementPageInterceptor implements PageInterceptor {
 
@@ -24,10 +25,10 @@ class PersonalEquipmentManagementPageInterceptor implements PageInterceptor {
         LocationStateMachine.currentLocationStateMachine()
             .load()
             .whenInTown(() => {
-                new PersonalEquipmentManagementProcessor().process();
+                new PersonalEquipmentManagementPageProcessor().process();
             })
             .whenInCastle(() => {
-                new PersonalEquipmentManagementProcessor().process();
+                new PersonalEquipmentManagementPageProcessor().process();
             })
             .whenInMap(coordinate => {
                 const context = new PageProcessorContext();
