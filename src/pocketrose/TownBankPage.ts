@@ -1,12 +1,10 @@
-import Credential from "../util/Credential";
+import BankAccount from "../common/BankAccount";
+import Role from "../pocket/Role";
 
 class TownBankPage {
 
-    readonly #credential: Credential;
-
-    constructor(credential: Credential) {
-        this.#credential = credential;
-    }
+    role?: Role;
+    account?: BankAccount;
 
 }
 
