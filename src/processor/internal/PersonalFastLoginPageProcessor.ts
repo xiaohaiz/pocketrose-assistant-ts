@@ -1,26 +1,13 @@
-import Processor from "../Processor";
-import PageUtils from "../../util/PageUtils";
 import Credential from "../../util/Credential";
 import FastLoginLoader from "../../pocket/FastLoginLoader";
 import MessageBoard from "../../util/MessageBoard";
 import StorageUtils from "../../util/StorageUtils";
+import PageProcessorSupport from "../PageProcessorSupport";
+import PageProcessorContext from "../PageProcessorContext";
 
-/**
- * @deprecated
- */
-class PersonalFastLoginProcessor implements Processor {
+class PersonalFastLoginPageProcessor extends PageProcessorSupport {
 
-    accept(cgi: string, pageText: string): boolean {
-        if (cgi === "mydata.cgi") {
-            return pageText.includes("* 出家 *");
-        }
-        return false;
-    }
-
-    process(): void {
-        PageUtils.removeUnusedHyperLinks();
-        PageUtils.removeGoogleAnalyticsScript();
-        const credential = PageUtils.currentCredential();
+    doProcess(credential: Credential, context?: PageProcessorContext): void {
         doProcess(credential);
     }
 
@@ -217,4 +204,4 @@ function doRefresh() {
     doRender();
 }
 
-export = PersonalFastLoginProcessor;
+export = PersonalFastLoginPageProcessor;
