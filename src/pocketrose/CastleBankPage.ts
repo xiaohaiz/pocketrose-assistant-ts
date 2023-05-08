@@ -1,0 +1,4 @@
+class CastleBankPage {
+}
+
+export = CastleBankPage;
