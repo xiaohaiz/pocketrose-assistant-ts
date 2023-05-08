@@ -29,6 +29,7 @@ abstract class AbstractPersonalStatusPageProcessor extends PageProcessorSupport 
         this.doGenerateHiddenForm(credential, "hiddenFormContainer");
 
         // 删除旧的表单并且新建全新的智能返回按钮
+        $("form:last").remove();
         $("p:last").attr("id", "returnButtonContainer");
         this.doGenerateReturnButton(page.role!, "returnButtonContainer");
         this.doBindReturnButton();

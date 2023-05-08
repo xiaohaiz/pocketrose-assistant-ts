@@ -18,6 +18,7 @@ class PersonalStatusPageProcessor_Town extends AbstractPersonalStatusPageProcess
     doGenerateHiddenForm(credential: Credential, containerId: string): void {
         const html = PageUtils.generateReturnTownForm(credential);
         $("#" + containerId).html(html);
+        $("#returnTown").attr("tabIndex", 1);
     }
 
     doGenerateReturnButton(role: Role, containerId: string): void {
