@@ -1,9 +1,12 @@
 import PageInterceptor from "../PageInterceptor";
 import SetupLoader from "../../pocket/SetupLoader";
 import LocationStateMachine from "../../core/LocationStateMachine";
-import PersonalCareerManagementProcessor from "../../processor/personal/PersonalCareerManagementProcessor";
+import PersonalCareerManagementPageProcessor from "../../processor/internal/PersonalCareerManagementPageProcessor";
 
 class PersonalCareerManagementPageInterceptor implements PageInterceptor {
+
+    readonly #processor = new PersonalCareerManagementPageProcessor();
+
     accept(cgi: string, pageText: string): boolean {
         if (cgi === "mydata.cgi") {
             return pageText.includes("* 转职神殿 *");
@@ -18,10 +21,10 @@ class PersonalCareerManagementPageInterceptor implements PageInterceptor {
         LocationStateMachine.currentLocationStateMachine()
             .load()
             .whenInTown(() => {
-                new PersonalCareerManagementProcessor().process();
+                this.#processor.process();
             })
             .whenInCastle(() => {
-                new PersonalCareerManagementProcessor().process();
+                this.#processor.process();
             })
             .fork();
     }

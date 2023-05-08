@@ -1,4 +1,3 @@
-import PageUtils from "../../util/PageUtils";
 import CareerParser from "../../pocket/CareerParser";
 import Credential from "../../util/Credential";
 import NpcLoader from "../../pocket/NpcLoader";
@@ -11,27 +10,12 @@ import Spell from "../../pocket/Spell";
 import SpellLoader from "../../pocket/SpellLoader";
 import NetworkUtils from "../../util/NetworkUtils";
 import MessageBoard from "../../util/MessageBoard";
-import Processor from "../Processor";
+import PageProcessorSupport from "../PageProcessorSupport";
+import PageProcessorContext from "../PageProcessorContext";
 
-/**
- * @deprecated
- */
-class PersonalCareerManagementProcessor implements Processor {
+class PersonalCareerManagementPageProcessor extends PageProcessorSupport {
 
-    accept(cgi: string, pageText: string): boolean {
-        if (!SetupLoader.isCareerManagementUIEnabled()) {
-            return false;
-        }
-        if (cgi === "mydata.cgi") {
-            return pageText.includes("* 转职神殿 *");
-        }
-        return false;
-    }
-
-    process() {
-        PageUtils.removeUnusedHyperLinks();
-        PageUtils.removeGoogleAnalyticsScript();
-        const credential = PageUtils.currentCredential();
+    doProcess(credential: Credential, context?: PageProcessorContext): void {
         const pageHtml = document.documentElement.outerHTML;
         const candidateList = CareerParser.parseCareerTransferCandidateList(pageHtml);
         doProcess(credential, candidateList);
@@ -467,4 +451,4 @@ function doCalculateRecommendationCareers(role: Role, careerCandidateList: strin
     return recommendations;
 }
 
-export = PersonalCareerManagementProcessor;
+export = PersonalCareerManagementPageProcessor;
