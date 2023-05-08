@@ -1,4 +1,3 @@
-import Processor from "../Processor";
 import PageUtils from "../../util/PageUtils";
 import TownWeaponHouse from "../../pocket/house/TownWeaponHouse";
 import TownLoader from "../../pocket/TownLoader";
@@ -9,26 +8,15 @@ import TownWeaponHousePage from "../../pocket/house/TownWeaponHousePage";
 import Constants from "../../util/Constants";
 import BankUtils from "../../util/BankUtils";
 import TownBank from "../../pocket/bank/TownBank";
-import SetupLoader from "../../pocket/SetupLoader";
+import PageProcessorSupport from "../PageProcessorSupport";
 
-/**
- * @deprecated
- */
-class TownWeaponStoreProcessor implements Processor {
+class TownWeaponHousePageProcessor extends PageProcessorSupport {
 
-    accept(cgi: string, pageText: string): boolean {
-        if (!SetupLoader.isPocketSuperMarketEnabled()) {
-            return false;
-        }
-        if (cgi === "town.cgi") {
-            return pageText.includes("＜＜　□　武器屋　□　＞＞");
-        }
-        return false;
+    constructor() {
+        super();
     }
 
-    process(): void {
-        PageUtils.removeUnusedHyperLinks();
-        PageUtils.removeGoogleAnalyticsScript();
+    doProcess(credential: Credential): void {
         doProcess();
     }
 
@@ -351,4 +339,4 @@ function doBindBuyButton(page: TownWeaponHousePage, indexList: number[]) {
     }
 }
 
-export = TownWeaponStoreProcessor;
+export = TownWeaponHousePageProcessor;
