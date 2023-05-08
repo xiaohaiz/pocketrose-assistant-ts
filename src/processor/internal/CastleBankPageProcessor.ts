@@ -6,6 +6,8 @@ import CastleBank from "../../pocketrose/CastleBank";
 import StringUtils from "../../util/StringUtils";
 import MessageBoard from "../../util/MessageBoard";
 import NpcLoader from "../../pocket/NpcLoader";
+import BankAccount from "../../common/BankAccount";
+import CastleBankPage from "../../pocketrose/CastleBankPage";
 
 class CastleBankPageProcessor extends PageProcessorSupport {
 
@@ -85,7 +87,18 @@ class CastleBankPageProcessor extends PageProcessorSupport {
 
         html = "";
         html += "<p id='p1'>";
-        html += "<input type='button' id='depositAllButton' value='全部存入'>";
+        html += "<input type='button' id='depositAllButton' value='全部存入' class='dynamicButton'>";
+        html += "</p>";
+        html += "<p id='p2'>";
+        html += "<input type='text' id='depositAmount' value='' size='3' style='text-align:right'>0000 Gold&nbsp;&nbsp;&nbsp;";
+        html += "<input type='button' id='depositButton' value='金存入' class='dynamicButton'>";
+        html += "</p>";
+        html += "<p id='p3'>";
+        html += "<input type='text' id='withdrawAmount' value='' size='3' style='text-align:right'>0000 Gold&nbsp;&nbsp;&nbsp;";
+        html += "<input type='button' id='withdrawButton' value='金取出' class='dynamicButton'>";
+        html += "</p>";
+        html += "<p id='p4'>";
+        html += "&nbsp;&nbsp;&nbsp;";
         html += "</p>";
         $("#tr4")
             .next()
@@ -102,9 +115,13 @@ class CastleBankPageProcessor extends PageProcessorSupport {
             .next()
             .attr("id", "accountSaving");
 
-        this.#bindDepositAllButton(credential);
+        this.#load(credential, page);
+    }
 
-        console.log(PageUtils.currentPageHtml());
+    #load(credential: Credential, page: CastleBankPage) {
+        this.#bindDepositAllButton(credential, page.account!);
+        this.#bindDepositButton(credential, page.account!);
+        this.#bindWithdrawButton(credential, page.account!);
     }
 
     #refresh(credential: Credential) {
@@ -113,6 +130,10 @@ class CastleBankPageProcessor extends PageProcessorSupport {
             $("#roleCash").text(page.role!.cash + " GOLD");
             $("#accountCash").text(page.account!.cash!.toString());
             $("#accountSaving").text(page.account!.saving!.toString());
+            $("#depositAmount").val("");
+            $("#withdrawAmount").val("");
+            $(".dynamicButton").off("click");
+            this.#load(credential, page);
         });
     }
 
@@ -135,9 +156,61 @@ class CastleBankPageProcessor extends PageProcessorSupport {
         });
     }
 
-    #bindDepositAllButton(credential: Credential) {
+    #bindDepositAllButton(credential: Credential, account: BankAccount) {
         $("#depositAllButton").on("click", () => {
+            if (account.cash! < 10000) {
+                PageUtils.scrollIntoView("pageTitle");
+                MessageBoard.publishWarning("没觉得你身上有啥值得存入的现金！");
+                return;
+            }
             new CastleBank(credential).depositAll().then(() => {
+                this.#refresh(credential);
+            });
+        });
+    }
+
+    #bindDepositButton(credential: Credential, account: BankAccount) {
+        $("#depositButton").on("click", () => {
+            const text = $("#depositAmount").val();
+            if (text === undefined || text === "") {
+                PageUtils.scrollIntoView("pageTitle");
+                MessageBoard.publishWarning("没有输入存入的金额！");
+                return;
+            }
+            const amount = parseInt((text as string).trim());
+            if (isNaN(amount) || !Number.isInteger(amount) || amount <= 0) {
+                PageUtils.scrollIntoView("pageTitle");
+                MessageBoard.publishWarning("非法输入金额！");
+                return;
+            }
+            if (amount * 10000 > account.cash!) {
+                PageUtils.scrollIntoView("pageTitle");
+                MessageBoard.publishWarning(amount + "万！真逗，搞得你好像有这么多现金似得！");
+                return;
+            }
+        });
+    }
+
+    #bindWithdrawButton(credential: Credential, account: BankAccount) {
+        $("#withdrawButton").on("click", () => {
+            const text = $("#withdrawAmount").val();
+            if (text === undefined || text === "") {
+                PageUtils.scrollIntoView("pageTitle");
+                MessageBoard.publishWarning("没有输入取出的金额！");
+                return;
+            }
+            const amount = parseInt((text as string).trim());
+            if (isNaN(amount) || !Number.isInteger(amount) || amount <= 0) {
+                PageUtils.scrollIntoView("pageTitle");
+                MessageBoard.publishWarning("非法输入金额！");
+                return;
+            }
+            if (amount * 10000 > account.saving!) {
+                PageUtils.scrollIntoView("pageTitle");
+                MessageBoard.publishWarning(amount + "万！真逗，搞得你好像有这么多存款似得！");
+                return;
+            }
+            new CastleBank(credential).withdraw(amount).then(() => {
                 this.#refresh(credential);
             });
         });

@@ -48,6 +48,35 @@ class CastleBank {
         };
         return await action();
     }
+
+    async withdraw(amount: number): Promise<void> {
+        const action = () => {
+            return new Promise<void>((resolve, reject) => {
+                if (isNaN(amount) || !Number.isInteger(amount) || amount < 0) {
+                    reject();
+                    return;
+                }
+                if (amount === 0) {
+                    resolve();
+                    return;
+                }
+                const request = this.#credential.asRequestMap();
+                request.set("dasu", amount.toString());
+                request.set("mode", "CASTLEBANK_BUY");
+                NetworkUtils.post("castle.cgi", request)
+                    .then(html => {
+                        if ($(html).text().includes("您在钱庄里没那么多存款")) {
+                            MessageBoard.publishWarning("真可怜，银行里面连" + amount + "万存款都没有！");
+                            reject();
+                        } else {
+                            MessageBoard.publishMessage("从城堡支行里提取了" + amount + "万现金。");
+                            resolve();
+                        }
+                    });
+            });
+        };
+        return await action();
+    }
 }
 
 function doParsePage(html: string): CastleBankPage {
