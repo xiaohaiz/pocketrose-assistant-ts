@@ -62,7 +62,7 @@ class MapDashboardPageProcessor extends PageProcessorSupport {
             .filter(it => it.endsWith(")"))
             .map(function (it) {
                 // noinspection HtmlDeprecatedTag,XmlDeprecatedElement,HtmlDeprecatedAttribute
-                const header = "<font color=\"navy\">●</font>";
+                const header: string = "<font color=\"navy\">●</font>";
                 return StringUtils.substringAfter(it, header);
             })
             .map(function (it) {
