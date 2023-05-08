@@ -1,10 +1,14 @@
 import StringUtils from "../../util/StringUtils";
 import EventHandler from "../../pocket/EventHandler";
 import PageProcessor from "../PageProcessor";
+import PageUtils from "../../util/PageUtils";
 
 class NationalInformationPageProcessor implements PageProcessor {
 
     process(): void {
+        PageUtils.fixCurrentPageBrokenImages();
+        PageUtils.removeUnusedHyperLinks();
+        PageUtils.removeGoogleAnalyticsScript();
         this.#renderEventBoard();
     }
 

@@ -1,9 +1,13 @@
 import FastLoginLoader from "../../pocket/FastLoginLoader";
 import PageProcessor from "../PageProcessor";
+import PageUtils from "../../util/PageUtils";
 
 class LoginDashboardPageProcessor implements PageProcessor {
 
     process(): void {
+        PageUtils.fixCurrentPageBrokenImages();
+        PageUtils.removeUnusedHyperLinks();
+        PageUtils.removeGoogleAnalyticsScript();
         doProcess();
     }
 
