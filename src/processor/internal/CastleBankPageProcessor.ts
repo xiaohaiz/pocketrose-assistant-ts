@@ -14,7 +14,12 @@ class CastleBankPageProcessor extends PageProcessorSupport {
     doProcess(credential: Credential, context?: PageProcessorContext): void {
         const page = CastleBank.parsePage(PageUtils.currentPageHtml());
         const castleName = context!.get("castleName")!;
+        this.#createImmutablePage(credential, page, castleName);
+    }
 
+    #createImmutablePage(credential: Credential,
+                         page: CastleBankPage,
+                         castleName: string) {
         $("form").remove();
 
         $("table:eq(1)")
