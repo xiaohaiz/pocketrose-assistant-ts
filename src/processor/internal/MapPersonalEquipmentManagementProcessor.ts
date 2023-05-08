@@ -1,14 +1,14 @@
-import PageUtils from "../../../util/PageUtils";
-import PersonalEquipmentManagement from "../../../pocket/PersonalEquipmentManagement";
-import MessageBoard from "../../../util/MessageBoard";
-import NpcLoader from "../../../pocket/NpcLoader";
-import Coordinate from "../../../util/Coordinate";
-import PersonalEquipmentManagementPage from "../../../pocket/PersonalEquipmentManagementPage";
-import Credential from "../../../util/Credential";
-import Role from "../../../pocket/Role";
-import StringUtils from "../../../util/StringUtils";
-import Equipment from "../../../pocket/Equipment";
-import TreasureBag from "../../../pocket/TreasureBag";
+import PageUtils from "../../util/PageUtils";
+import PersonalEquipmentManagement from "../../pocket/PersonalEquipmentManagement";
+import MessageBoard from "../../util/MessageBoard";
+import NpcLoader from "../../pocket/NpcLoader";
+import Coordinate from "../../util/Coordinate";
+import PersonalEquipmentManagementPage from "../../pocket/PersonalEquipmentManagementPage";
+import Credential from "../../util/Credential";
+import Role from "../../pocket/Role";
+import StringUtils from "../../util/StringUtils";
+import Equipment from "../../pocket/Equipment";
+import TreasureBag from "../../pocket/TreasureBag";
 
 /**
  * @deprecated
