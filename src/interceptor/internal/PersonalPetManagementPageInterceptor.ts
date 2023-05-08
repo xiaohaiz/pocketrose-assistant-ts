@@ -1,7 +1,7 @@
 import PageInterceptor from "../PageInterceptor";
 import SetupLoader from "../../pocket/SetupLoader";
 import LocationStateMachine from "../../core/LocationStateMachine";
-import PersonalPetManagementProcessor from "../../processor/personal/PersonalPetManagementProcessor";
+import PersonalPetManagementPageProcessor from "../../processor/internal/PersonalPetManagementPageProcessor";
 
 class PersonalPetManagementPageInterceptor implements PageInterceptor {
     accept(cgi: string, pageText: string): boolean {
@@ -18,10 +18,10 @@ class PersonalPetManagementPageInterceptor implements PageInterceptor {
         LocationStateMachine.currentLocationStateMachine()
             .load()
             .whenInTown(() => {
-                new PersonalPetManagementProcessor().process();
+                new PersonalPetManagementPageProcessor().process();
             })
             .whenInCastle(() => {
-                new PersonalPetManagementProcessor().process();
+                new PersonalPetManagementPageProcessor().process();
             })
             .fork();
     }

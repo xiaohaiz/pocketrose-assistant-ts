@@ -7,31 +7,18 @@ import MessageBoard from "../../util/MessageBoard";
 import NetworkUtils from "../../util/NetworkUtils";
 import TownBank from "../../pocket/TownBank";
 import EquipmentParser from "../../pocket/EquipmentParser";
-import Processor from "../Processor";
-import SetupLoader from "../../pocket/SetupLoader";
 import NpcLoader from "../../pocket/NpcLoader";
 import RoleLoader from "../../pocket/RoleLoader";
 import PetProfileLoader from "../../pocket/pet/PetProfileLoader";
+import PageProcessorSupport from "../PageProcessorSupport";
+import PageProcessorContext from "../PageProcessorContext";
 
 /**
  * @deprecated
  */
-class PersonalPetManagementProcessor implements Processor {
+class PersonalPetManagementPageProcessor extends PageProcessorSupport {
 
-    accept(cgi: string, pageText: string): boolean {
-        if (!SetupLoader.isPetManagementUIEnabled()) {
-            return false;
-        }
-        if (cgi === "mydata.cgi") {
-            return pageText.includes("宠物现在升级时学习新技能情况一览");
-        }
-        return false;
-    }
-
-    process() {
-        PageUtils.removeUnusedHyperLinks();
-        PageUtils.removeGoogleAnalyticsScript();
-        const credential = PageUtils.currentCredential();
+    doProcess(credential: Credential, context?: PageProcessorContext): void {
         const pageHtml = document.documentElement.outerHTML;
         const petList = PetParser.parsePersonalPetList(pageHtml);
         const studyStatus = PetParser.parsePersonalPetStudyStatus(pageHtml);
@@ -42,6 +29,7 @@ class PersonalPetManagementProcessor implements Processor {
 function doProcess(credential: Credential, petList: Pet[], studyStatus: number[]) {
     $("input:submit[value='返回城市']").attr("id", "returnButton");
 
+    // noinspection HtmlDeprecatedTag,XmlDeprecatedElement
     let html = "<center>";
     html += "<table style='background-color:#888888;width:100%;text-align:center'>";
     html += "<tbody style='background-color:#F8F0E0'>";
@@ -73,8 +61,10 @@ function doProcess(credential: Credential, petList: Pet[], studyStatus: number[]
     html += "</tr>";
     html += "</tody>";
     html += "</table>";
+    // noinspection HtmlDeprecatedTag,XmlDeprecatedElement
     html += "<center>已登陆宠物联赛的宠物一览";
 
+    // noinspection HtmlDeprecatedTag,XmlDeprecatedElement
     const leftHtml = StringUtils.substringAfter($("body:first").html(), "<center>已登陆宠物联赛的宠物一览");
 
     $("body:first").html(html + leftHtml);
@@ -1061,4 +1051,4 @@ function doBindTakeOutButton(credential: Credential, index: number) {
     });
 }
 
-export = PersonalPetManagementProcessor;
+export = PersonalPetManagementPageProcessor;
