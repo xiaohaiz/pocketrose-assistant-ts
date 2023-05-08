@@ -82,7 +82,7 @@ class TownBankPageProcessor extends PageProcessorSupport {
         html += "</td>";
         html += "</tr>";
         $("#tr2").after($(html));
-        $("#hiddenFormContainer").html(PageUtils.generateReturnCastleForm(credential));
+        $("#hiddenFormContainer").html(PageUtils.generateReturnTownForm(credential));
 
         html = "";
         html += "<p id='p1'>";
