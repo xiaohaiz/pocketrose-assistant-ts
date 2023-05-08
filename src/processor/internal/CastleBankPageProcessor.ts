@@ -15,6 +15,7 @@ class CastleBankPageProcessor extends PageProcessorSupport {
         const page = CastleBank.parsePage(PageUtils.currentPageHtml());
         const castleName = context!.get("castleName")!;
         this.#createImmutablePage(credential, page, castleName);
+        this.#renderMutablePage(credential, page);
     }
 
     #createImmutablePage(credential: Credential,
@@ -119,11 +120,9 @@ class CastleBankPageProcessor extends PageProcessorSupport {
             .attr("id", "accountCash")
             .next()
             .attr("id", "accountSaving");
-
-        this.#load(credential, page);
     }
 
-    #load(credential: Credential, page: CastleBankPage) {
+    #renderMutablePage(credential: Credential, page: CastleBankPage) {
         this.#bindDepositAllButton(credential, page.account!);
         this.#bindDepositButton(credential, page.account!);
         this.#bindWithdrawButton(credential, page.account!);
@@ -138,7 +137,7 @@ class CastleBankPageProcessor extends PageProcessorSupport {
             $("#depositAmount").val("");
             $("#withdrawAmount").val("");
             $(".dynamicButton").off("click");
-            this.#load(credential, page);
+            this.#renderMutablePage(credential, page);
         });
     }
 
