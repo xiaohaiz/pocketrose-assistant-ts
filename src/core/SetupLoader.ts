@@ -224,6 +224,10 @@ class SetupLoader {
     static isCastleKeeperEnabled(): boolean {
         return StorageUtils.getBoolean("_pa_032");
     }
+
+    static isPocketBankEnabled(): boolean {
+        return StorageUtils.getBoolean("_pa_033");
+    }
 }
 
 export = SetupLoader;

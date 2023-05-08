@@ -1,4 +1,3 @@
-import PageInterceptor from "./PageInterceptor";
 import BattlePageInterceptor from "./internal/BattlePageInterceptor";
 import CastleBankPageInterceptor from "./internal/CastleBankPageInterceptor";
 import CastleDashboardPageInterceptor from "./internal/CastleDashboardPageInterceptor";
@@ -25,6 +24,7 @@ import TownPetMapHousePageInterceptor from "./internal/TownPetMapHousePageInterc
 import TownPetRankHousePageInterceptor from "./internal/TownPetRankHousePageInterceptor";
 import TownPostHousePageInterceptor from "./internal/TownPostHousePageInterceptor";
 import TownWeaponHousePageInterceptor from "./internal/TownWeaponHousePageInterceptor";
+import PageInterceptor from "./PageInterceptor";
 
 class PageInterceptorManager {
 
