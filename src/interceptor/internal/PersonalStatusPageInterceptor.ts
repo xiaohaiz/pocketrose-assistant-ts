@@ -1,11 +1,12 @@
 import PageInterceptor from "../PageInterceptor";
 import LocationStateMachine from "../../core/LocationStateMachine";
-import PersonalStatusProcessor from "../../processor/personal/PersonalStatusProcessor";
 import PersonalStatusPageProcessor_Town from "../../processor/internal/PersonalStatusPageProcessor_Town";
+import PersonalStatusPageProcessor_Castle from "../../processor/internal/PersonalStatusPageProcessor_Castle";
 
 class PersonalStatusPageInterceptor implements PageInterceptor {
 
     readonly #inTownProcessor = new PersonalStatusPageProcessor_Town();
+    readonly #inCastleProcessor = new PersonalStatusPageProcessor_Castle();
 
     accept(cgi: string, pageText: string): boolean {
         if (cgi === "mydata.cgi") {
@@ -21,7 +22,7 @@ class PersonalStatusPageInterceptor implements PageInterceptor {
                 this.#inTownProcessor.process();
             })
             .whenInCastle(() => {
-                new PersonalStatusProcessor().process();
+                this.#inCastleProcessor.process();
             })
             .fork();
     }
