@@ -1,11 +1,16 @@
 import PageInterceptor from "../PageInterceptor";
-import SetupLoader from "../../pocket/SetupLoader";
+import SetupLoader from "../../core/SetupLoader";
 import LocationStateMachine from "../../core/LocationStateMachine";
-import MapPersonalEquipmentManagementProcessor
-    from "../../processor/personal/internal/MapPersonalEquipmentManagementProcessor";
-import PersonalEquipmentManagementProcessor from "../../processor/personal/PersonalEquipmentManagementProcessor";
+import PersonalEquipmentManagementPageProcessor_Map
+    from "../../processor/internal/PersonalEquipmentManagementPageProcessor_Map";
+import PageProcessorContext from "../../processor/PageProcessorContext";
+import PersonalEquipmentManagementPageProcessor
+    from "../../processor/internal/PersonalEquipmentManagementPageProcessor";
 
 class PersonalEquipmentManagementPageInterceptor implements PageInterceptor {
+
+    readonly #inMapProcessor = new PersonalEquipmentManagementPageProcessor_Map();
+
     accept(cgi: string, pageText: string): boolean {
         if (cgi === "mydata.cgi") {
             return pageText.includes("＜＜　|||　物品使用．装备　|||　＞＞");
@@ -17,16 +22,18 @@ class PersonalEquipmentManagementPageInterceptor implements PageInterceptor {
         if (!SetupLoader.isEquipmentManagementUIEnabled()) {
             return;
         }
-        LocationStateMachine.currentLocationStateMachine()
+        LocationStateMachine.create()
             .load()
             .whenInTown(() => {
-                new PersonalEquipmentManagementProcessor().process();
+                new PersonalEquipmentManagementPageProcessor().process();
             })
             .whenInCastle(() => {
-                new PersonalEquipmentManagementProcessor().process();
+                new PersonalEquipmentManagementPageProcessor().process();
             })
             .whenInMap(coordinate => {
-                new MapPersonalEquipmentManagementProcessor().process(coordinate!);
+                const context = new PageProcessorContext();
+                context.set("coordinate", coordinate!.asText());
+                this.#inMapProcessor.process(context);
             })
             .fork();
     }

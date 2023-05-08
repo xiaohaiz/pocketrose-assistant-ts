@@ -1,5 +1,5 @@
 import PageInterceptor from "../PageInterceptor";
-import SetupLoader from "../../pocket/SetupLoader";
+import SetupLoader from "../../core/SetupLoader";
 import LoginDashboardPageProcessor from "../../processor/internal/LoginDashboardPageProcessor";
 
 class LoginDashboardPageInterceptor implements PageInterceptor {

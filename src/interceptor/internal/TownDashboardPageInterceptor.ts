@@ -1,8 +1,11 @@
 import PageInterceptor from "../PageInterceptor";
 import LocationStateMachine from "../../core/LocationStateMachine";
-import TownDashboardProcessor from "../../processor/town/TownDashboardProcessor";
+import TownDashboardPageProcessor from "../../processor/internal/TownDashboardPageProcessor";
 
 class TownDashboardPageInterceptor implements PageInterceptor {
+
+    readonly #processor = new TownDashboardPageProcessor();
+
     accept(cgi: string, pageText: string): boolean {
         if (cgi === "status.cgi" || cgi === "town.cgi") {
             return pageText.includes("城市支配率");
@@ -12,8 +15,8 @@ class TownDashboardPageInterceptor implements PageInterceptor {
 
     intercept(): void {
         // Set current location state to TOWN.
-        LocationStateMachine.currentLocationStateMachine().inTown();
-        new TownDashboardProcessor().process();
+        LocationStateMachine.create().inTown();
+        this.#processor.process();
     }
 
 }

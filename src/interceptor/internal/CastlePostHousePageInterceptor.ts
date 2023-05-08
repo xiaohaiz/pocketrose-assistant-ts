@@ -1,8 +1,11 @@
 import PageInterceptor from "../PageInterceptor";
 import LocationStateMachine from "../../core/LocationStateMachine";
-import CastlePostHouseProcessor from "../../processor/castle/CastlePostHouseProcessor";
+import CastlePostHousePageProcessor from "../../processor/internal/CastlePostHousePageProcessor";
 
 class CastlePostHousePageInterceptor implements PageInterceptor {
+
+    readonly #processor = new CastlePostHousePageProcessor();
+
     accept(cgi: string, pageText: string): boolean {
         if (cgi === "castle.cgi") {
             return pageText.includes("＜＜ * 机车建造厂 *＞＞");
@@ -11,10 +14,10 @@ class CastlePostHousePageInterceptor implements PageInterceptor {
     }
 
     intercept(): void {
-        LocationStateMachine.currentLocationStateMachine()
+        LocationStateMachine.create()
             .load()
             .whenInCastle(() => {
-                new CastlePostHouseProcessor().process();
+                this.#processor.process();
             })
             .fork();
     }

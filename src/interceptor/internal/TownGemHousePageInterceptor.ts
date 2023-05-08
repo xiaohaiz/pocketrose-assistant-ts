@@ -1,9 +1,12 @@
 import PageInterceptor from "../PageInterceptor";
-import SetupLoader from "../../pocket/SetupLoader";
+import SetupLoader from "../../core/SetupLoader";
 import LocationStateMachine from "../../core/LocationStateMachine";
-import TownGemHouseProcessor from "../../processor/town/TownGemHouseProcessor";
+import TownGemHousePageProcessor from "../../processor/internal/TownGemHousePageProcessor";
 
 class TownGemHousePageInterceptor implements PageInterceptor {
+
+    readonly #processor = new TownGemHousePageProcessor();
+
     accept(cgi: string, pageText: string): boolean {
         if (cgi === "town.cgi") {
             return pageText.includes("＜＜ * 合 成 屋 *＞＞");
@@ -15,10 +18,10 @@ class TownGemHousePageInterceptor implements PageInterceptor {
         if (!SetupLoader.isGemHouseUIEnabled()) {
             return;
         }
-        LocationStateMachine.currentLocationStateMachine()
+        LocationStateMachine.create()
             .load()
             .whenInTown(() => {
-                new TownGemHouseProcessor().process();
+                this.#processor.process();
             })
             .fork();
     }

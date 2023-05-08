@@ -1,9 +1,12 @@
 import PageInterceptor from "../PageInterceptor";
-import SetupLoader from "../../pocket/SetupLoader";
+import SetupLoader from "../../core/SetupLoader";
 import LocationStateMachine from "../../core/LocationStateMachine";
-import PersonalFastLoginProcessor from "../../processor/personal/PersonalFastLoginProcessor";
+import PersonalFastLoginPageProcessor from "../../processor/internal/PersonalFastLoginPageProcessor";
 
 class PersonalFastLoginPageInterceptor implements PageInterceptor {
+
+    readonly #processor = new PersonalFastLoginPageProcessor();
+
     accept(cgi: string, pageText: string): boolean {
         if (cgi === "mydata.cgi") {
             return pageText.includes("* 出家 *");
@@ -15,10 +18,10 @@ class PersonalFastLoginPageInterceptor implements PageInterceptor {
         if (!SetupLoader.isFastLoginEnabled()) {
             return;
         }
-        LocationStateMachine.currentLocationStateMachine()
+        LocationStateMachine.create()
             .load()
             .whenInTown(() => {
-                new PersonalFastLoginProcessor().process();
+                this.#processor.process();
             })
             .fork();
     }

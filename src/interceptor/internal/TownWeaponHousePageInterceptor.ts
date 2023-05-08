@@ -1,9 +1,12 @@
 import PageInterceptor from "../PageInterceptor";
-import SetupLoader from "../../pocket/SetupLoader";
+import SetupLoader from "../../core/SetupLoader";
 import LocationStateMachine from "../../core/LocationStateMachine";
-import TownWeaponStoreProcessor from "../../processor/town/TownWeaponStoreProcessor";
+import TownWeaponHousePageProcessor from "../../processor/internal/TownWeaponHousePageProcessor";
+import PageProcessorContext from "../../processor/PageProcessorContext";
 
 class TownWeaponHousePageInterceptor implements PageInterceptor {
+
+    readonly #processor = new TownWeaponHousePageProcessor();
 
     accept(cgi: string, pageText: string): boolean {
         if (cgi === "town.cgi") {
@@ -14,10 +17,12 @@ class TownWeaponHousePageInterceptor implements PageInterceptor {
 
     intercept(): void {
         if (SetupLoader.isPocketSuperMarketEnabled()) {
-            LocationStateMachine.currentLocationStateMachine()
+            LocationStateMachine.create()
                 .load()
-                .whenInTown(() => {
-                    new TownWeaponStoreProcessor().process();
+                .whenInTown(townId => {
+                    const context = new PageProcessorContext();
+                    context.set("townId", townId!);
+                    this.#processor.process(context);
                 })
                 .fork();
         }

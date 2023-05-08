@@ -1,10 +1,11 @@
 import PageProcessor from "./PageProcessor";
 import PageUtils from "../util/PageUtils";
 import Credential from "../util/Credential";
+import PageProcessorContext from "./PageProcessorContext";
 
 abstract class PageProcessorSupport implements PageProcessor {
 
-    process(): void {
+    process(context?: PageProcessorContext): void {
         PageUtils.fixCurrentPageBrokenImages();
         PageUtils.removeUnusedHyperLinks();
         PageUtils.removeGoogleAnalyticsScript();
@@ -15,10 +16,10 @@ abstract class PageProcessorSupport implements PageProcessor {
             return;
         }
 
-        this.doProcess(new Credential(id.toString(), pass.toString()));
+        this.doProcess(new Credential(id.toString(), pass.toString()), context);
     }
 
-    abstract doProcess(credential: Credential): void;
+    abstract doProcess(credential: Credential, context?: PageProcessorContext): void;
 }
 
 export = PageProcessorSupport;

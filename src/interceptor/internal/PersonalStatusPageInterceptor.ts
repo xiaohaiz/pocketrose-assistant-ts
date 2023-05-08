@@ -1,8 +1,13 @@
 import PageInterceptor from "../PageInterceptor";
 import LocationStateMachine from "../../core/LocationStateMachine";
-import PersonalStatusProcessor from "../../processor/personal/PersonalStatusProcessor";
+import PersonalStatusPageProcessor_Town from "../../processor/internal/PersonalStatusPageProcessor_Town";
+import PersonalStatusPageProcessor_Castle from "../../processor/internal/PersonalStatusPageProcessor_Castle";
 
 class PersonalStatusPageInterceptor implements PageInterceptor {
+
+    readonly #inTownProcessor = new PersonalStatusPageProcessor_Town();
+    readonly #inCastleProcessor = new PersonalStatusPageProcessor_Castle();
+
     accept(cgi: string, pageText: string): boolean {
         if (cgi === "mydata.cgi") {
             return pageText.includes("仙人的宝物");
@@ -11,13 +16,13 @@ class PersonalStatusPageInterceptor implements PageInterceptor {
     }
 
     intercept(): void {
-        LocationStateMachine.currentLocationStateMachine()
+        LocationStateMachine.create()
             .load()
             .whenInTown(() => {
-                new PersonalStatusProcessor().process();
+                this.#inTownProcessor.process();
             })
             .whenInCastle(() => {
-                new PersonalStatusProcessor().process();
+                this.#inCastleProcessor.process();
             })
             .fork();
     }

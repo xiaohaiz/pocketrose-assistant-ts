@@ -1,8 +1,11 @@
 import PageInterceptor from "../PageInterceptor";
 import LocationStateMachine from "../../core/LocationStateMachine";
-import TownPetMapProcessor from "../../processor/town/TownPetMapProcessor";
+import TownPetMapHousePageProcessor from "../../processor/internal/TownPetMapHousePageProcessor";
 
 class TownPetMapHousePageInterceptor implements PageInterceptor {
+
+    readonly #processor = new TownPetMapHousePageProcessor();
+
     accept(cgi: string, pageText: string): boolean {
         if (cgi === "town.cgi") {
             return pageText.includes("* 宠物图鉴 *");
@@ -11,10 +14,10 @@ class TownPetMapHousePageInterceptor implements PageInterceptor {
     }
 
     intercept(): void {
-        LocationStateMachine.currentLocationStateMachine()
+        LocationStateMachine.create()
             .load()
             .whenInTown(() => {
-                new TownPetMapProcessor().process();
+                this.#processor.process();
             })
             .fork();
     }

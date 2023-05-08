@@ -4,6 +4,8 @@ import CastleDashboardPageProcessor from "../../processor/internal/CastleDashboa
 
 class CastleDashboardPageInterceptor implements PageInterceptor {
 
+    readonly #processor = new CastleDashboardPageProcessor();
+
     accept(cgi: string, pageText: string): boolean {
         if (cgi === "castle.cgi" || cgi === "castlestatus.cgi") {
             return pageText.includes("城堡的情報");
@@ -13,8 +15,8 @@ class CastleDashboardPageInterceptor implements PageInterceptor {
 
     intercept(): void {
         // Set current location state to CASTLE.
-        LocationStateMachine.currentLocationStateMachine().inCastle();
-        new CastleDashboardPageProcessor().process();
+        LocationStateMachine.create().inCastle();
+        this.#processor.process();
     }
 
 }

@@ -14,7 +14,7 @@ class LocationStateMachine {
         this.#storageKey = "_lc_" + id;
     }
 
-    static currentLocationStateMachine(): LocationStateMachine {
+    static create(): LocationStateMachine {
         const id = $("input:hidden[name='id']:last").val() as string;
         return new LocationStateMachine(id);
     }

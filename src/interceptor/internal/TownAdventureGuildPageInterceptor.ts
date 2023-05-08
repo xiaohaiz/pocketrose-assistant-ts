@@ -1,8 +1,11 @@
 import PageInterceptor from "../PageInterceptor";
 import LocationStateMachine from "../../core/LocationStateMachine";
-import TownAdventureGuildProcessor from "../../processor/town/TownAdventureGuildProcessor";
+import TownAdventureGuildPageProcessor from "../../processor/internal/TownAdventureGuildPageProcessor";
 
 class TownAdventureGuildPageInterceptor implements PageInterceptor {
+
+    readonly #processor = new TownAdventureGuildPageProcessor();
+
     accept(cgi: string, pageText: string): boolean {
         if (cgi === "town.cgi") {
             return pageText.includes("*  藏宝图以旧换新业务 *");
@@ -11,10 +14,10 @@ class TownAdventureGuildPageInterceptor implements PageInterceptor {
     }
 
     intercept(): void {
-        LocationStateMachine.currentLocationStateMachine()
+        LocationStateMachine.create()
             .load()
             .whenInTown(() => {
-                new TownAdventureGuildProcessor().process();
+                this.#processor.process();
             })
             .fork();
     }
