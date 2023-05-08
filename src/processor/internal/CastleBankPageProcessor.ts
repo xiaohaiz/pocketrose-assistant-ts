@@ -120,6 +120,11 @@ class CastleBankPageProcessor extends PageProcessorSupport {
 
         html = "";
         html += "<tr id='tr6'>";
+        html += "<td style='background-color:darkred;width:100%;text-align:center;font-weight:bold;color:aliceblue'>";
+        html += "＜ 转 账 通 道 ＞";
+        html += "</td>";
+        html += "</tr>";
+        html += "<tr id='tr7'>";
         html += "<td style='background-color:#F8F0E0;width:100%;text-align:center'>";
         html += "<input type='text' id='searchName' size='15' maxlength='20'>";
         html += "<input type='button' id='searchButton' value='找人'>";
