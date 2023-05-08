@@ -3,7 +3,7 @@ import EventHandler from "../../pocket/EventHandler";
 import PageProcessorSupport from "../PageProcessorSupport";
 import Credential from "../../util/Credential";
 
-class EventDashboardPageProcessor extends PageProcessorSupport {
+class NationalInformationPageProcessor extends PageProcessorSupport {
 
     constructor() {
         super();
@@ -50,4 +50,4 @@ class EventDashboardPageProcessor extends PageProcessorSupport {
 
 }
 
-export = EventDashboardPageProcessor;
+export = NationalInformationPageProcessor;

@@ -1,9 +1,9 @@
 import PageInterceptor from "../PageInterceptor";
-import EventDashboardPageProcessor from "../../processor/internal/EventDashboardPageProcessor";
+import NationalInformationPageProcessor from "../../processor/internal/NationalInformationPageProcessor";
 
 class NationInformationPageInterceptor implements PageInterceptor {
 
-    readonly #processor = new EventDashboardPageProcessor();
+    readonly #processor = new NationalInformationPageProcessor();
 
     accept(cgi: string, pageText: string): boolean {
         if (cgi === "map.cgi") {
