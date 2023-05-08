@@ -3,6 +3,9 @@ import LocationStateMachine from "../../core/LocationStateMachine";
 import MapPostHousePageProcessor from "../../processor/internal/MapPostHousePageProcessor";
 
 class MapPostHousePageInterceptor implements PageInterceptor {
+
+    readonly #processor = new MapPostHousePageProcessor();
+
     accept(cgi: string, pageText: string): boolean {
         if (cgi === "map.cgi") {
             return pageText.includes("＜＜住所＞＞");
@@ -14,7 +17,7 @@ class MapPostHousePageInterceptor implements PageInterceptor {
         LocationStateMachine.currentLocationStateMachine()
             .load()
             .whenInMap(() => {
-                new MapPostHousePageProcessor().process();
+                this.#processor.process();
             })
             .fork();
     }
