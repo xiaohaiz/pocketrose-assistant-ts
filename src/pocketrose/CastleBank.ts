@@ -1,10 +1,10 @@
-import Credential from "../util/Credential";
-import NetworkUtils from "../util/NetworkUtils";
-import MessageBoard from "../util/MessageBoard";
-import CastleBankPage from "./CastleBankPage";
-import Role from "../pocket/Role";
-import StringUtils from "../util/StringUtils";
 import BankAccount from "../common/BankAccount";
+import Role from "../pocket/Role";
+import Credential from "../util/Credential";
+import MessageBoard from "../util/MessageBoard";
+import NetworkUtils from "../util/NetworkUtils";
+import StringUtils from "../util/StringUtils";
+import CastleBankPage from "./CastleBankPage";
 
 class CastleBank {
 
@@ -28,6 +28,17 @@ class CastleBank {
                         const page = CastleBank.parsePage(html);
                         resolve(page);
                     });
+            });
+        };
+        return await action();
+    }
+
+    async load(): Promise<BankAccount> {
+        const action = () => {
+            return new Promise<BankAccount>(resolve => {
+                this.open().then(page => {
+                    resolve(page.account!);
+                });
             });
         };
         return await action();
@@ -64,7 +75,7 @@ class CastleBank {
                 request.set("azukeru", amount.toString());
                 request.set("mode", "CASTLEBANK_SELL");
                 NetworkUtils.post("castle.cgi", request)
-                    .then(html => {
+                    .then(() => {
                         MessageBoard.publishMessage("在城堡支行存入了" + amount + "万现金。");
                         resolve();
                     });
