@@ -1,8 +1,10 @@
 import PageInterceptor from "../PageInterceptor";
 import LocationStateMachine from "../../core/LocationStateMachine";
-import TownPetRankHouseProcessor from "../../processor/town/TownPetRankHouseProcessor";
+import TownPetRankHousePageProcessor from "../../processor/internal/TownPetRankHousePageProcessor";
 
 class TownPetRankHousePageInterceptor implements PageInterceptor {
+
+    readonly #processor = new TownPetRankHousePageProcessor();
 
     accept(cgi: string, pageText: string): boolean {
         if (cgi === "town.cgi") {
@@ -15,7 +17,7 @@ class TownPetRankHousePageInterceptor implements PageInterceptor {
         LocationStateMachine.currentLocationStateMachine()
             .load()
             .whenInTown(() => {
-                new TownPetRankHouseProcessor().process();
+                this.#processor.process();
             })
             .fork();
     }

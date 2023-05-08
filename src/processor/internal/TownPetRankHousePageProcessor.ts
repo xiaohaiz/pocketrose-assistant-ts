@@ -1,25 +1,12 @@
-import Processor from "../Processor";
-import PageUtils from "../../util/PageUtils";
 import Credential from "../../util/Credential";
 import PetProfileLoader from "../../pocket/pet/PetProfileLoader";
 import PetProfile from "../../common/PetProfile";
+import PageProcessorSupport from "../PageProcessorSupport";
+import PageProcessorContext from "../PageProcessorContext";
 
-/**
- * @deprecated
- */
-class TownPetRankHouseProcessor implements Processor {
+class TownPetRankHousePageProcessor extends PageProcessorSupport {
 
-    accept(cgi: string, pageText: string): boolean {
-        if (cgi === "town.cgi") {
-            return pageText.includes("＜＜ * 宠物资料馆 *＞＞");
-        }
-        return false;
-    }
-
-    process(): void {
-        PageUtils.removeUnusedHyperLinks();
-        PageUtils.removeGoogleAnalyticsScript();
-        const credential = PageUtils.currentCredential();
+    doProcess(credential: Credential, context?: PageProcessorContext): void {
         doProcess(credential);
     }
 
@@ -329,4 +316,4 @@ function sortBySpeed(petList: PetProfile[]): PetProfile[] {
     return result;
 }
 
-export = TownPetRankHouseProcessor;
+export = TownPetRankHousePageProcessor;
