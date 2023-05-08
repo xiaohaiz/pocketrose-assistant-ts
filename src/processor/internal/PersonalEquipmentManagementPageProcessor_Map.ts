@@ -9,14 +9,14 @@ import Role from "../../pocket/Role";
 import StringUtils from "../../util/StringUtils";
 import Equipment from "../../pocket/Equipment";
 import TreasureBag from "../../pocket/TreasureBag";
+import PageProcessorSupport from "../PageProcessorSupport";
+import PageProcessorContext from "../PageProcessorContext";
 
-/**
- * @deprecated
- */
-class MapPersonalEquipmentManagementProcessor {
+class PersonalEquipmentManagementPageProcessor_Map extends PageProcessorSupport {
 
-    process(coordinate: Coordinate) {
-        doProcess(coordinate);
+    doProcess(credential: Credential, context?: PageProcessorContext): void {
+        const s = context!.get("coordinate")!;
+        doProcess(Coordinate.parse(s));
     }
 
 }
@@ -571,4 +571,4 @@ function doBindTakeOutButton(credential: Credential, treasureBag: Equipment) {
     });
 }
 
-export = MapPersonalEquipmentManagementProcessor;
+export = PersonalEquipmentManagementPageProcessor_Map;
