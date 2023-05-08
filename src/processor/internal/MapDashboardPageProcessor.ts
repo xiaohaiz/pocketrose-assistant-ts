@@ -12,8 +12,15 @@ class MapDashboardPageProcessor extends PageProcessorSupport {
     }
 
     doProcess(credential: Credential): void {
+        this.#renderMenu();
         this.#renderExperience();
         this.#renderEventBoard();
+    }
+
+    #renderMenu() {
+        $("option[value='MAP_VISIT']")
+            .css("background-color", "yellow")
+            .text("拜访·驿站");
     }
 
     #renderExperience() {
