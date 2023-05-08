@@ -1,4 +1,3 @@
-import Processor from "../Processor";
 import PageUtils from "../../util/PageUtils";
 import TownGemHouse from "../../pocket/house/TownGemHouse";
 import TownGemHousePage from "../../pocket/house/TownGemHousePage";
@@ -10,30 +9,21 @@ import BankUtils from "../../util/BankUtils";
 import TownBank from "../../pocket/bank/TownBank";
 import StringUtils from "../../util/StringUtils";
 import EquipmentManagement from "../../pocket/personal/EquipmentManagement";
-import SetupLoader from "../../pocket/SetupLoader";
+import PageProcessorSupport from "../PageProcessorSupport";
+import PageProcessorContext from "../PageProcessorContext";
 
-/**
- * @deprecated
- */
-class TownGemHouseProcessor implements Processor {
+class TownGemHousePageProcessor extends PageProcessorSupport {
 
-    accept(cgi: string, pageText: string): boolean {
-        if (!SetupLoader.isGemHouseUIEnabled()) {
-            return false;
-        }
-        if (cgi === "town.cgi") {
-            return pageText.includes("＜＜ * 合 成 屋 *＞＞");
-        }
-        return false;
+    constructor() {
+        super();
     }
 
-    process(): void {
-        PageUtils.removeUnusedHyperLinks();
-        PageUtils.removeGoogleAnalyticsScript();
+    doProcess(credential: Credential, context?: PageProcessorContext): void {
         TownGemHouse.parsePage(PageUtils.currentPageHtml())
             .then(page => {
                 doProcess(page);
             });
+
     }
 
 }
@@ -470,4 +460,4 @@ function doBindFuseButton(page: TownGemHousePage, indexList: number[]) {
     }
 }
 
-export = TownGemHouseProcessor;
+export = TownGemHousePageProcessor;
