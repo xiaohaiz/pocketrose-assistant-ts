@@ -84,19 +84,7 @@ class CastleBankPageProcessor extends PageProcessorSupport {
         html += "</td>";
         html += "</tr>";
         $("#tr2").after($(html));
-
-        html = PageUtils.generateReturnCastleForm(credential);
-        $("#hiddenFormContainer").html(html);
-
-        $("#refreshButton").on("click", () => {
-            MessageBoard.resetMessageBoard("请管理您的账户吧！");
-            $("#messageBoardManager").html(NpcLoader.randomNpcImageHtml);
-            this.#refresh(credential);
-        });
-
-        $("#returnButton").on("click", () => {
-            $("#returnCastle").trigger("click");
-        });
+        $("#hiddenFormContainer").html(PageUtils.generateReturnCastleForm(credential));
 
         html = "";
         html += "<p id='p1'>";
@@ -127,6 +115,16 @@ class CastleBankPageProcessor extends PageProcessorSupport {
             .attr("id", "accountCash")
             .next()
             .attr("id", "accountSaving");
+
+        // Bind immutable buttons
+        $("#refreshButton").on("click", () => {
+            MessageBoard.resetMessageBoard("请管理您的账户吧！");
+            $("#messageBoardManager").html(NpcLoader.randomNpcImageHtml);
+            this.#refresh(credential);
+        });
+        $("#returnButton").on("click", () => {
+            $("#returnCastle").trigger("click");
+        });
     }
 
     #renderMutablePage(credential: Credential, page: CastleBankPage) {
