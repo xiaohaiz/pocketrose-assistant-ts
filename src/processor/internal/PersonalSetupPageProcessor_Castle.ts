@@ -1,8 +1,8 @@
-import PersonalSetupPageProcessor from "./PersonalSetupPageProcessor";
+import AbstractPersonalSetupPageProcessor from "./AbstractPersonalSetupPageProcessor";
 import Credential from "../../util/Credential";
 import PageUtils from "../../util/PageUtils";
 
-class PersonalSetupPageProcessor_Castle extends PersonalSetupPageProcessor {
+class PersonalSetupPageProcessor_Castle extends AbstractPersonalSetupPageProcessor {
 
     doGenerateHiddenForm(credential: Credential, containerId: string): void {
         const html = PageUtils.generateReturnCastleForm(credential);

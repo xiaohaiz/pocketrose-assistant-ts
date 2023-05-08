@@ -9,7 +9,7 @@ import PageProcessorSupport from "../PageProcessorSupport";
 import RoleLoader from "../../pocket/RoleLoader";
 import MessageBoard from "../../util/MessageBoard";
 
-abstract class PersonalSetupPageProcessor extends PageProcessorSupport {
+abstract class AbstractPersonalSetupPageProcessor extends PageProcessorSupport {
 
     readonly #setupItemManager: SetupItemManager;
 
@@ -210,4 +210,4 @@ abstract class PersonalSetupPageProcessor extends PageProcessorSupport {
     abstract doBindReturnButton(returnButtonId: string): void;
 }
 
-export = PersonalSetupPageProcessor;
+export = AbstractPersonalSetupPageProcessor;
