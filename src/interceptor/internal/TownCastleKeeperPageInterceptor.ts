@@ -1,5 +1,5 @@
 import PageInterceptor from "../PageInterceptor";
-import SetupLoader from "../../pocket/SetupLoader";
+import SetupLoader from "../../core/SetupLoader";
 import LocationStateMachine from "../../core/LocationStateMachine";
 import TownCastleKeeperPageProcessor from "../../processor/internal/TownCastleKeeperPageProcessor";
 

@@ -1,6 +1,6 @@
 import PageUtils from "../../util/PageUtils";
 import Credential from "../../util/Credential";
-import SetupLoader from "../../pocket/SetupLoader";
+import SetupLoader from "../../core/SetupLoader";
 import StringUtils from "../../util/StringUtils";
 import RoleStatusParser from "../../pocket/RoleStatusParser";
 import RoleStatus from "../../pocket/RoleStatus";

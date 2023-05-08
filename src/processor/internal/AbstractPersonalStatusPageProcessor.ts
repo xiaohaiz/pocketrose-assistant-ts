@@ -4,7 +4,7 @@ import Credential from "../../util/Credential";
 import PersonalStatus from "../../pocket/PersonalStatus";
 import PageUtils from "../../util/PageUtils";
 import Role from "../../pocket/Role";
-import SetupLoader from "../../pocket/SetupLoader";
+import SetupLoader from "../../core/SetupLoader";
 import StringUtils from "../../util/StringUtils";
 
 abstract class AbstractPersonalStatusPageProcessor extends PageProcessorSupport {

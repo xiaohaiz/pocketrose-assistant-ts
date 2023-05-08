@@ -5,7 +5,7 @@ import CommentBoard from "../../util/CommentBoard";
 import Role from "../../pocket/Role";
 import RoleLoader from "../../pocket/RoleLoader";
 import CareerLoader from "../../pocket/CareerLoader";
-import SetupLoader from "../../pocket/SetupLoader";
+import SetupLoader from "../../core/SetupLoader";
 import Spell from "../../pocket/Spell";
 import SpellLoader from "../../pocket/SpellLoader";
 import NetworkUtils from "../../util/NetworkUtils";

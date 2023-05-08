@@ -1,5 +1,5 @@
 import PageInterceptor from "../PageInterceptor";
-import SetupLoader from "../../pocket/SetupLoader";
+import SetupLoader from "../../core/SetupLoader";
 import LocationStateMachine from "../../core/LocationStateMachine";
 import TownWeaponHousePageProcessor from "../../processor/internal/TownWeaponHousePageProcessor";
 import PageProcessorContext from "../../processor/PageProcessorContext";

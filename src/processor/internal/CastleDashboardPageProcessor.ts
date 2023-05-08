@@ -2,7 +2,7 @@ import PageProcessor from "../PageProcessor";
 import PageUtils from "../../util/PageUtils";
 import StringUtils from "../../util/StringUtils";
 import EventHandler from "../../pocket/EventHandler";
-import SetupLoader from "../../pocket/SetupLoader";
+import SetupLoader from "../../core/SetupLoader";
 
 class CastleDashboardPageProcessor implements PageProcessor {
 

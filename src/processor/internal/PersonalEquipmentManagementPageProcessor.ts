@@ -7,7 +7,7 @@ import NetworkUtils from "../../util/NetworkUtils";
 import EquipmentSet from "../../pocket/EquipmentSet";
 import EquipmentSetLoader from "../../pocket/EquipmentSetLoader";
 import TownBank from "../../pocket/TownBank";
-import SetupLoader from "../../pocket/SetupLoader";
+import SetupLoader from "../../core/SetupLoader";
 import CommentBoard from "../../util/CommentBoard";
 import NpcLoader from "../../pocket/NpcLoader";
 import RoleStatusLoader from "../../pocket/RoleStatusLoader";

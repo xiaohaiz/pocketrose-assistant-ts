@@ -5,7 +5,7 @@ import Equipment from "../../pocket/Equipment";
 import MessageBoard from "../../util/MessageBoard";
 import NpcLoader from "../../pocket/NpcLoader";
 import NetworkUtils from "../../util/NetworkUtils";
-import SetupLoader from "../../pocket/SetupLoader";
+import SetupLoader from "../../core/SetupLoader";
 import PageProcessorSupport from "../PageProcessorSupport";
 import PageProcessorContext from "../PageProcessorContext";
 

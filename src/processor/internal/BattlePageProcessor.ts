@@ -1,5 +1,5 @@
 import PageUtils from "../../util/PageUtils";
-import SetupLoader from "../../pocket/SetupLoader";
+import SetupLoader from "../../core/SetupLoader";
 import StringUtils from "../../util/StringUtils";
 import NpcLoader from "../../pocket/NpcLoader";
 import CommentBoard from "../../util/CommentBoard";

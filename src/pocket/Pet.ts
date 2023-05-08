@@ -1,5 +1,5 @@
 import Constants from "../util/Constants";
-import SetupLoader from "./SetupLoader";
+import SetupLoader from "../core/SetupLoader";
 import PageUtils from "../util/PageUtils";
 
 class Pet {
