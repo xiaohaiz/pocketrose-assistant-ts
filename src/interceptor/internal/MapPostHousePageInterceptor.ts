@@ -1,6 +1,6 @@
 import PageInterceptor from "../PageInterceptor";
 import LocationStateMachine from "../../core/LocationStateMachine";
-import MapPostHouseProcessor from "../../processor/map/MapPostHouseProcessor";
+import MapPostHousePageProcessor from "../../processor/internal/MapPostHousePageProcessor";
 
 class MapPostHousePageInterceptor implements PageInterceptor {
     accept(cgi: string, pageText: string): boolean {
@@ -14,7 +14,7 @@ class MapPostHousePageInterceptor implements PageInterceptor {
         LocationStateMachine.currentLocationStateMachine()
             .load()
             .whenInMap(() => {
-                new MapPostHouseProcessor().process();
+                new MapPostHousePageProcessor().process();
             })
             .fork();
     }
