@@ -1,5 +1,3 @@
-import Processor from "../Processor";
-import PageUtils from "../../util/PageUtils";
 import Credential from "../../util/Credential";
 import NpcLoader from "../../pocket/NpcLoader";
 import MapBuilder from "../../pocket/MapBuilder";
@@ -11,20 +9,15 @@ import MessageBoard from "../../util/MessageBoard";
 import NetworkUtils from "../../util/NetworkUtils";
 import TravelPlanBuilder from "../../pocket/TravelPlanBuilder";
 import TravelPlanExecutor from "../../pocket/TravelPlanExecutor";
+import PageProcessorSupport from "../PageProcessorSupport";
 
-class MapPostHouseProcessor implements Processor {
+class MapPostHousePageProcessor extends PageProcessorSupport {
 
-    accept(cgi: string, pageText: string): boolean {
-        if (cgi === "map.cgi") {
-            return pageText.includes("＜＜住所＞＞");
-        }
-        return false;
+    constructor() {
+        super();
     }
 
-    process(): void {
-        PageUtils.removeUnusedHyperLinks();
-        PageUtils.removeGoogleAnalyticsScript();
-        const credential = PageUtils.currentCredential();
+    doProcess(credential: Credential): void {
         doProcess(credential);
     }
 
@@ -219,4 +212,4 @@ function doTravelToLocation(credential: Credential, location: Coordinate) {
     });
 }
 
-export = MapPostHouseProcessor;
+export = MapPostHousePageProcessor;

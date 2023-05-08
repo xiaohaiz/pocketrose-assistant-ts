@@ -1,16 +1,10 @@
-import Processor from "../Processor";
 import PageUtils from "../../util/PageUtils";
+import PageProcessor from "../PageProcessor";
 
-class TownListDashboardProcessor implements Processor {
-
-    accept(cgi: string, pageText: string): boolean {
-        if (cgi === "town_print.cgi") {
-            return pageText.includes("收益金");
-        }
-        return false;
-    }
+class TownInformationPageProcessor implements PageProcessor {
 
     process(): void {
+        PageUtils.fixCurrentPageBrokenImages();
         PageUtils.removeUnusedHyperLinks();
         PageUtils.removeGoogleAnalyticsScript();
         doProcess();
@@ -29,4 +23,4 @@ function doProcess() {
         .text("- GOLD");
 }
 
-export = TownListDashboardProcessor;
+export = TownInformationPageProcessor;

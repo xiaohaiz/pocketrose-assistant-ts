@@ -4,6 +4,9 @@ import Credential from "../../util/Credential";
 import PetProfileLoader from "../../pocket/pet/PetProfileLoader";
 import PetProfile from "../../common/PetProfile";
 
+/**
+ * @deprecated
+ */
 class TownPetRankHouseProcessor implements Processor {
 
     accept(cgi: string, pageText: string): boolean {

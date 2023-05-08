@@ -7,6 +7,9 @@ import NpcLoader from "../../pocket/NpcLoader";
 import CastleRanchStatus from "../../pocket/CastleRanchStatus";
 import Constants from "../../util/Constants";
 
+/**
+ * @deprecated
+ */
 class CastleRanchProcessor implements Processor {
 
     accept(cgi: string, pageText: string): boolean {

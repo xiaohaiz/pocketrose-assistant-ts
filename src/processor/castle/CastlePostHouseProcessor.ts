@@ -14,6 +14,9 @@ import Coordinate from "../../util/Coordinate";
 import Town from "../../pocket/Town";
 import Processor from "../Processor";
 
+/**
+ * @deprecated
+ */
 class CastlePostHouseProcessor implements Processor {
 
     accept(cgi: string, pageText: string): boolean {

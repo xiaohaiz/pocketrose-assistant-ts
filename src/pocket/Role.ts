@@ -1,6 +1,7 @@
 import Town from "./Town";
 import Constants from "../util/Constants";
 import Castle from "./Castle";
+import StringUtils from "../util/StringUtils";
 
 class Role {
     name?: string;               // 姓名
@@ -37,6 +38,24 @@ class Role {
     get imageHtml(): string {
         const src = Constants.POCKET_DOMAIN + "/image/head/" + this.image;
         return "<img src='" + src + "' alt='" + this.name + "' width='64' height='64' id='roleImage'>";
+    }
+
+    parseHealth(s: string) {
+        if (s.includes("/")) {
+            this.health = parseInt(StringUtils.substringBeforeSlash(s));
+            this.maxHealth = parseInt(StringUtils.substringAfterSlash(s));
+        } else {
+            this.health = parseInt(s);
+        }
+    }
+
+    parseMana(s: string) {
+        if (s.includes("/")) {
+            this.mana = parseInt(StringUtils.substringBeforeSlash(s));
+            this.maxMana = parseInt(StringUtils.substringAfterSlash(s));
+        } else {
+            this.mana = parseInt(s);
+        }
     }
 
     asShortText(): string {

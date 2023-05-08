@@ -25,7 +25,7 @@ class PageUtils {
         $("script")
             .filter(function () {
                 const src = $(this).attr("src");
-                return src !== undefined && src.includes("google-analytics");
+                return src !== undefined && (src as string).includes("google-analytics");
             })
             .each(function (_idx, script) {
                 script.remove();
@@ -33,14 +33,14 @@ class PageUtils {
     }
 
     static currentCredential() {
-        const id = $("input:hidden[name='id']:first").val();
-        const pass = $("input:hidden[name='pass']:first").val();
+        const id = $("input:hidden[name='id']:last").val();
+        const pass = $("input:hidden[name='pass']:last").val();
         return new Credential(id!.toString(), pass!.toString());
     }
 
     static parseCredential(pageHtml: string) {
-        const id = $(pageHtml).find("input:hidden[name='id']:first").val() as string;
-        const pass = $(pageHtml).find("input:hidden[name='pass']:first").val() as string;
+        const id = $(pageHtml).find("input:hidden[name='id']:last").val() as string;
+        const pass = $(pageHtml).find("input:hidden[name='pass']:last").val() as string;
         return new Credential(id, pass);
     }
 
@@ -83,6 +83,12 @@ class PageUtils {
     static isColorGrey(id: string) {
         const color = $("#" + id).css("color");
         return color.toString() === "rgb(128, 128, 128)"
+    }
+
+    static generateInvisibleButton(backgroundColor: string) {
+        return "<input type='button' " +
+            "value='　　' " +
+            "style='background-color:" + backgroundColor + ";border-width:0'>";
     }
 
     static fixCurrentPageBrokenImages() {
@@ -136,6 +142,18 @@ class PageUtils {
         html += "<input type='hidden' name='pass' value='" + credential.pass + "'>"
         html += "<input type='hidden' name='mode' value='STATUS'>";
         html += "<input type='submit' id='returnTown'>";
+        html += "</form>";
+        return html;
+    }
+
+    static generateReturnMapForm(credential: Credential) {
+        let html = "";
+        // noinspection HtmlUnknownTarget
+        html += "<form action='status.cgi' method='post'>";
+        html += "<input type='hidden' name='id' value='" + credential.id + "'>";
+        html += "<input type='hidden' name='pass' value='" + credential.pass + "'>"
+        html += "<input type='hidden' name='mode' value='STATUS'>";
+        html += "<input type='submit' id='returnMap'>";
         html += "</form>";
         return html;
     }

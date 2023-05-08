@@ -34,6 +34,28 @@ class TreasureBag {
         return await action(this.#credential, this.#treasureBagIndex);
     }
 
+    async putInto(indexList: number[]): Promise<void> {
+        const action = (credential: Credential, indexList: number[]) => {
+            return new Promise<void>((resolve, reject) => {
+                if (indexList.length === 0) {
+                    reject();
+                }
+                const request = credential.asRequestMap();
+                request.set("chara", "1");
+                request.set("mode", "PUTINBAG");
+                for (const index of indexList) {
+                    request.set("item" + index, index.toString());
+                }
+                NetworkUtils.post("mydata.cgi", request)
+                    .then(html => {
+                        MessageBoard.processResponseMessage(html);
+                        resolve();
+                    });
+            });
+        };
+        return await action(this.#credential, indexList);
+    }
+
     async takeOut(indexList: number[]): Promise<void> {
         const action = (credential: Credential) => {
             return new Promise<void>(resolve => {

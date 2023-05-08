@@ -18,15 +18,7 @@ class EquipmentParser {
             equipment.using = (s === "★");
 
             // name & star
-            s = $(tr).find("td:eq(1)").text();
-            if (s.startsWith("齐心★")) {
-                equipment.star = true;
-                equipment.name = StringUtils.substringAfter(s, "齐心★");
-            } else {
-                equipment.star = false;
-                equipment.name = s;
-            }
-            equipment.nameHTML = $(tr).find("td:eq(1)").html();
+            equipment.parseName($(tr).find("td:eq(1)").html());
 
             // category
             s = $(tr).find("td:eq(2)").text();
@@ -88,18 +80,10 @@ class EquipmentParser {
             equipment.selectable = true;
 
             // name & star
-            let s = $(tr).find("td:eq(1)").text();
-            if (s.startsWith("齐心★")) {
-                equipment.star = true;
-                equipment.name = StringUtils.substringAfter(s, "齐心★");
-            } else {
-                equipment.star = false;
-                equipment.name = s;
-            }
-            equipment.nameHTML = $(tr).find("td:eq(1)").html();
+            equipment.parseName($(tr).find("td:eq(1)").html());
 
             // category
-            s = $(tr).find("td:eq(2)").text();
+            let s = $(tr).find("td:eq(2)").text();
             equipment.category = s;
 
             // power & weight & endure
@@ -294,7 +278,10 @@ class EquipmentParser {
         return equipmentList;
     }
 
-    static findTreasureBag(equipmentList: Equipment[]): Equipment | null {
+    static findTreasureBag(equipmentList: Equipment[] | undefined): Equipment | null {
+        if (equipmentList === undefined) {
+            return null;
+        }
         for (const equipment of equipmentList) {
             if (equipment.isTreasureBag) {
                 return equipment;
@@ -303,7 +290,10 @@ class EquipmentParser {
         return null;
     }
 
-    static findGoldenCage(equipmentList: Equipment[]): Equipment | null {
+    static findGoldenCage(equipmentList: Equipment[] | undefined): Equipment | null {
+        if (equipmentList === undefined) {
+            return null;
+        }
         for (const equipment of equipmentList) {
             if (equipment.isGoldenCage) {
                 return equipment;

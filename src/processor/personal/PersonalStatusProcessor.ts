@@ -6,6 +6,9 @@ import Processor from "../Processor";
 import PersonalStatus from "../../pocket/PersonalStatus";
 import Credential from "../../util/Credential";
 
+/**
+ * @deprecated
+ */
 class PersonalStatusProcessor implements Processor {
 
     accept(cgi: string, pageText: string): boolean {
@@ -16,13 +19,13 @@ class PersonalStatusProcessor implements Processor {
     }
 
     process() {
-        PageUtils.removeUnusedHyperLinks();
-        PageUtils.removeGoogleAnalyticsScript();
         doProcess();
     }
 }
 
 function doProcess() {
+    PageUtils.removeUnusedHyperLinks();
+    PageUtils.removeGoogleAnalyticsScript();
     const id = $("input:hidden[name='id']:last").val();
     const pass = $("input:hidden[name='pass']:last").val();
     const credential = new Credential(id!.toString(), pass!.toString());

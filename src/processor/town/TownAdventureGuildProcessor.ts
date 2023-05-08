@@ -17,6 +17,9 @@ import TravelPlanExecutor from "../../pocket/TravelPlanExecutor";
 import MapExplorer from "../../pocket/MapExplorer";
 import Processor from "../Processor";
 
+/**
+ * @deprecated
+ */
 class TownAdventureGuildProcessor implements Processor {
 
     accept(cgi: string, pageText: string): boolean {
