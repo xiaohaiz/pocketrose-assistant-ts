@@ -1,4 +1,4 @@
-import SetupItemManager from "../personal/setup/SetupItemManager";
+import SetupItemManager from "../../setup/SetupItemManager";
 import EquipmentLoader from "../../pocket/EquipmentLoader";
 import Equipment from "../../pocket/Equipment";
 import Credential from "../../util/Credential";
