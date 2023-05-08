@@ -188,6 +188,9 @@ class CastleBankPageProcessor extends PageProcessorSupport {
                 MessageBoard.publishWarning(amount + "万！真逗，搞得你好像有这么多现金似得！");
                 return;
             }
+            new CastleBank(credential).deposit(amount).then(() => {
+                this.#refresh(credential);
+            });
         });
     }
 

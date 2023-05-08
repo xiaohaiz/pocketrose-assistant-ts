@@ -49,6 +49,30 @@ class CastleBank {
         return await action();
     }
 
+    async deposit(amount: number): Promise<void> {
+        const action = () => {
+            return new Promise<void>((resolve, reject) => {
+                if (isNaN(amount) || !Number.isInteger(amount) || amount < 0) {
+                    reject();
+                    return;
+                }
+                if (amount === 0) {
+                    resolve();
+                    return;
+                }
+                const request = this.#credential.asRequestMap();
+                request.set("azukeru", amount.toString());
+                request.set("mode", "CASTLEBANK_SELL");
+                NetworkUtils.post("castle.cgi", request)
+                    .then(html => {
+                        MessageBoard.publishMessage("在城堡支行存入了" + amount + "万现金。");
+                        resolve();
+                    });
+            });
+        };
+        return await action();
+    }
+
     async withdraw(amount: number): Promise<void> {
         const action = () => {
             return new Promise<void>((resolve, reject) => {
