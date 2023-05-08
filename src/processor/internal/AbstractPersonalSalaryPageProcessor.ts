@@ -34,6 +34,24 @@ abstract class AbstractPersonalSalaryPageProcessor extends PageProcessorSupport 
             this.doBindReturnButton(context);
         } else {
             // 成功领取了俸禄
+            const imageHtml = NpcLoader.getNpcImageHtml("花子")!;
+            CommentBoard.createCommentBoard(imageHtml);
+            $("#commentBoard")
+                .css("background-color", "black")
+                .css("color", "wheat")
+                .css("font-size", "120%")
+                .css("font-weight", "bold")
+                .html("打、打、打劫。不许笑，我跟这儿打劫呢。IC、IP、IQ卡，通通告诉我密码！");
+
+            $("form").remove();
+            let html = "";
+            html += "<div id='hiddenFormContainer' style='display:none'></div>";
+            html += "<div id='menuContainer'></div>";
+            $("p:last").html(html);
+            this.doGenerateHiddenForm("hiddenFormContainer", credential);
+
+            $("#menuContainer").html("<input type='button' id='returnButton' value='返回'>");
+            this.doBindDepositButton(credential, context);
         }
 
     }
@@ -41,6 +59,8 @@ abstract class AbstractPersonalSalaryPageProcessor extends PageProcessorSupport 
     abstract doGenerateHiddenForm(containerId: string, credential: Credential): void;
 
     abstract doBindReturnButton(context?: PageProcessorContext): void;
+
+    abstract doBindDepositButton(credential: Credential, context?: PageProcessorContext): void;
 }
 
 export = AbstractPersonalSalaryPageProcessor;

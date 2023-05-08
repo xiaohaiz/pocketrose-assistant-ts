@@ -2,6 +2,7 @@ import AbstractPersonalSalaryPageProcessor from "./AbstractPersonalSalaryPagePro
 import Credential from "../../util/Credential";
 import PageUtils from "../../util/PageUtils";
 import PageProcessorContext from "../PageProcessorContext";
+import CastleBank from "../../pocket/bank/CastleBank";
 
 class PersonalSalaryPageProcessor_Castle extends AbstractPersonalSalaryPageProcessor {
 
@@ -20,6 +21,17 @@ class PersonalSalaryPageProcessor_Castle extends AbstractPersonalSalaryPageProce
         });
     }
 
+    doBindDepositButton(credential: Credential, context?: PageProcessorContext): void {
+        if (context !== undefined) {
+            const castleName = context.get("castleName")!;
+            $("#returnButton").val("携款逃回" + castleName);
+        }
+        $("#returnButton").on("click", () => {
+            new CastleBank(credential).depositAll().then(() => {
+                $("#returnCastle").trigger("click");
+            });
+        });
+    }
 
 }
 
