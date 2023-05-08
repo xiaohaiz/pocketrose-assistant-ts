@@ -1,5 +1,6 @@
 import PageInterceptor from "./PageInterceptor";
 import BattlePageInterceptor from "./internal/BattlePageInterceptor";
+import CastleBankPageInterceptor from "./internal/CastleBankPageInterceptor";
 import CastleDashboardPageInterceptor from "./internal/CastleDashboardPageInterceptor";
 import CastlePostHousePageInterceptor from "./internal/CastlePostHousePageInterceptor";
 import CastleRanchPageInterceptor from "./internal/CastleRanchPageInterceptor";
@@ -32,6 +33,7 @@ class PageInterceptorManager {
     constructor() {
         this.#interceptors = [
             new BattlePageInterceptor(),
+            new CastleBankPageInterceptor(),
             new CastleDashboardPageInterceptor(),
             new CastlePostHousePageInterceptor(),
             new CastleRanchPageInterceptor(),

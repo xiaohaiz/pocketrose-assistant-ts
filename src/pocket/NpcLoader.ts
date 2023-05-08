@@ -119,6 +119,7 @@ const POCKET_NPC_IMAGES = {
     "末末": Constants.POCKET_DOMAIN + "/image/head/8173.gif",
     "白皇": Constants.POCKET_DOMAIN + "/image/head/11134.gif",
     "莫莫": Constants.POCKET_DOMAIN + "/image/head/13165.gif",
+    "天翔": Constants.POCKET_DOMAIN + "/image/head/14129.gif",
 
 };
 

@@ -2,7 +2,7 @@ import AbstractPersonalSalaryPageProcessor from "./AbstractPersonalSalaryPagePro
 import Credential from "../../util/Credential";
 import PageUtils from "../../util/PageUtils";
 import PageProcessorContext from "../PageProcessorContext";
-import CastleBank from "../../pocket/bank/CastleBank";
+import CastleBank from "../../pocketrose/CastleBank";
 
 class PersonalSalaryPageProcessor_Castle extends AbstractPersonalSalaryPageProcessor {
 

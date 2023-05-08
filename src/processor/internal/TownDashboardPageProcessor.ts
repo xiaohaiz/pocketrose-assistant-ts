@@ -352,11 +352,13 @@ function doRenderTownTax(credential: Credential, roleStatus: RoleStatus) {
         }
         const tax = parseInt(td!.text());
         if (tax >= 50000) {
-            td!.css("color", "white")
-                .css("background-color", "green")
-                .css("font-weight", "bold")
-                .attr("id", "tax_" + roleStatus.townId);
-            doBindTownTaxButton(credential, "tax_" + roleStatus.townId);
+            if (tax - Math.ceil(tax / 50000) * 50000 <= 10000) {
+                td!.css("color", "white")
+                    .css("background-color", "green")
+                    .css("font-weight", "bold")
+                    .attr("id", "tax_" + roleStatus.townId);
+                doBindTownTaxButton(credential, "tax_" + roleStatus.townId);
+            }
         }
     }
 }
