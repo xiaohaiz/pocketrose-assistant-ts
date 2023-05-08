@@ -1,4 +1,4 @@
-import Credential from "../../util/Credential";
+import Credential from "../util/Credential";
 
 class TownBankPage {
 

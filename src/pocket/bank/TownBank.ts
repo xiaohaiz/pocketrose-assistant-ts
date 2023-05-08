@@ -1,7 +1,10 @@
 import Credential from "../../util/Credential";
-import NetworkUtils from "../../util/NetworkUtils";
 import MessageBoard from "../../util/MessageBoard";
+import NetworkUtils from "../../util/NetworkUtils";
 
+/**
+ * @deprecated
+ */
 class TownBank {
 
     readonly #credential: Credential;
