@@ -16,7 +16,7 @@ class PersonalStatusPageInterceptor implements PageInterceptor {
     }
 
     intercept(): void {
-        LocationStateMachine.currentLocationStateMachine()
+        LocationStateMachine.create()
             .load()
             .whenInTown(() => {
                 this.#inTownProcessor.process();

@@ -18,7 +18,7 @@ class TownCastleKeeperPageInterceptor implements PageInterceptor {
         if (!SetupLoader.isCastleKeeperEnabled()) {
             return;
         }
-        LocationStateMachine.currentLocationStateMachine()
+        LocationStateMachine.create()
             .load()
             .whenInTown(() => {
                 this.#processor.process();

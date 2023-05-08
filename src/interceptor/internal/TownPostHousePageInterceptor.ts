@@ -14,7 +14,7 @@ class TownPostHousePageInterceptor implements PageInterceptor {
     }
 
     intercept(): void {
-        LocationStateMachine.currentLocationStateMachine()
+        LocationStateMachine.create()
             .load()
             .whenInTown(() => {
                 this.#processor.process();

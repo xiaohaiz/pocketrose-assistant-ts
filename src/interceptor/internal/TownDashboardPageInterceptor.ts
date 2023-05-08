@@ -15,7 +15,7 @@ class TownDashboardPageInterceptor implements PageInterceptor {
 
     intercept(): void {
         // Set current location state to TOWN.
-        LocationStateMachine.currentLocationStateMachine().inTown();
+        LocationStateMachine.create().inTown();
         this.#processor.process();
     }
 

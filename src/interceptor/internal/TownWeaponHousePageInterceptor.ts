@@ -17,7 +17,7 @@ class TownWeaponHousePageInterceptor implements PageInterceptor {
 
     intercept(): void {
         if (SetupLoader.isPocketSuperMarketEnabled()) {
-            LocationStateMachine.currentLocationStateMachine()
+            LocationStateMachine.create()
                 .load()
                 .whenInTown(townId => {
                     const context = new PageProcessorContext();

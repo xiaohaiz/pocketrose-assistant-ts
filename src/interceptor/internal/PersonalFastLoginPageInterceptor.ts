@@ -18,7 +18,7 @@ class PersonalFastLoginPageInterceptor implements PageInterceptor {
         if (!SetupLoader.isFastLoginEnabled()) {
             return;
         }
-        LocationStateMachine.currentLocationStateMachine()
+        LocationStateMachine.create()
             .load()
             .whenInTown(() => {
                 this.#processor.process();

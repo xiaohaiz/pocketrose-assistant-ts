@@ -14,7 +14,7 @@ class MapPostHousePageInterceptor implements PageInterceptor {
     }
 
     intercept(): void {
-        LocationStateMachine.currentLocationStateMachine()
+        LocationStateMachine.create()
             .load()
             .whenInMap(() => {
                 this.#processor.process();

@@ -15,7 +15,7 @@ class MapDashboardPageInterceptor implements PageInterceptor {
 
     intercept(): void {
         // Set current location state to MAP.
-        LocationStateMachine.currentLocationStateMachine().inMap();
+        LocationStateMachine.create().inMap();
         this.#processor.process();
     }
 

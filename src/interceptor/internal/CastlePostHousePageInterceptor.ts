@@ -14,7 +14,7 @@ class CastlePostHousePageInterceptor implements PageInterceptor {
     }
 
     intercept(): void {
-        LocationStateMachine.currentLocationStateMachine()
+        LocationStateMachine.create()
             .load()
             .whenInCastle(() => {
                 this.#processor.process();

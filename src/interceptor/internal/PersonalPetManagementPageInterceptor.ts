@@ -15,7 +15,7 @@ class PersonalPetManagementPageInterceptor implements PageInterceptor {
         if (!SetupLoader.isPetManagementUIEnabled()) {
             return;
         }
-        LocationStateMachine.currentLocationStateMachine()
+        LocationStateMachine.create()
             .load()
             .whenInTown(() => {
                 new PersonalPetManagementPageProcessor().process();

@@ -1,0 +1,46 @@
+import Credential from "../../util/Credential";
+import PageProcessorSupport from "../PageProcessorSupport";
+import PageProcessorContext from "../PageProcessorContext";
+import NpcLoader from "../../pocket/NpcLoader";
+import CommentBoard from "../../util/CommentBoard";
+
+abstract class AbstractPersonalSalaryPageProcessor extends PageProcessorSupport {
+
+    doProcess(credential: Credential, context?: PageProcessorContext) {
+
+        const pageText = $("body:first").text();
+        if (pageText.includes("下次领取俸禄还需要等待")) {
+            // 没有到领取俸禄的时间
+            $("form").remove();
+            $("#ueqtweixin").remove();
+
+            $("hr:last").after($("<div></div>"));
+            const imageHtml = NpcLoader.getNpcImageHtml("花子")!;
+            CommentBoard.createCommentBoard(imageHtml);
+            $("#commentBoard")
+                .css("background-color", "black")
+                .css("color", "wheat")
+                .css("font-size", "120%")
+                .css("font-weight", "bold")
+                .html("害我也白跑一趟，晦气！");
+
+            let html = "";
+            html += "<div id='hiddenFormContainer' style='display:none'></div>";
+            html += "<div id='menuContainer'></div>";
+            $("p:last").html(html);
+            this.doGenerateHiddenForm("hiddenFormContainer", credential);
+
+            $("#menuContainer").html("<input type='button' id='returnButton' value='返回'>");
+            this.doBindReturnButton(context);
+        } else {
+            // 成功领取了俸禄
+        }
+
+    }
+
+    abstract doGenerateHiddenForm(containerId: string, credential: Credential): void;
+
+    abstract doBindReturnButton(context?: PageProcessorContext): void;
+}
+
+export = AbstractPersonalSalaryPageProcessor;

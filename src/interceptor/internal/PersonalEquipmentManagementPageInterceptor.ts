@@ -22,7 +22,7 @@ class PersonalEquipmentManagementPageInterceptor implements PageInterceptor {
         if (!SetupLoader.isEquipmentManagementUIEnabled()) {
             return;
         }
-        LocationStateMachine.currentLocationStateMachine()
+        LocationStateMachine.create()
             .load()
             .whenInTown(() => {
                 new PersonalEquipmentManagementPageProcessor().process();

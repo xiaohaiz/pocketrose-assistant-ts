@@ -18,7 +18,7 @@ class TownGemHousePageInterceptor implements PageInterceptor {
         if (!SetupLoader.isGemHouseUIEnabled()) {
             return;
         }
-        LocationStateMachine.currentLocationStateMachine()
+        LocationStateMachine.create()
             .load()
             .whenInTown(() => {
                 this.#processor.process();

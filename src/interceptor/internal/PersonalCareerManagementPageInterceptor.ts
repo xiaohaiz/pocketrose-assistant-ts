@@ -18,7 +18,7 @@ class PersonalCareerManagementPageInterceptor implements PageInterceptor {
         if (!SetupLoader.isCareerManagementUIEnabled()) {
             return;
         }
-        LocationStateMachine.currentLocationStateMachine()
+        LocationStateMachine.create()
             .load()
             .whenInTown(() => {
                 this.#processor.process();
