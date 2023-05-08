@@ -1,28 +1,28 @@
 import PageInterceptor from "./PageInterceptor";
-import CastleDashboardPageInterceptor from "./internal/CastleDashboardPageInterceptor";
-import PersonalSetupPageInterceptor from "./internal/PersonalSetupPageInterceptor";
 import BattlePageInterceptor from "./internal/BattlePageInterceptor";
-import TownWeaponHousePageInterceptor from "./internal/TownWeaponHousePageInterceptor";
-import TownPostHousePageInterceptor from "./internal/TownPostHousePageInterceptor";
-import TownPetRankHousePageInterceptor from "./internal/TownPetRankHousePageInterceptor";
-import TownPetMapHousePageInterceptor from "./internal/TownPetMapHousePageInterceptor";
+import CastleDashboardPageInterceptor from "./internal/CastleDashboardPageInterceptor";
 import CastlePostHousePageInterceptor from "./internal/CastlePostHousePageInterceptor";
-import TownInformationPageInterceptor from "./internal/TownInformationPageInterceptor";
-import LoginDashboardPageInterceptor from "./internal/LoginDashboardPageInterceptor";
-import NationInformationPageInterceptor from "./internal/NationInformationPageInterceptor";
 import CastleRanchPageInterceptor from "./internal/CastleRanchPageInterceptor";
 import CastleWarehousePageInterceptor from "./internal/CastleWarehousePageInterceptor";
+import LoginDashboardPageInterceptor from "./internal/LoginDashboardPageInterceptor";
 import MapDashboardPageInterceptor from "./internal/MapDashboardPageInterceptor";
 import MapPostHousePageInterceptor from "./internal/MapPostHousePageInterceptor";
-import TownGemHousePageInterceptor from "./internal/TownGemHousePageInterceptor";
-import TownCastleKeeperPageInterceptor from "./internal/TownCastleKeeperPageInterceptor";
-import TownDashboardPageInterceptor from "./internal/TownDashboardPageInterceptor";
-import TownAdventureGuildPageInterceptor from "./internal/TownAdventureGuildPageInterceptor";
-import PersonalStatusPageInterceptor from "./internal/PersonalStatusPageInterceptor";
-import PersonalPetManagementPageInterceptor from "./internal/PersonalPetManagementPageInterceptor";
-import PersonalFastLoginPageInterceptor from "./internal/PersonalFastLoginPageInterceptor";
+import NationInformationPageInterceptor from "./internal/NationInformationPageInterceptor";
 import PersonalCareerManagementPageInterceptor from "./internal/PersonalCareerManagementPageInterceptor";
 import PersonalEquipmentManagementPageInterceptor from "./internal/PersonalEquipmentManagementPageInterceptor";
+import PersonalFastLoginPageInterceptor from "./internal/PersonalFastLoginPageInterceptor";
+import PersonalPetManagementPageInterceptor from "./internal/PersonalPetManagementPageInterceptor";
+import PersonalSetupPageInterceptor from "./internal/PersonalSetupPageInterceptor";
+import PersonalStatusPageInterceptor from "./internal/PersonalStatusPageInterceptor";
+import TownAdventureGuildPageInterceptor from "./internal/TownAdventureGuildPageInterceptor";
+import TownCastleKeeperPageInterceptor from "./internal/TownCastleKeeperPageInterceptor";
+import TownDashboardPageInterceptor from "./internal/TownDashboardPageInterceptor";
+import TownGemHousePageInterceptor from "./internal/TownGemHousePageInterceptor";
+import TownInformationPageInterceptor from "./internal/TownInformationPageInterceptor";
+import TownPetMapHousePageInterceptor from "./internal/TownPetMapHousePageInterceptor";
+import TownPetRankHousePageInterceptor from "./internal/TownPetRankHousePageInterceptor";
+import TownPostHousePageInterceptor from "./internal/TownPostHousePageInterceptor";
+import TownWeaponHousePageInterceptor from "./internal/TownWeaponHousePageInterceptor";
 
 class PageInterceptorManager {
 
@@ -33,27 +33,27 @@ class PageInterceptorManager {
             new BattlePageInterceptor(),
             new CastleDashboardPageInterceptor(),
             new CastlePostHousePageInterceptor(),
+            new CastleRanchPageInterceptor(),
+            new CastleWarehousePageInterceptor(),
+            new LoginDashboardPageInterceptor(),
+            new MapDashboardPageInterceptor(),
+            new MapPostHousePageInterceptor(),
+            new NationInformationPageInterceptor(),
+            new PersonalCareerManagementPageInterceptor(),
+            new PersonalEquipmentManagementPageInterceptor(),
+            new PersonalFastLoginPageInterceptor(),
+            new PersonalPetManagementPageInterceptor(),
             new PersonalSetupPageInterceptor(),
+            new PersonalStatusPageInterceptor(),
+            new TownAdventureGuildPageInterceptor(),
+            new TownCastleKeeperPageInterceptor(),
+            new TownDashboardPageInterceptor(),
+            new TownGemHousePageInterceptor(),
+            new TownInformationPageInterceptor(),
             new TownPetMapHousePageInterceptor(),
             new TownPetRankHousePageInterceptor(),
             new TownPostHousePageInterceptor(),
             new TownWeaponHousePageInterceptor(),
-            new TownInformationPageInterceptor(),
-            new LoginDashboardPageInterceptor(),
-            new NationInformationPageInterceptor(),
-            new CastleRanchPageInterceptor(),
-            new CastleWarehousePageInterceptor(),
-            new MapDashboardPageInterceptor(),
-            new MapPostHousePageInterceptor(),
-            new TownGemHousePageInterceptor(),
-            new TownCastleKeeperPageInterceptor(),
-            new TownDashboardPageInterceptor(),
-            new TownAdventureGuildPageInterceptor(),
-            new PersonalStatusPageInterceptor(),
-            new PersonalPetManagementPageInterceptor(),
-            new PersonalFastLoginPageInterceptor(),
-            new PersonalCareerManagementPageInterceptor(),
-            new PersonalEquipmentManagementPageInterceptor(),
         ];
     }
 
