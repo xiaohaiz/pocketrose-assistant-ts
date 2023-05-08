@@ -1,4 +1,3 @@
-import Processor from "../Processor";
 import Credential from "../../util/Credential";
 import PageUtils from "../../util/PageUtils";
 import CastleRanch from "../../pocket/CastleRanch";
@@ -6,23 +5,16 @@ import MessageBoard from "../../util/MessageBoard";
 import NpcLoader from "../../pocket/NpcLoader";
 import CastleRanchStatus from "../../pocket/CastleRanchStatus";
 import Constants from "../../util/Constants";
+import PageProcessorSupport from "../PageProcessorSupport";
+import PageProcessorContext from "../PageProcessorContext";
 
-/**
- * @deprecated
- */
-class CastleRanchProcessor implements Processor {
+class CastleRanchPageProcessor extends PageProcessorSupport {
 
-    accept(cgi: string, pageText: string): boolean {
-        if (cgi === "castle.cgi") {
-            return pageText.includes("＜＜　|||　城堡牧场　|||　＞＞");
-        }
-        return false;
+    constructor() {
+        super();
     }
 
-    process(): void {
-        PageUtils.removeUnusedHyperLinks();
-        PageUtils.removeGoogleAnalyticsScript();
-        const credential = PageUtils.currentCredential();
+    doProcess(credential: Credential, context?: PageProcessorContext): void {
         doProcess(credential);
     }
 
@@ -304,4 +296,4 @@ function doBindSummonButton(credential: Credential, indexList: number[]) {
     }
 }
 
-export = CastleRanchProcessor;
+export = CastleRanchPageProcessor;
