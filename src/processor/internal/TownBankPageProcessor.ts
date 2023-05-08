@@ -16,6 +16,21 @@ class TownBankPageProcessor extends PageProcessorSupport {
     }
 
     #createImmutablePage(credential: Credential, town: Town) {
+        $("form").remove();
+
+        $("table:eq(1)")
+            .attr("id", "t1")
+            .find("td:first")
+            .attr("id", "pageTitle")
+            .removeAttr("bgcolor")
+            .removeAttr("width")
+            .removeAttr("height")
+            .css("text-align", "center")
+            .css("font-size", "150%")
+            .css("font-weight", "bold")
+            .css("background-color", "navy")
+            .css("color", "yellowgreen")
+            .text("＜＜  口 袋 银 行 " + town.nameTitle + " 分 行  ＞＞");
     }
 }
 
