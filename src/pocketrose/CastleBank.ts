@@ -1,6 +1,6 @@
-import Credential from "../../util/Credential";
-import NetworkUtils from "../../util/NetworkUtils";
-import MessageBoard from "../../util/MessageBoard";
+import Credential from "../util/Credential";
+import NetworkUtils from "../util/NetworkUtils";
+import MessageBoard from "../util/MessageBoard";
 
 class CastleBank {
 
