@@ -1,8 +1,10 @@
 import PageInterceptor from "../PageInterceptor";
 import LocationStateMachine from "../../core/LocationStateMachine";
-import BattleProcessor from "../../processor/battle/BattleProcessor";
+import BattlePageProcessor from "../../processor/internal/BattlePageProcessor";
 
 class BattlePageInterceptor implements PageInterceptor {
+
+    readonly #processor = new BattlePageProcessor();
 
     accept(cgi: string, pageText: string): boolean {
         if (cgi === "battle.cgi") {
@@ -19,7 +21,7 @@ class BattlePageInterceptor implements PageInterceptor {
         LocationStateMachine.currentLocationStateMachine()
             .load()
             .whenInTown(() => {
-                new BattleProcessor().process();
+                this.#processor.process();
             })
             .fork();
     }

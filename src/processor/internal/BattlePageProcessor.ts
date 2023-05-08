@@ -3,25 +3,20 @@ import SetupLoader from "../../pocket/SetupLoader";
 import StringUtils from "../../util/StringUtils";
 import NpcLoader from "../../pocket/NpcLoader";
 import CommentBoard from "../../util/CommentBoard";
-import Processor from "../Processor";
+import PageProcessorSupport from "../PageProcessorSupport";
+import Credential from "../../util/Credential";
 
-/**
- * @deprecated
- */
-class BattleProcessor implements Processor {
+class BattlePageProcessor extends PageProcessorSupport {
 
-    accept(cgi: string, pageText: string): boolean {
-        if (cgi === "battle.cgi") {
-            return pageText.includes("＜＜ - 秘宝之岛 - ＞＞") ||
-                pageText.includes("＜＜ - 初级之森 - ＞＞") ||
-                pageText.includes("＜＜ - 中级之塔 - ＞＞") ||
-                pageText.includes("＜＜ - 上级之洞窟 - ＞＞") ||
-                pageText.includes("＜＜ - 十二神殿 - ＞＞");
-        }
-        return false;
+    constructor() {
+        super();
     }
 
-    process(): void {
+    doProcess(credential: Credential): void {
+        this.#doProcess();
+    }
+
+    #doProcess(): void {
         $('a[target="_blank"]').attr('tabIndex', -1);
         PageUtils.removeUnusedHyperLinks();
         PageUtils.removeGoogleAnalyticsScript();
@@ -334,4 +329,4 @@ function doCheckIfPetUpgrade() {
     return petUpgrade;
 }
 
-export = BattleProcessor;
+export = BattlePageProcessor;
