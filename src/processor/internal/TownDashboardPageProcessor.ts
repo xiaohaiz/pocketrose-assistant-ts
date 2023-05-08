@@ -4,29 +4,19 @@ import SetupLoader from "../../pocket/SetupLoader";
 import StringUtils from "../../util/StringUtils";
 import RoleStatusParser from "../../pocket/RoleStatusParser";
 import RoleStatus from "../../pocket/RoleStatus";
-import Processor from "../Processor";
 import EventHandler from "../../pocket/EventHandler";
 import TownLoader from "../../pocket/TownLoader";
 import NetworkUtils from "../../util/NetworkUtils";
+import PageProcessorSupport from "../PageProcessorSupport";
+import PageProcessorContext from "../PageProcessorContext";
 
-/**
- * @deprecated
- */
-class TownDashboardProcessor implements Processor {
+class TownDashboardPageProcessor extends PageProcessorSupport {
 
-    accept(cgi: string, pageText: string): boolean {
-        if (cgi === "status.cgi" || cgi === "town.cgi") {
-            return pageText.includes("城市支配率");
-        }
-        return false;
+    constructor() {
+        super();
     }
 
-    process() {
-
-        PageUtils.removeUnusedHyperLinks();
-        PageUtils.removeGoogleAnalyticsScript();
-        PageUtils.fixCurrentPageBrokenImages();
-        const credential = PageUtils.currentCredential();
+    doProcess(credential: Credential, context?: PageProcessorContext): void {
         doProcess(credential);
     }
 
@@ -443,4 +433,4 @@ function doBindTownTaxButton(credential: Credential, cellId: string) {
     });
 }
 
-export = TownDashboardProcessor;
+export = TownDashboardPageProcessor;
