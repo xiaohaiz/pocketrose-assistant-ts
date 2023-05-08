@@ -1,9 +1,12 @@
 import PageInterceptor from "../PageInterceptor";
 import SetupLoader from "../../pocket/SetupLoader";
 import LocationStateMachine from "../../core/LocationStateMachine";
-import TownCastleKeeperProcessor from "../../processor/town/TownCastleKeeperProcessor";
+import TownCastleKeeperPageProcessor from "../../processor/internal/TownCastleKeeperPageProcessor";
 
 class TownCastleKeeperPageInterceptor implements PageInterceptor {
+
+    readonly #processor = new TownCastleKeeperPageProcessor();
+
     accept(cgi: string, pageText: string): boolean {
         if (cgi === "town.cgi") {
             return pageText.includes("＜＜ * 网 球 场 *＞＞");
@@ -18,7 +21,7 @@ class TownCastleKeeperPageInterceptor implements PageInterceptor {
         LocationStateMachine.currentLocationStateMachine()
             .load()
             .whenInTown(() => {
-                new TownCastleKeeperProcessor().process();
+                this.#processor.process();
             })
             .fork();
     }

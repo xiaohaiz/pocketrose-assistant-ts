@@ -1,4 +1,3 @@
-import Processor from "../Processor";
 import PageUtils from "../../util/PageUtils";
 import NpcLoader from "../../pocket/NpcLoader";
 import CastleLoader from "../../pocket/CastleLoader";
@@ -10,26 +9,16 @@ import Equipment from "../../pocket/Equipment";
 import CastleRanch from "../../pocket/CastleRanch";
 import Pet from "../../pocket/Pet";
 import StringUtils from "../../util/StringUtils";
-import SetupLoader from "../../pocket/SetupLoader";
+import PageProcessorSupport from "../PageProcessorSupport";
+import PageProcessorContext from "../PageProcessorContext";
 
-/**
- * @deprecated
- */
-class TownCastleKeeperProcessor implements Processor {
+class TownCastleKeeperPageProcessor extends PageProcessorSupport {
 
-    accept(cgi: string, pageText: string): boolean {
-        if (!SetupLoader.isCastleKeeperEnabled()) {
-            return false;
-        }
-        if (cgi === "town.cgi") {
-            return pageText.includes("＜＜ * 网 球 场 *＞＞");
-        }
-        return false;
+    constructor() {
+        super();
     }
 
-    process(): void {
-        PageUtils.removeUnusedHyperLinks();
-        PageUtils.removeGoogleAnalyticsScript();
+    doProcess(credential: Credential, context?: PageProcessorContext): void {
         doProcess();
     }
 
@@ -323,4 +312,4 @@ function doRender(credential: Credential, castle: Castle) {
     });
 }
 
-export = TownCastleKeeperProcessor;
+export = TownCastleKeeperPageProcessor;
