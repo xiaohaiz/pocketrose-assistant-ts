@@ -46,6 +46,17 @@ class StringUtils {
         }
         return text;
     }
+
+    static toTitleString(s: string): string {
+        let title = "";
+        for (let i = 0; i < s.length; i++) {
+            title += s.charAt(i);
+            if (i !== s.length - 1) {
+                title += " ";
+            }
+        }
+        return title;
+    }
 }
 
 export = StringUtils;
