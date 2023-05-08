@@ -1,5 +1,5 @@
+import Town from "../pocket/Town";
 import Coordinate from "../util/Coordinate";
-import Town from "./Town";
 
 class TownLoader {
 

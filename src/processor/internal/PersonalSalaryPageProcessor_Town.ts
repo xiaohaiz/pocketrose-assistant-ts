@@ -1,9 +1,9 @@
-import AbstractPersonalSalaryPageProcessor from "./AbstractPersonalSalaryPageProcessor";
+import TownLoader from "../../core/TownLoader";
+import TownBank from "../../pocket/bank/TownBank";
 import Credential from "../../util/Credential";
 import PageUtils from "../../util/PageUtils";
 import PageProcessorContext from "../PageProcessorContext";
-import TownLoader from "../../pocket/TownLoader";
-import TownBank from "../../pocket/bank/TownBank";
+import AbstractPersonalSalaryPageProcessor from "./AbstractPersonalSalaryPageProcessor";
 
 class PersonalSalaryPageProcessor_Town extends AbstractPersonalSalaryPageProcessor {
 

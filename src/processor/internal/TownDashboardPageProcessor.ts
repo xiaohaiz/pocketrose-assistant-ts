@@ -1,14 +1,14 @@
-import PageUtils from "../../util/PageUtils";
-import Credential from "../../util/Credential";
 import SetupLoader from "../../core/SetupLoader";
-import StringUtils from "../../util/StringUtils";
-import RoleStatusParser from "../../pocket/RoleStatusParser";
-import RoleStatus from "../../pocket/RoleStatus";
+import TownLoader from "../../core/TownLoader";
 import EventHandler from "../../pocket/EventHandler";
-import TownLoader from "../../pocket/TownLoader";
+import RoleStatus from "../../pocket/RoleStatus";
+import RoleStatusParser from "../../pocket/RoleStatusParser";
+import Credential from "../../util/Credential";
 import NetworkUtils from "../../util/NetworkUtils";
-import PageProcessorSupport from "../PageProcessorSupport";
+import PageUtils from "../../util/PageUtils";
+import StringUtils from "../../util/StringUtils";
 import PageProcessorContext from "../PageProcessorContext";
+import PageProcessorSupport from "../PageProcessorSupport";
 
 class TownDashboardPageProcessor extends PageProcessorSupport {
 

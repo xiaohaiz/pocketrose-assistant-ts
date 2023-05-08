@@ -1,10 +1,10 @@
+import TownLoader from "../core/TownLoader";
 import Credential from "../util/Credential";
-import TravelPlan from "./TravelPlan";
-import NetworkUtils from "../util/NetworkUtils";
 import MessageBoard from "../util/MessageBoard";
-import TravelPlanBuilder from "./TravelPlanBuilder";
+import NetworkUtils from "../util/NetworkUtils";
 import TimeoutUtils from "../util/TimeoutUtils";
-import TownLoader from "./TownLoader";
+import TravelPlan from "./TravelPlan";
+import TravelPlanBuilder from "./TravelPlanBuilder";
 
 class TownEntrance {
 
