@@ -52,6 +52,29 @@ class TownArmorHouse {
         };
         return await action();
     }
+
+    async buy(merchandiseIndex: number, count: number, discount: number): Promise<void> {
+        const action = () => {
+            return new Promise<void>((resolve, reject) => {
+                const request = this.#credential.asRequestMap();
+                request.set("select", merchandiseIndex.toString());
+                request.set("townid", this.#townId);
+                request.set("val_off", discount.toString());
+                request.set("mark", "1");
+                request.set("mode", "BUY");
+                request.set("num", count.toString());
+                NetworkUtils.post("town.cgi", request).then(html => {
+                    MessageBoard.processResponseMessage(html);
+                    if (html.includes("所持金不足")) {
+                        reject();
+                    } else {
+                        resolve();
+                    }
+                });
+            });
+        };
+        return await action();
+    }
 }
 
 function doParsePage(pageHtml: string) {
