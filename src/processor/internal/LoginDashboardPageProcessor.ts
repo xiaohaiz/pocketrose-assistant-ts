@@ -1,10 +1,12 @@
 import FastLoginLoader from "../../core/FastLoginLoader";
 import PageUtils from "../../util/PageUtils";
+import StyleUtils from "../../util/StyleUtils";
 import PageProcessor from "../PageProcessor";
 
 class LoginDashboardPageProcessor implements PageProcessor {
 
     process(): void {
+        StyleUtils.appendCSS();
         PageUtils.fixCurrentPageBrokenImages();
         PageUtils.removeUnusedHyperLinks();
         PageUtils.removeGoogleAnalyticsScript();
@@ -78,7 +80,8 @@ function doGenerateCell(configs: Map<number, {}>, code: number) {
     if (config !== undefined) {
         // @ts-ignore
         const name = config.name;
-        html += "<input type='button' class='fastLoginButton' id='fastLogin_" + code + "' value='" + name + "'>";
+        // html += "<input type='button' class='fastLoginButton' id='fastLogin_" + code + "' value='" + name + "'>";
+        html += "<button role='button' class='fastLoginButton button-8' id='fastLogin_" + code + "'>" + name + "</button>"
     } else {
         html += "<input type='button' disabled " +
             "style='background-color:#E8E8D0;border-width:0' value='　　　'>";
