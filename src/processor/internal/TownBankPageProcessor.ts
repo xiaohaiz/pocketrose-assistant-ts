@@ -175,7 +175,7 @@ class TownBankPageProcessor extends PageProcessorSupport {
     }
 
     #refreshMutablePage(credential: Credential, town?: Town) {
-        new TownBank(credential).open(town?.id).then(page => {
+        new TownBank(credential, town?.id).open().then(page => {
             $("#roleCash").text(page.role!.cash + " GOLD");
             $("#accountCash").text(page.account!.cash!.toString());
             $("#accountSaving").text(page.account!.saving!.toString());

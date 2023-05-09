@@ -1,6 +1,9 @@
 import BankAccount from "../common/BankAccount";
+import TownLoader from "../core/TownLoader";
 import Role from "../pocket/Role";
+import BankUtils from "../util/BankUtils";
 import Credential from "../util/Credential";
+import MessageBoard from "../util/MessageBoard";
 import NetworkUtils from "../util/NetworkUtils";
 import StringUtils from "../util/StringUtils";
 import TownBankPage from "./TownBankPage";
@@ -8,23 +11,34 @@ import TownBankPage from "./TownBankPage";
 class TownBank {
 
     readonly #credential: Credential;
+    readonly #townId?: string;
 
-    constructor(credential: Credential) {
+    constructor(credential: Credential, townId?: string) {
         this.#credential = credential;
+        this.#townId = townId;
+    }
+
+    get bankTitle() {
+        if (this.#townId === undefined) {
+            return "口袋银行";
+        } else {
+            const town = TownLoader.getTownById(this.#townId)!;
+            return town.name + "分行";
+        }
     }
 
     static parsePage(html: string): TownBankPage {
         return doParsePage(html);
     }
 
-    async open(townId?: string): Promise<TownBankPage> {
+    async open(): Promise<TownBankPage> {
         const action = () => {
             return new Promise<TownBankPage>(resolve => {
                 const request = this.#credential.asRequestMap();
                 request.set("con_str", "50");
                 request.set("mode", "BANK");
-                if (townId !== undefined) {
-                    request.set("town", townId);
+                if (this.#townId !== undefined) {
+                    request.set("town", this.#townId);
                 }
                 NetworkUtils.post("town.cgi", request).then(html => {
                     const page = TownBank.parsePage(html);
@@ -35,12 +49,50 @@ class TownBank {
         return await action();
     }
 
-    async load(townId?: string): Promise<BankAccount> {
+    async load(): Promise<BankAccount> {
         const action = () => {
             return new Promise<BankAccount>(resolve => {
-                this.open(townId).then(page => {
+                this.open().then(page => {
                     resolve(page.account!);
                 });
+            });
+        };
+        return await action();
+    }
+
+    async deposit(amount?: number): Promise<void> {
+        const action = () => {
+            return new Promise<void>((resolve, reject) => {
+                const request = this.#credential.asRequestMap();
+                if (amount === undefined) {
+                    request.set("azukeru", "all");
+                    request.set("mode", "BANK_SELL");
+                    NetworkUtils.post("town.cgi", request).then(() => {
+                        MessageBoard.publishMessage("在" + this.bankTitle + "存入了所有现金。");
+                        resolve();
+                    });
+                } else {
+                    if (!BankUtils.checkAmountAvailability(amount)) {
+                        MessageBoard.publishWarning("无效的金额，必须是零或者正整数！");
+                        reject();
+                    } else {
+                        if (amount === 0) {
+                            resolve();
+                        } else {
+                            request.set("azukeru", amount.toString());
+                            request.set("mode", "BANK_SELL");
+                            NetworkUtils.post("town.cgi", request).then(html => {
+                                if (html.includes("所持金不足")) {
+                                    MessageBoard.publishWarning("并没有那么多现金！");
+                                    reject();
+                                } else {
+                                    MessageBoard.publishMessage("在" + this.bankTitle + "存入了" + amount + "万现金。");
+                                    resolve();
+                                }
+                            });
+                        }
+                    }
+                }
             });
         };
         return await action();
