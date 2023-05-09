@@ -2,6 +2,7 @@ import Equipment from "../common/Equipment";
 import Merchandise from "../common/Merchandise";
 import Role from "../common/Role";
 import Credential from "../util/Credential";
+import NetworkUtils from "../util/NetworkUtils";
 import StringUtils from "../util/StringUtils";
 import TownArmorHousePage from "./TownArmorHousePage";
 
@@ -15,8 +16,24 @@ class TownArmorHouse {
         this.#townId = townId;
     }
 
-    static parsePage(pageHtml: string) {
+    static parsePage(pageHtml: string): TownArmorHousePage {
         return doParsePage(pageHtml);
+    }
+
+    async open(): Promise<TownArmorHousePage> {
+        const action = () => {
+            return new Promise<TownArmorHousePage>(resolve => {
+                const request = this.#credential.asRequestMap();
+                request.set("town", this.#townId);
+                request.set("con_str", "50");
+                request.set("mode", "PRO_SHOP");
+                NetworkUtils.post("town.cgi", request).then(html => {
+                    const page = TownArmorHouse.parsePage(html);
+                    resolve(page);
+                });
+            });
+        };
+        return await action();
     }
 }
 

@@ -10,8 +10,6 @@ class TownArmorHousePageProcessor extends PageProcessorCredentialSupport {
     doProcess(credential: Credential, context?: PageProcessorContext): void {
         const page = TownArmorHouse.parsePage(PageUtils.currentPageHtml());
         const town = TownLoader.getTownById(page.townId!)!;
-
-        console.log(JSON.stringify(page));
     }
 
 }
