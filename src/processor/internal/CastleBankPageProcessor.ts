@@ -1,17 +1,17 @@
-import PageProcessorSupport from "../PageProcessorSupport";
-import PageProcessorContext from "../PageProcessorContext";
-import Credential from "../../util/Credential";
-import PageUtils from "../../util/PageUtils";
-import CastleBank from "../../pocketrose/CastleBank";
-import StringUtils from "../../util/StringUtils";
-import MessageBoard from "../../util/MessageBoard";
-import NpcLoader from "../../core/NpcLoader";
 import BankAccount from "../../common/BankAccount";
+import NpcLoader from "../../core/NpcLoader";
+import CastleBank from "../../pocketrose/CastleBank";
 import CastleBankPage from "../../pocketrose/CastleBankPage";
-import NetworkUtils from "../../util/NetworkUtils";
 import BankUtils from "../../util/BankUtils";
+import Credential from "../../util/Credential";
+import MessageBoard from "../../util/MessageBoard";
+import NetworkUtils from "../../util/NetworkUtils";
+import PageUtils from "../../util/PageUtils";
+import StringUtils from "../../util/StringUtils";
+import PageProcessorContext from "../PageProcessorContext";
+import PageProcessorCredentialSupport from "../PageProcessorCredentialSupport";
 
-class CastleBankPageProcessor extends PageProcessorSupport {
+class CastleBankPageProcessor extends PageProcessorCredentialSupport {
 
     doProcess(credential: Credential, context?: PageProcessorContext): void {
         const page = CastleBank.parsePage(PageUtils.currentPageHtml());

@@ -1,7 +1,7 @@
-import AbstractPersonalStatusPageProcessor from "./AbstractPersonalStatusPageProcessor";
+import Role from "../../common/Role";
 import Credential from "../../util/Credential";
 import PageUtils from "../../util/PageUtils";
-import Role from "../../pocket/Role";
+import AbstractPersonalStatusPageProcessor from "./AbstractPersonalStatusPageProcessor";
 
 class PersonalStatusPageProcessor_Town extends AbstractPersonalStatusPageProcessor {
 

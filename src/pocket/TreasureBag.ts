@@ -1,8 +1,8 @@
+import Equipment from "../common/Equipment";
 import Credential from "../util/Credential";
-import Equipment from "./Equipment";
+import MessageBoard from "../util/MessageBoard";
 import NetworkUtils from "../util/NetworkUtils";
 import EquipmentParser from "./EquipmentParser";
-import MessageBoard from "../util/MessageBoard";
 
 class TreasureBag {
 

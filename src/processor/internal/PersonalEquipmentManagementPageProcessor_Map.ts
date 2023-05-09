@@ -1,18 +1,18 @@
-import PageUtils from "../../util/PageUtils";
-import PersonalEquipmentManagement from "../../pocket/PersonalEquipmentManagement";
-import MessageBoard from "../../util/MessageBoard";
+import Equipment from "../../common/Equipment";
+import Role from "../../common/Role";
 import NpcLoader from "../../core/NpcLoader";
-import Coordinate from "../../util/Coordinate";
+import PersonalEquipmentManagement from "../../pocket/PersonalEquipmentManagement";
 import PersonalEquipmentManagementPage from "../../pocket/PersonalEquipmentManagementPage";
-import Credential from "../../util/Credential";
-import Role from "../../pocket/Role";
-import StringUtils from "../../util/StringUtils";
-import Equipment from "../../pocket/Equipment";
 import TreasureBag from "../../pocket/TreasureBag";
-import PageProcessorSupport from "../PageProcessorSupport";
+import Coordinate from "../../util/Coordinate";
+import Credential from "../../util/Credential";
+import MessageBoard from "../../util/MessageBoard";
+import PageUtils from "../../util/PageUtils";
+import StringUtils from "../../util/StringUtils";
 import PageProcessorContext from "../PageProcessorContext";
+import PageProcessorCredentialSupport from "../PageProcessorCredentialSupport";
 
-class PersonalEquipmentManagementPageProcessor_Map extends PageProcessorSupport {
+class PersonalEquipmentManagementPageProcessor_Map extends PageProcessorCredentialSupport {
 
     doProcess(credential: Credential, context?: PageProcessorContext): void {
         const s = context!.get("coordinate")!;

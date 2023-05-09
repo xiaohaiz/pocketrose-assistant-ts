@@ -1,6 +1,6 @@
+import Role from "../common/Role";
 import Credential from "../util/Credential";
 import NetworkUtils from "../util/NetworkUtils";
-import Role from "./Role";
 import RoleParser from "./RoleParser";
 
 class RoleLoader {

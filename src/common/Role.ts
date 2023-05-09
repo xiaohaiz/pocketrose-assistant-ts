@@ -1,7 +1,7 @@
-import Town from "./Town";
+import Town from "../core/Town";
 import Constants from "../util/Constants";
-import Castle from "./Castle";
 import StringUtils from "../util/StringUtils";
+import Castle from "./Castle";
 
 class Role {
     name?: string;               // 姓名

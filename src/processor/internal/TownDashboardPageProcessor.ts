@@ -8,9 +8,9 @@ import NetworkUtils from "../../util/NetworkUtils";
 import PageUtils from "../../util/PageUtils";
 import StringUtils from "../../util/StringUtils";
 import PageProcessorContext from "../PageProcessorContext";
-import PageProcessorSupport from "../PageProcessorSupport";
+import PageProcessorCredentialSupport from "../PageProcessorCredentialSupport";
 
-class TownDashboardPageProcessor extends PageProcessorSupport {
+class TownDashboardPageProcessor extends PageProcessorCredentialSupport {
 
     constructor() {
         super();
@@ -362,7 +362,7 @@ function doRenderTownTax(credential: Credential, roleStatus: RoleStatus) {
         }
         const tax = parseInt(td!.text());
         if (tax >= 50000) {
-            if (tax - Math.ceil(tax / 50000) * 50000 <= 10000) {
+            if (tax - Math.floor(tax / 50000) * 50000 <= 10000) {
                 td!.css("color", "white")
                     .css("background-color", "green")
                     .css("font-weight", "bold")
@@ -374,7 +374,7 @@ function doRenderTownTax(credential: Credential, roleStatus: RoleStatus) {
 }
 
 function doRenderLeaveTown() {
-    if (!SetupLoader.isHiddenLeaveTownButtonEnabled()) {
+    if (!SetupLoader.isHiddenLeaveAndExitEnabled()) {
         return;
     }
     $("th:contains('出城')")
@@ -382,12 +382,16 @@ function doRenderLeaveTown() {
             return $(this).text() === "出城";
         })
         .parent()
-        .attr("id", "leaveTownRow");
-    $("#leaveTownRow").hide();
+        .attr("id", "leaveTownRow")
+        .hide()
+        .next()
+        .attr("id", "safeExitRow")
+        .hide();
 
     $("img:first").attr("id", "townImage");
     $("#townImage").on("click", function () {
         $("#leaveTownRow").toggle();
+        $("#safeExitRow").toggle();
     });
 }
 

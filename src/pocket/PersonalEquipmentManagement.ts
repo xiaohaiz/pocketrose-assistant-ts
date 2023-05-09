@@ -1,11 +1,11 @@
+import Role from "../common/Role";
 import Credential from "../util/Credential";
+import MessageBoard from "../util/MessageBoard";
+import NetworkUtils from "../util/NetworkUtils";
 import PageUtils from "../util/PageUtils";
-import PersonalEquipmentManagementPage from "./PersonalEquipmentManagementPage";
-import Role from "./Role";
 import StringUtils from "../util/StringUtils";
 import EquipmentParser from "./EquipmentParser";
-import NetworkUtils from "../util/NetworkUtils";
-import MessageBoard from "../util/MessageBoard";
+import PersonalEquipmentManagementPage from "./PersonalEquipmentManagementPage";
 
 class PersonalEquipmentManagement {
 

@@ -1,5 +1,5 @@
+import Equipment from "../../common/Equipment";
 import Credential from "../../util/Credential";
-import Equipment from "../Equipment";
 
 class CastleWarehousePage {
 

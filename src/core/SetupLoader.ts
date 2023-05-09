@@ -209,7 +209,7 @@ class SetupLoader {
         return StorageUtils.getBoolean("_pa_027");
     }
 
-    static isHiddenLeaveTownButtonEnabled(): boolean {
+    static isHiddenLeaveAndExitEnabled(): boolean {
         return StorageUtils.getBoolean("_pa_028");
     }
 

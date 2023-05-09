@@ -1,11 +1,11 @@
-import PageProcessorSupport from "../PageProcessorSupport";
-import Credential from "../../util/Credential";
 import SetupLoader from "../../core/SetupLoader";
-import StringUtils from "../../util/StringUtils";
-import PageUtils from "../../util/PageUtils";
 import EventHandler from "../../pocket/EventHandler";
+import Credential from "../../util/Credential";
+import PageUtils from "../../util/PageUtils";
+import StringUtils from "../../util/StringUtils";
+import PageProcessorCredentialSupport from "../PageProcessorCredentialSupport";
 
-class MapDashboardPageProcessor extends PageProcessorSupport {
+class MapDashboardPageProcessor extends PageProcessorCredentialSupport {
 
     constructor() {
         super();

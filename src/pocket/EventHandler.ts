@@ -1,8 +1,8 @@
+import Town from "../core/Town";
 import TownLoader from "../core/TownLoader";
 import Coordinate from "../util/Coordinate";
 import PageUtils from "../util/PageUtils";
 import StringUtils from "../util/StringUtils";
-import Town from "./Town";
 
 class EventHandler {
 

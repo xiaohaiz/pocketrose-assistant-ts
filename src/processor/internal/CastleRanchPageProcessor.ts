@@ -1,14 +1,14 @@
-import Credential from "../../util/Credential";
-import PageUtils from "../../util/PageUtils";
-import CastleRanch from "../../pocket/CastleRanch";
-import MessageBoard from "../../util/MessageBoard";
 import NpcLoader from "../../core/NpcLoader";
+import CastleRanch from "../../pocket/CastleRanch";
 import CastleRanchStatus from "../../pocket/CastleRanchStatus";
 import Constants from "../../util/Constants";
-import PageProcessorSupport from "../PageProcessorSupport";
+import Credential from "../../util/Credential";
+import MessageBoard from "../../util/MessageBoard";
+import PageUtils from "../../util/PageUtils";
 import PageProcessorContext from "../PageProcessorContext";
+import PageProcessorCredentialSupport from "../PageProcessorCredentialSupport";
 
-class CastleRanchPageProcessor extends PageProcessorSupport {
+class CastleRanchPageProcessor extends PageProcessorCredentialSupport {
 
     constructor() {
         super();

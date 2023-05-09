@@ -1,14 +1,10 @@
-import Credential from "../../util/Credential";
-import Equipment from "../Equipment";
+import Equipment from "../common/Equipment";
+import Role from "../common/Role";
 
 class TownGemMeltHousePage {
 
-    readonly credential: Credential;
+    role?: Role;
     equipmentList?: Equipment[];
-
-    constructor(credential: Credential) {
-        this.credential = credential;
-    }
 
     canMelt(index: number) {
         for (const equipment of this.equipmentList!) {

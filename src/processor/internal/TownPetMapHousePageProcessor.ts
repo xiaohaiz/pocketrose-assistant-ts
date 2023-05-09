@@ -1,9 +1,9 @@
 import Constants from "../../util/Constants";
-import PageProcessorSupport from "../PageProcessorSupport";
-import PageProcessorContext from "../PageProcessorContext";
 import Credential from "../../util/Credential";
+import PageProcessorContext from "../PageProcessorContext";
+import PageProcessorCredentialSupport from "../PageProcessorCredentialSupport";
 
-class TownPetMapHousePageProcessor extends PageProcessorSupport {
+class TownPetMapHousePageProcessor extends PageProcessorCredentialSupport {
 
     constructor() {
         super();

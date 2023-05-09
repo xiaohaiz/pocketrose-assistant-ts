@@ -1,18 +1,18 @@
-import PageUtils from "../../util/PageUtils";
+import Castle from "../../common/Castle";
+import Equipment from "../../common/Equipment";
+import Pet from "../../common/Pet";
 import NpcLoader from "../../core/NpcLoader";
-import CastleLoader from "../../pocket/CastleLoader";
-import MessageBoard from "../../util/MessageBoard";
-import Castle from "../../pocket/Castle";
-import Credential from "../../util/Credential";
 import CastleWarehouse from "../../pocket/castle/CastleWarehouse";
-import Equipment from "../../pocket/Equipment";
+import CastleLoader from "../../pocket/CastleLoader";
 import CastleRanch from "../../pocket/CastleRanch";
-import Pet from "../../pocket/Pet";
+import Credential from "../../util/Credential";
+import MessageBoard from "../../util/MessageBoard";
+import PageUtils from "../../util/PageUtils";
 import StringUtils from "../../util/StringUtils";
-import PageProcessorSupport from "../PageProcessorSupport";
 import PageProcessorContext from "../PageProcessorContext";
+import PageProcessorCredentialSupport from "../PageProcessorCredentialSupport";
 
-class TownCastleKeeperPageProcessor extends PageProcessorSupport {
+class TownCastleKeeperPageProcessor extends PageProcessorCredentialSupport {
 
     constructor() {
         super();

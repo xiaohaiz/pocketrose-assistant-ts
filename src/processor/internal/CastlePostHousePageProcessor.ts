@@ -1,8 +1,8 @@
+import Town from "../../core/Town";
 import TownLoader from "../../core/TownLoader";
 import CastleEntrance from "../../pocket/CastleEntrance";
 import MapBuilder from "../../pocket/MapBuilder";
 import RoleLoader from "../../pocket/RoleLoader";
-import Town from "../../pocket/Town";
 import TownBank from "../../pocket/TownBank";
 import TownEntrance from "../../pocket/TownEntrance";
 import TravelPlanExecutor from "../../pocket/TravelPlanExecutor";
@@ -12,9 +12,9 @@ import Credential from "../../util/Credential";
 import MessageBoard from "../../util/MessageBoard";
 import StringUtils from "../../util/StringUtils";
 import PageProcessorContext from "../PageProcessorContext";
-import PageProcessorSupport from "../PageProcessorSupport";
+import PageProcessorCredentialSupport from "../PageProcessorCredentialSupport";
 
-class CastlePostHousePageProcessor extends PageProcessorSupport {
+class CastlePostHousePageProcessor extends PageProcessorCredentialSupport {
 
     constructor() {
         super();

@@ -1,5 +1,5 @@
 import BankAccount from "../common/BankAccount";
-import Role from "../pocket/Role";
+import Role from "../common/Role";
 import Credential from "../util/Credential";
 import MessageBoard from "../util/MessageBoard";
 import NetworkUtils from "../util/NetworkUtils";

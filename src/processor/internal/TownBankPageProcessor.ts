@@ -1,6 +1,6 @@
 import NpcLoader from "../../core/NpcLoader";
+import Town from "../../core/Town";
 import TownLoader from "../../core/TownLoader";
-import Town from "../../pocket/Town";
 import TownBank from "../../pocketrose/TownBank";
 import TownBankPage from "../../pocketrose/TownBankPage";
 import BankUtils from "../../util/BankUtils";
@@ -9,9 +9,9 @@ import MessageBoard from "../../util/MessageBoard";
 import NetworkUtils from "../../util/NetworkUtils";
 import PageUtils from "../../util/PageUtils";
 import PageProcessorContext from "../PageProcessorContext";
-import PageProcessorSupport from "../PageProcessorSupport";
+import PageProcessorCredentialSupport from "../PageProcessorCredentialSupport";
 
-class TownBankPageProcessor extends PageProcessorSupport {
+class TownBankPageProcessor extends PageProcessorCredentialSupport {
 
     doProcess(credential: Credential, context?: PageProcessorContext): void {
         const page = TownBank.parsePage(PageUtils.currentPageHtml());

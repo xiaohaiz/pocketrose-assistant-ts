@@ -1,4 +1,4 @@
-import Equipment from "./Equipment";
+import Equipment from "../common/Equipment";
 import StringUtils from "../util/StringUtils";
 
 class EquipmentParser {

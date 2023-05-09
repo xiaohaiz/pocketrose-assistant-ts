@@ -1,10 +1,10 @@
-import Credential from "../../util/Credential";
-import PageProcessorSupport from "../PageProcessorSupport";
-import PageProcessorContext from "../PageProcessorContext";
 import NpcLoader from "../../core/NpcLoader";
 import CommentBoard from "../../util/CommentBoard";
+import Credential from "../../util/Credential";
+import PageProcessorContext from "../PageProcessorContext";
+import PageProcessorCredentialSupport from "../PageProcessorCredentialSupport";
 
-abstract class AbstractPersonalSalaryPageProcessor extends PageProcessorSupport {
+abstract class AbstractPersonalSalaryPageProcessor extends PageProcessorCredentialSupport {
 
     doProcess(credential: Credential, context?: PageProcessorContext) {
 

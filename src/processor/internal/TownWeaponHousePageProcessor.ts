@@ -1,17 +1,17 @@
+import NpcLoader from "../../core/NpcLoader";
 import TownLoader from "../../core/TownLoader";
-import TownBank from "../../pocket/bank/TownBank";
+import DeprecatedTownBank from "../../pocket/bank/DeprecatedTownBank";
 import TownWeaponHouse from "../../pocket/house/TownWeaponHouse";
 import TownWeaponHousePage from "../../pocket/house/TownWeaponHousePage";
-import NpcLoader from "../../core/NpcLoader";
 import BankUtils from "../../util/BankUtils";
 import Constants from "../../util/Constants";
 import Credential from "../../util/Credential";
 import MessageBoard from "../../util/MessageBoard";
 import PageUtils from "../../util/PageUtils";
 import PageProcessorContext from "../PageProcessorContext";
-import PageProcessorSupport from "../PageProcessorSupport";
+import PageProcessorCredentialSupport from "../PageProcessorCredentialSupport";
 
-class TownWeaponHousePageProcessor extends PageProcessorSupport {
+class TownWeaponHousePageProcessor extends PageProcessorCredentialSupport {
 
     constructor() {
         super();
@@ -300,7 +300,7 @@ function doBindSellButton(page: TownWeaponHousePage, indexList: number[]) {
             new TownWeaponHouse(page.credential, page.townId)
                 .sell(index, page.discount!)
                 .then(() => {
-                    new TownBank(page.credential)
+                    new DeprecatedTownBank(page.credential)
                         .depositAll()
                         .then(() => {
                             doRefresh(page);
@@ -321,7 +321,7 @@ function doBindBuyButton(page: TownWeaponHousePage, indexList: number[]) {
             if (!confirm("确认要购买" + count + "把“" + merchandise.name + "”？大约需要再支取" + amount + "万GOLD。")) {
                 return;
             }
-            const bank = new TownBank(page.credential);
+            const bank = new DeprecatedTownBank(page.credential);
             bank.withdraw(amount)
                 .then(() => {
                     new TownWeaponHouse(page.credential, page.townId)

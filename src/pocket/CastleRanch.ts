@@ -1,9 +1,9 @@
-import Pet from "./Pet";
-import StringUtils from "../util/StringUtils";
+import Pet from "../common/Pet";
 import Credential from "../util/Credential";
-import CastleRanchStatus from "./CastleRanchStatus";
-import NetworkUtils from "../util/NetworkUtils";
 import MessageBoard from "../util/MessageBoard";
+import NetworkUtils from "../util/NetworkUtils";
+import StringUtils from "../util/StringUtils";
+import CastleRanchStatus from "./CastleRanchStatus";
 
 class CastleRanch {
 

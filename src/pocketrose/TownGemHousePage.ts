@@ -1,18 +1,13 @@
-import Credential from "../../util/Credential";
+import Equipment from "../common/Equipment";
+import Role from "../common/Role";
 import TownGemMeltHousePage from "./TownGemMeltHousePage";
-import Equipment from "../Equipment";
 
 class TownGemHousePage {
 
-    readonly credential: Credential;
-    roleCash?: number;
+    role?: Role;
     equipmentList?: Equipment[];
     gemList?: Equipment[];
     townGemMeltHousePage?: TownGemMeltHousePage;
-
-    constructor(credential: Credential) {
-        this.credential = credential;
-    }
 
     findEquipment(index: number) {
         for (const equipment of this.equipmentList!) {
@@ -31,6 +26,7 @@ class TownGemHousePage {
         }
         return null;
     }
+
 }
 
 export = TownGemHousePage;

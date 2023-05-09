@@ -1,7 +1,8 @@
-import PageInterceptor from "../PageInterceptor";
-import SetupLoader from "../../core/SetupLoader";
 import LocationStateMachine from "../../core/LocationStateMachine";
+import SetupLoader from "../../core/SetupLoader";
 import TownGemHousePageProcessor from "../../processor/internal/TownGemHousePageProcessor";
+import PageProcessorContext from "../../processor/PageProcessorContext";
+import PageInterceptor from "../PageInterceptor";
 
 class TownGemHousePageInterceptor implements PageInterceptor {
 
@@ -20,8 +21,10 @@ class TownGemHousePageInterceptor implements PageInterceptor {
         }
         LocationStateMachine.create()
             .load()
-            .whenInTown(() => {
-                this.#processor.process();
+            .whenInTown(townId => {
+                const context = new PageProcessorContext();
+                context.set("townId", townId!);
+                this.#processor.process(context);
             })
             .fork();
     }

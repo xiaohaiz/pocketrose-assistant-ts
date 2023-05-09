@@ -1,5 +1,5 @@
+import Pet from "../common/Pet";
 import StringUtils from "../util/StringUtils";
-import Pet from "./Pet";
 
 class PetParser {
 

@@ -1,10 +1,10 @@
+import Equipment from "../common/Equipment";
 import Credential from "../util/Credential";
-import Equipment from "./Equipment";
-import EquipmentSet from "./EquipmentSet";
 import MessageBoard from "../util/MessageBoard";
 import NetworkUtils from "../util/NetworkUtils";
-import TreasureBag from "./TreasureBag";
 import EquipmentParser from "./EquipmentParser";
+import EquipmentSet from "./EquipmentSet";
+import TreasureBag from "./TreasureBag";
 
 class EquipmentSetLoader {
 
