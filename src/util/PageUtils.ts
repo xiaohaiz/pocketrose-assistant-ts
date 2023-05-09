@@ -428,6 +428,37 @@ const BUTTON_STYLES: {} = {
         ".button-35:hover {\n" +
         "  box-shadow: #121212 0 0 0 3px, transparent 0 0 0 0;\n" +
         "}\n",
+    "37": ".button-37 {\n" +
+        "  background-color: #13aa52;\n" +
+        "  border: 1px solid #13aa52;\n" +
+        "  border-radius: 4px;\n" +
+        "  box-shadow: rgba(0, 0, 0, .1) 0 2px 4px 0;\n" +
+        "  box-sizing: border-box;\n" +
+        "  color: #fff;\n" +
+        "  cursor: pointer;\n" +
+        "  font-size: 16px;\n" +
+        "  font-weight: 400;\n" +
+        "  outline: none;\n" +
+        "  outline: 0;\n" +
+        "  padding: 10px 25px;\n" +
+        "  text-align: center;\n" +
+        "  transform: translateY(0);\n" +
+        "  transition: transform 150ms, box-shadow 150ms;\n" +
+        "  user-select: none;\n" +
+        "  -webkit-user-select: none;\n" +
+        "  touch-action: manipulation;\n" +
+        "}\n" +
+        "\n" +
+        ".button-37:hover {\n" +
+        "  box-shadow: rgba(0, 0, 0, .15) 0 3px 9px 0;\n" +
+        "  transform: translateY(-2px);\n" +
+        "}\n" +
+        "\n" +
+        "@media (min-width: 768px) {\n" +
+        "  .button-37 {\n" +
+        "    padding: 10px 30px;\n" +
+        "  }\n" +
+        "}\n",
 };
 
 export = PageUtils;
