@@ -7,7 +7,7 @@ import MessageBoard from "../../util/MessageBoard";
 import NetworkUtils from "../../util/NetworkUtils";
 import TownBank from "../../pocket/TownBank";
 import EquipmentParser from "../../pocket/EquipmentParser";
-import NpcLoader from "../../pocket/NpcLoader";
+import NpcLoader from "../../core/NpcLoader";
 import RoleLoader from "../../pocket/RoleLoader";
 import PetProfileLoader from "../../pocket/pet/PetProfileLoader";
 import PageProcessorSupport from "../PageProcessorSupport";

@@ -5,7 +5,7 @@ import PageUtils from "../../util/PageUtils";
 import CastleBank from "../../pocketrose/CastleBank";
 import StringUtils from "../../util/StringUtils";
 import MessageBoard from "../../util/MessageBoard";
-import NpcLoader from "../../pocket/NpcLoader";
+import NpcLoader from "../../core/NpcLoader";
 import BankAccount from "../../common/BankAccount";
 import CastleBankPage from "../../pocketrose/CastleBankPage";
 import NetworkUtils from "../../util/NetworkUtils";

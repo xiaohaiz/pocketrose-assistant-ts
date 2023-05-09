@@ -1,5 +1,5 @@
 import PageUtils from "../../util/PageUtils";
-import NpcLoader from "../../pocket/NpcLoader";
+import NpcLoader from "../../core/NpcLoader";
 import CastleLoader from "../../pocket/CastleLoader";
 import MessageBoard from "../../util/MessageBoard";
 import Castle from "../../pocket/Castle";

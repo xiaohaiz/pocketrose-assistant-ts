@@ -9,7 +9,7 @@ import EquipmentSetLoader from "../../pocket/EquipmentSetLoader";
 import TownBank from "../../pocket/TownBank";
 import SetupLoader from "../../core/SetupLoader";
 import CommentBoard from "../../util/CommentBoard";
-import NpcLoader from "../../pocket/NpcLoader";
+import NpcLoader from "../../core/NpcLoader";
 import RoleStatusLoader from "../../pocket/RoleStatusLoader";
 import RoleLoader from "../../pocket/RoleLoader";
 import PageProcessorSupport from "../PageProcessorSupport";

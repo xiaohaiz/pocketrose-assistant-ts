@@ -1,5 +1,5 @@
 import Credential from "../../util/Credential";
-import NpcLoader from "../../pocket/NpcLoader";
+import NpcLoader from "../../core/NpcLoader";
 import MapBuilder from "../../pocket/MapBuilder";
 import RoleLocationLoader from "../../pocket/RoleLocationLoader";
 import StringUtils from "../../util/StringUtils";

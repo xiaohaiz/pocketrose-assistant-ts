@@ -2,7 +2,7 @@ import TownLoader from "../../core/TownLoader";
 import TownBank from "../../pocket/bank/TownBank";
 import TownWeaponHouse from "../../pocket/house/TownWeaponHouse";
 import TownWeaponHousePage from "../../pocket/house/TownWeaponHousePage";
-import NpcLoader from "../../pocket/NpcLoader";
+import NpcLoader from "../../core/NpcLoader";
 import BankUtils from "../../util/BankUtils";
 import Constants from "../../util/Constants";
 import Credential from "../../util/Credential";
