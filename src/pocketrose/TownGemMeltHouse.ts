@@ -1,6 +1,7 @@
 import Equipment from "../common/Equipment";
 import Role from "../common/Role";
 import Credential from "../util/Credential";
+import NetworkUtils from "../util/NetworkUtils";
 import StringUtils from "../util/StringUtils";
 import TownGemMeltHousePage from "./TownGemMeltHousePage";
 
@@ -16,6 +17,24 @@ class TownGemMeltHouse {
 
     static parsePage(html: string): TownGemMeltHousePage {
         return doParsePage(html);
+    }
+
+    async open(): Promise<TownGemMeltHousePage> {
+        const action = () => {
+            return new Promise<TownGemMeltHousePage>(resolve => {
+                const request = this.#credential.asRequestMap();
+                request.set("con_str", "50");
+                request.set("mode", "BAOSHI_DELSHOP");
+                if (this.#townId !== undefined) {
+                    request.set("town", this.#townId);
+                }
+                NetworkUtils.post("town.cgi", request).then(html => {
+                    const page = TownGemMeltHouse.parsePage(html);
+                    resolve(page);
+                });
+            });
+        };
+        return await action();
     }
 }
 
