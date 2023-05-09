@@ -12,6 +12,9 @@ import PageProcessorCredentialSupport from "../PageProcessorCredentialSupport";
 class TownArmorHousePageProcessor extends PageProcessorCredentialSupport {
 
     doProcess(credential: Credential, context?: PageProcessorContext): void {
+        PageUtils.loadButtonStyle(7);
+        PageUtils.loadButtonStyle(8);
+        PageUtils.loadButtonStyle(35);
         const page = TownArmorHouse.parsePage(PageUtils.currentPageHtml());
         this.#renderImmutablePage(credential, page);
         this.#renderMutablePage(credential, page);
@@ -88,9 +91,9 @@ class TownArmorHousePageProcessor extends PageProcessorCredentialSupport {
         // ------------------------------------------------------------------------
         html += "<tr>";
         html += "<td style='background-color:#F8F0E0;text-align:center'>";
-        html += "<input type='button' id='refresh_button' value='刷新" + page.town.name + "防具屋'>";
-        html += "<input type='button' id='return_button' value='离开" + page.town.name + "防具屋'>";
-        html += "<input type='button' id='equipment_button' value='转到装备管理'>";
+        html += "<input type='button' id='refresh_button' value='刷新" + page.town.name + "防具屋' class='button-35'>&nbsp;";
+        html += "<input type='button' id='return_button' value='离开" + page.town.name + "防具屋' class='button-35'>&nbsp;";
+        html += "<input type='button' id='equipment_button' value='转到装备管理' class='button-35'>";
         html += "</td>";
         // ------------------------------------------------------------------------
         // 个人物品栏
@@ -156,7 +159,7 @@ class TownArmorHousePageProcessor extends PageProcessorCredentialSupport {
                 html += "<td style='background-color:#E8E8D0'>";
                 if (equipment.isSellable) {
                     html += "<input type='button' value='出售' " +
-                        "id='sell_" + equipment.index! + "' class='dynamic_button_class'>";
+                        "id='sell_" + equipment.index! + "' class='dynamic_button_class button-7'>";
                 } else {
                     html += PageUtils.generateInvisibleButton("#E8E8D0");
                 }
@@ -226,7 +229,7 @@ class TownArmorHousePageProcessor extends PageProcessorCredentialSupport {
                 html += "<td style='background-color:#E8E8D0'>";
                 if (spaceCount > 0) {
                     html += "<input type='button' value='购买' " +
-                        "id='buy_" + merchandise.index! + "' class='dynamic_button_class'>";
+                        "id='buy_" + merchandise.index! + "' class='dynamic_button_class button-8'>";
                 } else {
                     html += PageUtils.generateInvisibleButton("#E8E8D0");
                 }

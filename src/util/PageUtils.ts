@@ -88,7 +88,8 @@ class PageUtils {
     static generateInvisibleButton(backgroundColor: string) {
         return "<input type='button' " +
             "value='　　' " +
-            "style='background-color:" + backgroundColor + ";border-width:0'>";
+            "style='background-color:" + backgroundColor + ";border-width:0' " +
+            "tabindex='-1'>";
     }
 
     static fixCurrentPageBrokenImages() {
@@ -185,61 +186,6 @@ class PageUtils {
 }
 
 const BUTTON_STYLES: {} = {
-    "4": ".button-4 {\n" +
-        "  appearance: none;\n" +
-        "  background-color: #FAFBFC;\n" +
-        "  border: 1px solid rgba(27, 31, 35, 0.15);\n" +
-        "  border-radius: 6px;\n" +
-        "  box-shadow: rgba(27, 31, 35, 0.04) 0 1px 0, rgba(255, 255, 255, 0.25) 0 1px 0 inset;\n" +
-        "  box-sizing: border-box;\n" +
-        "  color: #24292E;\n" +
-        "  cursor: pointer;\n" +
-        "  display: inline-block;\n" +
-        "  font-size: 14px;\n" +
-        "  font-weight: 500;\n" +
-        "  line-height: 20px;\n" +
-        "  list-style: none;\n" +
-        "  padding: 6px 16px;\n" +
-        "  position: relative;\n" +
-        "  transition: background-color 0.2s cubic-bezier(0.3, 0, 0.5, 1);\n" +
-        "  user-select: none;\n" +
-        "  -webkit-user-select: none;\n" +
-        "  touch-action: manipulation;\n" +
-        "  vertical-align: middle;\n" +
-        "  white-space: nowrap;\n" +
-        "  word-wrap: break-word;\n" +
-        "}\n" +
-        "\n" +
-        ".button-4:hover {\n" +
-        "  background-color: #F3F4F6;\n" +
-        "  text-decoration: none;\n" +
-        "  transition-duration: 0.1s;\n" +
-        "}\n" +
-        "\n" +
-        ".button-4:disabled {\n" +
-        "  background-color: #FAFBFC;\n" +
-        "  border-color: rgba(27, 31, 35, 0.15);\n" +
-        "  color: #959DA5;\n" +
-        "  cursor: default;\n" +
-        "}\n" +
-        "\n" +
-        ".button-4:active {\n" +
-        "  background-color: #EDEFF2;\n" +
-        "  box-shadow: rgba(225, 228, 232, 0.2) 0 1px 0 inset;\n" +
-        "  transition: none 0s;\n" +
-        "}\n" +
-        "\n" +
-        ".button-4:focus {\n" +
-        "  outline: 1px transparent;\n" +
-        "}\n" +
-        "\n" +
-        ".button-4:before {\n" +
-        "  display: none;\n" +
-        "}\n" +
-        "\n" +
-        ".button-4:-webkit-details-marker {\n" +
-        "  display: none;\n" +
-        "}\n",
     "5": ".button-5 {\n" +
         "  align-items: center;\n" +
         "  background-clip: padding-box;\n" +
@@ -292,7 +238,7 @@ const BUTTON_STYLES: {} = {
         "  color: #fff;\n" +
         "  cursor: pointer;\n" +
         "  display: inline-block;\n" +
-        "  font-size: 13px;\n" +
+        "  font-size: 50%;\n" +
         "  font-weight: 400;\n" +
         "  line-height: 1.15385;\n" +
         "  margin: 0;\n" +
@@ -330,7 +276,7 @@ const BUTTON_STYLES: {} = {
         "  color: #39739d;\n" +
         "  cursor: pointer;\n" +
         "  display: inline-block;\n" +
-        "  font-size: 13px;\n" +
+        "  font-size: 50%;\n" +
         "  font-weight: 400;\n" +
         "  line-height: 1.15385;\n" +
         "  margin: 0;\n" +
@@ -367,7 +313,7 @@ const BUTTON_STYLES: {} = {
         "  border-radius: 4px;\n" +
         "  color: #3c4043;\n" +
         "  cursor: pointer;\n" +
-        "  font-size: 14px;\n" +
+        "  font-size: 50%;\n" +
         "  height: 36px;\n" +
         "  line-height: 27px;\n" +
         "  min-width: 54px;\n" +
@@ -485,8 +431,7 @@ const BUTTON_STYLES: {} = {
         "  cursor: pointer;\n" +
         "  display: inline-flex;\n" +
         "  flex: 1 1 auto;\n" +
-        "  font-family: Inter,sans-serif;\n" +
-        "  font-size: 1.2rem;\n" +
+        "  font-size: 50%;\n" +
         "  font-weight: 700;\n" +
         "  justify-content: center;\n" +
         "  line-height: 1;\n" +
@@ -548,7 +493,7 @@ const BUTTON_STYLES: {} = {
         "  transition: .3s linear, color 0s, background-color 0s;\n" +
         "  outline: var(--b) solid #0000;\n" +
         "  outline-offset: .6em;\n" +
-        "  font-size: 16px;\n" +
+        "  font-size: 60%;\n" +
         "\n" +
         "  border: 0;\n" +
         "\n" +
