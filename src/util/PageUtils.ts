@@ -306,6 +306,34 @@ const BUTTON_STYLES: {} = {
         "  box-shadow: none;\n" +
         "  color: #2c5777;\n" +
         "}\n",
+    "16": ".button-16 {\n" +
+        "  background-color: #f8f9fa;\n" +
+        "  border: 1px solid #f8f9fa;\n" +
+        "  border-radius: 4px;\n" +
+        "  color: #3c4043;\n" +
+        "  cursor: pointer;\n" +
+        "  font-size: 14px;\n" +
+        "  height: 36px;\n" +
+        "  line-height: 27px;\n" +
+        "  min-width: 54px;\n" +
+        "  padding: 0 16px;\n" +
+        "  text-align: center;\n" +
+        "  user-select: none;\n" +
+        "  -webkit-user-select: none;\n" +
+        "  touch-action: manipulation;\n" +
+        "  white-space: pre;\n" +
+        "}\n" +
+        "\n" +
+        ".button-16:hover {\n" +
+        "  border-color: #dadce0;\n" +
+        "  box-shadow: rgba(0, 0, 0, .1) 0 1px 1px;\n" +
+        "  color: #202124;\n" +
+        "}\n" +
+        "\n" +
+        ".button-16:focus {\n" +
+        "  border-color: #4285f4;\n" +
+        "  outline: none;\n" +
+        "}\n",
     "24": ".button-24 {\n" +
         "  background: #FF4742;\n" +
         "  border: 1px solid #FF4742;\n" +
