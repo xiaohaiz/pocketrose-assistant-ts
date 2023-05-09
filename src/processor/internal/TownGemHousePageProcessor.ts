@@ -125,9 +125,9 @@ class TownGemHousePageProcessor extends PageProcessorCredentialSupport {
         CommentBoard.createCommentBoard(NpcLoader.getNpcImageHtml("末末")!);
         CommentBoard.writeMessage("<b style='font-size:120%;color:navy'>砸石头这种事儿，确实是有手就行。</b>");
         CommentBoard.writeMessage("<p id='fuseAllContainer' style='display:none'>" +
-            "<input type='button' id='fuseAllPowerGem' value='砸完所有威力' class='dynamic_button_class' disabled>" +
-            "<input type='button' id='fuseAllWeightGem' value='砸完所有重量' class='dynamic_button_class' disabled>" +
-            "<input type='button' id='fuseAllLuckGem' value='砸完所有幸运' class='dynamic_button_class' disabled>" +
+            "<input type='button' id='fuseAll_1' value='砸完所有威力' class='dynamic_button_class all_gem_class' disabled>" +
+            "<input type='button' id='fuseAll_2' value='砸完所有重量' class='dynamic_button_class all_gem_class' disabled>" +
+            "<input type='button' id='fuseAll_3' value='砸完所有幸运' class='dynamic_button_class all_gem_class' disabled>" +
             "</p>");
 
         this.#bindImmutableButtons(credential, town);
@@ -290,13 +290,13 @@ class TownGemHousePageProcessor extends PageProcessorCredentialSupport {
                 .show();
 
             if (powerGemFound) {
-                $("#fuseAllPowerGem").prop("disabled", false);
+                $("#fuseAll_1").prop("disabled", false);
             }
             if (weightGemFound) {
-                $("#fuseAllWeightGem").prop("disabled", false);
+                $("#fuseAll_2").prop("disabled", false);
             }
             if (luckGemFound) {
-                $("#fuseAllLuckGem").prop("disabled", false);
+                $("#fuseAll_3").prop("disabled", false);
             }
         }
 
@@ -410,13 +410,11 @@ class TownGemHousePageProcessor extends PageProcessorCredentialSupport {
     }
 
     #refreshMutablePage(credential: Credential, town: Town) {
-        $("#fuseAllPowerGem").prop("disabled", true);
-        $("#fuseAllWeightGem").prop("disabled", true);
-        $("#fuseAllLuckGem").prop("disabled", true);
         $("#equipment_list_cell").html("").parent().hide();
         $("#gem_list_cell").html("").parent().hide();
         $(".dynamic_button_class").off("click");
         $(".equipment_detail_class").off("mouseenter").off("mouseleave");
+        $(".all_gem_class").prop("disabled", true);
         new TownGemHouse(credential, town.id).open().then(page => {
             const cash = page.role!.cash!;
             $("#roleCash").html(cash + " GOLD");
