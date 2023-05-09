@@ -1,3 +1,4 @@
+import Equipment from "../../common/Equipment";
 import NpcLoader from "../../core/NpcLoader";
 import TownLoader from "../../core/TownLoader";
 import EquipmentManagement from "../../pocket/personal/EquipmentManagement";
@@ -408,6 +409,7 @@ class TownGemHousePageProcessor extends PageProcessorCredentialSupport {
             });
         });
         $(".all_gem_class").on("click", event => {
+            PageUtils.scrollIntoView("pageTitle");
             const buttonId = $(event.target).attr("id") as string;
             const gemCode = parseInt(buttonId.split("_")[1]);
             let gemName = "";
@@ -432,13 +434,11 @@ class TownGemHousePageProcessor extends PageProcessorCredentialSupport {
                     }
                 });
             if (checkedIndex === undefined) {
-                PageUtils.scrollIntoView("pageTitle");
                 MessageBoard.publishWarning("没有选择要镶嵌的装备！");
                 return;
             }
             const equipment = page.findEquipment(checkedIndex);
             if (!confirm("确认为“" + equipment?.nameHTML + "”尽可能镶嵌所有的“" + gemName + "”？")) {
-                PageUtils.scrollIntoView("pageTitle");
                 return;
             }
 
@@ -454,7 +454,7 @@ class TownGemHousePageProcessor extends PageProcessorCredentialSupport {
                     break;
                 }
             }
-
+            this.#_fuseAllGems(credential, page, town, lastFuse, gemCode);
         });
     }
 
@@ -468,6 +468,66 @@ class TownGemHousePageProcessor extends PageProcessorCredentialSupport {
             const cash = page.role!.cash!;
             $("#roleCash").html(cash + " GOLD");
             this.#renderMutablePage(credential, page, town);
+        });
+    }
+
+    #_fuseAllGems(credential: Credential, page: TownGemHousePage, town: Town, target: string, gemCode: number) {
+        // 找待砸石头的装备
+        const equipmentName = StringUtils.substringBefore(target, "/");
+        const equipmentSequence = parseInt(StringUtils.substringAfter(target, "/"));
+
+        // 查找装备
+        let equipmentIndex = -1;
+        let sequence = 0;
+        for (const equipment of page.equipmentList!) {
+            if (equipment.fullName === equipmentName) {
+                sequence++;
+                if (sequence === equipmentSequence) {
+                    equipmentIndex = equipment.index!;
+                    break;
+                }
+            }
+        }
+        if (equipmentIndex < 0) {
+            // Not found? Should not reach here.
+            this.#refreshMutablePage(credential, town);
+            return;
+        }
+        const equipment = page.findEquipment(equipmentIndex)!;
+        const canFuse = equipment.selectable! && (!equipment.using! || (equipment.using! && equipment.name === "宠物蛋"));
+        if (!canFuse) {
+            // 已经不能再继续镶嵌了，返回
+            MessageBoard.publishMessage("所选装备已经没有剩余孔位，结束。");
+            this.#refreshMutablePage(credential, town);
+            return;
+        }
+
+        let gem: Equipment | undefined = undefined;
+        for (const it of page.gemList!) {
+            if (gemCode === 1 && it.name === "威力宝石") {
+                gem = it;
+                break;
+            }
+            if (gemCode === 2 && it.name === "重量宝石") {
+                gem = it;
+                break;
+            }
+            if (gemCode === 3 && it.name === "幸运宝石") {
+                gem = it;
+                break;
+            }
+        }
+        if (gem === undefined) {
+            // 已经没有剩余的宝石，返回
+            MessageBoard.publishMessage("已经没有剩余的宝石，结束。");
+            this.#refreshMutablePage(credential, town);
+            return;
+        }
+        const house = new TownGemHouse(credential, town.id);
+        house.fuse(equipmentIndex, gem.index!).then(() => {
+            house.open().then(page => {
+                this.#_fuseAllGems(credential, page, town, target, gemCode);
+            });
         });
     }
 }
