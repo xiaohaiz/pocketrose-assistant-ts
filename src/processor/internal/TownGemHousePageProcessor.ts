@@ -1,7 +1,7 @@
 import NpcLoader from "../../core/NpcLoader";
 import TownLoader from "../../core/TownLoader";
 import TownBank from "../../pocket/bank/TownBank";
-import TownGemHouse from "../../pocket/house/TownGemHouse";
+import DeprecatedTownGemHouse from "../../pocket/house/DeprecatedTownGemHouse";
 import TownGemHousePage from "../../pocket/house/TownGemHousePage";
 import EquipmentManagement from "../../pocket/personal/EquipmentManagement";
 import BankUtils from "../../util/BankUtils";
@@ -18,7 +18,7 @@ class TownGemHousePageProcessor extends PageProcessorCredentialSupport {
     doProcess(credential: Credential, context?: PageProcessorContext): void {
         const townId = context!.get("townId")!;
         const town = TownLoader.getTownById(townId)!;
-        TownGemHouse.parsePage(PageUtils.currentPageHtml())
+        DeprecatedTownGemHouse.parsePage(PageUtils.currentPageHtml())
             .then(page => {
                 doProcess(page);
             });
@@ -153,7 +153,7 @@ function doRefresh(credential: Credential) {
     $("#gem_list_cell").parent().hide();
     $(".dynamic_button_class").off("click");
     $(".equipment_detail_class").off("mouseenter").off("mouseleave");
-    new TownGemHouse(credential).enter()
+    new DeprecatedTownGemHouse(credential).enter()
         .then(page => {
             const roleCash = page.roleCash!;
             $("#roleCash").text(roleCash + " GOLD");

@@ -3,13 +3,13 @@ import Credential from "../../util/Credential";
 import NetworkUtils from "../../util/NetworkUtils";
 import PageUtils from "../../util/PageUtils";
 import StringUtils from "../../util/StringUtils";
+import DeprecatedTownGemMeltHouse from "./DeprecatedTownGemMeltHouse";
 import TownGemHousePage from "./TownGemHousePage";
-import TownGemMeltHouse from "./TownGemMeltHouse";
 
 /**
  * @deprecated
  */
-class TownGemHouse {
+class DeprecatedTownGemHouse {
 
     readonly #credential: Credential;
 
@@ -30,7 +30,7 @@ class TownGemHouse {
                 // @ts-ignore
                 request.mode = "BAOSHI_SHOP";
                 NetworkUtils.sendPostRequest("town.cgi", request, function (pageHtml) {
-                    TownGemHouse.parsePage(pageHtml)
+                    DeprecatedTownGemHouse.parsePage(pageHtml)
                         .then(page => {
                             resolve(page);
                         });
@@ -109,7 +109,7 @@ async function doParsePage(pageHtml: string) {
                 });
             page.gemList = gemList;
 
-            new TownGemMeltHouse(credential).enter()
+            new DeprecatedTownGemMeltHouse(credential).enter()
                 .then(townGemMeltHousePage => {
                     page.townGemMeltHousePage = townGemMeltHousePage;
                     resolve(page);
@@ -119,4 +119,4 @@ async function doParsePage(pageHtml: string) {
     return await action(pageHtml);
 }
 
-export = TownGemHouse;
+export = DeprecatedTownGemHouse;

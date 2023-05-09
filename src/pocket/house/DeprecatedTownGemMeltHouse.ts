@@ -7,7 +7,7 @@ import TownGemMeltHousePage from "./TownGemMeltHousePage";
 /**
  * @deprecated
  */
-class TownGemMeltHouse {
+class DeprecatedTownGemMeltHouse {
 
     readonly #credential: Credential;
 
@@ -29,7 +29,7 @@ class TownGemMeltHouse {
                 // @ts-ignore
                 request.mode = "BAOSHI_DELSHOP";
                 NetworkUtils.sendPostRequest("town.cgi", request, function (pageHtml) {
-                    const page = TownGemMeltHouse.parsePage(pageHtml);
+                    const page = DeprecatedTownGemMeltHouse.parsePage(pageHtml);
                     resolve(page);
                 });
             });
@@ -72,4 +72,4 @@ function doParsePage(pageHtml: string) {
     return page;
 }
 
-export = TownGemMeltHouse;
+export = DeprecatedTownGemMeltHouse;
