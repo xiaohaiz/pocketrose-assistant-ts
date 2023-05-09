@@ -100,6 +100,12 @@ class TownArmorHousePageProcessor extends PageProcessorCredentialSupport {
 
     #renderMutablePage(credential: Credential, page: TownArmorHousePage, town: Town) {
     }
+
+    #refreshMutablePage(credential: Credential, town: Town) {
+        new TownArmorHouse(credential, town.id).open().then(page => {
+            this.#renderMutablePage(credential, page, town);
+        });
+    }
 }
 
 export = TownArmorHousePageProcessor;
