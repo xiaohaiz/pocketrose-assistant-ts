@@ -1,6 +1,6 @@
-import StorageUtils from "../../util/StorageUtils";
-import MessageBoard from "../../util/MessageBoard";
 import SetupLoader from "../../core/SetupLoader";
+import MessageBoard from "../../util/MessageBoard";
+import StorageUtils from "../../util/StorageUtils";
 import SetupItem from "../SetupItem";
 
 class SetupItem028 implements SetupItem {
@@ -12,7 +12,7 @@ class SetupItem028 implements SetupItem {
 }
 
 const code: string = "028";
-const name: string = "隐藏出城的按钮";
+const name: string = "隐藏出城和退出";
 const key: string = "_pa_" + code;
 
 function doRender() {
@@ -26,7 +26,7 @@ function doRender() {
 
     $("#setup_item_table").append($(html));
 
-    const value = SetupLoader.isHiddenLeaveTownButtonEnabled();
+    const value = SetupLoader.isHiddenLeaveAndExitEnabled();
     $(".option_class_" + code + "[value='" + Number(value) + "']").prop("selected", true);
 
     $("#setup_" + code).on("click", function () {

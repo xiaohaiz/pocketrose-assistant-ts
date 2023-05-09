@@ -374,7 +374,7 @@ function doRenderTownTax(credential: Credential, roleStatus: RoleStatus) {
 }
 
 function doRenderLeaveTown() {
-    if (!SetupLoader.isHiddenLeaveTownButtonEnabled()) {
+    if (!SetupLoader.isHiddenLeaveAndExitEnabled()) {
         return;
     }
     $("th:contains('出城')")
@@ -382,12 +382,16 @@ function doRenderLeaveTown() {
             return $(this).text() === "出城";
         })
         .parent()
-        .attr("id", "leaveTownRow");
-    $("#leaveTownRow").hide();
+        .attr("id", "leaveTownRow")
+        .hide()
+        .next()
+        .attr("id", "safeExitRow")
+        .hide();
 
     $("img:first").attr("id", "townImage");
     $("#townImage").on("click", function () {
         $("#leaveTownRow").toggle();
+        $("#safeExitRow").toggle();
     });
 }
 
