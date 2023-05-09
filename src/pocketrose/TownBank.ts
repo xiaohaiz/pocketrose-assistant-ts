@@ -1,6 +1,7 @@
 import BankAccount from "../common/BankAccount";
 import Role from "../pocket/Role";
 import Credential from "../util/Credential";
+import NetworkUtils from "../util/NetworkUtils";
 import StringUtils from "../util/StringUtils";
 import TownBankPage from "./TownBankPage";
 
@@ -14,6 +15,24 @@ class TownBank {
 
     static parsePage(html: string): TownBankPage {
         return doParsePage(html);
+    }
+
+    async open(townId?: string): Promise<TownBankPage> {
+        const action = () => {
+            return new Promise<TownBankPage>(resolve => {
+                const request = this.#credential.asRequestMap();
+                request.set("con_str", "50");
+                request.set("mode", "BANK");
+                if (townId !== undefined) {
+                    request.set("town", townId);
+                }
+                NetworkUtils.post("town.cgi", request).then(html => {
+                    const page = TownBank.parsePage(html);
+                    resolve(page);
+                });
+            });
+        };
+        return await action();
     }
 }
 

@@ -1,7 +1,11 @@
+import NpcLoader from "../../core/NpcLoader";
 import TownLoader from "../../core/TownLoader";
 import Town from "../../pocket/Town";
 import TownBank from "../../pocketrose/TownBank";
+import TownBankPage from "../../pocketrose/TownBankPage";
 import Credential from "../../util/Credential";
+import MessageBoard from "../../util/MessageBoard";
+import NetworkUtils from "../../util/NetworkUtils";
 import PageUtils from "../../util/PageUtils";
 import PageProcessorContext from "../PageProcessorContext";
 import PageProcessorSupport from "../PageProcessorSupport";
@@ -13,7 +17,7 @@ class TownBankPageProcessor extends PageProcessorSupport {
         const town = TownLoader.getTownById(context!.get("townId")!)!;
 
         this.#renderImmutablePage(credential, town);
-        this.#bindImmutableButtons(credential);
+
     }
 
     #renderImmutablePage(credential: Credential, town: Town) {
@@ -130,9 +134,46 @@ class TownBankPageProcessor extends PageProcessorSupport {
         html += "</td>";
         html += "</tr>";
         $("#tr5").after($(html));
+
+        this.#bindImmutableButtons(credential);
     }
 
     #bindImmutableButtons(credential: Credential) {
+        $("#refreshButton").on("click", () => {
+            PageUtils.scrollIntoView("pageTitle");
+            MessageBoard.resetMessageBoard("请管理您的账户吧！");
+            $("#messageBoardManager").html(NpcLoader.randomNpcImageHtml());
+            this.#refreshMutablePage(credential);
+        });
+        $("#returnButton").on("click", () => {
+            $("#returnCastle").trigger("click");
+        });
+        $("#searchButton").on("click", () => {
+            const s = $("#searchName").val();
+            if (s === undefined || (s as string).trim() === "") {
+                PageUtils.scrollIntoView("pageTitle");
+                MessageBoard.publishWarning("请正确输入人名！");
+                return;
+            }
+            const searchName = (s as string).trim();
+            const request = credential.asRequestMap();
+            request.set("mode", "CASTLE_SENDMONEY");
+            // noinspection JSDeprecatedSymbols
+            request.set("serch", escape(searchName));
+            NetworkUtils.post("castle.cgi", request).then(html => {
+                const options = $(html).find("select[name='eid']").html();
+                $("#peopleSelect").html(options);
+            });
+        });
+    }
+
+    #renderMutablePage(credential: Credential, page: TownBankPage) {
+    }
+
+    #bindMutableButtons(credential: Credential) {
+    }
+
+    #refreshMutablePage(credential: Credential) {
     }
 }
 
