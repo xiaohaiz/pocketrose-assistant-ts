@@ -1,7 +1,7 @@
 import NpcLoader from "../../core/NpcLoader";
-import TownLoader from "../../core/TownLoader";
 import TownArmorHouse from "../../pocketrose/TownArmorHouse";
 import TownArmorHousePage from "../../pocketrose/TownArmorHousePage";
+import TownBank from "../../pocketrose/TownBank";
 import Credential from "../../util/Credential";
 import MessageBoard from "../../util/MessageBoard";
 import PageUtils from "../../util/PageUtils";
@@ -12,7 +12,6 @@ class TownArmorHousePageProcessor extends PageProcessorCredentialSupport {
 
     doProcess(credential: Credential, context?: PageProcessorContext): void {
         const page = TownArmorHouse.parsePage(PageUtils.currentPageHtml());
-        const town = TownLoader.getTownById(page.townId!)!;
         this.#renderImmutablePage(credential, page);
         this.#renderMutablePage(credential, page);
     }
@@ -260,6 +259,21 @@ class TownArmorHousePageProcessor extends PageProcessorCredentialSupport {
     }
 
     #bindMutableButtons(credential: Credential, page: TownArmorHousePage) {
+        $("input:button[value='出售']").on("click", event => {
+            const buttonId = $(event.target).attr("id") as string;
+            const index = parseInt(buttonId.split("_")[1]);
+            const equipment = page.findEquipment(index)!;
+            if (!confirm("确认要出售“" + equipment.fullName + "”？")) {
+                return;
+            }
+            new TownArmorHouse(credential, page.townId!)
+                .sell(index, page.discount!)
+                .then(() => {
+                    new TownBank(credential, page.townId).deposit().then(() => {
+                        this.#refreshMutablePage(credential, page.townId!);
+                    });
+                });
+        });
     }
 
     #refreshMutablePage(credential: Credential, townId: string) {
