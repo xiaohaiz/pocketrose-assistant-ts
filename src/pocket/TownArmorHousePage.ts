@@ -1,5 +1,5 @@
+import Role from "../common/Role";
 import Credential from "../util/Credential";
-import Role from "./Role";
 
 class TownArmorHousePage {
 

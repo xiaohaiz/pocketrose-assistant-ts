@@ -1,6 +1,6 @@
+import Role from "../../common/Role";
 import SetupLoader from "../../core/SetupLoader";
 import PersonalStatus from "../../pocket/PersonalStatus";
-import Role from "../../pocket/Role";
 import Credential from "../../util/Credential";
 import PageUtils from "../../util/PageUtils";
 import StringUtils from "../../util/StringUtils";

@@ -1,5 +1,5 @@
 import BankAccount from "../common/BankAccount";
-import Role from "../pocket/Role";
+import Role from "../common/Role";
 
 class TownBankPage {
 
