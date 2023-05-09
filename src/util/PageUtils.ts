@@ -345,6 +345,36 @@ const BUTTON_STYLES: {} = {
         "  box-shadow: #D6D6E7 0 3px 7px inset;\n" +
         "  transform: translateY(2px);\n" +
         "}",
+    "32": ".button-32 {\n" +
+        "  background-color: #fff000;\n" +
+        "  border-radius: 12px;\n" +
+        "  color: #000;\n" +
+        "  cursor: pointer;\n" +
+        "  font-weight: bold;\n" +
+        "  padding: 10px 15px;\n" +
+        "  text-align: center;\n" +
+        "  transition: 200ms;\n" +
+        "  width: 100%;\n" +
+        "  box-sizing: border-box;\n" +
+        "  border: 0;\n" +
+        "  font-size: 16px;\n" +
+        "  user-select: none;\n" +
+        "  -webkit-user-select: none;\n" +
+        "  touch-action: manipulation;\n" +
+        "}\n" +
+        "\n" +
+        ".button-32:not(:disabled):hover,\n" +
+        ".button-32:not(:disabled):focus {\n" +
+        "  outline: 0;\n" +
+        "  background: #f4e603;\n" +
+        "  box-shadow: 0 0 0 2px rgba(0,0,0,.2), 0 3px 8px 0 rgba(0,0,0,.15);\n" +
+        "}\n" +
+        "\n" +
+        ".button-32:disabled {\n" +
+        "  filter: saturate(0.2) opacity(0.5);\n" +
+        "  -webkit-filter: saturate(0.2) opacity(0.5);\n" +
+        "  cursor: not-allowed;\n" +
+        "}\n",
 };
 
 export = PageUtils;
