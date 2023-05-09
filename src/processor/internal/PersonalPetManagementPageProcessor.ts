@@ -1,6 +1,6 @@
+import Pet from "../../common/Pet";
 import NpcLoader from "../../core/NpcLoader";
 import EquipmentParser from "../../pocket/EquipmentParser";
-import Pet from "../../pocket/Pet";
 import PetProfileLoader from "../../pocket/pet/PetProfileLoader";
 import PetParser from "../../pocket/PetParser";
 import RoleLoader from "../../pocket/RoleLoader";
