@@ -397,6 +397,37 @@ const BUTTON_STYLES: {} = {
         "  box-shadow: rgba(44,187,99,.35) 0 -25px 18px -14px inset,rgba(44,187,99,.25) 0 1px 2px,rgba(44,187,99,.25) 0 2px 4px,rgba(44,187,99,.25) 0 4px 8px,rgba(44,187,99,.25) 0 8px 16px,rgba(44,187,99,.25) 0 16px 32px;\n" +
         "  transform: scale(1.05) rotate(-1deg);\n" +
         "}\n",
+    "35": ".button-35 {\n" +
+        "  align-items: center;\n" +
+        "  background-color: #fff;\n" +
+        "  border-radius: 12px;\n" +
+        "  box-shadow: transparent 0 0 0 3px,rgba(18, 18, 18, .1) 0 6px 20px;\n" +
+        "  box-sizing: border-box;\n" +
+        "  color: #121212;\n" +
+        "  cursor: pointer;\n" +
+        "  display: inline-flex;\n" +
+        "  flex: 1 1 auto;\n" +
+        "  font-family: Inter,sans-serif;\n" +
+        "  font-size: 1.2rem;\n" +
+        "  font-weight: 700;\n" +
+        "  justify-content: center;\n" +
+        "  line-height: 1;\n" +
+        "  margin: 0;\n" +
+        "  outline: none;\n" +
+        "  padding: 1rem 1.2rem;\n" +
+        "  text-align: center;\n" +
+        "  text-decoration: none;\n" +
+        "  transition: box-shadow .2s,-webkit-box-shadow .2s;\n" +
+        "  white-space: nowrap;\n" +
+        "  border: 0;\n" +
+        "  user-select: none;\n" +
+        "  -webkit-user-select: none;\n" +
+        "  touch-action: manipulation;\n" +
+        "}\n" +
+        "\n" +
+        ".button-35:hover {\n" +
+        "  box-shadow: #121212 0 0 0 3px, transparent 0 0 0 0;\n" +
+        "}\n",
 };
 
 export = PageUtils;
