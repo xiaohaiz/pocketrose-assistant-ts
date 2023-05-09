@@ -7,6 +7,7 @@ import TownGemHouse from "../../pocketrose/TownGemHouse";
 import TownGemHousePage from "../../pocketrose/TownGemHousePage";
 import TownGemMeltHouse from "../../pocketrose/TownGemMeltHouse";
 import BankUtils from "../../util/BankUtils";
+import CommentBoard from "../../util/CommentBoard";
 import Credential from "../../util/Credential";
 import MessageBoard from "../../util/MessageBoard";
 import PageUtils from "../../util/PageUtils";
@@ -121,6 +122,14 @@ class TownGemHousePageProcessor extends PageProcessorCredentialSupport {
 
         $("#gem_house_UI").html(html);
 
+        CommentBoard.createCommentBoard(NpcLoader.getNpcImageHtml("末末")!);
+        CommentBoard.writeMessage("<b style='font-size:120%;color:navy'>砸石头这种事儿，确实是有手就行。</b>");
+        CommentBoard.writeMessage("<p id='fuseAllContainer' style='display:none'>" +
+            "<input type='button' id='fuseAllPowerGem' value='砸完所有威力' class='dynamic_button_class' disabled>" +
+            "<input type='button' id='fuseAllWeightGem' value='砸完所有重量' class='dynamic_button_class' disabled>" +
+            "<input type='button' id='fuseAllLuckGem' value='砸完所有幸运' class='dynamic_button_class' disabled>" +
+            "</p>");
+
         this.#bindImmutableButtons(credential, town);
     }
 
@@ -134,6 +143,9 @@ class TownGemHousePageProcessor extends PageProcessorCredentialSupport {
             MessageBoard.resetMessageBoard("钻石恒久远，一颗永流传。");
             $("#last_fuse_cell").text("none");
             this.#refreshMutablePage(credential, town);
+        });
+        $("#p_8173").on("dblclick", () => {
+            $("#fuseAllContainer").toggle();
         });
     }
 
@@ -232,6 +244,10 @@ class TownGemHousePageProcessor extends PageProcessorCredentialSupport {
         }
 
         if (page.gemList!.length > 0) {
+            let powerGemFound = false;
+            let weightGemFound = false;
+            let luckGemFound = false;
+
             let html = "";
             html += "<table style='border-width:0;background-color:#888888;margin:auto'>";
             html += "<tbody style='background-color:#F8F0E0;text-align:center'>";
@@ -246,6 +262,15 @@ class TownGemHousePageProcessor extends PageProcessorCredentialSupport {
             html += "</tr>";
 
             for (const gem of page.gemList!) {
+                if (gem.name === "威力宝石") {
+                    powerGemFound = true;
+                }
+                if (gem.name === "重量宝石") {
+                    weightGemFound = true;
+                }
+                if (gem.name === "幸运宝石") {
+                    luckGemFound = true;
+                }
                 html += "<tr>";
                 html += "<td style='background-color:#E8E8D0'>" + gem.nameHTML + "</td>";
                 html += "<td style='background-color:#EFE0C0'>";
@@ -263,6 +288,16 @@ class TownGemHousePageProcessor extends PageProcessorCredentialSupport {
                 .html(html)
                 .parent()
                 .show();
+
+            if (powerGemFound) {
+                $("#fuseAllPowerGem").prop("disabled", false);
+            }
+            if (weightGemFound) {
+                $("#fuseAllWeightGem").prop("disabled", false);
+            }
+            if (luckGemFound) {
+                $("#fuseAllLuckGem").prop("disabled", false);
+            }
         }
 
         this.#bindMutableButtons(credential, page, town);
@@ -375,6 +410,9 @@ class TownGemHousePageProcessor extends PageProcessorCredentialSupport {
     }
 
     #refreshMutablePage(credential: Credential, town: Town) {
+        $("#fuseAllPowerGem").prop("disabled", true);
+        $("#fuseAllWeightGem").prop("disabled", true);
+        $("#fuseAllLuckGem").prop("disabled", true);
         $("#equipment_list_cell").html("").parent().hide();
         $("#gem_list_cell").html("").parent().hide();
         $(".dynamic_button_class").off("click");
