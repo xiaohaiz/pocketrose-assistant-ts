@@ -1,18 +1,13 @@
+import Equipment from "../common/Equipment";
 import Role from "../common/Role";
-import Credential from "../util/Credential";
 
 class TownArmorHousePage {
 
-    readonly credential: Credential;
-    readonly townId: string;
-
+    townId?: string;
     discount?: number;
     role?: Role;
+    equipmentList?: Equipment[];
 
-    constructor(credential: Credential, townId: string) {
-        this.credential = credential;
-        this.townId = townId;
-    }
 }
 
 export = TownArmorHousePage;

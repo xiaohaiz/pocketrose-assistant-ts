@@ -1,6 +1,7 @@
 import Equipment from "../common/Equipment";
+import Role from "../common/Role";
 import Credential from "../util/Credential";
-import PageUtils from "../util/PageUtils";
+import StringUtils from "../util/StringUtils";
 import TownArmorHousePage from "./TownArmorHousePage";
 
 class TownArmorHouse {
@@ -19,25 +20,54 @@ class TownArmorHouse {
 }
 
 function doParsePage(pageHtml: string) {
-    const credential = PageUtils.parseCredential(pageHtml);
     const townId = $(pageHtml).find("input:hidden[name='townid']:first").val() as string;
-    const page = new TownArmorHousePage(credential, townId);
-    doParseDiscount(pageHtml, page);
-    doParseRole(pageHtml, page);
-    return page;
-}
 
-function doParseDiscount(pageHtml: string, page: TownArmorHousePage) {
     let discount = 1;
     const input = $(pageHtml).find("input:hidden[name='val_off']:first");
     if (input.length > 0) {
         discount = parseFloat(input.val() as string);
     }
+
+    const role = new Role();
+    $(pageHtml).find("td:contains('姓名')")
+        .filter((idx, td) => $(td).text() === "姓名")
+        .closest("table")
+        .find("tr:first")
+        .next()
+        .find("td:first")
+        .each((idx, td) => {
+            role.name = $(td).text();
+        })
+        .next()
+        .each((idx, td) => {
+            let s = $(td).text();
+            role.level = parseInt(s);
+        })
+        .next()
+        .each((idx, td) => {
+            role.attribute = $(td).text();
+        })
+        .next()
+        .each((idx, td) => {
+            role.career = $(td).text();
+        })
+        .parent()
+        .next()
+        .find("td:first")
+        .next()
+        .each((idx, td) => {
+            let s = $(td).text();
+            s = StringUtils.substringBefore(s, " GOLD");
+            role.cash = parseInt(s);
+        })
+
+    const page = new TownArmorHousePage();
+    page.townId = townId;
     page.discount = discount;
-}
+    page.role = role;
+    page.equipmentList = doParsePersonalEquipmentList(pageHtml);
 
-function doParseRole(pageHtml: string, page: TownArmorHousePage) {
-
+    return page;
 }
 
 function doParsePersonalEquipmentList(pageHtml: string) {
