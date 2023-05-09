@@ -1,6 +1,6 @@
-import FastLoginLoader from "../../pocket/FastLoginLoader";
-import PageProcessor from "../PageProcessor";
+import FastLoginLoader from "../../core/FastLoginLoader";
 import PageUtils from "../../util/PageUtils";
+import PageProcessor from "../PageProcessor";
 
 class LoginDashboardPageProcessor implements PageProcessor {
 

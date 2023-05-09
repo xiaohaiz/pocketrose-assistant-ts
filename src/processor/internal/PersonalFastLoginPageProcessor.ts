@@ -1,4 +1,4 @@
-import FastLoginLoader from "../../pocket/FastLoginLoader";
+import FastLoginLoader from "../../core/FastLoginLoader";
 import Credential from "../../util/Credential";
 import MessageBoard from "../../util/MessageBoard";
 import StorageUtils from "../../util/StorageUtils";
