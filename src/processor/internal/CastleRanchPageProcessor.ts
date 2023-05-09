@@ -2,7 +2,7 @@ import Credential from "../../util/Credential";
 import PageUtils from "../../util/PageUtils";
 import CastleRanch from "../../pocket/CastleRanch";
 import MessageBoard from "../../util/MessageBoard";
-import NpcLoader from "../../pocket/NpcLoader";
+import NpcLoader from "../../core/NpcLoader";
 import CastleRanchStatus from "../../pocket/CastleRanchStatus";
 import Constants from "../../util/Constants";
 import PageProcessorSupport from "../PageProcessorSupport";

@@ -1,6 +1,6 @@
 import CareerParser from "../../pocket/CareerParser";
 import Credential from "../../util/Credential";
-import NpcLoader from "../../pocket/NpcLoader";
+import NpcLoader from "../../core/NpcLoader";
 import CommentBoard from "../../util/CommentBoard";
 import Role from "../../pocket/Role";
 import RoleLoader from "../../pocket/RoleLoader";

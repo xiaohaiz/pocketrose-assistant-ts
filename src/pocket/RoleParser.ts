@@ -1,8 +1,8 @@
-import Role from "./Role";
+import TownLoader from "../core/TownLoader";
+import Coordinate from "../util/Coordinate";
 import StringUtils from "../util/StringUtils";
 import Castle from "./Castle";
-import Coordinate from "../util/Coordinate";
-import TownLoader from "./TownLoader";
+import Role from "./Role";
 
 class RoleParser {
 

@@ -1,18 +1,18 @@
-import Credential from "../../util/Credential";
-import MessageBoard from "../../util/MessageBoard";
-import TownLoader from "../../pocket/TownLoader";
-import CastleBank from "../../pocket/CastleBank";
+import TownLoader from "../../core/TownLoader";
 import CastleEntrance from "../../pocket/CastleEntrance";
-import TravelPlanExecutor from "../../pocket/TravelPlanExecutor";
-import TownEntrance from "../../pocket/TownEntrance";
-import TownBank from "../../pocket/TownBank";
 import MapBuilder from "../../pocket/MapBuilder";
 import RoleLoader from "../../pocket/RoleLoader";
-import StringUtils from "../../util/StringUtils";
-import Coordinate from "../../util/Coordinate";
 import Town from "../../pocket/Town";
-import PageProcessorSupport from "../PageProcessorSupport";
+import TownBank from "../../pocket/TownBank";
+import TownEntrance from "../../pocket/TownEntrance";
+import TravelPlanExecutor from "../../pocket/TravelPlanExecutor";
+import CastleBank from "../../pocketrose/CastleBank";
+import Coordinate from "../../util/Coordinate";
+import Credential from "../../util/Credential";
+import MessageBoard from "../../util/MessageBoard";
+import StringUtils from "../../util/StringUtils";
 import PageProcessorContext from "../PageProcessorContext";
+import PageProcessorSupport from "../PageProcessorSupport";
 
 class CastlePostHousePageProcessor extends PageProcessorSupport {
 
@@ -190,17 +190,8 @@ function doTravelToTown(credential: Credential, town: Town) {
 
     const castleBank = new CastleBank(credential);
     castleBank.withdraw(10)
-        .then(success => {
-            if (!success) {
-                MessageBoard.publishWarning("因为没有足够的保证金，旅途被中断！");
-                MessageBoard.publishMessage("回去吧，没钱就别来了。");
-                $("#returnButton")
-                    .prop("disabled", false)
-                    .val("真可怜钱不够");
-                return;
-            }
-
-            castleBank.loadBankAccount()
+        .then(() => {
+            castleBank.load()
                 .then(account => {
                     $("#roleCash").text(account.cash + " GOLD");
                 });
@@ -232,6 +223,13 @@ function doTravelToTown(credential: Credential, town: Town) {
                                 });
                         });
                 });
+        })
+        .catch(() => {
+            MessageBoard.publishWarning("因为没有足够的保证金，旅途被中断！");
+            MessageBoard.publishMessage("回去吧，没钱就别来了。");
+            $("#returnButton")
+                .prop("disabled", false)
+                .val("真可怜钱不够");
         });
 }
 

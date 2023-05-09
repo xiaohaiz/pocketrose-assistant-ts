@@ -1,4 +1,3 @@
-import PageInterceptor from "./PageInterceptor";
 import BattlePageInterceptor from "./internal/BattlePageInterceptor";
 import CastleBankPageInterceptor from "./internal/CastleBankPageInterceptor";
 import CastleDashboardPageInterceptor from "./internal/CastleDashboardPageInterceptor";
@@ -17,6 +16,7 @@ import PersonalSalaryPageInterceptor from "./internal/PersonalSalaryPageIntercep
 import PersonalSetupPageInterceptor from "./internal/PersonalSetupPageInterceptor";
 import PersonalStatusPageInterceptor from "./internal/PersonalStatusPageInterceptor";
 import TownAdventureGuildPageInterceptor from "./internal/TownAdventureGuildPageInterceptor";
+import TownBankPageInterceptor from "./internal/TownBankPageInterceptor";
 import TownCastleKeeperPageInterceptor from "./internal/TownCastleKeeperPageInterceptor";
 import TownDashboardPageInterceptor from "./internal/TownDashboardPageInterceptor";
 import TownGemHousePageInterceptor from "./internal/TownGemHousePageInterceptor";
@@ -25,6 +25,7 @@ import TownPetMapHousePageInterceptor from "./internal/TownPetMapHousePageInterc
 import TownPetRankHousePageInterceptor from "./internal/TownPetRankHousePageInterceptor";
 import TownPostHousePageInterceptor from "./internal/TownPostHousePageInterceptor";
 import TownWeaponHousePageInterceptor from "./internal/TownWeaponHousePageInterceptor";
+import PageInterceptor from "./PageInterceptor";
 
 class PageInterceptorManager {
 
@@ -50,6 +51,7 @@ class PageInterceptorManager {
             new PersonalSetupPageInterceptor(),
             new PersonalStatusPageInterceptor(),
             new TownAdventureGuildPageInterceptor(),
+            new TownBankPageInterceptor(),
             new TownCastleKeeperPageInterceptor(),
             new TownDashboardPageInterceptor(),
             new TownGemHousePageInterceptor(),

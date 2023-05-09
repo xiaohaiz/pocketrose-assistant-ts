@@ -3,7 +3,7 @@ import EquipmentParser from "../../pocket/EquipmentParser";
 import Credential from "../../util/Credential";
 import Equipment from "../../pocket/Equipment";
 import MessageBoard from "../../util/MessageBoard";
-import NpcLoader from "../../pocket/NpcLoader";
+import NpcLoader from "../../core/NpcLoader";
 import NetworkUtils from "../../util/NetworkUtils";
 import SetupLoader from "../../core/SetupLoader";
 import PageProcessorSupport from "../PageProcessorSupport";

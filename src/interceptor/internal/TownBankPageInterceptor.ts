@@ -1,15 +1,15 @@
 import LocationStateMachine from "../../core/LocationStateMachine";
 import SetupLoader from "../../core/SetupLoader";
-import CastleBankPageProcessor from "../../processor/internal/CastleBankPageProcessor";
+import TownBankPageProcessor from "../../processor/internal/TownBankPageProcessor";
 import PageProcessorContext from "../../processor/PageProcessorContext";
 import PageInterceptor from "../PageInterceptor";
 
-class CastleBankPageInterceptor implements PageInterceptor {
+class TownBankPageInterceptor implements PageInterceptor {
 
-    readonly #processor = new CastleBankPageProcessor();
+    readonly #processor = new TownBankPageProcessor();
 
     accept(cgi: string, pageText: string): boolean {
-        if (cgi === "castle.cgi") {
+        if (cgi === "town.cgi") {
             return pageText.includes("存入或取出请输入数额后按下确认键");
         }
         return false;
@@ -21,9 +21,9 @@ class CastleBankPageInterceptor implements PageInterceptor {
         }
         LocationStateMachine.create()
             .load()
-            .whenInCastle(castleName => {
+            .whenInTown(townId => {
                 const context = new PageProcessorContext();
-                context.set("castleName", castleName!);
+                context.set("townId", townId!);
                 this.#processor.process(context);
             })
             .fork();
@@ -31,4 +31,4 @@ class CastleBankPageInterceptor implements PageInterceptor {
 
 }
 
-export = CastleBankPageInterceptor;
+export = TownBankPageInterceptor;

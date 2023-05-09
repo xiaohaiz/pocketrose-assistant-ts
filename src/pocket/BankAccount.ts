@@ -1,5 +1,8 @@
 import Credential from "../util/Credential";
 
+/**
+ * @deprecated
+ */
 class BankAccount {
 
     credential?: Credential;

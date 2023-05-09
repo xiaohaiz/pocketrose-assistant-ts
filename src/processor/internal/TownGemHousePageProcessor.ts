@@ -2,7 +2,7 @@ import PageUtils from "../../util/PageUtils";
 import TownGemHouse from "../../pocket/house/TownGemHouse";
 import TownGemHousePage from "../../pocket/house/TownGemHousePage";
 import Credential from "../../util/Credential";
-import NpcLoader from "../../pocket/NpcLoader";
+import NpcLoader from "../../core/NpcLoader";
 import MessageBoard from "../../util/MessageBoard";
 import NetworkUtils from "../../util/NetworkUtils";
 import BankUtils from "../../util/BankUtils";

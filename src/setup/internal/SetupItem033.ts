@@ -3,7 +3,7 @@ import MessageBoard from "../../util/MessageBoard";
 import StorageUtils from "../../util/StorageUtils";
 import SetupItem from "../SetupItem";
 
-class SetupItem013 implements SetupItem {
+class SetupItem033 implements SetupItem {
 
     render(id?: string): void {
         doRender();
@@ -11,8 +11,8 @@ class SetupItem013 implements SetupItem {
 
 }
 
-const code: string = "013";
-const name: string = "全新的商店界面";
+const code: string = "033";
+const name: string = "全新的银行界面";
 const key: string = "_pa_" + code;
 
 function doRender() {
@@ -26,7 +26,7 @@ function doRender() {
 
     $("#setup_item_table").append($(html));
 
-    const value = SetupLoader.isPocketSuperMarketEnabled();
+    const value = SetupLoader.isPocketBankEnabled();
     $(".option_class_" + code + "[value='" + Number(value) + "']").prop("selected", true);
 
     $("#setup_" + code).on("click", function () {
@@ -50,4 +50,4 @@ function doSaveSetupItem() {
     $("#refreshButton").trigger("click");
 }
 
-export = SetupItem013;
+export = SetupItem033;

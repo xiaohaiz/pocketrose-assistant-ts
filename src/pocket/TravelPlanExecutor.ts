@@ -1,11 +1,11 @@
-import TravelPlan from "./TravelPlan";
+import TownLoader from "../core/TownLoader";
 import Coordinate from "../util/Coordinate";
-import MessageBoard from "../util/MessageBoard";
 import Credential from "../util/Credential";
-import TimeoutUtils from "../util/TimeoutUtils";
+import MessageBoard from "../util/MessageBoard";
 import NetworkUtils from "../util/NetworkUtils";
-import TownLoader from "./TownLoader";
 import StringUtils from "../util/StringUtils";
+import TimeoutUtils from "../util/TimeoutUtils";
+import TravelPlan from "./TravelPlan";
 
 class TravelPlanExecutor {
 

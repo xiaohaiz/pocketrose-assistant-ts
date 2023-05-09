@@ -2,7 +2,7 @@ import StorageUtils from "../../util/StorageUtils";
 import MessageBoard from "../../util/MessageBoard";
 import SetupLoader from "../../core/SetupLoader";
 import SetupItem from "../SetupItem";
-import NpcLoader from "../../pocket/NpcLoader";
+import NpcLoader from "../../core/NpcLoader";
 
 class SetupItem024 implements SetupItem {
 

@@ -1,26 +1,27 @@
-import PageProcessorSupport from "../PageProcessorSupport";
-import PageProcessorContext from "../PageProcessorContext";
-import Credential from "../../util/Credential";
-import PageUtils from "../../util/PageUtils";
-import CastleBank from "../../pocketrose/CastleBank";
-import StringUtils from "../../util/StringUtils";
-import MessageBoard from "../../util/MessageBoard";
 import NpcLoader from "../../core/NpcLoader";
-import BankAccount from "../../common/BankAccount";
-import CastleBankPage from "../../pocketrose/CastleBankPage";
-import NetworkUtils from "../../util/NetworkUtils";
+import TownLoader from "../../core/TownLoader";
+import Town from "../../pocket/Town";
+import TownBank from "../../pocketrose/TownBank";
+import TownBankPage from "../../pocketrose/TownBankPage";
 import BankUtils from "../../util/BankUtils";
+import Credential from "../../util/Credential";
+import MessageBoard from "../../util/MessageBoard";
+import NetworkUtils from "../../util/NetworkUtils";
+import PageUtils from "../../util/PageUtils";
+import PageProcessorContext from "../PageProcessorContext";
+import PageProcessorSupport from "../PageProcessorSupport";
 
-class CastleBankPageProcessor extends PageProcessorSupport {
+class TownBankPageProcessor extends PageProcessorSupport {
 
     doProcess(credential: Credential, context?: PageProcessorContext): void {
-        const page = CastleBank.parsePage(PageUtils.currentPageHtml());
-        const castleName = context!.get("castleName")!;
-        this.#createImmutablePage(credential, castleName);
-        this.#renderMutablePage(credential, page);
+        const page = TownBank.parsePage(PageUtils.currentPageHtml());
+        const town = TownLoader.getTownById(context!.get("townId")!)!;
+
+        this.#renderImmutablePage(credential, town);
+        this.#renderMutablePage(credential, page, town);
     }
 
-    #createImmutablePage(credential: Credential, castleName: string) {
+    #renderImmutablePage(credential: Credential, town: Town) {
         $("form").remove();
 
         $("table:eq(1)")
@@ -35,7 +36,7 @@ class CastleBankPageProcessor extends PageProcessorSupport {
             .css("font-weight", "bold")
             .css("background-color", "navy")
             .css("color", "yellowgreen")
-            .text("＜＜  城 堡 银 行 " + StringUtils.toTitleString(castleName) + " 支 行  ＞＞");
+            .text("＜＜  口 袋 银 行 " + town.nameTitle + " 分 行  ＞＞");
 
         $("#pageTitle")
             .parent()
@@ -81,12 +82,12 @@ class CastleBankPageProcessor extends PageProcessorSupport {
         html += "</tr>";
         html += "<tr id='tr4'>";
         html += "<td style='background-color:#F8F0E0;text-align:center;width:100%'>";
-        html += "<input type='button' id='refreshButton' value='刷新" + castleName + "银行'>";
-        html += "<input type='button' id='returnButton' value='离开" + castleName + "银行'>";
+        html += "<input type='button' id='refreshButton' value='刷新" + town.name + "银行'>";
+        html += "<input type='button' id='returnButton' value='离开" + town.name + "银行'>";
         html += "</td>";
         html += "</tr>";
         $("#tr2").after($(html));
-        $("#hiddenFormContainer").html(PageUtils.generateReturnCastleForm(credential));
+        $("#hiddenFormContainer").html(PageUtils.generateReturnTownForm(credential));
 
         html = "";
         html += "<p id='p1'>";
@@ -135,14 +136,18 @@ class CastleBankPageProcessor extends PageProcessorSupport {
         html += "</tr>";
         $("#tr5").after($(html));
 
-        // Bind immutable buttons
+        this.#bindImmutableButtons(credential, town);
+    }
+
+    #bindImmutableButtons(credential: Credential, town?: Town) {
         $("#refreshButton").on("click", () => {
+            PageUtils.scrollIntoView("pageTitle");
             MessageBoard.resetMessageBoard("请管理您的账户吧！");
-            $("#messageBoardManager").html(NpcLoader.randomNpcImageHtml);
-            this.#refresh(credential);
+            $("#messageBoardManager").html(NpcLoader.randomNpcImageHtml());
+            this.#refreshMutablePage(credential, town);
         });
         $("#returnButton").on("click", () => {
-            $("#returnCastle").trigger("click");
+            $("#returnTown").trigger("click");
         });
         $("#searchButton").on("click", () => {
             const s = $("#searchName").val();
@@ -153,51 +158,31 @@ class CastleBankPageProcessor extends PageProcessorSupport {
             }
             const searchName = (s as string).trim();
             const request = credential.asRequestMap();
-            request.set("mode", "CASTLE_SENDMONEY");
+            request.set("mode", "MONEY_SEND");
             // noinspection JSDeprecatedSymbols
             request.set("serch", escape(searchName));
-            NetworkUtils.post("castle.cgi", request).then(html => {
+            NetworkUtils.post("town.cgi", request).then(html => {
                 const options = $(html).find("select[name='eid']").html();
                 $("#peopleSelect").html(options);
             });
         });
     }
 
-    #renderMutablePage(credential: Credential, page: CastleBankPage) {
-        this.#bindDepositAllButton(credential, page.account!);
-        this.#bindDepositButton(credential, page.account!);
-        this.#bindWithdrawButton(credential, page.account!);
-        this.#bindTransferButton(credential, page.account!);
+    #renderMutablePage(credential: Credential, page: TownBankPage, town?: Town) {
+        this.#bindMutableButtons(credential, page, town);
     }
 
-    #refresh(credential: Credential) {
-        PageUtils.scrollIntoView("pageTitle");
-        new CastleBank(credential).open().then(page => {
-            $("#roleCash").text(page.role!.cash + " GOLD");
-            $("#accountCash").text(page.account!.cash!.toString());
-            $("#accountSaving").text(page.account!.saving!.toString());
-            $("#depositAmount").val("");
-            $("#withdrawAmount").val("");
-            $("#transferAmount").val("");
-            $(".dynamicButton").off("click");
-            this.#renderMutablePage(credential, page);
-        });
-    }
-
-    #bindDepositAllButton(credential: Credential, account: BankAccount) {
+    #bindMutableButtons(credential: Credential, page: TownBankPage, town?: Town) {
         $("#depositAllButton").on("click", () => {
-            if (account.cash! < 10000) {
+            if (page.account!.cash! < 10000) {
                 PageUtils.scrollIntoView("pageTitle");
                 MessageBoard.publishWarning("没觉得你身上有啥值得存入的现金！");
                 return;
             }
-            new CastleBank(credential).depositAll().then(() => {
-                this.#refresh(credential);
-            });
+            new TownBank(credential, town?.id).deposit()
+                .then(() => this.#refreshMutablePage(credential, town))
+                .catch(() => PageUtils.scrollIntoView("pageTitle"));
         });
-    }
-
-    #bindDepositButton(credential: Credential, account: BankAccount) {
         $("#depositButton").on("click", () => {
             const text = $("#depositAmount").val();
             if (text === undefined || (text as string).trim() === "") {
@@ -211,18 +196,14 @@ class CastleBankPageProcessor extends PageProcessorSupport {
                 MessageBoard.publishWarning("非法输入金额！");
                 return;
             }
-            if (amount * 10000 > account.cash!) {
+            if (amount * 10000 > page.account!.cash!) {
                 PageUtils.scrollIntoView("pageTitle");
                 MessageBoard.publishWarning(amount + "万！真逗，搞得你好像有这么多现金似得！");
                 return;
             }
-            new CastleBank(credential).deposit(amount).then(() => {
-                this.#refresh(credential);
-            });
+            new TownBank(credential, town?.id).deposit(amount)
+                .then(() => this.#refreshMutablePage(credential, town));
         });
-    }
-
-    #bindWithdrawButton(credential: Credential, account: BankAccount) {
         $("#withdrawButton").on("click", () => {
             const text = $("#withdrawAmount").val();
             if (text === undefined || (text as string).trim() === "") {
@@ -236,18 +217,14 @@ class CastleBankPageProcessor extends PageProcessorSupport {
                 MessageBoard.publishWarning("非法输入金额！");
                 return;
             }
-            if (amount * 10000 > account.saving!) {
+            if (amount * 10000 > page.account!.saving!) {
                 PageUtils.scrollIntoView("pageTitle");
                 MessageBoard.publishWarning(amount + "万！真逗，搞得你好像有这么多存款似得！");
                 return;
             }
-            new CastleBank(credential).withdraw(amount).then(() => {
-                this.#refresh(credential);
-            });
+            new TownBank(credential, town?.id).withdraw(amount)
+                .then(() => this.#refreshMutablePage(credential, town));
         });
-    }
-
-    #bindTransferButton(credential: Credential, account: BankAccount) {
         $("#transferButton").on("click", () => {
             const s = $("#peopleSelect").val();
             if (s === undefined || (s as string).trim() === "") {
@@ -267,7 +244,7 @@ class CastleBankPageProcessor extends PageProcessorSupport {
                 MessageBoard.publishWarning("非法输入金额！");
                 return;
             }
-            if ((amount + 10) * 10000 > account.total) {
+            if ((amount + 10) * 10000 > page.account!.total) {
                 PageUtils.scrollIntoView("pageTitle");
                 MessageBoard.publishWarning("很遗憾，你压根就没有这么多钱！");
                 return;
@@ -278,22 +255,34 @@ class CastleBankPageProcessor extends PageProcessorSupport {
                 return;
             }
 
-            const delta = BankUtils.calculateCashDifferenceAmount(account.cash!, (amount + 10) * 10000);
-            const bank = new CastleBank(credential);
+            const delta = BankUtils.calculateCashDifferenceAmount(page.account!.cash!, (amount + 10) * 10000);
+            const bank = new TownBank(credential, town?.id);
             bank.withdraw(delta).then(() => {
                 const request = credential.asRequestMap();
                 request.set("gold", (amount * 10).toString());  // 送钱的接口单位是K
                 request.set("eid", (s as string).trim());
-                request.set("mode", "CASTLE_SENDMONEY2");
-                NetworkUtils.post("castle.cgi", request).then(html => {
+                request.set("mode", "MONEY_SEND2");
+                NetworkUtils.post("town.cgi", request).then(html => {
                     MessageBoard.processResponseMessage(html);
-                    bank.depositAll().then(() => {
-                        this.#refresh(credential);
-                    });
+                    bank.deposit()
+                        .then(() => this.#refreshMutablePage(credential, town));
                 });
             });
         });
     }
+
+    #refreshMutablePage(credential: Credential, town?: Town) {
+        new TownBank(credential, town?.id).open().then(page => {
+            $("#roleCash").text(page.role!.cash + " GOLD");
+            $("#accountCash").text(page.account!.cash!.toString());
+            $("#accountSaving").text(page.account!.saving!.toString());
+            $("#depositAmount").val("");
+            $("#withdrawAmount").val("");
+            $("#transferAmount").val("");
+            $(".dynamicButton").off("click");
+            this.#renderMutablePage(credential, page, town);
+        });
+    }
 }
 
-export = CastleBankPageProcessor;
+export = TownBankPageProcessor;

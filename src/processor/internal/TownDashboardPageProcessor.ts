@@ -1,14 +1,14 @@
-import PageUtils from "../../util/PageUtils";
-import Credential from "../../util/Credential";
 import SetupLoader from "../../core/SetupLoader";
-import StringUtils from "../../util/StringUtils";
-import RoleStatusParser from "../../pocket/RoleStatusParser";
-import RoleStatus from "../../pocket/RoleStatus";
+import TownLoader from "../../core/TownLoader";
 import EventHandler from "../../pocket/EventHandler";
-import TownLoader from "../../pocket/TownLoader";
+import RoleStatus from "../../pocket/RoleStatus";
+import RoleStatusParser from "../../pocket/RoleStatusParser";
+import Credential from "../../util/Credential";
 import NetworkUtils from "../../util/NetworkUtils";
-import PageProcessorSupport from "../PageProcessorSupport";
+import PageUtils from "../../util/PageUtils";
+import StringUtils from "../../util/StringUtils";
 import PageProcessorContext from "../PageProcessorContext";
+import PageProcessorSupport from "../PageProcessorSupport";
 
 class TownDashboardPageProcessor extends PageProcessorSupport {
 
@@ -38,6 +38,7 @@ function doProcess(credential: Credential) {
     doRenderPetRankMenu();
     doRenderCastleKeeperMenu();
     doRenderFastLoginMenu();
+    doRenderBankMenu();
 
     const roleStatus = RoleStatusParser.parseRoleStatus(document.documentElement.outerHTML);
     doRenderBattleCount(roleStatus);
@@ -257,6 +258,15 @@ function doRenderFastLoginMenu() {
         $("option[value='CHUJIA']")
             .css("background-color", "yellow")
             .text("快速登陆设置");
+    }
+}
+
+function doRenderBankMenu() {
+    if (SetupLoader.isPocketBankEnabled()) {
+        $("option[value='BANK']")
+            .css("background-color", "yellow")
+            .text("口袋银行");
+        $("option[value='MONEY_SEND']").remove();
     }
 }
 

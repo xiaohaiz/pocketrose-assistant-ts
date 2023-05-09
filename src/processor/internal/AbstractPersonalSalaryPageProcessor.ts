@@ -1,7 +1,7 @@
 import Credential from "../../util/Credential";
 import PageProcessorSupport from "../PageProcessorSupport";
 import PageProcessorContext from "../PageProcessorContext";
-import NpcLoader from "../../pocket/NpcLoader";
+import NpcLoader from "../../core/NpcLoader";
 import CommentBoard from "../../util/CommentBoard";
 
 abstract class AbstractPersonalSalaryPageProcessor extends PageProcessorSupport {

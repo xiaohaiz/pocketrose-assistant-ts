@@ -1,5 +1,5 @@
+import TownLoader from "../core/TownLoader";
 import Coordinate from "../util/Coordinate";
-import TownLoader from "./TownLoader";
 import TownStatusLoader from "./TownStatusLoader";
 
 class MapBuilder {

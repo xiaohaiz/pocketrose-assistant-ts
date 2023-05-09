@@ -1,8 +1,8 @@
-import PageProcessor from "../PageProcessor";
+import SetupLoader from "../../core/SetupLoader";
+import EventHandler from "../../pocket/EventHandler";
 import PageUtils from "../../util/PageUtils";
 import StringUtils from "../../util/StringUtils";
-import EventHandler from "../../pocket/EventHandler";
-import SetupLoader from "../../core/SetupLoader";
+import PageProcessor from "../PageProcessor";
 
 class CastleDashboardPageProcessor implements PageProcessor {
 
@@ -17,6 +17,12 @@ class CastleDashboardPageProcessor implements PageProcessor {
     }
 
     #renderMenu() {
+        if (SetupLoader.isPocketBankEnabled()) {
+            $("option[value='CASTLE_BANK']")
+                .css("background-color", "yellow")
+                .text("口袋银行城堡支行");
+            $("option[value='CASTLE_SENDMONEY']").remove();
+        }
         $("option[value='CASTLE_BUILDMACHINE']")
             .css("background-color", "yellow")
             .text("城堡驿站");
