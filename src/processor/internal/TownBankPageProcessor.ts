@@ -168,10 +168,20 @@ class TownBankPageProcessor extends PageProcessorSupport {
     }
 
     #renderMutablePage(credential: Credential, page: TownBankPage, town?: Town) {
-        this.#bindMutableButtons(credential);
+        this.#bindMutableButtons(credential, page, town);
     }
 
-    #bindMutableButtons(credential: Credential) {
+    #bindMutableButtons(credential: Credential, page: TownBankPage, town?: Town) {
+        $("#depositAllButton").on("click", () => {
+            if (page.account!.cash! < 10000) {
+                PageUtils.scrollIntoView("pageTitle");
+                MessageBoard.publishWarning("没觉得你身上有啥值得存入的现金！");
+                return;
+            }
+            new TownBank(credential, town?.id).deposit()
+                .then(() => this.#refreshMutablePage(credential, town))
+                .catch(() => PageUtils.scrollIntoView("pageTitle"));
+        });
     }
 
     #refreshMutablePage(credential: Credential, town?: Town) {
