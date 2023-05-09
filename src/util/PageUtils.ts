@@ -375,6 +375,28 @@ const BUTTON_STYLES: {} = {
         "  -webkit-filter: saturate(0.2) opacity(0.5);\n" +
         "  cursor: not-allowed;\n" +
         "}\n",
+    "33": ".button-33 {\n" +
+        "  background-color: #c2fbd7;\n" +
+        "  border-radius: 100px;\n" +
+        "  box-shadow: rgba(44, 187, 99, .2) 0 -25px 18px -14px inset,rgba(44, 187, 99, .15) 0 1px 2px,rgba(44, 187, 99, .15) 0 2px 4px,rgba(44, 187, 99, .15) 0 4px 8px,rgba(44, 187, 99, .15) 0 8px 16px,rgba(44, 187, 99, .15) 0 16px 32px;\n" +
+        "  color: green;\n" +
+        "  cursor: pointer;\n" +
+        "  display: inline-block;\n" +
+        "  padding: 7px 20px;\n" +
+        "  text-align: center;\n" +
+        "  text-decoration: none;\n" +
+        "  transition: all 250ms;\n" +
+        "  border: 0;\n" +
+        "  font-size: 16px;\n" +
+        "  user-select: none;\n" +
+        "  -webkit-user-select: none;\n" +
+        "  touch-action: manipulation;\n" +
+        "}\n" +
+        "\n" +
+        ".button-33:hover {\n" +
+        "  box-shadow: rgba(44,187,99,.35) 0 -25px 18px -14px inset,rgba(44,187,99,.25) 0 1px 2px,rgba(44,187,99,.25) 0 2px 4px,rgba(44,187,99,.25) 0 4px 8px,rgba(44,187,99,.25) 0 8px 16px,rgba(44,187,99,.25) 0 16px 32px;\n" +
+        "  transform: scale(1.05) rotate(-1deg);\n" +
+        "}\n",
 };
 
 export = PageUtils;
