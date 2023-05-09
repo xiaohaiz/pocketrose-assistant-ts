@@ -3,6 +3,7 @@ import TownLoader from "../../core/TownLoader";
 import TownArmorHouse from "../../pocketrose/TownArmorHouse";
 import TownArmorHousePage from "../../pocketrose/TownArmorHousePage";
 import Credential from "../../util/Credential";
+import MessageBoard from "../../util/MessageBoard";
 import PageUtils from "../../util/PageUtils";
 import PageProcessorContext from "../PageProcessorContext";
 import PageProcessorCredentialSupport from "../PageProcessorCredentialSupport";
@@ -113,8 +114,8 @@ class TownArmorHousePageProcessor extends PageProcessorCredentialSupport {
 
     #bindImmutableButtons(credential: Credential, townId: string) {
         $("#refresh_button").on("click", () => {
-            PageUtils.scrollIntoView("pageTitle");
             $("#messageBoardManager").html(NpcLoader.randomNpcImageHtml());
+            MessageBoard.resetMessageBoard("欢迎、欢迎。");
             this.#refreshMutablePage(credential, townId);
         });
         $("#return_button").on("click", () => {
@@ -133,7 +134,12 @@ class TownArmorHousePageProcessor extends PageProcessorCredentialSupport {
     }
 
     #refreshMutablePage(credential: Credential, townId: string) {
+        PageUtils.scrollIntoView("pageTitle");
+        $("#personal_equipment_list_cell").parent().hide();
+        $("#armor_merchandise_list_cell").parent().hide();
+        $(".dynamic_button_class").off("click");
         new TownArmorHouse(credential, townId).open().then(page => {
+            $("#roleCash").text(page.role!.cash! + " GOLD");
             this.#renderMutablePage(credential, page);
         });
     }
