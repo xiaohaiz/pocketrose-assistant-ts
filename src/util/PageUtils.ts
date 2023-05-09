@@ -302,6 +302,49 @@ const BUTTON_STYLES: {} = {
         ".button-24:active {\n" +
         "  opacity: .5;\n" +
         "}\n",
+    "30": ".button-30 {\n" +
+        "  align-items: center;\n" +
+        "  appearance: none;\n" +
+        "  background-color: #FCFCFD;\n" +
+        "  border-radius: 4px;\n" +
+        "  border-width: 0;\n" +
+        "  box-shadow: rgba(45, 35, 66, 0.4) 0 2px 4px,rgba(45, 35, 66, 0.3) 0 7px 13px -3px,#D6D6E7 0 -3px 0 inset;\n" +
+        "  box-sizing: border-box;\n" +
+        "  color: #36395A;\n" +
+        "  cursor: pointer;\n" +
+        "  display: inline-flex;\n" +
+        "  height: 48px;\n" +
+        "  justify-content: center;\n" +
+        "  line-height: 1;\n" +
+        "  list-style: none;\n" +
+        "  overflow: hidden;\n" +
+        "  padding-left: 16px;\n" +
+        "  padding-right: 16px;\n" +
+        "  position: relative;\n" +
+        "  text-align: left;\n" +
+        "  text-decoration: none;\n" +
+        "  transition: box-shadow .15s,transform .15s;\n" +
+        "  user-select: none;\n" +
+        "  -webkit-user-select: none;\n" +
+        "  touch-action: manipulation;\n" +
+        "  white-space: nowrap;\n" +
+        "  will-change: box-shadow,transform;\n" +
+        "  font-size: 18px;\n" +
+        "}\n" +
+        "\n" +
+        ".button-30:focus {\n" +
+        "  box-shadow: #D6D6E7 0 0 0 1.5px inset, rgba(45, 35, 66, 0.4) 0 2px 4px, rgba(45, 35, 66, 0.3) 0 7px 13px -3px, #D6D6E7 0 -3px 0 inset;\n" +
+        "}\n" +
+        "\n" +
+        ".button-30:hover {\n" +
+        "  box-shadow: rgba(45, 35, 66, 0.4) 0 4px 8px, rgba(45, 35, 66, 0.3) 0 7px 13px -3px, #D6D6E7 0 -3px 0 inset;\n" +
+        "  transform: translateY(-2px);\n" +
+        "}\n" +
+        "\n" +
+        ".button-30:active {\n" +
+        "  box-shadow: #D6D6E7 0 3px 7px inset;\n" +
+        "  transform: translateY(2px);\n" +
+        "}",
 };
 
 export = PageUtils;
