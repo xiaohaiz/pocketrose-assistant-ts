@@ -264,7 +264,7 @@ function doRender(page: TownWeaponHousePage) {
             html += "<td style='background-color:#E0D0B0'>" + merchandise.nameHtml + "</td>";
             html += "<td style='background-color:#EFE0C0;text-align:right'>" + merchandise.priceHtml + "</td>";
             html += "<td style='background-color:#E0D0B0'>" + merchandise.power + "</td>";
-            html += "<td style='background-color:#EFE0C0'>" + merchandise.weaponCategory + "</td>";
+            html += "<td style='background-color:#EFE0C0'>" + merchandise.weight + "</td>";
             html += "<td style='background-color:#EFE0C0'>" + merchandise.endureHtml + "</td>";
             html += "<td style='background-color:#E0D0B0'>" + merchandise.requiredCareerHtml + "</td>";
             html += "<td style='background-color:#E0D0B0'>" + merchandise.requiredAttackHtml + "</td>";
