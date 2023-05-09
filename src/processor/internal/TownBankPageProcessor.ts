@@ -17,7 +17,7 @@ class TownBankPageProcessor extends PageProcessorSupport {
         const town = TownLoader.getTownById(context!.get("townId")!)!;
 
         this.#renderImmutablePage(credential, town);
-
+        this.#renderMutablePage(credential, page, town);
     }
 
     #renderImmutablePage(credential: Credential, town: Town) {
@@ -135,18 +135,18 @@ class TownBankPageProcessor extends PageProcessorSupport {
         html += "</tr>";
         $("#tr5").after($(html));
 
-        this.#bindImmutableButtons(credential);
+        this.#bindImmutableButtons(credential, town);
     }
 
-    #bindImmutableButtons(credential: Credential) {
+    #bindImmutableButtons(credential: Credential, town?: Town) {
         $("#refreshButton").on("click", () => {
             PageUtils.scrollIntoView("pageTitle");
             MessageBoard.resetMessageBoard("请管理您的账户吧！");
             $("#messageBoardManager").html(NpcLoader.randomNpcImageHtml());
-            this.#refreshMutablePage(credential);
+            this.#refreshMutablePage(credential, town);
         });
         $("#returnButton").on("click", () => {
-            $("#returnCastle").trigger("click");
+            $("#returnTown").trigger("click");
         });
         $("#searchButton").on("click", () => {
             const s = $("#searchName").val();
@@ -157,23 +157,33 @@ class TownBankPageProcessor extends PageProcessorSupport {
             }
             const searchName = (s as string).trim();
             const request = credential.asRequestMap();
-            request.set("mode", "CASTLE_SENDMONEY");
+            request.set("mode", "MONEY_SEND");
             // noinspection JSDeprecatedSymbols
             request.set("serch", escape(searchName));
-            NetworkUtils.post("castle.cgi", request).then(html => {
+            NetworkUtils.post("town.cgi", request).then(html => {
                 const options = $(html).find("select[name='eid']").html();
                 $("#peopleSelect").html(options);
             });
         });
     }
 
-    #renderMutablePage(credential: Credential, page: TownBankPage) {
+    #renderMutablePage(credential: Credential, page: TownBankPage, town?: Town) {
     }
 
     #bindMutableButtons(credential: Credential) {
     }
 
-    #refreshMutablePage(credential: Credential) {
+    #refreshMutablePage(credential: Credential, town?: Town) {
+        new TownBank(credential).open(town?.id).then(page => {
+            $("#roleCash").text(page.role!.cash + " GOLD");
+            $("#accountCash").text(page.account!.cash!.toString());
+            $("#accountSaving").text(page.account!.saving!.toString());
+            $("#depositAmount").val("");
+            $("#withdrawAmount").val("");
+            $("#transferAmount").val("");
+            $(".dynamicButton").off("click");
+            this.#renderMutablePage(credential, page, town);
+        });
     }
 }
 
