@@ -214,7 +214,7 @@ class TownArmorHousePageProcessor extends PageProcessorCredentialSupport {
             for (const merchandise of merchandiseList) {
                 html += "<tr>";
                 html += "<td style='background-color:#E8E8D0'>";
-                const spaceCount = 20 - page.equipmentList!.length;
+                const spaceCount = 19 - page.equipmentList!.length;
                 if (spaceCount > 0) {
                     html += "<select id='count_" + merchandise.index + "'>";
                     for (let i = 1; i <= spaceCount; i++) {
