@@ -1,4 +1,5 @@
 import NpcLoader from "../../core/NpcLoader";
+import TownLoader from "../../core/TownLoader";
 import TownBank from "../../pocket/bank/TownBank";
 import TownGemHouse from "../../pocket/house/TownGemHouse";
 import TownGemHousePage from "../../pocket/house/TownGemHousePage";
@@ -14,11 +15,9 @@ import PageProcessorCredentialSupport from "../PageProcessorCredentialSupport";
 
 class TownGemHousePageProcessor extends PageProcessorCredentialSupport {
 
-    constructor() {
-        super();
-    }
-
     doProcess(credential: Credential, context?: PageProcessorContext): void {
+        const townId = context!.get("townId")!;
+        const town = TownLoader.getTownById(townId)!;
         TownGemHouse.parsePage(PageUtils.currentPageHtml())
             .then(page => {
                 doProcess(page);
