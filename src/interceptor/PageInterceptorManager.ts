@@ -16,6 +16,7 @@ import PersonalSalaryPageInterceptor from "./internal/PersonalSalaryPageIntercep
 import PersonalSetupPageInterceptor from "./internal/PersonalSetupPageInterceptor";
 import PersonalStatusPageInterceptor from "./internal/PersonalStatusPageInterceptor";
 import TownAdventureGuildPageInterceptor from "./internal/TownAdventureGuildPageInterceptor";
+import TownArmorHousePageInterceptor from "./internal/TownArmorHousePageInterceptor";
 import TownBankPageInterceptor from "./internal/TownBankPageInterceptor";
 import TownCastleKeeperPageInterceptor from "./internal/TownCastleKeeperPageInterceptor";
 import TownDashboardPageInterceptor from "./internal/TownDashboardPageInterceptor";
@@ -51,6 +52,7 @@ class PageInterceptorManager {
             new PersonalSetupPageInterceptor(),
             new PersonalStatusPageInterceptor(),
             new TownAdventureGuildPageInterceptor(),
+            new TownArmorHousePageInterceptor(),
             new TownBankPageInterceptor(),
             new TownCastleKeeperPageInterceptor(),
             new TownDashboardPageInterceptor(),
