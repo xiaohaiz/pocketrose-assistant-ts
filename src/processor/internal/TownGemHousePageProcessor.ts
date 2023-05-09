@@ -266,9 +266,11 @@ class TownGemHousePageProcessor extends PageProcessorCredentialSupport {
                 .parent()
                 .show();
         }
+
+        this.#bindMutableButtons(credential);
     }
 
-    #bindMutableButtons() {
+    #bindMutableButtons(credential: Credential) {
     }
 
     #refreshMutablePage(credential: Credential, town: Town) {
