@@ -220,6 +220,8 @@ function doRenderSuperMarketMenu() {
     if (SetupLoader.isPocketSuperMarketEnabled()) {
         $("option[value='ARM_SHOP']")
             .css("background-color", "yellow");
+        $("option[value='PRO_SHOP']")
+            .css("background-color", "yellow");
     }
 }
 
