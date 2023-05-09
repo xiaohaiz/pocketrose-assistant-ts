@@ -1,6 +1,6 @@
-import Equipment from "../../common/Equipment";
-import Merchandise from "../../common/Merchandise";
-import Credential from "../../util/Credential";
+import Equipment from "../common/Equipment";
+import Merchandise from "../common/Merchandise";
+import Credential from "../util/Credential";
 
 /**
  * 城市武器屋页面数据结构的描述

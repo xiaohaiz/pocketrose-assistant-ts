@@ -1,10 +1,10 @@
-import Equipment from "../../common/Equipment";
-import Merchandise from "../../common/Merchandise";
-import Credential from "../../util/Credential";
-import MessageBoard from "../../util/MessageBoard";
-import NetworkUtils from "../../util/NetworkUtils";
-import PageUtils from "../../util/PageUtils";
-import StringUtils from "../../util/StringUtils";
+import Equipment from "../common/Equipment";
+import Merchandise from "../common/Merchandise";
+import Credential from "../util/Credential";
+import MessageBoard from "../util/MessageBoard";
+import NetworkUtils from "../util/NetworkUtils";
+import PageUtils from "../util/PageUtils";
+import StringUtils from "../util/StringUtils";
 import TownWeaponHousePage from "./TownWeaponHousePage";
 
 class TownWeaponHouse {
