@@ -528,6 +528,40 @@ const BUTTON_STYLES: {} = {
         "    padding: .75rem 2rem;\n" +
         "  }\n" +
         "}\n",
+    "89": ".button-89 {\n" +
+        "  --b: 3px;   /* border thickness */\n" +
+        "  --s: .45em; /* size of the corner */\n" +
+        "  --color: #373B44;\n" +
+        "  \n" +
+        "  padding: calc(.5em + var(--s)) calc(.9em + var(--s));\n" +
+        "  color: var(--color);\n" +
+        "  --_p: var(--s);\n" +
+        "  background:\n" +
+        "    conic-gradient(from 90deg at var(--b) var(--b),#0000 90deg,var(--color) 0)\n" +
+        "    var(--_p) var(--_p)/calc(100% - var(--b) - 2*var(--_p)) calc(100% - var(--b) - 2*var(--_p));\n" +
+        "  transition: .3s linear, color 0s, background-color 0s;\n" +
+        "  outline: var(--b) solid #0000;\n" +
+        "  outline-offset: .6em;\n" +
+        "  font-size: 16px;\n" +
+        "\n" +
+        "  border: 0;\n" +
+        "\n" +
+        "  user-select: none;\n" +
+        "  -webkit-user-select: none;\n" +
+        "  touch-action: manipulation;\n" +
+        "}\n" +
+        "\n" +
+        ".button-89:hover,\n" +
+        ".button-89:focus-visible{\n" +
+        "  --_p: 0px;\n" +
+        "  outline-color: var(--color);\n" +
+        "  outline-offset: .05em;\n" +
+        "}\n" +
+        "\n" +
+        ".button-89:active {\n" +
+        "  background: var(--color);\n" +
+        "  color: #fff;\n" +
+        "}\n",
 };
 
 export = PageUtils;
