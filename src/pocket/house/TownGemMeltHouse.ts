@@ -1,7 +1,7 @@
+import Equipment from "../../common/Equipment";
 import Credential from "../../util/Credential";
 import NetworkUtils from "../../util/NetworkUtils";
 import PageUtils from "../../util/PageUtils";
-import Equipment from "../Equipment";
 import TownGemMeltHousePage from "./TownGemMeltHousePage";
 
 /**

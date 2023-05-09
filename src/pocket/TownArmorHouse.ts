@@ -1,5 +1,5 @@
+import Equipment from "../common/Equipment";
 import Credential from "../util/Credential";
-import Equipment from "./Equipment";
 import PageUtils from "../util/PageUtils";
 import TownArmorHousePage from "./TownArmorHousePage";
 

@@ -1,5 +1,5 @@
-import Equipment from "../../pocket/Equipment";
-import EquipmentLoader from "../../pocket/EquipmentLoader";
+import Equipment from "../../common/Equipment";
+import EquipmentLoader from "../../core/EquipmentLoader";
 import EquipmentParser from "../../pocket/EquipmentParser";
 import RoleLoader from "../../pocket/RoleLoader";
 import TreasureBag from "../../pocket/TreasureBag";

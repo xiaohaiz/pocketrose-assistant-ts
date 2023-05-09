@@ -1,7 +1,7 @@
+import Equipment from "../common/Equipment";
 import Credential from "../util/Credential";
-import Role from "./Role";
-import Equipment from "./Equipment";
 import EquipmentParser from "./EquipmentParser";
+import Role from "./Role";
 
 class PersonalEquipmentManagementPage {
 

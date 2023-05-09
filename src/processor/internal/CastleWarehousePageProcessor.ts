@@ -1,6 +1,6 @@
+import Equipment from "../../common/Equipment";
 import NpcLoader from "../../core/NpcLoader";
 import SetupLoader from "../../core/SetupLoader";
-import Equipment from "../../pocket/Equipment";
 import EquipmentParser from "../../pocket/EquipmentParser";
 import Credential from "../../util/Credential";
 import MessageBoard from "../../util/MessageBoard";

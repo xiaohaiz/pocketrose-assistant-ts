@@ -1,17 +1,8 @@
-import Equipment from "../../common/Equipment";
-import Credential from "../../util/Credential";
+import Equipment from "../common/Equipment";
 
-/**
- * @deprecated
- */
 class TownGemMeltHousePage {
 
-    readonly credential: Credential;
     equipmentList?: Equipment[];
-
-    constructor(credential: Credential) {
-        this.credential = credential;
-    }
 
     canMelt(index: number) {
         for (const equipment of this.equipmentList!) {

@@ -1,5 +1,5 @@
+import Equipment from "../../common/Equipment";
 import NpcLoader from "../../core/NpcLoader";
-import Equipment from "../../pocket/Equipment";
 import PersonalEquipmentManagement from "../../pocket/PersonalEquipmentManagement";
 import PersonalEquipmentManagementPage from "../../pocket/PersonalEquipmentManagementPage";
 import Role from "../../pocket/Role";
