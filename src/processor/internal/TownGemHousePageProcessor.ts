@@ -407,6 +407,55 @@ class TownGemHousePageProcessor extends PageProcessorCredentialSupport {
                 this.#refreshMutablePage(credential, town);
             });
         });
+        $(".all_gem_class").on("click", event => {
+            const buttonId = $(event.target).attr("id") as string;
+            const gemCode = parseInt(buttonId.split("_")[1]);
+            let gemName = "";
+            if (gemCode === 1) {
+                gemName = "威力宝石";
+            } else if (gemCode === 2) {
+                gemName = "重量宝石";
+            } else if (gemCode === 3) {
+                gemName = "幸运宝石";
+            }
+
+            let checkedIndex: number | undefined = undefined;
+            $("input:button[value='选择']")
+                .filter(function () {
+                    const buttonId = $(this).attr("id") as string;
+                    return PageUtils.isColorBlue(buttonId);
+                })
+                .each(function (_idx, button) {
+                    if (checkedIndex === undefined) {
+                        const buttonId = $(button).attr("id") as string;
+                        checkedIndex = parseInt(StringUtils.substringAfter(buttonId, "_"));
+                    }
+                });
+            if (checkedIndex === undefined) {
+                PageUtils.scrollIntoView("pageTitle");
+                MessageBoard.publishWarning("没有选择要镶嵌的装备！");
+                return;
+            }
+            const equipment = page.findEquipment(checkedIndex);
+            if (!confirm("确认为“" + equipment?.nameHTML + "”尽可能镶嵌所有的“" + gemName + "”？")) {
+                PageUtils.scrollIntoView("pageTitle");
+                return;
+            }
+
+            // 找这件装备的序号是多少
+            let lastFuse = "none";
+            let sequence = 0;
+            for (const it of page.equipmentList!) {
+                if (it.fullName === equipment!.fullName) {
+                    sequence++;
+                }
+                if (it.index! === equipment!.index!) {
+                    lastFuse = equipment!.fullName + "/" + sequence;
+                    break;
+                }
+            }
+
+        });
     }
 
     #refreshMutablePage(credential: Credential, town: Town) {
