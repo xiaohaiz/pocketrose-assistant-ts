@@ -362,7 +362,7 @@ function doRenderTownTax(credential: Credential, roleStatus: RoleStatus) {
         }
         const tax = parseInt(td!.text());
         if (tax >= 50000) {
-            if (tax - Math.ceil(tax / 50000) * 50000 <= 10000) {
+            if (tax - Math.floor(tax / 50000) * 50000 <= 10000) {
                 td!.css("color", "white")
                     .css("background-color", "green")
                     .css("font-weight", "bold")
