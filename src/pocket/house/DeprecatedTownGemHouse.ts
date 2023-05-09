@@ -3,8 +3,8 @@ import Credential from "../../util/Credential";
 import NetworkUtils from "../../util/NetworkUtils";
 import PageUtils from "../../util/PageUtils";
 import StringUtils from "../../util/StringUtils";
+import DeprecatedTownGemHousePage from "./DeprecatedTownGemHousePage";
 import DeprecatedTownGemMeltHouse from "./DeprecatedTownGemMeltHouse";
-import TownGemHousePage from "./TownGemHousePage";
 
 /**
  * @deprecated
@@ -23,7 +23,7 @@ class DeprecatedTownGemHouse {
 
     async enter() {
         const action = (credential: Credential) => {
-            return new Promise<TownGemHousePage>(resolve => {
+            return new Promise<DeprecatedTownGemHousePage>(resolve => {
                 const request = credential.asRequest();
                 // @ts-ignore
                 request.con_str = "50";
@@ -43,9 +43,9 @@ class DeprecatedTownGemHouse {
 
 async function doParsePage(pageHtml: string) {
     const action = (pageHtml: string) => {
-        return new Promise<TownGemHousePage>(resolve => {
+        return new Promise<DeprecatedTownGemHousePage>(resolve => {
             const credential = PageUtils.parseCredential(pageHtml);
-            const page = new TownGemHousePage(credential);
+            const page = new DeprecatedTownGemHousePage(credential);
 
             $(pageHtml).find("td:contains('所持金')")
                 .filter(function () {

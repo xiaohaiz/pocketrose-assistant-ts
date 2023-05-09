@@ -2,7 +2,7 @@ import Equipment from "../../common/Equipment";
 import Credential from "../../util/Credential";
 import NetworkUtils from "../../util/NetworkUtils";
 import PageUtils from "../../util/PageUtils";
-import TownGemMeltHousePage from "./TownGemMeltHousePage";
+import DeprecatedTownGemMeltHousePage from "./DeprecatedTownGemMeltHousePage";
 
 /**
  * @deprecated
@@ -21,7 +21,7 @@ class DeprecatedTownGemMeltHouse {
 
     async enter() {
         const action = (credential: Credential) => {
-            return new Promise<TownGemMeltHousePage>(resolve => {
+            return new Promise<DeprecatedTownGemMeltHousePage>(resolve => {
                 const request = credential.asRequest();
                 // request.town = townId;
                 // @ts-ignore
@@ -40,7 +40,7 @@ class DeprecatedTownGemMeltHouse {
 
 function doParsePage(pageHtml: string) {
     const credential = PageUtils.parseCredential(pageHtml);
-    const page = new TownGemMeltHousePage(credential);
+    const page = new DeprecatedTownGemMeltHousePage(credential);
 
     const equipmentList: Equipment[] = [];
     $(pageHtml).find("input:radio")

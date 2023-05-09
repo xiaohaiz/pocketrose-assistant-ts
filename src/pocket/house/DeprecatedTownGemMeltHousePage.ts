@@ -4,7 +4,7 @@ import Credential from "../../util/Credential";
 /**
  * @deprecated
  */
-class TownGemMeltHousePage {
+class DeprecatedTownGemMeltHousePage {
 
     readonly credential: Credential;
     equipmentList?: Equipment[];
@@ -24,4 +24,4 @@ class TownGemMeltHousePage {
 
 }
 
-export = TownGemMeltHousePage;
+export = DeprecatedTownGemMeltHousePage;

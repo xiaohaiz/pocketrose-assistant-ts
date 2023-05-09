@@ -1,17 +1,17 @@
 import Equipment from "../../common/Equipment";
 import Credential from "../../util/Credential";
-import TownGemMeltHousePage from "./TownGemMeltHousePage";
+import DeprecatedTownGemMeltHousePage from "./DeprecatedTownGemMeltHousePage";
 
 /**
  * @deprecated
  */
-class TownGemHousePage {
+class DeprecatedTownGemHousePage {
 
     readonly credential: Credential;
     roleCash?: number;
     equipmentList?: Equipment[];
     gemList?: Equipment[];
-    townGemMeltHousePage?: TownGemMeltHousePage;
+    townGemMeltHousePage?: DeprecatedTownGemMeltHousePage;
 
     constructor(credential: Credential) {
         this.credential = credential;
@@ -36,4 +36,4 @@ class TownGemHousePage {
     }
 }
 
-export = TownGemHousePage;
+export = DeprecatedTownGemHousePage;

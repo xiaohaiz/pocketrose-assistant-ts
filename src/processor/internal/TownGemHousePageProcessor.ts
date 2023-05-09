@@ -2,7 +2,7 @@ import NpcLoader from "../../core/NpcLoader";
 import TownLoader from "../../core/TownLoader";
 import TownBank from "../../pocket/bank/TownBank";
 import DeprecatedTownGemHouse from "../../pocket/house/DeprecatedTownGemHouse";
-import TownGemHousePage from "../../pocket/house/TownGemHousePage";
+import DeprecatedTownGemHousePage from "../../pocket/house/DeprecatedTownGemHousePage";
 import EquipmentManagement from "../../pocket/personal/EquipmentManagement";
 import BankUtils from "../../util/BankUtils";
 import Credential from "../../util/Credential";
@@ -25,9 +25,10 @@ class TownGemHousePageProcessor extends PageProcessorCredentialSupport {
 
     }
 
+
 }
 
-function doProcess(page: TownGemHousePage) {
+function doProcess(page: DeprecatedTownGemHousePage) {
     const t1 = $("table:eq(1)");
 
     t1.find("td:first")
@@ -170,7 +171,7 @@ function doBindRefreshButton(credential: Credential) {
     });
 }
 
-function doRender(page: TownGemHousePage) {
+function doRender(page: DeprecatedTownGemHousePage) {
     if (page.equipmentList!.length > 0) {
         let html = "";
         html += "<table style='border-width:0;background-color:#888888;margin:auto'>";
@@ -364,7 +365,7 @@ function doBindSelectButton() {
     }
 }
 
-function doBindMeltButton(page: TownGemHousePage, indexList: number[]) {
+function doBindMeltButton(page: DeprecatedTownGemHousePage, indexList: number[]) {
     for (const index of indexList) {
         const buttonId = "melt_" + index;
         $("#" + buttonId).on("click", function () {
@@ -397,7 +398,7 @@ function doBindMeltButton(page: TownGemHousePage, indexList: number[]) {
     }
 }
 
-function doBindFuseButton(page: TownGemHousePage, indexList: number[]) {
+function doBindFuseButton(page: DeprecatedTownGemHousePage, indexList: number[]) {
     for (const index of indexList) {
         const buttonId = "fuse_" + index;
         $("#" + buttonId).on("click", function () {
