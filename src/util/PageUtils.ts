@@ -1,5 +1,5 @@
-import Credential from "./Credential";
 import Constants from "./Constants";
+import Credential from "./Credential";
 import StringUtils from "./StringUtils";
 
 class PageUtils {
@@ -169,6 +169,65 @@ class PageUtils {
         html += "</form>";
         return html;
     }
+
+    static loadButtonStyle(code: number) {
+        const key = code.toString();
+        // @ts-ignore
+        if (BUTTON_STYLES[key] !== undefined) {
+            let s = $("style[type='text/css']").html();
+            s = s.replace("-->", "\n");
+            // @ts-ignore
+            s += BUTTON_STYLES[key];
+            s += "-->";
+            $("style[type='text/css']").html(s);
+        }
+    }
 }
+
+const BUTTON_STYLES: {} = {
+    "5": ".button-5 {\n" +
+        "  align-items: center;\n" +
+        "  background-clip: padding-box;\n" +
+        "  background-color: #fa6400;\n" +
+        "  border: 1px solid transparent;\n" +
+        "  border-radius: .25rem;\n" +
+        "  box-shadow: rgba(0, 0, 0, 0.02) 0 1px 3px 0;\n" +
+        "  box-sizing: border-box;\n" +
+        "  color: #fff;\n" +
+        "  cursor: pointer;\n" +
+        "  display: inline-flex;\n" +
+        "  font-size: 16px;\n" +
+        "  font-weight: 600;\n" +
+        "  justify-content: center;\n" +
+        "  line-height: 1.25;\n" +
+        "  margin: 0;\n" +
+        "  min-height: 3rem;\n" +
+        "  padding: calc(.875rem - 1px) calc(1.5rem - 1px);\n" +
+        "  position: relative;\n" +
+        "  text-decoration: none;\n" +
+        "  transition: all 250ms;\n" +
+        "  user-select: none;\n" +
+        "  -webkit-user-select: none;\n" +
+        "  touch-action: manipulation;\n" +
+        "  vertical-align: baseline;\n" +
+        "  width: auto;\n" +
+        "}\n" +
+        "\n" +
+        ".button-5:hover,\n" +
+        ".button-5:focus {\n" +
+        "  background-color: #fb8332;\n" +
+        "  box-shadow: rgba(0, 0, 0, 0.1) 0 4px 12px;\n" +
+        "}\n" +
+        "\n" +
+        ".button-5:hover {\n" +
+        "  transform: translateY(-1px);\n" +
+        "}\n" +
+        "\n" +
+        ".button-5:active {\n" +
+        "  background-color: #c85000;\n" +
+        "  box-shadow: rgba(0, 0, 0, .06) 0 2px 4px;\n" +
+        "  transform: translateY(0);\n" +
+        "}\n",
+};
 
 export = PageUtils;
