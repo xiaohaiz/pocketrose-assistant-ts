@@ -38,6 +38,7 @@ function doProcess(credential: Credential) {
     doRenderPetRankMenu();
     doRenderCastleKeeperMenu();
     doRenderFastLoginMenu();
+    doRenderBankMenu();
 
     const roleStatus = RoleStatusParser.parseRoleStatus(document.documentElement.outerHTML);
     doRenderBattleCount(roleStatus);
@@ -257,6 +258,15 @@ function doRenderFastLoginMenu() {
         $("option[value='CHUJIA']")
             .css("background-color", "yellow")
             .text("快速登陆设置");
+    }
+}
+
+function doRenderBankMenu() {
+    if (SetupLoader.isPocketBankEnabled()) {
+        $("option[value='BANK']")
+            .css("background-color", "yellow")
+            .text("口袋银行");
+        $("option[value='MONEY_SEND']").remove();
     }
 }
 
