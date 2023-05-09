@@ -5,7 +5,7 @@ import NetworkUtils from "../../util/NetworkUtils";
 /**
  * @deprecated
  */
-class TownBank {
+class DeprecatedTownBank {
 
     readonly #credential: Credential;
 
@@ -58,4 +58,4 @@ class TownBank {
     }
 }
 
-export = TownBank;
+export = DeprecatedTownBank;

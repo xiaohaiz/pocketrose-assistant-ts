@@ -1,6 +1,7 @@
 import Equipment from "../common/Equipment";
 import Role from "../common/Role";
 import Credential from "../util/Credential";
+import MessageBoard from "../util/MessageBoard";
 import NetworkUtils from "../util/NetworkUtils";
 import StringUtils from "../util/StringUtils";
 import TownGemMeltHousePage from "./TownGemMeltHousePage";
@@ -31,6 +32,22 @@ class TownGemMeltHouse {
                 NetworkUtils.post("town.cgi", request).then(html => {
                     const page = TownGemMeltHouse.parsePage(html);
                     resolve(page);
+                });
+            });
+        };
+        return await action();
+    }
+
+    async melt(index: number): Promise<void> {
+        const action = () => {
+            return new Promise<void>(resolve => {
+                const request = this.#credential.asRequestMap();
+                request.set("select", index.toString());
+                request.set("azukeru", "0");
+                request.set("mode", "BAOSHI_DELETE");
+                NetworkUtils.post("town.cgi", request).then(html => {
+                    MessageBoard.processResponseMessage(html);
+                    resolve();
                 });
             });
         };

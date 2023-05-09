@@ -1,12 +1,14 @@
 import NpcLoader from "../../core/NpcLoader";
 import TownLoader from "../../core/TownLoader";
-import TownBank from "../../pocket/bank/TownBank";
+import DeprecatedTownBank from "../../pocket/bank/DeprecatedTownBank";
 import DeprecatedTownGemHouse from "../../pocket/house/DeprecatedTownGemHouse";
 import DeprecatedTownGemHousePage from "../../pocket/house/DeprecatedTownGemHousePage";
 import EquipmentManagement from "../../pocket/personal/EquipmentManagement";
 import Town from "../../pocket/Town";
+import TownBank from "../../pocketrose/TownBank";
 import TownGemHouse from "../../pocketrose/TownGemHouse";
 import TownGemHousePage from "../../pocketrose/TownGemHousePage";
+import TownGemMeltHouse from "../../pocketrose/TownGemMeltHouse";
 import BankUtils from "../../util/BankUtils";
 import Credential from "../../util/Credential";
 import MessageBoard from "../../util/MessageBoard";
@@ -267,10 +269,10 @@ class TownGemHousePageProcessor extends PageProcessorCredentialSupport {
                 .show();
         }
 
-        this.#bindMutableButtons(credential);
+        this.#bindMutableButtons(credential, page, town);
     }
 
-    #bindMutableButtons(credential: Credential) {
+    #bindMutableButtons(credential: Credential, page: TownGemHousePage, town: Town) {
         $(".equipment_detail_class")
             .on("mouseenter", function () {
                 const index = parseInt(($(this).attr("id") as string).split("_")[1]);
@@ -309,6 +311,23 @@ class TownGemHousePageProcessor extends PageProcessorCredentialSupport {
                         }
                     });
             }
+        });
+        $("input:button[value='销毁']").on("click", event => {
+            const buttonId = $(event.target).attr("id") as string;
+            const index = parseInt(buttonId.split("_")[1]);
+            const equipment = page.findEquipment(index);
+            if (!confirm("确认销毁“" + equipment?.nameHTML + "”的宝石？")) {
+                return;
+            }
+            const amount = BankUtils.calculateCashDifferenceAmount(page.role!.cash!, 5000000);
+            const bank = new TownBank(credential, town.id);
+            bank.withdraw(amount).then(() => {
+                new TownGemMeltHouse(credential, town.id).melt(index).then(() => {
+                    bank.deposit().then(() => {
+                        this.#refreshMutablePage(credential, town);
+                    });
+                });
+            });
         });
     }
 
@@ -677,7 +696,7 @@ function doBindMeltButton(page: DeprecatedTownGemHousePage, indexList: number[])
                 return;
             }
             const amount = BankUtils.calculateCashDifferenceAmount(page.roleCash!, 5000000);
-            const bank = new TownBank(page.credential);
+            const bank = new DeprecatedTownBank(page.credential);
             bank.withdraw(amount)
                 .then(() => {
                     const request = page.credential.asRequest();

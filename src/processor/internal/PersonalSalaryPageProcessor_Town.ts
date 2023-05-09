@@ -1,5 +1,5 @@
 import TownLoader from "../../core/TownLoader";
-import TownBank from "../../pocket/bank/TownBank";
+import DeprecatedTownBank from "../../pocket/bank/DeprecatedTownBank";
 import Credential from "../../util/Credential";
 import PageUtils from "../../util/PageUtils";
 import PageProcessorContext from "../PageProcessorContext";
@@ -30,7 +30,7 @@ class PersonalSalaryPageProcessor_Town extends AbstractPersonalSalaryPageProcess
             $("#returnButton").val("携款逃回" + town.name);
         }
         $("#returnButton").on("click", () => {
-            new TownBank(credential).depositAll().then(() => {
+            new DeprecatedTownBank(credential).depositAll().then(() => {
                 $("#returnTown").trigger("click");
             });
         });
