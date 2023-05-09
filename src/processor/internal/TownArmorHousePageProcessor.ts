@@ -1,3 +1,4 @@
+import NpcLoader from "../../core/NpcLoader";
 import Town from "../../core/Town";
 import TownLoader from "../../core/TownLoader";
 import TownArmorHouse from "../../pocketrose/TownArmorHouse";
@@ -21,7 +22,7 @@ class TownArmorHousePageProcessor extends PageProcessorCredentialSupport {
         $("table:eq(1)")
             .attr("id", "t1")
             .find("td:first")
-            .attr("id", "title_cell")
+            .attr("id", "pageTitle")
             .removeAttr("width")
             .removeAttr("height")
             .removeAttr("bgcolor")
@@ -70,7 +71,17 @@ class TownArmorHousePageProcessor extends PageProcessorCredentialSupport {
         // 隐藏的表单
         // ------------------------------------------------------------------------
         html += "<tr style='display:none'>";
-        html += "<td id='hidden_form_cell'></td>";
+        html += "<td id='hidden_form_cell'>";
+        html += PageUtils.generateReturnTownForm(credential);
+        // noinspection HtmlUnknownTarget
+        html += "<form action='mydata.cgi' method='post'>";
+        html += "<input type='hidden' name='id' value='" + credential.id + "'>";
+        html += "<input type='hidden' name='pass' value='" + credential.pass + "'>"
+        html += "<input type='hidden' name='town' value='" + town.id + "'>";
+        html += "<input type='hidden' name='mode' value='USE_ITEM'>";
+        html += "<input type='submit' id='equipmentManagement'>";
+        html += "</form>";
+        html += "</td>";
         html += "</tr>";
         // ------------------------------------------------------------------------
         // 主菜单
@@ -79,6 +90,7 @@ class TownArmorHousePageProcessor extends PageProcessorCredentialSupport {
         html += "<td style='background-color:#F8F0E0;text-align:center'>";
         html += "<input type='button' id='refresh_button' value='刷新" + town.name + "防具屋'>";
         html += "<input type='button' id='return_button' value='离开" + town.name + "防具屋'>";
+        html += "<input type='button' id='equipment_button' value='转到装备管理'>";
         html += "</td>";
         // ------------------------------------------------------------------------
         // 个人物品栏
@@ -96,9 +108,29 @@ class TownArmorHousePageProcessor extends PageProcessorCredentialSupport {
         html += "</table>";
 
         $("#armor_store_UI").html(html);
+
+        this.#bindImmutableButtons(credential, town);
+    }
+
+    #bindImmutableButtons(credential: Credential, town: Town) {
+        $("#refresh_button").on("click", () => {
+            PageUtils.scrollIntoView("pageTitle");
+            $("#messageBoardManager").html(NpcLoader.randomNpcImageHtml());
+            this.#refreshMutablePage(credential, town);
+        });
+        $("#return_button").on("click", () => {
+            $("#returnTown").trigger("click");
+        });
+        $("#equipment_button").on("click", () => {
+            $("#equipmentManagement").trigger("click");
+        });
     }
 
     #renderMutablePage(credential: Credential, page: TownArmorHousePage, town: Town) {
+        this.#bindMutableButtons(credential, page, town);
+    }
+
+    #bindMutableButtons(credential: Credential, page: TownArmorHousePage, town: Town) {
     }
 
     #refreshMutablePage(credential: Credential, town: Town) {
