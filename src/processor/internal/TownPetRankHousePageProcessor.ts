@@ -1,5 +1,5 @@
 import PetProfile from "../../common/PetProfile";
-import PetProfileLoader from "../../pocket/pet/PetProfileLoader";
+import PetProfileLoader from "../../core/PetProfileLoader";
 import Credential from "../../util/Credential";
 import PageProcessorContext from "../PageProcessorContext";
 import PageProcessorCredentialSupport from "../PageProcessorCredentialSupport";
