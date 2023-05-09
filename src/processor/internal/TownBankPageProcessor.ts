@@ -3,6 +3,7 @@ import TownLoader from "../../core/TownLoader";
 import Town from "../../pocket/Town";
 import TownBank from "../../pocketrose/TownBank";
 import TownBankPage from "../../pocketrose/TownBankPage";
+import BankUtils from "../../util/BankUtils";
 import Credential from "../../util/Credential";
 import MessageBoard from "../../util/MessageBoard";
 import NetworkUtils from "../../util/NetworkUtils";
@@ -223,6 +224,50 @@ class TownBankPageProcessor extends PageProcessorSupport {
             }
             new TownBank(credential, town?.id).withdraw(amount)
                 .then(() => this.#refreshMutablePage(credential, town));
+        });
+        $("#transferButton").on("click", () => {
+            const s = $("#peopleSelect").val();
+            if (s === undefined || (s as string).trim() === "") {
+                PageUtils.scrollIntoView("pageTitle");
+                MessageBoard.publishWarning("没有选择转账对象！");
+                return;
+            }
+            const text = $("#transferAmount").val();
+            if (text === undefined || (text as string).trim() === "") {
+                PageUtils.scrollIntoView("pageTitle");
+                MessageBoard.publishWarning("没有输入取出的金额！");
+                return;
+            }
+            const amount = parseInt((text as string).trim());
+            if (isNaN(amount) || !Number.isInteger(amount) || amount <= 0) {
+                PageUtils.scrollIntoView("pageTitle");
+                MessageBoard.publishWarning("非法输入金额！");
+                return;
+            }
+            if ((amount + 10) * 10000 > page.account!.total) {
+                PageUtils.scrollIntoView("pageTitle");
+                MessageBoard.publishWarning("很遗憾，你压根就没有这么多钱！");
+                return;
+            }
+
+            const target = $("#peopleSelect").find("option:selected").text();
+            if (!confirm("请您确认向" + target + "转账" + amount + "万GOLD？")) {
+                return;
+            }
+
+            const delta = BankUtils.calculateCashDifferenceAmount(page.account!.cash!, (amount + 10) * 10000);
+            const bank = new TownBank(credential, town?.id);
+            bank.withdraw(delta).then(() => {
+                const request = credential.asRequestMap();
+                request.set("gold", (amount * 10).toString());  // 送钱的接口单位是K
+                request.set("eid", (s as string).trim());
+                request.set("mode", "MONEY_SEND2");
+                NetworkUtils.post("town.cgi", request).then(html => {
+                    MessageBoard.processResponseMessage(html);
+                    bank.deposit()
+                        .then(() => this.#refreshMutablePage(credential, town));
+                });
+            });
         });
     }
 
