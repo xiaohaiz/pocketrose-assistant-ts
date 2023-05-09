@@ -5,7 +5,7 @@ import PageProcessor from "../PageProcessor";
 class LoginDashboardPageProcessor implements PageProcessor {
 
     process(): void {
-        PageUtils.loadButtonStyle(5);
+        PageUtils.loadButtonStyle(24);
         PageUtils.fixCurrentPageBrokenImages();
         PageUtils.removeUnusedHyperLinks();
         PageUtils.removeGoogleAnalyticsScript();
@@ -79,8 +79,8 @@ function doGenerateCell(configs: Map<number, {}>, code: number) {
     if (config !== undefined) {
         // @ts-ignore
         const name = config.name;
-        html += "<input type='button' class='fastLoginButton button-5' id='fastLogin_" + code + "' value='" + name + "'>";
-        // html += "<button role='button' class='fastLoginButton button-8' id='fastLogin_" + code + "'>" + name + "</button>"
+        html += "<input type='button' class='fastLoginButton button-24' " +
+            "id='fastLogin_" + code + "' value='" + name + "'>";
     } else {
         html += "<input type='button' disabled " +
             "style='background-color:#E8E8D0;border-width:0' value='　　　'>";

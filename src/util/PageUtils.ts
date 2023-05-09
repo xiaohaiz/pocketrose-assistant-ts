@@ -268,6 +268,40 @@ const BUTTON_STYLES: {} = {
         "  box-shadow: none;\n" +
         "  color: #2c5777;\n" +
         "}\n",
+    "24": ".button-24 {\n" +
+        "  background: #FF4742;\n" +
+        "  border: 1px solid #FF4742;\n" +
+        "  border-radius: 6px;\n" +
+        "  box-shadow: rgba(0, 0, 0, 0.1) 1px 2px 4px;\n" +
+        "  box-sizing: border-box;\n" +
+        "  color: #FFFFFF;\n" +
+        "  cursor: pointer;\n" +
+        "  display: inline-block;\n" +
+        "  font-size: 16px;\n" +
+        "  font-weight: 800;\n" +
+        "  line-height: 16px;\n" +
+        "  min-height: 40px;\n" +
+        "  outline: 0;\n" +
+        "  padding: 12px 14px;\n" +
+        "  text-align: center;\n" +
+        "  text-rendering: geometricprecision;\n" +
+        "  text-transform: none;\n" +
+        "  user-select: none;\n" +
+        "  -webkit-user-select: none;\n" +
+        "  touch-action: manipulation;\n" +
+        "  vertical-align: middle;\n" +
+        "}\n" +
+        "\n" +
+        ".button-24:hover,\n" +
+        ".button-24:active {\n" +
+        "  background-color: initial;\n" +
+        "  background-position: 0 0;\n" +
+        "  color: #FF4742;\n" +
+        "}\n" +
+        "\n" +
+        ".button-24:active {\n" +
+        "  opacity: .5;\n" +
+        "}\n",
 };
 
 export = PageUtils;
