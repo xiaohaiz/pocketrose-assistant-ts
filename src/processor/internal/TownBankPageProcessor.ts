@@ -168,6 +168,7 @@ class TownBankPageProcessor extends PageProcessorSupport {
     }
 
     #renderMutablePage(credential: Credential, page: TownBankPage, town?: Town) {
+        this.#bindMutableButtons(credential);
     }
 
     #bindMutableButtons(credential: Credential) {

@@ -34,6 +34,17 @@ class TownBank {
         };
         return await action();
     }
+
+    async load(townId?: string): Promise<BankAccount> {
+        const action = () => {
+            return new Promise<BankAccount>(resolve => {
+                this.open(townId).then(page => {
+                    resolve(page.account!);
+                });
+            });
+        };
+        return await action();
+    }
 }
 
 function doParsePage(html: string): TownBankPage {
