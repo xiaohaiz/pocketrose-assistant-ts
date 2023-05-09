@@ -182,6 +182,27 @@ class TownBankPageProcessor extends PageProcessorSupport {
                 .then(() => this.#refreshMutablePage(credential, town))
                 .catch(() => PageUtils.scrollIntoView("pageTitle"));
         });
+        $("#withdrawButton").on("click", () => {
+            const text = $("#withdrawAmount").val();
+            if (text === undefined || (text as string).trim() === "") {
+                PageUtils.scrollIntoView("pageTitle");
+                MessageBoard.publishWarning("没有输入取出的金额！");
+                return;
+            }
+            const amount = parseInt((text as string).trim());
+            if (isNaN(amount) || !Number.isInteger(amount) || amount <= 0) {
+                PageUtils.scrollIntoView("pageTitle");
+                MessageBoard.publishWarning("非法输入金额！");
+                return;
+            }
+            if (amount * 10000 > page.account!.saving!) {
+                PageUtils.scrollIntoView("pageTitle");
+                MessageBoard.publishWarning(amount + "万！真逗，搞得你好像有这么多存款似得！");
+                return;
+            }
+            new TownBank(credential, town?.id).withdraw(amount)
+                .then(() => this.#refreshMutablePage(credential, town));
+        });
     }
 
     #refreshMutablePage(credential: Credential, town?: Town) {
