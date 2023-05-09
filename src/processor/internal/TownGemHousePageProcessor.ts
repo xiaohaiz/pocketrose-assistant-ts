@@ -195,8 +195,8 @@ class TownGemHousePageProcessor extends PageProcessorCredentialSupport {
             }
 
             html += "</tr>";
-            html += "<tr style='display:none'>";
-            html += "<td id='equipment_detail' style='background-color:navy;color:greenyellow;font-weight:bold' colspan='9'></td>";
+            html += "<tr>";
+            html += "<td id='equipment_detail' style='background-color:navy;color:greenyellow;font-weight:bold' colspan='9'>　</td>";
             html += "</tr>";
             html += "</tbody>";
             html += "</table>";
@@ -271,6 +271,28 @@ class TownGemHousePageProcessor extends PageProcessorCredentialSupport {
     }
 
     #bindMutableButtons(credential: Credential) {
+        $(".equipment_detail_class")
+            .on("mouseenter", function () {
+                const index = parseInt(($(this).attr("id") as string).split("_")[1]);
+                new EquipmentManagement(credential).load()
+                    .then(page => {
+                        const equipment = page.findEquipment(index);
+                        if (equipment !== null) {
+                            let s = "";
+                            s += equipment.fullName;
+                            s += " ";
+                            s += "附加威力:" + equipment.additionalPower;
+                            s += " ";
+                            s += "附加重量:" + equipment.additionalWeight;
+                            s += " ";
+                            s += "附加幸运:" + equipment.additionalLuck;
+                            $("#equipment_detail").text(s);
+                        }
+                    });
+            })
+            .on("mouseleave", function () {
+                $("#equipment_detail").text("　");
+            });
         $("input:button[value='选择']").on("click", event => {
             const buttonId = $(event.target).attr("id") as string;
             if (PageUtils.isColorBlue(buttonId)) {
@@ -509,7 +531,7 @@ function doRender(page: DeprecatedTownGemHousePage) {
 
         html += "</tr>";
         html += "<tr style='display:none'>";
-        html += "<td id='equipment_detail' style='background-color:navy;color:greenyellow;font-weight:bold' colspan='9'></td>";
+        html += "<td id='equipment_detail' style='background-color:navy;color:greenyellow;font-weight:bold' colspan='9'>　</td>";
         html += "</tr>";
         html += "</tbody>";
         html += "</table>";
