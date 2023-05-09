@@ -1,24 +1,24 @@
-import PageUtils from "../../util/PageUtils";
-import EquipmentParser from "../../pocket/EquipmentParser";
-import Credential from "../../util/Credential";
+import NpcLoader from "../../core/NpcLoader";
+import SetupLoader from "../../core/SetupLoader";
 import Equipment from "../../pocket/Equipment";
-import MessageBoard from "../../util/MessageBoard";
-import NetworkUtils from "../../util/NetworkUtils";
+import EquipmentParser from "../../pocket/EquipmentParser";
 import EquipmentSet from "../../pocket/EquipmentSet";
 import EquipmentSetLoader from "../../pocket/EquipmentSetLoader";
-import TownBank from "../../pocket/TownBank";
-import SetupLoader from "../../core/SetupLoader";
-import CommentBoard from "../../util/CommentBoard";
-import NpcLoader from "../../core/NpcLoader";
-import RoleStatusLoader from "../../pocket/RoleStatusLoader";
 import RoleLoader from "../../pocket/RoleLoader";
-import PageProcessorSupport from "../PageProcessorSupport";
+import RoleStatusLoader from "../../pocket/RoleStatusLoader";
+import TownBank from "../../pocket/TownBank";
+import CommentBoard from "../../util/CommentBoard";
+import Credential from "../../util/Credential";
+import MessageBoard from "../../util/MessageBoard";
+import NetworkUtils from "../../util/NetworkUtils";
+import PageUtils from "../../util/PageUtils";
 import PageProcessorContext from "../PageProcessorContext";
+import PageProcessorCredentialSupport from "../PageProcessorCredentialSupport";
 
 /**
  * @deprecated
  */
-class PersonalEquipmentManagementPageProcessor extends PageProcessorSupport {
+class PersonalEquipmentManagementPageProcessor extends PageProcessorCredentialSupport {
 
     doProcess(credential: Credential, context?: PageProcessorContext): void {
         const pageHtml = document.documentElement.outerHTML;

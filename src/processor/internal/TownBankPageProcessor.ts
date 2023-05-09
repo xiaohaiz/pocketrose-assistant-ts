@@ -9,9 +9,9 @@ import MessageBoard from "../../util/MessageBoard";
 import NetworkUtils from "../../util/NetworkUtils";
 import PageUtils from "../../util/PageUtils";
 import PageProcessorContext from "../PageProcessorContext";
-import PageProcessorSupport from "../PageProcessorSupport";
+import PageProcessorCredentialSupport from "../PageProcessorCredentialSupport";
 
-class TownBankPageProcessor extends PageProcessorSupport {
+class TownBankPageProcessor extends PageProcessorCredentialSupport {
 
     doProcess(credential: Credential, context?: PageProcessorContext): void {
         const page = TownBank.parsePage(PageUtils.currentPageHtml());

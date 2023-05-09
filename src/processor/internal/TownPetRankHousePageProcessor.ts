@@ -1,10 +1,10 @@
-import Credential from "../../util/Credential";
-import PetProfileLoader from "../../pocket/pet/PetProfileLoader";
 import PetProfile from "../../common/PetProfile";
-import PageProcessorSupport from "../PageProcessorSupport";
+import PetProfileLoader from "../../pocket/pet/PetProfileLoader";
+import Credential from "../../util/Credential";
 import PageProcessorContext from "../PageProcessorContext";
+import PageProcessorCredentialSupport from "../PageProcessorCredentialSupport";
 
-class TownPetRankHousePageProcessor extends PageProcessorSupport {
+class TownPetRankHousePageProcessor extends PageProcessorCredentialSupport {
 
     doProcess(credential: Credential, context?: PageProcessorContext): void {
         doProcess(credential);

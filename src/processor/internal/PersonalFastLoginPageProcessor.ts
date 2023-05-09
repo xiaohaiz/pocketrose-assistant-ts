@@ -1,11 +1,11 @@
-import Credential from "../../util/Credential";
 import FastLoginLoader from "../../pocket/FastLoginLoader";
+import Credential from "../../util/Credential";
 import MessageBoard from "../../util/MessageBoard";
 import StorageUtils from "../../util/StorageUtils";
-import PageProcessorSupport from "../PageProcessorSupport";
 import PageProcessorContext from "../PageProcessorContext";
+import PageProcessorCredentialSupport from "../PageProcessorCredentialSupport";
 
-class PersonalFastLoginPageProcessor extends PageProcessorSupport {
+class PersonalFastLoginPageProcessor extends PageProcessorCredentialSupport {
 
     doProcess(credential: Credential, context?: PageProcessorContext): void {
         doProcess(credential);

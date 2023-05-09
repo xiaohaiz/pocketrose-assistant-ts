@@ -1,18 +1,18 @@
-import PageUtils from "../../util/PageUtils";
+import NpcLoader from "../../core/NpcLoader";
+import TownBank from "../../pocket/bank/TownBank";
 import TownGemHouse from "../../pocket/house/TownGemHouse";
 import TownGemHousePage from "../../pocket/house/TownGemHousePage";
+import EquipmentManagement from "../../pocket/personal/EquipmentManagement";
+import BankUtils from "../../util/BankUtils";
 import Credential from "../../util/Credential";
-import NpcLoader from "../../core/NpcLoader";
 import MessageBoard from "../../util/MessageBoard";
 import NetworkUtils from "../../util/NetworkUtils";
-import BankUtils from "../../util/BankUtils";
-import TownBank from "../../pocket/bank/TownBank";
+import PageUtils from "../../util/PageUtils";
 import StringUtils from "../../util/StringUtils";
-import EquipmentManagement from "../../pocket/personal/EquipmentManagement";
-import PageProcessorSupport from "../PageProcessorSupport";
 import PageProcessorContext from "../PageProcessorContext";
+import PageProcessorCredentialSupport from "../PageProcessorCredentialSupport";
 
-class TownGemHousePageProcessor extends PageProcessorSupport {
+class TownGemHousePageProcessor extends PageProcessorCredentialSupport {
 
     constructor() {
         super();

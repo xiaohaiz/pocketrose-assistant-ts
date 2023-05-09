@@ -1,15 +1,15 @@
-import PageUtils from "../../util/PageUtils";
+import NpcLoader from "../../core/NpcLoader";
+import SetupLoader from "../../core/SetupLoader";
+import Equipment from "../../pocket/Equipment";
 import EquipmentParser from "../../pocket/EquipmentParser";
 import Credential from "../../util/Credential";
-import Equipment from "../../pocket/Equipment";
 import MessageBoard from "../../util/MessageBoard";
-import NpcLoader from "../../core/NpcLoader";
 import NetworkUtils from "../../util/NetworkUtils";
-import SetupLoader from "../../core/SetupLoader";
-import PageProcessorSupport from "../PageProcessorSupport";
+import PageUtils from "../../util/PageUtils";
 import PageProcessorContext from "../PageProcessorContext";
+import PageProcessorCredentialSupport from "../PageProcessorCredentialSupport";
 
-class CastleWarehousePageProcessor extends PageProcessorSupport {
+class CastleWarehousePageProcessor extends PageProcessorCredentialSupport {
 
     constructor() {
         super();

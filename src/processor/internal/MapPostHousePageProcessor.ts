@@ -1,17 +1,17 @@
-import Credential from "../../util/Credential";
 import NpcLoader from "../../core/NpcLoader";
+import CastleLoader from "../../pocket/CastleLoader";
 import MapBuilder from "../../pocket/MapBuilder";
 import RoleLocationLoader from "../../pocket/RoleLocationLoader";
-import StringUtils from "../../util/StringUtils";
-import CastleLoader from "../../pocket/CastleLoader";
-import Coordinate from "../../util/Coordinate";
-import MessageBoard from "../../util/MessageBoard";
-import NetworkUtils from "../../util/NetworkUtils";
 import TravelPlanBuilder from "../../pocket/TravelPlanBuilder";
 import TravelPlanExecutor from "../../pocket/TravelPlanExecutor";
-import PageProcessorSupport from "../PageProcessorSupport";
+import Coordinate from "../../util/Coordinate";
+import Credential from "../../util/Credential";
+import MessageBoard from "../../util/MessageBoard";
+import NetworkUtils from "../../util/NetworkUtils";
+import StringUtils from "../../util/StringUtils";
+import PageProcessorCredentialSupport from "../PageProcessorCredentialSupport";
 
-class MapPostHousePageProcessor extends PageProcessorSupport {
+class MapPostHousePageProcessor extends PageProcessorCredentialSupport {
 
     constructor() {
         super();

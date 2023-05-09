@@ -1,15 +1,15 @@
-import SetupItemManager from "../../setup/SetupItemManager";
-import EquipmentLoader from "../../pocket/EquipmentLoader";
 import Equipment from "../../pocket/Equipment";
-import Credential from "../../util/Credential";
-import NetworkUtils from "../../util/NetworkUtils";
+import EquipmentLoader from "../../pocket/EquipmentLoader";
 import EquipmentParser from "../../pocket/EquipmentParser";
-import TreasureBag from "../../pocket/TreasureBag";
-import PageProcessorSupport from "../PageProcessorSupport";
 import RoleLoader from "../../pocket/RoleLoader";
+import TreasureBag from "../../pocket/TreasureBag";
+import SetupItemManager from "../../setup/SetupItemManager";
+import Credential from "../../util/Credential";
 import MessageBoard from "../../util/MessageBoard";
+import NetworkUtils from "../../util/NetworkUtils";
+import PageProcessorCredentialSupport from "../PageProcessorCredentialSupport";
 
-abstract class AbstractPersonalSetupPageProcessor extends PageProcessorSupport {
+abstract class AbstractPersonalSetupPageProcessor extends PageProcessorCredentialSupport {
 
     readonly #setupItemManager: SetupItemManager;
 

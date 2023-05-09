@@ -1,17 +1,17 @@
+import NpcLoader from "../../core/NpcLoader";
 import TownLoader from "../../core/TownLoader";
 import TownBank from "../../pocket/bank/TownBank";
 import TownWeaponHouse from "../../pocket/house/TownWeaponHouse";
 import TownWeaponHousePage from "../../pocket/house/TownWeaponHousePage";
-import NpcLoader from "../../core/NpcLoader";
 import BankUtils from "../../util/BankUtils";
 import Constants from "../../util/Constants";
 import Credential from "../../util/Credential";
 import MessageBoard from "../../util/MessageBoard";
 import PageUtils from "../../util/PageUtils";
 import PageProcessorContext from "../PageProcessorContext";
-import PageProcessorSupport from "../PageProcessorSupport";
+import PageProcessorCredentialSupport from "../PageProcessorCredentialSupport";
 
-class TownWeaponHousePageProcessor extends PageProcessorSupport {
+class TownWeaponHousePageProcessor extends PageProcessorCredentialSupport {
 
     constructor() {
         super();

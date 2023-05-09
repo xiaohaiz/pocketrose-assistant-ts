@@ -1,8 +1,8 @@
 import Credential from "../../util/Credential";
-import PageProcessorSupport from "../PageProcessorSupport";
 import PageProcessorContext from "../PageProcessorContext";
+import PageProcessorCredentialSupport from "../PageProcessorCredentialSupport";
 
-abstract class AbstractPersonalPetManagementPageProcessor extends PageProcessorSupport {
+abstract class AbstractPersonalPetManagementPageProcessor extends PageProcessorCredentialSupport {
 
     doProcess(credential: Credential, context?: PageProcessorContext) {
     }

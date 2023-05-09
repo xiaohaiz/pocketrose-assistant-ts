@@ -1,12 +1,12 @@
-import PageUtils from "../../util/PageUtils";
-import SetupLoader from "../../core/SetupLoader";
-import StringUtils from "../../util/StringUtils";
 import NpcLoader from "../../core/NpcLoader";
+import SetupLoader from "../../core/SetupLoader";
 import CommentBoard from "../../util/CommentBoard";
-import PageProcessorSupport from "../PageProcessorSupport";
 import Credential from "../../util/Credential";
+import PageUtils from "../../util/PageUtils";
+import StringUtils from "../../util/StringUtils";
+import PageProcessorCredentialSupport from "../PageProcessorCredentialSupport";
 
-class BattlePageProcessor extends PageProcessorSupport {
+class BattlePageProcessor extends PageProcessorCredentialSupport {
 
     constructor() {
         super();

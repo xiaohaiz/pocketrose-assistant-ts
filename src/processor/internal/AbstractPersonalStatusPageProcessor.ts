@@ -1,13 +1,13 @@
-import PageProcessorSupport from "../PageProcessorSupport";
-import PageProcessorContext from "../PageProcessorContext";
-import Credential from "../../util/Credential";
-import PersonalStatus from "../../pocket/PersonalStatus";
-import PageUtils from "../../util/PageUtils";
-import Role from "../../pocket/Role";
 import SetupLoader from "../../core/SetupLoader";
+import PersonalStatus from "../../pocket/PersonalStatus";
+import Role from "../../pocket/Role";
+import Credential from "../../util/Credential";
+import PageUtils from "../../util/PageUtils";
 import StringUtils from "../../util/StringUtils";
+import PageProcessorContext from "../PageProcessorContext";
+import PageProcessorCredentialSupport from "../PageProcessorCredentialSupport";
 
-abstract class AbstractPersonalStatusPageProcessor extends PageProcessorSupport {
+abstract class AbstractPersonalStatusPageProcessor extends PageProcessorCredentialSupport {
 
     protected constructor() {
         super();

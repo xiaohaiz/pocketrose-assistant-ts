@@ -1,9 +1,9 @@
-import PageProcessor from "./PageProcessor";
-import PageUtils from "../util/PageUtils";
 import Credential from "../util/Credential";
+import PageUtils from "../util/PageUtils";
+import PageProcessor from "./PageProcessor";
 import PageProcessorContext from "./PageProcessorContext";
 
-abstract class PageProcessorSupport implements PageProcessor {
+abstract class PageProcessorCredentialSupport implements PageProcessor {
 
     process(context?: PageProcessorContext): void {
         PageUtils.fixCurrentPageBrokenImages();
@@ -22,4 +22,4 @@ abstract class PageProcessorSupport implements PageProcessor {
     abstract doProcess(credential: Credential, context?: PageProcessorContext): void;
 }
 
-export = PageProcessorSupport;
+export = PageProcessorCredentialSupport;

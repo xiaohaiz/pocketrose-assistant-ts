@@ -8,9 +8,9 @@ import NetworkUtils from "../../util/NetworkUtils";
 import PageUtils from "../../util/PageUtils";
 import StringUtils from "../../util/StringUtils";
 import PageProcessorContext from "../PageProcessorContext";
-import PageProcessorSupport from "../PageProcessorSupport";
+import PageProcessorCredentialSupport from "../PageProcessorCredentialSupport";
 
-class TownDashboardPageProcessor extends PageProcessorSupport {
+class TownDashboardPageProcessor extends PageProcessorCredentialSupport {
 
     constructor() {
         super();

@@ -1,23 +1,23 @@
-import Credential from "../../util/Credential";
-import TreasureHintParser from "../../pocket/TreasureHintParser";
-import TreasureHint from "../../pocket/TreasureHint";
 import NpcLoader from "../../core/NpcLoader";
-import MessageBoard from "../../util/MessageBoard";
-import NetworkUtils from "../../util/NetworkUtils";
-import TownBank from "../../pocket/TownBank";
 import MapBuilder from "../../pocket/MapBuilder";
-import StringUtils from "../../util/StringUtils";
-import Coordinate from "../../util/Coordinate";
+import MapExplorer from "../../pocket/MapExplorer";
 import RoleLoader from "../../pocket/RoleLoader";
 import Town from "../../pocket/Town";
+import TownBank from "../../pocket/TownBank";
 import TownEntrance from "../../pocket/TownEntrance";
 import TravelPlan from "../../pocket/TravelPlan";
 import TravelPlanExecutor from "../../pocket/TravelPlanExecutor";
-import MapExplorer from "../../pocket/MapExplorer";
-import PageProcessorSupport from "../PageProcessorSupport";
+import TreasureHint from "../../pocket/TreasureHint";
+import TreasureHintParser from "../../pocket/TreasureHintParser";
+import Coordinate from "../../util/Coordinate";
+import Credential from "../../util/Credential";
+import MessageBoard from "../../util/MessageBoard";
+import NetworkUtils from "../../util/NetworkUtils";
+import StringUtils from "../../util/StringUtils";
 import PageProcessorContext from "../PageProcessorContext";
+import PageProcessorCredentialSupport from "../PageProcessorCredentialSupport";
 
-class TownAdventureGuildPageProcessor extends PageProcessorSupport {
+class TownAdventureGuildPageProcessor extends PageProcessorCredentialSupport {
 
     constructor() {
         super();

@@ -10,9 +10,9 @@ import MessageBoard from "../../util/MessageBoard";
 import PageUtils from "../../util/PageUtils";
 import StringUtils from "../../util/StringUtils";
 import PageProcessorContext from "../PageProcessorContext";
-import PageProcessorSupport from "../PageProcessorSupport";
+import PageProcessorCredentialSupport from "../PageProcessorCredentialSupport";
 
-class TownCastleKeeperPageProcessor extends PageProcessorSupport {
+class TownCastleKeeperPageProcessor extends PageProcessorCredentialSupport {
 
     constructor() {
         super();

@@ -1,22 +1,22 @@
-import PageUtils from "../../util/PageUtils";
-import PetParser from "../../pocket/PetParser";
-import Credential from "../../util/Credential";
+import NpcLoader from "../../core/NpcLoader";
+import EquipmentParser from "../../pocket/EquipmentParser";
 import Pet from "../../pocket/Pet";
-import StringUtils from "../../util/StringUtils";
+import PetProfileLoader from "../../pocket/pet/PetProfileLoader";
+import PetParser from "../../pocket/PetParser";
+import RoleLoader from "../../pocket/RoleLoader";
+import TownBank from "../../pocket/TownBank";
+import Credential from "../../util/Credential";
 import MessageBoard from "../../util/MessageBoard";
 import NetworkUtils from "../../util/NetworkUtils";
-import TownBank from "../../pocket/TownBank";
-import EquipmentParser from "../../pocket/EquipmentParser";
-import NpcLoader from "../../core/NpcLoader";
-import RoleLoader from "../../pocket/RoleLoader";
-import PetProfileLoader from "../../pocket/pet/PetProfileLoader";
-import PageProcessorSupport from "../PageProcessorSupport";
+import PageUtils from "../../util/PageUtils";
+import StringUtils from "../../util/StringUtils";
 import PageProcessorContext from "../PageProcessorContext";
+import PageProcessorCredentialSupport from "../PageProcessorCredentialSupport";
 
 /**
  * @deprecated
  */
-class PersonalPetManagementPageProcessor extends PageProcessorSupport {
+class PersonalPetManagementPageProcessor extends PageProcessorCredentialSupport {
 
     doProcess(credential: Credential, context?: PageProcessorContext): void {
         const pageHtml = document.documentElement.outerHTML;

@@ -1,19 +1,19 @@
-import CareerParser from "../../pocket/CareerParser";
-import Credential from "../../util/Credential";
 import NpcLoader from "../../core/NpcLoader";
-import CommentBoard from "../../util/CommentBoard";
+import SetupLoader from "../../core/SetupLoader";
+import CareerLoader from "../../pocket/CareerLoader";
+import CareerParser from "../../pocket/CareerParser";
 import Role from "../../pocket/Role";
 import RoleLoader from "../../pocket/RoleLoader";
-import CareerLoader from "../../pocket/CareerLoader";
-import SetupLoader from "../../core/SetupLoader";
 import Spell from "../../pocket/Spell";
 import SpellLoader from "../../pocket/SpellLoader";
-import NetworkUtils from "../../util/NetworkUtils";
+import CommentBoard from "../../util/CommentBoard";
+import Credential from "../../util/Credential";
 import MessageBoard from "../../util/MessageBoard";
-import PageProcessorSupport from "../PageProcessorSupport";
+import NetworkUtils from "../../util/NetworkUtils";
 import PageProcessorContext from "../PageProcessorContext";
+import PageProcessorCredentialSupport from "../PageProcessorCredentialSupport";
 
-class PersonalCareerManagementPageProcessor extends PageProcessorSupport {
+class PersonalCareerManagementPageProcessor extends PageProcessorCredentialSupport {
 
     doProcess(credential: Credential, context?: PageProcessorContext): void {
         const pageHtml = document.documentElement.outerHTML;
