@@ -140,6 +140,132 @@ class TownGemHousePageProcessor extends PageProcessorCredentialSupport {
     }
 
     #renderMutablePage(credential: Credential, page: TownGemHousePage, town: Town) {
+        if (page.equipmentList!.length > 0) {
+            let html = "";
+            html += "<table style='border-width:0;background-color:#888888;margin:auto'>";
+            html += "<tbody style='background-color:#F8F0E0;text-align:center'>";
+            html += "<tr>";
+            html += "<td style='background-color:darkred;color:wheat;font-weight:bold' colspan='9'>";
+            html += "＜ 随 身 装 备 ＞";
+            html += "</td>";
+            html += "<tr>";
+            html += "<th style='background-color:#E8E8D0'>选择</th>";
+            html += "<th style='background-color:#EFE0C0'>装备</th>";
+            html += "<th style='background-color:#E0D0B0'>名字</th>";
+            html += "<th style='background-color:#EFE0C0'>种类</th>";
+            html += "<th style='background-color:#E0D0B0'>威力</th>";
+            html += "<th style='background-color:#EFE0C0'>重量</th>";
+            html += "<th style='background-color:#EFE0C0'>耐久</th>";
+            html += "<th style='background-color:#E0D0B0'>宝石</th>";
+            html += "<th style='background-color:#E0D0B0'>销毁</th>";
+            html += "</tr>";
+
+            for (const equipment of page.equipmentList!) {
+                const canFuse = equipment.selectable! && (!equipment.using! || (equipment.using! && equipment.name === "宠物蛋"));
+                const canMelt = !equipment.using! && page.townGemMeltHousePage!.canMelt(equipment.index!);
+                if (!canFuse && !canMelt) {
+                    continue;
+                }
+
+                html += "<tr>";
+                html += "<td style='background-color:#E8E8D0'>";
+                if (canFuse) {
+                    html += "<input type='button' value='选择' " +
+                        "class='dynamic_button_class' " +
+                        "id='select_" + equipment.index + "' " +
+                        "style='color:grey'>";
+                }
+                html += "</td>";
+                html += "<td style='background-color:#EFE0C0'>" + equipment.usingHTML + "</td>";
+                html += "<td style='background-color:#E0D0B0' id='name_" + equipment.index + "' class='equipment_detail_class'>" + equipment.nameHTML + "</td>";
+                html += "<td style='background-color:#EFE0C0'>" + equipment.category + "</td>";
+                html += "<td style='background-color:#E0D0B0'>" + equipment.power + "</td>";
+                html += "<td style='background-color:#EFE0C0'>" + equipment.weight + "</td>";
+                html += "<td style='background-color:#EFE0C0'>" + equipment.endureHtml + "</td>";
+                html += "<td style='background-color:#E0D0B0'>" + equipment.gemCountHtml + "</td>";
+                html += "<td style='background-color:#E0D0B0'>";
+                if (canMelt) {
+                    html += "<input type='button' value='销毁' " +
+                        "class='dynamic_button_class' " +
+                        "id='melt_" + equipment.index + "' " +
+                        "style='color:red'>";
+                }
+                html += "</td>";
+                html += "</tr>";
+            }
+
+            html += "</tr>";
+            html += "<tr style='display:none'>";
+            html += "<td id='equipment_detail' style='background-color:navy;color:greenyellow;font-weight:bold' colspan='9'></td>";
+            html += "</tr>";
+            html += "</tbody>";
+            html += "</table>";
+
+            $("#equipment_list_cell")
+                .html(html)
+                .parent()
+                .show();
+
+            const lastFuse = $("#last_fuse_cell").text();
+            if (lastFuse !== "none" && lastFuse.includes("/")) {
+                const equipmentName = StringUtils.substringBefore(lastFuse, "/");
+                const equipmentSequence = parseInt(StringUtils.substringAfter(lastFuse, "/"));
+
+                // 查找装备
+                let equipmentIndex = -1;
+                let sequence = 0;
+                for (const equipment of page.equipmentList!) {
+                    if (equipment.fullName === equipmentName) {
+                        sequence++;
+                        if (sequence === equipmentSequence) {
+                            equipmentIndex = equipment.index!;
+                            break;
+                        }
+                    }
+                }
+                if (equipmentIndex >= 0) {
+                    // 找到对应的装备，修改对应按钮的状态
+                    const buttonId = "select_" + equipmentIndex;
+                    if ($("#" + buttonId).length > 0) {
+                        $("#" + buttonId).css("color", "blue");
+                    }
+                }
+            }
+        }
+
+        if (page.gemList!.length > 0) {
+            let html = "";
+            html += "<table style='border-width:0;background-color:#888888;margin:auto'>";
+            html += "<tbody style='background-color:#F8F0E0;text-align:center'>";
+            html += "<tr>";
+            html += "<td style='background-color:darkgreen;color:wheat;font-weight:bold' colspan='2'>";
+            html += "＜ 可 用 宝 石 ＞";
+            html += "</td>";
+            html += "</tr>";
+            html += "<tr>";
+            html += "<th style='background-color:#E8E8D0'>宝石</th>";
+            html += "<th style='background-color:#EFE0C0'>镶嵌</th>";
+            html += "</tr>";
+
+            for (const gem of page.gemList!) {
+                html += "<tr>";
+                html += "<td style='background-color:#E8E8D0'>" + gem.nameHTML + "</td>";
+                html += "<td style='background-color:#EFE0C0'>";
+                html += "<input type='button' value='镶嵌' " +
+                    "class='dynamic_button_class' " +
+                    "id='fuse_" + gem.index + "'>";
+                html += "</td>";
+                html += "</tr>";
+            }
+
+            html += "</tbody>";
+            html += "</table>";
+
+            $("#gem_list_cell")
+                .html(html)
+                .parent()
+                .show();
+        }
     }
 
     #bindMutableButtons() {
