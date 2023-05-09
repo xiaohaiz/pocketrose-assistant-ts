@@ -73,12 +73,9 @@ function doProcess(credential: Credential, petList: Pet[], studyStatus: number[]
     $("#messageBoard")
         .css("background-color", "black")
         .css("color", "white")
-        .css("height", "80");
+        .css("height", "96");
     MessageBoard.resetMessageBoard("全新的宠物管理UI为您带来不一样的感受，试试把鼠标停留在宠物图片上有惊喜。<br>" +
         "手机用户请试试单击宠物名字那一栏。");
-    $("#messageBoard").closest("td")
-        .prev()
-        .css("background-color", "black");
 
     new RoleLoader(credential).load()
         .then(role => {
@@ -454,25 +451,33 @@ function doBindPetFuture(petList: Pet[]) {
                     html += "<th>速努</th>";
                     html += "<th>捕获</th>";
                     html += "<th>成长</th>";
-                    html += "<td rowspan='2' style='text-align:center'>" + petFuture.imageHtml + "</td>";
+                    html += "<td rowspan='3' style='text-align:center'>" + petFuture.imageHtml + "</td>";
                     html += "</tr>";
                     html += "<tr style='background-color:black;color:wheat;font-weight:bold;text-align:center'>";
-                    html += "<td>" + petFuture.name + "</td>";
-                    html += "<td>" + petFuture.totalBaseStats + "</td>";
+                    html += "<td rowspan='2'>" + petFuture.name + "</td>";
+                    html += "<td rowspan='2'>" + petFuture.totalBaseStats + "</td>";
                     html += "<td>" + petFuture.healthBaseStats + "</td>";
                     html += "<td>" + petFuture.attackBaseStats + "</td>";
                     html += "<td>" + petFuture.defenseBaseStats + "</td>";
                     html += "<td>" + petFuture.specialAttackBaseStats + "</td>";
                     html += "<td>" + petFuture.specialDefenseBaseStats + "</td>";
                     html += "<td>" + petFuture.speedBaseStats + "</td>";
-                    html += "<td>" + petFuture.healthEffort + "</td>";
-                    html += "<td>" + petFuture.attackEffort + "</td>";
-                    html += "<td>" + petFuture.defenseEffort + "</td>";
-                    html += "<td>" + petFuture.specialAttackEffort + "</td>";
-                    html += "<td>" + petFuture.specialDefenseEffort + "</td>";
-                    html += "<td>" + petFuture.speedEffort + "</td>";
-                    html += "<td>" + petFuture.catchRatio + "</td>";
-                    html += "<td>" + petFuture.growExperience + "</td>";
+                    html += "<td rowspan='2'>" + petFuture.healthEffort + "</td>";
+                    html += "<td rowspan='2'>" + petFuture.attackEffort + "</td>";
+                    html += "<td rowspan='2'>" + petFuture.defenseEffort + "</td>";
+                    html += "<td rowspan='2'>" + petFuture.specialAttackEffort + "</td>";
+                    html += "<td rowspan='2'>" + petFuture.specialDefenseEffort + "</td>";
+                    html += "<td rowspan='2'>" + petFuture.speedEffort + "</td>";
+                    html += "<td rowspan='2'>" + petFuture.catchRatio + "</td>";
+                    html += "<td rowspan='2'>" + petFuture.growExperience + "</td>";
+                    html += "</tr>";
+                    html += "<tr style='background-color:black;color:wheat;font-weight:bold;text-align:center'>";
+                    html += "<td>" + petFuture.perfectHealth + "</td>";
+                    html += "<td>" + petFuture.perfectAttack + "</td>";
+                    html += "<td>" + petFuture.perfectDefense + "</td>";
+                    html += "<td>" + petFuture.perfectSpecialAttack + "</td>";
+                    html += "<td>" + petFuture.perfectSpecialDefense + "</td>";
+                    html += "<td>" + petFuture.perfectSpeed + "</td>";
                     html += "</tr>";
                     html += "</tbody>";
                     html += "</table>";
