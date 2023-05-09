@@ -1,7 +1,7 @@
-import StringUtils from "../util/StringUtils";
+import Spell from "../common/Spell";
 import Credential from "../util/Credential";
 import NetworkUtils from "../util/NetworkUtils";
-import Spell from "./Spell";
+import StringUtils from "../util/StringUtils";
 
 class SpellLoader {
 
