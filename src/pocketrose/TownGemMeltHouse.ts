@@ -1,3 +1,4 @@
+import Equipment from "../common/Equipment";
 import Role from "../common/Role";
 import Credential from "../util/Credential";
 import StringUtils from "../util/StringUtils";
@@ -54,8 +55,35 @@ function doParsePage(html: string): TownGemMeltHousePage {
             role.cash = parseInt(s);
         });
 
+    const equipmentList: Equipment[] = [];
+    $(html).find("input:radio")
+        .each(function (_idx, radio) {
+            const c0 = $(radio).parent();
+            const c1 = c0.next();
+            const c2 = c1.next();
+            const c3 = c2.next();
+            const c4 = c3.next();
+            const c5 = c4.next();
+            const c6 = c5.next();
+            const c7 = c6.next();
+
+            const equipment = new Equipment();
+            equipment.index = parseInt($(radio).val() as string);
+            equipment.selectable = !$(radio).prop("disabled");
+            equipment.using = c1.text() === "★";
+            equipment.parseName(c2.html());
+            equipment.category = c3.text();
+            equipment.additionalPower = parseInt(c4.text());
+            equipment.additionalWeight = parseInt(c5.text());
+            equipment.additionalLuck = parseInt(c6.text());
+            equipment.parseGemCount(c7.text());
+
+            equipmentList.push(equipment);
+        });
+
     const page = new TownGemMeltHousePage();
     page.role = role;
+    page.equipmentList = equipmentList;
     return page;
 }
 
