@@ -271,6 +271,23 @@ class TownGemHousePageProcessor extends PageProcessorCredentialSupport {
     }
 
     #bindMutableButtons(credential: Credential) {
+        $("input:button[value='选择']").on("click", event => {
+            const buttonId = $(event.target).attr("id") as string;
+            if (PageUtils.isColorBlue(buttonId)) {
+                // 当前按钮是蓝色，是已经选中状态。将其变为灰色即可
+                $("#" + buttonId).css("color", "grey");
+            } else if (PageUtils.isColorGrey(buttonId)) {
+                // 当前按钮是灰色，将其变成选中状态，并且取消其他所有的按钮
+                $("#" + buttonId).css("color", "blue");
+                $("input:button[value='选择']")
+                    .each((_idx, button) => {
+                        const otherButtonId = $(button).attr("id") as string;
+                        if (otherButtonId !== buttonId) {
+                            $("#" + otherButtonId).css("color", "grey");
+                        }
+                    });
+            }
+        });
     }
 
     #refreshMutablePage(credential: Credential, town: Town) {
