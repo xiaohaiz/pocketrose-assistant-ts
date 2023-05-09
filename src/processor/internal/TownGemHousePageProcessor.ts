@@ -317,6 +317,7 @@ class TownGemHousePageProcessor extends PageProcessorCredentialSupport {
             const index = parseInt(buttonId.split("_")[1]);
             const equipment = page.findEquipment(index);
             if (!confirm("确认销毁“" + equipment?.nameHTML + "”的宝石？")) {
+                PageUtils.scrollIntoView("pageTitle");
                 return;
             }
             const amount = BankUtils.calculateCashDifferenceAmount(page.role!.cash!, 5000000);
@@ -327,6 +328,52 @@ class TownGemHousePageProcessor extends PageProcessorCredentialSupport {
                         this.#refreshMutablePage(credential, town);
                     });
                 });
+            });
+        });
+        $("input:button[value='镶嵌']").on("click", event => {
+            const buttonId = $(event.target).attr("id") as string;
+            const index = parseInt(buttonId.split("_")[1]);
+
+            let checkedIndex: number | undefined = undefined;
+            $("input:button[value='选择']")
+                .filter(function () {
+                    const buttonId = $(this).attr("id") as string;
+                    return PageUtils.isColorBlue(buttonId);
+                })
+                .each(function (_idx, button) {
+                    if (checkedIndex === undefined) {
+                        const buttonId = $(button).attr("id") as string;
+                        checkedIndex = parseInt(StringUtils.substringAfter(buttonId, "_"));
+                    }
+                });
+            if (checkedIndex === undefined) {
+                PageUtils.scrollIntoView("pageTitle");
+                MessageBoard.publishWarning("没有选择要镶嵌的装备！");
+                return;
+            }
+            const equipment = page.findEquipment(checkedIndex);
+            const gem = page.findGem(index);
+            if (!confirm("确认为“" + equipment?.nameHTML + "”镶嵌“" + gem?.name + "”？")) {
+                PageUtils.scrollIntoView("pageTitle");
+                return;
+            }
+            // 找这件装备的序号是多少
+            let lastFuse = "none";
+            let sequence = 0;
+            for (const it of page.equipmentList!) {
+                if (it.fullName === equipment!.fullName) {
+                    sequence++;
+                }
+                if (it.index! === equipment!.index!) {
+                    lastFuse = equipment!.fullName + "/" + sequence;
+                    break;
+                }
+            }
+
+            new TownGemHouse(credential, town.id).fuse(checkedIndex, index).then(() => {
+                // 合成装备之后，设置最后一次合成的信息
+                $("#last_fuse_cell").text(lastFuse);
+                this.#refreshMutablePage(credential, town);
             });
         });
     }

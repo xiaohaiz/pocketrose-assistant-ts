@@ -1,6 +1,7 @@
 import Equipment from "../common/Equipment";
 import Role from "../common/Role";
 import Credential from "../util/Credential";
+import MessageBoard from "../util/MessageBoard";
 import NetworkUtils from "../util/NetworkUtils";
 import StringUtils from "../util/StringUtils";
 import TownGemHousePage from "./TownGemHousePage";
@@ -43,6 +44,23 @@ class TownGemHouse {
                     this.parsePage(html).then(page => {
                         resolve(page);
                     });
+                });
+            });
+        };
+        return await action();
+    }
+
+    async fuse(equipmentIndex: number, gemIndex: number): Promise<void> {
+        const action = () => {
+            return new Promise<void>(resolve => {
+                const request = this.#credential.asRequestMap();
+                request.set("select", equipmentIndex.toString());
+                request.set("baoshi", gemIndex.toString());
+                request.set("azukeru", "0");
+                request.set("mode", "BAOSHI_MAKE");
+                NetworkUtils.post("town.cgi", request).then(html => {
+                    MessageBoard.processResponseMessage(html);
+                    resolve();
                 });
             });
         };
