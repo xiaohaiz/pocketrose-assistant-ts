@@ -1,6 +1,6 @@
 import NpcLoader from "../../core/NpcLoader";
+import Town from "../../core/Town";
 import TownLoader from "../../core/TownLoader";
-import Town from "../../pocket/Town";
 import TownBank from "../../pocketrose/TownBank";
 import TownBankPage from "../../pocketrose/TownBankPage";
 import BankUtils from "../../util/BankUtils";
