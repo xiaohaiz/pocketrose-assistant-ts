@@ -1,5 +1,4 @@
 import NpcLoader from "../../core/NpcLoader";
-import Town from "../../core/Town";
 import TownLoader from "../../core/TownLoader";
 import TownArmorHouse from "../../pocketrose/TownArmorHouse";
 import TownArmorHousePage from "../../pocketrose/TownArmorHousePage";
@@ -13,11 +12,11 @@ class TownArmorHousePageProcessor extends PageProcessorCredentialSupport {
     doProcess(credential: Credential, context?: PageProcessorContext): void {
         const page = TownArmorHouse.parsePage(PageUtils.currentPageHtml());
         const town = TownLoader.getTownById(page.townId!)!;
-        this.#renderImmutablePage(credential, town);
-        this.#renderMutablePage(credential, page, town);
+        this.#renderImmutablePage(credential, page);
+        this.#renderMutablePage(credential, page);
     }
 
-    #renderImmutablePage(credential: Credential, town: Town) {
+    #renderImmutablePage(credential: Credential, page: TownArmorHousePage) {
         // 重新绘制页面框架
         $("table:eq(1)")
             .attr("id", "t1")
@@ -31,7 +30,7 @@ class TownArmorHousePageProcessor extends PageProcessorCredentialSupport {
             .css("font-weight", "bold")
             .css("background-color", "navy")
             .css("color", "yellowgreen")
-            .text("＜＜  " + town.nameTitle + " 防 具 屋  ＞＞")
+            .text("＜＜  " + page.town.nameTitle + " 防 具 屋  ＞＞")
             .parent()
             .next()
             .find("table:first")
@@ -77,7 +76,7 @@ class TownArmorHousePageProcessor extends PageProcessorCredentialSupport {
         html += "<form action='mydata.cgi' method='post'>";
         html += "<input type='hidden' name='id' value='" + credential.id + "'>";
         html += "<input type='hidden' name='pass' value='" + credential.pass + "'>"
-        html += "<input type='hidden' name='town' value='" + town.id + "'>";
+        html += "<input type='hidden' name='town' value='" + page.town.id + "'>";
         html += "<input type='hidden' name='mode' value='USE_ITEM'>";
         html += "<input type='submit' id='equipmentManagement'>";
         html += "</form>";
@@ -88,8 +87,8 @@ class TownArmorHousePageProcessor extends PageProcessorCredentialSupport {
         // ------------------------------------------------------------------------
         html += "<tr>";
         html += "<td style='background-color:#F8F0E0;text-align:center'>";
-        html += "<input type='button' id='refresh_button' value='刷新" + town.name + "防具屋'>";
-        html += "<input type='button' id='return_button' value='离开" + town.name + "防具屋'>";
+        html += "<input type='button' id='refresh_button' value='刷新" + page.town.name + "防具屋'>";
+        html += "<input type='button' id='return_button' value='离开" + page.town.name + "防具屋'>";
         html += "<input type='button' id='equipment_button' value='转到装备管理'>";
         html += "</td>";
         // ------------------------------------------------------------------------
@@ -109,14 +108,14 @@ class TownArmorHousePageProcessor extends PageProcessorCredentialSupport {
 
         $("#armor_store_UI").html(html);
 
-        this.#bindImmutableButtons(credential, town);
+        this.#bindImmutableButtons(credential, page.town.id);
     }
 
-    #bindImmutableButtons(credential: Credential, town: Town) {
+    #bindImmutableButtons(credential: Credential, townId: string) {
         $("#refresh_button").on("click", () => {
             PageUtils.scrollIntoView("pageTitle");
             $("#messageBoardManager").html(NpcLoader.randomNpcImageHtml());
-            this.#refreshMutablePage(credential, town);
+            this.#refreshMutablePage(credential, townId);
         });
         $("#return_button").on("click", () => {
             $("#returnTown").trigger("click");
@@ -126,16 +125,16 @@ class TownArmorHousePageProcessor extends PageProcessorCredentialSupport {
         });
     }
 
-    #renderMutablePage(credential: Credential, page: TownArmorHousePage, town: Town) {
-        this.#bindMutableButtons(credential, page, town);
+    #renderMutablePage(credential: Credential, page: TownArmorHousePage) {
+        this.#bindMutableButtons(credential, page);
     }
 
-    #bindMutableButtons(credential: Credential, page: TownArmorHousePage, town: Town) {
+    #bindMutableButtons(credential: Credential, page: TownArmorHousePage) {
     }
 
-    #refreshMutablePage(credential: Credential, town: Town) {
-        new TownArmorHouse(credential, town.id).open().then(page => {
-            this.#renderMutablePage(credential, page, town);
+    #refreshMutablePage(credential: Credential, townId: string) {
+        new TownArmorHouse(credential, townId).open().then(page => {
+            this.#renderMutablePage(credential, page);
         });
     }
 }
