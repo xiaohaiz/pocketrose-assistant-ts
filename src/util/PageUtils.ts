@@ -459,6 +459,34 @@ const BUTTON_STYLES: {} = {
         "    padding: 10px 30px;\n" +
         "  }\n" +
         "}\n",
+    "62": ".button-62 {\n" +
+        "  background: linear-gradient(to bottom right, #EF4765, #FF9A5A);\n" +
+        "  border: 0;\n" +
+        "  border-radius: 12px;\n" +
+        "  color: #FFFFFF;\n" +
+        "  cursor: pointer;\n" +
+        "  display: inline-block;\n" +
+        "  font-size: 16px;\n" +
+        "  font-weight: 500;\n" +
+        "  line-height: 2.5;\n" +
+        "  outline: transparent;\n" +
+        "  padding: 0 1rem;\n" +
+        "  text-align: center;\n" +
+        "  text-decoration: none;\n" +
+        "  transition: box-shadow .2s ease-in-out;\n" +
+        "  user-select: none;\n" +
+        "  -webkit-user-select: none;\n" +
+        "  touch-action: manipulation;\n" +
+        "  white-space: nowrap;\n" +
+        "}\n" +
+        "\n" +
+        ".button-62:not([disabled]):focus {\n" +
+        "  box-shadow: 0 0 .25rem rgba(0, 0, 0, 0.5), -.125rem -.125rem 1rem rgba(239, 71, 101, 0.5), .125rem .125rem 1rem rgba(255, 154, 90, 0.5);\n" +
+        "}\n" +
+        "\n" +
+        ".button-62:not([disabled]):hover {\n" +
+        "  box-shadow: 0 0 .25rem rgba(0, 0, 0, 0.5), -.125rem -.125rem 1rem rgba(239, 71, 101, 0.5), .125rem .125rem 1rem rgba(255, 154, 90, 0.5);\n" +
+        "}\n",
 };
 
 export = PageUtils;
