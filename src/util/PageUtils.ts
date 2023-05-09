@@ -487,6 +487,47 @@ const BUTTON_STYLES: {} = {
         ".button-62:not([disabled]):hover {\n" +
         "  box-shadow: 0 0 .25rem rgba(0, 0, 0, 0.5), -.125rem -.125rem 1rem rgba(239, 71, 101, 0.5), .125rem .125rem 1rem rgba(255, 154, 90, 0.5);\n" +
         "}\n",
+    "73": ".button-73 {\n" +
+        "  appearance: none;\n" +
+        "  background-color: #FFFFFF;\n" +
+        "  border-radius: 40em;\n" +
+        "  border-style: none;\n" +
+        "  box-shadow: #ADCFFF 0 -12px 6px inset;\n" +
+        "  box-sizing: border-box;\n" +
+        "  color: #000000;\n" +
+        "  cursor: pointer;\n" +
+        "  display: inline-block;\n" +
+        "  font-size: 1.2rem;\n" +
+        "  font-weight: 700;\n" +
+        "  letter-spacing: -.24px;\n" +
+        "  margin: 0;\n" +
+        "  outline: none;\n" +
+        "  padding: 1rem 1.3rem;\n" +
+        "  quotes: auto;\n" +
+        "  text-align: center;\n" +
+        "  text-decoration: none;\n" +
+        "  transition: all .15s;\n" +
+        "  user-select: none;\n" +
+        "  -webkit-user-select: none;\n" +
+        "  touch-action: manipulation;\n" +
+        "}\n" +
+        "\n" +
+        ".button-73:hover {\n" +
+        "  background-color: #FFC229;\n" +
+        "  box-shadow: #FF6314 0 -6px 8px inset;\n" +
+        "  transform: scale(1.125);\n" +
+        "}\n" +
+        "\n" +
+        ".button-73:active {\n" +
+        "  transform: scale(1.025);\n" +
+        "}\n" +
+        "\n" +
+        "@media (min-width: 768px) {\n" +
+        "  .button-73 {\n" +
+        "    font-size: 1.5rem;\n" +
+        "    padding: .75rem 2rem;\n" +
+        "  }\n" +
+        "}\n",
 };
 
 export = PageUtils;
