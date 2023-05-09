@@ -4,6 +4,9 @@ import TownBank from "../../pocket/bank/TownBank";
 import DeprecatedTownGemHouse from "../../pocket/house/DeprecatedTownGemHouse";
 import DeprecatedTownGemHousePage from "../../pocket/house/DeprecatedTownGemHousePage";
 import EquipmentManagement from "../../pocket/personal/EquipmentManagement";
+import Town from "../../pocket/Town";
+import TownGemHouse from "../../pocketrose/TownGemHouse";
+import TownGemHousePage from "../../pocketrose/TownGemHousePage";
 import BankUtils from "../../util/BankUtils";
 import Credential from "../../util/Credential";
 import MessageBoard from "../../util/MessageBoard";
@@ -18,15 +21,147 @@ class TownGemHousePageProcessor extends PageProcessorCredentialSupport {
     doProcess(credential: Credential, context?: PageProcessorContext): void {
         const townId = context!.get("townId")!;
         const town = TownLoader.getTownById(townId)!;
-        DeprecatedTownGemHouse.parsePage(PageUtils.currentPageHtml())
+        new TownGemHouse(credential, town.id).parsePage(PageUtils.currentPageHtml())
             .then(page => {
-                doProcess(page);
+                this.#renderImmutablePage(credential, town);
+                this.#renderMutablePage(credential, page, town);
             });
-
     }
 
+    #renderImmutablePage(credential: Credential, town: Town) {
+        $("table:eq(1)")
+            .attr("id", "t1")
+            .find("td:first")
+            .attr("id", "pageTitle")
+            .removeAttr("width")
+            .removeAttr("height")
+            .removeAttr("bgcolor")
+            .css("text-align", "center")
+            .css("font-size", "150%")
+            .css("font-weight", "bold")
+            .css("background-color", "navy")
+            .css("color", "yellowgreen")
+            .text("＜＜  " + town.nameTitle + " 宝 石 屋  ＞＞")
+            .parent()
+            .next()
+            .find("table:first")
+            .find("td:eq(1)")
+            .find("table:first")
+            .find("td:first")
+            .find("table:first")
+            .find("td:last")
+            .attr("id", "roleCash");
 
+        $("#t1")
+            .find("tr:first")
+            .next()
+            .next()
+            .find("table:first")
+            .find("td:first")
+            .attr("id", "messageBoard")
+            .removeAttr("width")
+            .removeAttr("bgcolor")
+            .css("width", "100%")
+            .css("background-color", "black")
+            .css("color", "white")
+            .html(WELCOME_MESSAGE)
+            .next()
+            .attr("id", "messageBoardManager");
+
+        // 清空原来的页面内容，准备重新绘制
+        $("#t1")
+            .find("tr:first")
+            .next()
+            .next()
+            .next()
+            .html("<td id='gem_house_UI' style='width:100%;text-align:center'></td>")
+            .next()
+            .remove();
+
+        // 绘制新的内容
+        let html = "";
+        html += "<table style='width:100%;border-width:0;background-color:#888888;margin:auto'>";
+        html += "<tbody>";
+        // ------------------------------------------------------------------------
+        // 隐藏的表单
+        // ------------------------------------------------------------------------
+        html += "<tr style='display:none'>";
+        html += "<td id='hidden_form_cell'>";
+        html += PageUtils.generateReturnTownForm(credential);
+        html += "</td>";
+        html += "</tr>";
+        // ------------------------------------------------------------------------
+        // 记录最后一次合成装备的信息
+        // 不能用下标来记录，因为宝石的消耗可能造成下标的变化
+        // 因此需要记录的是装备的全名及其在物品栏出现的序号。
+        // ------------------------------------------------------------------------
+        html += "<tr style='display:none'>";
+        html += "<td id='last_fuse_cell'>none</td>";
+        html += "</tr>";
+        // ------------------------------------------------------------------------
+        // 主菜单
+        // ------------------------------------------------------------------------
+        html += "<tr>";
+        html += "<td style='background-color:#F8F0E0;text-align:center'>";
+        html += "<input type='button' id='refresh_button' value='刷新" + town.name + "宝石屋'>";
+        html += "<input type='button' id='return_button' value='离开" + town.name + "宝石屋'>";
+        html += "</td>";
+        // ------------------------------------------------------------------------
+        // 个人物品栏
+        // ------------------------------------------------------------------------
+        html += "<tr style='display:none'>";
+        html += "<td id='equipment_list_cell' style='background-color:#F8F0E0;text-align:center'></td>";
+        html += "</tr>";
+        // ------------------------------------------------------------------------
+        // 宝石栏
+        // ------------------------------------------------------------------------
+        html += "<tr style='display:none'>";
+        html += "<td id='gem_list_cell' style='background-color:#F8F0E0;text-align:center'></td>";
+        html += "</tr>";
+        html += "</tbody>";
+        html += "</table>";
+
+        $("#gem_house_UI").html(html);
+
+        this.#bindImmutableButtons(credential, town);
+    }
+
+    #bindImmutableButtons(credential: Credential, town: Town) {
+        $("#return_button").on("click", () => {
+            $("#returnTown").trigger("click");
+        });
+        $("#refresh_button").on("click", () => {
+            PageUtils.scrollIntoView("pageTitle");
+            $("#messageBoardManager").html(NpcLoader.randomNpcImageHtml());
+            MessageBoard.resetMessageBoard("钻石恒久远，一颗永流传。");
+            $("#last_fuse_cell").text("none");
+            this.#refreshMutablePage(credential, town);
+        });
+    }
+
+    #renderMutablePage(credential: Credential, page: TownGemHousePage, town: Town) {
+    }
+
+    #bindMutableButtons() {
+    }
+
+    #refreshMutablePage(credential: Credential, town: Town) {
+        $("#equipment_list_cell").html("").parent().hide();
+        $("#gem_list_cell").html("").parent().hide();
+        $(".dynamic_button_class").off("click");
+        $(".equipment_detail_class").off("mouseenter").off("mouseleave");
+        new TownGemHouse(credential, town.id).open().then(page => {
+            const cash = page.role!.cash!;
+            $("#roleCash").html(cash + " GOLD");
+            this.#renderMutablePage(credential, page, town);
+        });
+    }
 }
+
+const WELCOME_MESSAGE: string = "<b style='color:yellow'>宝石屋改造的一些说明：</b><br>" +
+    "正在使用中的装备除了宠物蛋之外不允许镶嵌；<br>" +
+    "鼠标停留在装备名字上可以显示当前装备的宝石附加状态。<br>" +
+    "（鼠标停留功能请慎用，会对服务器发出额外的请求）";
 
 function doProcess(page: DeprecatedTownGemHousePage) {
     const t1 = $("table:eq(1)");
