@@ -1,6 +1,9 @@
 import Credential from "../../util/Credential";
 import Equipment from "../Equipment";
 
+/**
+ * @deprecated
+ */
 class TownGemMeltHousePage {
 
     readonly credential: Credential;

@@ -1,7 +1,10 @@
 import Credential from "../../util/Credential";
-import TownGemMeltHousePage from "./TownGemMeltHousePage";
 import Equipment from "../Equipment";
+import TownGemMeltHousePage from "./TownGemMeltHousePage";
 
+/**
+ * @deprecated
+ */
 class TownGemHousePage {
 
     readonly credential: Credential;

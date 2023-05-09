@@ -1,9 +1,12 @@
 import Credential from "../../util/Credential";
-import PageUtils from "../../util/PageUtils";
-import TownGemMeltHousePage from "./TownGemMeltHousePage";
 import NetworkUtils from "../../util/NetworkUtils";
+import PageUtils from "../../util/PageUtils";
 import Equipment from "../Equipment";
+import TownGemMeltHousePage from "./TownGemMeltHousePage";
 
+/**
+ * @deprecated
+ */
 class TownGemMeltHouse {
 
     readonly #credential: Credential;

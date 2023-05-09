@@ -1,11 +1,14 @@
 import Credential from "../../util/Credential";
+import NetworkUtils from "../../util/NetworkUtils";
 import PageUtils from "../../util/PageUtils";
+import StringUtils from "../../util/StringUtils";
+import Equipment from "../Equipment";
 import TownGemHousePage from "./TownGemHousePage";
 import TownGemMeltHouse from "./TownGemMeltHouse";
-import Equipment from "../Equipment";
-import NetworkUtils from "../../util/NetworkUtils";
-import StringUtils from "../../util/StringUtils";
 
+/**
+ * @deprecated
+ */
 class TownGemHouse {
 
     readonly #credential: Credential;
