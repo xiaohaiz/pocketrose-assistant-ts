@@ -228,6 +228,46 @@ const BUTTON_STYLES: {} = {
         "  box-shadow: rgba(0, 0, 0, .06) 0 2px 4px;\n" +
         "  transform: translateY(0);\n" +
         "}\n",
+    "8": ".button-8 {\n" +
+        "  background-color: #e1ecf4;\n" +
+        "  border-radius: 3px;\n" +
+        "  border: 1px solid #7aa7c7;\n" +
+        "  box-shadow: rgba(255, 255, 255, .7) 0 1px 0 0 inset;\n" +
+        "  box-sizing: border-box;\n" +
+        "  color: #39739d;\n" +
+        "  cursor: pointer;\n" +
+        "  display: inline-block;\n" +
+        "  font-size: 13px;\n" +
+        "  font-weight: 400;\n" +
+        "  line-height: 1.15385;\n" +
+        "  margin: 0;\n" +
+        "  outline: none;\n" +
+        "  padding: 8px .8em;\n" +
+        "  position: relative;\n" +
+        "  text-align: center;\n" +
+        "  text-decoration: none;\n" +
+        "  user-select: none;\n" +
+        "  -webkit-user-select: none;\n" +
+        "  touch-action: manipulation;\n" +
+        "  vertical-align: baseline;\n" +
+        "  white-space: nowrap;\n" +
+        "}\n" +
+        "\n" +
+        ".button-8:hover,\n" +
+        ".button-8:focus {\n" +
+        "  background-color: #b3d3ea;\n" +
+        "  color: #2c5777;\n" +
+        "}\n" +
+        "\n" +
+        ".button-8:focus {\n" +
+        "  box-shadow: 0 0 0 4px rgba(0, 149, 255, .15);\n" +
+        "}\n" +
+        "\n" +
+        ".button-8:active {\n" +
+        "  background-color: #a0c7e4;\n" +
+        "  box-shadow: none;\n" +
+        "  color: #2c5777;\n" +
+        "}\n",
 };
 
 export = PageUtils;
