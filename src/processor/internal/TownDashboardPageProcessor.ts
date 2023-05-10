@@ -40,6 +40,9 @@ function doProcess(credential: Credential) {
         $("input:submit[value='行动']").addClass("button-16");
     }
 
+    $("#refreshButton").attr("height", "100%");
+    $("input:submit[value='行动']").attr("height", "100%");
+
     if (SetupLoader.isEnlargeBattleSelectionEnabled()) {
         $("th:contains('训练·战斗')")
             .filter((idx, th) => {
@@ -55,6 +58,11 @@ function doProcess(credential: Credential) {
             .attr("width", "160")
             .attr("height", "80")
             .before($("<br>"));
+
+        $("#battleCell")
+            .next()
+            .find("input:submit:first")
+            .css("height", "100%");
     }
 
 
