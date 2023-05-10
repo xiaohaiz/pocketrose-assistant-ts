@@ -9,6 +9,7 @@ import MapBuilder from "../../pocket/MapBuilder";
 import RoleLoader from "../../pocket/RoleLoader";
 import TownEntrance from "../../pocket/TownEntrance";
 import TravelPlanExecutor from "../../pocket/TravelPlanExecutor";
+import TownBank from "../../pocketrose/TownBank";
 import Coordinate from "../../util/Coordinate";
 import Credential from "../../util/Credential";
 import MessageBoard from "../../util/MessageBoard";
@@ -233,9 +234,10 @@ function doTravelToTown(credential: Credential, town: Town) {
     MessageBoard.publishMessage("目的地城市：<span style='color:greenyellow'>" + town.name + "</span>");
     MessageBoard.publishMessage("目的地坐标：<span style='color:greenyellow'>" + town.coordinate.asText() + "</span>");
 
-    const bank = new DeprecatedTownBank(credential);
+    const bank = new TownBank(credential);
+    const bank1 = new DeprecatedTownBank(credential);
     // 支取10万城门税
-    bank.withdraw(10)
+    bank1.withdraw(10)
         .then(success => {
             if (!success) {
                 MessageBoard.publishWarning("因为没有足够的保证金，旅途被中断！");
@@ -246,10 +248,9 @@ function doTravelToTown(credential: Credential, town: Town) {
             }
 
             // 更新现金栏
-            bank.loadBankAccount()
-                .then(account => {
-                    $("#roleCash").text(account.cash + " GOLD");
-                });
+            bank.load().then(account => {
+                $("#roleCash").text(account.cash + " GOLD");
+            });
 
             const entrance = new TownEntrance(credential);
             // 离开当前城市
@@ -264,13 +265,12 @@ function doTravelToTown(credential: Credential, town: Town) {
                             entrance.enter(town.id)
                                 .then(() => {
                                     // 把身上现金全部存入
-                                    bank.deposit(undefined)
+                                    bank1.deposit(undefined)
                                         .then(() => {
                                             // 更新现金栏
-                                            bank.loadBankAccount()
-                                                .then(account => {
-                                                    $("#roleCash").text(account.cash + " GOLD");
-                                                });
+                                            bank.load().then(account => {
+                                                $("#roleCash").text(account.cash + " GOLD");
+                                            });
 
                                             MessageBoard.publishMessage("旅途愉快，下次再见。");
                                             $("#returnButton").val(town.name + "欢迎您");
