@@ -222,6 +222,8 @@ function doRenderSuperMarketMenu() {
             .css("background-color", "yellow");
         $("option[value='PRO_SHOP']")
             .css("background-color", "yellow");
+        $("option[value='ACC_SHOP']")
+            .css("background-color", "yellow");
     }
 }
 
