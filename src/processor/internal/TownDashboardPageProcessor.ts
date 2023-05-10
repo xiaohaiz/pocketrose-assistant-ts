@@ -43,7 +43,12 @@ function doProcess(credential: Credential) {
     $("#refreshButton").attr("height", "100%");
     $("input:submit[value='行动']").attr("height", "100%");
 
-    if (SetupLoader.isEnlargeBattleSelectionEnabled()) {
+    const enlargeRatio = SetupLoader.getEnlargeBattleRatio();
+    if (enlargeRatio > 0) {
+        let fontSize = 100 * enlargeRatio;
+        let picWidth = 80 * enlargeRatio;
+        let picHeight = 40 * enlargeRatio;
+
         $("th:contains('训练·战斗')")
             .filter((idx, th) => {
                 return $(th).text() === "训练·战斗";
@@ -52,11 +57,11 @@ function doProcess(credential: Credential) {
             .attr("id", "battleCell")
             .removeAttr("height")
             .find("select:first")
-            .css("font-size", "200%")
+            .css("font-size", fontSize + "%")
             .parent()
             .find("img:first")
-            .attr("width", "160")
-            .attr("height", "80")
+            .attr("width", picWidth)
+            .attr("height", picHeight)
             .before($("<br>"));
 
         $("#battleCell")

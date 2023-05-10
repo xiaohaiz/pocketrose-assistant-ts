@@ -33,6 +33,7 @@ import SetupItem032 from "./internal/SetupItem032";
 import SetupItem033 from "./internal/SetupItem033";
 import SetupItem034 from "./internal/SetupItem034";
 import SetupItem035 from "./internal/SetupItem035";
+import SetupItem036 from "./internal/SetupItem036";
 import SetupItem from "./SetupItem";
 
 class SetupItemManager {
@@ -76,6 +77,7 @@ class SetupItemManager {
             new SetupItem032(),
             new SetupItem034(),
             new SetupItem035(),
+            new SetupItem036(),
         ];
     }
 
