@@ -523,6 +523,14 @@ class TownGemHousePageProcessor extends PageProcessorCredentialSupport {
             this.#refreshMutablePage(credential, town);
             return;
         }
+
+        if (gemCode === 1 && equipment.additionalPower! < 0) {
+            // 自动砸威力时出现负数，返回
+            MessageBoard.publishMessage("当前装备镶嵌威力宝石时出现负数，中断转手工处理。");
+            this.#refreshMutablePage(credential, town);
+            return;
+        }
+
         const house = new TownGemHouse(credential, town.id);
         house.fuse(equipmentIndex, gem.index!).then(() => {
             house.open().then(page => {
