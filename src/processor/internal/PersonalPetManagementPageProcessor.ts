@@ -1,7 +1,6 @@
 import Pet from "../../common/Pet";
 import NpcLoader from "../../core/NpcLoader";
 import PetProfileLoader from "../../core/PetProfileLoader";
-import DeprecatedTownBank from "../../pocket/DeprecatedTownBank";
 import EquipmentParser from "../../pocket/EquipmentParser";
 import PetParser from "../../pocket/PetParser";
 import RoleLoader from "../../pocket/RoleLoader";
@@ -871,28 +870,22 @@ function doBindPetSendButton(credential: Credential, buttonId: string, pet: Pet)
             MessageBoard.publishWarning("没有选择发送对象！");
             return;
         }
-        const bank = new DeprecatedTownBank(credential);
-        bank.withdraw(10)
-            .then(success => {
-                if (!success) {
-                    MessageBoard.publishWarning("没钱还是自己留着宠物吧！");
-                    return;
-                }
-                const request = credential.asRequest();
-                // @ts-ignore
-                request["mode"] = "PET_SEND2";
-                // @ts-ignore
-                request["eid"] = receiver;
-                // @ts-ignore
-                request["select"] = pet.index;
-                NetworkUtils.sendPostRequest("town.cgi", request, function (html) {
-                    MessageBoard.processResponseMessage(html);
-                    bank.deposit(undefined)
-                        .then(() => {
-                            doRefresh(credential);
-                        });
+        const bank = new TownBank(credential);
+        bank.withdraw(10).then(() => {
+            const request = credential.asRequest();
+            // @ts-ignore
+            request["mode"] = "PET_SEND2";
+            // @ts-ignore
+            request["eid"] = receiver;
+            // @ts-ignore
+            request["select"] = pet.index;
+            NetworkUtils.sendPostRequest("town.cgi", request, function (html) {
+                MessageBoard.processResponseMessage(html);
+                bank.deposit().then(() => {
+                    doRefresh(credential);
                 });
             });
+        });
     });
 }
 

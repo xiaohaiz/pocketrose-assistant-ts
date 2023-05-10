@@ -9,6 +9,7 @@ import TravelPlan from "../../pocket/TravelPlan";
 import TravelPlanExecutor from "../../pocket/TravelPlanExecutor";
 import TreasureHint from "../../pocket/TreasureHint";
 import TreasureHintParser from "../../pocket/TreasureHintParser";
+import TownBank from "../../pocketrose/TownBank";
 import Coordinate from "../../util/Coordinate";
 import Credential from "../../util/Credential";
 import MessageBoard from "../../util/MessageBoard";
@@ -213,21 +214,15 @@ function doBindExchangeButton(credential: Credential) {
         }
         // @ts-ignore
         request["mode"] = "CHANGEMAP2";
-        const bank = new DeprecatedTownBank(credential);
-        bank.withdraw(10)
-            .then(success => {
-                if (!success) {
-                    MessageBoard.publishWarning("没钱你就回吧，晦气！");
-                    return;
-                }
-                NetworkUtils.sendPostRequest("town.cgi", request, function () {
-                    MessageBoard.publishMessage("交换藏宝图成功。");
-                    bank.deposit(undefined)
-                        .then(() => {
-                            doRefresh(credential);
-                        });
+        const bank = new TownBank(credential);
+        bank.withdraw(10).then(() => {
+            NetworkUtils.sendPostRequest("town.cgi", request, function () {
+                MessageBoard.publishMessage("交换藏宝图成功。");
+                bank.deposit().then(() => {
+                    doRefresh(credential);
                 });
             });
+        });
     });
 }
 
