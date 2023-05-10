@@ -93,13 +93,13 @@ class TownAccessoryHousePageProcessor extends PageProcessorCredentialSupport {
         // 个人物品栏
         // ------------------------------------------------------------------------
         html += "<tr style='display:none'>";
-        html += "<td id='equipmentList'></td>";
+        html += "<td id='equipmentList' style='text-align:center'></td>";
         html += "</tr>";
         // ------------------------------------------------------------------------
         // 饰品屋商品栏
         // ------------------------------------------------------------------------
         html += "<tr style='display:none'>";
-        html += "<td id='merchandiseList'></td>";
+        html += "<td id='merchandiseList' style='text-align:center'></td>";
         html += "</tr>";
         html += "</tbody>";
         html += "</table>";
@@ -130,7 +130,7 @@ class TownAccessoryHousePageProcessor extends PageProcessorCredentialSupport {
         const equipmentList = page.equipmentList!;
         if (equipmentList.length > 0) {
             let html = "";
-            html += "<table style='border-width:0;background-color:#888888'>";
+            html += "<table style='border-width:0;background-color:#888888;margin:auto;width:100%'>";
             html += "<tbody style='background-color:#F8F0E0;text-align:center'>";
             html += "<tr>";
             html += "<td style='background-color:darkred;color:wheat;font-weight:bold' colspan='12'>";
@@ -172,6 +172,80 @@ class TownAccessoryHousePageProcessor extends PageProcessorCredentialSupport {
             html += "</table>";
 
             $("#equipmentList")
+                .html(html)
+                .parent()
+                .show();
+        }
+
+        // ------------------------------------------------------------------------
+        // 渲染饰品店商品
+        // ------------------------------------------------------------------------
+        const merchandiseList = page.merchandiseList!;
+        if (merchandiseList.length > 0) {
+            let html = "";
+            html += "<table style='border-width:0;background-color:#888888;margin:auto;width:100%'>";
+            html += "<tbody style='background-color:#F8F0E0;text-align:center'>";
+            html += "<tr>";
+            html += "<td style='background-color:darkgreen;color:wheat;font-weight:bold' colspan='15'>";
+            html += "＜ 商 品 列 表 ＞";
+            html += "</td>";
+            html += "</tr>";
+            html += "<tr>";
+            html += "<th style='background-color:#E8E8D0'>数量</th>";
+            html += "<th style='background-color:#E8E8D0'>购买</th>";
+            html += "<th style='background-color:#EFE0C0'>特产</th>";
+            html += "<th style='background-color:#E0D0B0'>名字</th>";
+            html += "<th style='background-color:#EFE0C0'>价格</th>";
+            html += "<th style='background-color:#E0D0B0'>威力</th>";
+            html += "<th style='background-color:#EFE0C0'>重量</th>";
+            html += "<th style='background-color:#EFE0C0'>耐久</th>";
+            html += "<th style='background-color:#E0D0B0'>职业</th>";
+            html += "<th style='background-color:#E0D0B0'>攻击</th>";
+            html += "<th style='background-color:#E0D0B0'>防御</th>";
+            html += "<th style='background-color:#E0D0B0'>智力</th>";
+            html += "<th style='background-color:#E0D0B0'>精神</th>";
+            html += "<th style='background-color:#E0D0B0'>速度</th>";
+            html += "<th style='background-color:#E0D0B0'>宝石</th>";
+            html += "</tr>";
+
+            for (const merchandise of merchandiseList) {
+                html += "<tr>";
+                html += "<td style='background-color:#E8E8D0'>";
+                const spaceCount = 19 - page.equipmentList!.length;
+                if (spaceCount > 0) {
+                    html += "<select id='count_" + merchandise.index + "'>";
+                    for (let i = 1; i <= spaceCount; i++) {
+                        html += "<option value='" + i + "'>" + i + "</option>";
+                    }
+                    html += "</select>";
+                }
+                html += "</td>";
+                html += "<td style='background-color:#E8E8D0'>";
+                if (spaceCount > 0) {
+                    html += "<input type='button' value='购买' " +
+                        "id='buy_" + merchandise.index! + "' class='dynamic_button_class button-89'>";
+                }
+                html += "</td>";
+                html += "<td style='background-color:#EFE0C0'>" + merchandise.specialityHtml + "</td>";
+                html += "<td style='background-color:#E0D0B0'>" + merchandise.nameHtml + "</td>";
+                html += "<td style='background-color:#EFE0C0;text-align:right'>" + merchandise.priceHtml + "</td>";
+                html += "<td style='background-color:#E0D0B0'>" + merchandise.power + "</td>";
+                html += "<td style='background-color:#EFE0C0'>" + merchandise.weight + "</td>";
+                html += "<td style='background-color:#EFE0C0'>" + merchandise.endureHtml + "</td>";
+                html += "<td style='background-color:#E0D0B0'>" + merchandise.requiredCareerHtml + "</td>";
+                html += "<td style='background-color:#E0D0B0'>" + merchandise.requiredAttackHtml + "</td>";
+                html += "<td style='background-color:#E0D0B0'>" + merchandise.requiredDefenseHtml + "</td>";
+                html += "<td style='background-color:#E0D0B0'>" + merchandise.requiredSpecialAttackHtml + "</td>";
+                html += "<td style='background-color:#E0D0B0'>" + merchandise.requiredSpecialDefenseHtml + "</td>";
+                html += "<td style='background-color:#E0D0B0'>" + merchandise.requiredSpeedHtml + "</td>";
+                html += "<td style='background-color:#E0D0B0'>" + merchandise.gemCountHtml + "</td>";
+                html += "</tr>";
+            }
+
+            html += "</tbody>";
+            html += "</table>";
+
+            $("#merchandiseList")
                 .html(html)
                 .parent()
                 .show();
