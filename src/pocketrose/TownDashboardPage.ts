@@ -1,0 +1,4 @@
+class TownDashboardPage {
+}
+
+export = TownDashboardPage;
