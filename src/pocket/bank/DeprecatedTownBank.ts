@@ -40,22 +40,6 @@ class DeprecatedTownBank {
         return await action(this.#credential, amount);
     }
 
-    async depositAll() {
-        const action = (credential: Credential) => {
-            return new Promise<void>(resolve => {
-                const request = credential.asRequest();
-                // @ts-ignore
-                request.mode = "BANK_SELL";
-                // @ts-ignore
-                request.azukeru = "all";
-                NetworkUtils.sendPostRequest("town.cgi", request, function () {
-                    MessageBoard.publishMessage("在银行存入了全部现金。");
-                    resolve();
-                });
-            });
-        };
-        return await action(this.#credential);
-    }
 }
 
 export = DeprecatedTownBank;
