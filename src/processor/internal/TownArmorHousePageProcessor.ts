@@ -102,7 +102,7 @@ class TownArmorHousePageProcessor extends PageProcessorCredentialSupport {
         html += "<td id='personal_equipment_list_cell'></td>";
         html += "</tr>";
         // ------------------------------------------------------------------------
-        // 武器屋商品栏
+        // 防具屋商品栏
         // ------------------------------------------------------------------------
         html += "<tr style='display:none'>";
         html += "<td id='armor_merchandise_list_cell'></td>";
