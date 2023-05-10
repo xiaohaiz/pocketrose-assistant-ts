@@ -13,7 +13,7 @@ import PageProcessorCredentialSupport from "../PageProcessorCredentialSupport";
 class TownDashboardPageProcessor extends PageProcessorCredentialSupport {
 
     doLoadButtonStyles(): number[] {
-        return [7, 8, 16];
+        return [7, 8, 16, 24];
     }
 
     doProcess(credential: Credential, context?: PageProcessorContext): void {
@@ -123,22 +123,22 @@ function doProcess(credential: Credential) {
         .find("th:first")
         .css("text-align", "right")
         .text("城市设施")
-        .before($("<td></td>"))
+        .before($("<td><button role='button' class='button-24' id='shortcut1'>状</button></td>"))
         .parent()
         .next()
         .find("th:first")
         .css("text-align", "right")
-        .before($("<td></td>"))
+        .before($("<td><button role='button' class='button-24' id='shortcut2'>装</button></td>"))
         .parent()
         .next()
         .find("th:first")
         .css("text-align", "right")
-        .before($("<td></td>"))
+        .before($("<td><button role='button' class='button-24' id='shortcut3'>宠</button></td>"))
         .parent()
         .next()
         .find("th:first")
         .css("text-align", "right")
-        .before($("<td></td>"))
+        .before($("<td><button role='button' class='button-24' id='shortcut4'>职</button></td>"))
         .parent()
         .next()
         .find("th:first")
@@ -153,6 +153,38 @@ function doProcess(credential: Credential) {
         .attr("colspan", 5)
 
 
+    $("#shortcut1").on("click", () => {
+        $("option[value='STATUS_PRINT']")
+            .prop("selected", true)
+            .closest("td")
+            .next()
+            .find("input:submit:first")
+            .trigger("click");
+    });
+    $("#shortcut2").on("click", () => {
+        $("option[value='USE_ITEM']")
+            .prop("selected", true)
+            .closest("td")
+            .next()
+            .find("input:submit:first")
+            .trigger("click");
+    });
+    $("#shortcut3").on("click", () => {
+        $("option[value='PETSTATUS']")
+            .prop("selected", true)
+            .closest("td")
+            .next()
+            .find("input:submit:first")
+            .trigger("click");
+    });
+    $("#shortcut4").on("click", () => {
+        $("option[value='CHANGE_OCCUPATION']")
+            .prop("selected", true)
+            .closest("td")
+            .next()
+            .find("input:submit:first")
+            .trigger("click");
+    });
 }
 
 function doRenderBattleMenu(credential: Credential) {

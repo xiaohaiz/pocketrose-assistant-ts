@@ -197,7 +197,7 @@ const BUTTON_STYLES: {} = {
         "  color: #fff;\n" +
         "  cursor: pointer;\n" +
         "  display: inline-flex;\n" +
-        "  font-size: 16px;\n" +
+        "  font-size: 100%;\n" +
         "  font-weight: 600;\n" +
         "  justify-content: center;\n" +
         "  line-height: 1.25;\n" +
@@ -346,12 +346,12 @@ const BUTTON_STYLES: {} = {
         "  color: #FFFFFF;\n" +
         "  cursor: pointer;\n" +
         "  display: inline-block;\n" +
-        "  font-size: 16px;\n" +
+        "  font-size: 100%;\n" +
         "  font-weight: 800;\n" +
         "  line-height: 16px;\n" +
-        "  min-height: 40px;\n" +
+        "  /* min-height: 40px;\n */" +
         "  outline: 0;\n" +
-        "  padding: 12px 14px;\n" +
+        "  /* padding: 12px 14px;\n */" +
         "  text-align: center;\n" +
         "  text-rendering: geometricprecision;\n" +
         "  text-transform: none;\n" +
