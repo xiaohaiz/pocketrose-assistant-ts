@@ -106,11 +106,9 @@ function doRenderBattleMenu(credential: Credential) {
     }
 
     // 设置了战斗场所偏好
-    let treasureIslandFound = false;
     $("select[name='level']").find("option").each(function (_idx, option) {
         const text = $(option).text();
         if (text.startsWith("秘宝之岛")) {
-            treasureIslandFound = true;
             // do nothing, keep
         } else if (text.startsWith("初级之森")) {
             // do nothing, keep
@@ -130,22 +128,22 @@ function doRenderBattleMenu(credential: Credential) {
         const text = $(option).text();
         if (text.startsWith("初级之森")) {
             // @ts-ignore
-            if (treasureIslandFound || !preference["primary"]) {
+            if (!preference["primary"]) {
                 $(option).remove();
             }
         } else if (text.startsWith("中级之塔")) {
             // @ts-ignore
-            if (treasureIslandFound || !preference["junior"]) {
+            if (!preference["junior"]) {
                 $(option).remove();
             }
         } else if (text.startsWith("上级之洞")) {
             // @ts-ignore
-            if (treasureIslandFound || !preference["senior"]) {
+            if (!preference["senior"]) {
                 $(option).remove();
             }
         } else if (text.startsWith("十二神殿")) {
             // @ts-ignore
-            if (treasureIslandFound || !preference["zodiac"]) {
+            if (!preference["zodiac"]) {
                 $(option).remove();
             }
         }
@@ -446,6 +444,7 @@ function doRenderEventBoard() {
         .split("<br>")
         .filter(it => it.endsWith(")"))
         .map(function (it) {
+            // noinspection HtmlDeprecatedTag,XmlDeprecatedElement,HtmlDeprecatedAttribute
             const header = "<font color=\"navy\">●</font>";
             return StringUtils.substringAfter(it, header);
         })
