@@ -1,6 +1,9 @@
 import NpcLoader from "../../core/NpcLoader";
+import TownAccessoryHouse from "../../pocketrose/TownAccessoryHouse";
+import TownBank from "../../pocketrose/TownBank";
 import TownItemHouse from "../../pocketrose/TownItemHouse";
 import TownItemHousePage from "../../pocketrose/TownItemHousePage";
+import BankUtils from "../../util/BankUtils";
 import Credential from "../../util/Credential";
 import MessageBoard from "../../util/MessageBoard";
 import PageUtils from "../../util/PageUtils";
@@ -10,7 +13,7 @@ import PageProcessorCredentialSupport from "../PageProcessorCredentialSupport";
 class TownItemHousePageProcessor extends PageProcessorCredentialSupport {
 
     doLoadButtonStyles(): number[] {
-        return [35];
+        return [7, 8, 35];
     }
 
     doProcess(credential: Credential, context?: PageProcessorContext): void {
@@ -155,7 +158,7 @@ class TownItemHousePageProcessor extends PageProcessorCredentialSupport {
                 html += "<td style='background-color:#E8E8D0'>";
                 if (equipment.isSellable) {
                     html += "<input type='button' value='出售' " +
-                        "id='sell_" + equipment.index! + "' class='mutableButton button-89'>";
+                        "id='sell_" + equipment.index! + "' class='mutableButton button-7'>";
                 } else {
                     html += PageUtils.generateInvisibleButton("#E8E8D0");
                 }
@@ -218,7 +221,7 @@ class TownItemHousePageProcessor extends PageProcessorCredentialSupport {
                 html += "<td style='background-color:#E8E8D0'>";
                 if (spaceCount > 0) {
                     html += "<input type='button' value='购买' " +
-                        "id='buy_" + merchandise.index! + "' class='dynamic_button_class button-89'>";
+                        "id='buy_" + merchandise.index! + "' class='dynamic_button_class button-8'>";
                 }
                 html += "</td>";
                 html += "<td style='background-color:#E0D0B0'>" + merchandise.nameHtml + "</td>";
@@ -243,7 +246,46 @@ class TownItemHousePageProcessor extends PageProcessorCredentialSupport {
     }
 
     #bindMutableButtons(credential: Credential, page: TownItemHousePage) {
+        $("input:button[value='出售']").on("click", event => {
+            const buttonId = $(event.target).attr("id") as string;
+            const index = parseInt(buttonId.split("_")[1]);
+            const equipment = page.findEquipment(index)!;
+            if (!confirm("确认要出售“" + equipment.fullName + "”？")) {
+                return;
+            }
+            new TownAccessoryHouse(credential, page.townId!)
+                .sell(index, page.discount!)
+                .then(() => {
+                    new TownBank(credential, page.townId).deposit().then(() => {
+                        this.#refreshMutablePage(credential, page.townId!);
+                    });
+                });
+        });
+        $("input:button[value='购买']").on("click", event => {
+            const buttonId = $(event.target).attr("id") as string;
+            const index = parseInt(buttonId.split("_")[1]);
 
+            const count = parseInt($("#count_" + index).val() as string);
+            const merchandise = page.findMerchandise(index)!;
+            const totalPrice = merchandise.price! * count;
+            const amount = BankUtils.calculateCashDifferenceAmount(page.role!.cash!, totalPrice);
+            if (!confirm("确认要购买" + count + "件“" + merchandise.name + "”？大约需要再支取" + amount + "万GOLD。")) {
+                return;
+            }
+
+            const bank = new TownBank(credential, page.townId);
+            bank.withdraw(amount)
+                .then(() => {
+                    new TownItemHouse(credential, page.townId!)
+                        .buy(index, count, page.discount!)
+                        .then(() => {
+                            bank.deposit()
+                                .then(() => {
+                                    this.#refreshMutablePage(credential, page.townId!);
+                                });
+                        });
+                });
+        });
     }
 
     #refreshMutablePage(credential: Credential, townId: string) {
