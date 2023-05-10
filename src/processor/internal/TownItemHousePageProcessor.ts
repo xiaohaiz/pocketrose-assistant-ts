@@ -1,6 +1,8 @@
+import NpcLoader from "../../core/NpcLoader";
 import TownItemHouse from "../../pocketrose/TownItemHouse";
 import TownItemHousePage from "../../pocketrose/TownItemHousePage";
 import Credential from "../../util/Credential";
+import MessageBoard from "../../util/MessageBoard";
 import PageUtils from "../../util/PageUtils";
 import PageProcessorContext from "../PageProcessorContext";
 import PageProcessorCredentialSupport from "../PageProcessorCredentialSupport";
@@ -109,17 +111,20 @@ class TownItemHousePageProcessor extends PageProcessorCredentialSupport {
     }
 
     #bindImmutableButtons(credential: Credential, townId: string) {
-        // $("#refreshButton").on("click", () => {
-        //     $("#messageBoardManager").html(NpcLoader.randomNpcImageHtml());
-        //     MessageBoard.resetMessageBoard("欢迎、欢迎。");
-        //     this.#refreshMutablePage(credential, townId);
-        // });
+        $("#refreshButton").on("click", () => {
+            $("#messageBoardManager").html(NpcLoader.randomNpcImageHtml());
+            MessageBoard.resetMessageBoard("欢迎、欢迎。");
+            this.#refreshMutablePage(credential, townId);
+        });
         $("#returnButton").on("click", () => {
             $("#returnTown").trigger("click");
         });
         $("#equipmentButton").on("click", () => {
             $("#equipmentManagement").trigger("click");
         });
+    }
+
+    #refreshMutablePage(credential: Credential, townId: string) {
     }
 }
 
