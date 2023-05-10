@@ -229,6 +229,10 @@ class SetupLoader {
         return StorageUtils.getBoolean("_pa_033");
     }
 
+    static isBattleLargeButtonEnabled(): boolean {
+        return StorageUtils.getBoolean("_pa_034");
+    }
+
     static getEnlargeBattleRatio(): number {
         return StorageUtils.getFloat("_pa_036", -1);
     }
