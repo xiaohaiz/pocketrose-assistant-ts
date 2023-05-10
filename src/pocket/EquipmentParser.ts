@@ -1,5 +1,4 @@
 import Equipment from "../common/Equipment";
-import StringUtils from "../util/StringUtils";
 
 class EquipmentParser {
 
@@ -105,54 +104,6 @@ class EquipmentParser {
             // experience
             s = $(tr).find("td:eq(9)").text();
             equipment.experience = parseInt(s);
-
-            equipmentList.push(equipment);
-        });
-        return equipmentList;
-    }
-
-    static parseWeaponStoreItemList(html: string) {
-        const equipmentList: Equipment[] = [];
-        $(html).find("table:eq(4) input:radio").each(function (_idx, radio) {
-            const equipment = new Equipment();
-            const tr = $(radio).parent().parent();
-
-            // index & selectable
-            equipment.index = parseInt($(radio).val() as string);
-            equipment.selectable = !$(radio).prop("disabled");
-
-            // using
-            let s = $(tr).find("th:first").text();
-            equipment.using = (s === "★");
-
-            // name & star
-            s = $(tr).find("th:eq(1)").text();
-            if (s.startsWith("齐心★")) {
-                equipment.star = true;
-                equipment.name = StringUtils.substringAfter(s, "齐心★");
-            } else {
-                equipment.star = false;
-                equipment.name = s;
-            }
-            equipment.nameHTML = $(tr).find("th:eq(1)").html();
-
-            // category
-            s = $(tr).find("td:eq(1)").text();
-            equipment.category = s;
-
-            // power & weight & endure
-            s = $(tr).find("td:eq(2)").text();
-            equipment.power = parseInt(s);
-            s = $(tr).find("td:eq(3)").text();
-            equipment.weight = parseInt(s);
-            s = $(tr).find("td:eq(4)").text();
-            equipment.endure = parseInt(StringUtils.substringBeforeSlash(s));
-            equipment.maxEndure = parseInt(StringUtils.substringAfterSlash(s));
-
-            // price
-            s = $(tr).find("td:eq(5)").text();
-            equipment.price = parseInt(StringUtils.substringBefore(s, " Gold"));
-            equipment.priceHTML = $(tr).find("td:eq(5)").html();
 
             equipmentList.push(equipment);
         });
