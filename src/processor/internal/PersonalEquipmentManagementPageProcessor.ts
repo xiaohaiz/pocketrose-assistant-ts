@@ -7,6 +7,7 @@ import EquipmentSet from "../../pocket/EquipmentSet";
 import EquipmentSetLoader from "../../pocket/EquipmentSetLoader";
 import RoleLoader from "../../pocket/RoleLoader";
 import RoleStatusLoader from "../../pocket/RoleStatusLoader";
+import TownBank from "../../pocketrose/TownBank";
 import CommentBoard from "../../util/CommentBoard";
 import Credential from "../../util/Credential";
 import MessageBoard from "../../util/MessageBoard";
@@ -633,21 +634,15 @@ function doBindSendButton(credential: Credential) {
         }
         // @ts-ignore
         request["mode"] = "ITEM_SEND2";
-        const bank = new DeprecatedTownBank(credential);
-        bank.withdraw(10)
-            .then(success => {
-                if (!success) {
-                    MessageBoard.publishWarning("没钱就不要学别人送装备了！");
-                } else {
-                    NetworkUtils.sendPostRequest("town.cgi", request, function (html) {
-                        MessageBoard.processResponseMessage(html);
-                        bank.deposit(undefined)
-                            .then(() => {
-                                doRefresh(credential);
-                            });
-                    });
-                }
+        const bank = new TownBank(credential);
+        bank.withdraw(10).then(() => {
+            NetworkUtils.sendPostRequest("town.cgi", request, function (html) {
+                MessageBoard.processResponseMessage(html);
+                bank.deposit().then(() => {
+                    doRefresh(credential);
+                });
             });
+        });
     });
 }
 
