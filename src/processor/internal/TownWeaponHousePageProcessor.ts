@@ -1,6 +1,5 @@
 import NpcLoader from "../../core/NpcLoader";
 import TownLoader from "../../core/TownLoader";
-import DeprecatedTownBank from "../../pocket/bank/DeprecatedTownBank";
 import TownBank from "../../pocketrose/TownBank";
 import TownWeaponHouse from "../../pocketrose/TownWeaponHouse";
 import TownWeaponHousePage from "../../pocketrose/TownWeaponHousePage";
@@ -324,17 +323,15 @@ function doBindBuyButton(page: TownWeaponHousePage, indexList: number[]) {
                 return;
             }
             const bank = new TownBank(page.credential);
-            const bank2 = new DeprecatedTownBank(page.credential);
-            bank2.withdraw(amount)
-                .then(() => {
-                    new TownWeaponHouse(page.credential, page.townId)
-                        .buy(index, count, page.discount!)
-                        .then(() => {
-                            bank.deposit().then(() => {
-                                doRefresh(page);
-                            });
+            bank.withdraw(amount).then(() => {
+                new TownWeaponHouse(page.credential, page.townId)
+                    .buy(index, count, page.discount!)
+                    .then(() => {
+                        bank.deposit().then(() => {
+                            doRefresh(page);
                         });
-                })
+                    });
+            })
                 .catch(() => {
                     // Nothing changed, ignore.
                 });
