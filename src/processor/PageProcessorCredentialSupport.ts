@@ -6,6 +6,13 @@ import PageProcessorContext from "./PageProcessorContext";
 abstract class PageProcessorCredentialSupport implements PageProcessor {
 
     process(context?: PageProcessorContext): void {
+        const buttons = this.doLoadButtonStyles();
+        if (buttons.length > 0) {
+            for (const button of buttons) {
+                PageUtils.loadButtonStyle(button);
+            }
+        }
+
         PageUtils.fixCurrentPageBrokenImages();
         PageUtils.removeUnusedHyperLinks();
         PageUtils.removeGoogleAnalyticsScript();
@@ -20,6 +27,10 @@ abstract class PageProcessorCredentialSupport implements PageProcessor {
     }
 
     abstract doProcess(credential: Credential, context?: PageProcessorContext): void;
+
+    doLoadButtonStyles(): number[] {
+        return [];
+    }
 }
 
 export = PageProcessorCredentialSupport;

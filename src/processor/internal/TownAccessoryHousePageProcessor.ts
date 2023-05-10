@@ -1,19 +1,22 @@
+import NpcLoader from "../../core/NpcLoader";
 import TownAccessoryHouse from "../../pocketrose/TownAccessoryHouse";
 import TownAccessoryHousePage from "../../pocketrose/TownAccessoryHousePage";
 import Credential from "../../util/Credential";
+import MessageBoard from "../../util/MessageBoard";
 import PageUtils from "../../util/PageUtils";
 import PageProcessorContext from "../PageProcessorContext";
 import PageProcessorCredentialSupport from "../PageProcessorCredentialSupport";
 
 class TownAccessoryHousePageProcessor extends PageProcessorCredentialSupport {
 
-    doProcess(credential: Credential, context?: PageProcessorContext): void {
-        PageUtils.loadButtonStyle(7);
-        PageUtils.loadButtonStyle(8);
-        PageUtils.loadButtonStyle(35);
+    doLoadButtonStyles(): number[] {
+        return [7, 8, 35, 89];
+    }
 
+    doProcess(credential: Credential, context?: PageProcessorContext): void {
         const page = TownAccessoryHouse.parsePage(PageUtils.currentPageHtml());
         this.#renderImmutablePage(credential, page);
+        this.#renderMutablePage(credential, page);
     }
 
     #renderImmutablePage(credential: Credential, page: TownAccessoryHousePage) {
@@ -102,16 +105,84 @@ class TownAccessoryHousePageProcessor extends PageProcessorCredentialSupport {
         html += "</table>";
 
         $("#storeUI").html(html);
+
+        this.#bindImmutableButtons(credential, page.town.id);
+    }
+
+    #bindImmutableButtons(credential: Credential, townId: string) {
+        $("#refreshButton").on("click", () => {
+            $("#messageBoardManager").html(NpcLoader.randomNpcImageHtml());
+            MessageBoard.resetMessageBoard("欢迎、欢迎。");
+            this.#refreshMutablePage(credential, townId);
+        });
+        $("#returnButton").on("click", () => {
+            $("#returnTown").trigger("click");
+        });
+        $("#equipmentButton").on("click", () => {
+            $("#equipmentManagement").trigger("click");
+        });
     }
 
     #renderMutablePage(credential: Credential, page: TownAccessoryHousePage) {
+        // ------------------------------------------------------------------------
+        // 渲染随身装备
+        // ------------------------------------------------------------------------
+        const equipmentList = page.equipmentList!;
+        if (equipmentList.length > 0) {
+            let html = "";
+            html += "<table style='border-width:0;background-color:#888888'>";
+            html += "<tbody style='background-color:#F8F0E0;text-align:center'>";
+            html += "<tr>";
+            html += "<td style='background-color:darkred;color:wheat;font-weight:bold' colspan='12'>";
+            html += "＜ 随 身 装 备 ＞";
+            html += "</td>";
+            html += "</tr>";
+            html += "<tr>";
+            html += "<th style='background-color:#E8E8D0'>出售</th>";
+            html += "<th style='background-color:#EFE0C0'>装备</th>";
+            html += "<th style='background-color:#E0D0B0'>名字</th>";
+            html += "<th style='background-color:#EFE0C0'>种类</th>";
+            html += "<th style='background-color:#E0D0B0'>效果</th>";
+            html += "<th style='background-color:#EFE0C0'>重量</th>";
+            html += "<th style='background-color:#EFE0C0'>耐久</th>";
+            html += "<th style='background-color:#E0D0B0'>价值</th>";
+            html += "</tr>";
+
+            for (const equipment of equipmentList) {
+                html += "<tr>";
+                html += "<td style='background-color:#E8E8D0'>";
+                if (equipment.isSellable) {
+                    html += "<input type='button' value='出售' " +
+                        "id='sell_" + equipment.index! + "' class='mutableButton button-89'>";
+                } else {
+                    html += PageUtils.generateInvisibleButton("#E8E8D0");
+                }
+                html += "</td>";
+                html += "<td style='background-color:#EFE0C0'>" + equipment.usingHTML + "</td>";
+                html += "<td style='background-color:#E0D0B0'>" + equipment.nameHTML + "</td>";
+                html += "<td style='background-color:#EFE0C0'>" + equipment.category + "</td>";
+                html += "<td style='background-color:#E0D0B0'>" + equipment.power + "</td>";
+                html += "<td style='background-color:#EFE0C0'>" + equipment.weight + "</td>";
+                html += "<td style='background-color:#EFE0C0'>" + equipment.endureHtml + "</td>";
+                html += "<td style='background-color:#E0D0B0;text-align:right'>" + equipment.priceHTML + "</td>";
+                html += "</tr>";
+            }
+
+            html += "</tbody>";
+            html += "</table>";
+
+            $("#equipmentList")
+                .html(html)
+                .parent()
+                .show();
+        }
     }
 
     #refreshMutablePage(credential: Credential, townId: string) {
         PageUtils.scrollIntoView("pageTitle");
         $("#equipmentList").parent().hide();
         $("#merchandiseList").parent().hide();
-        $(".dynamic_button_class").off("click");
+        $(".mutableButton").off("click");
         new TownAccessoryHouse(credential, townId).open().then(page => {
             $("#roleCash").text(page.role!.cash! + " GOLD");
             this.#renderMutablePage(credential, page);
