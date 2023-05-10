@@ -367,19 +367,18 @@ function doSeekTreasure(credential: Credential,
             .then(() => {
                 new TownEntrance(credential).enter(town.id)
                     .then(() => {
-                        new DeprecatedTownBank(credential).deposit(undefined)
-                            .then(() => {
-                                MessageBoard.publishMessage("探险完成。");
-                                if (foundList.length > 0) {
-                                    MessageBoard.publishMessage("在无人处，悄悄检视了下探险的收入：");
-                                    for (let i = 0; i < foundList.length; i++) {
-                                        MessageBoard.publishMessage("<b style='color: yellow'>" + foundList[i] + "</b>");
-                                    }
+                        new TownBank(credential).deposit().then(() => {
+                            MessageBoard.publishMessage("探险完成。");
+                            if (foundList.length > 0) {
+                                MessageBoard.publishMessage("在无人处，悄悄检视了下探险的收入：");
+                                for (let i = 0; i < foundList.length; i++) {
+                                    MessageBoard.publishMessage("<b style='color: yellow'>" + foundList[i] + "</b>");
                                 }
-                                $("#returnButton")
-                                    .prop("disabled", false)
-                                    .attr("value", town.name + "欢迎您的归来");
-                            });
+                            }
+                            $("#returnButton")
+                                .prop("disabled", false)
+                                .attr("value", town.name + "欢迎您的归来");
+                        });
                     });
             });
     }

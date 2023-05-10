@@ -13,40 +13,6 @@ class DeprecatedTownBank {
         this.#credential = credential;
     }
 
-    async deposit(amount?: number): Promise<boolean> {
-        const action = (credential: Credential, amount?: number) => {
-            return new Promise<boolean>(resolve => {
-                const request = credential.asRequest();
-                // @ts-ignore
-                request["mode"] = "BANK_SELL";
-                if (amount === undefined || amount === null) {
-                    // @ts-ignore
-                    request["azukeru"] = "all";
-                    NetworkUtils.sendPostRequest("town.cgi", request, function () {
-                        MessageBoard.publishMessage("在城市银行存入了全部现金。");
-                        resolve(true);
-                    });
-                } else {
-                    if (amount <= 0) {
-                        resolve(true);
-                    } else {
-                        // @ts-ignore
-                        request["azukeru"] = amount;
-                        NetworkUtils.sendPostRequest("town.cgi", request, function (html: string) {
-                            if ($(html).text().includes("所持金不足")) {
-                                MessageBoard.publishWarning("银行出纳鄙视的说：你身上并没有" + amount + "万现金。");
-                                resolve(false);
-                            } else {
-                                MessageBoard.publishMessage("在城市银行存入了" + amount + "万现金。");
-                                resolve(true);
-                            }
-                        });
-                    }
-                }
-            });
-        };
-        return await action(this.#credential, amount);
-    }
 
     async withdraw(amount: number): Promise<boolean> {
         const action = (credential: Credential, amount: number) => {

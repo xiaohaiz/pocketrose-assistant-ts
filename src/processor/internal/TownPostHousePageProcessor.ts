@@ -265,17 +265,16 @@ function doTravelToTown(credential: Credential, town: Town) {
                             entrance.enter(town.id)
                                 .then(() => {
                                     // 把身上现金全部存入
-                                    bank1.deposit(undefined)
-                                        .then(() => {
-                                            // 更新现金栏
-                                            bank.load().then(account => {
-                                                $("#roleCash").text(account.cash + " GOLD");
-                                            });
-
-                                            MessageBoard.publishMessage("旅途愉快，下次再见。");
-                                            $("#returnButton").val(town.name + "欢迎您");
-                                            $("#returnButton").prop("disabled", false);
+                                    bank.deposit().then(() => {
+                                        // 更新现金栏
+                                        bank.load().then(account => {
+                                            $("#roleCash").text(account.cash + " GOLD");
                                         });
+
+                                        MessageBoard.publishMessage("旅途愉快，下次再见。");
+                                        $("#returnButton").val(town.name + "欢迎您");
+                                        $("#returnButton").prop("disabled", false);
+                                    });
                                 });
                         });
                 });
