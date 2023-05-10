@@ -233,10 +233,6 @@ class SetupLoader {
         return StorageUtils.getBoolean("_pa_034");
     }
 
-    static isEnlargeBattleSelectionEnabled(): boolean {
-        return StorageUtils.getBoolean("_pa_035");
-    }
-
     static getEnlargeBattleRatio(): number {
         return StorageUtils.getFloat("_pa_036", -1);
     }
