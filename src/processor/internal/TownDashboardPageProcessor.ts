@@ -31,11 +31,11 @@ function doProcess(credential: Credential) {
     if (SetupLoader.isConsecrateStateRecognizeEnabled(credential.id)) {
         buttonChanged = true;
         if (PageUtils.currentPageHtml().includes("可以进行下次祭奠了")) {
-            $("#refreshButton").addClass("button-8");
-            $("input:submit[value='行动']").addClass("button-8");
-        } else {
             $("#refreshButton").addClass("button-7");
             $("input:submit[value='行动']").addClass("button-7");
+        } else {
+            $("#refreshButton").addClass("button-8");
+            $("input:submit[value='行动']").addClass("button-8");
         }
     }
 
