@@ -1,9 +1,9 @@
 import Town from "../../core/Town";
 import TownLoader from "../../core/TownLoader";
 import CastleEntrance from "../../pocket/CastleEntrance";
+import DeprecatedTownBank from "../../pocket/DeprecatedTownBank";
 import MapBuilder from "../../pocket/MapBuilder";
 import RoleLoader from "../../pocket/RoleLoader";
-import TownBank from "../../pocket/TownBank";
 import TownEntrance from "../../pocket/TownEntrance";
 import TravelPlanExecutor from "../../pocket/TravelPlanExecutor";
 import CastleBank from "../../pocketrose/CastleBank";
@@ -203,7 +203,7 @@ function doTravelToTown(credential: Credential, town: Town) {
                         .then(() => {
                             new TownEntrance(credential).enter(town.id)
                                 .then(() => {
-                                    const townBank = new TownBank(credential);
+                                    const townBank = new DeprecatedTownBank(credential);
                                     townBank.deposit(undefined)
                                         .then(() => {
                                             townBank.loadBankAccount()

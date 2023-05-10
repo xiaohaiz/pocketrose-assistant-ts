@@ -1,13 +1,13 @@
 import Credential from "../util/Credential";
-import NetworkUtils from "../util/NetworkUtils";
 import MessageBoard from "../util/MessageBoard";
-import BankAccount from "./BankAccount";
+import NetworkUtils from "../util/NetworkUtils";
 import StringUtils from "../util/StringUtils";
+import BankAccount from "./BankAccount";
 
 /**
  * @deprecated
  */
-class TownBank {
+class DeprecatedTownBank {
 
     readonly #credential: Credential;
 
@@ -102,4 +102,4 @@ class TownBank {
 
 }
 
-export = TownBank;
+export = DeprecatedTownBank;

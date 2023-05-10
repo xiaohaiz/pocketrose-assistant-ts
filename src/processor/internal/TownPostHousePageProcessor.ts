@@ -4,9 +4,9 @@ import Town from "../../core/Town";
 import TownLoader from "../../core/TownLoader";
 import CastleEntrance from "../../pocket/CastleEntrance";
 import CastleLoader from "../../pocket/CastleLoader";
+import DeprecatedTownBank from "../../pocket/DeprecatedTownBank";
 import MapBuilder from "../../pocket/MapBuilder";
 import RoleLoader from "../../pocket/RoleLoader";
-import TownBank from "../../pocket/TownBank";
 import TownEntrance from "../../pocket/TownEntrance";
 import TravelPlanExecutor from "../../pocket/TravelPlanExecutor";
 import Coordinate from "../../util/Coordinate";
@@ -233,7 +233,7 @@ function doTravelToTown(credential: Credential, town: Town) {
     MessageBoard.publishMessage("目的地城市：<span style='color:greenyellow'>" + town.name + "</span>");
     MessageBoard.publishMessage("目的地坐标：<span style='color:greenyellow'>" + town.coordinate.asText() + "</span>");
 
-    const bank = new TownBank(credential);
+    const bank = new DeprecatedTownBank(credential);
     // 支取10万城门税
     bank.withdraw(10)
         .then(success => {

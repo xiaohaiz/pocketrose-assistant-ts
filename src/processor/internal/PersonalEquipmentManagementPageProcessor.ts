@@ -1,12 +1,12 @@
 import Equipment from "../../common/Equipment";
 import NpcLoader from "../../core/NpcLoader";
 import SetupLoader from "../../core/SetupLoader";
+import DeprecatedTownBank from "../../pocket/DeprecatedTownBank";
 import EquipmentParser from "../../pocket/EquipmentParser";
 import EquipmentSet from "../../pocket/EquipmentSet";
 import EquipmentSetLoader from "../../pocket/EquipmentSetLoader";
 import RoleLoader from "../../pocket/RoleLoader";
 import RoleStatusLoader from "../../pocket/RoleStatusLoader";
-import TownBank from "../../pocket/TownBank";
 import CommentBoard from "../../util/CommentBoard";
 import Credential from "../../util/Credential";
 import MessageBoard from "../../util/MessageBoard";
@@ -633,7 +633,7 @@ function doBindSendButton(credential: Credential) {
         }
         // @ts-ignore
         request["mode"] = "ITEM_SEND2";
-        const bank = new TownBank(credential);
+        const bank = new DeprecatedTownBank(credential);
         bank.withdraw(10)
             .then(success => {
                 if (!success) {
@@ -736,7 +736,7 @@ function doBindConsecrateButton(credential: Credential) {
         if (!confirm("请务必确认你将要祭奠的这些装备：" + consecrateCandidateNames.join())) {
             return;
         }
-        new TownBank(credential).withdraw(100)
+        new DeprecatedTownBank(credential).withdraw(100)
             .then(success => {
                 if (!success) {
                     MessageBoard.publishWarning("没钱学别人玩什么祭奠！");

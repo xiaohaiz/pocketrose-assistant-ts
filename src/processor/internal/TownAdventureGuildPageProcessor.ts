@@ -1,9 +1,9 @@
 import NpcLoader from "../../core/NpcLoader";
 import Town from "../../core/Town";
+import DeprecatedTownBank from "../../pocket/DeprecatedTownBank";
 import MapBuilder from "../../pocket/MapBuilder";
 import MapExplorer from "../../pocket/MapExplorer";
 import RoleLoader from "../../pocket/RoleLoader";
-import TownBank from "../../pocket/TownBank";
 import TownEntrance from "../../pocket/TownEntrance";
 import TravelPlan from "../../pocket/TravelPlan";
 import TravelPlanExecutor from "../../pocket/TravelPlanExecutor";
@@ -213,7 +213,7 @@ function doBindExchangeButton(credential: Credential) {
         }
         // @ts-ignore
         request["mode"] = "CHANGEMAP2";
-        const bank = new TownBank(credential);
+        const bank = new DeprecatedTownBank(credential);
         bank.withdraw(10)
             .then(success => {
                 if (!success) {
@@ -264,7 +264,7 @@ function doBindTreasureButton(credential: Credential) {
             .off("mouseleave");
 
         // 页面渲染完毕，开始探险
-        new TownBank(credential).withdraw(110)
+        new DeprecatedTownBank(credential).withdraw(110)
             .then(success => {
                 if (!success) {
                     MessageBoard.publishWarning("没钱还学别人探险？");
@@ -372,7 +372,7 @@ function doSeekTreasure(credential: Credential,
             .then(() => {
                 new TownEntrance(credential).enter(town.id)
                     .then(() => {
-                        new TownBank(credential).deposit(undefined)
+                        new DeprecatedTownBank(credential).deposit(undefined)
                             .then(() => {
                                 MessageBoard.publishMessage("探险完成。");
                                 if (foundList.length > 0) {

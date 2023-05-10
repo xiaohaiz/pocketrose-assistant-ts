@@ -1,10 +1,10 @@
 import Pet from "../../common/Pet";
 import NpcLoader from "../../core/NpcLoader";
 import PetProfileLoader from "../../core/PetProfileLoader";
+import DeprecatedTownBank from "../../pocket/DeprecatedTownBank";
 import EquipmentParser from "../../pocket/EquipmentParser";
 import PetParser from "../../pocket/PetParser";
 import RoleLoader from "../../pocket/RoleLoader";
-import TownBank from "../../pocket/TownBank";
 import Credential from "../../util/Credential";
 import MessageBoard from "../../util/MessageBoard";
 import NetworkUtils from "../../util/NetworkUtils";
@@ -789,7 +789,7 @@ function doBindPetSpellButton(credential: Credential, pet: Pet) {
 function doBindPetLoveButton(credential: Credential, buttonId: string, pet: Pet) {
     $("#" + buttonId).on("click", function () {
         const amount = Math.ceil(100 - pet.love!);
-        const bank = new TownBank(credential);
+        const bank = new DeprecatedTownBank(credential);
         bank.withdraw(amount)
             .then(success => {
                 if (!success) {
@@ -858,7 +858,7 @@ function doBindPetConsecrateButton(credential: Credential, buttonId: string, pet
         if (!confirm("你确认要献祭宠物" + pet.name + "吗？")) {
             return;
         }
-        const bank = new TownBank(credential);
+        const bank = new DeprecatedTownBank(credential);
         bank.withdraw(1000)
             .then(success => {
                 if (!success) {
@@ -883,7 +883,7 @@ function doBindPetSendButton(credential: Credential, buttonId: string, pet: Pet)
             MessageBoard.publishWarning("没有选择发送对象！");
             return;
         }
-        const bank = new TownBank(credential);
+        const bank = new DeprecatedTownBank(credential);
         bank.withdraw(10)
             .then(success => {
                 if (!success) {
