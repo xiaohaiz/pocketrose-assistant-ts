@@ -238,7 +238,7 @@ const BUTTON_STYLES: {} = {
         "  color: #fff;\n" +
         "  cursor: pointer;\n" +
         "  display: inline-block;\n" +
-        "  font-size: 50%;\n" +
+        "  font-size: 100%;\n" +
         "  font-weight: 400;\n" +
         "  line-height: 1.15385;\n" +
         "  margin: 0;\n" +
@@ -276,7 +276,7 @@ const BUTTON_STYLES: {} = {
         "  color: #39739d;\n" +
         "  cursor: pointer;\n" +
         "  display: inline-block;\n" +
-        "  font-size: 50%;\n" +
+        "  font-size: 100%;\n" +
         "  font-weight: 400;\n" +
         "  line-height: 1.15385;\n" +
         "  margin: 0;\n" +
@@ -313,11 +313,13 @@ const BUTTON_STYLES: {} = {
         "  border-radius: 4px;\n" +
         "  color: #3c4043;\n" +
         "  cursor: pointer;\n" +
-        "  font-size: 50%;\n" +
+        "  font-size: 100%;\n" +
         "  height: 36px;\n" +
         "  line-height: 27px;\n" +
-        "  min-width: 54px;\n" +
-        "  padding: 0 16px;\n" +
+        "  /* min-width: 54px;\n */" +
+        "  /* padding: 0 16px;\n */" +
+        "  min-width: 36px;\n" +
+        "  padding: 0 8px;\n" +
         "  text-align: center;\n" +
         "  user-select: none;\n" +
         "  -webkit-user-select: none;\n" +
@@ -378,7 +380,7 @@ const BUTTON_STYLES: {} = {
         "  color: #3B3B3B;\n" +
         "  cursor: pointer;\n" +
         "  display: inline-block;\n" +
-        "  font-size: 50%;\n" +
+        "  font-size: 100%;\n" +
         "  font-weight: 600;\n" +
         "  line-height: normal;\n" +
         "  margin: 0;\n" +
@@ -473,7 +475,7 @@ const BUTTON_STYLES: {} = {
         "  cursor: pointer;\n" +
         "  display: inline-flex;\n" +
         "  flex: 1 1 auto;\n" +
-        "  font-size: 50%;\n" +
+        "  font-size: 100%;\n" +
         "  font-weight: 700;\n" +
         "  justify-content: center;\n" +
         "  line-height: 1;\n" +
