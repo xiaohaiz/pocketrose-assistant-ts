@@ -360,6 +360,8 @@ function doRenderSuperMarketMenu() {
             .css("background-color", "yellow");
         $("option[value='ACC_SHOP']")
             .css("background-color", "yellow");
+        $("option[value='ITEM_SHOP']")
+            .css("background-color", "yellow");
     }
 }
 
