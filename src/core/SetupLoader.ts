@@ -229,16 +229,12 @@ class SetupLoader {
         return StorageUtils.getBoolean("_pa_033");
     }
 
-    static isConsecrateStateRecognizeEnabled1(): boolean {
-        return StorageUtils.getBoolean("_pa_034");
-    }
-
     static getEnlargeBattleRatio(): number {
         return StorageUtils.getFloat("_pa_036", -1);
     }
 
     static isConsecrateStateRecognizeEnabled(id: string): boolean {
-        return StorageUtils.getBoolean("_pa_034_" + id);
+        return StorageUtils.getBoolean("_pa_037_" + id);
     }
 }
 
