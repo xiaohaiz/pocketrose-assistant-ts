@@ -5,6 +5,7 @@ import DeprecatedTownBank from "../../pocket/DeprecatedTownBank";
 import EquipmentParser from "../../pocket/EquipmentParser";
 import PetParser from "../../pocket/PetParser";
 import RoleLoader from "../../pocket/RoleLoader";
+import TownBank from "../../pocketrose/TownBank";
 import Credential from "../../util/Credential";
 import MessageBoard from "../../util/MessageBoard";
 import NetworkUtils from "../../util/NetworkUtils";
@@ -858,21 +859,14 @@ function doBindPetConsecrateButton(credential: Credential, buttonId: string, pet
         if (!confirm("你确认要献祭宠物" + pet.name + "吗？")) {
             return;
         }
-        const bank = new DeprecatedTownBank(credential);
-        bank.withdraw(1000)
-            .then(success => {
-                if (!success) {
-                    MessageBoard.publishWarning("没钱玩什么献祭！");
-                    return;
-                }
-                consecratePet(credential, pet.index!)
-                    .then(() => {
-                        bank.deposit(undefined)
-                            .then(() => {
-                                doRefresh(credential);
-                            });
-                    });
+        const bank = new TownBank(credential);
+        bank.withdraw(1000).then(() => {
+            consecratePet(credential, pet.index!).then(() => {
+                bank.deposit().then(() => {
+                    doRefresh(credential);
+                });
             });
+        });
     });
 }
 
