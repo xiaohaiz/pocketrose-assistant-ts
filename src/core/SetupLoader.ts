@@ -228,6 +228,10 @@ class SetupLoader {
     static isPocketBankEnabled(): boolean {
         return StorageUtils.getBoolean("_pa_033");
     }
+
+    static isConsecrateStateRecognizeEnabled(): boolean {
+        return StorageUtils.getBoolean("_pa_034");
+    }
 }
 
 export = SetupLoader;

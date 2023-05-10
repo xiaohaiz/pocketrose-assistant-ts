@@ -12,8 +12,8 @@ import PageProcessorCredentialSupport from "../PageProcessorCredentialSupport";
 
 class TownDashboardPageProcessor extends PageProcessorCredentialSupport {
 
-    constructor() {
-        super();
+    doLoadButtonStyles(): number[] {
+        return [7, 8, 16];
     }
 
     doProcess(credential: Credential, context?: PageProcessorContext): void {
@@ -24,7 +24,22 @@ class TownDashboardPageProcessor extends PageProcessorCredentialSupport {
 
 function doProcess(credential: Credential) {
     $("input:text:last").attr("id", "messageInputText");
-    $("input:submit[value='更新']").attr("id", "refreshButton");
+    $("input:submit[value='更新']")
+        .attr("id", "refreshButton");
+
+    if (SetupLoader.isConsecrateStateRecognizeEnabled()) {
+        if (PageUtils.currentPageHtml().includes("可以进行下次祭奠了")) {
+            $("#refreshButton").addClass("button-8");
+            $("input:submit[value='行动']").addClass("button-8");
+        } else {
+            $("#refreshButton").addClass("button-7");
+            $("input:submit[value='行动']").addClass("button-7");
+        }
+    } else {
+        $("#refreshButton").addClass("button-16");
+        $("input:submit[value='行动']").addClass("button-16");
+    }
+
 
     doRenderBattleMenu(credential);
     doRenderPostHouseMenu();
