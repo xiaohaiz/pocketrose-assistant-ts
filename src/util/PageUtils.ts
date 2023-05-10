@@ -369,6 +369,48 @@ const BUTTON_STYLES: {} = {
         ".button-24:active {\n" +
         "  opacity: .5;\n" +
         "}\n",
+    "28": ".button-28 {\n" +
+        "  appearance: none;\n" +
+        "  background-color: transparent;\n" +
+        "  border: 2px solid #1A1A1A;\n" +
+        "  border-radius: 15px;\n" +
+        "  box-sizing: border-box;\n" +
+        "  color: #3B3B3B;\n" +
+        "  cursor: pointer;\n" +
+        "  display: inline-block;\n" +
+        "  font-size: 50%;\n" +
+        "  font-weight: 600;\n" +
+        "  line-height: normal;\n" +
+        "  margin: 0;\n" +
+        "  min-height: 30px;\n" +
+        "  min-width: 0;\n" +
+        "  outline: none;\n" +
+        "  padding: 16px 24px;\n" +
+        "  text-align: center;\n" +
+        "  text-decoration: none;\n" +
+        "  transition: all 300ms cubic-bezier(.23, 1, 0.32, 1);\n" +
+        "  user-select: none;\n" +
+        "  -webkit-user-select: none;\n" +
+        "  touch-action: manipulation;\n" +
+        "  width: 100%;\n" +
+        "  will-change: transform;\n" +
+        "}\n" +
+        "\n" +
+        ".button-28:disabled {\n" +
+        "  pointer-events: none;\n" +
+        "}\n" +
+        "\n" +
+        ".button-28:hover {\n" +
+        "  color: #fff;\n" +
+        "  background-color: #1A1A1A;\n" +
+        "  box-shadow: rgba(0, 0, 0, 0.25) 0 8px 15px;\n" +
+        "  transform: translateY(-2px);\n" +
+        "}\n" +
+        "\n" +
+        ".button-28:active {\n" +
+        "  box-shadow: none;\n" +
+        "  transform: translateY(0);\n" +
+        "}\n",
     "32": ".button-32 {\n" +
         "  background-color: #fff000;\n" +
         "  border-radius: 12px;\n" +
@@ -493,7 +535,7 @@ const BUTTON_STYLES: {} = {
         "  transition: .3s linear, color 0s, background-color 0s;\n" +
         "  outline: var(--b) solid #0000;\n" +
         "  outline-offset: .6em;\n" +
-        "  font-size: 60%;\n" +
+        "  font-size: 50%;\n" +
         "\n" +
         "  border: 0;\n" +
         "\n" +

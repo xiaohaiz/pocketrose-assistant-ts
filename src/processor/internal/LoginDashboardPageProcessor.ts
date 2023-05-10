@@ -5,7 +5,7 @@ import PageProcessor from "../PageProcessor";
 class LoginDashboardPageProcessor implements PageProcessor {
 
     process(): void {
-        PageUtils.loadButtonStyle(89);
+        PageUtils.loadButtonStyle(28);
         PageUtils.fixCurrentPageBrokenImages();
         PageUtils.removeUnusedHyperLinks();
         PageUtils.removeGoogleAnalyticsScript();
@@ -74,15 +74,13 @@ function doRender(configs: Map<number, {}>) {
 
 function doGenerateCell(configs: Map<number, {}>, code: number) {
     let html = "";
-    html += "<td style='background-color:#E8E8D0'>";
+    html += "<td style='background-color:#E8E8D0;width:20%;height:32px'>";
     let config = configs.get(code);
     if (config !== undefined) {
         // @ts-ignore
         const name = config.name;
-        html += "<input type='button' class='fastLoginButton button-89' " +
+        html += "<input type='button' class='fastLoginButton button-28' " +
             "id='fastLogin_" + code + "' value='" + name + "'>";
-    } else {
-        html += PageUtils.generateInvisibleButton("#E8E8D0");
     }
     html += "</td>";
     return html;
