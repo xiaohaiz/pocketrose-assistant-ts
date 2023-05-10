@@ -1,12 +1,12 @@
 import Town from "../../core/Town";
 import TownLoader from "../../core/TownLoader";
 import CastleEntrance from "../../pocket/CastleEntrance";
-import DeprecatedTownBank from "../../pocket/DeprecatedTownBank";
 import MapBuilder from "../../pocket/MapBuilder";
 import RoleLoader from "../../pocket/RoleLoader";
 import TownEntrance from "../../pocket/TownEntrance";
 import TravelPlanExecutor from "../../pocket/TravelPlanExecutor";
 import CastleBank from "../../pocketrose/CastleBank";
+import TownBank from "../../pocketrose/TownBank";
 import Coordinate from "../../util/Coordinate";
 import Credential from "../../util/Credential";
 import MessageBoard from "../../util/MessageBoard";
@@ -203,23 +203,21 @@ function doTravelToTown(credential: Credential, town: Town) {
                         .then(() => {
                             new TownEntrance(credential).enter(town.id)
                                 .then(() => {
-                                    const townBank = new DeprecatedTownBank(credential);
-                                    townBank.deposit(undefined)
-                                        .then(() => {
-                                            townBank.loadBankAccount()
-                                                .then(account => {
-                                                    $("#roleCash").text(account.cash + " GOLD");
-                                                });
-
-                                            MessageBoard.publishMessage("旅途愉快，下次再见。");
-                                            $("#returnForm")
-                                                .attr("action", "status.cgi")
-                                                .find("input:hidden[name='mode']")
-                                                .val("STATUS");
-                                            $("#returnButton")
-                                                .prop("disabled", false)
-                                                .val(town.name + "欢迎您");
+                                    const bank = new TownBank(credential);
+                                    bank.deposit().then(() => {
+                                        bank.load().then(account => {
+                                            $("#roleCash").text(account.cash + " GOLD");
                                         });
+
+                                        MessageBoard.publishMessage("旅途愉快，下次再见。");
+                                        $("#returnForm")
+                                            .attr("action", "status.cgi")
+                                            .find("input:hidden[name='mode']")
+                                            .val("STATUS");
+                                        $("#returnButton")
+                                            .prop("disabled", false)
+                                            .val(town.name + "欢迎您");
+                                    });
                                 });
                         });
                 });
