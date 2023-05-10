@@ -2,6 +2,7 @@ import Equipment from "../common/Equipment";
 import Merchandise from "../common/Merchandise";
 import Role from "../common/Role";
 import Credential from "../util/Credential";
+import MessageBoard from "../util/MessageBoard";
 import NetworkUtils from "../util/NetworkUtils";
 import StringUtils from "../util/StringUtils";
 import TownAccessoryHousePage from "./TownAccessoryHousePage";
@@ -31,6 +32,22 @@ class TownAccessoryHouse {
                 NetworkUtils.post("town.cgi", request).then(html => {
                     const page = TownAccessoryHouse.parsePage(html);
                     resolve(page);
+                });
+            });
+        };
+        return await action();
+    }
+
+    async sell(equipmentIndex: number, discount: number): Promise<void> {
+        const action = () => {
+            return new Promise<void>(resolve => {
+                const request = this.#credential.asRequestMap();
+                request.set("select", equipmentIndex.toString());
+                request.set("val_off", discount.toString());
+                request.set("mode", "SELL");
+                NetworkUtils.post("town.cgi", request).then(html => {
+                    MessageBoard.processResponseMessage(html);
+                    resolve();
                 });
             });
         };

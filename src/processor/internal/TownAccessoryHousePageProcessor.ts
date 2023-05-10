@@ -1,6 +1,7 @@
 import NpcLoader from "../../core/NpcLoader";
 import TownAccessoryHouse from "../../pocketrose/TownAccessoryHouse";
 import TownAccessoryHousePage from "../../pocketrose/TownAccessoryHousePage";
+import TownBank from "../../pocketrose/TownBank";
 import Credential from "../../util/Credential";
 import MessageBoard from "../../util/MessageBoard";
 import PageUtils from "../../util/PageUtils";
@@ -250,6 +251,26 @@ class TownAccessoryHousePageProcessor extends PageProcessorCredentialSupport {
                 .parent()
                 .show();
         }
+
+        this.#bindMutableButtons(credential, page);
+    }
+
+    #bindMutableButtons(credential: Credential, page: TownAccessoryHousePage) {
+        $("input:button[value='出售']").on("click", event => {
+            const buttonId = $(event.target).attr("id") as string;
+            const index = parseInt(buttonId.split("_")[1]);
+            const equipment = page.findEquipment(index)!;
+            if (!confirm("确认要出售“" + equipment.fullName + "”？")) {
+                return;
+            }
+            new TownAccessoryHouse(credential, page.townId!)
+                .sell(index, page.discount!)
+                .then(() => {
+                    new TownBank(credential, page.townId).deposit().then(() => {
+                        this.#refreshMutablePage(credential, page.townId!);
+                    });
+                });
+        });
     }
 
     #refreshMutablePage(credential: Credential, townId: string) {
