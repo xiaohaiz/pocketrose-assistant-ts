@@ -16,6 +16,7 @@ class TownItemHousePageProcessor extends PageProcessorCredentialSupport {
     doProcess(credential: Credential, context?: PageProcessorContext): void {
         const page = TownItemHouse.parsePage(PageUtils.currentPageHtml());
         this.#renderImmutablePage(credential, page);
+        this.#renderMutablePage(credential, page);
     }
 
     #renderImmutablePage(credential: Credential, page: TownItemHousePage) {
@@ -124,7 +125,18 @@ class TownItemHousePageProcessor extends PageProcessorCredentialSupport {
         });
     }
 
+    #renderMutablePage(credential: Credential, page: TownItemHousePage) {
+    }
+
     #refreshMutablePage(credential: Credential, townId: string) {
+        PageUtils.scrollIntoView("pageTitle");
+        $("#equipmentList").parent().hide();
+        $("#merchandiseList").parent().hide();
+        $(".mutableButton").off("click");
+        new TownItemHouse(credential, townId).open().then(page => {
+            $("#roleCash").text(page.role!.cash! + " GOLD");
+            this.#renderMutablePage(credential, page);
+        });
     }
 }
 
