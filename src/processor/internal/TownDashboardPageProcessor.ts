@@ -27,7 +27,7 @@ function doProcess(credential: Credential) {
     $("input:submit[value='更新']")
         .attr("id", "refreshButton");
 
-    if (SetupLoader.isConsecrateStateRecognizeEnabled()) {
+    if (SetupLoader.isConsecrateStateRecognizeEnabled(credential.id)) {
         if (PageUtils.currentPageHtml().includes("可以进行下次祭奠了")) {
             $("#refreshButton").addClass("button-8");
             $("input:submit[value='行动']").addClass("button-8");
