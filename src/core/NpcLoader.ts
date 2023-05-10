@@ -108,6 +108,7 @@ const POCKET_NPC_IMAGES = {
     "夜三": Constants.POCKET_DOMAIN + "/image/head/1117.gif",
     "花子": Constants.POCKET_DOMAIN + "/image/head/1126.gif",
     "骨头": Constants.POCKET_DOMAIN + "/image/head/1160.gif",
+    "狐狸": Constants.POCKET_DOMAIN + "/image/head/1196.gif",
     "七七": Constants.POCKET_DOMAIN + "/image/head/1368.gif",
     "豚豚": Constants.POCKET_DOMAIN + "/image/head/1389.gif",
     "夜九": Constants.POCKET_DOMAIN + "/image/head/1561.gif",
