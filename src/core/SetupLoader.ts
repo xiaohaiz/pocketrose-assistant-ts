@@ -232,6 +232,10 @@ class SetupLoader {
     static isConsecrateStateRecognizeEnabled(): boolean {
         return StorageUtils.getBoolean("_pa_034");
     }
+
+    static isEnlargeBattleSelectionEnabled(): boolean {
+        return StorageUtils.getBoolean("_pa_035");
+    }
 }
 
 export = SetupLoader;

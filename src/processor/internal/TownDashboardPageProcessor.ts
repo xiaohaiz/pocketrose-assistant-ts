@@ -40,6 +40,23 @@ function doProcess(credential: Credential) {
         $("input:submit[value='行动']").addClass("button-16");
     }
 
+    if (SetupLoader.isEnlargeBattleSelectionEnabled()) {
+        $("th:contains('训练·战斗')")
+            .filter((idx, th) => {
+                return $(th).text() === "训练·战斗";
+            })
+            .next()
+            .attr("id", "battleCell")
+            .removeAttr("height")
+            .find("select:first")
+            .css("font-size", "200%")
+            .parent()
+            .find("img:first")
+            .attr("width", "160")
+            .attr("height", "80")
+            .before($("<br>"));
+    }
+
 
     doRenderBattleMenu(credential);
     doRenderPostHouseMenu();
