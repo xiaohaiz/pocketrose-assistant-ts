@@ -27,7 +27,9 @@ function doProcess(credential: Credential) {
     $("input:submit[value='更新']")
         .attr("id", "refreshButton");
 
+    let buttonChanged = false;
     if (SetupLoader.isConsecrateStateRecognizeEnabled(credential.id)) {
+        buttonChanged = true;
         if (PageUtils.currentPageHtml().includes("可以进行下次祭奠了")) {
             $("#refreshButton").addClass("button-8");
             $("input:submit[value='行动']").addClass("button-8");
@@ -35,9 +37,6 @@ function doProcess(credential: Credential) {
             $("#refreshButton").addClass("button-7");
             $("input:submit[value='行动']").addClass("button-7");
         }
-    } else {
-        $("#refreshButton").addClass("button-16");
-        $("input:submit[value='行动']").addClass("button-16");
     }
 
     $("#refreshButton").attr("height", "100%");
@@ -45,6 +44,11 @@ function doProcess(credential: Credential) {
 
     const enlargeRatio = SetupLoader.getEnlargeBattleRatio();
     if (enlargeRatio > 0) {
+        if (!buttonChanged) {
+            $("#refreshButton").addClass("button-16");
+            $("input:submit[value='行动']").addClass("button-16");
+        }
+
         let fontSize = 100 * enlargeRatio;
         let picWidth = 80 * enlargeRatio;
         let picHeight = 40 * enlargeRatio;
