@@ -1,6 +1,6 @@
-import StorageUtils from "../../util/StorageUtils";
-import MessageBoard from "../../util/MessageBoard";
 import SetupLoader from "../../core/SetupLoader";
+import MessageBoard from "../../util/MessageBoard";
+import StorageUtils from "../../util/StorageUtils";
 import SetupItem from "../SetupItem";
 
 class SetupItem002 implements SetupItem {
@@ -36,7 +36,7 @@ function doRender() {
 
 function doGenerateSetupItem() {
     let html = "<select id='select_" + code + "'>";
-    html += "<option class='option_class_" + code + "' value='-1'>禁止</option>";
+    html += "<option class='option_class_" + code + "' value='-1'>禁用</option>";
     html += "<option class='option_class_" + code + "' value='0.1'>10%</option>";
     html += "<option class='option_class_" + code + "' value='0.2'>20%</option>";
     html += "<option class='option_class_" + code + "' value='0.3'>30%</option>";
