@@ -8,8 +8,8 @@ import PageProcessorCredentialSupport from "../PageProcessorCredentialSupport";
 
 class BattlePageProcessor extends PageProcessorCredentialSupport {
 
-    constructor() {
-        super();
+    doLoadButtonStyles(): number[] {
+        return [90];
     }
 
     doProcess(credential: Credential): void {
@@ -30,6 +30,13 @@ class BattlePageProcessor extends PageProcessorCredentialSupport {
         $('input[value="返回城市"]').attr('id', 'returnButton');
         $('input[value="返回更新"]').attr('id', 'updateButton');
         $('input[value="返回银行"]').attr('id', 'depositButton');
+        if (SetupLoader.isBattleLargeButtonEnabled()) {
+            $("#lodgeButton").addClass("button-90");
+            $("#repairButton").addClass("button-90");
+            $("#returnButton").addClass("button-90");
+            $("#updateButton").addClass("button-90");
+            $("#depositButton").addClass("button-90");
+        }
 
         // 根据设置的内容修改按钮的台词
         let buttonText = SetupLoader.getBattleReturnButtonText();

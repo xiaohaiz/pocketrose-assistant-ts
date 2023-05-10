@@ -557,6 +557,24 @@ const BUTTON_STYLES: {} = {
         "  background: var(--color);\n" +
         "  color: #fff;\n" +
         "}\n",
+    "90": ".button-90 {\n" +
+        "  color: #fff;\n" +
+        "  padding: 15px 25px;\n" +
+        "  border-radius: 100px;\n" +
+        "  background-color: #4C43CD;\n" +
+        "  background-image: radial-gradient(93% 87% at 87% 89%, rgba(0, 0, 0, 0.23) 0%, transparent 86.18%), radial-gradient(66% 87% at 26% 20%, rgba(255, 255, 255, 0.41) 0%, rgba(255, 255, 255, 0) 69.79%, rgba(255, 255, 255, 0) 100%);\n" +
+        "  box-shadow: 2px 19px 31px rgba(0, 0, 0, 0.2);\n" +
+        "  font-weight: bold;\n" +
+        "  font-size: 16px;\n" +
+        "\n" +
+        "  border: 0;\n" +
+        "\n" +
+        "  user-select: none;\n" +
+        "  -webkit-user-select: none;\n" +
+        "  touch-action: manipulation;\n" +
+        "\n" +
+        "  cursor: pointer;\n" +
+        "}\n",
 };
 
 export = PageUtils;
