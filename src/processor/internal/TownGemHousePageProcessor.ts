@@ -3,6 +3,7 @@ import NpcLoader from "../../core/NpcLoader";
 import Town from "../../core/Town";
 import TownLoader from "../../core/TownLoader";
 import EquipmentManagement from "../../pocket/personal/EquipmentManagement";
+import PersonalEquipmentManagement from "../../pocket/PersonalEquipmentManagement";
 import TownBank from "../../pocketrose/TownBank";
 import TownGemHouse from "../../pocketrose/TownGemHouse";
 import TownGemHousePage from "../../pocketrose/TownGemHousePage";
@@ -524,19 +525,29 @@ class TownGemHousePageProcessor extends PageProcessorCredentialSupport {
             return;
         }
 
-        if (gemCode === 1 && equipment.additionalPower! < 0) {
-            // 自动砸威力时出现负数，返回
-            MessageBoard.publishMessage("当前装备镶嵌威力宝石时出现负数，中断转手工处理。");
-            this.#refreshMutablePage(credential, town);
-            return;
-        }
-
-        const house = new TownGemHouse(credential, town.id);
-        house.fuse(equipmentIndex, gem.index!).then(() => {
-            house.open().then(page => {
-                this.#_fuseAllGems(credential, page, town, target, gemCode);
+        if (gemCode === 1) {
+            new PersonalEquipmentManagement(credential).open().then(p => {
+                const e = p.findEquipment(equipmentIndex);
+                if (e !== null && e.additionalPower! < 0) {
+                    MessageBoard.publishMessage("当前装备镶嵌威力宝石时出现负数，中断转手工处理。");
+                    this.#refreshMutablePage(credential, town);
+                } else {
+                    const house = new TownGemHouse(credential, town.id);
+                    house.fuse(equipmentIndex, gem!.index!).then(() => {
+                        house.open().then(page => {
+                            this.#_fuseAllGems(credential, page, town, target, gemCode);
+                        });
+                    });
+                }
             });
-        });
+        } else {
+            const house = new TownGemHouse(credential, town.id);
+            house.fuse(equipmentIndex, gem!.index!).then(() => {
+                house.open().then(page => {
+                    this.#_fuseAllGems(credential, page, town, target, gemCode);
+                });
+            });
+        }
     }
 }
 

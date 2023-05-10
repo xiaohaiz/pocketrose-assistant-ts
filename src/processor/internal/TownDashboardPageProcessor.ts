@@ -96,6 +96,63 @@ function doProcess(credential: Credential) {
     doRenderTownTax(credential, roleStatus);
     doRenderLeaveTown();
     doRenderEventBoard();
+
+    $("th:contains('训练·战斗')")
+        .filter((idx, th) => {
+            return $(th).text() === "训练·战斗";
+        })
+        .closest("table")
+        .attr("id", "mainMenu")
+        .find("tr:first")
+        .find("td:first")
+        .attr("colspan", 5)
+        .attr("id", "hiddenFormContainer")
+        .css("display", "none")
+        .parent()
+        .next()
+        .find("th:first")
+        .attr("colspan", 4)
+        .parent()
+        .next()
+        .find("th:first")
+        .attr("colspan", 3)
+        .css("text-align", "right")
+        .text("训练战斗")
+        .parent()
+        .next()
+        .find("th:first")
+        .css("text-align", "right")
+        .text("城市设施")
+        .before($("<td></td>"))
+        .parent()
+        .next()
+        .find("th:first")
+        .css("text-align", "right")
+        .before($("<td></td>"))
+        .parent()
+        .next()
+        .find("th:first")
+        .css("text-align", "right")
+        .before($("<td></td>"))
+        .parent()
+        .next()
+        .find("th:first")
+        .css("text-align", "right")
+        .before($("<td></td>"))
+        .parent()
+        .next()
+        .find("th:first")
+        .attr("colspan", 3)
+        .parent()
+        .next()
+        .find("th:first")
+        .attr("colspan", 4)
+        .parent()
+        .next()
+        .find("th:first")
+        .attr("colspan", 5)
+
+
 }
 
 function doRenderBattleMenu(credential: Credential) {

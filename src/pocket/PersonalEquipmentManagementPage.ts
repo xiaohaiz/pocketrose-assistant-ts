@@ -25,6 +25,15 @@ class PersonalEquipmentManagementPage {
     findTreasureBag(): Equipment | null {
         return EquipmentParser.findTreasureBag(this.equipmentList);
     }
+
+    findEquipment(index: number) {
+        for (const equipment of this.equipmentList!) {
+            if (equipment.index === index) {
+                return equipment;
+            }
+        }
+        return null;
+    }
 }
 
 export = PersonalEquipmentManagementPage;
