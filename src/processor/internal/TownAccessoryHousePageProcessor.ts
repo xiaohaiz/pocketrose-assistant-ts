@@ -2,6 +2,7 @@ import NpcLoader from "../../core/NpcLoader";
 import TownAccessoryHouse from "../../pocketrose/TownAccessoryHouse";
 import TownAccessoryHousePage from "../../pocketrose/TownAccessoryHousePage";
 import TownBank from "../../pocketrose/TownBank";
+import BankUtils from "../../util/BankUtils";
 import Credential from "../../util/Credential";
 import MessageBoard from "../../util/MessageBoard";
 import PageUtils from "../../util/PageUtils";
@@ -11,7 +12,7 @@ import PageProcessorCredentialSupport from "../PageProcessorCredentialSupport";
 class TownAccessoryHousePageProcessor extends PageProcessorCredentialSupport {
 
     doLoadButtonStyles(): number[] {
-        return [7, 8, 35, 89];
+        return [35, 89];
     }
 
     doProcess(credential: Credential, context?: PageProcessorContext): void {
@@ -269,6 +270,31 @@ class TownAccessoryHousePageProcessor extends PageProcessorCredentialSupport {
                     new TownBank(credential, page.townId).deposit().then(() => {
                         this.#refreshMutablePage(credential, page.townId!);
                     });
+                });
+        });
+        $("input:button[value='购买']").on("click", event => {
+            const buttonId = $(event.target).attr("id") as string;
+            const index = parseInt(buttonId.split("_")[1]);
+
+            const count = parseInt($("#count_" + index).val() as string);
+            const merchandise = page.findMerchandise(index)!;
+            const totalPrice = merchandise.price! * count;
+            const amount = BankUtils.calculateCashDifferenceAmount(page.role!.cash!, totalPrice);
+            if (!confirm("确认要购买" + count + "件“" + merchandise.name + "”？大约需要再支取" + amount + "万GOLD。")) {
+                return;
+            }
+
+            const bank = new TownBank(credential, page.townId);
+            bank.withdraw(amount)
+                .then(() => {
+                    new TownAccessoryHouse(credential, page.townId!)
+                        .buy(index, count, page.discount!)
+                        .then(() => {
+                            bank.deposit()
+                                .then(() => {
+                                    this.#refreshMutablePage(credential, page.townId!);
+                                });
+                        });
                 });
         });
     }
