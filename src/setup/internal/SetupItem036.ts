@@ -37,7 +37,9 @@ function doRender() {
 function doGenerateSetupItem() {
     let html = "<select id='select_" + code + "'>";
     html += "<option class='option_class_" + code + "' value='-1'>禁止</option>";
+    html += "<option class='option_class_" + code + "' value='1.2'>120%</option>";
     html += "<option class='option_class_" + code + "' value='1.5'>150%</option>";
+    html += "<option class='option_class_" + code + "' value='1.8'>180%</option>";
     html += "<option class='option_class_" + code + "' value='2'>200%</option>";
     html += "<option class='option_class_" + code + "' value='2.5'>250%</option>";
     html += "<option class='option_class_" + code + "' value='3'>300%</option>";
