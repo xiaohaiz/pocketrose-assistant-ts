@@ -103,6 +103,20 @@ class TownAccessoryHousePageProcessor extends PageProcessorCredentialSupport {
 
         $("#storeUI").html(html);
     }
+
+    #renderMutablePage(credential: Credential, page: TownAccessoryHousePage) {
+    }
+
+    #refreshMutablePage(credential: Credential, townId: string) {
+        PageUtils.scrollIntoView("pageTitle");
+        $("#equipmentList").parent().hide();
+        $("#merchandiseList").parent().hide();
+        $(".dynamic_button_class").off("click");
+        new TownAccessoryHouse(credential, townId).open().then(page => {
+            $("#roleCash").text(page.role!.cash! + " GOLD");
+            this.#renderMutablePage(credential, page);
+        });
+    }
 }
 
 export = TownAccessoryHousePageProcessor;
