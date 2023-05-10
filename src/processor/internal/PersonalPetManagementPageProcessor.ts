@@ -790,26 +790,20 @@ function doBindPetSpellButton(credential: Credential, pet: Pet) {
 function doBindPetLoveButton(credential: Credential, buttonId: string, pet: Pet) {
     $("#" + buttonId).on("click", function () {
         const amount = Math.ceil(100 - pet.love!);
-        const bank = new DeprecatedTownBank(credential);
-        bank.withdraw(amount)
-            .then(success => {
-                if (!success) {
-                    MessageBoard.publishWarning("没钱就不要顾及宠物亲密度了！");
-                } else {
-                    const request = credential.asRequest();
-                    // @ts-ignore
-                    request["mode"] = "PETADDLOVE";
-                    // @ts-ignore
-                    request["select"] = pet.index;
-                    NetworkUtils.sendPostRequest("mydata.cgi", request, function (html) {
-                        MessageBoard.processResponseMessage(html);
-                        bank.deposit(undefined)
-                            .then(() => {
-                                doRefresh(credential);
-                            });
-                    });
-                }
+        const bank = new TownBank(credential);
+        bank.withdraw(amount).then(() => {
+            const request = credential.asRequest();
+            // @ts-ignore
+            request["mode"] = "PETADDLOVE";
+            // @ts-ignore
+            request["select"] = pet.index;
+            NetworkUtils.sendPostRequest("mydata.cgi", request, function (html) {
+                MessageBoard.processResponseMessage(html);
+                bank.deposit().then(() => {
+                    doRefresh(credential);
+                });
             });
+        });
     });
 }
 
