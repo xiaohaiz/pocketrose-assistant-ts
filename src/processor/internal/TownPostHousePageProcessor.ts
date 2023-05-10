@@ -4,7 +4,6 @@ import Town from "../../core/Town";
 import TownLoader from "../../core/TownLoader";
 import CastleEntrance from "../../pocket/CastleEntrance";
 import CastleLoader from "../../pocket/CastleLoader";
-import DeprecatedTownBank from "../../pocket/DeprecatedTownBank";
 import MapBuilder from "../../pocket/MapBuilder";
 import RoleLoader from "../../pocket/RoleLoader";
 import TownEntrance from "../../pocket/TownEntrance";
@@ -235,50 +234,40 @@ function doTravelToTown(credential: Credential, town: Town) {
     MessageBoard.publishMessage("目的地坐标：<span style='color:greenyellow'>" + town.coordinate.asText() + "</span>");
 
     const bank = new TownBank(credential);
-    const bank1 = new DeprecatedTownBank(credential);
     // 支取10万城门税
-    bank1.withdraw(10)
-        .then(success => {
-            if (!success) {
-                MessageBoard.publishWarning("因为没有足够的保证金，旅途被中断！");
-                MessageBoard.publishMessage("回去吧，没钱就别来了。");
-                $("#returnButton").val("请攒够钱再来");
-                $("#returnButton").prop("disabled", false);
-                return;
-            }
-
-            // 更新现金栏
-            bank.load().then(account => {
-                $("#roleCash").text(account.cash + " GOLD");
-            });
-
-            const entrance = new TownEntrance(credential);
-            // 离开当前城市
-            entrance.leave()
-                .then(plan => {
-                    plan.destination = town.coordinate;
-                    const executor = new TravelPlanExecutor(plan);
-                    // 执行旅途计划
-                    executor.execute()
-                        .then(() => {
-                            // 进入目标城市
-                            entrance.enter(town.id)
-                                .then(() => {
-                                    // 把身上现金全部存入
-                                    bank.deposit().then(() => {
-                                        // 更新现金栏
-                                        bank.load().then(account => {
-                                            $("#roleCash").text(account.cash + " GOLD");
-                                        });
-
-                                        MessageBoard.publishMessage("旅途愉快，下次再见。");
-                                        $("#returnButton").val(town.name + "欢迎您");
-                                        $("#returnButton").prop("disabled", false);
-                                    });
-                                });
-                        });
-                });
+    bank.withdraw(10).then(() => {
+        // 更新现金栏
+        bank.load().then(account => {
+            $("#roleCash").text(account.cash + " GOLD");
         });
+
+        const entrance = new TownEntrance(credential);
+        // 离开当前城市
+        entrance.leave()
+            .then(plan => {
+                plan.destination = town.coordinate;
+                const executor = new TravelPlanExecutor(plan);
+                // 执行旅途计划
+                executor.execute()
+                    .then(() => {
+                        // 进入目标城市
+                        entrance.enter(town.id)
+                            .then(() => {
+                                // 把身上现金全部存入
+                                bank.deposit().then(() => {
+                                    // 更新现金栏
+                                    bank.load().then(account => {
+                                        $("#roleCash").text(account.cash + " GOLD");
+                                    });
+
+                                    MessageBoard.publishMessage("旅途愉快，下次再见。");
+                                    $("#returnButton").val(town.name + "欢迎您");
+                                    $("#returnButton").prop("disabled", false);
+                                });
+                            });
+                    });
+            });
+    });
 }
 
 function doTravelToCastle(credential: Credential, castle: Castle) {

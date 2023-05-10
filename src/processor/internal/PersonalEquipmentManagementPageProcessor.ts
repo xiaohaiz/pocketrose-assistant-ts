@@ -1,7 +1,6 @@
 import Equipment from "../../common/Equipment";
 import NpcLoader from "../../core/NpcLoader";
 import SetupLoader from "../../core/SetupLoader";
-import DeprecatedTownBank from "../../pocket/DeprecatedTownBank";
 import EquipmentParser from "../../pocket/EquipmentParser";
 import EquipmentSet from "../../pocket/EquipmentSet";
 import EquipmentSetLoader from "../../pocket/EquipmentSetLoader";
@@ -731,19 +730,14 @@ function doBindConsecrateButton(credential: Credential) {
         if (!confirm("请务必确认你将要祭奠的这些装备：" + consecrateCandidateNames.join())) {
             return;
         }
-        new DeprecatedTownBank(credential).withdraw(100)
-            .then(success => {
-                if (!success) {
-                    MessageBoard.publishWarning("没钱学别人玩什么祭奠！");
-                    return;
-                }
-                let html = "";
-                consecrateCandidates.forEach(it => {
-                    html += "<input type='hidden' name='item" + it + "' value='" + it + "'>";
-                });
-                $("#consecrateFormPayload").html(html);
-                $("#consecrateSubmit").trigger("click");
+        new TownBank(credential).withdraw(100).then(() => {
+            let html = "";
+            consecrateCandidates.forEach(it => {
+                html += "<input type='hidden' name='item" + it + "' value='" + it + "'>";
             });
+            $("#consecrateFormPayload").html(html);
+            $("#consecrateSubmit").trigger("click");
+        });
     });
 }
 

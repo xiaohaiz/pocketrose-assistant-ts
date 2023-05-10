@@ -1,6 +1,5 @@
 import NpcLoader from "../../core/NpcLoader";
 import Town from "../../core/Town";
-import DeprecatedTownBank from "../../pocket/DeprecatedTownBank";
 import MapBuilder from "../../pocket/MapBuilder";
 import MapExplorer from "../../pocket/MapExplorer";
 import RoleLoader from "../../pocket/RoleLoader";
@@ -259,18 +258,13 @@ function doBindTreasureButton(credential: Credential) {
             .off("mouseleave");
 
         // 页面渲染完毕，开始探险
-        new DeprecatedTownBank(credential).withdraw(110)
-            .then(success => {
-                if (!success) {
-                    MessageBoard.publishWarning("没钱还学别人探险？");
-                    return;
-                }
-                new RoleLoader(credential).load()
-                    .then(role => {
-                        const town = role.town!;
-                        doStartTreasureSeeking(credential, candidates, town);
-                    });
-            });
+        new TownBank(credential).withdraw(110).then(() => {
+            new RoleLoader(credential).load()
+                .then(role => {
+                    const town = role.town!;
+                    doStartTreasureSeeking(credential, candidates, town);
+                });
+        });
     });
 }
 
