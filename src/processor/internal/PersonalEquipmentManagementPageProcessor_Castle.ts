@@ -1,6 +1,6 @@
 import Equipment from "../../common/Equipment";
-import CastleWarehouse from "../../pocket/castle/CastleWarehouse";
 import TreasureBag from "../../pocket/TreasureBag";
+import CastleWarehouse from "../../pocketrose/CastleWarehouse";
 import PersonalEquipmentManagementPage from "../../pocketrose/PersonalEquipmentManagementPage";
 import PersonalStatus from "../../pocketrose/PersonalStatus";
 import Credential from "../../util/Credential";

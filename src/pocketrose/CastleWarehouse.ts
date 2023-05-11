@@ -1,7 +1,7 @@
-import Credential from "../../util/Credential";
-import NetworkUtils from "../../util/NetworkUtils";
-import StringUtils from "../../util/StringUtils";
-import EquipmentParser from "../EquipmentParser";
+import EquipmentParser from "../pocket/EquipmentParser";
+import Credential from "../util/Credential";
+import NetworkUtils from "../util/NetworkUtils";
+import StringUtils from "../util/StringUtils";
 import CastleWarehousePage from "./CastleWarehousePage";
 
 class CastleWarehouse {

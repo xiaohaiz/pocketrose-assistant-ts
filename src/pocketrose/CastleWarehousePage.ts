@@ -1,4 +1,4 @@
-import Equipment from "../../common/Equipment";
+import Equipment from "../common/Equipment";
 
 class CastleWarehousePage {
 
