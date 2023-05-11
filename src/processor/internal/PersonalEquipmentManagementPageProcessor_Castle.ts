@@ -21,6 +21,10 @@ class PersonalEquipmentManagementPageProcessor_Castle extends AbstractPersonalEq
         }
     }
 
+    doGenerateWelcomeMessageHtml(): string {
+        return "<b style='font-size:120%;color:wheat'>又来管理您的装备来啦？真是一刻不得闲置啊。</b>";
+    }
+
 
 }
 

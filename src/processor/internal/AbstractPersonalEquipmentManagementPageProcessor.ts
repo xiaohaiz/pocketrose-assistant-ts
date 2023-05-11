@@ -1,6 +1,8 @@
+import NpcLoader from "../../core/NpcLoader";
 import PersonalEquipmentManagement from "../../pocketrose/PersonalEquipmentManagement";
 import PersonalEquipmentManagementPage from "../../pocketrose/PersonalEquipmentManagementPage";
 import Credential from "../../util/Credential";
+import MessageBoard from "../../util/MessageBoard";
 import PageUtils from "../../util/PageUtils";
 import PageProcessorContext from "../PageProcessorContext";
 import PageProcessorCredentialSupport from "../PageProcessorCredentialSupport";
@@ -69,11 +71,28 @@ abstract class AbstractPersonalEquipmentManagementPageProcessor extends PageProc
                 "colspan='5' id='roleLocation'>" + this.doGenerateRoleLocationHtml(context) + "</td>" +
                 "</tr>" +
                 ""));
+
+        // ------------------------------------------------------------------------
+        // 消息面板栏
+        // ------------------------------------------------------------------------
+        $("#tr1")
+            .next()
+            .attr("id", "tr2")
+            .find("td:first")
+            .attr("id", "messageBoardContainer")
+            .removeAttr("height");
+        MessageBoard.createMessageBoardStyleB("messageBoardContainer", NpcLoader.randomNpcImageHtml());
+        $("#messageBoard")
+            .css("background-color", "black")
+            .css("color", "wheat");
+        MessageBoard.resetMessageBoard(this.doGenerateWelcomeMessageHtml());
     }
 
     abstract doGeneratePageTitleHtml(context?: PageProcessorContext): string;
 
     abstract doGenerateRoleLocationHtml(context?: PageProcessorContext): string;
+
+    abstract doGenerateWelcomeMessageHtml(): string;
 }
 
 export = AbstractPersonalEquipmentManagementPageProcessor;
