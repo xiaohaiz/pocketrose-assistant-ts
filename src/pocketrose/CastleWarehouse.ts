@@ -32,11 +32,13 @@ class CastleWarehouse {
         return await action(this.#credential);
     }
 
-    async takeOut(index: number): Promise<void> {
+    async takeOut(indexList: number[]): Promise<void> {
         const action = () => {
             return new Promise<void>(resolve => {
                 const request = this.#credential.asRequestMap();
-                request.set("item" + index, index.toString());
+                for (const index of indexList) {
+                    request.set("item" + index, index.toString());
+                }
                 request.set("chara", "1");
                 request.set("mode", "CASTLE_ITEMWITHDRAW");
                 NetworkUtils.post("castle.cgi", request).then(html => {

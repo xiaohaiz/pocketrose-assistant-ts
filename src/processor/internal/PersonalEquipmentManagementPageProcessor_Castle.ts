@@ -393,7 +393,7 @@ class PersonalEquipmentManagementPageProcessor_Castle extends AbstractPersonalEq
             $("input:button[value='出库']").on("click", event => {
                 const buttonId = $(event.target).attr("id")!;
                 const index = parseInt(buttonId.split("_")[1]);
-                new CastleWarehouse(credential).takeOut(index).then(() => {
+                new CastleWarehouse(credential).takeOut([index]).then(() => {
                     this.doRefreshMutablePage(credential, context);
                 });
             });
