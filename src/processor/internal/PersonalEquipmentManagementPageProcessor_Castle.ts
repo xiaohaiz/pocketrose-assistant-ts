@@ -132,8 +132,10 @@ class PersonalEquipmentManagementPageProcessor_Castle extends AbstractPersonalEq
                 html += "<td style='background-color:#E8E8D0'>"
                 html += "</td>";
                 html += "<td style='background-color:#E8E8D0'>"
-                html += "<input type='button' class='mutableButton' " +
-                    "id='inWarehouse_" + equipment.index + "' value='入库'>";
+                if (!equipment.using!) {
+                    html += "<input type='button' class='mutableButton' " +
+                        "id='inWarehouse_" + equipment.index + "' value='入库'>";
+                }
                 html += "</td>";
                 html += "</tr>";
             }
