@@ -1,9 +1,8 @@
 import Credential from "../../util/Credential";
-import PageUtils from "../../util/PageUtils";
-import CastleWarehousePage from "./CastleWarehousePage";
-import EquipmentParser from "../EquipmentParser";
-import StringUtils from "../../util/StringUtils";
 import NetworkUtils from "../../util/NetworkUtils";
+import StringUtils from "../../util/StringUtils";
+import EquipmentParser from "../EquipmentParser";
+import CastleWarehousePage from "./CastleWarehousePage";
 
 class CastleWarehouse {
 
@@ -35,8 +34,7 @@ class CastleWarehouse {
 }
 
 function doParsePage(pageHtml: string) {
-    const credential = PageUtils.parseCredential(pageHtml);
-    const page = new CastleWarehousePage(credential);
+    const page = new CastleWarehousePage();
 
     const s = $(pageHtml).find("td:contains('所持金')")
         .filter(function () {
