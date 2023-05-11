@@ -1,8 +1,8 @@
 import Equipment from "../../common/Equipment";
 import EquipmentLoader from "../../core/EquipmentLoader";
+import DeprecatedTreasureBag from "../../pocket/DeprecatedTreasureBag";
 import EquipmentParser from "../../pocket/EquipmentParser";
 import RoleLoader from "../../pocket/RoleLoader";
-import TreasureBag from "../../pocket/TreasureBag";
 import SetupItemManager from "../../setup/SetupItemManager";
 import Credential from "../../util/Credential";
 import MessageBoard from "../../util/MessageBoard";
@@ -128,7 +128,7 @@ abstract class AbstractPersonalSetupPageProcessor extends PageProcessorCredentia
                 const equipmentList = EquipmentParser.parsePersonalItemList(html);
                 const treasureBag = EquipmentParser.findTreasureBag(equipmentList);
                 if (treasureBag !== null) {
-                    new TreasureBag(credential, treasureBag.index!).open()
+                    new DeprecatedTreasureBag(credential, treasureBag.index!).open()
                         .then(bagEquipmentList => {
                             instance.#loadEquipments(equipmentList, bagEquipmentList);
                             $("#refreshButton").trigger("click");

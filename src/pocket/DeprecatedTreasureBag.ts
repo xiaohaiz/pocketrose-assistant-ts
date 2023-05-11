@@ -4,7 +4,7 @@ import MessageBoard from "../util/MessageBoard";
 import NetworkUtils from "../util/NetworkUtils";
 import EquipmentParser from "./EquipmentParser";
 
-class TreasureBag {
+class DeprecatedTreasureBag {
 
     readonly #credential: Credential;
     readonly #treasureBagIndex: number;
@@ -80,4 +80,4 @@ class TreasureBag {
     }
 }
 
-export = TreasureBag;
+export = DeprecatedTreasureBag;

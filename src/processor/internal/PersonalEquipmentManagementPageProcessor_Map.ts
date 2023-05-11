@@ -1,9 +1,9 @@
 import Equipment from "../../common/Equipment";
 import Role from "../../common/Role";
 import NpcLoader from "../../core/NpcLoader";
+import DeprecatedTreasureBag from "../../pocket/DeprecatedTreasureBag";
 import PersonalEquipmentManagement from "../../pocket/PersonalEquipmentManagement";
 import PersonalEquipmentManagementPage from "../../pocket/PersonalEquipmentManagementPage";
-import TreasureBag from "../../pocket/TreasureBag";
 import Coordinate from "../../util/Coordinate";
 import Credential from "../../util/Credential";
 import MessageBoard from "../../util/MessageBoard";
@@ -383,7 +383,7 @@ function doBindStoreButton(credential: Credential, treasureBag: Equipment | null
     $("input:button[value='收藏']").on("click", function () {
         const buttonId = $(this).attr("id") as string;
         const index = parseInt(StringUtils.substringAfter(buttonId, "_"));
-        new TreasureBag(credential, treasureBag.index!)
+        new DeprecatedTreasureBag(credential, treasureBag.index!)
             .putInto([index])
             .then(() => {
                 doRefresh(credential);
@@ -408,7 +408,7 @@ function doBindStoreButton(credential: Credential, treasureBag: Equipment | null
             MessageBoard.publishWarning("没有选择装备或者物品！");
             return;
         }
-        new TreasureBag(credential, treasureBag.index!)
+        new DeprecatedTreasureBag(credential, treasureBag.index!)
             .putInto(indexList)
             .then(() => {
                 doRefresh(credential);
@@ -437,7 +437,7 @@ function doBindCloseBagButton(credential: Credential) {
 }
 
 function doRenderStorageEquipmentList(page: PersonalEquipmentManagementPage, treasureBag: Equipment) {
-    new TreasureBag(page.credential, treasureBag.index!)
+    new DeprecatedTreasureBag(page.credential, treasureBag.index!)
         .open()
         .then(equipmentList => {
 
@@ -538,7 +538,7 @@ function doBindTakeOutButton(credential: Credential, treasureBag: Equipment) {
     $("input:button[value='取出']").on("click", function () {
         const buttonId = $(this).attr("id") as string;
         const index = parseInt(StringUtils.substringAfter(buttonId, "_"));
-        new TreasureBag(credential, treasureBag.index!)
+        new DeprecatedTreasureBag(credential, treasureBag.index!)
             .takeOut([index])
             .then(() => {
                 doRefresh(credential);
@@ -563,7 +563,7 @@ function doBindTakeOutButton(credential: Credential, treasureBag: Equipment) {
             MessageBoard.publishWarning("没有选择装备或者物品！");
             return;
         }
-        new TreasureBag(credential, treasureBag.index!)
+        new DeprecatedTreasureBag(credential, treasureBag.index!)
             .takeOut(indexList)
             .then(() => {
                 doRefresh(credential);

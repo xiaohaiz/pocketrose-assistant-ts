@@ -3,8 +3,8 @@ import EquipmentSet from "../common/EquipmentSet";
 import Credential from "../util/Credential";
 import MessageBoard from "../util/MessageBoard";
 import NetworkUtils from "../util/NetworkUtils";
+import DeprecatedTreasureBag from "./DeprecatedTreasureBag";
 import EquipmentParser from "./EquipmentParser";
-import TreasureBag from "./TreasureBag";
 
 class EquipmentSetLoader {
 
@@ -23,7 +23,7 @@ class EquipmentSetLoader {
                 // 在自身完成了检索
                 if (!set.isAllFound && set.treasureBagIndex !== undefined) {
                     // 没有找全，有百宝袋，进继续找。
-                    const treasureBag = new TreasureBag(credential, set.treasureBagIndex);
+                    const treasureBag = new DeprecatedTreasureBag(credential, set.treasureBagIndex);
                     treasureBag.open()
                         .then(bagEquipmentList => {
                             const candidateIndexList: number[] = [];

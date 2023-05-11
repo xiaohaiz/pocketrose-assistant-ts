@@ -1,5 +1,5 @@
 import Equipment from "../../common/Equipment";
-import TreasureBag from "../../pocket/TreasureBag";
+import DeprecatedTreasureBag from "../../pocket/DeprecatedTreasureBag";
 import CastleWarehouse from "../../pocketrose/CastleWarehouse";
 import PersonalEquipmentManagementPage from "../../pocketrose/PersonalEquipmentManagementPage";
 import PersonalStatus from "../../pocketrose/PersonalStatus";
@@ -223,7 +223,7 @@ class PersonalEquipmentManagementPageProcessor_Castle extends AbstractPersonalEq
     }
 
     #loadAndRenderBagList(credential: Credential, bagIndex: number, context?: PageProcessorContext) {
-        new TreasureBag(credential, bagIndex).open().then(equipments => {
+        new DeprecatedTreasureBag(credential, bagIndex).open().then(equipments => {
             const equipmentList = Equipment.sortEquipmentList(equipments);
 
             let html = "";
