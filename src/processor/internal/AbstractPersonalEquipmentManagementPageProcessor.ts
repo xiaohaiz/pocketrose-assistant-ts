@@ -165,11 +165,11 @@ abstract class AbstractPersonalEquipmentManagementPageProcessor extends PageProc
             this.doScrollToPageTitle();
             $("#messageBoardManager").html(NpcLoader.randomNpcImageHtml());
             MessageBoard.resetMessageBoard(this.doGenerateWelcomeMessageHtml());
-            this.#refreshMutablePage(credential, context);
+            this.doRefreshMutablePage(credential, context);
         });
     }
 
-    #refreshMutablePage(credential: Credential, context?: PageProcessorContext) {
+    doRefreshMutablePage(credential: Credential, context?: PageProcessorContext) {
         $(".mutableButton")
             .off("click")
             .off("mouseenter")

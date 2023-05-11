@@ -1,3 +1,4 @@
+import Equipment from "../../common/Equipment";
 import CastleWarehouse from "../../pocket/castle/CastleWarehouse";
 import TreasureBag from "../../pocket/TreasureBag";
 import PersonalEquipmentManagementPage from "../../pocketrose/PersonalEquipmentManagementPage";
@@ -168,7 +169,7 @@ class PersonalEquipmentManagementPageProcessor_Castle extends AbstractPersonalEq
 
         if ($("#bagState").text() === "on") {
             $("#openBag").prop("disabled", true);
-            this.#loadAndRenderBagList(credential, bagIndex);
+            this.#loadAndRenderBagList(credential, bagIndex, context);
         } else {
             $("#closeBag").prop("disabled", true);
         }
@@ -178,14 +179,36 @@ class PersonalEquipmentManagementPageProcessor_Castle extends AbstractPersonalEq
         } else {
             $("#closeWarehouse").prop("disabled", true);
         }
+
+        if (!$("#openBag").prop("disabled")) {
+            $("#openBag").on("click", () => {
+                $("#bagState").text("on");
+                this.doRefreshMutablePage(credential, context);
+            });
+        }
+        if (!$("#closeBag").prop("disabled")) {
+            $("#closeBag").on("click", () => {
+                $("#bagState").text("off");
+                this.doRefreshMutablePage(credential, context);
+            });
+        }
+        if (!$("#openWarehouse").prop("disabled")) {
+            $("#openWarehouse").on("click", () => {
+                $("#warehouseState").text("on");
+                this.doRefreshMutablePage(credential, context);
+            });
+        }
+        if (!$("#closeWarehouse").prop("disabled")) {
+            $("#closeWarehouse").on("click", () => {
+                $("#warehouseState").text("off");
+                this.doRefreshMutablePage(credential, context);
+            });
+        }
     }
 
-    #loadAndRenderBagList(credential: Credential, bagIndex: number) {
-        new TreasureBag(credential, bagIndex).open().then(equipmentList => {
-            if (equipmentList.length === 0) {
-                // Nothing found in bag.
-                return;
-            }
+    #loadAndRenderBagList(credential: Credential, bagIndex: number, context?: PageProcessorContext) {
+        new TreasureBag(credential, bagIndex).open().then(equipments => {
+            const equipmentList = Equipment.sortEquipmentList(equipments);
 
             let html = "";
             html += "<table style='border-width:0;background-color:#888888;text-align:center;width:100%;margin:auto'>";
@@ -235,6 +258,9 @@ class PersonalEquipmentManagementPageProcessor_Castle extends AbstractPersonalEq
             html += "<td style='text-align:left'>";
             html += "<input type='button' id='takeOut' class='mutableButton' value='出百宝袋'>";
             html += "</td>";
+            html += "<td style='text-align:right'>";
+            html += "<input type='button' id='internalCloseBag' class='mutableButton' value='关闭百宝袋'>";
+            html += "</td>";
             html += "</tr>";
             html += "</tbody>";
             html += "</table>";
@@ -245,12 +271,16 @@ class PersonalEquipmentManagementPageProcessor_Castle extends AbstractPersonalEq
 
             $("#bagList").html(html).parent().show();
 
+            $("#internalCloseBag").on("click", () => {
+                $("#bagState").text("off");
+                this.doRefreshMutablePage(credential, context);
+            });
         });
     }
 
     #loadAndRenderWarehouseList(credential: Credential) {
         new CastleWarehouse(credential).open().then(page => {
-            const equipmentList = page.storageEquipmentList!;
+            const equipmentList = Equipment.sortEquipmentList(page.storageEquipmentList!);
 
             let html = "";
             html += "<table style='border-width:0;background-color:#888888;margin:auto;width:100%'>";
