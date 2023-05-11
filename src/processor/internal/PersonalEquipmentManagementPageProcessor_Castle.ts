@@ -4,6 +4,7 @@ import CastleWarehouse from "../../pocketrose/CastleWarehouse";
 import PersonalEquipmentManagementPage from "../../pocketrose/PersonalEquipmentManagementPage";
 import PersonalStatus from "../../pocketrose/PersonalStatus";
 import Credential from "../../util/Credential";
+import MessageBoard from "../../util/MessageBoard";
 import PageUtils from "../../util/PageUtils";
 import StringUtils from "../../util/StringUtils";
 import PageProcessorContext from "../PageProcessorContext";
@@ -303,10 +304,11 @@ class PersonalEquipmentManagementPageProcessor_Castle extends AbstractPersonalEq
             html += "<tbody style='background-color:#F8F0E0;text-align:center'>";
             html += "<tr>";
             html += "<td style='background-color:darkred;color:wheat;font-weight:bold' " +
-                "colspan='17'>";
+                "colspan='18'>";
             html += "＜ 城 堡 仓 库 ＞";
             html += "</td>";
             html += "<tr>";
+            html += "<th style='background-color:#E8E8D0'>选择</th>";
             html += "<th style='background-color:#E8E8D0'>名字</th>";
             html += "<th style='background-color:#EFE0C0'>种类</th>";
             html += "<th style='background-color:#E0D0B0'>效果</th>";
@@ -328,6 +330,14 @@ class PersonalEquipmentManagementPageProcessor_Castle extends AbstractPersonalEq
 
             for (const equipment of equipmentList) {
                 html += "<tr>";
+                html += "<td style='background-color:#E8E8D0'>";
+                if (page.spaceCount > 0) {
+                    html += "<input type='button' class='mutableButton selectButton-3' " +
+                        "id='selectWarehouse_" + equipment.index + "' " +
+                        "value='选择' " +
+                        "style='color:grey'>";
+                }
+                html += "</td>";
                 html += "<td style='background-color:#E8E8D0'>" + equipment.nameHTML + "</td>";
                 html += "<td style='background-color:#EFE0C0'>" + equipment.category + "</td>";
                 html += "<td style='background-color:#E0D0B0'>" + equipment.power + "</td>";
@@ -356,11 +366,16 @@ class PersonalEquipmentManagementPageProcessor_Castle extends AbstractPersonalEq
             // 城堡仓库菜单栏
             // ----------------------------------------------------------------
             html += "<tr>";
-            html += "<td style='background-color:#F8F0E0;text-align:center' colspan='17'>";
+            html += "<td style='background-color:#F8F0E0;text-align:center' colspan='18'>";
             html += "<table style='border-width:0;background-color:#F8F0E0;width:100%;margin:auto'>";
             html += "<tbody>";
             html += "<tr>";
             html += "<td style='text-align:left'>";
+            if (page.spaceCount > 0) {
+                html += "<input type='button' class='mutableButton' " +
+                    "id='takeOutFromWarehouse' " +
+                    "value='从仓库中取出'>";
+            }
             html += "</td>";
             html += "<td style='text-align:right'>";
             html += "<input type='button' id='internalCloseWarehouse' class='mutableButton' value='关闭仓库'>";
@@ -381,6 +396,34 @@ class PersonalEquipmentManagementPageProcessor_Castle extends AbstractPersonalEq
             $("#internalCloseWarehouse").on("click", () => {
                 $("#warehouseState").text("off");
                 this.doRefreshMutablePage(credential, context);
+            });
+
+            $(".selectButton-3").on("click", event => {
+                const buttonId = $(event.target).attr("id") as string;
+                if (PageUtils.isColorGrey(buttonId)) {
+                    $(event.target).css("color", "blue");
+                } else if (PageUtils.isColorBlue(buttonId)) {
+                    $(event.target).css("color", "grey");
+                }
+            });
+
+            $("#takeOutFromWarehouse").on("click", () => {
+                const indexList: number[] = [];
+                $(".selectButton-3").each((idx, button) => {
+                    const buttonId = $(button).attr("id") as string;
+                    if (PageUtils.isColorBlue(buttonId)) {
+                        const index = parseInt(buttonId.split("_")[1]);
+                        indexList.push(index);
+                    }
+                });
+                if (indexList.length === 0) {
+                    this.doScrollToPageTitle();
+                    MessageBoard.publishWarning("没有选择仓库中的物品/装备！");
+                    return;
+                }
+                new CastleWarehouse(credential).takeOut(indexList).then(() => {
+                    this.doRefreshMutablePage(credential, context);
+                });
             });
 
             $("input:button[value='出库']").on("click", event => {
