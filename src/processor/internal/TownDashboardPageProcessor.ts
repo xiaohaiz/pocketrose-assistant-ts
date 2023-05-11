@@ -106,8 +106,6 @@ function doProcess(credential: Credential) {
         .find("tr:first")
         .find("td:first")
         .attr("colspan", 5)
-        .attr("id", "hiddenFormContainer")
-        .css("display", "none")
         .parent()
         .next()
         .find("th:first")
