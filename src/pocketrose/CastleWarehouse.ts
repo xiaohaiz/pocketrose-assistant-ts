@@ -34,7 +34,11 @@ class CastleWarehouse {
 
     async putInto(indexList: number[]): Promise<void> {
         const action = () => {
-            return new Promise<void>(resolve => {
+            return new Promise<void>((resolve, reject) => {
+                if (indexList.length === 0) {
+                    reject();
+                    return;
+                }
                 const request = this.#credential.asRequestMap();
                 for (const index of indexList) {
                     request.set("item" + index, index.toString());
@@ -52,7 +56,11 @@ class CastleWarehouse {
 
     async takeOut(indexList: number[]): Promise<void> {
         const action = () => {
-            return new Promise<void>(resolve => {
+            return new Promise<void>((resolve, reject) => {
+                if (indexList.length === 0) {
+                    reject();
+                    return;
+                }
                 const request = this.#credential.asRequestMap();
                 for (const index of indexList) {
                     request.set("item" + index, index.toString());
