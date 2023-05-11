@@ -12,14 +12,17 @@ class PersonalEquipmentManagement {
         this.#credential = credential;
         this.#townId = townId;
     }
+
+    static parsePage(html: string): PersonalEquipmentManagementPage {
+        return __parsePage(html);
+    }
 }
 
 function __parsePage(html: string): PersonalEquipmentManagementPage {
     const role = new Role();
-    $(html).find("td:contains('姓名')")
-        .filter((idx, td) => $(td).text() === "姓名")
-        .closest("table")
-        .find("tr:first")
+    $(html).find("td:contains('ＬＶ')")
+        .filter((idx, td) => $(td).text() === "ＬＶ")
+        .closest("tr")
         .next()
         .find("td:first")
         .each((idx, td) => {
@@ -44,6 +47,7 @@ function __parsePage(html: string): PersonalEquipmentManagementPage {
         .each((idx, td) => {
             role.attribute = $(td).text();
         })
+        .next()
         .each((idx, td) => {
             role.career = $(td).text();
         })
