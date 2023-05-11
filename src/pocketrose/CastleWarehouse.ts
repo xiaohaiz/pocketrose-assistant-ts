@@ -1,5 +1,6 @@
 import EquipmentParser from "../pocket/EquipmentParser";
 import Credential from "../util/Credential";
+import MessageBoard from "../util/MessageBoard";
 import NetworkUtils from "../util/NetworkUtils";
 import StringUtils from "../util/StringUtils";
 import CastleWarehousePage from "./CastleWarehousePage";
@@ -31,6 +32,21 @@ class CastleWarehouse {
         return await action(this.#credential);
     }
 
+    async takeOut(index: number): Promise<void> {
+        const action = () => {
+            return new Promise<void>(resolve => {
+                const request = this.#credential.asRequestMap();
+                request.set("item" + index, index.toString());
+                request.set("chara", "1");
+                request.set("mode", "CASTLE_ITEMWITHDRAW");
+                NetworkUtils.post("castle.cgi", request).then(html => {
+                    MessageBoard.processResponseMessage(html);
+                    resolve();
+                });
+            });
+        };
+        return await action();
+    }
 }
 
 function doParsePage(pageHtml: string) {
