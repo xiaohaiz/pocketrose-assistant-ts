@@ -120,6 +120,7 @@ abstract class AbstractPersonalEquipmentManagementPageProcessor extends PageProc
         html = "";
         html += "<tr id='tr5' style='display:none'>";
         html += "<td>";
+        html += "<div id='bagIndex'>-99</div>";
         html += "<div id='bagState'>off</div>";             // 仅限有百宝袋
         html += "<div id='warehouseState'>off</div>";       // 仅限城堡
         html += "</td>"
