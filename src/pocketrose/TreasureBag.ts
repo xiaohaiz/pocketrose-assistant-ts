@@ -59,6 +59,27 @@ class TreasureBag {
         };
         return await action();
     }
+
+    async takeOut(indexList: number[]): Promise<void> {
+        const action = () => {
+            return new Promise<void>((resolve, reject) => {
+                if (indexList.length === 0) {
+                    reject();
+                    return;
+                }
+                const request = this.#credential.asRequestMap();
+                request.set("mode", "GETOUTBAG");
+                for (const index of indexList) {
+                    request.set("item" + index, index.toString());
+                }
+                NetworkUtils.post("mydata.cgi", request).then(html => {
+                    MessageBoard.processResponseMessage(html);
+                    resolve();
+                });
+            });
+        };
+        return await action();
+    }
 }
 
 export = TreasureBag;
