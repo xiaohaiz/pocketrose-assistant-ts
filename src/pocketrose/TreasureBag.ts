@@ -1,5 +1,6 @@
 import EquipmentParser from "../pocket/EquipmentParser";
 import Credential from "../util/Credential";
+import MessageBoard from "../util/MessageBoard";
 import NetworkUtils from "../util/NetworkUtils";
 import TreasureBagPage from "./TreasureBagPage";
 
@@ -31,6 +32,28 @@ class TreasureBag {
                 NetworkUtils.post("mydata.cgi", request).then(html => {
                     const page = TreasureBag.parsePage(html);
                     resolve(page);
+                });
+            });
+        };
+        return await action();
+    }
+
+    async putInto(indexList: number[]): Promise<void> {
+        const action = () => {
+            return new Promise<void>((resolve, reject) => {
+                if (indexList.length === 0) {
+                    reject();
+                    return;
+                }
+                const request = this.#credential.asRequestMap();
+                request.set("chara", "1");
+                request.set("mode", "PUTINBAG");
+                for (const index of indexList) {
+                    request.set("item" + index, index.toString());
+                }
+                NetworkUtils.post("mydata.cgi", request).then(html => {
+                    MessageBoard.processResponseMessage(html);
+                    resolve();
                 });
             });
         };
