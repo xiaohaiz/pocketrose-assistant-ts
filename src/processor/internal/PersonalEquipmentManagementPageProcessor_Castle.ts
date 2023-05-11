@@ -4,8 +4,6 @@ import CastleWarehouse from "../../pocketrose/CastleWarehouse";
 import PersonalEquipmentManagementPage from "../../pocketrose/PersonalEquipmentManagementPage";
 import PersonalStatus from "../../pocketrose/PersonalStatus";
 import Credential from "../../util/Credential";
-import MessageBoard from "../../util/MessageBoard";
-import NetworkUtils from "../../util/NetworkUtils";
 import PageUtils from "../../util/PageUtils";
 import StringUtils from "../../util/StringUtils";
 import PageProcessorContext from "../PageProcessorContext";
@@ -218,14 +216,9 @@ class PersonalEquipmentManagementPageProcessor_Castle extends AbstractPersonalEq
         $("input:button[value='入库']").on("click", event => {
             const buttonId = $(event.target).attr("id")!;
             const index = parseInt(buttonId.split("_")[1]);
-            const request = credential.asRequestMap();
-            request.set("item" + index, index.toString());
-            request.set("chara", "1");
-            request.set("mode", "CASTLE_ITEMSTORE")
-            NetworkUtils.post("castle.cgi", request).then(html => {
-                MessageBoard.processResponseMessage(html)
-                this.doRefreshMutablePage(credential, context)
-            })
+            new CastleWarehouse(credential).putInto([index]).then(() => {
+                this.doRefreshMutablePage(credential, context);
+            });
         });
     }
 
