@@ -1,8 +1,8 @@
+import Role from "../common/Role";
+import RoleParser from "../pocket/RoleParser";
 import Credential from "../util/Credential";
-import PageUtils from "../util/PageUtils";
-import PersonalStatusPage from "./PersonalStatusPage";
-import RoleParser from "./RoleParser";
 import NetworkUtils from "../util/NetworkUtils";
+import PersonalStatusPage from "./PersonalStatusPage";
 
 class PersonalStatus {
 
@@ -30,11 +30,21 @@ class PersonalStatus {
         };
         return await action(this.#credential);
     }
+
+    async load(): Promise<Role> {
+        const action = () => {
+            return new Promise<Role>(resolve => {
+                this.open().then(page => {
+                    resolve(page.role!);
+                });
+            });
+        };
+        return await action();
+    }
 }
 
 function doParsePage(pageHtml: string): PersonalStatusPage {
-    const credential = PageUtils.parseCredential(pageHtml);
-    const page = new PersonalStatusPage(credential);
+    const page = new PersonalStatusPage();
     page.role = RoleParser.parseRole(pageHtml);
     return page;
 }

@@ -37,6 +37,13 @@ class PersonalEquipmentManagementPageProcessor_Castle extends AbstractPersonalEq
     }
 
     doRenderMutablePage(credential: Credential, page: PersonalEquipmentManagementPage, context?: PageProcessorContext): void {
+        const bag = page.findTreasureBag();
+        if (bag !== null) {
+
+        } else {
+
+        }
+
         if (page.equipmentList!.length > 0) {
 
             let html = "";
