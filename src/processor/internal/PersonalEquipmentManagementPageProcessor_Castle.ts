@@ -129,9 +129,19 @@ class PersonalEquipmentManagementPageProcessor_Castle extends AbstractPersonalEq
                 html += "<td style='background-color:#E8E8D0'>"
                 html += "</td>";
                 html += "<td style='background-color:#E8E8D0'>"
+                html += "<input type='button' class='mutableButton' " +
+                    "id='inWarehouse_" + equipment.index + "' value='入库'>";
                 html += "</td>";
                 html += "</tr>";
             }
+            // ------------------------------------------------------------------------
+            // 装备信息栏
+            // ------------------------------------------------------------------------
+            html += "<tr>";
+            html += "<td style='background-color:#F8F0E0;text-align:center;color:navy;font-weight:bold' colspan='21'>";
+            html += "目前剩余空位数：<span style='color:red'>" + page.spaceCount + "</span>";
+            html += "</td>";
+            html += "</tr>";
             // ------------------------------------------------------------------------
             // 装备菜单栏
             // ------------------------------------------------------------------------
@@ -204,6 +214,19 @@ class PersonalEquipmentManagementPageProcessor_Castle extends AbstractPersonalEq
                 this.doRefreshMutablePage(credential, context);
             });
         }
+
+        $("input:button[value='入库']").on("click", event => {
+            const buttonId = $(event.target).attr("id")!;
+            const index = parseInt(buttonId.split("_")[1]);
+            const request = credential.asRequestMap();
+            request.set("item" + index, index.toString());
+            request.set("chara", "1");
+            request.set("mode", "CASTLE_ITEMSTORE")
+            NetworkUtils.post("castle.cgi", request).then(html => {
+                MessageBoard.processResponseMessage(html)
+                this.doRefreshMutablePage(credential, context)
+            })
+        });
     }
 
     #loadAndRenderBagList(credential: Credential, bagIndex: number, context?: PageProcessorContext) {
