@@ -1,3 +1,4 @@
+import CastleWarehouse from "../../pocket/castle/CastleWarehouse";
 import TreasureBag from "../../pocket/TreasureBag";
 import PersonalEquipmentManagementPage from "../../pocketrose/PersonalEquipmentManagementPage";
 import PersonalStatus from "../../pocketrose/PersonalStatus";
@@ -134,7 +135,7 @@ class PersonalEquipmentManagementPageProcessor_Castle extends AbstractPersonalEq
             // 装备菜单栏
             // ------------------------------------------------------------------------
             html += "<tr>";
-            html += "<td style='background-color:#F8F0E0;text-align:center' colspan='20'>";
+            html += "<td style='background-color:#F8F0E0;text-align:center' colspan='21'>";
             html += "<table style='border-width:0;background-color:#F8F0E0;width:100%;margin:auto'>";
             html += "<tbody>";
             html += "<tr>";
@@ -242,13 +243,67 @@ class PersonalEquipmentManagementPageProcessor_Castle extends AbstractPersonalEq
             html += "</tbody>";
             html += "</table>";
 
-            $("#storageEquipmentList").html(html).parent().show();
+            $("#bagList").html(html).parent().show();
 
         });
     }
 
     #loadAndRenderWarehouseList(credential: Credential) {
+        new CastleWarehouse(credential).open().then(page => {
+            const equipmentList = page.storageEquipmentList!;
 
+            let html = "";
+            html += "<table style='border-width:0;background-color:#888888;margin:auto;width:100%'>";
+            html += "<tbody style='background-color:#F8F0E0;text-align:center'>";
+            html += "<tr>";
+            html += "<td style='background-color:darkred;color:wheat;font-weight:bold' colspan='16'>";
+            html += "＜ 城 堡 仓 库 ＞";
+            html += "</td>";
+            html += "<tr>";
+            html += "<th style='background-color:#E8E8D0'>名字</th>";
+            html += "<th style='background-color:#EFE0C0'>种类</th>";
+            html += "<th style='background-color:#E0D0B0'>效果</th>";
+            html += "<th style='background-color:#EFE0C0'>重量</th>";
+            html += "<th style='background-color:#E0D0B0'>耐久</th>";
+            html += "<th style='background-color:#EFE0C0'>职业</th>";
+            html += "<th style='background-color:#E0D0B0'>攻击</th>";
+            html += "<th style='background-color:#E0D0B0'>防御</th>";
+            html += "<th style='background-color:#E0D0B0'>智力</th>";
+            html += "<th style='background-color:#E0D0B0'>精神</th>";
+            html += "<th style='background-color:#E0D0B0'>速度</th>";
+            html += "<th style='background-color:#EFE0C0'>威力</th>";
+            html += "<th style='background-color:#EFE0C0'>重量</th>";
+            html += "<th style='background-color:#EFE0C0'>幸运</th>";
+            html += "<th style='background-color:#E0D0B0'>经验</th>";
+            html += "<th style='background-color:#E0D0B0'>属性</th>";
+            html += "</tr>";
+
+            for (const equipment of equipmentList) {
+                html += "<tr>";
+                html += "<td style='background-color:#E8E8D0'>" + equipment.nameHTML + "</td>";
+                html += "<td style='background-color:#EFE0C0'>" + equipment.category + "</td>";
+                html += "<td style='background-color:#E0D0B0'>" + equipment.power + "</td>";
+                html += "<td style='background-color:#EFE0C0'>" + equipment.weight + "</td>";
+                html += "<td style='background-color:#E0D0B0'>" + equipment.endureHtml + "</td>";
+                html += "<td style='background-color:#EFE0C0'>" + equipment.requiredCareerHtml + "</td>";
+                html += "<td style='background-color:#E0D0B0'>" + equipment.requiredAttackHtml + "</td>";
+                html += "<td style='background-color:#E0D0B0'>" + equipment.requiredDefenseHtml + "</td>";
+                html += "<td style='background-color:#E0D0B0'>" + equipment.requiredSpecialAttackHtml + "</td>";
+                html += "<td style='background-color:#E0D0B0'>" + equipment.requiredSpecialDefenseHtml + "</td>";
+                html += "<td style='background-color:#E0D0B0'>" + equipment.requiredSpeedHtml + "</td>";
+                html += "<td style='background-color:#EFE0C0'>" + equipment.additionalPowerHtml + "</td>";
+                html += "<td style='background-color:#EFE0C0'>" + equipment.additionalWeightHtml + "</td>";
+                html += "<td style='background-color:#EFE0C0'>" + equipment.additionalLuckHtml + "</td>";
+                html += "<td style='background-color:#E0D0B0'>" + equipment.experienceHTML + "</td>";
+                html += "<td style='background-color:#E0D0B0'>" + equipment.attributeHtml + "</td>";
+                html += "</tr>";
+            }
+
+            html += "</tbody>";
+            html += "</table>";
+
+            $("#warehouseList").html(html).parent().show();
+        });
     }
 
 }
