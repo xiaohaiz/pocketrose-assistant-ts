@@ -330,16 +330,42 @@ class PersonalEquipmentManagementPageProcessor_Castle extends AbstractPersonalEq
                 html += "<td style='background-color:#E0D0B0'>" + equipment.attributeHtml + "</td>";
                 html += "<td style='background-color:#E8E8D0'>";
                 if (page.spaceCount > 0) {
-                    html += "<input type='button' class='mutableButton' id='outWarehouse_" + equipment.index + "' value='出库'>";
+                    html += "<input type='button' class='mutableButton' " +
+                        "id='outWarehouse_" + equipment.index + "' value='出库'>";
                 }
                 html += "</td>";
                 html += "</tr>";
             }
+            // ----------------------------------------------------------------
+            // 城堡仓库菜单栏
+            // ----------------------------------------------------------------
+            html += "<tr>";
+            html += "<td style='background-color:#F8F0E0;text-align:center' colspan='17'>";
+            html += "<table style='border-width:0;background-color:#F8F0E0;width:100%;margin:auto'>";
+            html += "<tbody>";
+            html += "<tr>";
+            html += "<td style='text-align:left'>";
+            html += "</td>";
+            html += "<td style='text-align:right'>";
+            html += "<input type='button' id='internalCloseWarehouse' class='mutableButton' value='关闭仓库'>";
+            html += "</td>";
+            html += "</tr>";
+            html += "</tbody>";
+            html += "</table>";
+            html += "</td>";
+            html += "</tr>";
+            html += "</tbody>";
+            html += "</table>";
 
             html += "</tbody>";
             html += "</table>";
 
             $("#warehouseList").html(html).parent().show();
+
+            $("#internalCloseWarehouse").on("click", () => {
+                $("#warehouseState").text("off");
+                this.doRefreshMutablePage(credential, context);
+            });
 
             $("input:button[value='出库']").on("click", event => {
                 const buttonId = $(event.target).attr("id")!;
