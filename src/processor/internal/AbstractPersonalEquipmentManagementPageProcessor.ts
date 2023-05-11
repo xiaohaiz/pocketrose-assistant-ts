@@ -1,3 +1,4 @@
+import Role from "../../common/Role";
 import NpcLoader from "../../core/NpcLoader";
 import PersonalEquipmentManagement from "../../pocketrose/PersonalEquipmentManagement";
 import PersonalEquipmentManagementPage from "../../pocketrose/PersonalEquipmentManagementPage";
@@ -8,6 +9,10 @@ import PageProcessorContext from "../PageProcessorContext";
 import PageProcessorCredentialSupport from "../PageProcessorCredentialSupport";
 
 abstract class AbstractPersonalEquipmentManagementPageProcessor extends PageProcessorCredentialSupport {
+
+    doLoadButtonStyles(): number[] {
+        return [35];
+    }
 
     doProcess(credential: Credential, context?: PageProcessorContext) {
         const page = PersonalEquipmentManagement.parsePage(PageUtils.currentPageHtml());
@@ -86,6 +91,112 @@ abstract class AbstractPersonalEquipmentManagementPageProcessor extends PageProc
             .css("background-color", "black")
             .css("color", "wheat");
         MessageBoard.resetMessageBoard(this.doGenerateWelcomeMessageHtml());
+
+        // ------------------------------------------------------------------------
+        // 隐藏表单栏
+        // ------------------------------------------------------------------------
+        let html = "";
+        html += "<tr id='tr3' style='display:none'>";
+        html += "<td id='hiddenFormContainer'>";
+        html += "</td>";
+        html += "</tr>"
+        $("#tr2").after($(html));
+
+        // ------------------------------------------------------------------------
+        // 主菜单栏
+        // ------------------------------------------------------------------------
+        html = "";
+        html += "<tr id='tr4'>";
+        html += "<td style='background-color:#F8F0E0;text-align:center'>";
+        html += "<input type='button' id='refreshButton' value='刷新装备管理' class='button-35'>&nbsp;&nbsp;&nbsp;";
+        html += "<input type='button' id='returnButton' value='退出装备管理' class='button-35'>";
+        html += "</td>";
+        html += "</tr>"
+        $("#tr3").after($(html));
+
+        // ------------------------------------------------------------------------
+        // 用于保存百宝袋和仓库的状态
+        // ------------------------------------------------------------------------
+        html = "";
+        html += "<tr id='tr5' style='display:none'>";
+        html += "<td>";
+        html += "<div id='bagState'>off</div>";             // 仅限有百宝袋
+        html += "<div id='warehouseState'>off</div>";       // 仅限城堡
+        html += "</td>"
+        html += "</tr>"
+        $("#tr4").after($(html));
+
+        // ------------------------------------------------------------------------
+        // 装备栏目
+        // ------------------------------------------------------------------------
+        html = "";
+        html += "<tr id='tr6' style='display:none'>";
+        html += "<td id='equipmentList'></td>";
+        html += "</tr>"
+        $("#tr5").after($(html));
+
+        // ------------------------------------------------------------------------
+        // 百宝袋栏目（仅限有百宝袋）
+        // ------------------------------------------------------------------------
+        html = "";
+        html += "<tr id='tr7' style='display:none'>";
+        html += "<td id='bagList'></td>";
+        html += "</tr>"
+        $("#tr6").after($(html));
+
+        // ------------------------------------------------------------------------
+        // 仓库栏目（仅限城堡）
+        // ------------------------------------------------------------------------
+        html = "";
+        html += "<tr id='tr8' style='display:none'>";
+        html += "<td id='warehouseList'></td>";
+        html += "</tr>"
+        $("#tr7").after($(html));
+
+        this.#bindImmutableButtons(credential, context);
+
+        this.doRenderMutablePage(credential, page, context);
+    }
+
+    #bindImmutableButtons(credential: Credential, context?: PageProcessorContext) {
+        this.doBindReturnButton(credential);
+        $("#refreshButton").on("click", () => {
+            this.doScrollToPageTitle();
+            $("#messageBoardManager").html(NpcLoader.randomNpcImageHtml());
+            MessageBoard.resetMessageBoard(this.doGenerateWelcomeMessageHtml());
+            this.#refreshMutablePage(credential, context);
+        });
+    }
+
+    #refreshMutablePage(credential: Credential, context?: PageProcessorContext) {
+        $(".mutableButton")
+            .off("click")
+            .off("mouseenter")
+            .off("mouseleave");
+        $("#equipmentList").parent().hide();
+        $("#bagList").parent().hide();
+        $("#warehouseList").parent().hide();
+
+        let townId: string | undefined = undefined;
+        if (context !== undefined) {
+            townId = context.get("townId");
+        }
+        new PersonalEquipmentManagement(credential, townId).open().then(page => {
+            this.doRenderRole(page.role);
+            this.doRenderMutablePage(credential, page, context);
+        });
+    }
+
+    doScrollToPageTitle() {
+        PageUtils.scrollIntoView("pageTitle");
+    }
+
+    doRenderRole(role: Role | undefined) {
+        if (role !== undefined) {
+            $("#roleHealth").text(role.health + "/" + role.maxHealth);
+            $("#roleMana").text(role.mana + "/" + role.maxMana);
+            $("#roleCash").text(role.cash + " GOLD");
+        }
     }
 
     abstract doGeneratePageTitleHtml(context?: PageProcessorContext): string;
@@ -93,6 +204,10 @@ abstract class AbstractPersonalEquipmentManagementPageProcessor extends PageProc
     abstract doGenerateRoleLocationHtml(context?: PageProcessorContext): string;
 
     abstract doGenerateWelcomeMessageHtml(): string;
+
+    abstract doBindReturnButton(credential: Credential): void;
+
+    abstract doRenderMutablePage(credential: Credential, page: PersonalEquipmentManagementPage, context?: PageProcessorContext): void;
 }
 
 export = AbstractPersonalEquipmentManagementPageProcessor;

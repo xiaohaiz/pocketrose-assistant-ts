@@ -1,6 +1,7 @@
 import Equipment from "../common/Equipment";
 import Role from "../common/Role";
 import Credential from "../util/Credential";
+import NetworkUtils from "../util/NetworkUtils";
 import StringUtils from "../util/StringUtils";
 import PersonalEquipmentManagementPage from "./PersonalEquipmentManagementPage";
 
@@ -16,6 +17,23 @@ class PersonalEquipmentManagement {
 
     static parsePage(html: string): PersonalEquipmentManagementPage {
         return __parsePage(html);
+    }
+
+    async open(): Promise<PersonalEquipmentManagementPage> {
+        const action = () => {
+            return new Promise<PersonalEquipmentManagementPage>(resolve => {
+                const request = this.#credential.asRequestMap();
+                request.set("mode", "USE_ITEM");
+                if (this.#townId !== undefined) {
+                    request.set("town", this.#townId);
+                }
+                NetworkUtils.post("mydata.cgi", request).then(html => {
+                    const page = PersonalEquipmentManagement.parsePage(html);
+                    resolve(page);
+                });
+            });
+        };
+        return await action();
     }
 }
 
