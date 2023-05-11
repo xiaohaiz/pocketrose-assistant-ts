@@ -5,6 +5,7 @@ import PersonalEquipmentManagementPage from "../../pocketrose/PersonalEquipmentM
 import PersonalStatus from "../../pocketrose/PersonalStatus";
 import Credential from "../../util/Credential";
 import MessageBoard from "../../util/MessageBoard";
+import NetworkUtils from "../../util/NetworkUtils";
 import PageUtils from "../../util/PageUtils";
 import StringUtils from "../../util/StringUtils";
 import PageProcessorContext from "../PageProcessorContext";
@@ -52,7 +53,6 @@ class PersonalEquipmentManagementPageProcessor_Castle extends AbstractPersonalEq
             new PersonalStatus(credential).load().then(role => {
                 if (role.masterCareerList!.includes("剑圣") || role.hasMirror!) {
                     // 真的曾经拥有百宝袋，但是又因为某些bug失去了
-                    MessageBoard.publishWarning("百宝袋丢失了？别担心，受限版百宝袋功能我们依然为您提供。");
                     this.#renderMutablePage(credential, page, -1, context);
                 } else {
                     // 是真的没有百宝袋
@@ -175,7 +175,7 @@ class PersonalEquipmentManagementPageProcessor_Castle extends AbstractPersonalEq
         }
         if ($("#warehouseState").text() === "on") {
             $("#openWarehouse").prop("disabled", true);
-            this.#loadAndRenderWarehouseList(credential);
+            this.#loadAndRenderWarehouseList(credential, page, context);
         } else {
             $("#closeWarehouse").prop("disabled", true);
         }
@@ -278,15 +278,16 @@ class PersonalEquipmentManagementPageProcessor_Castle extends AbstractPersonalEq
         });
     }
 
-    #loadAndRenderWarehouseList(credential: Credential) {
-        new CastleWarehouse(credential).open().then(page => {
-            const equipmentList = Equipment.sortEquipmentList(page.storageEquipmentList!);
+    #loadAndRenderWarehouseList(credential: Credential, page: PersonalEquipmentManagementPage, context?: PageProcessorContext) {
+        new CastleWarehouse(credential).open().then(warehousePage => {
+            const equipmentList = Equipment.sortEquipmentList(warehousePage.storageEquipmentList!);
 
             let html = "";
             html += "<table style='border-width:0;background-color:#888888;margin:auto;width:100%'>";
             html += "<tbody style='background-color:#F8F0E0;text-align:center'>";
             html += "<tr>";
-            html += "<td style='background-color:darkred;color:wheat;font-weight:bold' colspan='16'>";
+            html += "<td style='background-color:darkred;color:wheat;font-weight:bold' " +
+                "colspan='17'>";
             html += "＜ 城 堡 仓 库 ＞";
             html += "</td>";
             html += "<tr>";
@@ -306,6 +307,7 @@ class PersonalEquipmentManagementPageProcessor_Castle extends AbstractPersonalEq
             html += "<th style='background-color:#EFE0C0'>幸运</th>";
             html += "<th style='background-color:#E0D0B0'>经验</th>";
             html += "<th style='background-color:#E0D0B0'>属性</th>";
+            html += "<th style='background-color:#E8E8D0'>取出</th>";
             html += "</tr>";
 
             for (const equipment of equipmentList) {
@@ -326,6 +328,11 @@ class PersonalEquipmentManagementPageProcessor_Castle extends AbstractPersonalEq
                 html += "<td style='background-color:#EFE0C0'>" + equipment.additionalLuckHtml + "</td>";
                 html += "<td style='background-color:#E0D0B0'>" + equipment.experienceHTML + "</td>";
                 html += "<td style='background-color:#E0D0B0'>" + equipment.attributeHtml + "</td>";
+                html += "<td style='background-color:#E8E8D0'>";
+                if (page.spaceCount > 0) {
+                    html += "<input type='button' class='mutableButton' id='outWarehouse_" + equipment.index + "' value='出库'>";
+                }
+                html += "</td>";
                 html += "</tr>";
             }
 
@@ -333,6 +340,19 @@ class PersonalEquipmentManagementPageProcessor_Castle extends AbstractPersonalEq
             html += "</table>";
 
             $("#warehouseList").html(html).parent().show();
+
+            $("input:button[value='出库']").on("click", event => {
+                const buttonId = $(event.target).attr("id")!;
+                const index = parseInt(buttonId.split("_")[1]);
+                const request = credential.asRequestMap();
+                request.set("item" + index, index.toString());
+                request.set("chara", "1");
+                request.set("mode", "CASTLE_ITEMWITHDRAW");
+                NetworkUtils.post("castle.cgi", request).then(html => {
+                    MessageBoard.processResponseMessage(html);
+                    this.doRefreshMutablePage(credential, context);
+                });
+            });
         });
     }
 
