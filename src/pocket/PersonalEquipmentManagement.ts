@@ -7,6 +7,9 @@ import StringUtils from "../util/StringUtils";
 import EquipmentParser from "./EquipmentParser";
 import PersonalEquipmentManagementPage from "./PersonalEquipmentManagementPage";
 
+/**
+ * @deprecated
+ */
 class PersonalEquipmentManagement {
 
     readonly #credential: Credential;

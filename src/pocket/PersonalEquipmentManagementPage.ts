@@ -3,6 +3,9 @@ import Role from "../common/Role";
 import Credential from "../util/Credential";
 import EquipmentParser from "./EquipmentParser";
 
+/**
+ * @deprecated
+ */
 class PersonalEquipmentManagementPage {
 
     readonly credential: Credential;
