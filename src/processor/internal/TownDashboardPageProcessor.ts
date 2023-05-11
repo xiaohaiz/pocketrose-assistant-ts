@@ -97,92 +97,94 @@ function doProcess(credential: Credential) {
     doRenderLeaveTown();
     doRenderEventBoard();
 
-    $("th:contains('训练·战斗')")
-        .filter((idx, th) => {
-            return $(th).text() === "训练·战斗";
-        })
-        .closest("table")
-        .attr("id", "mainMenu")
-        .find("tr:first")
-        .find("td:first")
-        .attr("colspan", 5)
-        .parent()
-        .next()
-        .find("th:first")
-        .attr("colspan", 4)
-        .parent()
-        .next()
-        .find("th:first")
-        .attr("colspan", 3)
-        .css("text-align", "right")
-        .text("训练战斗")
-        .parent()
-        .next()
-        .find("th:first")
-        .css("text-align", "right")
-        .text("城市设施")
-        .before($("<td><button role='button' class='button-24' id='shortcut1'>状</button></td>"))
-        .parent()
-        .next()
-        .find("th:first")
-        .css("text-align", "right")
-        .before($("<td><button role='button' class='button-24' id='shortcut2'>装</button></td>"))
-        .parent()
-        .next()
-        .find("th:first")
-        .css("text-align", "right")
-        .before($("<td><button role='button' class='button-24' id='shortcut3'>宠</button></td>"))
-        .parent()
-        .next()
-        .find("th:first")
-        .css("text-align", "right")
-        .before($("<td><button role='button' class='button-24' id='shortcut4'>职</button></td>"))
-        .parent()
-        .next()
-        .find("th:first")
-        .attr("colspan", 3)
-        .parent()
-        .next()
-        .find("th:first")
-        .attr("colspan", 4)
-        .parent()
-        .next()
-        .find("th:first")
-        .attr("colspan", 5)
+    if (SetupLoader.isTownDashboardShortcutButtonEnabled()) {
+        $("th:contains('训练·战斗')")
+            .filter((idx, th) => {
+                return $(th).text() === "训练·战斗";
+            })
+            .closest("table")
+            .attr("id", "mainMenu")
+            .find("tr:first")
+            .find("td:first")
+            .attr("colspan", 5)
+            .parent()
+            .next()
+            .find("th:first")
+            .attr("colspan", 4)
+            .parent()
+            .next()
+            .find("th:first")
+            .attr("colspan", 3)
+            .css("text-align", "right")
+            .text("训练战斗")
+            .parent()
+            .next()
+            .find("th:first")
+            .css("text-align", "right")
+            .text("城市设施")
+            .before($("<td><button role='button' class='button-24' id='shortcut1'>状</button></td>"))
+            .parent()
+            .next()
+            .find("th:first")
+            .css("text-align", "right")
+            .before($("<td><button role='button' class='button-24' id='shortcut2'>装</button></td>"))
+            .parent()
+            .next()
+            .find("th:first")
+            .css("text-align", "right")
+            .before($("<td><button role='button' class='button-24' id='shortcut3'>宠</button></td>"))
+            .parent()
+            .next()
+            .find("th:first")
+            .css("text-align", "right")
+            .before($("<td><button role='button' class='button-24' id='shortcut4'>职</button></td>"))
+            .parent()
+            .next()
+            .find("th:first")
+            .attr("colspan", 3)
+            .parent()
+            .next()
+            .find("th:first")
+            .attr("colspan", 4)
+            .parent()
+            .next()
+            .find("th:first")
+            .attr("colspan", 5)
 
 
-    $("#shortcut1").on("click", () => {
-        $("option[value='STATUS_PRINT']")
-            .prop("selected", true)
-            .closest("td")
-            .next()
-            .find("input:submit:first")
-            .trigger("click");
-    });
-    $("#shortcut2").on("click", () => {
-        $("option[value='USE_ITEM']")
-            .prop("selected", true)
-            .closest("td")
-            .next()
-            .find("input:submit:first")
-            .trigger("click");
-    });
-    $("#shortcut3").on("click", () => {
-        $("option[value='PETSTATUS']")
-            .prop("selected", true)
-            .closest("td")
-            .next()
-            .find("input:submit:first")
-            .trigger("click");
-    });
-    $("#shortcut4").on("click", () => {
-        $("option[value='CHANGE_OCCUPATION']")
-            .prop("selected", true)
-            .closest("td")
-            .next()
-            .find("input:submit:first")
-            .trigger("click");
-    });
+        $("#shortcut1").on("click", () => {
+            $("option[value='STATUS_PRINT']")
+                .prop("selected", true)
+                .closest("td")
+                .next()
+                .find("input:submit:first")
+                .trigger("click");
+        });
+        $("#shortcut2").on("click", () => {
+            $("option[value='USE_ITEM']")
+                .prop("selected", true)
+                .closest("td")
+                .next()
+                .find("input:submit:first")
+                .trigger("click");
+        });
+        $("#shortcut3").on("click", () => {
+            $("option[value='PETSTATUS']")
+                .prop("selected", true)
+                .closest("td")
+                .next()
+                .find("input:submit:first")
+                .trigger("click");
+        });
+        $("#shortcut4").on("click", () => {
+            $("option[value='CHANGE_OCCUPATION']")
+                .prop("selected", true)
+                .closest("td")
+                .next()
+                .find("input:submit:first")
+                .trigger("click");
+        });
+    }
 }
 
 function doRenderBattleMenu(credential: Credential) {
