@@ -21,7 +21,9 @@ abstract class AbstractPersonalEquipmentManagementPageProcessor extends PageProc
             .attr("id", "t0");
 
         // 标题栏 : pageTitle
-        t0.find("td:first")
+        t0.find("tr:first")
+            .attr("id", "tr0")
+            .find("td:first")
             .attr("id", "pageTitle")
             .removeAttr("width")
             .removeAttr("height")
@@ -32,9 +34,46 @@ abstract class AbstractPersonalEquipmentManagementPageProcessor extends PageProc
             .css("background-color", "navy")
             .css("color", "yellowgreen")
             .html(this.doGeneratePageTitleHtml(context));
+
+        $("#tr0")
+            .next()
+            .attr("id", "tr1")
+            .find("td:first")
+            .find("table:first")
+            .find("tr:first")
+            .find("td:first")
+            .attr("id", "roleImage")
+            .next()
+            .removeAttr("width")
+            .css("width", "100%")
+            .next().remove();
+
+        $("#roleImage")
+            .next()
+            .find("table:first")
+            .find("tr:first")
+            .next()
+            .find("td:eq(2)")
+            .attr("id", "roleHealth")
+            .next()
+            .attr("id", "roleMana")
+            .parent()
+            .next()
+            .find("td:last")
+            .attr("id", "roleCash")
+            .parent()
+            .after($("" +
+                "<tr>" +
+                "<td style='background-color:#E0D0B0'>坐标点</td>" +
+                "<td style='background-color:#E8E8D0;text-align:right;font-weight:bold;color:red' " +
+                "colspan='5' id='roleLocation'>" + this.doGenerateRoleLocationHtml(context) + "</td>" +
+                "</tr>" +
+                ""));
     }
 
     abstract doGeneratePageTitleHtml(context?: PageProcessorContext): string;
+
+    abstract doGenerateRoleLocationHtml(context?: PageProcessorContext): string;
 }
 
 export = AbstractPersonalEquipmentManagementPageProcessor;

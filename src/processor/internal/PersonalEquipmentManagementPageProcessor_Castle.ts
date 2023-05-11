@@ -13,6 +13,14 @@ class PersonalEquipmentManagementPageProcessor_Castle extends AbstractPersonalEq
         }
     }
 
+    doGenerateRoleLocationHtml(context?: PageProcessorContext): string {
+        if (context === undefined) {
+            return "城堡";
+        } else {
+            return context.get("castleName")!;
+        }
+    }
+
 
 }
 
