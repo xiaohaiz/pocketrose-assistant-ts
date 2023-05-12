@@ -400,12 +400,29 @@ class PersonalEquipmentManagementPageProcessor_Castle extends AbstractPersonalEq
             });
         }
 
+        // Bind open/close warehouse buttons
+        $("#openWarehouse").on("click", () => {
+            if ($("#warehouseState").text() === "on") {
+                return;
+            }
+            $("#warehouseState").text("on");
+            this.#renderWarehouseUI(credential, page, context);
+        });
+        $("#closeWarehouse").on("click", () => {
+            if ($("#warehouseState").text() === "off") {
+                return;
+            }
+            $("#warehouseState").text("off");
+            PageUtils.unbindEventBySpecifiedClass("mutableButton-3");
+            $("#warehouseList").html("").parent().hide();
+        });
+
+        // Render bag or warehouse if necessary
         if ($("#bagState").text() === "on") {
             this.#renderBagUI(credential, page, bagIndex, context);
         }
-
         if ($("#warehouseState").text() === "on") {
-
+            this.#renderWarehouseUI(credential, page, context);
         }
 
     }
@@ -459,6 +476,109 @@ class PersonalEquipmentManagementPageProcessor_Castle extends AbstractPersonalEq
             html += "</table>";
 
             $("#bagList").html(html).parent().show();
+        });
+    }
+
+    #renderWarehouseUI(credential: Credential,
+                       page: PersonalEquipmentManagementPage,
+                       context?: PageProcessorContext) {
+        new CastleWarehouse(credential).open().then(warehousePage => {
+            const equipmentList = Equipment.sortEquipmentList(warehousePage.storageEquipmentList!);
+
+            let html = "";
+            html += "<table style='border-width:0;background-color:#888888;margin:auto;width:100%'>";
+            html += "<tbody style='background-color:#F8F0E0;text-align:center'>";
+            html += "<tr>";
+            html += "<td style='background-color:darkred;color:wheat;font-weight:bold' " +
+                "colspan='18'>";
+            html += "＜ 城 堡 仓 库 ＞";
+            html += "</td>";
+            html += "<tr>";
+            html += "<th style='background-color:#E8E8D0'>选择</th>";
+            html += "<th style='background-color:#E8E8D0'>名字</th>";
+            html += "<th style='background-color:#EFE0C0'>种类</th>";
+            html += "<th style='background-color:#E0D0B0'>效果</th>";
+            html += "<th style='background-color:#EFE0C0'>重量</th>";
+            html += "<th style='background-color:#E0D0B0'>耐久</th>";
+            html += "<th style='background-color:#EFE0C0'>职业</th>";
+            html += "<th style='background-color:#E0D0B0'>攻击</th>";
+            html += "<th style='background-color:#E0D0B0'>防御</th>";
+            html += "<th style='background-color:#E0D0B0'>智力</th>";
+            html += "<th style='background-color:#E0D0B0'>精神</th>";
+            html += "<th style='background-color:#E0D0B0'>速度</th>";
+            html += "<th style='background-color:#EFE0C0'>威力</th>";
+            html += "<th style='background-color:#EFE0C0'>重量</th>";
+            html += "<th style='background-color:#EFE0C0'>幸运</th>";
+            html += "<th style='background-color:#E0D0B0'>经验</th>";
+            html += "<th style='background-color:#E0D0B0'>属性</th>";
+            html += "<th style='background-color:#E8E8D0'>取出</th>";
+            html += "</tr>";
+
+            for (const equipment of equipmentList) {
+                html += "<tr>";
+                html += "<td style='background-color:#E8E8D0'>";
+                if (page.spaceCount > 0) {
+                    html += "<input type='button' class='mutableButton-3 select=3' " +
+                        "id='select3_" + equipment.index + "' " +
+                        "value='选择' " +
+                        "style='color:grey'>";
+                }
+                html += "</td>";
+                html += "<td style='background-color:#E8E8D0'>" + equipment.nameHTML + "</td>";
+                html += "<td style='background-color:#EFE0C0'>" + equipment.category + "</td>";
+                html += "<td style='background-color:#E0D0B0'>" + equipment.power + "</td>";
+                html += "<td style='background-color:#EFE0C0'>" + equipment.weight + "</td>";
+                html += "<td style='background-color:#E0D0B0'>" + equipment.endureHtml + "</td>";
+                html += "<td style='background-color:#EFE0C0'>" + equipment.requiredCareerHtml + "</td>";
+                html += "<td style='background-color:#E0D0B0'>" + equipment.requiredAttackHtml + "</td>";
+                html += "<td style='background-color:#E0D0B0'>" + equipment.requiredDefenseHtml + "</td>";
+                html += "<td style='background-color:#E0D0B0'>" + equipment.requiredSpecialAttackHtml + "</td>";
+                html += "<td style='background-color:#E0D0B0'>" + equipment.requiredSpecialDefenseHtml + "</td>";
+                html += "<td style='background-color:#E0D0B0'>" + equipment.requiredSpeedHtml + "</td>";
+                html += "<td style='background-color:#EFE0C0'>" + equipment.additionalPowerHtml + "</td>";
+                html += "<td style='background-color:#EFE0C0'>" + equipment.additionalWeightHtml + "</td>";
+                html += "<td style='background-color:#EFE0C0'>" + equipment.additionalLuckHtml + "</td>";
+                html += "<td style='background-color:#E0D0B0'>" + equipment.experienceHTML + "</td>";
+                html += "<td style='background-color:#E0D0B0'>" + equipment.attributeHtml + "</td>";
+                html += "<td style='background-color:#E8E8D0'>";
+                if (page.spaceCount > 0) {
+                    html += "<input type='button' class='mutableButton-3' " +
+                        "id='outWarehouse_" + equipment.index + "' value='出库'>";
+                }
+                html += "</td>";
+                html += "</tr>";
+            }
+            // ----------------------------------------------------------------
+            // 城堡仓库菜单栏
+            // ----------------------------------------------------------------
+            html += "<tr>";
+            html += "<td style='background-color:#F8F0E0;text-align:center' colspan='18'>";
+            html += "<table style='border-width:0;background-color:#F8F0E0;width:100%;margin:auto'>";
+            html += "<tbody>";
+            html += "<tr>";
+            html += "<td style='text-align:left'>";
+            if (page.spaceCount > 0) {
+                html += "<input type='button' class='mutableButton-3' " +
+                    "id='takeOutFromWarehouse' " +
+                    "value='从仓库中取出'>";
+            }
+            html += "</td>";
+            html += "<td style='text-align:right'>";
+            html += "<input type='button' id='internalCloseWarehouse' class='mutableButton' value='关闭仓库'>";
+            html += "</td>";
+            html += "</tr>";
+            html += "</tbody>";
+            html += "</table>";
+            html += "</td>";
+            html += "</tr>";
+            html += "</tbody>";
+            html += "</table>";
+
+            html += "</tbody>";
+            html += "</table>";
+
+            $("#warehouseList").html(html).parent().show();
+
         });
     }
 
