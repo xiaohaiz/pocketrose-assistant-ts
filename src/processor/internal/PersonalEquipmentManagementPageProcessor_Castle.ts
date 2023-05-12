@@ -186,6 +186,7 @@ class PersonalEquipmentManagementPageProcessor_Castle extends AbstractPersonalEq
         html += "<input type='text' id='searchName' size='15' maxlength='20'>";
         html += "<input type='button' id='searchButton' class='mutableButton-1' value='找人'>";
         html += "<select id='peopleSelect'><option value=''>选择发送对象</select>";
+        html += "<input type='button' id='sendButton' class='mutableButton-1' value='发送'>";
         html += "</td>";
         html += "</tr>";
         html += "</tbody>";
@@ -377,6 +378,38 @@ class PersonalEquipmentManagementPageProcessor_Castle extends AbstractPersonalEq
             }
             new CastleEquipmentExpressHouse(credential).search(s as string).then(optionListHtml => {
                 $("#peopleSelect").html(optionListHtml);
+            });
+        });
+
+        $("#sendButton").on("click", () => {
+            const indexList: number[] = [];
+            $(".select-1").each((idx, button) => {
+                const buttonId = $(button).attr("id") as string;
+                if (PageUtils.isColorBlue(buttonId)) {
+                    const index = parseInt(StringUtils.substringAfterLast(buttonId, "_"));
+                    indexList.push(index);
+                }
+            });
+            if (indexList.length === 0) {
+                this.doScrollToPageTitle();
+                MessageBoard.publishWarning("没有选择物品或装备！");
+                return;
+            }
+
+            const s = $("#peopleSelect").val();
+            if (s === undefined || (s as string).trim() === "") {
+                this.doScrollToPageTitle();
+                MessageBoard.publishWarning("没有选择发送对象！");
+                return;
+            }
+
+            const bank = new CastleBank(credential);
+            bank.withdraw(10).then(() => {
+                new CastleEquipmentExpressHouse(credential).send(s as string, indexList).then(() => {
+                    bank.depositAll().then(() => {
+                        this.doRefreshMutablePage(credential, context);
+                    });
+                });
             });
         });
 
