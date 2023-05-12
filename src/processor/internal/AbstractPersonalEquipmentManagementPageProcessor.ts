@@ -174,9 +174,9 @@ abstract class AbstractPersonalEquipmentManagementPageProcessor extends PageProc
         PageUtils.unbindEventBySpecifiedClass("mutableButton-2");
         PageUtils.unbindEventBySpecifiedClass("mutableButton-3");
 
-        $("#equipmentList").parent().hide();
-        $("#bagList").parent().hide();
-        $("#warehouseList").parent().hide();
+        $("#equipmentList").html("").parent().hide();
+        $("#bagList").html("").parent().hide();
+        $("#warehouseList").html("").parent().hide();
 
         let townId: string | undefined = undefined;
         if (context !== undefined) {

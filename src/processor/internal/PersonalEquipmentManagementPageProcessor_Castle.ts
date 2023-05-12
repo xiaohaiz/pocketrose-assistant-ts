@@ -457,6 +457,12 @@ class PersonalEquipmentManagementPageProcessor_Castle extends AbstractPersonalEq
             for (const equipment of equipmentList) {
                 html += "<tr>";
                 html += "<td style='background-color:#E8E8D0'>";
+                if (page.spaceCount > 0) {
+                    html += "<input type='button' value='选择' " +
+                        "style='color:grey' " +
+                        "class='mutableButton-2 select-2' " +
+                        "id='select2_" + equipment.index! + "'>";
+                }
                 html += "</td>";
                 html += "<td style='background-color:#E0D0B0'>" + equipment.nameHTML + "</td>";
                 html += "<td style='background-color:#EFE0C0'>" + equipment.category + "</td>";
@@ -468,6 +474,11 @@ class PersonalEquipmentManagementPageProcessor_Castle extends AbstractPersonalEq
                 html += "<td style='background-color:#EFE0C0'>" + equipment.additionalLuckHtml + "</td>";
                 html += "<td style='background-color:#E0D0B0'>" + equipment.experienceHTML + "</td>";
                 html += "<td style='background-color:#E8E8D0'>";
+                if (page.spaceCount > 0) {
+                    html += "<input type='button' value='出袋' " +
+                        "class='mutableButton-2 takeOutBag-2' " +
+                        "id='takeOutBag1_" + equipment.index! + "'>";
+                }
                 html += "</td>";
                 html += "</tr>";
             }
@@ -476,6 +487,25 @@ class PersonalEquipmentManagementPageProcessor_Castle extends AbstractPersonalEq
             html += "</table>";
 
             $("#bagList").html(html).parent().show();
+
+            // Bind select buttons
+            $(".select-2").on("click", event => {
+                const buttonId = $(event.target).attr("id")!;
+                if (PageUtils.isColorGrey(buttonId)) {
+                    $(event.target).css("color", "blue");
+                } else if (PageUtils.isColorBlue(buttonId)) {
+                    $(event.target).css("color", "grey");
+                }
+            });
+
+            // Bind take out buttons
+            $(".takeOutBag-2").on("click", event => {
+                const buttonId = $(event.target).attr("id")!;
+                const index = parseInt(StringUtils.substringAfterLast(buttonId, "_"));
+                new TreasureBag(credential).takeOut([index]).then(() => {
+                    this.doRefreshMutablePage(credential, context);
+                });
+            });
         });
     }
 
