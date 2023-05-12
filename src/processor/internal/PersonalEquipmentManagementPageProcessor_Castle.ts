@@ -66,176 +66,252 @@ class PersonalEquipmentManagementPageProcessor_Castle extends AbstractPersonalEq
                        bagIndex: number,
                        context?: PageProcessorContext) {
         $("#bagIndex").text(bagIndex);
+        this.#renderPersonalUI(credential, page, bagIndex, context);
 
-        if (page.equipmentList!.length > 0) {
-            let html = "";
-            html += "<table style='border-width:0;background-color:#888888;text-align:center;width:100%;margin:auto'>";
-            html += "<tbody>";
-            html += "<tr>";
-            html += "<td style='background-color:darkred;color:wheat;font-weight:bold;font-size:120%;text-align:center' " +
-                "colspan='21'>＜ 随 身 装 备 ＞</td>";
-            html += "</tr>";
-            html += "<tr>";
-            html += "<th style='background-color:#E8E8D0'>选择</th>"
-            html += "<th style='background-color:#EFE0C0'>装备</th>"
-            html += "<th style='background-color:#E0D0B0'>名字</th>"
-            html += "<th style='background-color:#EFE0C0'>种类</th>"
-            html += "<th style='background-color:#E0D0B0'>效果</th>"
-            html += "<th style='background-color:#EFE0C0'>重量</th>"
-            html += "<th style='background-color:#EFE0C0'>耐久</th>"
-            html += "<th style='background-color:#E0D0B0'>职需</th>"
-            html += "<th style='background-color:#E0D0B0'>攻需</th>"
-            html += "<th style='background-color:#E0D0B0'>防需</th>"
-            html += "<th style='background-color:#E0D0B0'>智需</th>"
-            html += "<th style='background-color:#E0D0B0'>精需</th>"
-            html += "<th style='background-color:#E0D0B0'>速需</th>"
-            html += "<th style='background-color:#EFE0C0'>威＋</th>"
-            html += "<th style='background-color:#EFE0C0'>重＋</th>"
-            html += "<th style='background-color:#EFE0C0'>幸＋</th>"
-            html += "<th style='background-color:#E0D0B0'>经验</th>"
-            html += "<th style='background-color:#EFE0C0'>属性</th>"
-            html += "<th style='background-color:#E8E8D0'>使用</th>"
-            html += "<th style='background-color:#E8E8D0'>入袋</th>"
-            html += "<th style='background-color:#E8E8D0'>入库</th>"
-            html += "</tr>";
+        // if (page.equipmentList!.length > 0) {
+        //     let html = "";
+        //     html += "<table style='border-width:0;background-color:#888888;text-align:center;width:100%;margin:auto'>";
+        //     html += "<tbody>";
+        //     html += "<tr>";
+        //     html += "<td style='background-color:darkred;color:wheat;font-weight:bold;font-size:120%;text-align:center' " +
+        //         "colspan='21'>＜ 随 身 装 备 ＞</td>";
+        //     html += "</tr>";
+        //     html += "<tr>";
+        //     html += "<th style='background-color:#E8E8D0'>选择</th>"
+        //     html += "<th style='background-color:#EFE0C0'>装备</th>"
+        //     html += "<th style='background-color:#E0D0B0'>名字</th>"
+        //     html += "<th style='background-color:#EFE0C0'>种类</th>"
+        //     html += "<th style='background-color:#E0D0B0'>效果</th>"
+        //     html += "<th style='background-color:#EFE0C0'>重量</th>"
+        //     html += "<th style='background-color:#EFE0C0'>耐久</th>"
+        //     html += "<th style='background-color:#E0D0B0'>职需</th>"
+        //     html += "<th style='background-color:#E0D0B0'>攻需</th>"
+        //     html += "<th style='background-color:#E0D0B0'>防需</th>"
+        //     html += "<th style='background-color:#E0D0B0'>智需</th>"
+        //     html += "<th style='background-color:#E0D0B0'>精需</th>"
+        //     html += "<th style='background-color:#E0D0B0'>速需</th>"
+        //     html += "<th style='background-color:#EFE0C0'>威＋</th>"
+        //     html += "<th style='background-color:#EFE0C0'>重＋</th>"
+        //     html += "<th style='background-color:#EFE0C0'>幸＋</th>"
+        //     html += "<th style='background-color:#E0D0B0'>经验</th>"
+        //     html += "<th style='background-color:#EFE0C0'>属性</th>"
+        //     html += "<th style='background-color:#E8E8D0'>使用</th>"
+        //     html += "<th style='background-color:#E8E8D0'>入袋</th>"
+        //     html += "<th style='background-color:#E8E8D0'>入库</th>"
+        //     html += "</tr>";
+        //
+        //     for (const equipment of page.equipmentList!) {
+        //         if (equipment.isGoldenCage || equipment.isTreasureBag) {
+        //             continue;
+        //         }
+        //         html += "<tr>";
+        //         html += "<td style='background-color:#E8E8D0'>"
+        //         html += "<input type='button' class='mutableButton selectButton-1' " +
+        //             "id='selectPersonal_" + equipment.index + "' " +
+        //             "value='选择' " +
+        //             "style='color:grey'>";
+        //         html += "</td>";
+        //         html += "<td style='background-color:#EFE0C0'>" + equipment.usingHTML + "</td>"
+        //         html += "<td style='background-color:#E0D0B0'>" + equipment.nameHTML + "</td>"
+        //         html += "<td style='background-color:#EFE0C0'>" + equipment.category + "</td>"
+        //         html += "<td style='background-color:#E0D0B0'>" + equipment.power + "</td>"
+        //         html += "<td style='background-color:#EFE0C0'>" + equipment.weight + "</td>"
+        //         html += "<td style='background-color:#EFE0C0'>" + equipment.endureHtml + "</td>"
+        //         html += "<td style='background-color:#E0D0B0'>" + equipment.requiredCareerHtml + "</td>"
+        //         html += "<td style='background-color:#E0D0B0'>" + equipment.requiredAttackHtml + "</td>"
+        //         html += "<td style='background-color:#E0D0B0'>" + equipment.requiredDefenseHtml + "</td>"
+        //         html += "<td style='background-color:#E0D0B0'>" + equipment.requiredSpecialAttackHtml + "</td>"
+        //         html += "<td style='background-color:#E0D0B0'>" + equipment.requiredSpecialDefenseHtml + "</td>"
+        //         html += "<td style='background-color:#E0D0B0'>" + equipment.requiredSpeedHtml + "</td>"
+        //         html += "<td style='background-color:#EFE0C0'>" + equipment.additionalPowerHtml + "</td>"
+        //         html += "<td style='background-color:#EFE0C0'>" + equipment.additionalWeightHtml + "</td>"
+        //         html += "<td style='background-color:#EFE0C0'>" + equipment.additionalLuckHtml + "</td>"
+        //         html += "<td style='background-color:#E0D0B0'>" + equipment.experienceHTML + "</td>"
+        //         html += "<td style='background-color:#EFE0C0'>" + equipment.attributeHtml + "</td>"
+        //         html += "<td style='background-color:#E8E8D0'>"
+        //         html += "</td>";
+        //         html += "<td style='background-color:#E8E8D0'>"
+        //         html += "</td>";
+        //         html += "<td style='background-color:#E8E8D0'>"
+        //         if (!equipment.using!) {
+        //             html += "<input type='button' class='mutableButton' " +
+        //                 "id='inWarehouse_" + equipment.index + "' value='入库'>";
+        //         }
+        //         html += "</td>";
+        //         html += "</tr>";
+        //     }
+        //     // ------------------------------------------------------------------------
+        //     // 装备信息栏
+        //     // ------------------------------------------------------------------------
+        //     html += "<tr>";
+        //     html += "<td style='background-color:#F8F0E0;text-align:center;color:navy;font-weight:bold' colspan='21'>";
+        //     html += "目前剩余空位数：<span style='color:red'>" + page.spaceCount + "</span>";
+        //     html += "</td>";
+        //     html += "</tr>";
+        //     // ------------------------------------------------------------------------
+        //     // 装备菜单栏
+        //     // ------------------------------------------------------------------------
+        //     html += "<tr>";
+        //     html += "<td style='background-color:#F8F0E0;text-align:center' colspan='21'>";
+        //     html += "<table style='border-width:0;background-color:#F8F0E0;width:100%;margin:auto'>";
+        //     html += "<tbody>";
+        //     html += "<tr>";
+        //     html += "<td style='text-align:left'>";
+        //     html += "<input type='button' id='use' class='mutableButton' value='使用装备'>";
+        //     html += "<input type='button' id='bag' class='mutableButton' value='入百宝袋'>";
+        //     html += "</td>";
+        //     html += "<td style='text-align:right'>";
+        //     html += "<input type='button' id='openBag' class='mutableButton' value='打开百宝袋'>";
+        //     html += "<input type='button' id='closeBag' class='mutableButton' value='关闭百宝袋'>";
+        //     html += "<input type='button' id='openWarehouse' class='mutableButton' value='打开仓库'>";
+        //     html += "<input type='button' id='closeWarehouse' class='mutableButton' value='关闭仓库'>";
+        //     html += "</td>";
+        //     html += "</tr>";
+        //     html += "</tbody>";
+        //     html += "</table>";
+        //     html += "</td>";
+        //     html += "</tr>";
+        //
+        //     html += "</tbody>";
+        //     html += "</table>";
+        //
+        //     $("#equipmentList").html(html).parent().show();
+        // }
+        //
+        // $(".selectButton-1").on("click", event => {
+        //     const buttonId = $(event.target).attr("id") as string;
+        //     if (PageUtils.isColorGrey(buttonId)) {
+        //         $(event.target).css("color", "blue");
+        //     } else if (PageUtils.isColorBlue(buttonId)) {
+        //         $(event.target).css("color", "grey");
+        //     }
+        // });
+        //
+        // if (bagIndex < 0) {
+        //     $("#openBag").prop("disabled", true).hide();
+        //     $("#closeBag").prop("disabled", true).hide();
+        // }
+        //
+        // if ($("#bagState").text() === "on") {
+        //     $("#openBag").prop("disabled", true);
+        //     this.#loadAndRenderBagList(credential, bagIndex, context);
+        // } else {
+        //     $("#closeBag").prop("disabled", true);
+        // }
+        // if ($("#warehouseState").text() === "on") {
+        //     $("#openWarehouse").prop("disabled", true);
+        //     this.#loadAndRenderWarehouseList(credential, page, context);
+        // } else {
+        //     $("#closeWarehouse").prop("disabled", true);
+        // }
+        //
+        // if (!$("#openBag").prop("disabled")) {
+        //     $("#openBag").on("click", () => {
+        //         $("#bagState").text("on");
+        //         this.doRefreshMutablePage(credential, context);
+        //     });
+        // }
+        // if (!$("#closeBag").prop("disabled")) {
+        //     $("#closeBag").on("click", () => {
+        //         $("#bagState").text("off");
+        //         this.doRefreshMutablePage(credential, context);
+        //     });
+        // }
+        // if (!$("#openWarehouse").prop("disabled")) {
+        //     $("#openWarehouse").on("click", () => {
+        //         $("#warehouseState").text("on");
+        //         this.doRefreshMutablePage(credential, context);
+        //     });
+        // }
+        // if (!$("#closeWarehouse").prop("disabled")) {
+        //     $("#closeWarehouse").on("click", () => {
+        //         $("#warehouseState").text("off");
+        //         this.doRefreshMutablePage(credential, context);
+        //     });
+        // }
+        //
+        // $("input:button[value='入库']").on("click", event => {
+        //     const buttonId = $(event.target).attr("id")!;
+        //     const index = parseInt(buttonId.split("_")[1]);
+        //     new CastleWarehouse(credential).putInto([index]).then(() => {
+        //         this.doRefreshMutablePage(credential, context);
+        //     });
+        // });
+    }
 
-            for (const equipment of page.equipmentList!) {
-                if (equipment.isGoldenCage || equipment.isTreasureBag) {
-                    continue;
-                }
-                html += "<tr>";
-                html += "<td style='background-color:#E8E8D0'>"
-                html += "<input type='button' class='mutableButton selectButton-1' " +
-                    "id='selectPersonal_" + equipment.index + "' " +
-                    "value='选择' " +
-                    "style='color:grey'>";
-                html += "</td>";
-                html += "<td style='background-color:#EFE0C0'>" + equipment.usingHTML + "</td>"
-                html += "<td style='background-color:#E0D0B0'>" + equipment.nameHTML + "</td>"
-                html += "<td style='background-color:#EFE0C0'>" + equipment.category + "</td>"
-                html += "<td style='background-color:#E0D0B0'>" + equipment.power + "</td>"
-                html += "<td style='background-color:#EFE0C0'>" + equipment.weight + "</td>"
-                html += "<td style='background-color:#EFE0C0'>" + equipment.endureHtml + "</td>"
-                html += "<td style='background-color:#E0D0B0'>" + equipment.requiredCareerHtml + "</td>"
-                html += "<td style='background-color:#E0D0B0'>" + equipment.requiredAttackHtml + "</td>"
-                html += "<td style='background-color:#E0D0B0'>" + equipment.requiredDefenseHtml + "</td>"
-                html += "<td style='background-color:#E0D0B0'>" + equipment.requiredSpecialAttackHtml + "</td>"
-                html += "<td style='background-color:#E0D0B0'>" + equipment.requiredSpecialDefenseHtml + "</td>"
-                html += "<td style='background-color:#E0D0B0'>" + equipment.requiredSpeedHtml + "</td>"
-                html += "<td style='background-color:#EFE0C0'>" + equipment.additionalPowerHtml + "</td>"
-                html += "<td style='background-color:#EFE0C0'>" + equipment.additionalWeightHtml + "</td>"
-                html += "<td style='background-color:#EFE0C0'>" + equipment.additionalLuckHtml + "</td>"
-                html += "<td style='background-color:#E0D0B0'>" + equipment.experienceHTML + "</td>"
-                html += "<td style='background-color:#EFE0C0'>" + equipment.attributeHtml + "</td>"
-                html += "<td style='background-color:#E8E8D0'>"
-                html += "</td>";
-                html += "<td style='background-color:#E8E8D0'>"
-                html += "</td>";
-                html += "<td style='background-color:#E8E8D0'>"
-                if (!equipment.using!) {
-                    html += "<input type='button' class='mutableButton' " +
-                        "id='inWarehouse_" + equipment.index + "' value='入库'>";
-                }
-                html += "</td>";
-                html += "</tr>";
+    #renderPersonalUI(credential: Credential,
+                      page: PersonalEquipmentManagementPage,
+                      bagIndex: number,
+                      context?: PageProcessorContext) {
+
+        let html = "";
+        html += "<table style='border-width:0;background-color:#888888;text-align:center;width:100%;margin:auto'>";
+        html += "<tbody>";
+        html += "<tr>";
+        html += "<td style='background-color:darkred;color:wheat;font-weight:bold;font-size:120%;text-align:center' " +
+            "colspan='21'>＜ 随 身 装 备 ＞</td>";
+        html += "</tr>";
+        html += "<tr>";
+        html += "<th style='background-color:#E8E8D0'>选择</th>"
+        html += "<th style='background-color:#EFE0C0'>装备</th>"
+        html += "<th style='background-color:#E0D0B0'>名字</th>"
+        html += "<th style='background-color:#EFE0C0'>种类</th>"
+        html += "<th style='background-color:#E0D0B0'>效果</th>"
+        html += "<th style='background-color:#EFE0C0'>重量</th>"
+        html += "<th style='background-color:#EFE0C0'>耐久</th>"
+        html += "<th style='background-color:#E0D0B0'>职需</th>"
+        html += "<th style='background-color:#E0D0B0'>攻需</th>"
+        html += "<th style='background-color:#E0D0B0'>防需</th>"
+        html += "<th style='background-color:#E0D0B0'>智需</th>"
+        html += "<th style='background-color:#E0D0B0'>精需</th>"
+        html += "<th style='background-color:#E0D0B0'>速需</th>"
+        html += "<th style='background-color:#EFE0C0'>威＋</th>"
+        html += "<th style='background-color:#EFE0C0'>重＋</th>"
+        html += "<th style='background-color:#EFE0C0'>幸＋</th>"
+        html += "<th style='background-color:#E0D0B0'>经验</th>"
+        html += "<th style='background-color:#EFE0C0'>属性</th>"
+        html += "<th style='background-color:#E8E8D0'>使用</th>"
+        html += "<th style='background-color:#E8E8D0'>入袋</th>"
+        html += "<th style='background-color:#E8E8D0'>入库</th>"
+        html += "</tr>";
+
+        for (const equipment of page.equipmentList!) {
+            if (equipment.isGoldenCage || equipment.isTreasureBag) {
+                continue;
             }
-            // ------------------------------------------------------------------------
-            // 装备信息栏
-            // ------------------------------------------------------------------------
             html += "<tr>";
-            html += "<td style='background-color:#F8F0E0;text-align:center;color:navy;font-weight:bold' colspan='21'>";
-            html += "目前剩余空位数：<span style='color:red'>" + page.spaceCount + "</span>";
+            html += "<td style='background-color:#E8E8D0'>"
+            html += "</td>";
+            html += "<td style='background-color:#EFE0C0'>" + equipment.usingHTML + "</td>"
+            html += "<td style='background-color:#E0D0B0'>" + equipment.nameHTML + "</td>"
+            html += "<td style='background-color:#EFE0C0'>" + equipment.category + "</td>"
+            html += "<td style='background-color:#E0D0B0'>" + equipment.power + "</td>"
+            html += "<td style='background-color:#EFE0C0'>" + equipment.weight + "</td>"
+            html += "<td style='background-color:#EFE0C0'>" + equipment.endureHtml + "</td>"
+            html += "<td style='background-color:#E0D0B0'>" + equipment.requiredCareerHtml + "</td>"
+            html += "<td style='background-color:#E0D0B0'>" + equipment.requiredAttackHtml + "</td>"
+            html += "<td style='background-color:#E0D0B0'>" + equipment.requiredDefenseHtml + "</td>"
+            html += "<td style='background-color:#E0D0B0'>" + equipment.requiredSpecialAttackHtml + "</td>"
+            html += "<td style='background-color:#E0D0B0'>" + equipment.requiredSpecialDefenseHtml + "</td>"
+            html += "<td style='background-color:#E0D0B0'>" + equipment.requiredSpeedHtml + "</td>"
+            html += "<td style='background-color:#EFE0C0'>" + equipment.additionalPowerHtml + "</td>"
+            html += "<td style='background-color:#EFE0C0'>" + equipment.additionalWeightHtml + "</td>"
+            html += "<td style='background-color:#EFE0C0'>" + equipment.additionalLuckHtml + "</td>"
+            html += "<td style='background-color:#E0D0B0'>" + equipment.experienceHTML + "</td>"
+            html += "<td style='background-color:#EFE0C0'>" + equipment.attributeHtml + "</td>"
+            html += "<td style='background-color:#E8E8D0'>"
+            html += "</td>";
+            html += "<td style='background-color:#E8E8D0'>"
+            html += "</td>";
+            html += "<td style='background-color:#E8E8D0'>"
             html += "</td>";
             html += "</tr>";
-            // ------------------------------------------------------------------------
-            // 装备菜单栏
-            // ------------------------------------------------------------------------
-            html += "<tr>";
-            html += "<td style='background-color:#F8F0E0;text-align:center' colspan='21'>";
-            html += "<table style='border-width:0;background-color:#F8F0E0;width:100%;margin:auto'>";
-            html += "<tbody>";
-            html += "<tr>";
-            html += "<td style='text-align:left'>";
-            html += "<input type='button' id='use' class='mutableButton' value='使用装备'>";
-            html += "<input type='button' id='bag' class='mutableButton' value='入百宝袋'>";
-            html += "</td>";
-            html += "<td style='text-align:right'>";
-            html += "<input type='button' id='openBag' class='mutableButton' value='打开百宝袋'>";
-            html += "<input type='button' id='closeBag' class='mutableButton' value='关闭百宝袋'>";
-            html += "<input type='button' id='openWarehouse' class='mutableButton' value='打开仓库'>";
-            html += "<input type='button' id='closeWarehouse' class='mutableButton' value='关闭仓库'>";
-            html += "</td>";
-            html += "</tr>";
-            html += "</tbody>";
-            html += "</table>";
-            html += "</td>";
-            html += "</tr>";
-
-            html += "</tbody>";
-            html += "</table>";
-
-            $("#equipmentList").html(html).parent().show();
         }
 
-        $(".selectButton-1").on("click", event => {
-            const buttonId = $(event.target).attr("id") as string;
-            if (PageUtils.isColorGrey(buttonId)) {
-                $(event.target).css("color", "blue");
-            } else if (PageUtils.isColorBlue(buttonId)) {
-                $(event.target).css("color", "grey");
-            }
-        });
+        html += "</tbody>";
+        html += "</table>";
 
-        if (bagIndex < 0) {
-            $("#openBag").prop("disabled", true).hide();
-            $("#closeBag").prop("disabled", true).hide();
-        }
-
-        if ($("#bagState").text() === "on") {
-            $("#openBag").prop("disabled", true);
-            this.#loadAndRenderBagList(credential, bagIndex, context);
-        } else {
-            $("#closeBag").prop("disabled", true);
-        }
-        if ($("#warehouseState").text() === "on") {
-            $("#openWarehouse").prop("disabled", true);
-            this.#loadAndRenderWarehouseList(credential, page, context);
-        } else {
-            $("#closeWarehouse").prop("disabled", true);
-        }
-
-        if (!$("#openBag").prop("disabled")) {
-            $("#openBag").on("click", () => {
-                $("#bagState").text("on");
-                this.doRefreshMutablePage(credential, context);
-            });
-        }
-        if (!$("#closeBag").prop("disabled")) {
-            $("#closeBag").on("click", () => {
-                $("#bagState").text("off");
-                this.doRefreshMutablePage(credential, context);
-            });
-        }
-        if (!$("#openWarehouse").prop("disabled")) {
-            $("#openWarehouse").on("click", () => {
-                $("#warehouseState").text("on");
-                this.doRefreshMutablePage(credential, context);
-            });
-        }
-        if (!$("#closeWarehouse").prop("disabled")) {
-            $("#closeWarehouse").on("click", () => {
-                $("#warehouseState").text("off");
-                this.doRefreshMutablePage(credential, context);
-            });
-        }
-
-        $("input:button[value='入库']").on("click", event => {
-            const buttonId = $(event.target).attr("id")!;
-            const index = parseInt(buttonId.split("_")[1]);
-            new CastleWarehouse(credential).putInto([index]).then(() => {
-                this.doRefreshMutablePage(credential, context);
-            });
-        });
+        $("#equipmentList").html(html).parent().show();
     }
 
     #loadAndRenderBagList(credential: Credential, bagIndex: number, context?: PageProcessorContext) {
