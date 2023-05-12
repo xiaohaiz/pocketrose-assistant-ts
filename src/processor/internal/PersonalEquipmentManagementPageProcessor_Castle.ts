@@ -32,7 +32,7 @@ class PersonalEquipmentManagementPageProcessor_Castle extends AbstractPersonalEq
     }
 
     doGenerateWelcomeMessageHtml(): string {
-        return "<b style='font-size:120%;color:wheat'>又来管理您的装备来啦？真是一刻不得闲置啊。</b>";
+        return "<b style='font-size:120%;color:wheat'>又来管理您的装备来啦？真是一刻不得闲啊。</b>";
     }
 
     doBindReturnButton(credential: Credential): void {
@@ -388,6 +388,15 @@ class PersonalEquipmentManagementPageProcessor_Castle extends AbstractPersonalEq
             });
         });
 
+        // Bind put into warehouse buttons
+        $(".putIntoWarehouse-1").on("click", event => {
+            const buttonId = $(event.target).attr("id")!;
+            const index = parseInt(StringUtils.substringAfterLast(buttonId, "_"));
+            new CastleWarehouse(credential).putInto([index]).then(() => {
+                this.doRefreshMutablePage(credential, context);
+            });
+        });
+
         // Bind open/close bag buttons
         if (bagIndex >= 0) {
             $("#openBag").prop("disabled", false).show();
@@ -557,10 +566,12 @@ class PersonalEquipmentManagementPageProcessor_Castle extends AbstractPersonalEq
                 html += "<tr>";
                 html += "<td style='background-color:#E8E8D0'>";
                 if (page.spaceCount > 0) {
-                    html += "<input type='button' class='mutableButton-3 select=3' " +
-                        "id='select3_" + equipment.index + "' " +
-                        "value='选择' " +
-                        "style='color:grey'>";
+                    if (page.spaceCount > 0) {
+                        html += "<input type='button' value='选择' " +
+                            "style='color:grey' " +
+                            "class='mutableButton-3 select-3' " +
+                            "id='select3_" + equipment.index! + "'>";
+                    }
                 }
                 html += "</td>";
                 html += "<td style='background-color:#E8E8D0'>" + equipment.nameHTML + "</td>";
@@ -581,8 +592,8 @@ class PersonalEquipmentManagementPageProcessor_Castle extends AbstractPersonalEq
                 html += "<td style='background-color:#E0D0B0'>" + equipment.attributeHtml + "</td>";
                 html += "<td style='background-color:#E8E8D0'>";
                 if (page.spaceCount > 0) {
-                    html += "<input type='button' class='mutableButton-3' " +
-                        "id='outWarehouse_" + equipment.index + "' value='出库'>";
+                    html += "<input type='button' class='mutableButton-3 takeOutFromWarehouse-3' " +
+                        "id='takeOutFromWarehouse3_" + equipment.index + "' value='出库'>";
                 }
                 html += "</td>";
                 html += "</tr>";
@@ -618,6 +629,24 @@ class PersonalEquipmentManagementPageProcessor_Castle extends AbstractPersonalEq
 
             $("#warehouseList").html(html).parent().show();
 
+            // Bind select buttons
+            $(".select-3").on("click", event => {
+                const buttonId = $(event.target).attr("id")!;
+                if (PageUtils.isColorGrey(buttonId)) {
+                    $(event.target).css("color", "blue");
+                } else if (PageUtils.isColorBlue(buttonId)) {
+                    $(event.target).css("color", "grey");
+                }
+            });
+
+            // Bind take out buttons
+            $(".takeOutFromWarehouse-3").on("click", event => {
+                const buttonId = $(event.target).attr("id")!;
+                const index = parseInt(StringUtils.substringAfterLast(buttonId, "_"));
+                new CastleWarehouse(credential).takeOut([index]).then(() => {
+                    this.doRefreshMutablePage(credential, context);
+                });
+            });
         });
     }
 
