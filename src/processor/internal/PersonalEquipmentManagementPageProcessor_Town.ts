@@ -98,6 +98,65 @@ class PersonalEquipmentManagementPageProcessor_Town extends AbstractPersonalEqui
         html += "<th style='background-color:#E8E8D0'>发送</th>"
         html += "</tr>";
 
+        for (const equipment of page.equipmentList!) {
+            if (equipment.isGoldenCage || equipment.isTreasureBag) {
+                continue;
+            }
+            html += "<tr>";
+            html += "<td style='background-color:#E8E8D0'>"
+            if (equipment.selectable!) {
+                html += "<input type='button' value='选择' " +
+                    "style='color:grey' " +
+                    "class='mutableButton-1 selectButton-1' " +
+                    "id='selectButton_1_" + equipment.index! + "'>";
+            }
+            html += "</td>";
+            html += "<td style='background-color:#EFE0C0'>" + equipment.usingHTML + "</td>"
+            html += "<td style='background-color:#E0D0B0'>" + equipment.nameHTML + "</td>"
+            html += "<td style='background-color:#EFE0C0'>" + equipment.category + "</td>"
+            html += "<td style='background-color:#E0D0B0'>" + equipment.power + "</td>"
+            html += "<td style='background-color:#EFE0C0'>" + equipment.weight + "</td>"
+            html += "<td style='background-color:#EFE0C0'>" + equipment.endureHtml + "</td>"
+            html += "<td style='background-color:#E0D0B0'>" + equipment.requiredCareerHtml + "</td>"
+            html += "<td style='background-color:#E0D0B0'>" + equipment.requiredAttackHtml + "</td>"
+            html += "<td style='background-color:#E0D0B0'>" + equipment.requiredDefenseHtml + "</td>"
+            html += "<td style='background-color:#E0D0B0'>" + equipment.requiredSpecialAttackHtml + "</td>"
+            html += "<td style='background-color:#E0D0B0'>" + equipment.requiredSpecialDefenseHtml + "</td>"
+            html += "<td style='background-color:#E0D0B0'>" + equipment.requiredSpeedHtml + "</td>"
+            html += "<td style='background-color:#EFE0C0'>" + equipment.additionalPowerHtml + "</td>"
+            html += "<td style='background-color:#EFE0C0'>" + equipment.additionalWeightHtml + "</td>"
+            html += "<td style='background-color:#EFE0C0'>" + equipment.additionalLuckHtml + "</td>"
+            html += "<td style='background-color:#E0D0B0'>" + equipment.experienceHTML + "</td>"
+            html += "<td style='background-color:#EFE0C0'>" + equipment.attributeHtml + "</td>"
+            html += "<td style='background-color:#E8E8D0'>"
+            if (equipment.selectable!) {
+                html += "<input type='button' value='" + equipment.buttonTitle + "' " +
+                    "class='mutableButton-1 useButton-1' " +
+                    "id='useButton_1_" + equipment.index! + "'>";
+            }
+            html += "</td>";
+            html += "<td style='background-color:#E8E8D0'>";
+            if (equipment.isRepairable) {
+                html += "<input type='button' value='修理' " +
+                    "class='mutableButton-1 repairButton-1' " +
+                    "id='repairButton_1_" + equipment.index! + "'>";
+            }
+            html += "</td>";
+            html += "<td style='background-color:#E8E8D0'>"
+            if (equipment.selectable! && !equipment.using! && bagIndex >= -1) {
+                html += "<input type='button' value='入袋' " +
+                    "class='mutableButton-1 storeButton-1' " +
+                    "id='storeButton_1_" + equipment.index! + "'>";
+            }
+            html += "</td>";
+            html += "<td style='background-color:#E8E8D0'>"
+            html += "<input type='button' value='发送' " +
+                "class='mutableButton-1 sendButton-1' " +
+                "id='sendButton_1_" + equipment.index! + "' disabled style='display:none'>";
+            html += "</td>";
+            html += "</tr>";
+        }
+
         html += "</tbody>";
         html += "</table>";
 
