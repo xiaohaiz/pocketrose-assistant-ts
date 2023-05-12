@@ -379,6 +379,15 @@ class PersonalEquipmentManagementPageProcessor_Castle extends AbstractPersonalEq
             });
         });
 
+        // Bind put into bag buttons
+        $(".putIntoBag-1").on("click", event => {
+            const buttonId = $(event.target).attr("id")!;
+            const index = parseInt(StringUtils.substringAfterLast(buttonId, "_"));
+            new TreasureBag(credential).putInto([index]).then(() => {
+                this.doRefreshMutablePage(credential, context);
+            });
+        });
+
         // Bind open/close bag buttons
         if (bagIndex >= 0) {
             $("#openBag").prop("disabled", false).show();
