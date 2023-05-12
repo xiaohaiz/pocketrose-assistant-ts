@@ -164,6 +164,7 @@ class PersonalEquipmentManagementPageProcessor_Castle extends AbstractPersonalEq
         html += "<td style='text-align:left'>";
         html += "<input type='button' id='use1' class='mutableButton-1' value='使用装备'>";
         html += "<input type='button' id='putIntoBag1' class='mutableButton-1' value='放入百宝袋' disabled style='display:none'>";
+        html += "<input type='button' id='putIntoWarehouse1' class='mutableButton-1' value='放入仓库'>";
         html += "</td>";
         html += "<td style='text-align:right'>";
         html += "<input type='button' id='openBag' class='mutableButton-1' value='打开百宝袋' disabled style='display:none'>";
@@ -261,6 +262,26 @@ class PersonalEquipmentManagementPageProcessor_Castle extends AbstractPersonalEq
                 });
             });
         }
+
+        // Put into warehouse
+        $("#putIntoWarehouse1").on("click", () => {
+            const indexList: number[] = [];
+            $(".select-1").each((idx, button) => {
+                const buttonId = $(button).attr("id") as string;
+                if (PageUtils.isColorBlue(buttonId)) {
+                    const index = parseInt(StringUtils.substringAfterLast(buttonId, "_"));
+                    indexList.push(index);
+                }
+            });
+            if (indexList.length === 0) {
+                this.doScrollToPageTitle();
+                MessageBoard.publishWarning("没有选择物品或装备！");
+                return;
+            }
+            new CastleWarehouse(credential).putInto(indexList).then(() => {
+                this.doRefreshMutablePage(credential, context);
+            });
+        });
 
         // Bind open/close bag buttons
         if (bagIndex >= -1) {
