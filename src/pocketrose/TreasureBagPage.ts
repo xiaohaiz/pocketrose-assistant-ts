@@ -4,6 +4,10 @@ class TreasureBagPage {
 
     equipmentList?: Equipment[];
 
+    get sortedEquipmentList(): Equipment[] {
+        return Equipment.sortEquipmentList(this.equipmentList!);
+    }
+
 }
 
 export = TreasureBagPage;
