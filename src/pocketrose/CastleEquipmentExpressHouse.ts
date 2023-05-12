@@ -1,6 +1,7 @@
 import Equipment from "../common/Equipment";
 import Role from "../common/Role";
 import Credential from "../util/Credential";
+import NetworkUtils from "../util/NetworkUtils";
 import StringUtils from "../util/StringUtils";
 import CastleEquipmentExpressHousePage from "./CastleEquipmentExpressHousePage";
 
@@ -10,6 +11,19 @@ class CastleEquipmentExpressHouse {
 
     constructor(credential: Credential) {
         this.#credential = credential;
+    }
+
+    async open(): Promise<CastleEquipmentExpressHousePage> {
+        return await (() => {
+            return new Promise<CastleEquipmentExpressHousePage>(resolve => {
+                const request = this.#credential.asRequestMap();
+                request.set("mode", "CASTLE_SENDITEM");
+                NetworkUtils.post("castle.cgi", request).then(html => {
+                    const page = CastleEquipmentExpressHouse.parsePage(html);
+                    resolve(page);
+                });
+            });
+        })();
     }
 
     static parsePage(html: string): CastleEquipmentExpressHousePage {
