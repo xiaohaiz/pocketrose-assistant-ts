@@ -151,7 +151,7 @@ class PersonalEquipmentManagementPageProcessor_Map2 extends AbstractPersonalEqui
             $("#openBag").prop("disabled", true).hide();
             $("#closeBag").prop("disabled", true).hide();
         } else {
-            if ($("#treasureBag").text() === "on") {
+            if ($("#bagState").text() === "on") {
                 $("#openBag").prop("disabled", true);
             } else {
                 $("#closeBag").prop("disabled", true);
@@ -161,6 +161,12 @@ class PersonalEquipmentManagementPageProcessor_Map2 extends AbstractPersonalEqui
         this.#bindSelectPersonalButton();
         this.#bindUseButton(credential, context);
         this.#bindStoreButton(credential, treasureBag, context);
+        this.#bindOpenBagButton(credential, context);
+        this.#bindCloseBagButton(credential, context);
+
+        if (treasureBag !== null && $("#bagState").text() === "on") {
+            this.#doRenderStorageEquipmentList(credential, page, treasureBag, context);
+        }
     }
 
     #bindSelectPersonalButton() {
@@ -256,6 +262,168 @@ class PersonalEquipmentManagementPageProcessor_Map2 extends AbstractPersonalEqui
             }
             new TreasureBag(credential)
                 .putInto(indexList)
+                .then(() => {
+                    instance.doRefreshMutablePage(credential, context);
+                });
+        });
+    }
+
+
+    #bindOpenBagButton(credential: Credential, context?: PageProcessorContext) {
+        if ($("#openBag").prop("disabled")) {
+            return;
+        }
+        const instance = this;
+        $("#openBag").on("click", function () {
+            $("#bagState").text("on");
+            instance.doRefreshMutablePage(credential, context);
+        });
+    }
+
+    #bindCloseBagButton(credential: Credential, context?: PageProcessorContext) {
+        if ($("#closeBag").prop("disabled")) {
+            return;
+        }
+        const instance = this;
+        $("#closeBag").on("click", function () {
+            $("#bagState").text("off");
+            instance.doRefreshMutablePage(credential, context);
+        });
+    }
+
+    #doRenderStorageEquipmentList(credential: Credential,
+                                  page: PersonalEquipmentManagementPage,
+                                  treasureBag: Equipment,
+                                  context?: PageProcessorContext) {
+        new TreasureBag(credential)
+            .open(treasureBag.index!)
+            .then(bagPage => {
+                const equipmentList = bagPage.sortedEquipmentList;
+                if (equipmentList.length === 0) {
+                    // Nothing found in bag.
+                    return;
+                }
+
+                let html = "";
+                html += "<table style='border-width:0;background-color:#888888;text-align:center;width:100%;margin:auto'>";
+                html += "<tbody>";
+                html += "<tr>";
+                html += "<td style='background-color:darkgreen;color:wheat;font-weight:bold;font-size:120%;text-align:center' colspan='11'>＜ 百 宝 袋 ＞</td>";
+                html += "</tr>";
+                html += "<tr>";
+                html += "<th style='background-color:#E8E8D0'>选择</th>"
+                html += "<th style='background-color:#E0D0B0'>名字</th>"
+                html += "<th style='background-color:#EFE0C0'>种类</th>"
+                html += "<th style='background-color:#E0D0B0'>效果</th>"
+                html += "<th style='background-color:#EFE0C0'>重量</th>"
+                html += "<th style='background-color:#EFE0C0'>耐久</th>"
+                html += "<th style='background-color:#EFE0C0'>威＋</th>"
+                html += "<th style='background-color:#EFE0C0'>重＋</th>"
+                html += "<th style='background-color:#EFE0C0'>幸＋</th>"
+                html += "<th style='background-color:#E0D0B0'>经验</th>"
+                html += "<th style='background-color:#E8E8D0'>取出</th>"
+                html += "</tr>";
+
+                for (const equipment of equipmentList) {
+                    html += "<tr>";
+                    html += "<td style='background-color:#E8E8D0'>";
+                    html += "<input type='button' " +
+                        "value='选择' " +
+                        "style='color:grey' " +
+                        "id='selectStorage_" + equipment.index + "' " +
+                        "class='mutableElement'>";
+                    html += "</td>";
+                    html += "<td style='background-color:#E0D0B0'>" + equipment.nameHTML + "</td>";
+                    html += "<td style='background-color:#EFE0C0'>" + equipment.category + "</td>";
+                    html += "<td style='background-color:#E0D0B0'>" + equipment.power + "</td>";
+                    html += "<td style='background-color:#EFE0C0'>" + equipment.weight + "</td>";
+                    html += "<td style='background-color:#EFE0C0'>" + equipment.endureHtml + "</td>";
+                    html += "<td style='background-color:#EFE0C0'>" + equipment.additionalPowerHtml + "</td>";
+                    html += "<td style='background-color:#EFE0C0'>" + equipment.additionalWeightHtml + "</td>";
+                    html += "<td style='background-color:#EFE0C0'>" + equipment.additionalLuckHtml + "</td>";
+                    html += "<td style='background-color:#E0D0B0'>" + equipment.experienceHTML + "</td>";
+                    html += "<td style='background-color:#E8E8D0'>";
+                    html += "<input type='button' " +
+                        "value='取出' " +
+                        "id='takeOut_" + equipment.index + "' " +
+                        "class='mutableElement'>";
+                    html += "</td>";
+                    html += "</tr>";
+                }
+                // ----------------------------------------------------------------
+                // 百宝袋菜单栏
+                // ----------------------------------------------------------------
+                html += "<tr>";
+                html += "<td style='background-color:#F8F0E0;text-align:center' colspan='11'>";
+                html += "<table style='border-width:0;background-color:#F8F0E0;width:100%;margin:auto'>";
+                html += "<tbody>";
+                html += "<tr>";
+                html += "<td style='text-align:left'>";
+                html += "<input type='button' id='takeOut' class='mutableElement' value='取出百宝袋'>";
+                html += "</td>";
+                html += "</tr>";
+                html += "</tbody>";
+                html += "</table>";
+                html += "</td>";
+                html += "</tr>";
+                html += "</tbody>";
+                html += "</table>";
+
+                $("#bagList").html(html).parent().show();
+
+                this.#bindSelectStorageButton();
+                this.#bindTakeOutButton(credential, treasureBag, context);
+            });
+    }
+
+    #bindSelectStorageButton() {
+        $("input:button[value='选择']")
+            .filter(function () {
+                const buttonId = $(this).attr("id") as string;
+                return buttonId.startsWith("selectStorage_");
+            })
+            .on("click", function () {
+                const buttonId = $(this).attr("id") as string;
+                if (PageUtils.isColorGrey(buttonId)) {
+                    $(this).css("color", "blue");
+                } else if (PageUtils.isColorBlue(buttonId)) {
+                    $(this).css("color", "grey");
+                }
+            });
+    }
+
+    #bindTakeOutButton(credential: Credential, treasureBag: Equipment, context?: PageProcessorContext) {
+        const instance = this;
+        $("input:button[value='取出']").on("click", function () {
+            const buttonId = $(this).attr("id") as string;
+            const index = parseInt(StringUtils.substringAfter(buttonId, "_"));
+            new DeprecatedTreasureBag(credential, treasureBag.index!)
+                .takeOut([index])
+                .then(() => {
+                    instance.doRefreshMutablePage(credential, context);
+                });
+        });
+        $("#takeOut").on("click", function () {
+            const indexList: number[] = [];
+            $("input:button[value='选择']")
+                .filter(function () {
+                    const buttonId = $(this).attr("id") as string;
+                    return buttonId.startsWith("selectStorage_");
+                })
+                .each(function (_idx, input) {
+                    const buttonId = $(input).attr("id") as string;
+                    if (PageUtils.isColorBlue(buttonId)) {
+                        const index = parseInt(StringUtils.substringAfter(buttonId, "_"));
+                        indexList.push(index);
+                    }
+                });
+            if (indexList.length === 0) {
+                instance.doScrollToPageTitle();
+                MessageBoard.publishWarning("没有选择装备或者物品！");
+                return;
+            }
+            new DeprecatedTreasureBag(credential, treasureBag.index!)
+                .takeOut(indexList)
                 .then(() => {
                     instance.doRefreshMutablePage(credential, context);
                 });
