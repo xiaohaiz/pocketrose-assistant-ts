@@ -323,6 +323,30 @@ class PersonalEquipmentManagementPageProcessor_Castle extends AbstractPersonalEq
                 html += "</tr>";
             }
 
+            // ----------------------------------------------------------------
+            // 百宝袋菜单栏
+            // ----------------------------------------------------------------
+            html += "<tr>";
+            html += "<td style='background-color:#F8F0E0;text-align:center' colspan='11'>";
+            html += "<table style='border-width:0;background-color:#F8F0E0;width:100%;margin:auto'>";
+            html += "<tbody>";
+            html += "<tr>";
+            html += "<td style='text-align:left'>";
+            if (page.spaceCount > 0) {
+                html += "<input type='button' class='mutableButton-2' " +
+                    "id='takeOutFromBag2' " +
+                    "value='从百宝袋中取出'>";
+            }
+            html += "</td>";
+            html += "<td style='text-align:right'>";
+            html += "<input type='button' id='closeBag2' class='mutableButton-2' value='关闭百宝袋'>";
+            html += "</td>";
+            html += "</tr>";
+            html += "</tbody>";
+            html += "</table>";
+            html += "</td>";
+            html += "</tr>";
+
             html += "</tbody>";
             html += "</table>";
 
@@ -345,6 +369,33 @@ class PersonalEquipmentManagementPageProcessor_Castle extends AbstractPersonalEq
                 new TreasureBag(credential).takeOut([index]).then(() => {
                     this.doRefreshMutablePage(credential, context);
                 });
+            });
+            $("#takeOutFromBag2").on("click", () => {
+                const indexList: number[] = [];
+                $(".select-2").each((idx, button) => {
+                    const buttonId = $(button).attr("id") as string;
+                    if (PageUtils.isColorBlue(buttonId)) {
+                        const index = parseInt(StringUtils.substringAfterLast(buttonId, "_"));
+                        indexList.push(index);
+                    }
+                });
+                if (indexList.length === 0) {
+                    this.doScrollToPageTitle();
+                    MessageBoard.publishWarning("没有选择百宝袋中的物品或装备！");
+                    return;
+                }
+                new TreasureBag(credential).takeOut(indexList).then(() => {
+                    this.doRefreshMutablePage(credential, context);
+                });
+            });
+
+            $("#closeBag2").on("click", () => {
+                if ($("#bagState").text() === "off") {
+                    return;
+                }
+                $("#bagState").text("off");
+                PageUtils.unbindEventBySpecifiedClass("mutableButton-2");
+                $("#bagList").html("").parent().hide();
             });
         });
     }
@@ -443,8 +494,6 @@ class PersonalEquipmentManagementPageProcessor_Castle extends AbstractPersonalEq
             html += "</table>";
             html += "</td>";
             html += "</tr>";
-            html += "</tbody>";
-            html += "</table>";
 
             html += "</tbody>";
             html += "</table>";
