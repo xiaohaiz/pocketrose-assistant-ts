@@ -281,6 +281,12 @@ class PersonalEquipmentManagementPageProcessor_Castle extends AbstractPersonalEq
             }
             html += "<tr>";
             html += "<td style='background-color:#E8E8D0'>"
+            if (equipment.selectable!) {
+                html += "<input type='button' value='选择' " +
+                    "style='color:grey' " +
+                    "class='mutableButton-1 select-1' " +
+                    "id='select1_" + equipment.index! + "'>";
+            }
             html += "</td>";
             html += "<td style='background-color:#EFE0C0'>" + equipment.usingHTML + "</td>"
             html += "<td style='background-color:#E0D0B0'>" + equipment.nameHTML + "</td>"
@@ -312,6 +318,16 @@ class PersonalEquipmentManagementPageProcessor_Castle extends AbstractPersonalEq
         html += "</table>";
 
         $("#equipmentList").html(html).parent().show();
+
+        // Bind select buttons
+        $(".select-1").on("click", event => {
+            const buttonId = $(event.target).attr("id")!;
+            if (PageUtils.isColorGrey(buttonId)) {
+                $(event.target).css("color", "blue");
+            } else if (PageUtils.isColorBlue(buttonId)) {
+                $(event.target).css("color", "grey");
+            }
+        });
     }
 
     #loadAndRenderBagList(credential: Credential, bagIndex: number, context?: PageProcessorContext) {
