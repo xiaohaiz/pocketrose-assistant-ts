@@ -165,7 +165,7 @@ class PersonalEquipmentManagementPageProcessor_Map2 extends AbstractPersonalEqui
         this.#bindCloseBagButton(credential, context);
 
         if (treasureBag !== null && $("#bagState").text() === "on") {
-            this.#doRenderStorageEquipmentList(credential, page, treasureBag, context);
+            this.#doRenderStorageEquipmentList(credential, treasureBag, context);
         }
     }
 
@@ -292,7 +292,6 @@ class PersonalEquipmentManagementPageProcessor_Map2 extends AbstractPersonalEqui
     }
 
     #doRenderStorageEquipmentList(credential: Credential,
-                                  page: PersonalEquipmentManagementPage,
                                   treasureBag: Equipment,
                                   context?: PageProcessorContext) {
         new TreasureBag(credential)
