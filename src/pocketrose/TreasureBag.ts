@@ -80,6 +80,26 @@ class TreasureBag {
         };
         return await action();
     }
+
+    async tryTakeOut(count: number): Promise<void> {
+        return await (() => {
+            return new Promise<void>((resolve, reject) => {
+                if (count <= 0) {
+                    reject();
+                    return;
+                }
+                const request = this.#credential.asRequestMap();
+                request.set("mode", "GETOUTBAG");
+                for (let i = 0; i < count; i++) {
+                    request.set("item" + i, i.toString());
+                }
+                NetworkUtils.post("mydata.cgi", request).then(html => {
+                    MessageBoard.processResponseMessage(html);
+                    resolve();
+                });
+            });
+        })();
+    }
 }
 
 export = TreasureBag;

@@ -335,6 +335,61 @@ class PersonalEquipmentManagementPageProcessor_Castle extends AbstractPersonalEq
                  page: PersonalEquipmentManagementPage,
                  bagIndex: number,
                  context?: PageProcessorContext) {
+        if (bagIndex < 0) {
+            let html = "";
+            html += "<table style='border-width:0;background-color:#888888;text-align:center;width:100%;margin:auto'>";
+            html += "<tbody>";
+            html += "<tr>";
+            html += "<td style='background-color:darkgreen;color:wheat;font-weight:bold;font-size:120%;text-align:center'>＜ 百 宝 袋 ＞</td>";
+            html += "</tr>";
+            html += "<tr>";
+            html += "<th style='background-color:#E8E8D0;text-align:center;color:navy;font-weight:bold'>百宝袋丢失了呀？那只能为您提供受限的功能了。</th>"
+            html += "</tr>";
+            // ----------------------------------------------------------------
+            // 百宝袋菜单栏
+            // ----------------------------------------------------------------
+            html += "<tr>";
+            html += "<td style='background-color:#F8F0E0;text-align:center' colspan='11'>";
+            html += "<table style='border-width:0;background-color:#F8F0E0;width:100%;margin:auto'>";
+            html += "<tbody>";
+            html += "<tr>";
+            html += "<td style='text-align:left'>";
+            if (page.spaceCount > 0) {
+                html += "<input type='button' class='mutableButton-2' " +
+                    "id='tryTakeOutFromBag2' " +
+                    "value='从百宝袋中盲取'>";
+            }
+            html += "</td>";
+            html += "<td style='text-align:right'>";
+            html += "<input type='button' id='closeBag2' class='mutableButton-2' value='关闭百宝袋'>";
+            html += "</td>";
+            html += "</tr>";
+            html += "</tbody>";
+            html += "</table>";
+            html += "</td>";
+            html += "</tr>";
+            html += "</tbody>";
+            html += "</table>";
+
+            $("#bagList").html(html).parent().show();
+
+            $("#tryTakeOutFromBag2").on("click", () => {
+                new TreasureBag(credential).tryTakeOut(page.spaceCount).then(() => {
+                    this.doRefreshMutablePage(credential, context);
+                });
+            });
+
+            $("#closeBag2").on("click", () => {
+                if ($("#bagState").text() === "off") {
+                    return;
+                }
+                $("#bagState").text("off");
+                PageUtils.unbindEventBySpecifiedClass("mutableButton-2");
+                $("#bagList").html("").parent().hide();
+            });
+
+            return;
+        }
         new TreasureBag(credential).open(bagIndex).then(bagPage => {
             const equipmentList = bagPage.sortedEquipmentList;
 
