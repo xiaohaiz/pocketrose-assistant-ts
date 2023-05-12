@@ -196,6 +196,9 @@ class PersonalEquipmentManagementPageProcessor_Castle extends AbstractPersonalEq
         html += "</tr>";
         html += "<tr>";
         html += "<td style='text-align:right' colspan='2'>";
+        if (bagIndex >= 0) {
+            html += "<input type='button' id='takeGemsOutFromBag' class='mutableButton-1' value='取出袋中全部宝石'>";
+        }
         html += "<input type='button' id='putGemsIntoWarehouse' class='mutableButton-1' value='随身宝石全部入库'>";
         html += "</td>";
         html += "</tr>";
@@ -419,6 +422,29 @@ class PersonalEquipmentManagementPageProcessor_Castle extends AbstractPersonalEq
                     bank.depositAll().then(() => {
                         this.doRefreshMutablePage(credential, context);
                     });
+                });
+            });
+        });
+
+        $("#takeGemsOutFromBag").on("click", () => {
+            const bag = new TreasureBag(credential);
+            bag.open(bagIndex).then(bagPage => {
+                let count = 0;
+                const indexList: number[] = [];
+                for (const equipment of bagPage.equipmentList!) {
+                    if (equipment.name!.endsWith("宝石")) {
+                        count++;
+                        if (count <= page.spaceCount) {
+                            indexList.push(equipment.index!);
+                        }
+                    }
+                }
+                if (indexList.length === 0) {
+                    // Nothing found, ignore
+                    return;
+                }
+                bag.takeOut(indexList).then(() => {
+                    this.doRefreshMutablePage(credential, context);
                 });
             });
         });
