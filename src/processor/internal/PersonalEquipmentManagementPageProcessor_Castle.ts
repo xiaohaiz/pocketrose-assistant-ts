@@ -162,8 +162,8 @@ class PersonalEquipmentManagementPageProcessor_Castle extends AbstractPersonalEq
         html += "<tbody>";
         html += "<tr>";
         html += "<td style='text-align:left'>";
-        html += "<input type='button' id='use' class='mutableButton-1' value='使用装备'>";
-        html += "<input type='button' id='bag' class='mutableButton-1' value='入百宝袋'>";
+        html += "<input type='button' id='use1' class='mutableButton-1' value='使用装备'>";
+        html += "<input type='button' id='putIntoBag1' class='mutableButton-1' value='放入百宝袋'>";
         html += "</td>";
         html += "<td style='text-align:right'>";
         html += "<input type='button' id='openBag' class='mutableButton-1' value='打开百宝袋' disabled style='display:none'>";
@@ -215,6 +215,26 @@ class PersonalEquipmentManagementPageProcessor_Castle extends AbstractPersonalEq
             const buttonId = $(event.target).attr("id")!;
             const index = parseInt(StringUtils.substringAfterLast(buttonId, "_"));
             new CastleWarehouse(credential).putInto([index]).then(() => {
+                this.doRefreshMutablePage(credential, context);
+            });
+        });
+
+        // Bind use button
+        $("#use1").on("click", () => {
+            const indexList: number[] = [];
+            $(".select-1").each((idx, button) => {
+                const buttonId = $(button).attr("id") as string;
+                if (PageUtils.isColorBlue(buttonId)) {
+                    const index = parseInt(StringUtils.substringAfterLast(buttonId, "_"));
+                    indexList.push(index);
+                }
+            });
+            if (indexList.length === 0) {
+                this.doScrollToPageTitle();
+                MessageBoard.publishWarning("没有选择物品或装备！");
+                return;
+            }
+            new PersonalEquipmentManagement(credential).use(indexList).then(() => {
                 this.doRefreshMutablePage(credential, context);
             });
         });
