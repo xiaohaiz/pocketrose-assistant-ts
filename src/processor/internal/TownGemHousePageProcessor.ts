@@ -2,8 +2,7 @@ import Equipment from "../../common/Equipment";
 import NpcLoader from "../../core/NpcLoader";
 import Town from "../../core/Town";
 import TownLoader from "../../core/TownLoader";
-import EquipmentManagement from "../../pocket/personal/EquipmentManagement";
-import PersonalEquipmentManagement from "../../pocket/PersonalEquipmentManagement";
+import PersonalEquipmentManagement from "../../pocketrose/PersonalEquipmentManagement";
 import TownBank from "../../pocketrose/TownBank";
 import TownGemHouse from "../../pocketrose/TownGemHouse";
 import TownGemHousePage from "../../pocketrose/TownGemHousePage";
@@ -309,21 +308,20 @@ class TownGemHousePageProcessor extends PageProcessorCredentialSupport {
         $(".equipment_detail_class")
             .on("mouseenter", function () {
                 const index = parseInt(($(this).attr("id") as string).split("_")[1]);
-                new EquipmentManagement(credential).load()
-                    .then(page => {
-                        const equipment = page.findEquipment(index);
-                        if (equipment !== null) {
-                            let s = "";
-                            s += equipment.fullName;
-                            s += " ";
-                            s += "附加威力:" + equipment.additionalPower;
-                            s += " ";
-                            s += "附加重量:" + equipment.additionalWeight;
-                            s += " ";
-                            s += "附加幸运:" + equipment.additionalLuck;
-                            $("#equipment_detail").text(s);
-                        }
-                    });
+                new PersonalEquipmentManagement(credential).open().then(page => {
+                    const equipment = page.findEquipment(index);
+                    if (equipment !== null) {
+                        let s = "";
+                        s += equipment.fullName;
+                        s += " ";
+                        s += "附加威力:" + equipment.additionalPower;
+                        s += " ";
+                        s += "附加重量:" + equipment.additionalWeight;
+                        s += " ";
+                        s += "附加幸运:" + equipment.additionalLuck;
+                        $("#equipment_detail").text(s);
+                    }
+                });
             })
             .on("mouseleave", function () {
                 $("#equipment_detail").text("　");

@@ -3,12 +3,12 @@ import Town from "../../core/Town";
 import MapBuilder from "../../pocket/MapBuilder";
 import MapExplorer from "../../pocket/MapExplorer";
 import RoleLoader from "../../pocket/RoleLoader";
-import TownBank from "../../pocket/TownBank";
 import TownEntrance from "../../pocket/TownEntrance";
 import TravelPlan from "../../pocket/TravelPlan";
 import TravelPlanExecutor from "../../pocket/TravelPlanExecutor";
 import TreasureHint from "../../pocket/TreasureHint";
 import TreasureHintParser from "../../pocket/TreasureHintParser";
+import TownBank from "../../pocketrose/TownBank";
 import Coordinate from "../../util/Coordinate";
 import Credential from "../../util/Credential";
 import MessageBoard from "../../util/MessageBoard";
@@ -214,20 +214,14 @@ function doBindExchangeButton(credential: Credential) {
         // @ts-ignore
         request["mode"] = "CHANGEMAP2";
         const bank = new TownBank(credential);
-        bank.withdraw(10)
-            .then(success => {
-                if (!success) {
-                    MessageBoard.publishWarning("没钱你就回吧，晦气！");
-                    return;
-                }
-                NetworkUtils.sendPostRequest("town.cgi", request, function () {
-                    MessageBoard.publishMessage("交换藏宝图成功。");
-                    bank.deposit(undefined)
-                        .then(() => {
-                            doRefresh(credential);
-                        });
+        bank.withdraw(10).then(() => {
+            NetworkUtils.sendPostRequest("town.cgi", request, function () {
+                MessageBoard.publishMessage("交换藏宝图成功。");
+                bank.deposit().then(() => {
+                    doRefresh(credential);
                 });
             });
+        });
     });
 }
 
@@ -264,18 +258,13 @@ function doBindTreasureButton(credential: Credential) {
             .off("mouseleave");
 
         // 页面渲染完毕，开始探险
-        new TownBank(credential).withdraw(110)
-            .then(success => {
-                if (!success) {
-                    MessageBoard.publishWarning("没钱还学别人探险？");
-                    return;
-                }
-                new RoleLoader(credential).load()
-                    .then(role => {
-                        const town = role.town!;
-                        doStartTreasureSeeking(credential, candidates, town);
-                    });
-            });
+        new TownBank(credential).withdraw(110).then(() => {
+            new RoleLoader(credential).load()
+                .then(role => {
+                    const town = role.town!;
+                    doStartTreasureSeeking(credential, candidates, town);
+                });
+        });
     });
 }
 
@@ -372,19 +361,18 @@ function doSeekTreasure(credential: Credential,
             .then(() => {
                 new TownEntrance(credential).enter(town.id)
                     .then(() => {
-                        new TownBank(credential).deposit(undefined)
-                            .then(() => {
-                                MessageBoard.publishMessage("探险完成。");
-                                if (foundList.length > 0) {
-                                    MessageBoard.publishMessage("在无人处，悄悄检视了下探险的收入：");
-                                    for (let i = 0; i < foundList.length; i++) {
-                                        MessageBoard.publishMessage("<b style='color: yellow'>" + foundList[i] + "</b>");
-                                    }
+                        new TownBank(credential).deposit().then(() => {
+                            MessageBoard.publishMessage("探险完成。");
+                            if (foundList.length > 0) {
+                                MessageBoard.publishMessage("在无人处，悄悄检视了下探险的收入：");
+                                for (let i = 0; i < foundList.length; i++) {
+                                    MessageBoard.publishMessage("<b style='color: yellow'>" + foundList[i] + "</b>");
                                 }
-                                $("#returnButton")
-                                    .prop("disabled", false)
-                                    .attr("value", town.name + "欢迎您的归来");
-                            });
+                            }
+                            $("#returnButton")
+                                .prop("disabled", false)
+                                .attr("value", town.name + "欢迎您的归来");
+                        });
                     });
             });
     }

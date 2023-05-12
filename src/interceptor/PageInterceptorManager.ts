@@ -3,7 +3,6 @@ import CastleBankPageInterceptor from "./internal/CastleBankPageInterceptor";
 import CastleDashboardPageInterceptor from "./internal/CastleDashboardPageInterceptor";
 import CastlePostHousePageInterceptor from "./internal/CastlePostHousePageInterceptor";
 import CastleRanchPageInterceptor from "./internal/CastleRanchPageInterceptor";
-import CastleWarehousePageInterceptor from "./internal/CastleWarehousePageInterceptor";
 import LoginDashboardPageInterceptor from "./internal/LoginDashboardPageInterceptor";
 import MapDashboardPageInterceptor from "./internal/MapDashboardPageInterceptor";
 import MapPostHousePageInterceptor from "./internal/MapPostHousePageInterceptor";
@@ -41,7 +40,6 @@ class PageInterceptorManager {
             new CastleDashboardPageInterceptor(),
             new CastlePostHousePageInterceptor(),
             new CastleRanchPageInterceptor(),
-            new CastleWarehousePageInterceptor(),
             new LoginDashboardPageInterceptor(),
             new MapDashboardPageInterceptor(),
             new MapPostHousePageInterceptor(),

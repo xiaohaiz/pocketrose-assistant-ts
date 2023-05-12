@@ -4,7 +4,7 @@ import PetProfileLoader from "../../core/PetProfileLoader";
 import EquipmentParser from "../../pocket/EquipmentParser";
 import PetParser from "../../pocket/PetParser";
 import RoleLoader from "../../pocket/RoleLoader";
-import TownBank from "../../pocket/TownBank";
+import TownBank from "../../pocketrose/TownBank";
 import Credential from "../../util/Credential";
 import MessageBoard from "../../util/MessageBoard";
 import NetworkUtils from "../../util/NetworkUtils";
@@ -790,25 +790,19 @@ function doBindPetLoveButton(credential: Credential, buttonId: string, pet: Pet)
     $("#" + buttonId).on("click", function () {
         const amount = Math.ceil(100 - pet.love!);
         const bank = new TownBank(credential);
-        bank.withdraw(amount)
-            .then(success => {
-                if (!success) {
-                    MessageBoard.publishWarning("没钱就不要顾及宠物亲密度了！");
-                } else {
-                    const request = credential.asRequest();
-                    // @ts-ignore
-                    request["mode"] = "PETADDLOVE";
-                    // @ts-ignore
-                    request["select"] = pet.index;
-                    NetworkUtils.sendPostRequest("mydata.cgi", request, function (html) {
-                        MessageBoard.processResponseMessage(html);
-                        bank.deposit(undefined)
-                            .then(() => {
-                                doRefresh(credential);
-                            });
-                    });
-                }
+        bank.withdraw(amount).then(() => {
+            const request = credential.asRequest();
+            // @ts-ignore
+            request["mode"] = "PETADDLOVE";
+            // @ts-ignore
+            request["select"] = pet.index;
+            NetworkUtils.sendPostRequest("mydata.cgi", request, function (html) {
+                MessageBoard.processResponseMessage(html);
+                bank.deposit().then(() => {
+                    doRefresh(credential);
+                });
             });
+        });
     });
 }
 
@@ -859,20 +853,13 @@ function doBindPetConsecrateButton(credential: Credential, buttonId: string, pet
             return;
         }
         const bank = new TownBank(credential);
-        bank.withdraw(1000)
-            .then(success => {
-                if (!success) {
-                    MessageBoard.publishWarning("没钱玩什么献祭！");
-                    return;
-                }
-                consecratePet(credential, pet.index!)
-                    .then(() => {
-                        bank.deposit(undefined)
-                            .then(() => {
-                                doRefresh(credential);
-                            });
-                    });
+        bank.withdraw(1000).then(() => {
+            consecratePet(credential, pet.index!).then(() => {
+                bank.deposit().then(() => {
+                    doRefresh(credential);
+                });
             });
+        });
     });
 }
 
@@ -884,27 +871,21 @@ function doBindPetSendButton(credential: Credential, buttonId: string, pet: Pet)
             return;
         }
         const bank = new TownBank(credential);
-        bank.withdraw(10)
-            .then(success => {
-                if (!success) {
-                    MessageBoard.publishWarning("没钱还是自己留着宠物吧！");
-                    return;
-                }
-                const request = credential.asRequest();
-                // @ts-ignore
-                request["mode"] = "PET_SEND2";
-                // @ts-ignore
-                request["eid"] = receiver;
-                // @ts-ignore
-                request["select"] = pet.index;
-                NetworkUtils.sendPostRequest("town.cgi", request, function (html) {
-                    MessageBoard.processResponseMessage(html);
-                    bank.deposit(undefined)
-                        .then(() => {
-                            doRefresh(credential);
-                        });
+        bank.withdraw(10).then(() => {
+            const request = credential.asRequest();
+            // @ts-ignore
+            request["mode"] = "PET_SEND2";
+            // @ts-ignore
+            request["eid"] = receiver;
+            // @ts-ignore
+            request["select"] = pet.index;
+            NetworkUtils.sendPostRequest("town.cgi", request, function (html) {
+                MessageBoard.processResponseMessage(html);
+                bank.deposit().then(() => {
+                    doRefresh(credential);
                 });
             });
+        });
     });
 }
 

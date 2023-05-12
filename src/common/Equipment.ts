@@ -387,6 +387,33 @@ class Equipment {
         }
         return title;
     }
+
+    static sortEquipmentList(source: Equipment[]): Equipment[] {
+        const target: Equipment[] = [];
+        target.push(...source);
+        target.sort((a, b) => {
+            let ret = a.categoryOrder - b.categoryOrder;
+            if (ret !== 0) {
+                return ret;
+            }
+            let a1 = a.star! ? 1 : 0;
+            let b1 = b.star! ? 1 : 0;
+            ret = a1 - b1;
+            if (ret !== 0) {
+                return ret;
+            }
+            ret = b.power! - a.power!;
+            if (ret !== 0) {
+                return ret;
+            }
+            ret = a.fullName!.localeCompare(b.fullName);
+            if (ret !== 0) {
+                return ret;
+            }
+            return b.additionalPower! - a.additionalPower!;
+        });
+        return target;
+    }
 }
 
 function isAttributeHeavyArmor(name: string) {

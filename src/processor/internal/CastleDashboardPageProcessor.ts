@@ -33,6 +33,7 @@ class CastleDashboardPageProcessor implements PageProcessor {
             $("option[value='USE_ITEM']")
                 .css("background-color", "yellow")
                 .text("装备管理");
+            $("option[value='CASTLE_ITEM']").remove();
             $("option[value='CASTLE_SENDITEM']").remove();
         }
         if (SetupLoader.isPetManagementUIEnabled()) {

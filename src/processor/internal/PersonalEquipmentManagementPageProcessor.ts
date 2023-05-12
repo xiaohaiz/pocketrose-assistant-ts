@@ -1,12 +1,12 @@
 import Equipment from "../../common/Equipment";
+import EquipmentSet from "../../common/EquipmentSet";
 import NpcLoader from "../../core/NpcLoader";
 import SetupLoader from "../../core/SetupLoader";
 import EquipmentParser from "../../pocket/EquipmentParser";
-import EquipmentSet from "../../pocket/EquipmentSet";
 import EquipmentSetLoader from "../../pocket/EquipmentSetLoader";
 import RoleLoader from "../../pocket/RoleLoader";
 import RoleStatusLoader from "../../pocket/RoleStatusLoader";
-import TownBank from "../../pocket/TownBank";
+import TownBank from "../../pocketrose/TownBank";
 import CommentBoard from "../../util/CommentBoard";
 import Credential from "../../util/Credential";
 import MessageBoard from "../../util/MessageBoard";
@@ -634,20 +634,14 @@ function doBindSendButton(credential: Credential) {
         // @ts-ignore
         request["mode"] = "ITEM_SEND2";
         const bank = new TownBank(credential);
-        bank.withdraw(10)
-            .then(success => {
-                if (!success) {
-                    MessageBoard.publishWarning("没钱就不要学别人送装备了！");
-                } else {
-                    NetworkUtils.sendPostRequest("town.cgi", request, function (html) {
-                        MessageBoard.processResponseMessage(html);
-                        bank.deposit(undefined)
-                            .then(() => {
-                                doRefresh(credential);
-                            });
-                    });
-                }
+        bank.withdraw(10).then(() => {
+            NetworkUtils.sendPostRequest("town.cgi", request, function (html) {
+                MessageBoard.processResponseMessage(html);
+                bank.deposit().then(() => {
+                    doRefresh(credential);
+                });
             });
+        });
     });
 }
 
@@ -736,19 +730,14 @@ function doBindConsecrateButton(credential: Credential) {
         if (!confirm("请务必确认你将要祭奠的这些装备：" + consecrateCandidateNames.join())) {
             return;
         }
-        new TownBank(credential).withdraw(100)
-            .then(success => {
-                if (!success) {
-                    MessageBoard.publishWarning("没钱学别人玩什么祭奠！");
-                    return;
-                }
-                let html = "";
-                consecrateCandidates.forEach(it => {
-                    html += "<input type='hidden' name='item" + it + "' value='" + it + "'>";
-                });
-                $("#consecrateFormPayload").html(html);
-                $("#consecrateSubmit").trigger("click");
+        new TownBank(credential).withdraw(100).then(() => {
+            let html = "";
+            consecrateCandidates.forEach(it => {
+                html += "<input type='hidden' name='item" + it + "' value='" + it + "'>";
             });
+            $("#consecrateFormPayload").html(html);
+            $("#consecrateSubmit").trigger("click");
+        });
     });
 }
 

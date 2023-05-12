@@ -13,7 +13,7 @@ class CommentBoard {
         html += "</tr>";
         html += "</tbody>";
         html += "</table>";
-        $("div:last").before($("<div id='commentBoardContainer'></div>"));
+        $("body:first").find("div:last").before($("<div id='commentBoardContainer'></div>"));
         $("#commentBoardContainer").html(html);
     }
 

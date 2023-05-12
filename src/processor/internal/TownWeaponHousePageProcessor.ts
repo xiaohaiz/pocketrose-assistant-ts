@@ -1,6 +1,6 @@
 import NpcLoader from "../../core/NpcLoader";
 import TownLoader from "../../core/TownLoader";
-import DeprecatedTownBank from "../../pocket/bank/DeprecatedTownBank";
+import TownBank from "../../pocketrose/TownBank";
 import TownWeaponHouse from "../../pocketrose/TownWeaponHouse";
 import TownWeaponHousePage from "../../pocketrose/TownWeaponHousePage";
 import BankUtils from "../../util/BankUtils";
@@ -11,6 +11,9 @@ import PageUtils from "../../util/PageUtils";
 import PageProcessorContext from "../PageProcessorContext";
 import PageProcessorCredentialSupport from "../PageProcessorCredentialSupport";
 
+/**
+ * @deprecated
+ */
 class TownWeaponHousePageProcessor extends PageProcessorCredentialSupport {
 
     constructor() {
@@ -300,11 +303,9 @@ function doBindSellButton(page: TownWeaponHousePage, indexList: number[]) {
             new TownWeaponHouse(page.credential, page.townId)
                 .sell(index, page.discount!)
                 .then(() => {
-                    new DeprecatedTownBank(page.credential)
-                        .depositAll()
-                        .then(() => {
-                            doRefresh(page);
-                        });
+                    new TownBank(page.credential).deposit().then(() => {
+                        doRefresh(page);
+                    });
                 });
         });
     }
@@ -321,18 +322,16 @@ function doBindBuyButton(page: TownWeaponHousePage, indexList: number[]) {
             if (!confirm("确认要购买" + count + "把“" + merchandise.name + "”？大约需要再支取" + amount + "万GOLD。")) {
                 return;
             }
-            const bank = new DeprecatedTownBank(page.credential);
-            bank.withdraw(amount)
-                .then(() => {
-                    new TownWeaponHouse(page.credential, page.townId)
-                        .buy(index, count, page.discount!)
-                        .then(() => {
-                            bank.depositAll()
-                                .then(() => {
-                                    doRefresh(page);
-                                });
+            const bank = new TownBank(page.credential);
+            bank.withdraw(amount).then(() => {
+                new TownWeaponHouse(page.credential, page.townId)
+                    .buy(index, count, page.discount!)
+                    .then(() => {
+                        bank.deposit().then(() => {
+                            doRefresh(page);
                         });
-                })
+                    });
+            })
                 .catch(() => {
                     // Nothing changed, ignore.
                 });
