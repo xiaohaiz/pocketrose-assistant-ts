@@ -169,6 +169,11 @@ class PersonalEquipmentManagementPageProcessor_Castle extends AbstractPersonalEq
         html += "<table style='border-width:0;background-color:#F8F0E0;width:100%;margin:auto'>";
         html += "<tbody>";
         html += "<tr>";
+        html += "<td style='text-align:center;font-weight:bold' colspan='2'>";
+        html += "<span style='color:navy'>目前剩余空位数：</span><span style='color:red'>" + page.spaceCount + "</span>";
+        html += "</td>";
+        html += "</tr>";
+        html += "<tr>";
         html += "<td style='text-align:left'>";
         html += "<input type='button' id='use1' class='mutableButton-1' value='使用装备'>";
         html += "<input type='button' id='putIntoBag1' class='mutableButton-1' value='放入百宝袋' disabled style='display:none'>";
@@ -187,6 +192,11 @@ class PersonalEquipmentManagementPageProcessor_Castle extends AbstractPersonalEq
         html += "<input type='button' id='searchButton' class='mutableButton-1' value='找人'>";
         html += "<select id='peopleSelect'><option value=''>选择发送对象</select>";
         html += "<input type='button' id='sendButton' class='mutableButton-1' value='发送'>";
+        html += "</td>";
+        html += "</tr>";
+        html += "<tr>";
+        html += "<td style='text-align:right' colspan='2'>";
+        html += "<input type='button' id='putGemsIntoWarehouse' class='mutableButton-1' value='随身宝石全部入库'>";
         html += "</td>";
         html += "</tr>";
         html += "</tbody>";
@@ -411,6 +421,21 @@ class PersonalEquipmentManagementPageProcessor_Castle extends AbstractPersonalEq
                     });
                 });
             });
+        });
+
+        $("#putGemsIntoWarehouse").on("click", () => {
+            const indexList: number[] = [];
+            $(".select-1").each((idx, button) => {
+                const buttonId = $(button).attr("id") as string;
+                const index = parseInt(StringUtils.substringAfterLast(buttonId, "_"));
+                const equipment = page.findEquipment(index);
+                if (equipment !== null && equipment.name!.endsWith("宝石")) {
+                    $("#" + buttonId).css("color", "blue");
+                } else {
+                    $("#" + buttonId).css("color", "grey");
+                }
+            });
+            $("#putIntoWarehouse1").trigger("click");
         });
 
         // Render bag or warehouse if necessary

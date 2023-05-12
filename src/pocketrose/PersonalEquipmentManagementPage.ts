@@ -10,6 +10,15 @@ class PersonalEquipmentManagementPage {
         return 20 - this.equipmentList!.length;
     }
 
+    findEquipment(index: number) {
+        for (const equipment of this.equipmentList!) {
+            if (equipment.index === index) {
+                return equipment;
+            }
+        }
+        return null;
+    }
+
     findTreasureBag() {
         for (const equipment of this.equipmentList!) {
             if (equipment.isTreasureBag) {
