@@ -609,12 +609,12 @@ class PersonalEquipmentManagementPageProcessor_Castle extends AbstractPersonalEq
             html += "<td style='text-align:left'>";
             if (page.spaceCount > 0) {
                 html += "<input type='button' class='mutableButton-3' " +
-                    "id='takeOutFromWarehouse' " +
+                    "id='takeOutFromWarehouse3' " +
                     "value='从仓库中取出'>";
             }
             html += "</td>";
             html += "<td style='text-align:right'>";
-            html += "<input type='button' id='internalCloseWarehouse' class='mutableButton' value='关闭仓库'>";
+            html += "<input type='button' id='closeWarehouse3' class='mutableButton-3' value='关闭仓库'>";
             html += "</td>";
             html += "</tr>";
             html += "</tbody>";
@@ -646,6 +646,33 @@ class PersonalEquipmentManagementPageProcessor_Castle extends AbstractPersonalEq
                 new CastleWarehouse(credential).takeOut([index]).then(() => {
                     this.doRefreshMutablePage(credential, context);
                 });
+            });
+            $("#takeOutFromWarehouse3").on("click", () => {
+                const indexList: number[] = [];
+                $(".select-3").each((idx, button) => {
+                    const buttonId = $(button).attr("id") as string;
+                    if (PageUtils.isColorBlue(buttonId)) {
+                        const index = parseInt(StringUtils.substringAfterLast(buttonId, "_"));
+                        indexList.push(index);
+                    }
+                });
+                if (indexList.length === 0) {
+                    this.doScrollToPageTitle();
+                    MessageBoard.publishWarning("没有选择仓库中的物品或装备！");
+                    return;
+                }
+                new CastleWarehouse(credential).takeOut(indexList).then(() => {
+                    this.doRefreshMutablePage(credential, context);
+                });
+            });
+
+            $("#closeWarehouse3").on("click", () => {
+                if ($("#warehouseState").text() === "off") {
+                    return;
+                }
+                $("#warehouseState").text("off");
+                PageUtils.unbindEventBySpecifiedClass("mutableButton-3");
+                $("#warehouseList").html("").parent().hide();
             });
         });
     }
