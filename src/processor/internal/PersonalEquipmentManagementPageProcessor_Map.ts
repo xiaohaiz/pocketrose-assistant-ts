@@ -1,5 +1,4 @@
 import Equipment from "../../common/Equipment";
-import DeprecatedTreasureBag from "../../pocket/DeprecatedTreasureBag";
 import PersonalEquipmentManagement from "../../pocketrose/PersonalEquipmentManagement";
 import PersonalEquipmentManagementPage from "../../pocketrose/PersonalEquipmentManagementPage";
 import TreasureBag from "../../pocketrose/TreasureBag";
@@ -235,7 +234,7 @@ class PersonalEquipmentManagementPageProcessor_Map extends AbstractPersonalEquip
         $("input:button[value='入袋']").on("click", function () {
             const buttonId = $(this).attr("id") as string;
             const index = parseInt(StringUtils.substringAfter(buttonId, "_"));
-            new DeprecatedTreasureBag(credential, treasureBag.index!)
+            new TreasureBag(credential)
                 .putInto([index])
                 .then(() => {
                     instance.doRefreshMutablePage(credential, context);
@@ -396,7 +395,7 @@ class PersonalEquipmentManagementPageProcessor_Map extends AbstractPersonalEquip
         $("input:button[value='取出']").on("click", function () {
             const buttonId = $(this).attr("id") as string;
             const index = parseInt(StringUtils.substringAfter(buttonId, "_"));
-            new DeprecatedTreasureBag(credential, treasureBag.index!)
+            new TreasureBag(credential)
                 .takeOut([index])
                 .then(() => {
                     instance.doRefreshMutablePage(credential, context);
@@ -421,7 +420,7 @@ class PersonalEquipmentManagementPageProcessor_Map extends AbstractPersonalEquip
                 MessageBoard.publishWarning("没有选择装备或者物品！");
                 return;
             }
-            new DeprecatedTreasureBag(credential, treasureBag.index!)
+            new TreasureBag(credential)
                 .takeOut(indexList)
                 .then(() => {
                     instance.doRefreshMutablePage(credential, context);
