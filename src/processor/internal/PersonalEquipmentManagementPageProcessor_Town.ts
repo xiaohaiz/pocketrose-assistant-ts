@@ -65,6 +65,43 @@ class PersonalEquipmentManagementPageProcessor_Town extends AbstractPersonalEqui
                       bagIndex: number,
                       context?: PageProcessorContext) {
         $("#bagIndex").text(bagIndex);
+
+        let html = "";
+        html += "<table style='border-width:0;background-color:#888888;text-align:center;width:100%;margin:auto'>";
+        html += "<tbody>";
+        html += "<tr>";
+        html += "<td style='background-color:darkred;color:wheat;font-weight:bold;font-size:120%;text-align:center' " +
+            "colspan='22'>＜ 随 身 装 备 ＞</td>";
+        html += "</tr>";
+        html += "<tr>";
+        html += "<th style='background-color:#E8E8D0'>选择</th>"
+        html += "<th style='background-color:#EFE0C0'>装备</th>"
+        html += "<th style='background-color:#E0D0B0'>名字</th>"
+        html += "<th style='background-color:#EFE0C0'>种类</th>"
+        html += "<th style='background-color:#E0D0B0'>效果</th>"
+        html += "<th style='background-color:#EFE0C0'>重量</th>"
+        html += "<th style='background-color:#EFE0C0'>耐久</th>"
+        html += "<th style='background-color:#E0D0B0'>职需</th>"
+        html += "<th style='background-color:#E0D0B0'>攻需</th>"
+        html += "<th style='background-color:#E0D0B0'>防需</th>"
+        html += "<th style='background-color:#E0D0B0'>智需</th>"
+        html += "<th style='background-color:#E0D0B0'>精需</th>"
+        html += "<th style='background-color:#E0D0B0'>速需</th>"
+        html += "<th style='background-color:#EFE0C0'>威＋</th>"
+        html += "<th style='background-color:#EFE0C0'>重＋</th>"
+        html += "<th style='background-color:#EFE0C0'>幸＋</th>"
+        html += "<th style='background-color:#E0D0B0'>经验</th>"
+        html += "<th style='background-color:#EFE0C0'>属性</th>"
+        html += "<th style='background-color:#E8E8D0'>使用</th>"
+        html += "<th style='background-color:#E8E8D0'>修理</th>"
+        html += "<th style='background-color:#E8E8D0'>入袋</th>"
+        html += "<th style='background-color:#E8E8D0'>发送</th>"
+        html += "</tr>";
+
+        html += "</tbody>";
+        html += "</table>";
+
+        $("#equipmentList").html(html).parent().show();
     }
 }
 
