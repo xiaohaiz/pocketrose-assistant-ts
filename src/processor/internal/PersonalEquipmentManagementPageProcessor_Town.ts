@@ -157,6 +157,45 @@ class PersonalEquipmentManagementPageProcessor_Town extends AbstractPersonalEqui
             html += "</tr>";
         }
 
+        // ------------------------------------------------------------------------
+        // 装备菜单栏
+        // ------------------------------------------------------------------------
+        html += "<tr>";
+        html += "<td style='background-color:#F8F0E0;text-align:center' colspan='22'>";
+        html += "<table style='border-width:0;background-color:#F8F0E0;width:100%;margin:auto'>";
+        html += "<tbody>";
+        html += "<tr>";
+        html += "<td style='text-align:center;font-weight:bold' colspan='2'>";
+        html += "<span style='color:navy'>目前剩余空位数：</span><span style='color:red'>" + page.spaceCount + "</span>";
+        html += "</td>";
+        html += "</tr>";
+        html += "<tr>";
+        html += "<td style='text-align:left'>";
+        html += "<input type='button' id='useButton' class='mutableButton-1' value='使用装备'>";
+        html += "<input type='button' id='storeButton' class='mutableButton-1' value='放入百宝袋' disabled style='display:none'>";
+        html += "</td>";
+        html += "<td style='text-align:right'>";
+        html += "<input type='button' id='openBagButton' class='mutableButton-1' value='打开百宝袋' disabled style='display:none'>";
+        html += "<input type='button' id='closeBagButton' class='mutableButton-1' value='关闭百宝袋' disabled style='display:none'>";
+        html += "</td>";
+        html += "</tr>";
+        html += "<tr>";
+        html += "<td style='text-align:left' colspan='2'>";
+        html += "<input type='text' id='searchName' size='15' maxlength='20'>";
+        html += "<input type='button' id='searchButton' class='mutableButton-1' value='找人'>";
+        html += "<select id='peopleSelect'><option value=''>选择发送对象</select>";
+        html += "<input type='button' id='sendButton' class='mutableButton-1' value='发送'>";
+        html += "</td>";
+        html += "</tr>";
+        html += "<tr style='display:none'>";
+        html += "<td style='text-align:right' colspan='2'>";
+        html += "</td>";
+        html += "</tr>";
+        html += "</tbody>";
+        html += "</table>";
+        html += "</td>";
+        html += "</tr>";
+
         html += "</tbody>";
         html += "</table>";
 
