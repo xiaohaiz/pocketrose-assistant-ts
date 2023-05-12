@@ -183,6 +183,15 @@ class PageUtils {
             $("style[type='text/css']").html(s);
         }
     }
+
+    static unbindEventBySpecifiedClass(className: string) {
+        if ($("." + className).length > 0) {
+            $("." + className)
+                .off("click")
+                .off("mouseenter")
+                .off("mouseleave");
+        }
+    }
 }
 
 const BUTTON_STYLES: {} = {

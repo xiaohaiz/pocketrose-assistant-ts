@@ -170,10 +170,10 @@ abstract class AbstractPersonalEquipmentManagementPageProcessor extends PageProc
     }
 
     doRefreshMutablePage(credential: Credential, context?: PageProcessorContext) {
-        $(".mutableButton")
-            .off("click")
-            .off("mouseenter")
-            .off("mouseleave");
+        PageUtils.unbindEventBySpecifiedClass("mutableButton-1");
+        PageUtils.unbindEventBySpecifiedClass("mutableButton-2");
+        PageUtils.unbindEventBySpecifiedClass("mutableButton-3");
+
         $("#equipmentList").parent().hide();
         $("#bagList").parent().hide();
         $("#warehouseList").parent().hide();
