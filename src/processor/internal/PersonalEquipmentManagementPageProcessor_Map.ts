@@ -1,9 +1,9 @@
 import Equipment from "../../common/Equipment";
 import Role from "../../common/Role";
 import NpcLoader from "../../core/NpcLoader";
+import DeprecatedPersonalEquipmentManagement from "../../pocket/DeprecatedPersonalEquipmentManagement";
+import DeprecatedPersonalEquipmentManagementPage from "../../pocket/DeprecatedPersonalEquipmentManagementPage";
 import DeprecatedTreasureBag from "../../pocket/DeprecatedTreasureBag";
-import PersonalEquipmentManagement from "../../pocket/PersonalEquipmentManagement";
-import PersonalEquipmentManagementPage from "../../pocket/PersonalEquipmentManagementPage";
 import Coordinate from "../../util/Coordinate";
 import Credential from "../../util/Credential";
 import MessageBoard from "../../util/MessageBoard";
@@ -25,7 +25,7 @@ const welcomeMessage: string = "<b style='font-size:120%;color:wheat'>真是难�
 
 function doProcess(coordinate: Coordinate) {
     // 解析原始的页面信息
-    const page = PersonalEquipmentManagement.parsePage(PageUtils.currentPageHtml());
+    const page = DeprecatedPersonalEquipmentManagement.parsePage(PageUtils.currentPageHtml());
 
     // 重组旧的页面
     PageUtils.removeUnusedHyperLinks();
@@ -162,7 +162,7 @@ function doRefresh(credential: Credential) {
     $(".mutableElement").off("click");
     $("#equipmentList").html("").parent().hide();
     $("#storageEquipmentList").html("").parent().hide();
-    new PersonalEquipmentManagement(credential)
+    new DeprecatedPersonalEquipmentManagement(credential)
         .open()
         .then(page => {
             doRenderRole(page.role);
@@ -178,7 +178,7 @@ function doRenderRole(role: Role | undefined) {
     }
 }
 
-function doRenderEquipmentList(page: PersonalEquipmentManagementPage) {
+function doRenderEquipmentList(page: DeprecatedPersonalEquipmentManagementPage) {
     if (page.equipmentCount === 0) {
         return;
     }
@@ -342,7 +342,7 @@ function doBindUseButton(credential: Credential) {
             continue;
         }
         $("#" + buttonId).on("click", function () {
-            new PersonalEquipmentManagement(credential)
+            new DeprecatedPersonalEquipmentManagement(credential)
                 .use([i])
                 .then(() => {
                     doRefresh(credential);
@@ -368,7 +368,7 @@ function doBindUseButton(credential: Credential) {
             MessageBoard.publishWarning("没有选择装备或者物品！");
             return;
         }
-        new PersonalEquipmentManagement(credential)
+        new DeprecatedPersonalEquipmentManagement(credential)
             .use(indexList)
             .then(() => {
                 doRefresh(credential);
@@ -436,7 +436,7 @@ function doBindCloseBagButton(credential: Credential) {
     });
 }
 
-function doRenderStorageEquipmentList(page: PersonalEquipmentManagementPage, treasureBag: Equipment) {
+function doRenderStorageEquipmentList(page: DeprecatedPersonalEquipmentManagementPage, treasureBag: Equipment) {
     new DeprecatedTreasureBag(page.credential, treasureBag.index!)
         .open()
         .then(equipmentList => {

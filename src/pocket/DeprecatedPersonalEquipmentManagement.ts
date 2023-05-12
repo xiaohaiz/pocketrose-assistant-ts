@@ -4,13 +4,13 @@ import MessageBoard from "../util/MessageBoard";
 import NetworkUtils from "../util/NetworkUtils";
 import PageUtils from "../util/PageUtils";
 import StringUtils from "../util/StringUtils";
+import DeprecatedPersonalEquipmentManagementPage from "./DeprecatedPersonalEquipmentManagementPage";
 import EquipmentParser from "./EquipmentParser";
-import PersonalEquipmentManagementPage from "./PersonalEquipmentManagementPage";
 
 /**
  * @deprecated
  */
-class PersonalEquipmentManagement {
+class DeprecatedPersonalEquipmentManagement {
 
     readonly #credential: Credential;
 
@@ -22,14 +22,14 @@ class PersonalEquipmentManagement {
         return doParsePage(pageHtml);
     }
 
-    async open(): Promise<PersonalEquipmentManagementPage> {
+    async open(): Promise<DeprecatedPersonalEquipmentManagementPage> {
         const action = (credential: Credential) => {
-            return new Promise<PersonalEquipmentManagementPage>(resolve => {
+            return new Promise<DeprecatedPersonalEquipmentManagementPage>(resolve => {
                 const request = credential.asRequestMap();
                 request.set("mode", "USE_ITEM");
                 NetworkUtils.post("mydata.cgi", request)
                     .then(pageHtml => {
-                        const page = PersonalEquipmentManagement.parsePage(pageHtml);
+                        const page = DeprecatedPersonalEquipmentManagement.parsePage(pageHtml);
                         resolve(page);
                     });
             });
@@ -63,13 +63,13 @@ class PersonalEquipmentManagement {
 
 function doParsePage(pageHtml: string) {
     const credential = PageUtils.parseCredential(pageHtml);
-    const page = new PersonalEquipmentManagementPage(credential);
+    const page = new DeprecatedPersonalEquipmentManagementPage(credential);
     doParseRole(pageHtml, page);
     doParseEquipmentList(pageHtml, page);
     return page;
 }
 
-function doParseRole(pageHtml: string, page: PersonalEquipmentManagementPage) {
+function doParseRole(pageHtml: string, page: DeprecatedPersonalEquipmentManagementPage) {
     const role = new Role();
     $(pageHtml)
         .find("td:contains('ＬＶ')")
@@ -122,8 +122,8 @@ function doParseRole(pageHtml: string, page: PersonalEquipmentManagementPage) {
     page.role = role;
 }
 
-function doParseEquipmentList(pageHtml: string, page: PersonalEquipmentManagementPage) {
+function doParseEquipmentList(pageHtml: string, page: DeprecatedPersonalEquipmentManagementPage) {
     page.equipmentList = EquipmentParser.parsePersonalItemList(pageHtml);
 }
 
-export = PersonalEquipmentManagement;
+export = DeprecatedPersonalEquipmentManagement;

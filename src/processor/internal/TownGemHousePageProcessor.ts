@@ -2,8 +2,8 @@ import Equipment from "../../common/Equipment";
 import NpcLoader from "../../core/NpcLoader";
 import Town from "../../core/Town";
 import TownLoader from "../../core/TownLoader";
+import DeprecatedPersonalEquipmentManagement from "../../pocket/DeprecatedPersonalEquipmentManagement";
 import EquipmentManagement from "../../pocket/personal/EquipmentManagement";
-import PersonalEquipmentManagement from "../../pocket/PersonalEquipmentManagement";
 import TownBank from "../../pocketrose/TownBank";
 import TownGemHouse from "../../pocketrose/TownGemHouse";
 import TownGemHousePage from "../../pocketrose/TownGemHousePage";
@@ -526,7 +526,7 @@ class TownGemHousePageProcessor extends PageProcessorCredentialSupport {
         }
 
         if (gemCode === 1) {
-            new PersonalEquipmentManagement(credential).open().then(p => {
+            new DeprecatedPersonalEquipmentManagement(credential).open().then(p => {
                 const e = p.findEquipment(equipmentIndex);
                 if (e !== null && e.additionalPower! < 0) {
                     MessageBoard.publishMessage("当前装备镶嵌威力宝石时出现负数，中断转手工处理。");

@@ -6,7 +6,7 @@ import EquipmentParser from "./EquipmentParser";
 /**
  * @deprecated
  */
-class PersonalEquipmentManagementPage {
+class DeprecatedPersonalEquipmentManagementPage {
 
     readonly credential: Credential;
 
@@ -39,4 +39,4 @@ class PersonalEquipmentManagementPage {
     }
 }
 
-export = PersonalEquipmentManagementPage;
+export = DeprecatedPersonalEquipmentManagementPage;
