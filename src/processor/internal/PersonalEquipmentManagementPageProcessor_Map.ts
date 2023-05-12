@@ -10,7 +10,7 @@ import StringUtils from "../../util/StringUtils";
 import PageProcessorContext from "../PageProcessorContext";
 import AbstractPersonalEquipmentManagementPageProcessor from "./AbstractPersonalEquipmentManagementPageProcessor";
 
-class PersonalEquipmentManagementPageProcessor_Map2 extends AbstractPersonalEquipmentManagementPageProcessor {
+class PersonalEquipmentManagementPageProcessor_Map extends AbstractPersonalEquipmentManagementPageProcessor {
 
     doGeneratePageTitleHtml(context?: PageProcessorContext): string {
         return "＜＜  装 备 管 理 （ 地 图 模 式 ）  ＞＞";
@@ -431,4 +431,4 @@ class PersonalEquipmentManagementPageProcessor_Map2 extends AbstractPersonalEqui
 
 }
 
-export = PersonalEquipmentManagementPageProcessor_Map2;
+export = PersonalEquipmentManagementPageProcessor_Map;

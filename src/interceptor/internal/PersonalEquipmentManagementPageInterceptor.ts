@@ -4,15 +4,15 @@ import PersonalEquipmentManagementPageProcessor
     from "../../processor/internal/PersonalEquipmentManagementPageProcessor";
 import PersonalEquipmentManagementPageProcessor_Castle
     from "../../processor/internal/PersonalEquipmentManagementPageProcessor_Castle";
-import PersonalEquipmentManagementPageProcessor_Map2
-    from "../../processor/internal/PersonalEquipmentManagementPageProcessor_Map2";
+import PersonalEquipmentManagementPageProcessor_Map
+    from "../../processor/internal/PersonalEquipmentManagementPageProcessor_Map";
 import PageProcessorContext from "../../processor/PageProcessorContext";
 import PageInterceptor from "../PageInterceptor";
 
 class PersonalEquipmentManagementPageInterceptor implements PageInterceptor {
 
     readonly #inCastleProcessor = new PersonalEquipmentManagementPageProcessor_Castle();
-    readonly #inMapProcessor = new PersonalEquipmentManagementPageProcessor_Map2();
+    readonly #inMapProcessor = new PersonalEquipmentManagementPageProcessor_Map();
 
     accept(cgi: string, pageText: string): boolean {
         if (cgi === "mydata.cgi") {
