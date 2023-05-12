@@ -1,4 +1,5 @@
 import Equipment from "../../common/Equipment";
+import CastleEquipmentExpressHouse from "../../pocketrose/CastleEquipmentExpressHouse";
 import CastleWarehouse from "../../pocketrose/CastleWarehouse";
 import PersonalEquipmentManagement from "../../pocketrose/PersonalEquipmentManagement";
 import PersonalEquipmentManagementPage from "../../pocketrose/PersonalEquipmentManagementPage";
@@ -173,6 +174,13 @@ class PersonalEquipmentManagementPageProcessor_Castle extends AbstractPersonalEq
         html += "<input type='button' id='closeWarehouse' class='mutableButton-1' value='关闭仓库'>";
         html += "</td>";
         html += "</tr>";
+        html += "<tr>";
+        html += "<td style='text-align:left' colspan='2'>";
+        html += "<input type='text' id='searchName' size='15' maxlength='20'>";
+        html += "<input type='button' id='searchButton' class='mutableButton-1' value='找人'>";
+        html += "<select id='peopleSelect'><option value=''>选择发送对象</select>";
+        html += "</td>";
+        html += "</tr>";
         html += "</tbody>";
         html += "</table>";
         html += "</td>";
@@ -319,6 +327,18 @@ class PersonalEquipmentManagementPageProcessor_Castle extends AbstractPersonalEq
             $("#warehouseState").text("off");
             PageUtils.unbindEventBySpecifiedClass("mutableButton-3");
             $("#warehouseList").html("").parent().hide();
+        });
+
+        $("#searchButton").on("click", () => {
+            const s = $("#searchName").val();
+            if (s === undefined || (s as string).trim() === "") {
+                this.doScrollToPageTitle();
+                MessageBoard.publishWarning("没有正确输入人名！");
+                return;
+            }
+            new CastleEquipmentExpressHouse(credential).search(s as string).then(optionListHtml => {
+                $("#peopleSelect").html(optionListHtml);
+            });
         });
 
         // Render bag or warehouse if necessary

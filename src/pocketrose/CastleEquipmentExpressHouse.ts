@@ -26,6 +26,25 @@ class CastleEquipmentExpressHouse {
         })();
     }
 
+    async search(name: string): Promise<string> {
+        return await (() => {
+            return new Promise<string>((resolve, reject) => {
+                if (name.trim() === "") {
+                    reject();
+                    return;
+                }
+                const request = this.#credential.asRequestMap();
+                request.set("mode", "CASTLE_SENDITEM");
+                // noinspection JSDeprecatedSymbols
+                request.set("serch", escape(name.trim()));
+                NetworkUtils.post("castle.cgi", request).then(html => {
+                    const optionListHtml = $(html).find("select:first").html();
+                    resolve(optionListHtml);
+                });
+            });
+        })();
+    }
+
     static parsePage(html: string): CastleEquipmentExpressHousePage {
         const role = new Role();
         $(html).find("td:contains('ＬＶ')")
