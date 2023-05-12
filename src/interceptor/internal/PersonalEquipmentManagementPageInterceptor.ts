@@ -1,16 +1,17 @@
 import LocationStateMachine from "../../core/LocationStateMachine";
 import SetupLoader from "../../core/SetupLoader";
-import PersonalEquipmentManagementPageProcessor
-    from "../../processor/internal/PersonalEquipmentManagementPageProcessor";
 import PersonalEquipmentManagementPageProcessor_Castle
     from "../../processor/internal/PersonalEquipmentManagementPageProcessor_Castle";
 import PersonalEquipmentManagementPageProcessor_Map
     from "../../processor/internal/PersonalEquipmentManagementPageProcessor_Map";
+import PersonalEquipmentManagementPageProcessor_Town
+    from "../../processor/internal/PersonalEquipmentManagementPageProcessor_Town";
 import PageProcessorContext from "../../processor/PageProcessorContext";
 import PageInterceptor from "../PageInterceptor";
 
 class PersonalEquipmentManagementPageInterceptor implements PageInterceptor {
 
+    readonly #inTownProcessor = new PersonalEquipmentManagementPageProcessor_Town();
     readonly #inCastleProcessor = new PersonalEquipmentManagementPageProcessor_Castle();
     readonly #inMapProcessor = new PersonalEquipmentManagementPageProcessor_Map();
 
@@ -27,8 +28,10 @@ class PersonalEquipmentManagementPageInterceptor implements PageInterceptor {
         }
         LocationStateMachine.create()
             .load()
-            .whenInTown(() => {
-                new PersonalEquipmentManagementPageProcessor().process();
+            .whenInTown(townId => {
+                const context = new PageProcessorContext();
+                context.set("townId", townId!);
+                this.#inTownProcessor.process(context);
             })
             .whenInCastle(castleName => {
                 const context = new PageProcessorContext();
