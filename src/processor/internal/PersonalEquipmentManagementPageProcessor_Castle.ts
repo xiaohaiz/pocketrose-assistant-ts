@@ -1,4 +1,5 @@
 import Equipment from "../../common/Equipment";
+import CastleBank from "../../pocketrose/CastleBank";
 import CastleEquipmentExpressHouse from "../../pocketrose/CastleEquipmentExpressHouse";
 import CastleWarehouse from "../../pocketrose/CastleWarehouse";
 import PersonalEquipmentManagement from "../../pocketrose/PersonalEquipmentManagement";
@@ -74,7 +75,7 @@ class PersonalEquipmentManagementPageProcessor_Castle extends AbstractPersonalEq
         html += "<tbody>";
         html += "<tr>";
         html += "<td style='background-color:darkred;color:wheat;font-weight:bold;font-size:120%;text-align:center' " +
-            "colspan='21'>＜ 随 身 装 备 ＞</td>";
+            "colspan='22'>＜ 随 身 装 备 ＞</td>";
         html += "</tr>";
         html += "<tr>";
         html += "<th style='background-color:#E8E8D0'>选择</th>"
@@ -98,6 +99,7 @@ class PersonalEquipmentManagementPageProcessor_Castle extends AbstractPersonalEq
         html += "<th style='background-color:#E8E8D0'>使用</th>"
         html += "<th style='background-color:#E8E8D0'>入袋</th>"
         html += "<th style='background-color:#E8E8D0'>入库</th>"
+        html += "<th style='background-color:#E8E8D0'>发送</th>"
         html += "</tr>";
 
         for (const equipment of page.equipmentList!) {
@@ -151,6 +153,11 @@ class PersonalEquipmentManagementPageProcessor_Castle extends AbstractPersonalEq
                     "id='putIntoWarehouse1_" + equipment.index! + "'>";
             }
             html += "</td>";
+            html += "<td style='background-color:#E8E8D0'>"
+            html += "<input type='button' value='发送' " +
+                "class='mutableButton-1 send-1' " +
+                "id='send1_" + equipment.index! + "' disabled style='display:none'>";
+            html += "</td>";
             html += "</tr>";
         }
 
@@ -158,7 +165,7 @@ class PersonalEquipmentManagementPageProcessor_Castle extends AbstractPersonalEq
         // 装备菜单栏
         // ------------------------------------------------------------------------
         html += "<tr>";
-        html += "<td style='background-color:#F8F0E0;text-align:center' colspan='21'>";
+        html += "<td style='background-color:#F8F0E0;text-align:center' colspan='22'>";
         html += "<table style='border-width:0;background-color:#F8F0E0;width:100%;margin:auto'>";
         html += "<tbody>";
         html += "<tr>";
@@ -190,6 +197,38 @@ class PersonalEquipmentManagementPageProcessor_Castle extends AbstractPersonalEq
         html += "</table>";
 
         $("#equipmentList").html(html).parent().show();
+
+        new CastleEquipmentExpressHouse(credential).open().then(expressPage => {
+            for (const equipment of expressPage.equipmentList!) {
+                const index = equipment.index!;
+                if (equipment.selectable) {
+                    $("#send1_" + index).prop("disabled", false).show();
+                } else {
+                    $("#send1_" + index).remove();
+                }
+            }
+            $(".send-1").on("click", event => {
+                const buttonId = $(event.target).attr("id")!;
+                const index = parseInt(StringUtils.substringAfterLast(buttonId, "_"));
+
+                const s = $("#peopleSelect").val();
+                if (s === undefined || (s as string).trim() === "") {
+                    this.doScrollToPageTitle();
+                    MessageBoard.publishWarning("没有选择发送对象！");
+                    return;
+                }
+
+                const bank = new CastleBank(credential);
+                bank.withdraw(10).then(() => {
+                    new CastleEquipmentExpressHouse(credential).send(s as string, [index]).then(() => {
+                        bank.depositAll().then(() => {
+                            this.doRefreshMutablePage(credential, context);
+                        });
+                    });
+                });
+
+            });
+        });
 
         // Bind select buttons
         $(".select-1").on("click", event => {
