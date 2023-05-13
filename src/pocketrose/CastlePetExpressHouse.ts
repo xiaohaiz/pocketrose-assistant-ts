@@ -17,7 +17,7 @@ class CastlePetExpressHouse {
                 request.set("serch", escape(searchName.trim()));
                 request.set("mode", "CASTLE_SENDPET");
                 NetworkUtils.post("castle.cgi", request).then(html => {
-                    const selectHtml = $(html).find("select:file").html();
+                    const selectHtml = $(html).find("select[name='eid']:first").html();
                     resolve(selectHtml);
                 });
             });

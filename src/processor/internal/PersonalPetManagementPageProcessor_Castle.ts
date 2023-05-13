@@ -4,6 +4,7 @@ import EquipmentParser from "../../pocket/EquipmentParser";
 import PetParser from "../../pocket/PetParser";
 import RoleLoader from "../../pocket/RoleLoader";
 import CastleBank from "../../pocketrose/CastleBank";
+import CastlePetExpressHouse from "../../pocketrose/CastlePetExpressHouse";
 import PersonalPetManagementPage from "../../pocketrose/PersonalPetManagementPage";
 import Credential from "../../util/Credential";
 import MessageBoard from "../../util/MessageBoard";
@@ -922,14 +923,8 @@ function doBindSearchButton(credential: Credential) {
             MessageBoard.publishWarning("接收人没有输入！");
             return;
         }
-        const request = credential.asRequest();
-        // @ts-ignore
-        request["mode"] = "PET_SEND";
-        // @ts-ignore
-        request["serch"] = escape(search.trim());
-        NetworkUtils.sendPostRequest("town.cgi", request, function (html) {
-            const optionHTML = $(html).find("select[name='eid']").html();
-            $("#receiverCandidates").html(optionHTML);
+        new CastlePetExpressHouse(credential).search(search as string).then(html => {
+            $("#receiverCandidates").html(html);
         });
     });
 }
