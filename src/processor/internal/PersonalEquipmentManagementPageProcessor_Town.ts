@@ -202,6 +202,29 @@ class PersonalEquipmentManagementPageProcessor_Town extends AbstractPersonalEqui
 
         $("#equipmentList").html(html).parent().show();
 
+        // --------------------------------------------------------------------
+        // 打开百宝袋 / 关闭百宝袋
+        // --------------------------------------------------------------------
+        if (bagIndex >= -1) {
+            $("#openBagButton").prop("disabled", false).show();
+            $("#closeBagButton").prop("disabled", false).show();
+            $("#openBagButton").on("click", () => {
+                if ($("#bagState").text() === "on") {
+                    return;
+                }
+                $("#bagState").text("on");
+                this.#renderBagUI(credential, page, bagIndex, context);
+            });
+            $("#closeBagButton").on("click", () => {
+                if ($("#bagState").text() === "off") {
+                    return;
+                }
+                $("#bagState").text("off");
+                PageUtils.unbindEventBySpecifiedClass("mutableButton-2");
+                $("#bagList").html("").parent().hide();
+            });
+        }
+
         if ($("#bagState").text() === "on") {
             this.#renderBagUI(credential, page, bagIndex, context);
         }
