@@ -1,6 +1,7 @@
 import TownLoader from "../../core/TownLoader";
 import PersonalEquipmentManagementPage from "../../pocketrose/PersonalEquipmentManagementPage";
 import PersonalStatus from "../../pocketrose/PersonalStatus";
+import TreasureBag from "../../pocketrose/TreasureBag";
 import Credential from "../../util/Credential";
 import PageUtils from "../../util/PageUtils";
 import PageProcessorContext from "../PageProcessorContext";
@@ -200,6 +201,149 @@ class PersonalEquipmentManagementPageProcessor_Town extends AbstractPersonalEqui
         html += "</table>";
 
         $("#equipmentList").html(html).parent().show();
+
+        if ($("#bagState").text() === "on") {
+            this.#renderBagUI(credential, page, bagIndex, context);
+        }
+    }
+
+    #renderBagUI(credential: Credential,
+                 page: PersonalEquipmentManagementPage,
+                 bagIndex: number,
+                 context?: PageProcessorContext) {
+        if (bagIndex < 0) {
+            this.#renderLostBagUI(credential, page, context)
+        } else {
+            this.#renderNormalBagUI(credential, page, bagIndex, context)
+        }
+    }
+
+    #renderLostBagUI(credential: Credential,
+                     page: PersonalEquipmentManagementPage,
+                     context?: PageProcessorContext) {
+        let html = "";
+        html += "<table style='border-width:0;background-color:#888888;text-align:center;width:100%;margin:auto'>";
+        html += "<tbody>";
+        html += "<tr>";
+        html += "<td style='background-color:darkgreen;color:wheat;font-weight:bold;font-size:120%;text-align:center'>＜ 百 宝 袋 ＞</td>";
+        html += "</tr>";
+        html += "<tr>";
+        html += "<th style='background-color:#E8E8D0;text-align:center;color:navy;font-weight:bold'>百宝袋丢失了呀？那只能为您提供受限的功能了。</th>"
+        html += "</tr>";
+        // ----------------------------------------------------------------
+        // 百宝袋菜单栏
+        // ----------------------------------------------------------------
+        html += "<tr>";
+        html += "<td style='background-color:#F8F0E0;text-align:center'>";
+        html += "<table style='border-width:0;background-color:#F8F0E0;width:100%;margin:auto'>";
+        html += "<tbody>";
+        html += "<tr>";
+        html += "<td style='text-align:left'>";
+        if (page.spaceCount > 0) {
+            html += "<input type='button' class='mutableButton-2' " +
+                "id='takeOutButton' " +
+                "value='从百宝袋中盲取'>";
+        }
+        html += "</td>";
+        html += "<td style='text-align:right'>";
+        html += "<input type='button' id='closeBag2' class='mutableButton-2' value='关闭百宝袋'>";
+        html += "</td>";
+        html += "</tr>";
+        html += "</tbody>";
+        html += "</table>";
+        html += "</td>";
+        html += "</tr>";
+        html += "</tbody>";
+        html += "</table>";
+
+        $("#bagList").html(html).parent().show();
+    }
+
+    #renderNormalBagUI(credential: Credential,
+                       page: PersonalEquipmentManagementPage,
+                       bagIndex: number,
+                       context?: PageProcessorContext) {
+        new TreasureBag(credential).open(bagIndex).then(bagPage => {
+            const equipmentList = bagPage.sortedEquipmentList;
+
+            let html = "";
+            html += "<table style='border-width:0;background-color:#888888;text-align:center;width:100%;margin:auto'>";
+            html += "<tbody>";
+            html += "<tr>";
+            html += "<td style='background-color:darkgreen;color:wheat;font-weight:bold;font-size:120%;text-align:center' colspan='11'>＜ 百 宝 袋 ＞</td>";
+            html += "</tr>";
+            html += "<tr>";
+            html += "<th style='background-color:#E8E8D0'>选择</th>"
+            html += "<th style='background-color:#E0D0B0'>名字</th>"
+            html += "<th style='background-color:#EFE0C0'>种类</th>"
+            html += "<th style='background-color:#E0D0B0'>效果</th>"
+            html += "<th style='background-color:#EFE0C0'>重量</th>"
+            html += "<th style='background-color:#EFE0C0'>耐久</th>"
+            html += "<th style='background-color:#EFE0C0'>威＋</th>"
+            html += "<th style='background-color:#EFE0C0'>重＋</th>"
+            html += "<th style='background-color:#EFE0C0'>幸＋</th>"
+            html += "<th style='background-color:#E0D0B0'>经验</th>"
+            html += "<th style='background-color:#E8E8D0'>取出</th>"
+            html += "</tr>";
+
+            for (const equipment of equipmentList) {
+                html += "<tr>";
+                html += "<td style='background-color:#E8E8D0'>";
+                if (page.spaceCount > 0) {
+                    html += "<input type='button' value='选择' " +
+                        "style='color:grey' " +
+                        "class='mutableButton-2 selectButton-2' " +
+                        "id='selectButton_2_" + equipment.index! + "'>";
+                }
+                html += "</td>";
+                html += "<td style='background-color:#E0D0B0'>" + equipment.nameHTML + "</td>";
+                html += "<td style='background-color:#EFE0C0'>" + equipment.category + "</td>";
+                html += "<td style='background-color:#E0D0B0'>" + equipment.power + "</td>";
+                html += "<td style='background-color:#EFE0C0'>" + equipment.weight + "</td>";
+                html += "<td style='background-color:#EFE0C0'>" + equipment.endureHtml + "</td>";
+                html += "<td style='background-color:#EFE0C0'>" + equipment.additionalPowerHtml + "</td>";
+                html += "<td style='background-color:#EFE0C0'>" + equipment.additionalWeightHtml + "</td>";
+                html += "<td style='background-color:#EFE0C0'>" + equipment.additionalLuckHtml + "</td>";
+                html += "<td style='background-color:#E0D0B0'>" + equipment.experienceHTML + "</td>";
+                html += "<td style='background-color:#E8E8D0'>";
+                if (page.spaceCount > 0) {
+                    html += "<input type='button' value='出袋' " +
+                        "class='mutableButton-2 takeOutButton-2' " +
+                        "id='takeOutButton_2_" + equipment.index! + "'>";
+                }
+                html += "</td>";
+                html += "</tr>";
+            }
+
+            // ----------------------------------------------------------------
+            // 百宝袋菜单栏
+            // ----------------------------------------------------------------
+            html += "<tr>";
+            html += "<td style='background-color:#F8F0E0;text-align:center' colspan='11'>";
+            html += "<table style='border-width:0;background-color:#F8F0E0;width:100%;margin:auto'>";
+            html += "<tbody>";
+            html += "<tr>";
+            html += "<td style='text-align:left'>";
+            if (page.spaceCount > 0) {
+                html += "<input type='button' class='mutableButton-2' " +
+                    "id='takeOutButton' " +
+                    "value='从百宝袋中取出'>";
+            }
+            html += "</td>";
+            html += "<td style='text-align:right'>";
+            html += "<input type='button' id='closeBagButton_2' class='mutableButton-2' value='关闭百宝袋'>";
+            html += "</td>";
+            html += "</tr>";
+            html += "</tbody>";
+            html += "</table>";
+            html += "</td>";
+            html += "</tr>";
+
+            html += "</tbody>";
+            html += "</table>";
+
+            $("#bagList").html(html).parent().show();
+        });
     }
 }
 

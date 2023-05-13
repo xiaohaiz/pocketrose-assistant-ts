@@ -492,7 +492,7 @@ class PersonalEquipmentManagementPageProcessor_Castle extends AbstractPersonalEq
             // 百宝袋菜单栏
             // ----------------------------------------------------------------
             html += "<tr>";
-            html += "<td style='background-color:#F8F0E0;text-align:center' colspan='11'>";
+            html += "<td style='background-color:#F8F0E0;text-align:center'>";
             html += "<table style='border-width:0;background-color:#F8F0E0;width:100%;margin:auto'>";
             html += "<tbody>";
             html += "<tr>";
