@@ -1,4 +1,5 @@
 import TownLoader from "../../core/TownLoader";
+import CastleEquipmentExpressHouse from "../../pocketrose/CastleEquipmentExpressHouse";
 import PersonalEquipmentManagement from "../../pocketrose/PersonalEquipmentManagement";
 import PersonalEquipmentManagementPage from "../../pocketrose/PersonalEquipmentManagementPage";
 import PersonalStatus from "../../pocketrose/PersonalStatus";
@@ -368,6 +369,41 @@ class PersonalEquipmentManagementPageProcessor_Town extends AbstractPersonalEqui
                 });
             });
         }
+
+        // --------------------------------------------------------------------
+        // 发送
+        // --------------------------------------------------------------------
+        $("#sendButton").on("click", () => {
+            const indexList: number[] = [];
+            $(".selectButton-1").each((idx, button) => {
+                const buttonId = $(button).attr("id") as string;
+                if (PageUtils.isColorBlue(buttonId)) {
+                    const index = parseInt(StringUtils.substringAfterLast(buttonId, "_"));
+                    indexList.push(index);
+                }
+            });
+            if (indexList.length === 0) {
+                this.doScrollToPageTitle();
+                MessageBoard.publishWarning("没有选择物品或装备！");
+                return;
+            }
+
+            const s = $("#peopleSelect").val();
+            if (s === undefined || (s as string).trim() === "") {
+                this.doScrollToPageTitle();
+                MessageBoard.publishWarning("没有选择发送对象！");
+                return;
+            }
+
+            const bank = new TownBank(credential, context?.get("townId"));
+            bank.withdraw(10).then(() => {
+                new CastleEquipmentExpressHouse(credential).send(s as string, indexList).then(() => {
+                    bank.deposit().then(() => {
+                        this.doRefreshMutablePage(credential, context);
+                    });
+                });
+            });
+        });
 
         if ($("#bagState").text() === "on") {
             this.#renderBagUI(credential, page, bagIndex, context);
