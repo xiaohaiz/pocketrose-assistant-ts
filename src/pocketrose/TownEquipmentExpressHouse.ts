@@ -32,6 +32,25 @@ class TownEquipmentExpressHouse {
         })();
     }
 
+    async search(name: string): Promise<string> {
+        return await (() => {
+            return new Promise<string>((resolve, reject) => {
+                if (name.trim() === "") {
+                    reject();
+                    return;
+                }
+                const request = this.#credential.asRequestMap();
+                request.set("mode", "ITEM_SEND");
+                // noinspection JSDeprecatedSymbols
+                request.set("serch", escape(name.trim()));
+                NetworkUtils.post("town.cgi", request).then(html => {
+                    const optionListHtml = $(html).find("select:first").html();
+                    resolve(optionListHtml);
+                });
+            });
+        })();
+    }
+
     static parsePage(html: string): TownEquipmentExpressHousePage {
         const role = new Role();
         $(html).find("td:contains('ＬＶ')")
