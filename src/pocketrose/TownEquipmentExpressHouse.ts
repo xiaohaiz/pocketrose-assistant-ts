@@ -1,6 +1,7 @@
 import Equipment from "../common/Equipment";
 import Role from "../common/Role";
 import Credential from "../util/Credential";
+import MessageBoard from "../util/MessageBoard";
 import NetworkUtils from "../util/NetworkUtils";
 import StringUtils from "../util/StringUtils";
 import TownEquipmentExpressHousePage from "./TownEquipmentExpressHousePage";
@@ -46,6 +47,31 @@ class TownEquipmentExpressHouse {
                 NetworkUtils.post("town.cgi", request).then(html => {
                     const optionListHtml = $(html).find("select:first").html();
                     resolve(optionListHtml);
+                });
+            });
+        })();
+    }
+
+    async send(target: string, indexList: number[]): Promise<void> {
+        return await (() => {
+            return new Promise<void>((resolve, reject) => {
+                if (target.trim() === "" || indexList.length === 0) {
+                    reject();
+                    return;
+                }
+                const request = this.#credential.asRequestMap();
+                request.set("mode", "ITEM_SEND2");
+                request.set("eid", target.trim());
+                for (const index of indexList) {
+                    request.set("item" + index, index.toString());
+                }
+                NetworkUtils.post("town.cgi", request).then(html => {
+                    if (html.includes("所持金不足")) {
+                        reject();
+                    } else {
+                        MessageBoard.processResponseMessage(html);
+                        resolve();
+                    }
                 });
             });
         })();
