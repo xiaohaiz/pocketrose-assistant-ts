@@ -156,6 +156,7 @@ function doRender(credential: Credential, petList: Pet[], studyStatus: number[])
         html += "<input type='button' class='PetUIButton' value='卸下' id='pet_" + pet.index + "_uninstall'>";
         html += "<input type='button' class='PetUIButton' value='使用' id='pet_" + pet.index + "_install'>";
         html += "<input type='button' class='PetUIButton' value='入笼' id='pet_" + pet.index + "_cage'>";
+        html += "<input type='button' class='PetUIButton grazeButton' value='放牧' id='pet_" + pet.index + "_graze'>";
         html += "<input type='button' class='PetUIButton' value='亲密' id='pet_" + pet.index + "_love'>";
         html += "<input type='button' class='PetUIButton' value='参赛' id='pet_" + pet.index + "_league'>";
         html += "<input type='button' class='PetUIButton' value='献祭' id='pet_" + pet.index + "_consecrate'>";
@@ -219,6 +220,10 @@ function doRender(credential: Credential, petList: Pet[], studyStatus: number[])
             $("#" + buttonId).css("color", "grey");
 
             buttonId = "pet_" + pet.index + "_cage";
+            $("#" + buttonId).prop("disabled", true);
+            $("#" + buttonId).css("color", "grey");
+
+            buttonId = "pet_" + pet.index + "_graze";
             $("#" + buttonId).prop("disabled", true);
             $("#" + buttonId).css("color", "grey");
         }
@@ -310,6 +315,8 @@ function doRender(credential: Credential, petList: Pet[], studyStatus: number[])
     doBindPetFuture(petList);
     // 绑定按钮点击事件处理
     doBind(credential, petList);
+
+    doBindGrazeButton(credential);
 
     if ($("#goldenCageStatus").text() === "on") {
         doRenderGoldenCage(credential);
@@ -1049,6 +1056,20 @@ function doRenderRanch(credential: Credential) {
 
         $("#ranchList").html(html).parent().show();
     });
+}
+
+function doBindGrazeButton(credential: Credential) {
+    $(".grazeButton")
+        .filter((idx, button) => {
+            return !$(button).prop("disabled");
+        })
+        .on("click", event => {
+            const buttonId = $(event.target).attr("id")!;
+            const index = parseInt(StringUtils.substringBetween(buttonId, "_", "_"));
+            new CastleRanch(credential).graze(index).then(() => {
+                doRefresh(credential);
+            });
+        });
 }
 
 export = PersonalPetManagementPageProcessor_Castle;
