@@ -2,6 +2,7 @@ import TownLoader from "../../core/TownLoader";
 import PersonalEquipmentManagement from "../../pocketrose/PersonalEquipmentManagement";
 import PersonalEquipmentManagementPage from "../../pocketrose/PersonalEquipmentManagementPage";
 import PersonalStatus from "../../pocketrose/PersonalStatus";
+import TownBank from "../../pocketrose/TownBank";
 import TownEquipmentExpressHouse from "../../pocketrose/TownEquipmentExpressHouse";
 import TownForgeHouse from "../../pocketrose/TownForgeHouse";
 import TreasureBag from "../../pocketrose/TreasureBag";
@@ -206,6 +207,42 @@ class PersonalEquipmentManagementPageProcessor_Town extends AbstractPersonalEqui
         html += "</table>";
 
         $("#equipmentList").html(html).parent().show();
+
+        // --------------------------------------------------------------------
+        // 发送
+        // --------------------------------------------------------------------
+        new TownEquipmentExpressHouse(credential, context?.get("townId")).open().then(expressPage => {
+            for (const equipment of expressPage.equipmentList!) {
+                const index = equipment.index!;
+                if (equipment.selectable) {
+                    $("#sendButton_1_" + index).prop("disabled", false).show();
+                } else {
+                    $("#sendButton_1_" + index).remove();
+                }
+            }
+
+            $(".sendButton-1").on("click", event => {
+                const buttonId = $(event.target).attr("id")!;
+                const index = parseInt(StringUtils.substringAfterLast(buttonId, "_"));
+
+                const s = $("#peopleSelect").val();
+                if (s === undefined || (s as string).trim() === "") {
+                    this.doScrollToPageTitle();
+                    MessageBoard.publishWarning("没有选择发送对象！");
+                    return;
+                }
+
+                const bank = new TownBank(credential, context?.get("townId"));
+                bank.withdraw(10).then(() => {
+                    new TownEquipmentExpressHouse(credential, context?.get("townId")).send(s as string, [index]).then(() => {
+                        bank.deposit().then(() => {
+                            this.doRefreshMutablePage(credential, context);
+                        });
+                    });
+                });
+
+            });
+        });
 
         // --------------------------------------------------------------------
         // 选择
