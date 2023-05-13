@@ -4,6 +4,7 @@ import PersonalStatus from "../../pocketrose/PersonalStatus";
 import TreasureBag from "../../pocketrose/TreasureBag";
 import Credential from "../../util/Credential";
 import PageUtils from "../../util/PageUtils";
+import StringUtils from "../../util/StringUtils";
 import PageProcessorContext from "../PageProcessorContext";
 import AbstractPersonalEquipmentManagementPageProcessor from "./AbstractPersonalEquipmentManagementPageProcessor";
 
@@ -202,6 +203,14 @@ class PersonalEquipmentManagementPageProcessor_Town extends AbstractPersonalEqui
 
         $("#equipmentList").html(html).parent().show();
 
+        $(".storeButton-1").on("click", event => {
+            const buttonId = $(event.target).attr("id")!;
+            const index = parseInt(StringUtils.substringAfterLast(buttonId, "_"));
+            new TreasureBag(credential).putInto([index]).then(() => {
+                this.doRefreshMutablePage(credential, context);
+            });
+        });
+
         // --------------------------------------------------------------------
         // 打开百宝袋 / 关闭百宝袋
         // --------------------------------------------------------------------
@@ -381,6 +390,23 @@ class PersonalEquipmentManagementPageProcessor_Town extends AbstractPersonalEqui
             html += "</table>";
 
             $("#bagList").html(html).parent().show();
+
+            $(".takeOutButton-2").on("click", event => {
+                const buttonId = $(event.target).attr("id")!;
+                const index = parseInt(StringUtils.substringAfterLast(buttonId, "_"));
+                new TreasureBag(credential).takeOut([index]).then(() => {
+                    this.doRefreshMutablePage(credential, context);
+                });
+            });
+
+            $("#closeBagButton_2").on("click", () => {
+                if ($("#bagState").text() === "off") {
+                    return;
+                }
+                $("#bagState").text("off");
+                PageUtils.unbindEventBySpecifiedClass("mutableButton-2");
+                $("#bagList").html("").parent().hide();
+            });
         });
     }
 }
