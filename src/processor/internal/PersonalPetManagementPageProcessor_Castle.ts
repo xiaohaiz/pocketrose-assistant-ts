@@ -334,6 +334,25 @@ function doRender(credential: Credential, petList: Pet[], studyStatus: number[])
                 });
         }
     }
+
+    $("#openRanchButton").on("click", () => {
+        if ($("#ranchState").text() === "on") {
+            return;
+        }
+        $("#ranchState").text("on");
+        doRefresh(credential);
+    });
+    $("#closeRanchButton").on("click", () => {
+        if ($("#ranchState").text() === "off") {
+            return;
+        }
+        $("#ranchState").text("off");
+        doRefresh(credential);
+    });
+
+    if ($("#ranchState").text() === "on") {
+        doRenderRanch(credential);
+    }
 }
 
 function doBindPetFuture(petList: Pet[]) {
@@ -585,6 +604,8 @@ function doRefresh(credential: Credential) {
         $(".PetUIButton").off("click");
         // 清除PetUI的内容
         $("#pet_management_container").html("");
+        // 清除牧场
+        $("#ranchList").html("").parent().hide();
         // 使用新的宠物重新渲染PetUI
         doRender(credential, petList, petStudyStatus);
     });
