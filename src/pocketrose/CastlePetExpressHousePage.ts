@@ -1,0 +1,4 @@
+class CastlePetExpressHousePage {
+}
+
+export = CastlePetExpressHousePage;

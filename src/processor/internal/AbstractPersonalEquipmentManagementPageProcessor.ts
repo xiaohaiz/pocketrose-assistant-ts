@@ -154,7 +154,15 @@ abstract class AbstractPersonalEquipmentManagementPageProcessor extends PageProc
         html += "</tr>"
         $("#tr7").after($(html));
 
+        html = "";
+        html += "<tr id='tr9' style='display:none'>";
+        html += "<td id='consecrateFormContainer'></td>";
+        html += "</tr>"
+        $("#tr8").after($(html));
+
         this.#bindImmutableButtons(credential, context);
+
+        this.doBeforeRenderMutablePage(credential, context);
 
         this.doRenderMutablePage(credential, page, context);
     }
@@ -198,6 +206,33 @@ abstract class AbstractPersonalEquipmentManagementPageProcessor extends PageProc
             $("#roleMana").text(role.mana + "/" + role.maxMana);
             $("#roleCash").text(role.cash + " GOLD");
         }
+    }
+
+    doBindSelectButtons(className: string) {
+        $("." + className).on("click", event => {
+            const buttonId = $(event.target).attr("id")!;
+            if (PageUtils.isColorGrey(buttonId)) {
+                $(event.target).css("color", "blue");
+            } else if (PageUtils.isColorBlue(buttonId)) {
+                $(event.target).css("color", "grey");
+            }
+        });
+    }
+
+    doCheckSetConfiguration(config: {} | null) {
+        if (config === null) {
+            return false;
+        }
+        // @ts-ignore
+        const a = config["weaponName"];
+        // @ts-ignore
+        const b = config["armorName"];
+        // @ts-ignore
+        const c = config["accessoryName"];
+        return (a !== undefined && a !== "NONE") || (b !== undefined && b !== "NONE") || (c !== undefined && c !== "NONE");
+    }
+
+    doBeforeRenderMutablePage(credential: Credential, context?: PageProcessorContext) {
     }
 
     abstract doGeneratePageTitleHtml(context?: PageProcessorContext): string;

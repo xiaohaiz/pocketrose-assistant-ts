@@ -40,6 +40,7 @@ class CastleDashboardPageProcessor implements PageProcessor {
             $("option[value='PETSTATUS']")
                 .css("background-color", "yellow")
                 .text("宠物管理");
+            $("option[value='CASTLE_PET']").remove();
             $("option[value='CASTLE_SENDPET']").remove();
         }
         if (SetupLoader.isCareerManagementUIEnabled()) {
