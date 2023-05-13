@@ -2,6 +2,7 @@ import TownLoader from "../../core/TownLoader";
 import PersonalEquipmentManagement from "../../pocketrose/PersonalEquipmentManagement";
 import PersonalEquipmentManagementPage from "../../pocketrose/PersonalEquipmentManagementPage";
 import PersonalStatus from "../../pocketrose/PersonalStatus";
+import TownEquipmentExpressHouse from "../../pocketrose/TownEquipmentExpressHouse";
 import TownForgeHouse from "../../pocketrose/TownForgeHouse";
 import TreasureBag from "../../pocketrose/TreasureBag";
 import Credential from "../../util/Credential";
@@ -246,6 +247,20 @@ class PersonalEquipmentManagementPageProcessor_Town extends AbstractPersonalEqui
             });
         });
 
+        // --------------------------------------------------------------------
+        // 找人
+        // --------------------------------------------------------------------
+        $("#searchButton").on("click", () => {
+            const s = $("#searchName").val();
+            if (s === undefined || (s as string).trim() === "") {
+                this.doScrollToPageTitle();
+                MessageBoard.publishWarning("没有正确输入人名！");
+                return;
+            }
+            new TownEquipmentExpressHouse(credential, context?.get("townId")).search(s as string).then(optionListHtml => {
+                $("#peopleSelect").html(optionListHtml);
+            });
+        });
 
         // --------------------------------------------------------------------
         // 打开百宝袋 / 关闭百宝袋
