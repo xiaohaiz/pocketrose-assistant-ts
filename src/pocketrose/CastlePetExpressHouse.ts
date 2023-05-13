@@ -11,7 +11,7 @@ class CastlePetExpressHouse {
 
     async search(searchName: string): Promise<string> {
         return await (() => {
-            return new Promise<string>((resolve, reject) => {
+            return new Promise<string>(resolve => {
                 const request = this.#credential.asRequestMap();
                 // noinspection JSDeprecatedSymbols
                 request.set("serch", escape(searchName.trim()));

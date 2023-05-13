@@ -42,6 +42,9 @@ abstract class AbstractPersonalPetManagementPageProcessor extends PageProcessorC
         html += "<tr style='display:none'>";
         html += "<td id='roleLocation'></td>";
         html += "</tr>";
+        html += "<tr style='display:none'>";
+        html += "<td id='ranchState'></td>";
+        html += "</tr>";
         html += "<tr>";
         html += "<td id='message_board_container'></td>";
         html += "</tr>";
