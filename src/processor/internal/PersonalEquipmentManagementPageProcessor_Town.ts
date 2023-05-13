@@ -1,8 +1,11 @@
 import TownLoader from "../../core/TownLoader";
+import PersonalEquipmentManagement from "../../pocketrose/PersonalEquipmentManagement";
 import PersonalEquipmentManagementPage from "../../pocketrose/PersonalEquipmentManagementPage";
 import PersonalStatus from "../../pocketrose/PersonalStatus";
+import TownForgeHouse from "../../pocketrose/TownForgeHouse";
 import TreasureBag from "../../pocketrose/TreasureBag";
 import Credential from "../../util/Credential";
+import MessageBoard from "../../util/MessageBoard";
 import PageUtils from "../../util/PageUtils";
 import StringUtils from "../../util/StringUtils";
 import PageProcessorContext from "../PageProcessorContext";
@@ -203,6 +206,38 @@ class PersonalEquipmentManagementPageProcessor_Town extends AbstractPersonalEqui
 
         $("#equipmentList").html(html).parent().show();
 
+        // --------------------------------------------------------------------
+        // 选择
+        // --------------------------------------------------------------------
+        this.doBindSelectButtons("selectButton-1");
+
+        // --------------------------------------------------------------------
+        // 使用
+        // --------------------------------------------------------------------
+        $(".useButton-1").on("click", event => {
+            const buttonId = $(event.target).attr("id")!;
+            const index = parseInt(StringUtils.substringAfterLast(buttonId, "_"));
+            new PersonalEquipmentManagement(credential, context?.get("townId")).use([index]).then(() => {
+                this.doRefreshMutablePage(credential, context);
+            });
+        });
+
+        // --------------------------------------------------------------------
+        // 修理
+        // --------------------------------------------------------------------
+        $(".repairButton-1").on("click", event => {
+            const buttonId = $(event.target).attr("id")!;
+            const index = parseInt(StringUtils.substringAfterLast(buttonId, "_"));
+            new TownForgeHouse(credential, context?.get("townId")).repair(index).then(() => {
+                const equipment = page.findEquipment(index)!;
+                MessageBoard.publishMessage("修理了" + equipment.fullName + "。");
+                this.doRefreshMutablePage(credential, context);
+            });
+        });
+
+        // --------------------------------------------------------------------
+        // 入袋
+        // --------------------------------------------------------------------
         $(".storeButton-1").on("click", event => {
             const buttonId = $(event.target).attr("id")!;
             const index = parseInt(StringUtils.substringAfterLast(buttonId, "_"));

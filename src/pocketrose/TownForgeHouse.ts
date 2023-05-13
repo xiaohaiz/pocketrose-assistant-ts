@@ -31,6 +31,23 @@ class TownForgeHouse {
         })();
     }
 
+    async repair(index: number): Promise<void> {
+        return await (() => {
+            return new Promise<void>((resolve, reject) => {
+                if (index < 0) {
+                    reject();
+                    return;
+                }
+                const request = this.#credential.asRequestMap();
+                request.set("select", index.toString());
+                request.set("mode", "MY_ARM2");
+                NetworkUtils.post("town.cgi", request).then(() => {
+                    resolve();
+                });
+            });
+        })();
+    }
+
     static parsePage(html: string): TownForgeHousePage {
         const role = new Role();
         $(html).find("td:contains('ＬＶ')")

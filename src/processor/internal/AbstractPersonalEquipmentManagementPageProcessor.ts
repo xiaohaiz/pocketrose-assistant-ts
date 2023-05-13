@@ -200,6 +200,17 @@ abstract class AbstractPersonalEquipmentManagementPageProcessor extends PageProc
         }
     }
 
+    doBindSelectButtons(className: string) {
+        $("." + className).on("click", event => {
+            const buttonId = $(event.target).attr("id")!;
+            if (PageUtils.isColorGrey(buttonId)) {
+                $(event.target).css("color", "blue");
+            } else if (PageUtils.isColorBlue(buttonId)) {
+                $(event.target).css("color", "grey");
+            }
+        });
+    }
+
     abstract doGeneratePageTitleHtml(context?: PageProcessorContext): string;
 
     abstract doGenerateRoleLocationHtml(context?: PageProcessorContext): string;
