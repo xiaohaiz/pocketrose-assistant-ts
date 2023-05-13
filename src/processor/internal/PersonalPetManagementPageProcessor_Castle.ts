@@ -1014,7 +1014,7 @@ function doBindTakeOutButton(credential: Credential, index: number) {
 
 function doRenderRanch(credential: Credential) {
     new CastleRanch(credential).enter().then(status => {
-        const petList = Pet.sortPetList(status.ranchPetList);
+        const petList = Pet.sortPetList(status.ranchPetList!);
 
         let html = "";
         html += "<table style='border-width:0;background-color:#888888;margin:auto;width:100%'>";

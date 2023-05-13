@@ -246,9 +246,9 @@ function doRender(credential: Credential, castle: Castle) {
     });
 
     new CastleRanch(credential).enter().then(page => {
-        if (page.ranchPetList.length > 0) {
+        if (page.ranchPetList!.length > 0) {
             const petList: Pet[] = [];
-            petList.push(...page.ranchPetList);
+            petList.push(...page.ranchPetList!);
 
             petList.sort((a, b) => {
                 let ret = b.level! - a.level!;
