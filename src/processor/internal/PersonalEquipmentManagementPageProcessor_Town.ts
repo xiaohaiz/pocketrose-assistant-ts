@@ -344,6 +344,31 @@ class PersonalEquipmentManagementPageProcessor_Town extends AbstractPersonalEqui
             });
         });
 
+        // --------------------------------------------------------------------
+        // 放入百宝袋
+        // --------------------------------------------------------------------
+        if (bagIndex >= -1) {
+            $("#storeButton").prop("disabled", false).show();
+            $("#storeButton").on("click", () => {
+                const indexList: number[] = [];
+                $(".selectButton-1").each((idx, button) => {
+                    const buttonId = $(button).attr("id") as string;
+                    if (PageUtils.isColorBlue(buttonId)) {
+                        const index = parseInt(StringUtils.substringAfterLast(buttonId, "_"));
+                        indexList.push(index);
+                    }
+                });
+                if (indexList.length === 0) {
+                    this.doScrollToPageTitle();
+                    MessageBoard.publishWarning("没有选择物品或装备！");
+                    return;
+                }
+                new TreasureBag(credential).putInto(indexList).then(() => {
+                    this.doRefreshMutablePage(credential, context);
+                });
+            });
+        }
+
         if ($("#bagState").text() === "on") {
             this.#renderBagUI(credential, page, bagIndex, context);
         }
