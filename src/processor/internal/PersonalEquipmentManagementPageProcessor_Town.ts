@@ -267,7 +267,7 @@ class PersonalEquipmentManagementPageProcessor_Town extends AbstractPersonalEqui
         html += "</td>";
         html += "</tr>";
         html += "<tr>";
-        html += "<td style='text-align:left' colspan='2'>";
+        html += "<td style='text-align:right' colspan='2'>";
         html += "<input type='text' id='searchName' size='15' maxlength='20'>";
         html += "<input type='button' id='searchButton' class='mutableButton-1' value='找人'>";
         html += "<select id='peopleSelect'><option value=''>选择发送对象</select>";
