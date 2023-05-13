@@ -269,7 +269,7 @@ class PersonalEquipmentManagementPageProcessor_Town extends AbstractPersonalEqui
         }
         html += "</td>";
         html += "<td style='text-align:right'>";
-        html += "<input type='button' id='closeBag2' class='mutableButton-2' value='关闭百宝袋'>";
+        html += "<input type='button' id='closeBagButton_2' class='mutableButton-2' value='关闭百宝袋'>";
         html += "</td>";
         html += "</tr>";
         html += "</tbody>";
@@ -280,6 +280,21 @@ class PersonalEquipmentManagementPageProcessor_Town extends AbstractPersonalEqui
         html += "</table>";
 
         $("#bagList").html(html).parent().show();
+
+        $("#takeOutButton").on("click", () => {
+            new TreasureBag(credential).tryTakeOut(page.spaceCount).then(() => {
+                this.doRefreshMutablePage(credential, context);
+            });
+        });
+
+        $("#closeBagButton_2").on("click", () => {
+            if ($("#bagState").text() === "off") {
+                return;
+            }
+            $("#bagState").text("off");
+            PageUtils.unbindEventBySpecifiedClass("mutableButton-2");
+            $("#bagList").html("").parent().hide();
+        });
     }
 
     #renderNormalBagUI(credential: Credential,
