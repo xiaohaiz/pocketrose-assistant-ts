@@ -1,7 +1,9 @@
 import EquipmentSet from "../../common/EquipmentSet";
+import NpcLoader from "../../core/NpcLoader";
 import SetupLoader from "../../core/SetupLoader";
 import TownLoader from "../../core/TownLoader";
 import EquipmentSetLoader from "../../pocket/EquipmentSetLoader";
+import RoleStatusLoader from "../../pocket/RoleStatusLoader";
 import CastleEquipmentExpressHouse from "../../pocketrose/CastleEquipmentExpressHouse";
 import PersonalEquipmentManagement from "../../pocketrose/PersonalEquipmentManagement";
 import PersonalEquipmentManagementPage from "../../pocketrose/PersonalEquipmentManagementPage";
@@ -10,6 +12,7 @@ import TownBank from "../../pocketrose/TownBank";
 import TownEquipmentExpressHouse from "../../pocketrose/TownEquipmentExpressHouse";
 import TownForgeHouse from "../../pocketrose/TownForgeHouse";
 import TreasureBag from "../../pocketrose/TreasureBag";
+import CommentBoard from "../../util/CommentBoard";
 import Credential from "../../util/Credential";
 import MessageBoard from "../../util/MessageBoard";
 import PageUtils from "../../util/PageUtils";
@@ -48,6 +51,79 @@ class PersonalEquipmentManagementPageProcessor_Town extends AbstractPersonalEqui
         $("#hiddenFormContainer").html(html);
         $("#returnButton").on("click", () => {
             $("#returnTown").trigger("click");
+        });
+    }
+
+    doBeforeRenderMutablePage(credential: Credential, context?: PageProcessorContext) {
+
+        let html = "";
+        // noinspection HtmlUnknownTarget
+        html += "<form action='mydata.cgi' method='post'>";
+        html += "<input type='hidden' name='id' value='" + credential.id + "'>";
+        html += "<input type='hidden' name='pass' value='" + credential.pass + "'>";
+        html += "<input type='hidden' name='chara' value='1'>";
+        html += "<input type='hidden' name='mode' value='CONSECRATE'>";
+        html += "<div id='consecrateItems'></div>";
+        html += "<input type='submit' id='consecrateSubmit'>";
+        html += "</form>";
+        $("#consecrateFormContainer").html(html);
+
+        CommentBoard.createCommentBoard(NpcLoader.getNpcImageHtml("饭饭")!);
+        CommentBoard.writeMessage("我就要一键祭奠，就要，就要！");
+        CommentBoard.writeMessage("<input type='button' id='consecrateButton' value='祭奠选择的装备'>");
+        $("#consecrateButton").hide();
+        $("#consecrateButton").on("click", function () {
+            const consecrateCandidates: number[] = [];
+            const consecrateCandidateNames: string[] = [];
+
+            $(".selectButton-1")
+                .each(function (_idx, button) {
+                    const buttonId = $(button).attr("id")!;
+                    const index = parseInt(StringUtils.substringAfterLast(buttonId, "_"));
+                    if (PageUtils.isColorBlue(buttonId)) {
+                        const c0 = $(button).parent();
+                        const c1 = c0.next();
+                        const c2 = c1.next();
+                        const c3 = c2.next();
+
+                        let s = c3.text().trim();
+                        if (s === "武器" || s === "防具" || s === "饰品") {
+                            s = c1.text().trim();
+                            if (s !== "★") {
+                                s = c2.text().trim();
+                                consecrateCandidates.push(index);
+                                consecrateCandidateNames.push(s);
+                            }
+                        }
+                    }
+                });
+
+            if (consecrateCandidates.length === 0) {
+                MessageBoard.publishWarning("没有选择能够祭奠的装备！");
+                return;
+            }
+            if (!confirm("请务必确认你将要祭奠的这些装备：" + consecrateCandidateNames.join())) {
+                return;
+            }
+            new TownBank(credential, context?.get("townId")).withdraw(100).then(() => {
+                let html = "";
+                consecrateCandidates.forEach(it => {
+                    html += "<input type='hidden' name='item" + it + "' value='" + it + "'>";
+                });
+                $("#consecrateItems").html(html);
+                $("#consecrateSubmit").trigger("click");
+            });
+        });
+        $("#p_3139").on("click", function () {
+            $("#p_3139").off("click");
+            new RoleStatusLoader(credential).loadRoleStatus()
+                .then(status => {
+                    if (status.canConsecrate) {
+                        $("#consecrateButton").show();
+                    } else {
+                        MessageBoard.publishWarning("祭奠还在冷却中！");
+                    }
+                });
         });
     }
 
