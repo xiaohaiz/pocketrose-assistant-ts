@@ -1020,7 +1020,7 @@ function doRenderRanch(credential: Credential) {
         html += "<table style='border-width:0;background-color:#888888;margin:auto;width:100%'>";
         html += "<tbody style='background-color:#F8F0E0;text-align:center'>";
         html += "<tr>";
-        html += "<td style='background-color:darkgreen;color:wheat;font-weight:bold' colspan='10'>";
+        html += "<td style='background-color:darkgreen;color:wheat;font-weight:bold' colspan='11'>";
         html += "＜ 城 堡 牧 场 ＞";
         html += "</td>";
         html += "<tr>";
@@ -1034,6 +1034,7 @@ function doRenderRanch(credential: Credential) {
         html += "<th style='background-color:#E0D0B0'>速度</th>";
         html += "<th style='background-color:#EFE0C0'>经验</th>";
         html += "<th style='background-color:#EFE0C0'>性别</th>";
+        html += "<th style='background-color:#E8E8D0'>召唤</th>";
         html += "</tr>";
 
         for (const pet of petList) {
@@ -1048,6 +1049,9 @@ function doRenderRanch(credential: Credential) {
             html += "<td style='background-color:#E0D0B0'>" + pet.speedHtml + "</td>";
             html += "<td style='background-color:#EFE0C0'>" + pet.experienceHtml + "</td>";
             html += "<td style='background-color:#EFE0C0'>" + pet.gender + "</td>";
+            html += "<td style='background-color:#E8E8D0'>";
+            html += "<input type='button' class='PetUIButton summonButton' id='summon_" + pet.index + "' value='召唤'>";
+            html += "</td>";
             html += "</tr>";
         }
 
@@ -1055,6 +1059,8 @@ function doRenderRanch(credential: Credential) {
         html += "</table>";
 
         $("#ranchList").html(html).parent().show();
+
+        doBindSummonButton(credential);
     });
 }
 
@@ -1067,6 +1073,17 @@ function doBindGrazeButton(credential: Credential) {
             const buttonId = $(event.target).attr("id")!;
             const index = parseInt(StringUtils.substringBetween(buttonId, "_", "_"));
             new CastleRanch(credential).graze(index).then(() => {
+                doRefresh(credential);
+            });
+        });
+}
+
+function doBindSummonButton(credential: Credential) {
+    $(".summonButton")
+        .on("click", event => {
+            const buttonId = $(event.target).attr("id")!;
+            const index = parseInt(StringUtils.substringAfterLast(buttonId, "_"));
+            new CastleRanch(credential).summon(index).then(() => {
                 doRefresh(credential);
             });
         });
