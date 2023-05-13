@@ -184,6 +184,10 @@ function doRender(credential: Credential, petList: Pet[], studyStatus: number[])
     html += "<input type='button' class='PetUIButton' value='关闭黄金笼子' id='closeCageButton'>";
     html += "<input type='button' class='PetUIButton' value='从黄金笼子盲取' id='takeOutFirstFromCageButton' disabled style='display:none'>";
     html += "</td></tr>";
+    html += "<tr><td style='background-color:#E8E8D0;text-align:center' colspan='20'>";
+    html += "<input type='button' class='PetUIButton' value='打开城堡牧场' id='openRanchButton'>";
+    html += "<input type='button' class='PetUIButton' value='关闭城堡牧场' id='closeRanchButton'>";
+    html += "</td></tr>";
     html += "<tr style='display:none'><td id='goldenCageContainer' style='background-color:#E8E8D0;text-align:center' colspan='20'>";
     html += "</td></tr>";
     html += "</tbody>";
@@ -822,21 +826,13 @@ function doBindPetConsecrateButton(credential: Credential, buttonId: string, pet
 function doBindPetSendButton(credential: Credential, buttonId: string, pet: Pet) {
     $("#" + buttonId).on("click", function () {
         const receiver = $("#receiverCandidates").val();
-        if (receiver === undefined || receiver === "") {
+        if (receiver === undefined || (receiver as string).trim() === "") {
             MessageBoard.publishWarning("没有选择发送对象！");
             return;
         }
         const bank = new CastleBank(credential);
         bank.withdraw(10).then(() => {
-            const request = credential.asRequest();
-            // @ts-ignore
-            request["mode"] = "PET_SEND2";
-            // @ts-ignore
-            request["eid"] = receiver;
-            // @ts-ignore
-            request["select"] = pet.index;
-            NetworkUtils.sendPostRequest("town.cgi", request, function (html) {
-                MessageBoard.processResponseMessage(html);
+            new CastlePetExpressHouse(credential).send(receiver as string, pet.index!).then(() => {
                 bank.depositAll().then(() => {
                     doRefresh(credential);
                 });
