@@ -3,8 +3,8 @@ import PetProfileLoader from "../../core/PetProfileLoader";
 import EquipmentParser from "../../pocket/EquipmentParser";
 import PetParser from "../../pocket/PetParser";
 import RoleLoader from "../../pocket/RoleLoader";
+import CastleBank from "../../pocketrose/CastleBank";
 import PersonalPetManagementPage from "../../pocketrose/PersonalPetManagementPage";
-import TownBank from "../../pocketrose/TownBank";
 import Credential from "../../util/Credential";
 import MessageBoard from "../../util/MessageBoard";
 import NetworkUtils from "../../util/NetworkUtils";
@@ -744,7 +744,7 @@ function doBindPetSpellButton(credential: Credential, pet: Pet) {
 function doBindPetLoveButton(credential: Credential, buttonId: string, pet: Pet) {
     $("#" + buttonId).on("click", function () {
         const amount = Math.ceil(100 - pet.love!);
-        const bank = new TownBank(credential);
+        const bank = new CastleBank(credential);
         bank.withdraw(amount).then(() => {
             const request = credential.asRequest();
             // @ts-ignore
@@ -753,7 +753,7 @@ function doBindPetLoveButton(credential: Credential, buttonId: string, pet: Pet)
             request["select"] = pet.index;
             NetworkUtils.sendPostRequest("mydata.cgi", request, function (html) {
                 MessageBoard.processResponseMessage(html);
-                bank.deposit().then(() => {
+                bank.depositAll().then(() => {
                     doRefresh(credential);
                 });
             });
@@ -807,10 +807,10 @@ function doBindPetConsecrateButton(credential: Credential, buttonId: string, pet
         if (!confirm("你确认要献祭宠物" + pet.name + "吗？")) {
             return;
         }
-        const bank = new TownBank(credential);
+        const bank = new CastleBank(credential);
         bank.withdraw(1000).then(() => {
             consecratePet(credential, pet.index!).then(() => {
-                bank.deposit().then(() => {
+                bank.depositAll().then(() => {
                     doRefresh(credential);
                 });
             });
@@ -825,7 +825,7 @@ function doBindPetSendButton(credential: Credential, buttonId: string, pet: Pet)
             MessageBoard.publishWarning("没有选择发送对象！");
             return;
         }
-        const bank = new TownBank(credential);
+        const bank = new CastleBank(credential);
         bank.withdraw(10).then(() => {
             const request = credential.asRequest();
             // @ts-ignore
@@ -836,7 +836,7 @@ function doBindPetSendButton(credential: Credential, buttonId: string, pet: Pet)
             request["select"] = pet.index;
             NetworkUtils.sendPostRequest("town.cgi", request, function (html) {
                 MessageBoard.processResponseMessage(html);
-                bank.deposit().then(() => {
+                bank.depositAll().then(() => {
                     doRefresh(credential);
                 });
             });
