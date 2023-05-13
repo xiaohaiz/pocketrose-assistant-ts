@@ -450,7 +450,6 @@ class PersonalEquipmentManagementPageProcessor_Castle extends AbstractPersonalEq
         });
 
         $("#putGemsIntoWarehouse").on("click", () => {
-            const indexList: number[] = [];
             $(".select-1").each((idx, button) => {
                 const buttonId = $(button).attr("id") as string;
                 const index = parseInt(StringUtils.substringAfterLast(buttonId, "_"));
