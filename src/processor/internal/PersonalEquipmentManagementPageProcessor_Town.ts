@@ -200,6 +200,9 @@ class PersonalEquipmentManagementPageProcessor_Town extends AbstractPersonalEqui
         html += "</tr>";
         html += "<tr>";
         html += "<td style='text-align:right' colspan='2'>";
+        html += "<input type='button' class='mutableButton-1' id='luckCharmButton' value='千与千寻' style='color:blue'>";
+        html += "<input type='button' class='mutableButton-1' id='dontForgetMeButton' value='勿忘我' style='color:red'>";
+        html += "<input type='button' class='mutableButton-1' id='magicBallButton' value='魔法使的闪光弹' style='color:green'>";
         html += "<input type='button' class='mutableButton-1' id='setButton_A' value='套装Ａ' disabled>";
         html += "<input type='button' class='mutableButton-1' id='setButton_B' value='套装Ｂ' disabled>";
         html += "<input type='button' class='mutableButton-1' id='setButton_C' value='套装Ｃ' disabled>";
@@ -413,6 +416,33 @@ class PersonalEquipmentManagementPageProcessor_Town extends AbstractPersonalEqui
             });
         });
 
+        $("#luckCharmButton").on("click", () => {
+            const set = new EquipmentSet();
+            set.initialize();
+            set.accessoryName = "千与千寻";
+            new EquipmentSetLoader(credential, page.equipmentList!).load(set)
+                .then(() => {
+                    this.doRefreshMutablePage(credential, context);
+                });
+        });
+        $("#dontForgetMeButton").on("click", () => {
+            const set = new EquipmentSet();
+            set.initialize();
+            set.accessoryName = "勿忘我";
+            new EquipmentSetLoader(credential, page.equipmentList!).load(set)
+                .then(() => {
+                    this.doRefreshMutablePage(credential, context);
+                });
+        });
+        $("#magicBallButton").on("click", () => {
+            const set = new EquipmentSet();
+            set.initialize();
+            set.accessoryName = "魔法使的闪光弹";
+            new EquipmentSetLoader(credential, page.equipmentList!).load(set)
+                .then(() => {
+                    this.doRefreshMutablePage(credential, context);
+                });
+        });
         this.#bindSetButton(credential, page, "A", context);
         this.#bindSetButton(credential, page, "B", context);
         this.#bindSetButton(credential, page, "C", context);
