@@ -1,6 +1,7 @@
 import SetupLoader from "../core/SetupLoader";
 import Constants from "../util/Constants";
 import PageUtils from "../util/PageUtils";
+import StringUtils from "../util/StringUtils";
 
 class Pet {
 
@@ -115,6 +116,30 @@ class Pet {
         const ratio = this.experience! / maxExperience;
         const progressBar = PageUtils.generateProgressBarHTML(ratio);
         return "<span title='" + this.experience + "'>" + progressBar + "</span>";
+    }
+
+    static sortPetList(source: Pet[]): Pet[] {
+        const target: Pet[] = [];
+        target.push(...source);
+        target.sort((a, b) => {
+            let ret = b.level! - a.level!;
+            if (ret !== 0) {
+                return ret;
+            }
+            let a1 = (a.name!.includes("(") && a.name!.includes(")")) ? 0 : 1;
+            let b1 = (b.name!.includes("(") && b.name!.includes(")")) ? 0 : 1;
+            ret = a1 - b1;
+            if (ret !== 0) {
+                return ret;
+            }
+
+            let a2 = (a.name!.includes("(") && a.name!.includes(")")) ?
+                StringUtils.substringBetween(a.name!, "(", ")") : a.name!;
+            let b2 = (b.name!.includes("(") && b.name!.includes(")")) ?
+                StringUtils.substringBetween(b.name!, "(", ")") : b.name!;
+            return a2.localeCompare(b2);
+        });
+        return target;
     }
 }
 
