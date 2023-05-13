@@ -3,7 +3,7 @@ import Equipment from "../../common/Equipment";
 import Pet from "../../common/Pet";
 import NpcLoader from "../../core/NpcLoader";
 import CastleLoader from "../../pocket/CastleLoader";
-import CastleRanch from "../../pocket/CastleRanch";
+import CastleRanch from "../../pocketrose/CastleRanch";
 import CastleWarehouse from "../../pocketrose/CastleWarehouse";
 import Credential from "../../util/Credential";
 import MessageBoard from "../../util/MessageBoard";
