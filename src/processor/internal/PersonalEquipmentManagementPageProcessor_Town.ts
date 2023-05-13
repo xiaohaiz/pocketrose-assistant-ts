@@ -479,10 +479,31 @@ class PersonalEquipmentManagementPageProcessor_Town extends AbstractPersonalEqui
 
             $("#bagList").html(html).parent().show();
 
+            this.doBindSelectButtons("selectButton-2");
+
             $(".takeOutButton-2").on("click", event => {
                 const buttonId = $(event.target).attr("id")!;
                 const index = parseInt(StringUtils.substringAfterLast(buttonId, "_"));
                 new TreasureBag(credential).takeOut([index]).then(() => {
+                    this.doRefreshMutablePage(credential, context);
+                });
+            });
+
+            $("#takeOutButton").on("click", () => {
+                const indexList: number[] = [];
+                $(".selectButton-2").each((idx, button) => {
+                    const buttonId = $(button).attr("id") as string;
+                    if (PageUtils.isColorBlue(buttonId)) {
+                        const index = parseInt(StringUtils.substringAfterLast(buttonId, "_"));
+                        indexList.push(index);
+                    }
+                });
+                if (indexList.length === 0) {
+                    this.doScrollToPageTitle();
+                    MessageBoard.publishWarning("没有选择百宝袋中的物品或装备！");
+                    return;
+                }
+                new TreasureBag(credential).takeOut(indexList).then(() => {
                     this.doRefreshMutablePage(credential, context);
                 });
             });
