@@ -1,4 +1,7 @@
+import EquipmentSet from "../../common/EquipmentSet";
+import SetupLoader from "../../core/SetupLoader";
 import TownLoader from "../../core/TownLoader";
+import EquipmentSetLoader from "../../pocket/EquipmentSetLoader";
 import CastleEquipmentExpressHouse from "../../pocketrose/CastleEquipmentExpressHouse";
 import PersonalEquipmentManagement from "../../pocketrose/PersonalEquipmentManagement";
 import PersonalEquipmentManagementPage from "../../pocketrose/PersonalEquipmentManagementPage";
@@ -195,8 +198,13 @@ class PersonalEquipmentManagementPageProcessor_Town extends AbstractPersonalEqui
         html += "<input type='button' id='sendButton' class='mutableButton-1' value='发送'>";
         html += "</td>";
         html += "</tr>";
-        html += "<tr style='display:none'>";
+        html += "<tr>";
         html += "<td style='text-align:right' colspan='2'>";
+        html += "<input type='button' class='mutableButton-1' id='setButton_A' value='套装Ａ' disabled>";
+        html += "<input type='button' class='mutableButton-1' id='setButton_B' value='套装Ｂ' disabled>";
+        html += "<input type='button' class='mutableButton-1' id='setButton_C' value='套装Ｃ' disabled>";
+        html += "<input type='button' class='mutableButton-1' id='setButton_D' value='套装Ｄ' disabled>";
+        html += "<input type='button' class='mutableButton-1' id='setButton_E' value='套装Ｅ' disabled>";
         html += "</td>";
         html += "</tr>";
         html += "</tbody>";
@@ -405,6 +413,12 @@ class PersonalEquipmentManagementPageProcessor_Town extends AbstractPersonalEqui
             });
         });
 
+        this.#bindSetButton(credential, page, "A", context);
+        this.#bindSetButton(credential, page, "B", context);
+        this.#bindSetButton(credential, page, "C", context);
+        this.#bindSetButton(credential, page, "D", context);
+        this.#bindSetButton(credential, page, "E", context);
+
         if ($("#bagState").text() === "on") {
             this.#renderBagUI(credential, page, bagIndex, context);
         }
@@ -599,6 +613,67 @@ class PersonalEquipmentManagementPageProcessor_Town extends AbstractPersonalEqui
                 PageUtils.unbindEventBySpecifiedClass("mutableButton-2");
                 $("#bagList").html("").parent().hide();
             });
+        });
+    }
+
+    #bindSetButton(credential: Credential,
+                   page: PersonalEquipmentManagementPage,
+                   setId: string,
+                   context?: PageProcessorContext) {
+        let setConfig: {} | null = null;
+        switch (setId) {
+            case "A":
+                setConfig = SetupLoader.loadEquipmentSet_A(credential.id);
+                break;
+            case "B":
+                setConfig = SetupLoader.loadEquipmentSet_B(credential.id);
+                break;
+            case "C":
+                setConfig = SetupLoader.loadEquipmentSet_C(credential.id);
+                break;
+            case "D":
+                setConfig = SetupLoader.loadEquipmentSet_D(credential.id);
+                break;
+            case "E":
+                setConfig = SetupLoader.loadEquipmentSet_E(credential.id);
+                break;
+            default:
+                break;
+        }
+        if (!this.doCheckSetConfiguration(setConfig)) {
+            return;
+        }
+        const buttonId = "setButton_" + setId;
+        $("#" + buttonId).prop("disabled", false);
+
+        $("#" + buttonId).on("click", () => {
+            const set = new EquipmentSet();
+            set.initialize();
+
+            // @ts-ignore
+            set.weaponName = setConfig["weaponName"];
+            // @ts-ignore
+            if (setConfig["weaponStar"] !== undefined && setConfig["weaponStar"]) {
+                set.weaponName = "齐心★" + set.weaponName;
+            }
+            // @ts-ignore
+            set.armorName = setConfig["armorName"];
+            // @ts-ignore
+            if (setConfig["armorStar"] !== undefined && setConfig["armorStar"]) {
+                set.armorName = "齐心★" + set.armorName;
+            }
+            // @ts-ignore
+            set.accessoryName = setConfig["accessoryName"];
+            // @ts-ignore
+            if (setConfig["accessoryStar"] !== undefined && setConfig["accessoryStar"]) {
+                set.accessoryName = "齐心★" + set.accessoryName;
+            }
+
+            new EquipmentSetLoader(credential, page.equipmentList!).load(set)
+                .then(() => {
+                    this.doRefreshMutablePage(credential, context);
+                });
+
         });
     }
 }

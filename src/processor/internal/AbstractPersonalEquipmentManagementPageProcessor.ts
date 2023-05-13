@@ -211,6 +211,19 @@ abstract class AbstractPersonalEquipmentManagementPageProcessor extends PageProc
         });
     }
 
+    doCheckSetConfiguration(config: {} | null) {
+        if (config === null) {
+            return false;
+        }
+        // @ts-ignore
+        const a = config["weaponName"];
+        // @ts-ignore
+        const b = config["armorName"];
+        // @ts-ignore
+        const c = config["accessoryName"];
+        return (a !== undefined && a !== "NONE") || (b !== undefined && b !== "NONE") || (c !== undefined && c !== "NONE");
+    }
+
     abstract doGeneratePageTitleHtml(context?: PageProcessorContext): string;
 
     abstract doGenerateRoleLocationHtml(context?: PageProcessorContext): string;
