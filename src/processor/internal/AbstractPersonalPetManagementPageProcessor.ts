@@ -9,6 +9,10 @@ abstract class AbstractPersonalPetManagementPageProcessor extends PageProcessorC
 
     doProcess(credential: Credential, context?: PageProcessorContext) {
         const page = PersonalPetManagement.parsePage(PageUtils.currentPageHtml());
+        this.#renderImmutablePage(credential, page, context);
+    }
+
+    #renderImmutablePage(credential: Credential, page: PersonalPetManagementPage, context?: PageProcessorContext) {
         this.doProcessWithPageParsed(credential, page, context);
     }
 
