@@ -16,6 +16,15 @@ import AbstractPersonalPetManagementPageProcessor from "./AbstractPersonalPetMan
 class PersonalPetManagementPageProcessor_Castle extends AbstractPersonalPetManagementPageProcessor {
 
     doProcessWithPageParsed(credential: Credential, page: PersonalPetManagementPage, context?: PageProcessorContext): void {
+
+        // 修改返回城堡的表单
+        $("#returnButton")
+            .val("返回城堡")
+            .parent()
+            .attr("action", "castlestatus.cgi")
+            .find("input:hidden[name='mode']")
+            .val("CASTLESTATUS");
+
         doProcess(credential, page.petList!, page.petStudyStatus!);
     }
 
