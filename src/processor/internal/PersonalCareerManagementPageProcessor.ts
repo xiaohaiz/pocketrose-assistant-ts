@@ -3,6 +3,7 @@ import Spell from "../../common/Spell";
 import CareerLoader from "../../core/CareerLoader";
 import NpcLoader from "../../core/NpcLoader";
 import PersonalCareerManagement from "../../pocketrose/PersonalCareerManagement";
+import PersonalCareerManagementPage from "../../pocketrose/PersonalCareerManagementPage";
 import PersonalSpell from "../../pocketrose/PersonalSpell";
 import PersonalStatus from "../../pocketrose/PersonalStatus";
 import SetupLoader from "../../setup/SetupLoader";
@@ -10,14 +11,12 @@ import CommentBoard from "../../util/CommentBoard";
 import Credential from "../../util/Credential";
 import MessageBoard from "../../util/MessageBoard";
 import NetworkUtils from "../../util/NetworkUtils";
-import PageUtils from "../../util/PageUtils";
 import PageProcessorContext from "../PageProcessorContext";
-import PageProcessorCredentialSupport from "../PageProcessorCredentialSupport";
+import AbstractPersonalCareerManagementPageProcessor from "./AbstractPersonalCareerManagementPageProcessor";
 
-class PersonalCareerManagementPageProcessor extends PageProcessorCredentialSupport {
+class PersonalCareerManagementPageProcessor extends AbstractPersonalCareerManagementPageProcessor {
 
-    doProcess(credential: Credential, context?: PageProcessorContext): void {
-        const page = PersonalCareerManagement.parsePage(PageUtils.currentPageHtml());
+    doProcessPageParsed(credential: Credential, page: PersonalCareerManagementPage, context?: PageProcessorContext): void {
         const candidateList = page.careerList!;
         doProcess(credential, candidateList);
     }
