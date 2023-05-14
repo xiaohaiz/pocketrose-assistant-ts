@@ -160,6 +160,11 @@ function doBindRankButton() {
         petList = sortBySpecialAttack(petList);
         doRender("智 力 排 行 榜", petList);
     });
+    $("#r_special_attack_rank").on("click", function () {
+        let petList = PetProfileLoader.loadAll();
+        petList = sortBySpecialAttack(petList, true);
+        doRender("智 力 （垫 底） 排 行 榜", petList);
+    });
     $("#special_defense_rank").on("click", function () {
         let petList = PetProfileLoader.loadAll();
         petList = sortBySpecialDefense(petList);
@@ -363,20 +368,34 @@ function sortByDefense(petList: PetProfile[], reverse?: boolean): PetProfile[] {
     return result;
 }
 
-function sortBySpecialAttack(petList: PetProfile[]): PetProfile[] {
+function sortBySpecialAttack(petList: PetProfile[], reverse?: boolean): PetProfile[] {
     const result: PetProfile[] = [];
     result.push(...petList);
-    result.sort((a, b) => {
-        let ret = b.perfectSpecialAttack - a.perfectSpecialAttack;
-        if (ret !== 0) {
-            return ret;
-        }
-        ret = b.totalBaseStats - a.totalBaseStats;
-        if (ret !== 0) {
-            return ret;
-        }
-        return a.code!.localeCompare(b.code!);
-    });
+    if (reverse) {
+        result.sort((a, b) => {
+            let ret = a.perfectSpecialAttack - b.perfectSpecialAttack;
+            if (ret !== 0) {
+                return ret;
+            }
+            ret = a.totalBaseStats - b.totalBaseStats;
+            if (ret !== 0) {
+                return ret;
+            }
+            return a.code!.localeCompare(b.code!);
+        });
+    } else {
+        result.sort((a, b) => {
+            let ret = b.perfectSpecialAttack - a.perfectSpecialAttack;
+            if (ret !== 0) {
+                return ret;
+            }
+            ret = b.totalBaseStats - a.totalBaseStats;
+            if (ret !== 0) {
+                return ret;
+            }
+            return a.code!.localeCompare(b.code!);
+        });
+    }
     return result;
 }
 
