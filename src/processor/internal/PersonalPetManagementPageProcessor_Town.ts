@@ -3,7 +3,6 @@ import Role from "../../common/Role";
 import PetProfileLoader from "../../core/PetProfileLoader";
 import EquipmentParser from "../../pocket/EquipmentParser";
 import PetParser from "../../pocket/PetParser";
-import RoleLoader from "../../pocket/RoleLoader";
 import CastleInformation from "../../pocketrose/CastleInformation";
 import CastleRanch from "../../pocketrose/CastleRanch";
 import PersonalPetManagementPage from "../../pocketrose/PersonalPetManagementPage";
@@ -28,28 +27,27 @@ class PersonalPetManagementPageProcessor_Town extends AbstractPersonalPetManagem
 
 function doProcess(credential: Credential, petList: Pet[], studyStatus: number[]) {
 
-    new RoleLoader(credential).load()
-        .then(role => {
-            if (role.masterCareerList!.includes("贤者") || role.hasMirror!) {
-                $("#hasGoldenCage").text("true");
+    new PersonalStatus(credential).load().then(role => {
+        if (role.masterCareerList!.includes("贤者") || role.hasMirror!) {
+            $("#hasGoldenCage").text("true");
+        }
+        $("#roleLocation").text(role.location!);
+
+        doRender(credential, petList, studyStatus, role);
+
+        const request = credential.asRequest();
+        // @ts-ignore
+        request["mode"] = "USE_ITEM";
+        NetworkUtils.sendPostRequest("mydata.cgi", request, function (html) {
+            const equipmentList = EquipmentParser.parsePersonalItemList(html);
+            const cage = EquipmentParser.findGoldenCage(equipmentList);
+            if (cage !== null) {
+                $("#goldenCageIndex").text(cage.index!);
+                $("#openCageButton").show();
+                $("#closeCageButton").show();
             }
-            $("#roleLocation").text(role.location!);
-
-            doRender(credential, petList, studyStatus, role);
-
-            const request = credential.asRequest();
-            // @ts-ignore
-            request["mode"] = "USE_ITEM";
-            NetworkUtils.sendPostRequest("mydata.cgi", request, function (html) {
-                const equipmentList = EquipmentParser.parsePersonalItemList(html);
-                const cage = EquipmentParser.findGoldenCage(equipmentList);
-                if (cage !== null) {
-                    $("#goldenCageIndex").text(cage.index!);
-                    $("#openCageButton").show();
-                    $("#closeCageButton").show();
-                }
-            });
         });
+    });
 
 }
 

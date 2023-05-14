@@ -3,7 +3,7 @@ import NpcLoader from "../../core/NpcLoader";
 import PetProfileLoader from "../../core/PetProfileLoader";
 import EquipmentParser from "../../pocket/EquipmentParser";
 import PetParser from "../../pocket/PetParser";
-import RoleLoader from "../../pocket/RoleLoader";
+import PersonalStatus from "../../pocketrose/PersonalStatus";
 import TownBank from "../../pocketrose/TownBank";
 import Credential from "../../util/Credential";
 import MessageBoard from "../../util/MessageBoard";
@@ -77,28 +77,27 @@ function doProcess(credential: Credential, petList: Pet[], studyStatus: number[]
     MessageBoard.resetMessageBoard("全新的宠物管理UI为您带来不一样的感受，试试把鼠标停留在宠物图片上有惊喜。<br>" +
         "手机用户请试试单击宠物名字那一栏。");
 
-    new RoleLoader(credential).load()
-        .then(role => {
-            if (role.masterCareerList!.includes("贤者") || role.hasMirror!) {
-                $("#hasGoldenCage").text("true");
+    new PersonalStatus(credential).load().then(role => {
+        if (role.masterCareerList!.includes("贤者") || role.hasMirror!) {
+            $("#hasGoldenCage").text("true");
+        }
+        $("#roleLocation").text(role.location!);
+
+        doRender(credential, petList, studyStatus);
+
+        const request = credential.asRequest();
+        // @ts-ignore
+        request["mode"] = "USE_ITEM";
+        NetworkUtils.sendPostRequest("mydata.cgi", request, function (html) {
+            const equipmentList = EquipmentParser.parsePersonalItemList(html);
+            const cage = EquipmentParser.findGoldenCage(equipmentList);
+            if (cage !== null) {
+                $("#goldenCageIndex").text(cage.index!);
+                $("#openCageButton").show();
+                $("#closeCageButton").show();
             }
-            $("#roleLocation").text(role.location!);
-
-            doRender(credential, petList, studyStatus);
-
-            const request = credential.asRequest();
-            // @ts-ignore
-            request["mode"] = "USE_ITEM";
-            NetworkUtils.sendPostRequest("mydata.cgi", request, function (html) {
-                const equipmentList = EquipmentParser.parsePersonalItemList(html);
-                const cage = EquipmentParser.findGoldenCage(equipmentList);
-                if (cage !== null) {
-                    $("#goldenCageIndex").text(cage.index!);
-                    $("#openCageButton").show();
-                    $("#closeCageButton").show();
-                }
-            });
         });
+    });
 
 }
 

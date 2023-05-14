@@ -2,11 +2,11 @@ import Pet from "../../common/Pet";
 import PetProfileLoader from "../../core/PetProfileLoader";
 import EquipmentParser from "../../pocket/EquipmentParser";
 import PetParser from "../../pocket/PetParser";
-import RoleLoader from "../../pocket/RoleLoader";
 import CastleBank from "../../pocketrose/CastleBank";
 import CastlePetExpressHouse from "../../pocketrose/CastlePetExpressHouse";
 import CastleRanch from "../../pocketrose/CastleRanch";
 import PersonalPetManagementPage from "../../pocketrose/PersonalPetManagementPage";
+import PersonalStatus from "../../pocketrose/PersonalStatus";
 import Credential from "../../util/Credential";
 import MessageBoard from "../../util/MessageBoard";
 import NetworkUtils from "../../util/NetworkUtils";
@@ -34,28 +34,27 @@ class PersonalPetManagementPageProcessor_Castle extends AbstractPersonalPetManag
 
 function doProcess(credential: Credential, petList: Pet[], studyStatus: number[]) {
 
-    new RoleLoader(credential).load()
-        .then(role => {
-            if (role.masterCareerList!.includes("贤者") || role.hasMirror!) {
-                $("#hasGoldenCage").text("true");
+    new PersonalStatus(credential).load().then(role => {
+        if (role.masterCareerList!.includes("贤者") || role.hasMirror!) {
+            $("#hasGoldenCage").text("true");
+        }
+        $("#roleLocation").text(role.location!);
+
+        doRender(credential, petList, studyStatus);
+
+        const request = credential.asRequest();
+        // @ts-ignore
+        request["mode"] = "USE_ITEM";
+        NetworkUtils.sendPostRequest("mydata.cgi", request, function (html) {
+            const equipmentList = EquipmentParser.parsePersonalItemList(html);
+            const cage = EquipmentParser.findGoldenCage(equipmentList);
+            if (cage !== null) {
+                $("#goldenCageIndex").text(cage.index!);
+                $("#openCageButton").show();
+                $("#closeCageButton").show();
             }
-            $("#roleLocation").text(role.location!);
-
-            doRender(credential, petList, studyStatus);
-
-            const request = credential.asRequest();
-            // @ts-ignore
-            request["mode"] = "USE_ITEM";
-            NetworkUtils.sendPostRequest("mydata.cgi", request, function (html) {
-                const equipmentList = EquipmentParser.parsePersonalItemList(html);
-                const cage = EquipmentParser.findGoldenCage(equipmentList);
-                if (cage !== null) {
-                    $("#goldenCageIndex").text(cage.index!);
-                    $("#openCageButton").show();
-                    $("#closeCageButton").show();
-                }
-            });
         });
+    });
 
 }
 

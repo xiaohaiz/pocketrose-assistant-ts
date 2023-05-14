@@ -2,12 +2,12 @@ import NpcLoader from "../../core/NpcLoader";
 import Town from "../../core/Town";
 import MapBuilder from "../../pocket/MapBuilder";
 import MapExplorer from "../../pocket/MapExplorer";
-import RoleLoader from "../../pocket/RoleLoader";
 import TownEntrance from "../../pocket/TownEntrance";
 import TravelPlan from "../../pocket/TravelPlan";
 import TravelPlanExecutor from "../../pocket/TravelPlanExecutor";
 import TreasureHint from "../../pocket/TreasureHint";
 import TreasureHintParser from "../../pocket/TreasureHintParser";
+import PersonalStatus from "../../pocketrose/PersonalStatus";
 import TownBank from "../../pocketrose/TownBank";
 import Coordinate from "../../util/Coordinate";
 import Credential from "../../util/Credential";
@@ -259,11 +259,10 @@ function doBindTreasureButton(credential: Credential) {
 
         // 页面渲染完毕，开始探险
         new TownBank(credential).withdraw(110).then(() => {
-            new RoleLoader(credential).load()
-                .then(role => {
-                    const town = role.town!;
-                    doStartTreasureSeeking(credential, candidates, town);
-                });
+            new PersonalStatus(credential).load().then(role => {
+                const town = role.town!;
+                doStartTreasureSeeking(credential, candidates, town);
+            });
         });
     });
 }

@@ -7,9 +7,11 @@ import PersonalStatusPage from "./PersonalStatusPage";
 class PersonalStatus {
 
     readonly #credential: Credential;
+    readonly #townId?: string
 
-    constructor(credential: Credential) {
+    constructor(credential: Credential, townId?: string) {
         this.#credential = credential;
+        this.#townId = townId;
     }
 
     static parsePage(pageHtml: string): PersonalStatusPage {
@@ -20,6 +22,9 @@ class PersonalStatus {
         const action = (credential: Credential) => {
             return new Promise<PersonalStatusPage>(resolve => {
                 const request = credential.asRequestMap();
+                if (this.#townId !== undefined) {
+                    request.set("town", this.#townId);
+                }
                 request.set("mode", "STATUS_PRINT");
                 NetworkUtils.post("mydata.cgi", request)
                     .then(pageHtml => {
