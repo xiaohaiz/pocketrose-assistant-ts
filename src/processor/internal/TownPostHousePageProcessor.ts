@@ -3,7 +3,7 @@ import Role from "../../common/Role";
 import Town from "../../core/Town";
 import TownLoader from "../../core/TownLoader";
 import CastleEntrance from "../../pocket/CastleEntrance";
-import CastleLoader from "../../pocket/CastleLoader";
+import CastleInformation from "../../pocket/CastleInformation";
 import MapBuilder from "../../pocket/MapBuilder";
 import RoleLoader from "../../pocket/RoleLoader";
 import TownEntrance from "../../pocket/TownEntrance";
@@ -157,20 +157,16 @@ function doRenderMap(credential: Credential, player: string) {
             $("#map").parent().show();
 
             // 如果有必要的话绘制城堡
-            CastleLoader.loadCastle(player)
-                .then(castle => {
-                    if (castle === null) {
-                        return;
-                    }
-                    const coordinate = castle.coordinate!;
-                    const buttonId = "location_" + coordinate.x + "_" + coordinate.y;
-                    $("#" + buttonId)
-                        .attr("value", "堡")
-                        .css("background-color", "fuchsia")
-                        .parent()
-                        .attr("title", "城堡" + coordinate.asText() + " " + castle.name)
-                        .attr("class", "color_fuchsia");
-                });
+            new CastleInformation().load(player).then(castle => {
+                const coordinate = castle.coordinate!;
+                const buttonId = "location_" + coordinate.x + "_" + coordinate.y;
+                $("#" + buttonId)
+                    .attr("value", "堡")
+                    .css("background-color", "fuchsia")
+                    .parent()
+                    .attr("title", "城堡" + coordinate.asText() + " " + castle.name)
+                    .attr("class", "color_fuchsia");
+            });
 
             // 绑定地图按钮事件
             doBindMapButton(credential);
