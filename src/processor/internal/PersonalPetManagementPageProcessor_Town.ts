@@ -1,7 +1,7 @@
 import Pet from "../../common/Pet";
 import Role from "../../common/Role";
 import PetProfileLoader from "../../core/PetProfileLoader";
-import CastleLoader from "../../pocket/CastleLoader";
+import CastleInformation from "../../pocket/CastleInformation";
 import EquipmentParser from "../../pocket/EquipmentParser";
 import PetParser from "../../pocket/PetParser";
 import RoleLoader from "../../pocket/RoleLoader";
@@ -306,7 +306,7 @@ function doRender(credential: Credential, petList: Pet[], studyStatus: number[],
     doBind(credential, petList);
 
     if (role !== undefined && SetupLoader.isCastleKeeperEnabled()) {
-        CastleLoader.loadCastle2(role.name!).then(() => {
+        new CastleInformation().load(role.name!).then(() => {
             $("#ranchMenu").show();
             $("#openRanchButton").on("click", () => {
                 if ($("#ranchState").text() === "on") {

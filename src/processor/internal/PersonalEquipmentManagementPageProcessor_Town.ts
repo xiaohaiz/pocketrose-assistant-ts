@@ -2,7 +2,7 @@ import Equipment from "../../common/Equipment";
 import EquipmentSet from "../../common/EquipmentSet";
 import NpcLoader from "../../core/NpcLoader";
 import TownLoader from "../../core/TownLoader";
-import CastleLoader from "../../pocket/CastleLoader";
+import CastleInformation from "../../pocket/CastleInformation";
 import EquipmentSetLoader from "../../pocket/EquipmentSetLoader";
 import RoleStatusLoader from "../../pocket/RoleStatusLoader";
 import CastleEquipmentExpressHouse from "../../pocketrose/CastleEquipmentExpressHouse";
@@ -302,7 +302,7 @@ class PersonalEquipmentManagementPageProcessor_Town extends AbstractPersonalEqui
         $("#equipmentList").html(html).parent().show();
 
         if (SetupLoader.isCastleKeeperEnabled()) {
-            CastleLoader.loadCastle2(page.role!.name!).then(() => {
+            new CastleInformation().load(page.role!.name!).then(() => {
                 $("#openWarehouse").prop("disabled", false).show();
                 $("#closeWarehouse").prop("disabled", false).show();
                 $("#openWarehouse").on("click", () => {
