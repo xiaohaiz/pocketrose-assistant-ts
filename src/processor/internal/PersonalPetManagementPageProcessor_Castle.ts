@@ -1,11 +1,11 @@
 import Pet from "../../common/Pet";
 import PetProfileLoader from "../../core/PetProfileLoader";
 import EquipmentParser from "../../pocket/EquipmentParser";
-import PetParser from "../../pocket/PetParser";
 import CastleBank from "../../pocketrose/CastleBank";
 import CastlePetExpressHouse from "../../pocketrose/CastlePetExpressHouse";
 import CastleRanch from "../../pocketrose/CastleRanch";
 import GoldenCage from "../../pocketrose/GoldenCage";
+import PersonalPetManagement from "../../pocketrose/PersonalPetManagement";
 import PersonalPetManagementPage from "../../pocketrose/PersonalPetManagementPage";
 import PersonalStatus from "../../pocketrose/PersonalStatus";
 import Credential from "../../util/Credential";
@@ -591,13 +591,10 @@ function doBind(credential: Credential, petList: Pet[]) {
 }
 
 function doRefresh(credential: Credential) {
-    const request = credential.asRequest();
-    // @ts-ignore
-    request["mode"] = "PETSTATUS";
-    NetworkUtils.sendPostRequest("mydata.cgi", request, function (html) {
+    new PersonalPetManagement(credential).open().then(petPage => {
         // 从新的宠物界面中重新解析宠物状态
-        const petList = PetParser.parsePersonalPetList(html);
-        const petStudyStatus = PetParser.parsePersonalPetStudyStatus(html);
+        const petList = petPage.petList!;
+        const petStudyStatus = petPage.petStudyStatus!;
 
         $(".pet_picture_class").off("mouseenter").off("mouseleave");
         // 解除当前所有的按钮
