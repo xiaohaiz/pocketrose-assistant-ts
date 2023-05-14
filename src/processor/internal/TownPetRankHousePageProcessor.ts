@@ -140,6 +140,11 @@ function doBindRankButton() {
         petList = sortByAttack(petList);
         doRender("攻 击 排 行 榜", petList);
     });
+    $("#r_attack_rank").on("click", function () {
+        let petList = PetProfileLoader.loadAll();
+        petList = sortByAttack(petList, true);
+        doRender("攻 击 （垫 底） 排 行 榜", petList);
+    });
     $("#defense_rank").on("click", function () {
         let petList = PetProfileLoader.loadAll();
         petList = sortByDefense(petList);
@@ -291,20 +296,34 @@ function sortByHealth(petList: PetProfile[], reverse?: boolean): PetProfile[] {
     return result;
 }
 
-function sortByAttack(petList: PetProfile[]): PetProfile[] {
+function sortByAttack(petList: PetProfile[], reverse?: boolean): PetProfile[] {
     const result: PetProfile[] = [];
     result.push(...petList);
-    result.sort((a, b) => {
-        let ret = b.perfectAttack - a.perfectAttack;
-        if (ret !== 0) {
-            return ret;
-        }
-        ret = b.totalBaseStats - a.totalBaseStats;
-        if (ret !== 0) {
-            return ret;
-        }
-        return a.code!.localeCompare(b.code!);
-    });
+    if (reverse) {
+        result.sort((a, b) => {
+            let ret = a.perfectAttack - b.perfectAttack;
+            if (ret !== 0) {
+                return ret;
+            }
+            ret = a.totalBaseStats - b.totalBaseStats;
+            if (ret !== 0) {
+                return ret;
+            }
+            return a.code!.localeCompare(b.code!);
+        });
+    } else {
+        result.sort((a, b) => {
+            let ret = b.perfectAttack - a.perfectAttack;
+            if (ret !== 0) {
+                return ret;
+            }
+            ret = b.totalBaseStats - a.totalBaseStats;
+            if (ret !== 0) {
+                return ret;
+            }
+            return a.code!.localeCompare(b.code!);
+        });
+    }
     return result;
 }
 
