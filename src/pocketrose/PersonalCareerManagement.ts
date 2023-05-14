@@ -1,8 +1,34 @@
 import Role from "../common/Role";
+import Credential from "../util/Credential";
+import NetworkUtils from "../util/NetworkUtils";
 import StringUtils from "../util/StringUtils";
 import PersonalCareerManagementPage from "./PersonalCareerManagementPage";
 
 class PersonalCareerManagement {
+
+    readonly #credential: Credential;
+    readonly #townId?: string;
+
+    constructor(credential: Credential, townId?: string) {
+        this.#credential = credential;
+        this.#townId = townId;
+    }
+
+    async open(): Promise<PersonalCareerManagementPage> {
+        return await (() => {
+            return new Promise<PersonalCareerManagementPage>(resolve => {
+                const request = this.#credential.asRequestMap();
+                if (this.#townId !== undefined) {
+                    request.set("town", this.#townId);
+                }
+                request.set("mode", "CHANGE_OCCUPATION");
+                NetworkUtils.post("mydata.cgi", request).then(html => {
+                    const page = PersonalCareerManagement.parsePage(html);
+                    resolve(page);
+                });
+            });
+        })();
+    }
 
     static parsePage(html: string) {
         const role = new Role();
