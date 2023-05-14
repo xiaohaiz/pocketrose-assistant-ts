@@ -1,6 +1,7 @@
 import Castle from "../common/Castle";
 import Coordinate from "../util/Coordinate";
 import StringUtils from "../util/StringUtils";
+import CastleInformationPage from "./CastleInformationPage";
 
 class CastleInformation {
 
@@ -23,6 +24,9 @@ class CastleInformation {
                 castleList.push(castle);
             }
         });
+        const page = new CastleInformationPage();
+        page.castleList = castleList;
+        return page;
     }
 
 }
