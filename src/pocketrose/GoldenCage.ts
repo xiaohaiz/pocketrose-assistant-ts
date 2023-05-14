@@ -1,8 +1,36 @@
 import Pet from "../common/Pet";
+import Credential from "../util/Credential";
+import NetworkUtils from "../util/NetworkUtils";
+import NumberUtils from "../util/NumberUtils";
 import StringUtils from "../util/StringUtils";
 import GoldenCagePage from "./GoldenCagePage";
 
 class GoldenCage {
+
+    readonly #credential: Credential;
+
+    constructor(credential: Credential) {
+        this.#credential = credential;
+    }
+
+    async open(cageIndex: number): Promise<GoldenCagePage> {
+        return await (() => {
+            return new Promise<GoldenCagePage>((resolve, reject) => {
+                if (!NumberUtils.isIndexNumber(cageIndex)) {
+                    reject();
+                } else {
+                    const request = this.#credential.asRequestMap();
+                    request.set("chara", "1");
+                    request.set("item" + cageIndex, cageIndex.toString());
+                    request.set("mode", "USE");
+                    NetworkUtils.post("mydata.cgi", request).then(html => {
+                        const page = GoldenCage.parsePage(html);
+                        resolve(page);
+                    });
+                }
+            });
+        })();
+    }
 
     static parsePage(pageHtml: string) {
         const petList: Pet[] = [];
