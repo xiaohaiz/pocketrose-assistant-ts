@@ -4,7 +4,6 @@ class PersonalStatusPage {
 
     role?: Role;
 
-
 }
 
 export = PersonalStatusPage;
