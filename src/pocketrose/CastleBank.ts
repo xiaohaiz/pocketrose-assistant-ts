@@ -1,5 +1,6 @@
 import BankAccount from "../common/BankAccount";
 import Role from "../common/Role";
+import BankUtils from "../util/BankUtils";
 import Credential from "../util/Credential";
 import MessageBoard from "../util/MessageBoard";
 import NetworkUtils from "../util/NetworkUtils";
@@ -42,6 +43,41 @@ class CastleBank {
             });
         };
         return await action();
+    }
+
+    async deposit1(amount?: number): Promise<void> {
+        return await (() => {
+            return new Promise<void>((resolve, reject) => {
+                const request = this.#credential.asRequestMap();
+                if (amount === undefined) {
+                    // deposit all
+                    request.set("azukeru", "all");
+                    request.set("mode", "CASTLEBANK_SELL");
+                    NetworkUtils.post("castle.cgi", request)
+                        .then(() => {
+                            MessageBoard.publishMessage("在城堡支行存入全部现金。");
+                            resolve();
+                        });
+                } else {
+                    // deposit specified amount
+                    if (!BankUtils.checkAmountAvailability(amount)) {
+                        MessageBoard.publishWarning("非法的金额" + amount + "！");
+                        reject();
+                    } else if (amount === 0) {
+                        // 真逗，没钱凑什么热闹。
+                        resolve();
+                    } else {
+                        request.set("azukeru", amount.toString());
+                        request.set("mode", "CASTLEBANK_SELL");
+                        NetworkUtils.post("castle.cgi", request)
+                            .then(() => {
+                                MessageBoard.publishMessage("在城堡支行存入了" + amount + "万现金。");
+                                resolve();
+                            });
+                    }
+                }
+            });
+        })();
     }
 
     async depositAll(): Promise<void> {
