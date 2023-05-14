@@ -44,7 +44,6 @@ function doProcess(credential: Credential, petList: Pet[], studyStatus: number[]
         doRender(credential, petList, studyStatus);
 
         new PersonalEquipmentManagement(credential).open().then(page => {
-            const equipmentList = page.equipmentList!;
             const cage = page.findGoldenCage();
             if (cage !== null) {
                 $("#goldenCageIndex").text(cage.index!);
