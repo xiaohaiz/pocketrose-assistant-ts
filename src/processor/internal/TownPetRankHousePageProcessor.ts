@@ -73,6 +73,18 @@ function doProcess(credential: Credential) {
     html += "<input type='button' class='button-89' id='capacity_rank' value='能力ＴＯＰ３０'>";
     html += "</td>";
     html += "</tr>";
+    html += "<tr>";
+    html += "<td style='background-color:#F8F0E0;text-align:center'>";
+    html += "<input type='button' class='button-89' id='r_total_base_stats_rank' value='族值垫底的３０'>";
+    html += "<input type='button' class='button-89' id='r_health_rank' value='生命垫底的３０'>";
+    html += "<input type='button' class='button-89' id='r_attack_rank' value='攻击垫底的３０'>";
+    html += "<input type='button' class='button-89' id='r_defense_rank' value='防御垫底的３０'>";
+    html += "<input type='button' class='button-89' id='r_special_attack_rank' value='智力垫底的３０'>";
+    html += "<input type='button' class='button-89' id='r_special_defense_rank' value='精神垫底的３０'>";
+    html += "<input type='button' class='button-89' id='r_speed_rank' value='速度ＴＯＰ３０'>";
+    html += "<input type='button' class='button-89' id='r_capacity_rank' value='能力ＴＯＰ３０'>";
+    html += "</td>";
+    html += "</tr>";
     html += "<tr style='display:none'>";
     html += "<td id='pet_rank_cell'></td>";
     html += "</tr>";
@@ -107,6 +119,11 @@ function doBindRankButton() {
         let petList = PetProfileLoader.loadAll();
         petList = sortByTotalBaseStats(petList);
         doRender("族 值 排 行 榜", petList);
+    });
+    $("#r_total_base_stats_rank").on("click", function () {
+        let petList = PetProfileLoader.loadAll();
+        petList = sortByTotalBaseStats(petList, true);
+        doRender("族 值 （垫 底） 排 行 榜", petList);
     });
     $("#health_rank").on("click", function () {
         let petList = PetProfileLoader.loadAll();
@@ -207,20 +224,34 @@ function doRender(title: string, petList: PetProfile[]) {
     $("#pet_rank_cell").html(html).parent().show();
 }
 
-function sortByTotalBaseStats(petList: PetProfile[]): PetProfile[] {
+function sortByTotalBaseStats(petList: PetProfile[], reverse?: boolean): PetProfile[] {
     const result: PetProfile[] = [];
     result.push(...petList);
-    result.sort((a, b) => {
-        let ret = b.totalBaseStats - a.totalBaseStats;
-        if (ret !== 0) {
-            return ret;
-        }
-        ret = b.totalEffort - a.totalEffort;
-        if (ret !== 0) {
-            return ret;
-        }
-        return a.code!.localeCompare(b.code!);
-    });
+    if (reverse) {
+        result.sort((a, b) => {
+            let ret = a.totalBaseStats - b.totalBaseStats;
+            if (ret !== 0) {
+                return ret;
+            }
+            ret = a.totalEffort - b.totalEffort;
+            if (ret !== 0) {
+                return ret;
+            }
+            return a.code!.localeCompare(b.code!);
+        });
+    } else {
+        result.sort((a, b) => {
+            let ret = b.totalBaseStats - a.totalBaseStats;
+            if (ret !== 0) {
+                return ret;
+            }
+            ret = b.totalEffort - a.totalEffort;
+            if (ret !== 0) {
+                return ret;
+            }
+            return a.code!.localeCompare(b.code!);
+        });
+    }
     return result;
 }
 
