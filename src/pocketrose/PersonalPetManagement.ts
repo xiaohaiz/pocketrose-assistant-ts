@@ -30,9 +30,17 @@ class PersonalPetManagement {
     }
 
     static parsePage(html: string): PersonalPetManagementPage {
+        const studyStatus: number[] = [];
+        $(html).find("input:checkbox:checked").each(function (_idx, checkbox) {
+            const name = $(checkbox).attr("name") as string;
+            if (name.startsWith("study")) {
+                studyStatus.push(parseInt($(checkbox).val() as string));
+            }
+        });
+
         const page = new PersonalPetManagementPage();
         page.petList = PetParser.parsePersonalPetList(html);
-        page.petStudyStatus = PetParser.parsePersonalPetStudyStatus(html);
+        page.petStudyStatus = studyStatus;
         return page;
     }
 }
