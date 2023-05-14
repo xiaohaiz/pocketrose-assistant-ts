@@ -1,12 +1,24 @@
 import TownStatus from "../common/TownStatus";
+import NetworkUtils from "../util/NetworkUtils";
 import StringUtils from "../util/StringUtils";
 import TownInformationPage from "./TownInformationPage";
 
 class TownInformation {
 
+    async open(): Promise<TownInformationPage> {
+        return await (() => {
+            return new Promise<TownInformationPage>(resolve => {
+                NetworkUtils.get("town_print.cgi").then(html => {
+                    const page = TownInformation.parsePage(html);
+                    resolve(page);
+                });
+            });
+        })();
+    }
+
     static parsePage(html: string): TownInformationPage {
         const statusList: TownStatus[] = [];
-        $(pageHtml).find("tr")
+        $(html).find("tr")
             .filter(function (_idx) {
                 return _idx > 0;
             })
