@@ -5,6 +5,7 @@ import PetParser from "../../pocket/PetParser";
 import CastleBank from "../../pocketrose/CastleBank";
 import CastlePetExpressHouse from "../../pocketrose/CastlePetExpressHouse";
 import CastleRanch from "../../pocketrose/CastleRanch";
+import GoldenCage from "../../pocketrose/GoldenCage";
 import PersonalPetManagementPage from "../../pocketrose/PersonalPetManagementPage";
 import PersonalStatus from "../../pocketrose/PersonalStatus";
 import Credential from "../../util/Credential";
@@ -483,15 +484,8 @@ function doRenderGoldenCage(credential: Credential) {
         return;
     }
     const index = parseInt(s);
-    const request = credential.asRequest();
-    // @ts-ignore
-    request["chara"] = "1";
-    // @ts-ignore
-    request["item" + index] = index;
-    // @ts-ignore
-    request["mode"] = "USE";
-    NetworkUtils.sendPostRequest("mydata.cgi", request, function (pageHtml) {
-        const cagePetList = PetParser.parseGoldenCagePetList(pageHtml);
+    new GoldenCage(credential).open(index).then(cagePage => {
+        const cagePetList = cagePage.sortedPetList;
 
         let html = "";
         html += "<table style='border-width:0;background-color:#888888;text-align:center;width:100%'>";
