@@ -3,6 +3,7 @@ import Spell from "../../common/Spell";
 import CareerLoader from "../../core/CareerLoader";
 import NpcLoader from "../../core/NpcLoader";
 import CareerParser from "../../pocket/CareerParser";
+import PersonalCareerManagement from "../../pocketrose/PersonalCareerManagement";
 import PersonalSpell from "../../pocketrose/PersonalSpell";
 import PersonalStatus from "../../pocketrose/PersonalStatus";
 import SetupLoader from "../../setup/SetupLoader";
@@ -357,11 +358,8 @@ function doRenderSpell(credential: Credential, role: Role, spellList: Spell[]) {
 }
 
 function doRefresh(credential: Credential) {
-    const request = credential.asRequest();
-    // @ts-ignore
-    request["mode"] = "CHANGE_OCCUPATION";
-    NetworkUtils.sendPostRequest("mydata.cgi", request, function (html) {
-        const careerCandidateList = CareerParser.parseCareerTransferCandidateList(html);
+    new PersonalCareerManagement(credential).open().then(page => {
+        const careerCandidateList = page.careerList!;
         $(".CareerUIButton").off("click");
         $("#CareerUI").html("");
         doRender(credential, careerCandidateList);
