@@ -244,6 +244,10 @@ class SetupLoader {
     static isConsecrateStateRecognizeEnabled(id: string): boolean {
         return StorageUtils.getBoolean("_pa_037_" + id);
     }
+
+    static isEquipmentPetSortEnabled(): boolean {
+        return StorageUtils.getBoolean("_pa_038");
+    }
 }
 
 export = SetupLoader;
