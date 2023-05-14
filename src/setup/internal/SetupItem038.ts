@@ -12,7 +12,7 @@ class SetupItem038 implements SetupItem {
 }
 
 const code: string = "038";
-const name: string = "装备宠物排序显示";
+const name: string = "装备和宠物排序";
 const key: string = "_pa_" + code;
 
 function doRender() {
