@@ -6,6 +6,10 @@ import PageProcessorCredentialSupport from "../PageProcessorCredentialSupport";
 
 class TownPetRankHousePageProcessor extends PageProcessorCredentialSupport {
 
+    doLoadButtonStyles(): number[] {
+        return [89];
+    }
+
     doProcess(credential: Credential, context?: PageProcessorContext): void {
         doProcess(credential);
     }
@@ -59,13 +63,14 @@ function doProcess(credential: Credential) {
     html += "</tr>";
     html += "<tr>";
     html += "<td style='background-color:#F8F0E0;text-align:center'>";
-    html += "<input type='button' id='total_base_stats_rank' value='族值ＴＯＰ３０'>";
-    html += "<input type='button' id='health_rank' value='生命ＴＯＰ３０'>";
-    html += "<input type='button' id='attack_rank' value='攻击ＴＯＰ３０'>";
-    html += "<input type='button' id='defense_rank' value='防御ＴＯＰ３０'>";
-    html += "<input type='button' id='special_attack_rank' value='智力ＴＯＰ３０'>";
-    html += "<input type='button' id='special_defense_rank' value='精神ＴＯＰ３０'>";
-    html += "<input type='button' id='speed_rank' value='速度ＴＯＰ３０'>";
+    html += "<input type='button' class='button-89' id='total_base_stats_rank' value='族值ＴＯＰ３０'>";
+    html += "<input type='button' class='button-89' id='health_rank' value='生命ＴＯＰ３０'>";
+    html += "<input type='button' class='button-89' id='attack_rank' value='攻击ＴＯＰ３０'>";
+    html += "<input type='button' class='button-89' id='defense_rank' value='防御ＴＯＰ３０'>";
+    html += "<input type='button' class='button-89' id='special_attack_rank' value='智力ＴＯＰ３０'>";
+    html += "<input type='button' class='button-89' id='special_defense_rank' value='精神ＴＯＰ３０'>";
+    html += "<input type='button' class='button-89' id='speed_rank' value='速度ＴＯＰ３０'>";
+    html += "<input type='button' class='button-89' id='capacity_rank' value='能力ＴＯＰ３０'>";
     html += "</td>";
     html += "</tr>";
     html += "<tr style='display:none'>";
@@ -132,6 +137,11 @@ function doBindRankButton() {
         let petList = PetProfileLoader.loadAll();
         petList = sortBySpeed(petList);
         doRender("速 度 排 行 榜", petList);
+    });
+    $("#capacity_rank").on("click", function () {
+        let petList = PetProfileLoader.loadAll();
+        petList = sortByCapacity(petList);
+        doRender("能 力 排 行 榜", petList);
     });
 }
 
@@ -304,6 +314,23 @@ function sortBySpeed(petList: PetProfile[]): PetProfile[] {
     result.push(...petList);
     result.sort((a, b) => {
         let ret = b.perfectSpeed - a.perfectSpeed;
+        if (ret !== 0) {
+            return ret;
+        }
+        ret = b.totalBaseStats - a.totalBaseStats;
+        if (ret !== 0) {
+            return ret;
+        }
+        return a.code!.localeCompare(b.code!);
+    });
+    return result;
+}
+
+function sortByCapacity(petList: PetProfile[]): PetProfile[] {
+    const result: PetProfile[] = [];
+    result.push(...petList);
+    result.sort((a, b) => {
+        let ret = b.perfectCapacity - a.perfectCapacity;
         if (ret !== 0) {
             return ret;
         }
