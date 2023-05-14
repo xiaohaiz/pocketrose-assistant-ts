@@ -81,8 +81,8 @@ function doProcess(credential: Credential) {
     html += "<input type='button' class='button-89' id='r_defense_rank' value='防御垫底的３０'>";
     html += "<input type='button' class='button-89' id='r_special_attack_rank' value='智力垫底的３０'>";
     html += "<input type='button' class='button-89' id='r_special_defense_rank' value='精神垫底的３０'>";
-    html += "<input type='button' class='button-89' id='r_speed_rank' value='速度ＴＯＰ３０'>";
-    html += "<input type='button' class='button-89' id='r_capacity_rank' value='能力ＴＯＰ３０'>";
+    html += "<input type='button' class='button-89' id='r_speed_rank' value='速度垫底的３０'>";
+    html += "<input type='button' class='button-89' id='r_capacity_rank' value='能力垫底的３０'>";
     html += "</td>";
     html += "</tr>";
     html += "<tr style='display:none'>";
@@ -202,7 +202,7 @@ function doRender(title: string, petList: PetProfile[]) {
     html += "<table style='border-width:0;background-color:#888888;margin:auto;width:100%'>";
     html += "<tbody style='background-color:#F8F0E0;text-align:center'>";
     html += "<tr>";
-    html += "<td style='background-color:darkred;color:wheat;font-weight:bold' colspan='19'>";
+    html += "<td style='background-color:darkred;color:wheat;font-weight:bold' colspan='20'>";
     html += "＜ " + title + " ＞";
     html += "</td>";
     html += "<tr>";
@@ -225,6 +225,7 @@ function doRender(title: string, petList: PetProfile[]) {
     html += "<th style='background-color:#E0D0B0'>速度努力</th>";
     html += "<th style='background-color:#EFE0C0'>捕获率</th>";
     html += "<th style='background-color:#EFE0C0'>成长经验</th>";
+    html += "<th style='background-color:#E8E8D0'>最大能力</th>";
     html += "</tr>";
 
     for (let i = 0; i < 30; i++) {
@@ -251,6 +252,7 @@ function doRender(title: string, petList: PetProfile[]) {
         html += "<td style='background-color:#E0D0B0'>" + pet.speedEffort + "</td>";
         html += "<td style='background-color:#EFE0C0'>" + pet.catchRatio + "</td>";
         html += "<td style='background-color:#EFE0C0'>" + pet.growExperience + "</td>";
+        html += "<td style='background-color:#E8E8D0'>" + pet.perfectCapacity + "</td>";
         html += "</tr>";
     }
 
