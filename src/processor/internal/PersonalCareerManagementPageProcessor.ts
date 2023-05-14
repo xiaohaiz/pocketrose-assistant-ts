@@ -4,7 +4,7 @@ import CareerLoader from "../../core/CareerLoader";
 import NpcLoader from "../../core/NpcLoader";
 import CareerParser from "../../pocket/CareerParser";
 import RoleLoader from "../../pocket/RoleLoader";
-import SpellLoader from "../../pocket/SpellLoader";
+import PersonalSpell from "../../pocketrose/PersonalSpell";
 import SetupLoader from "../../setup/SetupLoader";
 import CommentBoard from "../../util/CommentBoard";
 import Credential from "../../util/Credential";
@@ -105,11 +105,11 @@ function doRender(credential: Credential, candidateList: string[]) {
                 doBindCareerButton(credential);
             }
 
-            new SpellLoader(credential).load()
-                .then(spellList => {
-                    doRenderSpell(credential, role, spellList);
-                    doBindSpellButton(credential, spellList);
-                });
+            new PersonalSpell(credential).open().then(spellPage => {
+                const spellList = spellPage.spellList!;
+                doRenderSpell(credential, role, spellList);
+                doBindSpellButton(credential, spellList);
+            });
         });
 }
 

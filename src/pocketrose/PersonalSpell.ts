@@ -54,3 +54,5 @@ class PersonalSpell {
         return page;
     }
 }
+
+export = PersonalSpell;
