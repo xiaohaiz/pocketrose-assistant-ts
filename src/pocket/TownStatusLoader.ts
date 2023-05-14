@@ -1,4 +1,4 @@
-import TownStatus from "./TownStatus";
+import TownStatus from "../common/TownStatus";
 import NetworkUtils from "../util/NetworkUtils";
 import StringUtils from "../util/StringUtils";
 
