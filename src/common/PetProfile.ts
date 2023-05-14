@@ -86,6 +86,15 @@ class PetProfile {
         return Math.ceil(init + incr);
     }
 
+    get perfectCapacity(): number {
+        return Math.floor(this.perfectHealth / 3) +
+            this.perfectAttack +
+            this.perfectDefense +
+            this.perfectSpecialAttack +
+            this.perfectSpecialDefense +
+            this.perfectSpeed;
+    }
+
 }
 
 export = PetProfile;
