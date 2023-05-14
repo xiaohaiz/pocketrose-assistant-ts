@@ -191,7 +191,7 @@ class CastleBankPageProcessor extends PageProcessorCredentialSupport {
                 MessageBoard.publishWarning("没觉得你身上有啥值得存入的现金！");
                 return;
             }
-            new CastleBank(credential).depositAll().then(() => {
+            new CastleBank(credential).deposit1().then(() => {
                 this.#refresh(credential);
             });
         });
@@ -287,7 +287,7 @@ class CastleBankPageProcessor extends PageProcessorCredentialSupport {
                 request.set("mode", "CASTLE_SENDMONEY2");
                 NetworkUtils.post("castle.cgi", request).then(html => {
                     MessageBoard.processResponseMessage(html);
-                    bank.depositAll().then(() => {
+                    bank.deposit1().then(() => {
                         this.#refresh(credential);
                     });
                 });

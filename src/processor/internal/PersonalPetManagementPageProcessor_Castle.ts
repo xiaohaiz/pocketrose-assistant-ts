@@ -787,7 +787,7 @@ function doBindPetLoveButton(credential: Credential, buttonId: string, pet: Pet)
             request["select"] = pet.index;
             NetworkUtils.sendPostRequest("mydata.cgi", request, function (html) {
                 MessageBoard.processResponseMessage(html);
-                bank.depositAll().then(() => {
+                bank.deposit1().then(() => {
                     doRefresh(credential);
                 });
             });
@@ -844,7 +844,7 @@ function doBindPetConsecrateButton(credential: Credential, buttonId: string, pet
         const bank = new CastleBank(credential);
         bank.withdraw(1000).then(() => {
             consecratePet(credential, pet.index!).then(() => {
-                bank.depositAll().then(() => {
+                bank.deposit1().then(() => {
                     doRefresh(credential);
                 });
             });
@@ -862,7 +862,7 @@ function doBindPetSendButton(credential: Credential, buttonId: string, pet: Pet)
         const bank = new CastleBank(credential);
         bank.withdraw(10).then(() => {
             new CastlePetExpressHouse(credential).send(receiver as string, pet.index!).then(() => {
-                bank.depositAll().then(() => {
+                bank.deposit1().then(() => {
                     doRefresh(credential);
                 });
             });

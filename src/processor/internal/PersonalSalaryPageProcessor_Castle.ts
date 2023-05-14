@@ -1,8 +1,8 @@
-import AbstractPersonalSalaryPageProcessor from "./AbstractPersonalSalaryPageProcessor";
+import CastleBank from "../../pocketrose/CastleBank";
 import Credential from "../../util/Credential";
 import PageUtils from "../../util/PageUtils";
 import PageProcessorContext from "../PageProcessorContext";
-import CastleBank from "../../pocketrose/CastleBank";
+import AbstractPersonalSalaryPageProcessor from "./AbstractPersonalSalaryPageProcessor";
 
 class PersonalSalaryPageProcessor_Castle extends AbstractPersonalSalaryPageProcessor {
 
@@ -27,7 +27,7 @@ class PersonalSalaryPageProcessor_Castle extends AbstractPersonalSalaryPageProce
             $("#returnButton").val("携款逃回" + castleName);
         }
         $("#returnButton").on("click", () => {
-            new CastleBank(credential).depositAll().then(() => {
+            new CastleBank(credential).deposit1().then(() => {
                 $("#returnCastle").trigger("click");
             });
         });
