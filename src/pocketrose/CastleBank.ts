@@ -45,7 +45,7 @@ class CastleBank {
         return await action();
     }
 
-    async deposit1(amount?: number): Promise<void> {
+    async deposit(amount?: number): Promise<void> {
         return await (() => {
             return new Promise<void>((resolve, reject) => {
                 const request = this.#credential.asRequestMap();

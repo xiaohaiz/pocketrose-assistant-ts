@@ -27,7 +27,7 @@ class PersonalSalaryPageProcessor_Castle extends AbstractPersonalSalaryPageProce
             $("#returnButton").val("携款逃回" + castleName);
         }
         $("#returnButton").on("click", () => {
-            new CastleBank(credential).deposit1().then(() => {
+            new CastleBank(credential).deposit().then(() => {
                 $("#returnCastle").trigger("click");
             });
         });

@@ -235,7 +235,7 @@ class PersonalEquipmentManagementPageProcessor_Castle extends AbstractPersonalEq
                 const bank = new CastleBank(credential);
                 bank.withdraw(10).then(() => {
                     new CastleEquipmentExpressHouse(credential).send(s as string, [index]).then(() => {
-                        bank.deposit1().then(() => {
+                        bank.deposit().then(() => {
                             this.doRefreshMutablePage(credential, context);
                         });
                     });
@@ -419,7 +419,7 @@ class PersonalEquipmentManagementPageProcessor_Castle extends AbstractPersonalEq
             const bank = new CastleBank(credential);
             bank.withdraw(10).then(() => {
                 new CastleEquipmentExpressHouse(credential).send(s as string, indexList).then(() => {
-                    bank.deposit1().then(() => {
+                    bank.deposit().then(() => {
                         this.doRefreshMutablePage(credential, context);
                     });
                 });
