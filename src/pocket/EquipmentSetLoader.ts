@@ -1,10 +1,10 @@
 import Equipment from "../common/Equipment";
 import EquipmentSet from "../common/EquipmentSet";
+import PersonalEquipmentManagement from "../pocketrose/PersonalEquipmentManagement";
 import TreasureBag from "../pocketrose/TreasureBag";
 import Credential from "../util/Credential";
 import MessageBoard from "../util/MessageBoard";
 import NetworkUtils from "../util/NetworkUtils";
-import EquipmentParser from "./EquipmentParser";
 
 class EquipmentSetLoader {
 
@@ -57,17 +57,13 @@ class EquipmentSetLoader {
                             }
                             if (candidateIndexList.length > 0) {
                                 // 在百宝袋中找到了需要的装备，准备拿出来
-                                treasureBag.takeOut(candidateIndexList)
-                                    .then(() => {
-                                        const request = credential.asRequest();
-                                        // @ts-ignore
-                                        request["mode"] = "USE_ITEM";
-                                        NetworkUtils.sendPostRequest("mydata.cgi", request, function (html) {
-                                            const newEquipmentList = EquipmentParser.parsePersonalItemList(html);
-                                            set = doScanEquipmentSet(newEquipmentList, set);
-                                            doLoadEquipmentSet(credential, set, resolve);
-                                        });
+                                treasureBag.takeOut(candidateIndexList).then(() => {
+                                    new PersonalEquipmentManagement(credential).open().then(newPage => {
+                                        const newEquipmentList = newPage.equipmentList!;
+                                        set = doScanEquipmentSet(newEquipmentList, set);
+                                        doLoadEquipmentSet(credential, set, resolve);
                                     });
+                                });
                             } else {
                                 // 在百宝袋中没有找到需要的装备
                                 doLoadEquipmentSet(credential, set, resolve);
