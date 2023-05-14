@@ -45,6 +45,9 @@ function __internalSendGetRequest(count: number, cgi: string, handler?: (html: s
                 MessageBoard.publishWarning("请求" + cgi + "时返回错误[status=" + response.status + "]，尝试重试！");
                 throw new Error("RESPONSE was not ok");
             }
+            if (count !== 0) {
+                MessageBoard.publishMessage("第" + count + "次重试请求" + cgi + "成功。");
+            }
             return response.arrayBuffer();
         })
         .then((arrayBuffer) => {
@@ -54,7 +57,7 @@ function __internalSendGetRequest(count: number, cgi: string, handler?: (html: s
                 handler(html);
             }
         })
-        .catch((error) => {
+        .catch(() => {
             __internalSendGetRequest(count + 1, cgi, handler);
         });
 }
@@ -76,6 +79,9 @@ function __internalSendPostRequest(count: number, cgi: string, request: {}, hand
                 MessageBoard.publishWarning("请求" + cgi + "时返回错误[status=" + response.status + "]，尝试重试！");
                 throw new Error("RESPONSE was not ok");
             }
+            if (count !== 0) {
+                MessageBoard.publishMessage("第" + count + "次重试请求" + cgi + "成功。");
+            }
             return response.arrayBuffer();
         })
         .then((arrayBuffer) => {
@@ -85,7 +91,7 @@ function __internalSendPostRequest(count: number, cgi: string, request: {}, hand
                 handler(html);
             }
         })
-        .catch((error) => {
+        .catch(() => {
             __internalSendPostRequest(count + 1, cgi, request, handler);
         });
 }
