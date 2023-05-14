@@ -1,9 +1,36 @@
 import Castle from "../common/Castle";
 import Coordinate from "../util/Coordinate";
+import NetworkUtils from "../util/NetworkUtils";
 import StringUtils from "../util/StringUtils";
 import CastleInformationPage from "./CastleInformationPage";
 
 class CastleInformation {
+
+    async open(): Promise<CastleInformationPage> {
+        return await (() => {
+            return new Promise<CastleInformationPage>(resolve => {
+                NetworkUtils.get("castle_print.cgi").then(html => {
+                    const page = CastleInformation.parsePage(html);
+                    resolve(page);
+                });
+            });
+        })();
+    }
+
+    async load(roleName: string): Promise<Castle> {
+        return await (() => {
+            return new Promise<Castle>((resolve, reject) => {
+                this.open().then(page => {
+                    const castle = page.findByRoleName(roleName);
+                    if (castle === null) {
+                        reject();
+                    } else {
+                        resolve(castle);
+                    }
+                });
+            });
+        })();
+    }
 
     static parsePage(html: string) {
         const castleList: Castle[] = [];

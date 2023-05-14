@@ -1,5 +1,5 @@
 import NpcLoader from "../../core/NpcLoader";
-import CastleLoader from "../../pocket/CastleLoader";
+import CastleInformation from "../../pocket/CastleInformation";
 import MapBuilder from "../../pocket/MapBuilder";
 import RoleLocationLoader from "../../pocket/RoleLocationLoader";
 import TravelPlanBuilder from "../../pocket/TravelPlanBuilder";
@@ -144,23 +144,19 @@ function doRender(credential: Credential, player: string) {
 
             $("#postHouse").parent().show();
 
-            CastleLoader.loadCastle(player)
-                .then(castle => {
-                    if (castle === null) {
-                        return;
-                    }
-                    const coordinate = castle.coordinate!;
-                    if (location.coordinate!.equals(coordinate)) {
-                        return;
-                    }
-                    const buttonId = "location_" + coordinate.x + "_" + coordinate.y;
-                    $("#" + buttonId)
-                        .attr("value", "堡")
-                        .css("background-color", "fuchsia")
-                        .parent()
-                        .attr("title", "城堡" + coordinate.asText() + " " + castle.name)
-                        .attr("class", "color_fuchsia");
-                });
+            new CastleInformation().load(player).then(castle => {
+                const coordinate = castle.coordinate!;
+                if (location.coordinate!.equals(coordinate)) {
+                    return;
+                }
+                const buttonId = "location_" + coordinate.x + "_" + coordinate.y;
+                $("#" + buttonId)
+                    .attr("value", "堡")
+                    .css("background-color", "fuchsia")
+                    .parent()
+                    .attr("title", "城堡" + coordinate.asText() + " " + castle.name)
+                    .attr("class", "color_fuchsia");
+            });
 
             doBind(credential);
         });

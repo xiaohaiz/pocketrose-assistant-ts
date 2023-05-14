@@ -51,6 +51,16 @@ class NetworkUtils {
             });
     }
 
+    static async get(cgi: string): Promise<string> {
+        return await (() => {
+            return new Promise<string>(resolve => {
+                NetworkUtils.sendGetRequest(cgi, function (html) {
+                    resolve(html);
+                });
+            });
+        })();
+    }
+
     static async post(cgi: string, request: Map<string, string>): Promise<string> {
         const action = (cgi: string, request: Map<string, string>) => {
             return new Promise<string>(resolve => {
