@@ -2,7 +2,6 @@ import BattlePageInterceptor from "./internal/BattlePageInterceptor";
 import CastleBankPageInterceptor from "./internal/CastleBankPageInterceptor";
 import CastleDashboardPageInterceptor from "./internal/CastleDashboardPageInterceptor";
 import CastlePostHousePageInterceptor from "./internal/CastlePostHousePageInterceptor";
-import CastleRanchPageInterceptor from "./internal/CastleRanchPageInterceptor";
 import LoginDashboardPageInterceptor from "./internal/LoginDashboardPageInterceptor";
 import MapDashboardPageInterceptor from "./internal/MapDashboardPageInterceptor";
 import MapPostHousePageInterceptor from "./internal/MapPostHousePageInterceptor";
@@ -18,7 +17,6 @@ import TownAccessoryHousePageInterceptor from "./internal/TownAccessoryHousePage
 import TownAdventureGuildPageInterceptor from "./internal/TownAdventureGuildPageInterceptor";
 import TownArmorHousePageInterceptor from "./internal/TownArmorHousePageInterceptor";
 import TownBankPageInterceptor from "./internal/TownBankPageInterceptor";
-import TownCastleKeeperPageInterceptor from "./internal/TownCastleKeeperPageInterceptor";
 import TownDashboardPageInterceptor from "./internal/TownDashboardPageInterceptor";
 import TownGemHousePageInterceptor from "./internal/TownGemHousePageInterceptor";
 import TownInformationPageInterceptor from "./internal/TownInformationPageInterceptor";
@@ -39,7 +37,6 @@ class PageInterceptorManager {
             new CastleBankPageInterceptor(),
             new CastleDashboardPageInterceptor(),
             new CastlePostHousePageInterceptor(),
-            new CastleRanchPageInterceptor(),
             new LoginDashboardPageInterceptor(),
             new MapDashboardPageInterceptor(),
             new MapPostHousePageInterceptor(),
@@ -55,7 +52,6 @@ class PageInterceptorManager {
             new TownAdventureGuildPageInterceptor(),
             new TownArmorHousePageInterceptor(),
             new TownBankPageInterceptor(),
-            new TownCastleKeeperPageInterceptor(),
             new TownDashboardPageInterceptor(),
             new TownGemHousePageInterceptor(),
             new TownInformationPageInterceptor(),

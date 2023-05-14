@@ -1,6 +1,6 @@
 import TownLoader from "../core/TownLoader";
+import TownInformation from "../pocketrose/TownInformation";
 import Coordinate from "../util/Coordinate";
-import TownStatusLoader from "./TownStatusLoader";
 
 class MapBuilder {
 
@@ -67,20 +67,19 @@ class MapBuilder {
     }
 
     static updateTownBackgroundColor() {
-        TownStatusLoader.loadTownStatusList()
-            .then(statusList => {
-                for (const status of statusList) {
-                    const town = TownLoader.getTownByName(status.name!)!;
-                    const x = town.coordinate!.x;
-                    const y = town.coordinate!.y;
-                    const buttonId = "location_" + x + "_" + y;
-                    $("#" + buttonId)
-                        .css("background-color", status.color!)
-                        .css("color", "white")
-                        .parent()
-                        .attr("class", "color_" + status.color);
-                }
-            });
+        new TownInformation().open().then(page => {
+            for (const status of page.statusList!) {
+                const town = TownLoader.getTownByName(status.name!)!;
+                const x = town.coordinate!.x;
+                const y = town.coordinate!.y;
+                const buttonId = "location_" + x + "_" + y;
+                $("#" + buttonId)
+                    .css("background-color", status.color!)
+                    .css("color", "white")
+                    .parent()
+                    .attr("class", "color_" + status.color);
+            }
+        });
     }
 }
 

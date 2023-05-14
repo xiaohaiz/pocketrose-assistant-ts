@@ -1,4 +1,4 @@
-import SetupLoader from "../core/SetupLoader";
+import SetupLoader from "../setup/SetupLoader";
 import Constants from "../util/Constants";
 import PageUtils from "../util/PageUtils";
 import StringUtils from "../util/StringUtils";
@@ -121,6 +121,9 @@ class Pet {
     static sortPetList(source: Pet[]): Pet[] {
         const target: Pet[] = [];
         target.push(...source);
+        if (!SetupLoader.isEquipmentPetSortEnabled()) {
+            return target;
+        }
         target.sort((a, b) => {
             let ret = b.level! - a.level!;
             if (ret !== 0) {

@@ -1,5 +1,5 @@
-import SetupLoader from "../../core/SetupLoader";
 import EventHandler from "../../pocket/EventHandler";
+import SetupLoader from "../../setup/SetupLoader";
 import PageUtils from "../../util/PageUtils";
 import StringUtils from "../../util/StringUtils";
 import PageProcessor from "../PageProcessor";

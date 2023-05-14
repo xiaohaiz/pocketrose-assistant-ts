@@ -1,10 +1,15 @@
 import Pet from "../../common/Pet";
+import Role from "../../common/Role";
 import PetProfileLoader from "../../core/PetProfileLoader";
 import EquipmentParser from "../../pocket/EquipmentParser";
-import PetParser from "../../pocket/PetParser";
-import RoleLoader from "../../pocket/RoleLoader";
+import CastleInformation from "../../pocketrose/CastleInformation";
+import CastleRanch from "../../pocketrose/CastleRanch";
+import GoldenCage from "../../pocketrose/GoldenCage";
+import PersonalPetManagement from "../../pocketrose/PersonalPetManagement";
 import PersonalPetManagementPage from "../../pocketrose/PersonalPetManagementPage";
+import PersonalStatus from "../../pocketrose/PersonalStatus";
 import TownBank from "../../pocketrose/TownBank";
+import SetupLoader from "../../setup/SetupLoader";
 import Credential from "../../util/Credential";
 import MessageBoard from "../../util/MessageBoard";
 import NetworkUtils from "../../util/NetworkUtils";
@@ -23,32 +28,31 @@ class PersonalPetManagementPageProcessor_Town extends AbstractPersonalPetManagem
 
 function doProcess(credential: Credential, petList: Pet[], studyStatus: number[]) {
 
-    new RoleLoader(credential).load()
-        .then(role => {
-            if (role.masterCareerList!.includes("贤者") || role.hasMirror!) {
-                $("#hasGoldenCage").text("true");
+    new PersonalStatus(credential).load().then(role => {
+        if (role.masterCareerList!.includes("贤者") || role.hasMirror!) {
+            $("#hasGoldenCage").text("true");
+        }
+        $("#roleLocation").text(role.location!);
+
+        doRender(credential, petList, studyStatus, role);
+
+        const request = credential.asRequest();
+        // @ts-ignore
+        request["mode"] = "USE_ITEM";
+        NetworkUtils.sendPostRequest("mydata.cgi", request, function (html) {
+            const equipmentList = EquipmentParser.parsePersonalItemList(html);
+            const cage = EquipmentParser.findGoldenCage(equipmentList);
+            if (cage !== null) {
+                $("#goldenCageIndex").text(cage.index!);
+                $("#openCageButton").show();
+                $("#closeCageButton").show();
             }
-            $("#roleLocation").text(role.location!);
-
-            doRender(credential, petList, studyStatus);
-
-            const request = credential.asRequest();
-            // @ts-ignore
-            request["mode"] = "USE_ITEM";
-            NetworkUtils.sendPostRequest("mydata.cgi", request, function (html) {
-                const equipmentList = EquipmentParser.parsePersonalItemList(html);
-                const cage = EquipmentParser.findGoldenCage(equipmentList);
-                if (cage !== null) {
-                    $("#goldenCageIndex").text(cage.index!);
-                    $("#openCageButton").show();
-                    $("#closeCageButton").show();
-                }
-            });
         });
+    });
 
 }
 
-function doRender(credential: Credential, petList: Pet[], studyStatus: number[]) {
+function doRender(credential: Credential, petList: Pet[], studyStatus: number[], role?: Role) {
     let html = "";
     html += "<table style='border-width:0;background-color:#888888;text-align:center;width:100%'>";
     html += "<tbody style='background-color:#F8F0E0'>";
@@ -174,6 +178,10 @@ function doRender(credential: Credential, petList: Pet[], studyStatus: number[])
     html += "<input type='button' class='PetUIButton' value='关闭黄金笼子' id='closeCageButton'>";
     html += "<input type='button' class='PetUIButton' value='从黄金笼子盲取' id='takeOutFirstFromCageButton' disabled style='display:none'>";
     html += "</td></tr>";
+    html += "<tr id='ranchMenu' style='display:none'><td style='background-color:#E8E8D0;text-align:center' colspan='20'>";
+    html += "<input type='button' class='PetUIButton' value='打开城堡牧场' id='openRanchButton'>";
+    html += "<input type='button' class='PetUIButton' value='关闭城堡牧场' id='closeRanchButton'>";
+    html += "</td></tr>";
     html += "<tr style='display:none'><td id='goldenCageContainer' style='background-color:#E8E8D0;text-align:center' colspan='20'>";
     html += "</td></tr>";
     html += "</tbody>";
@@ -296,6 +304,26 @@ function doRender(credential: Credential, petList: Pet[], studyStatus: number[])
     // 绑定按钮点击事件处理
     doBind(credential, petList);
 
+    if (role !== undefined && SetupLoader.isCastleKeeperEnabled()) {
+        new CastleInformation().load(role.name!).then(() => {
+            $("#ranchMenu").show();
+            $("#openRanchButton").on("click", () => {
+                if ($("#ranchState").text() === "on") {
+                    return;
+                }
+                $("#ranchState").text("on");
+                doRefresh(credential);
+            });
+            $("#closeRanchButton").on("click", () => {
+                if ($("#ranchState").text() === "off") {
+                    return;
+                }
+                $("#ranchState").text("off");
+                doRefresh(credential);
+            });
+        });
+    }
+
     if ($("#goldenCageStatus").text() === "on") {
         doRenderGoldenCage(credential);
     } else {
@@ -318,6 +346,10 @@ function doRender(credential: Credential, petList: Pet[], studyStatus: number[])
                     });
                 });
         }
+    }
+
+    if ($("#ranchState").text() === "on") {
+        doRenderRanch(credential);
     }
 }
 
@@ -443,15 +475,8 @@ function doRenderGoldenCage(credential: Credential) {
         return;
     }
     const index = parseInt(s);
-    const request = credential.asRequest();
-    // @ts-ignore
-    request["chara"] = "1";
-    // @ts-ignore
-    request["item" + index] = index;
-    // @ts-ignore
-    request["mode"] = "USE";
-    NetworkUtils.sendPostRequest("mydata.cgi", request, function (pageHtml) {
-        const cagePetList = PetParser.parseGoldenCagePetList(pageHtml);
+    new GoldenCage(credential).open(index).then(cagePage => {
+        const cagePetList = cagePage.sortedPetList;
 
         let html = "";
         html += "<table style='border-width:0;background-color:#888888;text-align:center;width:100%'>";
@@ -557,21 +582,24 @@ function doBind(credential: Credential, petList: Pet[]) {
 }
 
 function doRefresh(credential: Credential) {
-    const request = credential.asRequest();
-    // @ts-ignore
-    request["mode"] = "PETSTATUS";
-    NetworkUtils.sendPostRequest("mydata.cgi", request, function (html) {
+    new PersonalPetManagement(credential).open().then(petPage => {
         // 从新的宠物界面中重新解析宠物状态
-        const petList = PetParser.parsePersonalPetList(html);
-        const petStudyStatus = PetParser.parsePersonalPetStudyStatus(html);
+        const petList = petPage.petList!;
+        const petStudyStatus = petPage.petStudyStatus!;
 
         $(".pet_picture_class").off("mouseenter").off("mouseleave");
         // 解除当前所有的按钮
         $(".PetUIButton").off("click");
         // 清除PetUI的内容
         $("#pet_management_container").html("");
-        // 使用新的宠物重新渲染PetUI
-        doRender(credential, petList, petStudyStatus);
+        // 清除牧场
+        $("#ranchList").html("").parent().hide();
+        $("#ranchMenu").hide();
+        new PersonalStatus(credential).open().then(page => {
+            const role = page.role;
+            // 使用新的宠物重新渲染PetUI
+            doRender(credential, petList, petStudyStatus, role);
+        });
     });
 }
 
@@ -980,6 +1008,52 @@ function doBindTakeOutButton(credential: Credential, index: number) {
             MessageBoard.processResponseMessage(html);
             doRefresh(credential);
         });
+    });
+}
+
+function doRenderRanch(credential: Credential) {
+    new CastleRanch(credential).enter().then(status => {
+        const petList = Pet.sortPetList(status.ranchPetList!);
+
+        let html = "";
+        html += "<table style='border-width:0;background-color:#888888;margin:auto;width:100%'>";
+        html += "<tbody style='background-color:#F8F0E0;text-align:center'>";
+        html += "<tr>";
+        html += "<td style='background-color:darkgreen;color:wheat;font-weight:bold' colspan='10'>";
+        html += "＜ 城 堡 牧 场 ＞";
+        html += "</td>";
+        html += "<tr>";
+        html += "<th style='background-color:#E8E8D0'>名字</th>";
+        html += "<th style='background-color:#EFE0C0'>等级</th>";
+        html += "<th style='background-color:#E0D0B0'>生命</th>";
+        html += "<th style='background-color:#E0D0B0'>攻击</th>";
+        html += "<th style='background-color:#E0D0B0'>防御</th>";
+        html += "<th style='background-color:#E0D0B0'>智力</th>";
+        html += "<th style='background-color:#E0D0B0'>精神</th>";
+        html += "<th style='background-color:#E0D0B0'>速度</th>";
+        html += "<th style='background-color:#EFE0C0'>经验</th>";
+        html += "<th style='background-color:#EFE0C0'>性别</th>";
+        html += "</tr>";
+
+        for (const pet of petList) {
+            html += "<tr>";
+            html += "<td style='background-color:#E8E8D0'>" + pet.name + "</td>";
+            html += "<td style='background-color:#EFE0C0'>" + pet.levelHtml + "</td>";
+            html += "<td style='background-color:#E0D0B0'>" + pet.healthHtml + "</td>";
+            html += "<td style='background-color:#E0D0B0'>" + pet.attackHtml + "</td>";
+            html += "<td style='background-color:#E0D0B0'>" + pet.defenseHtml + "</td>";
+            html += "<td style='background-color:#E0D0B0'>" + pet.specialAttackHtml + "</td>";
+            html += "<td style='background-color:#E0D0B0'>" + pet.specialDefenseHtml + "</td>";
+            html += "<td style='background-color:#E0D0B0'>" + pet.speedHtml + "</td>";
+            html += "<td style='background-color:#EFE0C0'>" + pet.experienceHtml + "</td>";
+            html += "<td style='background-color:#EFE0C0'>" + pet.gender + "</td>";
+            html += "</tr>";
+        }
+
+        html += "</tbody>";
+        html += "</table>";
+
+        $("#ranchList").html(html).parent().show();
     });
 }
 

@@ -1,7 +1,7 @@
-import PageInterceptor from "../PageInterceptor";
-import SetupLoader from "../../core/SetupLoader";
 import LocationStateMachine from "../../core/LocationStateMachine";
 import PersonalCareerManagementPageProcessor from "../../processor/internal/PersonalCareerManagementPageProcessor";
+import SetupLoader from "../../setup/SetupLoader";
+import PageInterceptor from "../PageInterceptor";
 
 class PersonalCareerManagementPageInterceptor implements PageInterceptor {
 

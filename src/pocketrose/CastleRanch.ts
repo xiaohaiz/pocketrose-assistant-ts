@@ -3,7 +3,7 @@ import Credential from "../util/Credential";
 import MessageBoard from "../util/MessageBoard";
 import NetworkUtils from "../util/NetworkUtils";
 import StringUtils from "../util/StringUtils";
-import CastleRanchStatus from "./CastleRanchStatus";
+import CastleRanchPage from "./CastleRanchPage";
 
 class CastleRanch {
 
@@ -13,15 +13,18 @@ class CastleRanch {
         this.#credential = credential;
     }
 
-    static parseCastleRanchStatus(pageHtml: string): CastleRanchStatus {
+    static parseCastleRanchStatus(pageHtml: string): CastleRanchPage {
         const personalPetList = doParsePersonalPetList(pageHtml);
         const ranchPetList = doParseRanchPetList(pageHtml);
-        return new CastleRanchStatus(personalPetList, ranchPetList);
+        const page = new CastleRanchPage();
+        page.personalPetList = personalPetList;
+        page.ranchPetList = ranchPetList;
+        return page;
     }
 
-    async enter(): Promise<CastleRanchStatus> {
+    async enter(): Promise<CastleRanchPage> {
         const action = (credential: Credential) => {
-            return new Promise<CastleRanchStatus>(resolve => {
+            return new Promise<CastleRanchPage>(resolve => {
                 const request = credential.asRequest();
                 // @ts-ignore
                 request.mode = "CASTLE_PET";

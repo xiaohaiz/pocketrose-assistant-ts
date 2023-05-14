@@ -1,5 +1,5 @@
-import SetupLoader from "../../core/SetupLoader";
 import EventHandler from "../../pocket/EventHandler";
+import SetupLoader from "../../setup/SetupLoader";
 import Credential from "../../util/Credential";
 import PageUtils from "../../util/PageUtils";
 import StringUtils from "../../util/StringUtils";

@@ -2,10 +2,10 @@ import Role from "../../common/Role";
 import Spell from "../../common/Spell";
 import CareerLoader from "../../core/CareerLoader";
 import NpcLoader from "../../core/NpcLoader";
-import SetupLoader from "../../core/SetupLoader";
 import CareerParser from "../../pocket/CareerParser";
-import RoleLoader from "../../pocket/RoleLoader";
-import SpellLoader from "../../pocket/SpellLoader";
+import PersonalSpell from "../../pocketrose/PersonalSpell";
+import PersonalStatus from "../../pocketrose/PersonalStatus";
+import SetupLoader from "../../setup/SetupLoader";
 import CommentBoard from "../../util/CommentBoard";
 import Credential from "../../util/Credential";
 import MessageBoard from "../../util/MessageBoard";
@@ -96,21 +96,20 @@ function doRender(credential: Credential, candidateList: string[]) {
     html += "</table>";
     $("#CareerUI").html(html);
 
-    new RoleLoader(credential).load()
-        .then(role => {
-            doRenderRoleStatus(role);
+    new PersonalStatus(credential).load().then(role => {
+        doRenderRoleStatus(role);
 
-            if (role.level! > 50) {
-                doRenderCareer(credential, role, candidateList);
-                doBindCareerButton(credential);
-            }
+        if (role.level! > 50) {
+            doRenderCareer(credential, role, candidateList);
+            doBindCareerButton(credential);
+        }
 
-            new SpellLoader(credential).load()
-                .then(spellList => {
-                    doRenderSpell(credential, role, spellList);
-                    doBindSpellButton(credential, spellList);
-                });
+        new PersonalSpell(credential).open().then(spellPage => {
+            const spellList = spellPage.spellList!;
+            doRenderSpell(credential, role, spellList);
+            doBindSpellButton(credential, spellList);
         });
+    });
 }
 
 function doRenderRoleStatus(role: Role) {

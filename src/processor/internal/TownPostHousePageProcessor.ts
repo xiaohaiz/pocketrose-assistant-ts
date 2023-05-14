@@ -3,11 +3,11 @@ import Role from "../../common/Role";
 import Town from "../../core/Town";
 import TownLoader from "../../core/TownLoader";
 import CastleEntrance from "../../pocket/CastleEntrance";
-import CastleLoader from "../../pocket/CastleLoader";
 import MapBuilder from "../../pocket/MapBuilder";
-import RoleLoader from "../../pocket/RoleLoader";
 import TownEntrance from "../../pocket/TownEntrance";
 import TravelPlanExecutor from "../../pocket/TravelPlanExecutor";
+import CastleInformation from "../../pocketrose/CastleInformation";
+import PersonalStatus from "../../pocketrose/PersonalStatus";
 import TownBank from "../../pocketrose/TownBank";
 import Coordinate from "../../util/Coordinate";
 import Credential from "../../util/Credential";
@@ -128,53 +128,48 @@ function doRenderMap(credential: Credential, player: string) {
     $("#map").html(html);
     MapBuilder.updateTownBackgroundColor();
 
-    new RoleLoader(credential).load()
-        .then((role: Role) => {
-            const town = role.town!;
-            const buttonId = "location_" + town.coordinate.x + "_" + town.coordinate.y;
+    new PersonalStatus(credential).load().then((role: Role) => {
+        const town = role.town!;
+        const buttonId = "location_" + town.coordinate.x + "_" + town.coordinate.y;
+        $("#" + buttonId)
+            .closest("td")
+            .css("background-color", "black")
+            .css("color", "yellow")
+            .css("text-align", "center")
+            .html($("#" + buttonId).val() as string);
+
+        $(".location_button_class")
+            .on("mouseenter", function () {
+                $(this).css("background-color", "red");
+            })
+            .on("mouseleave", function () {
+                const s = $(this).parent().attr("class")!;
+                const c = StringUtils.substringAfter(s, "_");
+                if (c !== "none") {
+                    $(this).css("background-color", c);
+                } else {
+                    $(this).removeAttr("style");
+                }
+            });
+
+        // 显示地图
+        $("#map").parent().show();
+
+        // 如果有必要的话绘制城堡
+        new CastleInformation().load(player).then(castle => {
+            const coordinate = castle.coordinate!;
+            const buttonId = "location_" + coordinate.x + "_" + coordinate.y;
             $("#" + buttonId)
-                .closest("td")
-                .css("background-color", "black")
-                .css("color", "yellow")
-                .css("text-align", "center")
-                .html($("#" + buttonId).val() as string);
-
-            $(".location_button_class")
-                .on("mouseenter", function () {
-                    $(this).css("background-color", "red");
-                })
-                .on("mouseleave", function () {
-                    const s = $(this).parent().attr("class")!;
-                    const c = StringUtils.substringAfter(s, "_");
-                    if (c !== "none") {
-                        $(this).css("background-color", c);
-                    } else {
-                        $(this).removeAttr("style");
-                    }
-                });
-
-            // 显示地图
-            $("#map").parent().show();
-
-            // 如果有必要的话绘制城堡
-            CastleLoader.loadCastle(player)
-                .then(castle => {
-                    if (castle === null) {
-                        return;
-                    }
-                    const coordinate = castle.coordinate!;
-                    const buttonId = "location_" + coordinate.x + "_" + coordinate.y;
-                    $("#" + buttonId)
-                        .attr("value", "堡")
-                        .css("background-color", "fuchsia")
-                        .parent()
-                        .attr("title", "城堡" + coordinate.asText() + " " + castle.name)
-                        .attr("class", "color_fuchsia");
-                });
-
-            // 绑定地图按钮事件
-            doBindMapButton(credential);
+                .attr("value", "堡")
+                .css("background-color", "fuchsia")
+                .parent()
+                .attr("title", "城堡" + coordinate.asText() + " " + castle.name)
+                .attr("class", "color_fuchsia");
         });
+
+        // 绑定地图按钮事件
+        doBindMapButton(credential);
+    });
 }
 
 function doBindMapButton(credential: Credential) {

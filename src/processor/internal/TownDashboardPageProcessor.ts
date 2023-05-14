@@ -1,8 +1,8 @@
-import SetupLoader from "../../core/SetupLoader";
 import TownLoader from "../../core/TownLoader";
 import EventHandler from "../../pocket/EventHandler";
 import RoleStatus from "../../pocket/RoleStatus";
 import RoleStatusParser from "../../pocket/RoleStatusParser";
+import SetupLoader from "../../setup/SetupLoader";
 import Credential from "../../util/Credential";
 import NetworkUtils from "../../util/NetworkUtils";
 import PageUtils from "../../util/PageUtils";
@@ -85,7 +85,6 @@ function doProcess(credential: Credential) {
     doRenderSuperMarketMenu();
     doRenderGemHouseMenu();
     doRenderPetRankMenu();
-    doRenderCastleKeeperMenu();
     doRenderFastLoginMenu();
     doRenderBankMenu();
 
@@ -379,14 +378,6 @@ function doRenderPetRankMenu() {
     $("option[value='PETPROFILE']")
         .css("background-color", "yellow")
         .text("宠物排行榜");
-}
-
-function doRenderCastleKeeperMenu() {
-    if (SetupLoader.isCastleKeeperEnabled()) {
-        $("option[value='TENNIS']")
-            .css("background-color", "yellow")
-            .text("城堡管家");
-    }
 }
 
 function doRenderAdventureGuildMenu() {

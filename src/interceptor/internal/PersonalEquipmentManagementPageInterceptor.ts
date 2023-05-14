@@ -1,5 +1,4 @@
 import LocationStateMachine from "../../core/LocationStateMachine";
-import SetupLoader from "../../core/SetupLoader";
 import PersonalEquipmentManagementPageProcessor_Castle
     from "../../processor/internal/PersonalEquipmentManagementPageProcessor_Castle";
 import PersonalEquipmentManagementPageProcessor_Map
@@ -7,6 +6,7 @@ import PersonalEquipmentManagementPageProcessor_Map
 import PersonalEquipmentManagementPageProcessor_Town
     from "../../processor/internal/PersonalEquipmentManagementPageProcessor_Town";
 import PageProcessorContext from "../../processor/PageProcessorContext";
+import SetupLoader from "../../setup/SetupLoader";
 import PageInterceptor from "../PageInterceptor";
 
 class PersonalEquipmentManagementPageInterceptor implements PageInterceptor {
