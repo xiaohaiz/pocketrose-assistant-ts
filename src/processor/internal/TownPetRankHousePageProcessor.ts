@@ -170,6 +170,11 @@ function doBindRankButton() {
         petList = sortBySpecialDefense(petList);
         doRender("精 神 排 行 榜", petList);
     });
+    $("#r_special_defense_rank").on("click", function () {
+        let petList = PetProfileLoader.loadAll();
+        petList = sortBySpecialDefense(petList, true);
+        doRender("精 神 （垫 底） 排 行 榜", petList);
+    });
     $("#speed_rank").on("click", function () {
         let petList = PetProfileLoader.loadAll();
         petList = sortBySpeed(petList);
@@ -399,20 +404,34 @@ function sortBySpecialAttack(petList: PetProfile[], reverse?: boolean): PetProfi
     return result;
 }
 
-function sortBySpecialDefense(petList: PetProfile[]): PetProfile[] {
+function sortBySpecialDefense(petList: PetProfile[], reverse?: boolean): PetProfile[] {
     const result: PetProfile[] = [];
     result.push(...petList);
-    result.sort((a, b) => {
-        let ret = b.perfectSpecialDefense - a.perfectSpecialDefense;
-        if (ret !== 0) {
-            return ret;
-        }
-        ret = b.totalBaseStats - a.totalBaseStats;
-        if (ret !== 0) {
-            return ret;
-        }
-        return a.code!.localeCompare(b.code!);
-    });
+    if (reverse) {
+        result.sort((a, b) => {
+            let ret = a.perfectSpecialDefense - b.perfectSpecialDefense;
+            if (ret !== 0) {
+                return ret;
+            }
+            ret = a.totalBaseStats - b.totalBaseStats;
+            if (ret !== 0) {
+                return ret;
+            }
+            return a.code!.localeCompare(b.code!);
+        });
+    } else {
+        result.sort((a, b) => {
+            let ret = b.perfectSpecialDefense - a.perfectSpecialDefense;
+            if (ret !== 0) {
+                return ret;
+            }
+            ret = b.totalBaseStats - a.totalBaseStats;
+            if (ret !== 0) {
+                return ret;
+            }
+            return a.code!.localeCompare(b.code!);
+        });
+    }
     return result;
 }
 
