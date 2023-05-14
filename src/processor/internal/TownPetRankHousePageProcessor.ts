@@ -130,6 +130,11 @@ function doBindRankButton() {
         petList = sortByHealth(petList);
         doRender("生 命 排 行 榜", petList);
     });
+    $("#r_health_rank").on("click", function () {
+        let petList = PetProfileLoader.loadAll();
+        petList = sortByHealth(petList, true);
+        doRender("生 命 （垫 底） 排 行 榜", petList);
+    });
     $("#attack_rank").on("click", function () {
         let petList = PetProfileLoader.loadAll();
         petList = sortByAttack(petList);
@@ -255,20 +260,34 @@ function sortByTotalBaseStats(petList: PetProfile[], reverse?: boolean): PetProf
     return result;
 }
 
-function sortByHealth(petList: PetProfile[]): PetProfile[] {
+function sortByHealth(petList: PetProfile[], reverse?: boolean): PetProfile[] {
     const result: PetProfile[] = [];
     result.push(...petList);
-    result.sort((a, b) => {
-        let ret = b.perfectHealth - a.perfectHealth;
-        if (ret !== 0) {
-            return ret;
-        }
-        ret = b.totalBaseStats - a.totalBaseStats;
-        if (ret !== 0) {
-            return ret;
-        }
-        return a.code!.localeCompare(b.code!);
-    });
+    if (reverse) {
+        result.sort((a, b) => {
+            let ret = a.perfectHealth - b.perfectHealth;
+            if (ret !== 0) {
+                return ret;
+            }
+            ret = a.totalBaseStats - b.totalBaseStats;
+            if (ret !== 0) {
+                return ret;
+            }
+            return a.code!.localeCompare(b.code!);
+        });
+    } else {
+        result.sort((a, b) => {
+            let ret = b.perfectHealth - a.perfectHealth;
+            if (ret !== 0) {
+                return ret;
+            }
+            ret = b.totalBaseStats - a.totalBaseStats;
+            if (ret !== 0) {
+                return ret;
+            }
+            return a.code!.localeCompare(b.code!);
+        });
+    }
     return result;
 }
 
