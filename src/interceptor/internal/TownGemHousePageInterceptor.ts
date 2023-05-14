@@ -1,7 +1,7 @@
 import LocationStateMachine from "../../core/LocationStateMachine";
-import SetupLoader from "../../core/SetupLoader";
 import TownGemHousePageProcessor from "../../processor/internal/TownGemHousePageProcessor";
 import PageProcessorContext from "../../processor/PageProcessorContext";
+import SetupLoader from "../../setup/SetupLoader";
 import PageInterceptor from "../PageInterceptor";
 
 class TownGemHousePageInterceptor implements PageInterceptor {

@@ -1,7 +1,6 @@
 import Pet from "../../common/Pet";
 import Role from "../../common/Role";
 import PetProfileLoader from "../../core/PetProfileLoader";
-import SetupLoader from "../../core/SetupLoader";
 import CastleLoader from "../../pocket/CastleLoader";
 import EquipmentParser from "../../pocket/EquipmentParser";
 import PetParser from "../../pocket/PetParser";
@@ -10,6 +9,7 @@ import CastleRanch from "../../pocketrose/CastleRanch";
 import PersonalPetManagementPage from "../../pocketrose/PersonalPetManagementPage";
 import PersonalStatus from "../../pocketrose/PersonalStatus";
 import TownBank from "../../pocketrose/TownBank";
+import SetupLoader from "../../setup/SetupLoader";
 import Credential from "../../util/Credential";
 import MessageBoard from "../../util/MessageBoard";
 import NetworkUtils from "../../util/NetworkUtils";

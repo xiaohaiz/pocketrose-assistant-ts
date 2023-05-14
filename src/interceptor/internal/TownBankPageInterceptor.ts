@@ -1,7 +1,7 @@
 import LocationStateMachine from "../../core/LocationStateMachine";
-import SetupLoader from "../../core/SetupLoader";
 import TownBankPageProcessor from "../../processor/internal/TownBankPageProcessor";
 import PageProcessorContext from "../../processor/PageProcessorContext";
+import SetupLoader from "../../setup/SetupLoader";
 import PageInterceptor from "../PageInterceptor";
 
 class TownBankPageInterceptor implements PageInterceptor {
