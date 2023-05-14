@@ -1,4 +1,5 @@
 import TownLoader from "../core/TownLoader";
+import SetupLoader from "../setup/SetupLoader";
 import Coordinate from "../util/Coordinate";
 import PageUtils from "../util/PageUtils";
 import StringUtils from "../util/StringUtils";
@@ -391,6 +392,9 @@ class Equipment {
     static sortEquipmentList(source: Equipment[]): Equipment[] {
         const target: Equipment[] = [];
         target.push(...source);
+        if (!SetupLoader.isEquipmentPetSortEnabled()) {
+            return target;
+        }
         target.sort((a, b) => {
             let ret = a.categoryOrder - b.categoryOrder;
             if (ret !== 0) {
