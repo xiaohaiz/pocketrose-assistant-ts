@@ -180,10 +180,20 @@ function doBindRankButton() {
         petList = sortBySpeed(petList);
         doRender("速 度 排 行 榜", petList);
     });
+    $("#r_speed_rank").on("click", function () {
+        let petList = PetProfileLoader.loadAll();
+        petList = sortBySpeed(petList, true);
+        doRender("速 度 （垫 底） 排 行 榜", petList);
+    });
     $("#capacity_rank").on("click", function () {
         let petList = PetProfileLoader.loadAll();
         petList = sortByCapacity(petList);
         doRender("能 力 排 行 榜", petList);
+    });
+    $("#r_capacity_rank").on("click", function () {
+        let petList = PetProfileLoader.loadAll();
+        petList = sortByCapacity(petList, true);
+        doRender("能 力 （垫 底） 排 行 榜", petList);
     });
 }
 
@@ -435,37 +445,65 @@ function sortBySpecialDefense(petList: PetProfile[], reverse?: boolean): PetProf
     return result;
 }
 
-function sortBySpeed(petList: PetProfile[]): PetProfile[] {
+function sortBySpeed(petList: PetProfile[], reverse?: boolean): PetProfile[] {
     const result: PetProfile[] = [];
     result.push(...petList);
-    result.sort((a, b) => {
-        let ret = b.perfectSpeed - a.perfectSpeed;
-        if (ret !== 0) {
-            return ret;
-        }
-        ret = b.totalBaseStats - a.totalBaseStats;
-        if (ret !== 0) {
-            return ret;
-        }
-        return a.code!.localeCompare(b.code!);
-    });
+    if (reverse) {
+        result.sort((a, b) => {
+            let ret = a.perfectSpeed - b.perfectSpeed;
+            if (ret !== 0) {
+                return ret;
+            }
+            ret = a.totalBaseStats - b.totalBaseStats;
+            if (ret !== 0) {
+                return ret;
+            }
+            return a.code!.localeCompare(b.code!);
+        });
+    } else {
+        result.sort((a, b) => {
+            let ret = b.perfectSpeed - a.perfectSpeed;
+            if (ret !== 0) {
+                return ret;
+            }
+            ret = b.totalBaseStats - a.totalBaseStats;
+            if (ret !== 0) {
+                return ret;
+            }
+            return a.code!.localeCompare(b.code!);
+        });
+    }
     return result;
 }
 
-function sortByCapacity(petList: PetProfile[]): PetProfile[] {
+function sortByCapacity(petList: PetProfile[], reverse?: boolean): PetProfile[] {
     const result: PetProfile[] = [];
     result.push(...petList);
-    result.sort((a, b) => {
-        let ret = b.perfectCapacity - a.perfectCapacity;
-        if (ret !== 0) {
-            return ret;
-        }
-        ret = b.totalBaseStats - a.totalBaseStats;
-        if (ret !== 0) {
-            return ret;
-        }
-        return a.code!.localeCompare(b.code!);
-    });
+    if (reverse) {
+        result.sort((a, b) => {
+            let ret = a.perfectCapacity - b.perfectCapacity;
+            if (ret !== 0) {
+                return ret;
+            }
+            ret = a.totalBaseStats - b.totalBaseStats;
+            if (ret !== 0) {
+                return ret;
+            }
+            return a.code!.localeCompare(b.code!);
+        });
+    } else {
+        result.sort((a, b) => {
+            let ret = b.perfectCapacity - a.perfectCapacity;
+            if (ret !== 0) {
+                return ret;
+            }
+            ret = b.totalBaseStats - a.totalBaseStats;
+            if (ret !== 0) {
+                return ret;
+            }
+            return a.code!.localeCompare(b.code!);
+        });
+    }
     return result;
 }
 
