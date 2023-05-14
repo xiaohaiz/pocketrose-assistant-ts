@@ -1,7 +1,7 @@
+import TravelPlan from "../common/TravelPlan";
 import Credential from "../util/Credential";
-import NetworkUtils from "../util/NetworkUtils";
 import MessageBoard from "../util/MessageBoard";
-import TravelPlan from "./TravelPlan";
+import NetworkUtils from "../util/NetworkUtils";
 import TravelPlanBuilder from "./TravelPlanBuilder";
 
 class CastleEntrance {

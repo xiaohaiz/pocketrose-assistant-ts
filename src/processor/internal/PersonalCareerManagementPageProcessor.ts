@@ -2,7 +2,8 @@ import Role from "../../common/Role";
 import Spell from "../../common/Spell";
 import CareerLoader from "../../core/CareerLoader";
 import NpcLoader from "../../core/NpcLoader";
-import CareerParser from "../../pocket/CareerParser";
+import PersonalCareerManagement from "../../pocketrose/PersonalCareerManagement";
+import PersonalCareerManagementPage from "../../pocketrose/PersonalCareerManagementPage";
 import PersonalSpell from "../../pocketrose/PersonalSpell";
 import PersonalStatus from "../../pocketrose/PersonalStatus";
 import SetupLoader from "../../setup/SetupLoader";
@@ -11,13 +12,12 @@ import Credential from "../../util/Credential";
 import MessageBoard from "../../util/MessageBoard";
 import NetworkUtils from "../../util/NetworkUtils";
 import PageProcessorContext from "../PageProcessorContext";
-import PageProcessorCredentialSupport from "../PageProcessorCredentialSupport";
+import AbstractPersonalCareerManagementPageProcessor from "./AbstractPersonalCareerManagementPageProcessor";
 
-class PersonalCareerManagementPageProcessor extends PageProcessorCredentialSupport {
+class PersonalCareerManagementPageProcessor extends AbstractPersonalCareerManagementPageProcessor {
 
-    doProcess(credential: Credential, context?: PageProcessorContext): void {
-        const pageHtml = document.documentElement.outerHTML;
-        const candidateList = CareerParser.parseCareerTransferCandidateList(pageHtml);
+    doProcessPageParsed(credential: Credential, page: PersonalCareerManagementPage, context?: PageProcessorContext): void {
+        const candidateList = page.careerList!;
         doProcess(credential, candidateList);
     }
 
@@ -357,11 +357,8 @@ function doRenderSpell(credential: Credential, role: Role, spellList: Spell[]) {
 }
 
 function doRefresh(credential: Credential) {
-    const request = credential.asRequest();
-    // @ts-ignore
-    request["mode"] = "CHANGE_OCCUPATION";
-    NetworkUtils.sendPostRequest("mydata.cgi", request, function (html) {
-        const careerCandidateList = CareerParser.parseCareerTransferCandidateList(html);
+    new PersonalCareerManagement(credential).open().then(page => {
+        const careerCandidateList = page.careerList!;
         $(".CareerUIButton").off("click");
         $("#CareerUI").html("");
         doRender(credential, careerCandidateList);

@@ -1,10 +1,10 @@
 import Pet from "../../common/Pet";
 import Role from "../../common/Role";
 import PetProfileLoader from "../../core/PetProfileLoader";
-import EquipmentParser from "../../pocket/EquipmentParser";
 import CastleInformation from "../../pocketrose/CastleInformation";
 import CastleRanch from "../../pocketrose/CastleRanch";
 import GoldenCage from "../../pocketrose/GoldenCage";
+import PersonalEquipmentManagement from "../../pocketrose/PersonalEquipmentManagement";
 import PersonalPetManagement from "../../pocketrose/PersonalPetManagement";
 import PersonalPetManagementPage from "../../pocketrose/PersonalPetManagementPage";
 import PersonalStatus from "../../pocketrose/PersonalStatus";
@@ -36,12 +36,8 @@ function doProcess(credential: Credential, petList: Pet[], studyStatus: number[]
 
         doRender(credential, petList, studyStatus, role);
 
-        const request = credential.asRequest();
-        // @ts-ignore
-        request["mode"] = "USE_ITEM";
-        NetworkUtils.sendPostRequest("mydata.cgi", request, function (html) {
-            const equipmentList = EquipmentParser.parsePersonalItemList(html);
-            const cage = EquipmentParser.findGoldenCage(equipmentList);
+        new PersonalEquipmentManagement(credential).open().then(page => {
+            const cage = page.findGoldenCage();
             if (cage !== null) {
                 $("#goldenCageIndex").text(cage.index!);
                 $("#openCageButton").show();

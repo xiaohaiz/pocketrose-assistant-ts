@@ -1,12 +1,11 @@
 import Equipment from "../../common/Equipment";
 import EquipmentLoader from "../../core/EquipmentLoader";
-import EquipmentParser from "../../pocket/EquipmentParser";
+import PersonalEquipmentManagement from "../../pocketrose/PersonalEquipmentManagement";
 import PersonalStatus from "../../pocketrose/PersonalStatus";
 import TreasureBag from "../../pocketrose/TreasureBag";
 import SetupItemManager from "../../setup/SetupItemManager";
 import Credential from "../../util/Credential";
 import MessageBoard from "../../util/MessageBoard";
-import NetworkUtils from "../../util/NetworkUtils";
 import PageProcessorCredentialSupport from "../PageProcessorCredentialSupport";
 
 abstract class AbstractPersonalSetupPageProcessor extends PageProcessorCredentialSupport {
@@ -120,12 +119,9 @@ abstract class AbstractPersonalSetupPageProcessor extends PageProcessorCredentia
     #bindLoadButton(credential: Credential) {
         const instance = this;
         $("#loadButton").on("click", function () {
-            const request = credential.asRequest();
-            // @ts-ignore
-            request["mode"] = "USE_ITEM";
-            NetworkUtils.sendPostRequest("mydata.cgi", request, function (html) {
-                const equipmentList = EquipmentParser.parsePersonalItemList(html);
-                const treasureBag = EquipmentParser.findTreasureBag(equipmentList);
+            new PersonalEquipmentManagement(credential).open().then(page => {
+                const equipmentList = page.equipmentList!;
+                const treasureBag = page.findTreasureBag();
                 if (treasureBag !== null) {
                     new TreasureBag(credential).open(treasureBag.index!)
                         .then(bagPage => {
