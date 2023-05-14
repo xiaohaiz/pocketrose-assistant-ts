@@ -41,8 +41,21 @@ class PersonalCareerManagement {
                 role.cash = parseInt(s);
             });
 
+        const careerCandidateList: string[] = [];
+        $(html)
+            .find("select[name='syoku_no']")
+            .find("option")
+            .each(function (_idx, option) {
+                const value = $(option).val();
+                if (value !== "") {
+                    const career = $(option).text().trim();
+                    careerCandidateList.push(career);
+                }
+            });
+
         const page = new PersonalCareerManagementPage();
         page.role = role;
+        page.careerList = careerCandidateList;
         return page;
     }
 
