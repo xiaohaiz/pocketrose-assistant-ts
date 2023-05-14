@@ -27,6 +27,15 @@ class PersonalEquipmentManagementPage {
         }
         return null;
     }
+
+    findGoldenCage() {
+        for (const equipment of this.equipmentList!) {
+            if (equipment.isGoldenCage) {
+                return equipment;
+            }
+        }
+        return null;
+    }
 }
 
 export = PersonalEquipmentManagementPage;
