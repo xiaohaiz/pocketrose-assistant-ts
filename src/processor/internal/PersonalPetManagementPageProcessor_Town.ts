@@ -179,7 +179,7 @@ function doRender(credential: Credential, petList: Pet[], studyStatus: number[],
     html += "<input type='button' class='PetUIButton' value='关闭黄金笼子' id='closeCageButton'>";
     html += "<input type='button' class='PetUIButton' value='从黄金笼子盲取' id='takeOutFirstFromCageButton' disabled style='display:none'>";
     html += "</td></tr>";
-    html += "<tr id='ranchMenu'><td style='background-color:#E8E8D0;text-align:center' colspan='20'>";
+    html += "<tr id='ranchMenu' style='display:none'><td style='background-color:#E8E8D0;text-align:center' colspan='20'>";
     html += "<input type='button' class='PetUIButton' value='打开城堡牧场' id='openRanchButton'>";
     html += "<input type='button' class='PetUIButton' value='关闭城堡牧场' id='closeRanchButton'>";
     html += "</td></tr>";

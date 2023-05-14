@@ -1,10 +1,13 @@
+import Equipment from "../../common/Equipment";
 import EquipmentSet from "../../common/EquipmentSet";
 import NpcLoader from "../../core/NpcLoader";
 import SetupLoader from "../../core/SetupLoader";
 import TownLoader from "../../core/TownLoader";
+import CastleLoader from "../../pocket/CastleLoader";
 import EquipmentSetLoader from "../../pocket/EquipmentSetLoader";
 import RoleStatusLoader from "../../pocket/RoleStatusLoader";
 import CastleEquipmentExpressHouse from "../../pocketrose/CastleEquipmentExpressHouse";
+import CastleWarehouse from "../../pocketrose/CastleWarehouse";
 import PersonalEquipmentManagement from "../../pocketrose/PersonalEquipmentManagement";
 import PersonalEquipmentManagementPage from "../../pocketrose/PersonalEquipmentManagementPage";
 import PersonalStatus from "../../pocketrose/PersonalStatus";
@@ -264,6 +267,8 @@ class PersonalEquipmentManagementPageProcessor_Town extends AbstractPersonalEqui
         html += "<td style='text-align:right'>";
         html += "<input type='button' id='openBagButton' class='mutableButton-1' value='打开百宝袋' disabled style='display:none'>";
         html += "<input type='button' id='closeBagButton' class='mutableButton-1' value='关闭百宝袋' disabled style='display:none'>";
+        html += "<input type='button' id='openWarehouse' class='mutableButton-1' value='打开仓库' disabled style='display:none'>";
+        html += "<input type='button' id='closeWarehouse' class='mutableButton-1' value='关闭仓库' disabled style='display:none'>";
         html += "</td>";
         html += "</tr>";
         html += "<tr>";
@@ -295,6 +300,28 @@ class PersonalEquipmentManagementPageProcessor_Town extends AbstractPersonalEqui
         html += "</table>";
 
         $("#equipmentList").html(html).parent().show();
+
+        if (SetupLoader.isCastleKeeperEnabled()) {
+            CastleLoader.loadCastle2(page.role!.name!).then(() => {
+                $("#openWarehouse").prop("disabled", false).show();
+                $("#closeWarehouse").prop("disabled", false).show();
+                $("#openWarehouse").on("click", () => {
+                    if ($("#warehouseState").text() === "on") {
+                        return;
+                    }
+                    $("#warehouseState").text("on");
+                    this.#renderWarehouseUI(credential, page, context);
+                });
+                $("#closeWarehouse").on("click", () => {
+                    if ($("#warehouseState").text() === "off") {
+                        return;
+                    }
+                    $("#warehouseState").text("off");
+                    PageUtils.unbindEventBySpecifiedClass("mutableButton-3");
+                    $("#warehouseList").html("").parent().hide();
+                });
+            });
+        }
 
         // --------------------------------------------------------------------
         // 发送
@@ -527,6 +554,9 @@ class PersonalEquipmentManagementPageProcessor_Town extends AbstractPersonalEqui
 
         if ($("#bagState").text() === "on") {
             this.#renderBagUI(credential, page, bagIndex, context);
+        }
+        if ($("#warehouseState").text() === "on") {
+            this.#renderWarehouseUI(credential, page, context);
         }
     }
 
@@ -780,6 +810,93 @@ class PersonalEquipmentManagementPageProcessor_Town extends AbstractPersonalEqui
                     this.doRefreshMutablePage(credential, context);
                 });
 
+        });
+    }
+
+    #renderWarehouseUI(credential: Credential,
+                       page: PersonalEquipmentManagementPage,
+                       context?: PageProcessorContext) {
+        new CastleWarehouse(credential).open().then(warehousePage => {
+            const equipmentList = Equipment.sortEquipmentList(warehousePage.storageEquipmentList!);
+
+            let html = "";
+            html += "<table style='border-width:0;background-color:#888888;margin:auto;width:100%'>";
+            html += "<tbody style='background-color:#F8F0E0;text-align:center'>";
+            html += "<tr>";
+            html += "<td style='background-color:darkred;color:wheat;font-weight:bold' " +
+                "colspan='16'>";
+            html += "＜ 城 堡 仓 库 ＞";
+            html += "</td>";
+            html += "<tr>";
+            html += "<th style='background-color:#E8E8D0'>名字</th>";
+            html += "<th style='background-color:#EFE0C0'>种类</th>";
+            html += "<th style='background-color:#E0D0B0'>效果</th>";
+            html += "<th style='background-color:#EFE0C0'>重量</th>";
+            html += "<th style='background-color:#E0D0B0'>耐久</th>";
+            html += "<th style='background-color:#EFE0C0'>职业</th>";
+            html += "<th style='background-color:#E0D0B0'>攻击</th>";
+            html += "<th style='background-color:#E0D0B0'>防御</th>";
+            html += "<th style='background-color:#E0D0B0'>智力</th>";
+            html += "<th style='background-color:#E0D0B0'>精神</th>";
+            html += "<th style='background-color:#E0D0B0'>速度</th>";
+            html += "<th style='background-color:#EFE0C0'>威力</th>";
+            html += "<th style='background-color:#EFE0C0'>重量</th>";
+            html += "<th style='background-color:#EFE0C0'>幸运</th>";
+            html += "<th style='background-color:#E0D0B0'>经验</th>";
+            html += "<th style='background-color:#E0D0B0'>属性</th>";
+            html += "</tr>";
+
+            for (const equipment of equipmentList) {
+                html += "<tr>";
+                html += "<td style='background-color:#E8E8D0'>" + equipment.nameHTML + "</td>";
+                html += "<td style='background-color:#EFE0C0'>" + equipment.category + "</td>";
+                html += "<td style='background-color:#E0D0B0'>" + equipment.power + "</td>";
+                html += "<td style='background-color:#EFE0C0'>" + equipment.weight + "</td>";
+                html += "<td style='background-color:#E0D0B0'>" + equipment.endureHtml + "</td>";
+                html += "<td style='background-color:#EFE0C0'>" + equipment.requiredCareerHtml + "</td>";
+                html += "<td style='background-color:#E0D0B0'>" + equipment.requiredAttackHtml + "</td>";
+                html += "<td style='background-color:#E0D0B0'>" + equipment.requiredDefenseHtml + "</td>";
+                html += "<td style='background-color:#E0D0B0'>" + equipment.requiredSpecialAttackHtml + "</td>";
+                html += "<td style='background-color:#E0D0B0'>" + equipment.requiredSpecialDefenseHtml + "</td>";
+                html += "<td style='background-color:#E0D0B0'>" + equipment.requiredSpeedHtml + "</td>";
+                html += "<td style='background-color:#EFE0C0'>" + equipment.additionalPowerHtml + "</td>";
+                html += "<td style='background-color:#EFE0C0'>" + equipment.additionalWeightHtml + "</td>";
+                html += "<td style='background-color:#EFE0C0'>" + equipment.additionalLuckHtml + "</td>";
+                html += "<td style='background-color:#E0D0B0'>" + equipment.experienceHTML + "</td>";
+                html += "<td style='background-color:#E0D0B0'>" + equipment.attributeHtml + "</td>";
+                html += "</tr>";
+            }
+            // ----------------------------------------------------------------
+            // 城堡仓库菜单栏
+            // ----------------------------------------------------------------
+            html += "<tr>";
+            html += "<td style='background-color:#F8F0E0;text-align:center' colspan='18'>";
+            html += "<table style='border-width:0;background-color:#F8F0E0;width:100%;margin:auto'>";
+            html += "<tbody>";
+            html += "<tr>";
+            html += "<td style='text-align:right'>";
+            html += "<input type='button' id='closeWarehouse3' class='mutableButton-3' value='关闭仓库'>";
+            html += "</td>";
+            html += "</tr>";
+            html += "</tbody>";
+            html += "</table>";
+            html += "</td>";
+            html += "</tr>";
+
+            html += "</tbody>";
+            html += "</table>";
+
+            $("#warehouseList").html(html).parent().show();
+
+
+            $("#closeWarehouse3").on("click", () => {
+                if ($("#warehouseState").text() === "off") {
+                    return;
+                }
+                $("#warehouseState").text("off");
+                PageUtils.unbindEventBySpecifiedClass("mutableButton-3");
+                $("#warehouseList").html("").parent().hide();
+            });
         });
     }
 }
