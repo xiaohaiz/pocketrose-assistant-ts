@@ -169,65 +169,6 @@ class EquipmentParser {
         return equipmentList;
     }
 
-    /**
-     * 解析城堡仓库页面的库存物品
-     * @param pageHtml
-     */
-    static parseCastleWareHouseStorageEquipmentList(pageHtml: string): Equipment[] {
-        const equipmentList: Equipment[] = [];
-        $(pageHtml).find("table")
-            .filter(function (_idx) {
-                return _idx == 3;
-            })
-            .each(function (_idx, element) {
-                $(element).find("input:checkbox")
-                    .each(function (_idx, checkbox) {
-                        const c1 = $(checkbox).parent();
-                        const c2 = $(c1).next();
-                        const c3 = $(c2).next();
-                        const c4 = $(c3).next();
-                        const c5 = $(c4).next();
-                        const c6 = $(c5).next();
-                        const c7 = $(c6).next();
-                        const c8 = $(c7).next();
-                        const c9 = $(c8).next();
-                        const c10 = $(c9).next();
-                        const c11 = $(c10).next();
-                        const c12 = $(c11).next();
-                        const c13 = $(c12).next();
-                        const c14 = $(c13).next();
-                        const c15 = $(c14).next();
-                        const c16 = $(c15).next();
-                        const c17 = $(c16).next();
-                        const c18 = $(c17).next();
-
-                        const equipment = new Equipment();
-
-                        equipment.index = parseInt($(checkbox).val() as string);
-                        equipment.selectable = true;
-                        equipment.using = false;
-                        equipment.parseName($(c3).html());
-                        equipment.category = $(c4).text();
-                        equipment.power = parseInt($(c5).text());
-                        equipment.weight = parseInt($(c6).text());
-                        equipment.parseEndure($(c7).text());
-                        equipment.requiredCareer = $(c8).text();
-                        equipment.requiredAttack = parseInt($(c9).text());
-                        equipment.requiredDefense = parseInt($(c10).text());
-                        equipment.requiredSpecialAttack = parseInt($(c11).text());
-                        equipment.requiredSpecialDefense = parseInt($(c12).text());
-                        equipment.requiredSpeed = parseInt($(c13).text());
-                        equipment.additionalPower = parseInt($(c14).text());
-                        equipment.additionalWeight = parseInt($(c15).text());
-                        equipment.additionalLuck = parseInt($(c16).text());
-                        equipment.experience = parseInt($(c17).text());
-                        equipment.attribute = $(c18).text();
-
-                        equipmentList.push(equipment);
-                    });
-            });
-        return equipmentList;
-    }
 
 }
 
