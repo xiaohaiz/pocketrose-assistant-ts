@@ -1,5 +1,5 @@
-import Credential from "../util/Credential";
 import Coordinate from "../util/Coordinate";
+import Credential from "../util/Credential";
 
 class TravelPlan {
 

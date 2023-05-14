@@ -229,18 +229,6 @@ class EquipmentParser {
         return equipmentList;
     }
 
-    static findTreasureBag(equipmentList: Equipment[] | undefined): Equipment | null {
-        if (equipmentList === undefined) {
-            return null;
-        }
-        for (const equipment of equipmentList) {
-            if (equipment.isTreasureBag) {
-                return equipment;
-            }
-        }
-        return null;
-    }
-
     static findGoldenCage(equipmentList: Equipment[] | undefined): Equipment | null {
         if (equipmentList === undefined) {
             return null;
