@@ -21,7 +21,7 @@ class LoginDashboardPageProcessor implements PageProcessor {
 
 function doProcess() {
     const configs = new Map<number, {}>();
-    for (let i = 0; i < 30; i++) {
+    for (let i = 0; i < 50; i++) {
         const config = FastLoginLoader.loadFastLoginConfig(i);
         if (doCheckConfigAvailability(config)) {
             configs.set(i, config);
@@ -53,7 +53,7 @@ function doCheckConfigAvailability(config: {}): boolean {
 }
 
 function doRender(configs: Map<number, {}>) {
-    const fastLoginCounts: number[] = [0, 0, 0, 0, 0, 0];
+    const fastLoginCounts: number[] = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
 
     let html = "";
     html += "<table style='border-width:0;margin:auto;text-align:center;width:100%'>";
@@ -107,6 +107,36 @@ function doRender(configs: Map<number, {}>) {
     }
     html += "</tr>";
 
+    html += "<tr id='tr7'>";
+    for (let i = 30; i < 35; i++) {
+        html += doGenerateCell(configs, i, () => {
+            fastLoginCounts[6]++;
+        });
+    }
+    html += "</tr>";
+    html += "<tr id='tr8'>";
+    for (let i = 35; i < 40; i++) {
+        html += doGenerateCell(configs, i, () => {
+            fastLoginCounts[7]++;
+        });
+    }
+    html += "</tr>";
+
+    html += "<tr id='tr9'>";
+    for (let i = 40; i < 45; i++) {
+        html += doGenerateCell(configs, i, () => {
+            fastLoginCounts[8]++;
+        });
+    }
+    html += "</tr>";
+    html += "<tr id='tr10'>";
+    for (let i = 45; i < 50; i++) {
+        html += doGenerateCell(configs, i, () => {
+            fastLoginCounts[9]++;
+        });
+    }
+    html += "</tr>";
+
 
     html += "</table>";
 
@@ -143,7 +173,7 @@ function doGenerateCell(configs: Map<number, {}>, code: number, handler?: () => 
 }
 
 function doBindFastLoginButton() {
-    for (let i = 0; i < 30; i++) {
+    for (let i = 0; i < 50; i++) {
         const buttonId = "fastLogin_" + i;
         if ($("#" + buttonId).length === 0) {
             continue;
