@@ -1,6 +1,7 @@
-import PageInterceptor from "../PageInterceptor";
 import LocationStateMachine from "../../core/LocationStateMachine";
 import TownPetMapHousePageProcessor from "../../processor/internal/TownPetMapHousePageProcessor";
+import PageProcessorContext from "../../processor/PageProcessorContext";
+import PageInterceptor from "../PageInterceptor";
 
 class TownPetMapHousePageInterceptor implements PageInterceptor {
 
@@ -16,8 +17,10 @@ class TownPetMapHousePageInterceptor implements PageInterceptor {
     intercept(): void {
         LocationStateMachine.create()
             .load()
-            .whenInTown(() => {
-                this.#processor.process();
+            .whenInTown(townId => {
+                const context = new PageProcessorContext();
+                context.set("townId", townId!);
+                this.#processor.process(context);
             })
             .fork();
     }
