@@ -17,16 +17,26 @@ class TownDashboardPageProcessor extends PageProcessorCredentialSupport {
     }
 
     doProcess(credential: Credential, context?: PageProcessorContext): void {
+        // 标记页面上的元素
+        $("input:text:last").attr("id", "messageInputText");
+        $("input:submit[value='更新']").attr("id", "refreshButton");
+
+        $("th:contains('训练·战斗')")
+            .filter((idx, th) => {
+                return $(th).text() === "训练·战斗";
+            })
+            .next()
+            .attr("id", "battleCell")
+            .next()
+            .find("input:submit:first")
+            .attr("id", "battleButton");
+
         doProcess(credential);
     }
 
 }
 
 function doProcess(credential: Credential) {
-    $("input:text:last").attr("id", "messageInputText");
-    $("input:submit[value='更新']")
-        .attr("id", "refreshButton");
-
     let buttonChanged = false;
     if (SetupLoader.isConsecrateStateRecognizeEnabled(credential.id)) {
         buttonChanged = true;
@@ -53,12 +63,7 @@ function doProcess(credential: Credential) {
         let picWidth = 80 * enlargeRatio;
         let picHeight = 40 * enlargeRatio;
 
-        $("th:contains('训练·战斗')")
-            .filter((idx, th) => {
-                return $(th).text() === "训练·战斗";
-            })
-            .next()
-            .attr("id", "battleCell")
+        $("#battleCell")
             .removeAttr("height")
             .find("select:first")
             .css("font-size", fontSize + "%")
@@ -67,10 +72,7 @@ function doProcess(credential: Credential) {
             .attr("width", picWidth)
             .attr("height", picHeight)
             .before($("<br>"));
-
-        $("#battleCell")
-            .next()
-            .find("input:submit:first")
+        $("#battleButton")
             .css("height", "100%");
     }
 
@@ -435,6 +437,11 @@ function doRenderCareerTransferWarning(credential: Credential, roleStatus: RoleS
 }
 
 function doRenderRoleStatus(roleStatus: RoleStatus) {
+    if (roleStatus.level !== 150 && (roleStatus.attack === 375 || roleStatus.defense === 375
+        || roleStatus.specialAttack === 375 || roleStatus.specialDefense === 375 || roleStatus.speed === 375)) {
+        $("#battleCell").css("background-color", "yellow");
+    }
+
     $("td:parent").each(function (_idx, td) {
         const text = $(td).text();
         if (text === "经验值") {
@@ -450,12 +457,6 @@ function doRenderRoleStatus(roleStatus: RoleStatus) {
                     $(td).next()
                         .html("<span title='" + exp + "'>" + progressBar + "</span>");
                 }
-            }
-        }
-        if (text === "身份") {
-            if (roleStatus.level !== 150 && (roleStatus.attack === 375 || roleStatus.defense === 375
-                || roleStatus.specialAttack === 375 || roleStatus.specialDefense === 375 || roleStatus.speed === 375)) {
-                $(td).next().css("color", "red");
             }
         }
         if (text === "资金") {
