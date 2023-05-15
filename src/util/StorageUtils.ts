@@ -12,6 +12,16 @@ class StorageUtils {
         localStorage.removeItem(key);
     }
 
+    static purge() {
+        for (let i = 0; i < localStorage.length; i++) {
+            const key = localStorage.key(i);
+            if (key === null || key.startsWith("_lc_")) {
+                continue;
+            }
+            localStorage.removeItem(key);
+        }
+    }
+
     static getString(key: string) {
         const value = StorageUtils.get(key);
         if (value === undefined ||
@@ -45,6 +55,23 @@ class StorageUtils {
             return defaultValue;
         }
         return parseFloat(value);
+    }
+
+    static dumpLocalStorage() {
+        const s = {};
+        for (let i = 0; i < localStorage.length; i++) {
+            const key = localStorage.key(i);
+            if (key === null || key.startsWith("_lc_")) {
+                continue;
+            }
+            const value = localStorage.getItem(key);
+            if (value === null) {
+                continue;
+            }
+            // @ts-ignore
+            s[key] = value;
+        }
+        return JSON.stringify(s);
     }
 }
 

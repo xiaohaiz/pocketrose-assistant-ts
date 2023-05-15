@@ -6,6 +6,8 @@ import TreasureBag from "../../pocketrose/TreasureBag";
 import SetupItemManager from "../../setup/SetupItemManager";
 import Credential from "../../util/Credential";
 import MessageBoard from "../../util/MessageBoard";
+import PageUtils from "../../util/PageUtils";
+import StorageUtils from "../../util/StorageUtils";
 import PageProcessorCredentialSupport from "../PageProcessorCredentialSupport";
 
 abstract class AbstractPersonalSetupPageProcessor extends PageProcessorCredentialSupport {
@@ -39,7 +41,7 @@ abstract class AbstractPersonalSetupPageProcessor extends PageProcessorCredentia
         html += "<table style='background-color:#888888;width:100%;text-align:center'>";
         html += "<tbody style='background-color:#F8F0E0'>";
         html += "<tr>";
-        html += "<td style='background-color:navy;color:yellowgreen;font-size:150%;font-weight:bold'>" +
+        html += "<td id='pageTitle' style='background-color:navy;color:yellowgreen;font-size:150%;font-weight:bold'>" +
             "＜＜  口 袋 助 手 设 置  ＞＞" +
             "</td>";
         html += "</tr>";
@@ -56,6 +58,30 @@ abstract class AbstractPersonalSetupPageProcessor extends PageProcessorCredentia
             "<input type='button' id='returnButton' value='退出助手设置'>" +
             "</td>";
         html += "</tr>";
+
+        html += "<tr>";
+        html += "<td style='text-align:center;background-color:red;font-weight:bold;font-size:120%'>" +
+            "以下操作包含有账号登陆敏感信息，请自己保护好数据安全！" +
+            "</td>";
+        html += "</tr>";
+
+        html += "<tr>";
+        html += "<td style='text-align:center'>" +
+            "<input type='button' id='exportButton' value='导出所有设置'>" +
+            "<input type='button' id='purgeButton' value='清除所有设置'>" +
+            "</td>";
+        html += "</tr>";
+
+        html += "<tr>";
+        html += "<td style='text-align:center'>";
+        // noinspection CssInvalidPropertyValue
+        html += "<textarea id='allConfigs' " +
+            "rows='15' " +
+            "style=\"height:expression((this.scrollHeight>150)?'150px':(this.scrollHeight+5)+'px');overflow:auto;width:100%;word-break;break-all;\">" +
+            "</textarea>";
+        html += "</td>";
+        html += "</tr>";
+
         html += "</tody>";
         html += "</table>";
         $("#top_container").append($(html));
@@ -64,10 +90,22 @@ abstract class AbstractPersonalSetupPageProcessor extends PageProcessorCredentia
         $("#armor_list").text(EquipmentLoader.loadArmorList().join(","));
         $("#accessory_list").text(EquipmentLoader.loadAccessoryList().join(","));
 
-
         this.#bindLoadButton(credential);
         this.#bindRefreshButton(credential);
         this.doBindReturnButton("returnButton");
+
+        $("#exportButton").on("click", () => {
+            const allConfigs = StorageUtils.dumpLocalStorage();
+            $("#allConfigs").text(allConfigs);
+        });
+        $("#purgeButton").on("click", () => {
+            if (!confirm("请再次确认要清除助手的所有信息？")) {
+                return;
+            }
+            StorageUtils.purge();
+            MessageBoard.publishMessage("所有助手设置信息已经清除！");
+            PageUtils.scrollIntoView("pageTitle");
+        });
 
         new PersonalStatus(credential).load().then(role => {
             MessageBoard.createMessageBoard("message_board_container", role.imageHtml);
@@ -113,7 +151,6 @@ abstract class AbstractPersonalSetupPageProcessor extends PageProcessorCredentia
         for (const it of this.#setupItemManager.getSetupItem()) {
             it.render(credential.id);
         }
-
     }
 
     #bindLoadButton(credential: Credential) {
