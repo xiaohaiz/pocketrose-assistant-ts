@@ -2,7 +2,9 @@ import TownLoader from "../../core/TownLoader";
 import TownPetMapHouse from "../../pocketrose/TownPetMapHouse";
 import TownPetMapHousePage from "../../pocketrose/TownPetMapHousePage";
 import Credential from "../../util/Credential";
+import MessageBoard from "../../util/MessageBoard";
 import PageUtils from "../../util/PageUtils";
+import StorageUtils from "../../util/StorageUtils";
 import PageProcessorContext from "../PageProcessorContext";
 import PageProcessorCredentialSupport from "../PageProcessorCredentialSupport";
 
@@ -72,12 +74,14 @@ class TownPetMapHousePageProcessor extends PageProcessorCredentialSupport {
             $("#returnTown").trigger("click");
         });
 
-        const petIdText = page.asText();
-        if (petIdText !== "") {
+        const petMapText = page.asText();
+        if (petMapText !== "") {
             let html = $("#messageBoard").html();
-            html += "<br>" + petIdText;
+            html += "<br>" + petMapText;
             $("#messageBoard").html(html);
         }
+        StorageUtils.set("_pm_" + credential.id, petMapText);
+        MessageBoard.publishMessage("宠物图鉴信息已存储。");
 
         $("table:eq(2)")
             .attr("id", "t1")
