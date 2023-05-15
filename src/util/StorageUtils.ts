@@ -13,13 +13,7 @@ class StorageUtils {
     }
 
     static purge() {
-        for (let i = 0; i < localStorage.length; i++) {
-            const key = localStorage.key(i);
-            if (key === null || key.startsWith("_lc_")) {
-                continue;
-            }
-            localStorage.removeItem(key);
-        }
+        localStorage.clear();
     }
 
     static getString(key: string) {

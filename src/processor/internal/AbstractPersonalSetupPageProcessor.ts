@@ -68,6 +68,7 @@ abstract class AbstractPersonalSetupPageProcessor extends PageProcessorCredentia
         html += "<tr>";
         html += "<td style='text-align:center'>" +
             "<input type='button' id='exportButton' value='导出所有设置'>" +
+            "<input type='button' id='importButton' value='导入所有设置'>" +
             "<input type='button' id='purgeButton' value='清除所有设置'>" +
             "</td>";
         html += "</tr>";
@@ -96,15 +97,33 @@ abstract class AbstractPersonalSetupPageProcessor extends PageProcessorCredentia
 
         $("#exportButton").on("click", () => {
             const allConfigs = StorageUtils.dumpLocalStorage();
-            $("#allConfigs").text(allConfigs);
+            $("#allConfigs").val(allConfigs);
+        });
+        $("#importButton").on("click", () => {
+            if (!confirm("请确认要导入助手的所有设置？")) {
+                return;
+            }
+            const json = $("#allConfigs").val() as string;
+            const allConfigs = JSON.parse(json);
+            const keys = Object.keys(allConfigs);
+            for (const key of keys) {
+                // @ts-ignore
+                const value = allConfigs[key];
+                StorageUtils.set(key, value);
+            }
+            MessageBoard.publishMessage("助手设置信息已经导入！");
+            PageUtils.scrollIntoView("pageTitle");
+            $("#refreshButton").trigger("click");
+
         });
         $("#purgeButton").on("click", () => {
-            if (!confirm("请再次确认要清除助手的所有信息？")) {
+            if (!confirm("请再次确认要清除助手的所有设置？")) {
                 return;
             }
             StorageUtils.purge();
             MessageBoard.publishMessage("所有助手设置信息已经清除！");
             PageUtils.scrollIntoView("pageTitle");
+            $("#refreshButton").trigger("click");
         });
 
         new PersonalStatus(credential).load().then(role => {
