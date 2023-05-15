@@ -1,3 +1,4 @@
+import PetMap from "../common/PetMap";
 import Role from "../common/Role";
 import StringUtils from "../util/StringUtils";
 import TownPetMapHousePage from "./TownPetMapHousePage";
@@ -37,8 +38,27 @@ class TownPetMapHouse {
                 role.cash = parseInt(s);
             });
 
+        const petMapList: PetMap[] = [];
+        $(html).find("table:eq(1)")
+            .find("td")
+            .each(function (_i, element) {
+                const img = $(element).find("img:first");
+                if (img.length > 0) {
+                    const code = img.attr("alt")!;
+                    const picture = StringUtils.substringAfterLast(img.attr("src")!, "/");
+                    const count = parseInt($(element).next().text());
+
+                    const pm = new PetMap();
+                    pm.code = code;
+                    pm.picture = picture;
+                    pm.count = count;
+                    petMapList.push(pm);
+                }
+            });
+
         const page = new TownPetMapHousePage();
         page.role = role;
+        page.petMapList = petMapList;
         return page;
     }
 }
