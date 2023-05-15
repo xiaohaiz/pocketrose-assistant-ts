@@ -248,6 +248,10 @@ class SetupLoader {
     static isEquipmentPetSortEnabled(): boolean {
         return StorageUtils.getBoolean("_pa_038");
     }
+
+    static getSavePetMapBattleCount(): number {
+        return StorageUtils.getInt("_pa_039", 20);
+    }
 }
 
 export = SetupLoader;
