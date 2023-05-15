@@ -121,7 +121,7 @@ function doProcess(credential: Credential) {
             .find("th:first")
             .css("text-align", "right")
             .text("城市设施")
-            .before($("<td><button role='button' class='button-24' id='shortcut1'>状</button></td>"))
+            .before($("<td><button role='button' class='button-24' id='shortcut1'>鉴</button></td>"))
             .parent()
             .next()
             .find("th:first")
@@ -152,7 +152,7 @@ function doProcess(credential: Credential) {
 
 
         $("#shortcut1").on("click", () => {
-            $("option[value='STATUS_PRINT']")
+            $("option[value='PETMAP']")
                 .prop("selected", true)
                 .closest("td")
                 .next()

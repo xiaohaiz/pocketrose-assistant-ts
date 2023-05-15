@@ -1,47 +1,192 @@
-import Constants from "../../util/Constants";
+import FastLogin from "../../common/FastLogin";
+import PetMap from "../../common/PetMap";
+import FastLoginLoader from "../../core/FastLoginLoader";
+import TownLoader from "../../core/TownLoader";
+import PersonalStatus from "../../pocketrose/PersonalStatus";
+import TownPetMapHouse from "../../pocketrose/TownPetMapHouse";
+import TownPetMapHousePage from "../../pocketrose/TownPetMapHousePage";
 import Credential from "../../util/Credential";
+import MessageBoard from "../../util/MessageBoard";
+import PageUtils from "../../util/PageUtils";
+import StorageUtils from "../../util/StorageUtils";
+import StringUtils from "../../util/StringUtils";
 import PageProcessorContext from "../PageProcessorContext";
 import PageProcessorCredentialSupport from "../PageProcessorCredentialSupport";
 
 class TownPetMapHousePageProcessor extends PageProcessorCredentialSupport {
 
-    constructor() {
-        super();
-    }
-
     doProcess(credential: Credential, context?: PageProcessorContext): void {
-        doProcess();
+        const page = TownPetMapHouse.parsePage(PageUtils.currentPageHtml());
+        this.#renderImmutablePage(credential, page, context);
     }
 
-}
+    #renderImmutablePage(credential: Credential, page: TownPetMapHousePage, context?: PageProcessorContext) {
+        let html = $("body:first").html();
+        html = html.replace("\n\n\n收集图鉴一览：\n", "");
+        $("body:first").html(html);
 
-function doProcess() {
-    let petIdText = "";             // 宠物图鉴编号及数量的文本
-    $("td:parent").each(function (_i, element) {
-        const img = $(element).children("img");
-        const src = img.attr("src");
-        if (src !== undefined && src.includes(Constants.POCKET_DOMAIN + "/image/386/")) {
-            const code = img.attr("alt");
-            const count = $(element).next();
+        // 删除所有的表单
+        $("form").remove();
+        $("input:hidden").remove();
 
-            petIdText += code;
-            petIdText += "/";
-            petIdText += count.text();
-            petIdText += "  ";
+        $("td:first")
+            .attr("id", "pageTitle")
+            .removeAttr("width")
+            .removeAttr("height")
+            .removeAttr("bgcolor")
+            .css("text-align", "center")
+            .css("font-size", "180%")
+            .css("font-weight", "bold")
+            .css("background-color", "navy")
+            .css("color", "yellowgreen")
+            .text("＜＜  宠 物 图 鉴  ＞＞")
+            .parent()
+            .attr("id", "tr0")
+            .next()
+            .attr("id", "tr1")
+            .find("td:first")
+            .find("table:first")
+            .find("tr:first")
+            .find("td:first")
+            .attr("id", "messageBoard")
+            .css("color", "white")
+            .next()
+            .attr("id", "messageBoardManager");
+
+        $("#tr1")
+            .next()
+            .attr("id", "tr2")
+            .css("display", "none")
+            .html("<td id='returnFormContainer'></td>");
+        $("#returnFormContainer").html(PageUtils.generateReturnTownForm(credential));
+
+        $("#tr2")
+            .after("<tr id='tr3'><td id='pageMenuContainer' style='text-align:center'></td></tr>");
+        let returnTitle = "返回城市";
+        const townId = context?.get("townId");
+        if (townId !== undefined) {
+            const town = TownLoader.getTownById(townId)!;
+            returnTitle = "返回" + town.name;
         }
-    });
-    if (petIdText !== "") {
-        $("td:contains('可以在这里看到收集到的图鉴')")
-            .filter(function () {
-                return $(this).text().startsWith("可以在这里看到收集到的图鉴");
-            })
-            .attr("id", "messageBoard");
-        $("#messageBoard").css("color", "white");
+        html = "";
+        html += "<input type='text' id='petCode' size='10' maxlength='10'>";
+        html += "<button role='button' id='searchButton'>查找图鉴</button>";
+        html += "<button role='button' id='returnButton'>" + returnTitle + "</button>";
+        $("#pageMenuContainer").html(html);
+        this.#bindSearchButton(credential);
+        $("#returnButton").on("click", () => {
+            $("#returnTown").trigger("click");
+        });
 
-        let html = $("#messageBoard").html();
-        html += "<br>" + petIdText;
-        $("#messageBoard").html(html);
+        const petMapText = page.asText();
+        if (petMapText !== "") {
+            let html = $("#messageBoard").html();
+            html += "<br>" + petMapText;
+            $("#messageBoard").html(html);
+        }
+        StorageUtils.set("_pm_" + credential.id, petMapText);
+        MessageBoard.publishMessage("宠物图鉴信息已存储。");
+
+        $("table:eq(2)")
+            .attr("id", "t1")
+            .css("width", "100%");
     }
+
+    #bindSearchButton(credential: Credential) {
+        $("#searchButton").on("click", () => {
+            const petCode = $("#petCode").val();
+            if (petCode === undefined || (petCode as string).trim() === "") {
+                MessageBoard.publishWarning("请输入正确的宠物图鉴编号！");
+                PageUtils.scrollIntoView("pageTitle");
+                return;
+            }
+
+            const configList: FastLogin[] = [];
+            for (let i = 0; i < 10; i++) {
+                const config = FastLoginLoader.loadFastLogin(i);
+                if (config === null) {
+                    continue;
+                }
+                configList.push(config);
+            }
+
+            let foundSelf = false;
+            for (const config of configList) {
+                if (config.id === credential.id) {
+                    foundSelf = true;
+                    break;
+                }
+            }
+
+            if (foundSelf) {
+                this.#searchPetMap((petCode as string).trim(), configList);
+            } else {
+                new PersonalStatus(credential).load().then(role => {
+                    const config = new FastLogin();
+                    config.name = role.name;
+                    config.id = credential.id;
+                    configList.push(config);
+                    this.#searchPetMap((petCode as string).trim(), configList);
+                });
+            }
+        });
+    }
+
+    #searchPetMap(petCode: string, configList: FastLogin[]) {
+        const foundList: string[] = [];
+
+        for (const config of configList) {
+            const key = "_pm_" + config.id;
+            const petMapText = StorageUtils.getString(key);
+
+            if (petMapText !== "") {
+                for (const it of petMapText.split(" ")) {
+                    const code = StringUtils.substringBeforeSlash(it);
+                    if (code === petCode) {
+                        const count = parseInt(StringUtils.substringAfterSlash(it));
+                        foundList.push(config.name + "/" + code + "/" + count);
+                        break;
+                    }
+                }
+            }
+        }
+
+        if (foundList.length === 0) {
+            MessageBoard.publishWarning("没有找到图鉴" + petCode + "的信息！");
+            PageUtils.scrollIntoView("pageTitle");
+            $("#t1").find("tbody:first").html("");
+            return;
+        }
+
+        const petMap = new PetMap();
+        petMap.code = petCode;
+        petMap.picture = petCode + ".png";
+        let html = "";
+        html += "<tr>";
+        html += "<td>";
+        html += petMap.imageHtml;
+        html += "</td>";
+        html += "<td style='width:100%;text-align:center'>";
+        html += "<table style='margin:auto;border-width:0;text-align:center;background-color:#888888'>";
+        html += "<tbody>";
+        html += "<tr>";
+        html += "<th style='background-color:#F8F0E0'>持有人</th>"
+        html += "<th style='background-color:#F8F0E0'>数量</th>"
+        html += "</tr>";
+        for (const found of foundList) {
+            const ss = found.split("/");
+            html += "<tr>";
+            html += "<td style='background-color:#E8E8D0'>" + ss[0] + "</td>";
+            html += "<td style='background-color:#E8E8B0'>" + ss[2] + "</td>";
+            html += "</tr>";
+        }
+        html += "</tbody>";
+        html += "</table>";
+        html += "</td>";
+        html += "</tr>";
+        $("#t1").find("tbody:first").html(html);
+    }
+
 }
 
 export = TownPetMapHousePageProcessor;
