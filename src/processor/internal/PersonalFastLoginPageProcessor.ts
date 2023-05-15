@@ -2,6 +2,7 @@ import FastLoginLoader from "../../core/FastLoginLoader";
 import Credential from "../../util/Credential";
 import MessageBoard from "../../util/MessageBoard";
 import StorageUtils from "../../util/StorageUtils";
+import StringUtils from "../../util/StringUtils";
 import PageProcessorContext from "../PageProcessorContext";
 import PageProcessorCredentialSupport from "../PageProcessorCredentialSupport";
 
@@ -99,7 +100,7 @@ function doRender() {
     html += "<th style='background-color:#EFE0C0'>设置</th>";
     html += "</tr>";
 
-    for (let i = 0; i < 10; i++) {
+    for (let i = 0; i < 50; i++) {
         html += "<tr>";
         html += "<th style='background-color:#E8E8D0'>";
         html += "快速登陆 (" + (i + 1) + ")";
@@ -118,6 +119,7 @@ function doRender() {
         html += "</td>";
         html += "<td style='background-color:#EFE0C0'>";
         html += "<input type='button' id='button_" + i + "' class='button_class' value='设置'>";
+        html += "<input type='button' id='clear_" + i + "' class='clear_class' value='清除'>";
         html += "</td>";
         html += "</tr>";
     }
@@ -127,7 +129,7 @@ function doRender() {
 
     $("#fastLoginSetup").html(html);
 
-    for (let i = 0; i < 10; i++) {
+    for (let i = 0; i < 50; i++) {
         const config = FastLoginLoader.loadFastLoginConfig(i);
         // @ts-ignore
         let s = config.name;
@@ -148,6 +150,7 @@ function doRender() {
     }
 
     doBindFastLoginButton();
+    doBindClearButton();
 }
 
 function doBindFastLoginButton() {
@@ -198,9 +201,20 @@ function doBindFastLoginButton() {
     });
 }
 
+function doBindClearButton() {
+    $(".clear_class").on("click", event => {
+        const buttonId = $(event.target).attr("id")!;
+        const code = parseInt(StringUtils.substringAfterLast(buttonId, "_"));
+        StorageUtils.remove("_fl_" + code);
+
+        doRefresh();
+    });
+}
+
 function doRefresh() {
     $("#fastLoginSetup").html("");
     $(".button_class").off("click");
+    $(".clear_class").off("click");
     doRender();
 }
 
