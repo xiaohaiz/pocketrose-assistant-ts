@@ -39,20 +39,22 @@ class TownPetMapHouse {
             });
 
         const petMapList: PetMap[] = [];
-        $(html).find("table:eq(1)")
-            .find("td")
-            .each(function (_i, element) {
-                const img = $(element).find("img:first");
+        $(html).find("td")
+            .each(function (idx, td) {
+                const img = $(td).find("img:first");
                 if (img.length > 0) {
-                    const code = img.attr("alt")!;
-                    const picture = StringUtils.substringAfterLast(img.attr("src")!, "/");
-                    const count = parseInt($(element).next().text());
+                    const src = img.attr("src")!;
+                    if (src.includes("/386/")) {
+                        const code = img.attr("alt")!;
+                        const picture = StringUtils.substringAfterLast(src, "/");
+                        const count = parseInt($(td).next().text());
 
-                    const pm = new PetMap();
-                    pm.code = code;
-                    pm.picture = picture;
-                    pm.count = count;
-                    petMapList.push(pm);
+                        const pm = new PetMap();
+                        pm.code = code;
+                        pm.picture = picture;
+                        pm.count = count;
+                        petMapList.push(pm);
+                    }
                 }
             });
 
