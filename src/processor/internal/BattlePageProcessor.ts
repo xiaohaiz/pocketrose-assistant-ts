@@ -1,8 +1,10 @@
 import NpcLoader from "../../core/NpcLoader";
+import TownPetMapHouse from "../../pocketrose/TownPetMapHouse";
 import SetupLoader from "../../setup/SetupLoader";
 import CommentBoard from "../../util/CommentBoard";
 import Credential from "../../util/Credential";
 import PageUtils from "../../util/PageUtils";
+import StorageUtils from "../../util/StorageUtils";
 import StringUtils from "../../util/StringUtils";
 import PageProcessorCredentialSupport from "../PageProcessorCredentialSupport";
 
@@ -13,10 +15,10 @@ class BattlePageProcessor extends PageProcessorCredentialSupport {
     }
 
     doProcess(credential: Credential): void {
-        this.#doProcess();
+        this.#doProcess(credential);
     }
 
-    #doProcess(): void {
+    #doProcess(credential: Credential): void {
         $('a[target="_blank"]').attr('tabIndex', -1);
         PageUtils.removeUnusedHyperLinks();
         PageUtils.removeGoogleAnalyticsScript();
@@ -64,7 +66,7 @@ class BattlePageProcessor extends PageProcessorCredentialSupport {
         $('#depositButton').parent().prepend($('<input type="hidden" name="azukeru" value="all">'));
         $('input[value="BANK"]').attr('value', 'BANK_SELL');
 
-        doPostBattle(pageText);
+        doPostBattle(credential, pageText);
 
         // 如果强制推荐启用，则删除其余所有的按钮
         if (SetupLoader.isBattleForceRecommendationEnabled()) {
@@ -107,9 +109,17 @@ function doRenderPrompt(pageText: string) {
     }
 }
 
-function doPostBattle(pageText: string): void {
+function doPostBattle(credential: Credential, pageText: string): void {
     const reportText = $("#ueqtweixin").text();
     const endure = findRecoverItemEndure(reportText);
+    const savePetMapBattleCount = SetupLoader.getSavePetMapBattleCount();
+    if (savePetMapBattleCount > 0) {
+        if (endure % savePetMapBattleCount === 0) {
+            new TownPetMapHouse(credential).open().then(page => {
+                StorageUtils.set("_pm_" + credential.id, page.asText());
+            });
+        }
+    }
 
     if (shouldRepair(reportText, endure)) {
         // 优先修理按钮
