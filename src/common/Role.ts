@@ -34,6 +34,7 @@ class Role {
     masterCareerList?: string[];
     treasureList?: string[];
     hasMirror?: boolean;
+    canConsecrate?: boolean;
 
     get imageHtml(): string {
         const src = Constants.POCKET_DOMAIN + "/image/head/" + this.image;
