@@ -4,7 +4,7 @@ import StorageUtils from "../util/StorageUtils";
 class FastLoginLoader {
 
     static loadFastLoginConfig(code: number): {} {
-        if (code < 0 || code > 9) {
+        if (code < 0 || code > 29) {
             return {};
         }
         const key = "_fl_" + code;

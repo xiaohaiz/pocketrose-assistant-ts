@@ -396,7 +396,7 @@ const BUTTON_STYLES: {} = {
         "  min-height: 30px;\n" +
         "  min-width: 0;\n" +
         "  outline: none;\n" +
-        "  padding: 16px 24px;\n" +
+        "  padding: 8px 12px;\n" +
         "  text-align: center;\n" +
         "  text-decoration: none;\n" +
         "  transition: all 300ms cubic-bezier(.23, 1, 0.32, 1);\n" +
