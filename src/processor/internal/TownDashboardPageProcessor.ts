@@ -2,6 +2,8 @@ import TownLoader from "../../core/TownLoader";
 import EventHandler from "../../pocket/EventHandler";
 import RoleStatus from "../../pocket/RoleStatus";
 import RoleStatusParser from "../../pocket/RoleStatusParser";
+import TownDashboard from "../../pocketrose/TownDashboard";
+import TownDashboardPage from "../../pocketrose/TownDashboardPage";
 import SetupLoader from "../../setup/SetupLoader";
 import Credential from "../../util/Credential";
 import NetworkUtils from "../../util/NetworkUtils";
@@ -17,6 +19,8 @@ class TownDashboardPageProcessor extends PageProcessorCredentialSupport {
     }
 
     doProcess(credential: Credential, context?: PageProcessorContext): void {
+        const page = TownDashboard.parsePage(PageUtils.currentPageHtml());
+
         // 标记页面上的元素
         $("input:text:last").attr("id", "messageInputText");
         $("input:submit[value='更新']").attr("id", "refreshButton");
@@ -31,12 +35,12 @@ class TownDashboardPageProcessor extends PageProcessorCredentialSupport {
             .find("input:submit:first")
             .attr("id", "battleButton");
 
-        doProcess(credential);
+        doProcess(credential, page);
     }
 
 }
 
-function doProcess(credential: Credential) {
+function doProcess(credential: Credential, page: TownDashboardPage) {
     let buttonChanged = false;
     if (SetupLoader.isConsecrateStateRecognizeEnabled(credential.id)) {
         buttonChanged = true;
