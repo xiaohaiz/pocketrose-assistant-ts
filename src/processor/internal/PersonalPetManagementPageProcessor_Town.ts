@@ -5,6 +5,7 @@ import CastleInformation from "../../pocketrose/CastleInformation";
 import CastleRanch from "../../pocketrose/CastleRanch";
 import GoldenCage from "../../pocketrose/GoldenCage";
 import PersonalEquipmentManagement from "../../pocketrose/PersonalEquipmentManagement";
+import PersonalPetEvolution from "../../pocketrose/PersonalPetEvolution";
 import PersonalPetManagement from "../../pocketrose/PersonalPetManagement";
 import PersonalPetManagementPage from "../../pocketrose/PersonalPetManagementPage";
 import PersonalStatus from "../../pocketrose/PersonalStatus";
@@ -347,6 +348,8 @@ function doRender(credential: Credential, petList: Pet[], studyStatus: number[],
     if ($("#ranchState").text() === "on") {
         doRenderRanch(credential);
     }
+
+    doRenderPetBorn(credential);
 }
 
 function doBindPetFuture(petList: Pet[]) {
@@ -595,7 +598,7 @@ function doRefresh(credential: Credential) {
         $("#propagateCell").html("").parent().hide();
         $("#evolutionCell").html("").parent().hide();
         $("#degradationCell").html("").parent().hide();
-        $("#PET_BRON").hide();
+        $("#PET_BORN").hide();
 
         new PersonalStatus(credential).open().then(page => {
             const role = page.role;
@@ -1056,6 +1059,53 @@ function doRenderRanch(credential: Credential) {
         html += "</table>";
 
         $("#ranchList").html(html).parent().show();
+    });
+}
+
+function doRenderPetBorn(credential: Credential) {
+    new PersonalPetEvolution(credential).open().then(evolutionPage => {
+
+        if (evolutionPage.degradationPetList!.length > 0) {
+            $("#PET_BORN").show();
+            let html = "";
+            html += "<table style='border-width:0;background-color:#888888;text-align:center;width:100%;margin:auto'>";
+            html += "<tbody style='background-color:#F8F0E0'>";
+            html += "<tr>";
+            html += "<th style='background-color:#EFE0C0'>退化</th>";
+            html += "<th style='background-color:#EFE0C0'>使用</th>";
+            html += "<th style='background-color:#E8E8D0'>宠物名</th>";
+            html += "<th style='background-color:#E8E8D0'>等级</th>";
+            html += "<th style='background-color:#E8E8D0'>攻击力</th>";
+            html += "<th style='background-color:#E8E8D0'>防御力</th>";
+            html += "<th style='background-color:#E8E8D0'>智力</th>";
+            html += "<th style='background-color:#E8E8D0'>精神力</th>";
+            html += "<th style='background-color:#E8E8D0'>速度</th>";
+            html += "<th style='background-color:#E8E8D0'>退化前</th>";
+            html += "<th style='background-color:#E8E8D0'>退化后</th>";
+            html += "<th style='background-color:#E8E8D0'>图鉴数</th>";
+            html += "</tr>";
+
+            for (const pet of evolutionPage.degradationPetList!) {
+                html += "<tr>";
+                html += "<td style='background-color:#EFE0C0'></td>";
+                html += "<td style='background-color:#EFE0C0'>" + pet.usingHtml + "</td>";
+                html += "<td style='background-color:#E8E8D0'>" + pet.name + "</td>";
+                html += "<td style='background-color:#E8E8D0'>" + pet.levelHtml + "</td>";
+                html += "<td style='background-color:#E8E8D0'>" + pet.attackHtml + "</td>";
+                html += "<td style='background-color:#E8E8D0'>" + pet.defenseHtml + "</td>";
+                html += "<td style='background-color:#E8E8D0'>" + pet.specialAttackHtml + "</td>";
+                html += "<td style='background-color:#E8E8D0'>" + pet.specialDefenseHtml + "</td>";
+                html += "<td style='background-color:#E8E8D0'>" + pet.speedHtml + "</td>";
+                html += "<td style='background-color:#E8E8D0'>" + pet.before + "</td>";
+                html += "<td style='background-color:#E8E8D0'>" + pet.after + "</td>";
+                html += "<td style='background-color:#E8E8D0'>" + pet.mapCount + "</td>";
+                html += "</tr>";
+            }
+
+            html += "</tbody>";
+            html += "</table>";
+            $("#degradationCell").html(html).parent().show();
+        }
     });
 }
 

@@ -73,7 +73,7 @@ abstract class AbstractPersonalPetManagementPageProcessor extends PageProcessorC
             "手机用户请试试单击宠物名字那一栏。");
 
         html = "";
-        html += "<table style='background-color:#888888;width:100%;text-align:center;display:none' id='PET_BRON'>";
+        html += "<table style='background-color:#888888;width:100%;text-align:center;display:none' id='PET_BORN'>";
         html += "<tbody style='background-color:#F8F0E0'>";
         html += "<tr style='display:none'>";
         html += "<td id='propagateCell'></td>";
