@@ -209,7 +209,8 @@ function doProcess(credential: Credential, page: TownDashboardPage) {
 
         $("#t1")
             .find("tr:first")
-            .remove();
+            .hide();
+
         $("#t2")
             .parent()
             .next()
