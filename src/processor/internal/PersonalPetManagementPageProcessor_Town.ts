@@ -1074,6 +1074,10 @@ function __findPet(index: number, petList: Pet[]) {
 function doRenderPetBorn(credential: Credential, petList: Pet[]) {
     new PersonalPetEvolution(credential).open().then(evolutionPage => {
 
+        if (evolutionPage.malePetList!.length > 0 && evolutionPage.femalePetList!.length > 0) {
+            $("#PET_BORN").show();
+        }
+
         if (evolutionPage.evolutionPetList!.length > 0) {
             $("#PET_BORN").show();
             let html = "";
