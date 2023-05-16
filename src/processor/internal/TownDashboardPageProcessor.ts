@@ -99,7 +99,7 @@ function doProcess(credential: Credential, page: TownDashboardPage) {
     doRenderBankMenu();
 
     const roleStatus = RoleStatusParser.parseRoleStatus(document.documentElement.outerHTML);
-    doRenderBattleCount(roleStatus);
+    doRenderBattleCount(page);
     doRenderCareerTransferWarning(credential, roleStatus);
     doRenderRoleStatus(roleStatus);
     doRenderTownTax(credential, roleStatus);
@@ -413,7 +413,7 @@ function doRenderBankMenu() {
     }
 }
 
-function doRenderBattleCount(roleStatus: RoleStatus) {
+function doRenderBattleCount(page: TownDashboardPage) {
     $("td:contains('贡献度')")
         .filter(function () {
             return $(this).text() === "贡献度";
@@ -425,9 +425,9 @@ function doRenderBattleCount(roleStatus: RoleStatus) {
             const name = StringUtils.substringBefore(text, "(");
             const unit = StringUtils.substringBetween(text, "(", "军)");
             if (unit.includes("无所属")) {
-                return name + "&nbsp;&nbsp;&nbsp;" + roleStatus.battleCount + "战";
+                return name + "&nbsp;&nbsp;&nbsp;" + page.role!.battleCount + "战";
             } else {
-                return name + "(" + unit + ")" + "&nbsp;&nbsp;&nbsp;" + roleStatus.battleCount + "战";
+                return name + "(" + unit + ")" + "&nbsp;&nbsp;&nbsp;" + page.role!.battleCount + "战";
             }
         });
 }
@@ -478,7 +478,7 @@ function doRenderRoleStatus(roleStatus: RoleStatus) {
 }
 
 function doRenderTownTax(credential: Credential, roleStatus: RoleStatus) {
-    let td: JQuery<HTMLElement> | null = null;
+    let td: JQuery | null = null;
     const town = TownLoader.getTownById(roleStatus.townId!);
     if (town !== null && town.name === "枫丹") {
         td = $("th:contains('收益')")
