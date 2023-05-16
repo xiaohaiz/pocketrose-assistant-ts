@@ -1,7 +1,4 @@
-import TownLoader from "../../core/TownLoader";
 import EventHandler from "../../pocket/EventHandler";
-import RoleStatus from "../../pocket/RoleStatus";
-import RoleStatusParser from "../../pocket/RoleStatusParser";
 import TownDashboard from "../../pocketrose/TownDashboard";
 import TownDashboardPage from "../../pocketrose/TownDashboardPage";
 import SetupLoader from "../../setup/SetupLoader";
@@ -98,11 +95,10 @@ function doProcess(credential: Credential, page: TownDashboardPage) {
     doRenderFastLoginMenu();
     doRenderBankMenu();
 
-    const roleStatus = RoleStatusParser.parseRoleStatus(document.documentElement.outerHTML);
     doRenderBattleCount(page);
     doRenderCareerTransferWarning(credential, page);
     doRenderRoleStatus(page);
-    doRenderTownTax(credential, roleStatus);
+    doRenderTownTax(credential, page);
     doRenderLeaveTown();
     doRenderEventBoard();
 
@@ -477,10 +473,10 @@ function doRenderRoleStatus(page: TownDashboardPage) {
     });
 }
 
-function doRenderTownTax(credential: Credential, roleStatus: RoleStatus) {
+function doRenderTownTax(credential: Credential, page: TownDashboardPage) {
     let td: JQuery | null = null;
-    const town = TownLoader.getTownById(roleStatus.townId!);
-    if (town !== null && town.name === "枫丹") {
+    const town = page.role!.town!;
+    if (town.name === "枫丹") {
         td = $("th:contains('收益')")
             .filter(function () {
                 return $(this).text() === "收益";
@@ -494,7 +490,7 @@ function doRenderTownTax(credential: Credential, roleStatus: RoleStatus) {
         $("option[value='MAKE_TOWN']").remove();
         return;
     }
-    if (roleStatus.country !== "在野" && roleStatus.country === roleStatus.townCountry) {
+    if (page.role!.country !== "在野" && page.role!.country === page.townCountry) {
         if (td === null) {
             td = $("th:contains('收益')")
                 .filter(function () {
@@ -508,8 +504,8 @@ function doRenderTownTax(credential: Credential, roleStatus: RoleStatus) {
                 td!.css("color", "white")
                     .css("background-color", "green")
                     .css("font-weight", "bold")
-                    .attr("id", "tax_" + roleStatus.townId);
-                doBindTownTaxButton(credential, "tax_" + roleStatus.townId);
+                    .attr("id", "tax_" + page.townId);
+                doBindTownTaxButton(credential, "tax_" + page.townId);
             }
         }
     }
