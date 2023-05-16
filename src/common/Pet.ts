@@ -122,6 +122,14 @@ class Pet {
         return "<span title='" + this.experience + "'>" + progressBar + "</span>";
     }
 
+    get beforeCode(): string {
+        return StringUtils.substringBetween(this.before!, "(", ")");
+    }
+
+    get afterCode(): string {
+        return StringUtils.substringBetween(this.after!, "(", ")");
+    }
+
     static sortPetList(source: Pet[]): Pet[] {
         const target: Pet[] = [];
         target.push(...source);

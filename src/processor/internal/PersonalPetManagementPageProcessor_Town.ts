@@ -1072,7 +1072,6 @@ function doRenderPetBorn(credential: Credential) {
             html += "<tbody style='background-color:#F8F0E0'>";
             html += "<tr>";
             html += "<th style='background-color:#EFE0C0'>退化</th>";
-            html += "<th style='background-color:#EFE0C0'>使用</th>";
             html += "<th style='background-color:#E8E8D0'>宠物名</th>";
             html += "<th style='background-color:#E8E8D0'>等级</th>";
             html += "<th style='background-color:#E8E8D0'>攻击力</th>";
@@ -1082,15 +1081,21 @@ function doRenderPetBorn(credential: Credential) {
             html += "<th style='background-color:#E8E8D0'>速度</th>";
             html += "<th style='background-color:#E8E8D0'>退化前</th>";
             html += "<th style='background-color:#E8E8D0'>退化后</th>";
+            html += "<th style='background-color:#E8E8D0'>退化前</th>";
+            html += "<th style='background-color:#E8E8D0'>退化后</th>";
             html += "<th style='background-color:#E8E8D0'>图鉴数</th>";
             html += "</tr>";
 
             for (const pet of evolutionPage.degradationPetList!) {
+                if (!pet.selectable) {
+                    continue;
+                }
+                const beforeHtml = PetProfileLoader.load(pet.beforeCode)!.imageHtml;
+                const afterHtml = PetProfileLoader.load(pet.afterCode)!.imageHtml;
                 html += "<tr>";
                 html += "<td style='background-color:#EFE0C0'>";
                 html += "<button role='button' class='PetUIButton' id='degradation_" + pet.index + "'>退化</button>";
                 html += "</td>";
-                html += "<td style='background-color:#EFE0C0'>" + pet.usingHtml + "</td>";
                 html += "<td style='background-color:#E8E8D0'>" + pet.name + "</td>";
                 html += "<td style='background-color:#E8E8D0'>" + pet.levelHtml + "</td>";
                 html += "<td style='background-color:#E8E8D0'>" + pet.attackHtml + "</td>";
@@ -1100,6 +1105,8 @@ function doRenderPetBorn(credential: Credential) {
                 html += "<td style='background-color:#E8E8D0'>" + pet.speedHtml + "</td>";
                 html += "<td style='background-color:#E8E8D0'>" + pet.before + "</td>";
                 html += "<td style='background-color:#E8E8D0'>" + pet.after + "</td>";
+                html += "<td style='background-color:#E8E8D0;width:64px;height:64px'>" + beforeHtml + "</td>";
+                html += "<td style='background-color:#E8E8D0;width:64px;height:64px'>" + afterHtml + "</td>";
                 html += "<td style='background-color:#E8E8D0'>" + pet.mapCount + "</td>";
                 html += "</tr>";
             }
