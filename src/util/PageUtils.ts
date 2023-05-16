@@ -584,6 +584,48 @@ const BUTTON_STYLES: {} = {
         "\n" +
         "  cursor: pointer;\n" +
         "}\n",
+    "10028": ".button-10028 {\n" +
+        "  appearance: none;\n" +
+        "  background-color: transparent;\n" +
+        "  border: 2px solid #1A1A1A;\n" +
+        "  border-radius: 15px;\n" +
+        "  box-sizing: border-box;\n" +
+        "  color: #3B3B3B;\n" +
+        "  cursor: pointer;\n" +
+        "  display: inline-block;\n" +
+        "  font-size: 100%;\n" +
+        "  font-weight: 600;\n" +
+        "  line-height: normal;\n" +
+        "  margin: 0;\n" +
+        "  min-height: 0;\n" +
+        "  min-width: 0;\n" +
+        "  outline: none;\n" +
+        "  padding: 0px 0px;\n" +
+        "  text-align: center;\n" +
+        "  text-decoration: none;\n" +
+        "  transition: all 300ms cubic-bezier(.23, 1, 0.32, 1);\n" +
+        "  user-select: none;\n" +
+        "  -webkit-user-select: none;\n" +
+        "  touch-action: manipulation;\n" +
+        "  width: 100%;\n" +
+        "  will-change: transform;\n" +
+        "}\n" +
+        "\n" +
+        ".button-10028:disabled {\n" +
+        "  pointer-events: none;\n" +
+        "}\n" +
+        "\n" +
+        ".button-10028:hover {\n" +
+        "  color: #fff;\n" +
+        "  background-color: #1A1A1A;\n" +
+        "  box-shadow: rgba(0, 0, 0, 0.25) 0 8px 15px;\n" +
+        "  transform: translateY(-2px);\n" +
+        "}\n" +
+        "\n" +
+        ".button-10028:active {\n" +
+        "  box-shadow: none;\n" +
+        "  transform: translateY(0);\n" +
+        "}\n",
 };
 
 export = PageUtils;

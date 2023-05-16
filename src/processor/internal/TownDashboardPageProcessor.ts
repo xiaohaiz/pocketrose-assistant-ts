@@ -12,7 +12,7 @@ import PageProcessorCredentialSupport from "../PageProcessorCredentialSupport";
 class TownDashboardPageProcessor extends PageProcessorCredentialSupport {
 
     doLoadButtonStyles(): number[] {
-        return [7, 8, 16, 24];
+        return [7, 8, 16, 10028];
     }
 
     doProcess(credential: Credential, context?: PageProcessorContext): void {
@@ -139,22 +139,22 @@ function doProcess(credential: Credential, page: TownDashboardPage) {
             .find("th:first")
             .css("text-align", "right")
             .text("城市设施")
-            .before($("<td><button role='button' class='button-24' id='shortcut1'>鉴</button></td>"))
+            .before($("<td><button role='button' class='button-10028' id='shortcut1'>鉴</button></td>"))
             .parent()
             .next()
             .find("th:first")
             .css("text-align", "right")
-            .before($("<td><button role='button' class='button-24' id='shortcut2'>装</button></td>"))
+            .before($("<td><button role='button' class='button-10028' id='shortcut2'>装</button></td>"))
             .parent()
             .next()
             .find("th:first")
             .css("text-align", "right")
-            .before($("<td><button role='button' class='button-24' id='shortcut3'>宠</button></td>"))
+            .before($("<td><button role='button' class='button-10028' id='shortcut3'>宠</button></td>"))
             .parent()
             .next()
             .find("th:first")
             .css("text-align", "right")
-            .before($("<td><button role='button' class='button-24' id='shortcut4'>职</button></td>"))
+            .before($("<td><button role='button' class='button-10028' id='shortcut4'>职</button></td>"))
             .parent()
             .next()
             .find("th:first")
