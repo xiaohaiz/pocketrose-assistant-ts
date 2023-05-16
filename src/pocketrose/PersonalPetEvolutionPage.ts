@@ -106,7 +106,7 @@ class PersonalPetEvolutionPage {
             });
 
         const evolutionPetList: Pet[] = [];
-        $("input:submit[value='进化']")
+        $(html).find("input:submit[value='进化']")
             .parent()
             .find("table:first")
             .find("input:radio")
@@ -142,7 +142,7 @@ class PersonalPetEvolutionPage {
             });
 
         const degradationPetList: Pet[] = [];
-        $("input:submit[value='退化']")
+        $(html).find("input:submit[value='退化']")
             .parent()
             .find("table:first")
             .find("input:radio")
