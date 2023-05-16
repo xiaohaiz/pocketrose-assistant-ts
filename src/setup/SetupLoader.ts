@@ -252,6 +252,10 @@ class SetupLoader {
     static getSavePetMapBattleCount(): number {
         return StorageUtils.getInt("_pa_039", 20);
     }
+
+    static isMobileMiniDashboardEnabled() {
+        return StorageUtils.getBoolean("_pa_040");
+    }
 }
 
 export = SetupLoader;
