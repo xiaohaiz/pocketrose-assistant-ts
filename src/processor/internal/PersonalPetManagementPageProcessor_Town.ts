@@ -1207,7 +1207,7 @@ function doRenderPetBorn(credential: Credential, petList: Pet[]) {
                 const afterHtml = PetProfileLoader.load(pet.afterCode)!.imageHtml;
                 html += "<tr>";
                 html += "<td style='background-color:#EFE0C0'>";
-                html += "<button role='button' class='PetUIButton evolutionButton' id='evolution_" + pet.index + "'>进化</button>";
+                html += "<button role='button' class='PetUIButton evolutionButton' id='evolution_" + pet.index + "_" + pet.evolution + "'>进化</button>";
                 html += "</td>";
                 html += "<td style='background-color:#E8E8D0'>" + pet.name + "</td>";
                 html += "<td style='background-color:#E8E8D0'>" + pet.levelHtml + "</td>";
@@ -1346,11 +1346,16 @@ function doBindPropagateButton(credential: Credential, page: PersonalPetEvolutio
 function doBindEvolutionButton(credential: Credential, page: PersonalPetEvolutionPage) {
     $(".evolutionButton").on("click", event => {
         const buttonId = $(event.target).attr("id")! as string;
-        const index = parseInt(StringUtils.substringAfterLast(buttonId, "_"));
-        const pet = page.findEvolutionPet(index)!;
+        const ss = buttonId.split("_");
+        const index = parseInt(ss[1]);
+        const evolution = parseInt(ss[2]);
+        const pet = page.findEvolutionPet(index, evolution)!;
         if (!confirm("请确认将\"" + pet.name + "\"进化到\"" + pet.after + "\"？")) {
             return;
         }
+        new PersonalPetEvolution(credential).evolve(index, evolution).then(() => {
+            doRefresh(credential);
+        });
     });
 }
 

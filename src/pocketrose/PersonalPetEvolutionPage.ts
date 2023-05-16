@@ -28,9 +28,9 @@ class PersonalPetEvolutionPage {
         return null;
     }
 
-    findEvolutionPet(index: number) {
+    findEvolutionPet(index: number, evolution: number) {
         for (const pet of this.evolutionPetList!) {
-            if (pet.index === index) {
+            if (pet.index === index && pet.evolution === evolution) {
                 return pet;
             }
         }

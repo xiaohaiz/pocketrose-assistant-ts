@@ -44,10 +44,16 @@ class PersonalPetEvolution {
         })();
     }
 
-    async evolve(index: number): Promise<void> {
+    async evolve(index: number, evolution: number): Promise<void> {
         return await (() => {
             return new Promise<void>(resolve => {
                 const request = this.#credential.asRequestMap();
+                request.set("select", index + "," + evolution);
+                request.set("mode", "PETBORN3");
+                NetworkUtils.post("mydata.cgi", request).then(html => {
+                    MessageBoard.processResponseMessage(html);
+                    resolve();
+                });
             })
         })();
     }
