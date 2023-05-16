@@ -6,6 +6,7 @@ import CastleRanch from "../../pocketrose/CastleRanch";
 import GoldenCage from "../../pocketrose/GoldenCage";
 import PersonalEquipmentManagement from "../../pocketrose/PersonalEquipmentManagement";
 import PersonalPetEvolution from "../../pocketrose/PersonalPetEvolution";
+import PersonalPetEvolutionPage from "../../pocketrose/PersonalPetEvolutionPage";
 import PersonalPetManagement from "../../pocketrose/PersonalPetManagement";
 import PersonalPetManagementPage from "../../pocketrose/PersonalPetManagementPage";
 import PersonalStatus from "../../pocketrose/PersonalStatus";
@@ -1169,6 +1170,8 @@ function doRenderPetBorn(credential: Credential, petList: Pet[]) {
             html += "</tbody>";
             html += "</table>";
             $("#propagateCell").html(html).parent().show();
+
+            doBindPropagateButton(credential, evolutionPage);
         }
 
         if (evolutionPage.evolutionPetList!.length > 0) {
@@ -1281,6 +1284,56 @@ function doRenderPetBorn(credential: Credential, petList: Pet[]) {
             html += "</tbody>";
             html += "</table>";
             $("#degradationCell").html(html).parent().show();
+        }
+    });
+}
+
+function doBindPropagateButton(credential: Credential, page: PersonalPetEvolutionPage) {
+    $(".fatherButton").on("click", event => {
+        const buttonId = $(event.target).attr("id")! as string;
+        if (PageUtils.isColorBlue(buttonId)) {
+            $(event.target).css("color", "grey");
+        } else if (PageUtils.isColorGrey(buttonId)) {
+            $(".fatherButton").css("color", "grey");
+            $(event.target).css("color", "blue");
+        }
+    });
+    $(".motherButton").on("click", event => {
+        const buttonId = $(event.target).attr("id")! as string;
+        if (PageUtils.isColorBlue(buttonId)) {
+            $(event.target).css("color", "grey");
+        } else if (PageUtils.isColorGrey(buttonId)) {
+            $(".motherButton").css("color", "grey");
+            $(event.target).css("color", "blue");
+        }
+    });
+    $("#propagate").on("click", () => {
+        const fatherButton = $(".fatherButton")
+            .filter((idx, button) => {
+                const buttonId = $(button).attr("id")! as string;
+                return PageUtils.isColorBlue(buttonId);
+            });
+        if (fatherButton.length === 0) {
+            MessageBoard.publishWarning("没有选择父系宠物！");
+            PageUtils.scrollIntoView("pageTitle");
+            return;
+        }
+        const motherButton = $(".motherButton")
+            .filter((idx, button) => {
+                const buttonId = $(button).attr("id")! as string;
+                return PageUtils.isColorBlue(buttonId);
+            });
+        if (motherButton.length === 0) {
+            MessageBoard.publishWarning("没有选择母系宠物！");
+            PageUtils.scrollIntoView("pageTitle");
+            return;
+        }
+        const fatherIndex = parseInt(StringUtils.substringAfterLast(fatherButton.attr("id")! as string, "_"));
+        const motherIndex = parseInt(StringUtils.substringAfterLast(motherButton.attr("id")! as string, "_"));
+        const father = page.findMale(fatherIndex)!;
+        const mother = page.findFemale(motherIndex)!;
+        if (!confirm("请确认要繁殖\"" + father.name + "\"和\"" + mother.name + "\"？")) {
+            return;
         }
     });
 }

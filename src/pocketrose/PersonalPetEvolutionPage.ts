@@ -10,6 +10,24 @@ class PersonalPetEvolutionPage {
     evolutionPetList?: Pet[];
     degradationPetList?: Pet[];
 
+    findMale(index: number) {
+        for (const pet of this.malePetList!) {
+            if (pet.index === index) {
+                return pet;
+            }
+        }
+        return null;
+    }
+
+    findFemale(index: number) {
+        for (const pet of this.femalePetList!) {
+            if (pet.index === index) {
+                return pet;
+            }
+        }
+        return null;
+    }
+
     static parse(html: string): PersonalPetEvolutionPage {
         const role = new Role();
         $(html).find("td:contains('ＬＶ')")
