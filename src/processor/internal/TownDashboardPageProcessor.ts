@@ -197,6 +197,51 @@ function doProcess(credential: Credential, page: TownDashboardPage) {
                 .trigger("click");
         });
     }
+
+
+    if (SetupLoader.isMobileMiniDashboardEnabled()) {
+        // 手机版极简主页。。尝试简化
+        $("center:first").remove();
+        $("br:first").remove();
+        $("#t0")
+            .find("tr:first")
+            .remove();
+
+        $("#t1")
+            .find("tr:first")
+            .remove();
+        $("#t2")
+            .parent()
+            .next()
+            .removeAttr("width")
+            .css("width", "100%")
+            .prev()
+            .remove();
+
+        $("#t6")
+            .find("tr:first")
+            .next()
+            .next()
+            .next()
+            .next().hide()
+            .next().hide()
+            .next().hide()
+            .next().hide();
+
+        $("#t8")
+            .find("tr:first")
+            .remove();
+
+        $("#t8")
+            .find("tr:first")
+            .next()
+            .find("td:first")
+            .attr("colspan", 2)
+            .removeAttr("width")
+            .css("width", "100%")
+            .next()
+            .remove();
+    }
 }
 
 function doRenderBattleMenu(credential: Credential) {
