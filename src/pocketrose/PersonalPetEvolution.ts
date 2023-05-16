@@ -57,6 +57,20 @@ class PersonalPetEvolution {
             })
         })();
     }
+
+    async degrade(index: number): Promise<void> {
+        return await (() => {
+            return new Promise<void>(resolve => {
+                const request = this.#credential.asRequestMap();
+                request.set("select", index.toString());
+                request.set("mode", "PETBORN4");
+                NetworkUtils.post("mydata.cgi", request).then(html => {
+                    MessageBoard.processResponseMessage(html);
+                    resolve();
+                });
+            })
+        })();
+    }
 }
 
 export = PersonalPetEvolution;

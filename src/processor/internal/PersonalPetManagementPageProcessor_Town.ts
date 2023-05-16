@@ -1265,7 +1265,7 @@ function doRenderPetBorn(credential: Credential, petList: Pet[]) {
                 const afterHtml = PetProfileLoader.load(pet.afterCode)!.imageHtml;
                 html += "<tr>";
                 html += "<td style='background-color:#EFE0C0'>";
-                html += "<button role='button' class='PetUIButton' id='degradation_" + pet.index + "'>退化</button>";
+                html += "<button role='button' class='PetUIButton degradationButton' id='degradation_" + pet.index + "'>退化</button>";
                 html += "</td>";
                 html += "<td style='background-color:#E8E8D0'>" + pet.name + "</td>";
                 html += "<td style='background-color:#E8E8D0'>" + pet.levelHtml + "</td>";
@@ -1286,6 +1286,8 @@ function doRenderPetBorn(credential: Credential, petList: Pet[]) {
             html += "</tbody>";
             html += "</table>";
             $("#degradationCell").html(html).parent().show();
+
+            doBindDegradationButton(credential, evolutionPage);
         }
     });
 }
@@ -1354,6 +1356,20 @@ function doBindEvolutionButton(credential: Credential, page: PersonalPetEvolutio
             return;
         }
         new PersonalPetEvolution(credential).evolve(index, evolution).then(() => {
+            doRefresh(credential);
+        });
+    });
+}
+
+function doBindDegradationButton(credential: Credential, page: PersonalPetEvolutionPage) {
+    $(".degradationButton").on("click", event => {
+        const buttonId = $(event.target).attr("id")! as string;
+        const index = parseInt(StringUtils.substringAfterLast(buttonId, "_"));
+        const pet = page.findDegradationPet(index)!;
+        if (!confirm("请确认将\"" + pet.name + "\"退化到\"" + pet.after + "\"？")) {
+            return;
+        }
+        new PersonalPetEvolution(credential).degrade(index).then(() => {
             doRefresh(credential);
         });
     });
