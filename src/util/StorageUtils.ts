@@ -65,9 +65,34 @@ class StorageUtils {
         const s = {};
         for (let i = 0; i < localStorage.length; i++) {
             const key = localStorage.key(i);
-            if (key === null || key.startsWith("_lc_")) {
+            if (key === null) {
                 continue;
             }
+            // 忽略位置信息
+            if (key.startsWith("_lc_")) {
+                continue;
+            }
+            // 忽略图鉴信息
+            if (key.startsWith("_pm_")) {
+                continue;
+            }
+            // 忽略套装信息
+            if (key.startsWith("_pa_019_")) {
+                continue;
+            }
+            if (key.startsWith("_pa_020_")) {
+                continue;
+            }
+            if (key.startsWith("_pa_021_")) {
+                continue;
+            }
+            if (key.startsWith("_pa_022_")) {
+                continue;
+            }
+            if (key.startsWith("_pa_023_")) {
+                continue;
+            }
+
             const value = localStorage.getItem(key);
             if (value === null) {
                 continue;
