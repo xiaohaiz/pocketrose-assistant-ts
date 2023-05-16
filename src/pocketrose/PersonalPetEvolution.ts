@@ -43,6 +43,14 @@ class PersonalPetEvolution {
             });
         })();
     }
+
+    async evolve(index: number): Promise<void> {
+        return await (() => {
+            return new Promise<void>(resolve => {
+                const request = this.#credential.asRequestMap();
+            })
+        })();
+    }
 }
 
 export = PersonalPetEvolution;

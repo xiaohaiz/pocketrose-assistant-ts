@@ -1207,7 +1207,7 @@ function doRenderPetBorn(credential: Credential, petList: Pet[]) {
                 const afterHtml = PetProfileLoader.load(pet.afterCode)!.imageHtml;
                 html += "<tr>";
                 html += "<td style='background-color:#EFE0C0'>";
-                html += "<button role='button' class='PetUIButton' id='evolution_" + pet.index + "'>进化</button>";
+                html += "<button role='button' class='PetUIButton evolutionButton' id='evolution_" + pet.index + "'>进化</button>";
                 html += "</td>";
                 html += "<td style='background-color:#E8E8D0'>" + pet.name + "</td>";
                 html += "<td style='background-color:#E8E8D0'>" + pet.levelHtml + "</td>";
@@ -1228,6 +1228,8 @@ function doRenderPetBorn(credential: Credential, petList: Pet[]) {
             html += "</tbody>";
             html += "</table>";
             $("#evolutionCell").html(html).parent().show();
+
+            doBindEvolutionButton(credential, evolutionPage);
         }
 
         if (evolutionPage.degradationPetList!.length > 0) {
@@ -1330,14 +1332,25 @@ function doBindPropagateButton(credential: Credential, page: PersonalPetEvolutio
         }
         const fatherIndex = parseInt(StringUtils.substringAfterLast(fatherButton.attr("id")! as string, "_"));
         const motherIndex = parseInt(StringUtils.substringAfterLast(motherButton.attr("id")! as string, "_"));
-        const father = page.findMale(fatherIndex)!;
-        const mother = page.findFemale(motherIndex)!;
+        const father = page.findMalePet(fatherIndex)!;
+        const mother = page.findFemalePet(motherIndex)!;
         if (!confirm("请确认要繁殖\"" + father.name + "\"和\"" + mother.name + "\"？")) {
             return;
         }
         new PersonalPetEvolution(credential).propagate(fatherIndex, motherIndex).then(() => {
             doRefresh(credential);
         });
+    });
+}
+
+function doBindEvolutionButton(credential: Credential, page: PersonalPetEvolutionPage) {
+    $(".evolutionButton").on("click", event => {
+        const buttonId = $(event.target).attr("id")! as string;
+        const index = parseInt(StringUtils.substringAfterLast(buttonId, "_"));
+        const pet = page.findEvolutionPet(index)!;
+        if (!confirm("请确认将\"" + pet.name + "\"进化到\"" + pet.after + "\"？")) {
+            return;
+        }
     });
 }
 

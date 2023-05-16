@@ -10,7 +10,7 @@ class PersonalPetEvolutionPage {
     evolutionPetList?: Pet[];
     degradationPetList?: Pet[];
 
-    findMale(index: number) {
+    findMalePet(index: number) {
         for (const pet of this.malePetList!) {
             if (pet.index === index) {
                 return pet;
@@ -19,8 +19,17 @@ class PersonalPetEvolutionPage {
         return null;
     }
 
-    findFemale(index: number) {
+    findFemalePet(index: number) {
         for (const pet of this.femalePetList!) {
+            if (pet.index === index) {
+                return pet;
+            }
+        }
+        return null;
+    }
+
+    findEvolutionPet(index: number) {
+        for (const pet of this.evolutionPetList!) {
             if (pet.index === index) {
                 return pet;
             }
