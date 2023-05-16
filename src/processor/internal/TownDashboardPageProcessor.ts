@@ -101,7 +101,7 @@ function doProcess(credential: Credential, page: TownDashboardPage) {
     const roleStatus = RoleStatusParser.parseRoleStatus(document.documentElement.outerHTML);
     doRenderBattleCount(page);
     doRenderCareerTransferWarning(credential, page);
-    doRenderRoleStatus(roleStatus);
+    doRenderRoleStatus(page);
     doRenderTownTax(credential, roleStatus);
     doRenderLeaveTown();
     doRenderEventBoard();
@@ -444,9 +444,9 @@ function doRenderCareerTransferWarning(credential: Credential, page: TownDashboa
     }
 }
 
-function doRenderRoleStatus(roleStatus: RoleStatus) {
-    if (roleStatus.level !== 150 && (roleStatus.attack === 375 || roleStatus.defense === 375
-        || roleStatus.specialAttack === 375 || roleStatus.specialDefense === 375 || roleStatus.speed === 375)) {
+function doRenderRoleStatus(page: TownDashboardPage) {
+    if (page.role!.level !== 150 && (page.role!.attack === 375 || page.role!.defense === 375
+        || page.role!.specialAttack === 375 || page.role!.specialDefense === 375 || page.role!.speed === 375)) {
         $("#battleCell").css("background-color", "yellow");
     }
 
@@ -454,12 +454,12 @@ function doRenderRoleStatus(roleStatus: RoleStatus) {
         const text = $(td).text();
         if (text === "经验值") {
             if (SetupLoader.isExperienceProgressBarEnabled()) {
-                if (roleStatus.level === 150) {
+                if (page.role!.level === 150) {
                     $(td).next()
                         .attr("style", "color: blue")
                         .text("MAX");
                 } else {
-                    const ratio = roleStatus.level! / 150;
+                    const ratio = page.role!.level! / 150;
                     const progressBar = PageUtils.generateProgressBarHTML(ratio);
                     const exp = $(td).next().text();
                     $(td).next()
