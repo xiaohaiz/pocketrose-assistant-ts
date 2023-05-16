@@ -21,6 +21,10 @@ class TownDashboardPageProcessor extends PageProcessorCredentialSupport {
     doProcess(credential: Credential, context?: PageProcessorContext): void {
         const page = TownDashboard.parsePage(PageUtils.currentPageHtml());
 
+        // 手机战斗返回后不在页面顶端，尝试自动触顶。
+        $("center:first").attr("id", "systemAnnouncement");
+        PageUtils.scrollIntoView("systemAnnouncement");
+
         // 标记页面上的元素
         $("input:text:last").attr("id", "messageInputText");
         $("input:submit[value='更新']").attr("id", "refreshButton");

@@ -142,7 +142,6 @@ function doRender(configs: Map<number, {}>) {
 
     $("#fastLogin").html(html);
 
-    console.log(fastLoginCounts);
     for (let i = 0; i < fastLoginCounts.length; i++) {
         const fastLoginCount = fastLoginCounts[i];
         if (fastLoginCount === 0) {
