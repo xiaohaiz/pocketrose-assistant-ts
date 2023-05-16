@@ -38,6 +38,10 @@ class Pet {
     race?: string;
     code?: string;
 
+    before?: string;
+    after?: string;
+    mapCount?: number;
+
     get imageHtml() {
         const src = Constants.POCKET_DOMAIN + "/image/pet/" + this.picture;
         return "<img src='" + src + "' width='64' height='64' alt='" + this.race + "' style='border-width:0'>";
