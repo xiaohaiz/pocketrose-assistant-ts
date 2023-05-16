@@ -1,6 +1,7 @@
 import Role from "../common/Role";
 import TownLoader from "../core/TownLoader";
 import Credential from "../util/Credential";
+import NetworkUtils from "../util/NetworkUtils";
 import StringUtils from "../util/StringUtils";
 import TownDashboardPage from "./TownDashboardPage";
 
@@ -13,11 +14,16 @@ class TownDashboard {
     }
 
     async open(): Promise<TownDashboardPage> {
-        const action = () => {
+        return await (() => {
             return new Promise<TownDashboardPage>(resolve => {
+                const request = this.#credential.asRequestMap();
+                request.set("mode", "STATUS");
+                NetworkUtils.post("status.cgi", request).then(html => {
+                    const page = TownDashboard.parsePage(html);
+                    resolve(page);
+                });
             });
-        };
-        return await action();
+        })();
     }
 
     static parsePage(html: string) {
