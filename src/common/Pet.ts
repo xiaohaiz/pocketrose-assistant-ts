@@ -41,6 +41,7 @@ class Pet {
     before?: string;
     after?: string;
     mapCount?: number;
+    evolution?: number;
 
     get imageHtml() {
         const src = Constants.POCKET_DOMAIN + "/image/pet/" + this.picture;

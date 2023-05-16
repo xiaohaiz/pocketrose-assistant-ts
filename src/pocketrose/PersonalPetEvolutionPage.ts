@@ -151,8 +151,12 @@ class PersonalPetEvolutionPage {
                 const c11 = c10.next();
                 const c12 = c11.next();
 
+                let s = $(radio).val() as string;
+                let s1 = StringUtils.substringBefore(s, ",");
+                let s2 = StringUtils.substringAfter(s, ",");
+
                 const pet = new Pet();
-                pet.index = parseInt($(radio).val() as string);
+                pet.index = parseInt(s1);
                 pet.selectable = !$(radio).prop("disabled");
                 pet.using = c2.text() === "★";
                 pet.name = c3.text();
@@ -165,6 +169,7 @@ class PersonalPetEvolutionPage {
                 pet.before = c10.text();
                 pet.after = c11.text();
                 pet.mapCount = parseInt(c12.text());
+                pet.evolution = parseInt(s2);
                 evolutionPetList.push(pet);
             });
 
