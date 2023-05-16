@@ -3,7 +3,6 @@ import EquipmentSet from "../../common/EquipmentSet";
 import NpcLoader from "../../core/NpcLoader";
 import TownLoader from "../../core/TownLoader";
 import EquipmentSetLoader from "../../pocket/EquipmentSetLoader";
-import RoleStatusLoader from "../../pocket/RoleStatusLoader";
 import CastleEquipmentExpressHouse from "../../pocketrose/CastleEquipmentExpressHouse";
 import CastleInformation from "../../pocketrose/CastleInformation";
 import CastleWarehouse from "../../pocketrose/CastleWarehouse";
@@ -11,6 +10,7 @@ import PersonalEquipmentManagement from "../../pocketrose/PersonalEquipmentManag
 import PersonalEquipmentManagementPage from "../../pocketrose/PersonalEquipmentManagementPage";
 import PersonalStatus from "../../pocketrose/PersonalStatus";
 import TownBank from "../../pocketrose/TownBank";
+import TownDashboard from "../../pocketrose/TownDashboard";
 import TownEquipmentExpressHouse from "../../pocketrose/TownEquipmentExpressHouse";
 import TownForgeHouse from "../../pocketrose/TownForgeHouse";
 import TreasureBag from "../../pocketrose/TreasureBag";
@@ -119,14 +119,13 @@ class PersonalEquipmentManagementPageProcessor_Town extends AbstractPersonalEqui
         });
         $("#p_3139").on("click", function () {
             $("#p_3139").off("click");
-            new RoleStatusLoader(credential).loadRoleStatus()
-                .then(status => {
-                    if (status.canConsecrate) {
-                        $("#consecrateButton").show();
-                    } else {
-                        MessageBoard.publishWarning("祭奠还在冷却中！");
-                    }
-                });
+            new TownDashboard(credential).open().then(dashboardPage => {
+                if (dashboardPage.role!.canConsecrate) {
+                    $("#consecrateButton").show();
+                } else {
+                    MessageBoard.publishWarning("祭奠还在冷却中！");
+                }
+            });
         });
     }
 
