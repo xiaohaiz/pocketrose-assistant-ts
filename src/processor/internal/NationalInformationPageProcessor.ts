@@ -1,7 +1,7 @@
-import StringUtils from "../../util/StringUtils";
-import EventHandler from "../../pocket/EventHandler";
-import PageProcessor from "../PageProcessor";
+import EventHandler from "../../core/EventHandler";
 import PageUtils from "../../util/PageUtils";
+import StringUtils from "../../util/StringUtils";
+import PageProcessor from "../PageProcessor";
 
 class NationalInformationPageProcessor implements PageProcessor {
 

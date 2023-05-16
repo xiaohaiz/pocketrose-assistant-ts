@@ -1,4 +1,4 @@
-import EventHandler from "../../pocket/EventHandler";
+import EventHandler from "../../core/EventHandler";
 import TownDashboard from "../../pocketrose/TownDashboard";
 import TownDashboardPage from "../../pocketrose/TownDashboardPage";
 import SetupLoader from "../../setup/SetupLoader";

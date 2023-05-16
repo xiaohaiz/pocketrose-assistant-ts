@@ -1,5 +1,5 @@
+import Town from "../../common/Town";
 import NpcLoader from "../../core/NpcLoader";
-import Town from "../../core/Town";
 import TownLoader from "../../core/TownLoader";
 import TownBank from "../../pocketrose/TownBank";
 import TownBankPage from "../../pocketrose/TownBankPage";

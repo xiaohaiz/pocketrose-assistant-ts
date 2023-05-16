@@ -1,4 +1,4 @@
-import EventHandler from "../../pocket/EventHandler";
+import EventHandler from "../../core/EventHandler";
 import SetupLoader from "../../setup/SetupLoader";
 import Credential from "../../util/Credential";
 import PageUtils from "../../util/PageUtils";

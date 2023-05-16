@@ -1,6 +1,6 @@
-import TownLoader from "../core/TownLoader";
 import TownInformation from "../pocketrose/TownInformation";
 import Coordinate from "../util/Coordinate";
+import TownLoader from "./TownLoader";
 
 class MapBuilder {
 

@@ -1,7 +1,7 @@
 import Credential from "../util/Credential";
 import MessageBoard from "../util/MessageBoard";
-import TimeoutUtils from "../util/TimeoutUtils";
 import NetworkUtils from "../util/NetworkUtils";
+import TimeoutUtils from "../util/TimeoutUtils";
 
 class MapExplorer {
 

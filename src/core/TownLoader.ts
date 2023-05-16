@@ -1,5 +1,5 @@
+import Town from "../common/Town";
 import Coordinate from "../util/Coordinate";
-import Town from "./Town";
 
 class TownLoader {
 

@@ -1,7 +1,7 @@
 import Equipment from "../common/Equipment";
 import Merchandise from "../common/Merchandise";
 import Role from "../common/Role";
-import Town from "../core/Town";
+import Town from "../common/Town";
 import TownLoader from "../core/TownLoader";
 
 class TownAccessoryHousePage {
