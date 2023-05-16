@@ -87,6 +87,11 @@ function doProcess(credential: Credential, page: TownDashboardPage) {
             .before($("<br>"));
         $("#battleButton")
             .css("height", "100%");
+
+        const clock = $("input:text[name='clock']");
+        if (clock.length > 0) {
+            clock.css("font-size", fontSize + "%");
+        }
     }
 
 
