@@ -591,6 +591,12 @@ function doRefresh(credential: Credential) {
         // 清除牧场
         $("#ranchList").html("").parent().hide();
         $("#ranchMenu").hide();
+
+        $("#propagateCell").html("").parent().hide();
+        $("#evolutionCell").html("").parent().hide();
+        $("#degradationCell").html("").parent().hide();
+        $("#PET_BRON").hide();
+
         new PersonalStatus(credential).open().then(page => {
             const role = page.role;
             // 使用新的宠物重新渲染PetUI

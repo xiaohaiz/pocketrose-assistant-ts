@@ -72,6 +72,25 @@ abstract class AbstractPersonalPetManagementPageProcessor extends PageProcessorC
         MessageBoard.resetMessageBoard("全新的宠物管理UI为您带来不一样的感受，试试把鼠标停留在宠物图片上有惊喜。<br>" +
             "手机用户请试试单击宠物名字那一栏。");
 
+        html = "";
+        html += "<table style='background-color:#888888;width:100%;text-align:center;display:none' id='PET_BRON'>";
+        html += "<tbody style='background-color:#F8F0E0'>";
+        html += "<tr style='display:none'>";
+        html += "<td id='propagateCell'></td>";
+        html += "</tr>";
+        html += "<tr style='display:none'>";
+        html += "<td id='evolutionCell'></td>";
+        html += "</tr>";
+        html += "<tr style='display:none'>";
+        html += "<td id='degradationCell'></td>";
+        html += "</tr>";
+        html += "</tody>";
+        html += "</table>";
+
+        $("#returnButton")
+            .parent()
+            .before($(html));
+
         this.doProcessWithPageParsed(credential, page, context);
     }
 
