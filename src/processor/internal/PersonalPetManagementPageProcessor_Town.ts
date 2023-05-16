@@ -1087,7 +1087,9 @@ function doRenderPetBorn(credential: Credential) {
 
             for (const pet of evolutionPage.degradationPetList!) {
                 html += "<tr>";
-                html += "<td style='background-color:#EFE0C0'></td>";
+                html += "<td style='background-color:#EFE0C0'>";
+                html += "<button role='button' class='PetUIButton' id='degradation_" + pet.index + "'>退化</button>";
+                html += "</td>";
                 html += "<td style='background-color:#EFE0C0'>" + pet.usingHtml + "</td>";
                 html += "<td style='background-color:#E8E8D0'>" + pet.name + "</td>";
                 html += "<td style='background-color:#E8E8D0'>" + pet.levelHtml + "</td>";
