@@ -100,7 +100,7 @@ function doProcess(credential: Credential, page: TownDashboardPage) {
 
     const roleStatus = RoleStatusParser.parseRoleStatus(document.documentElement.outerHTML);
     doRenderBattleCount(page);
-    doRenderCareerTransferWarning(credential, roleStatus);
+    doRenderCareerTransferWarning(credential, page);
     doRenderRoleStatus(roleStatus);
     doRenderTownTax(credential, roleStatus);
     doRenderLeaveTown();
@@ -432,9 +432,9 @@ function doRenderBattleCount(page: TownDashboardPage) {
         });
 }
 
-function doRenderCareerTransferWarning(credential: Credential, roleStatus: RoleStatus) {
+function doRenderCareerTransferWarning(credential: Credential, page: TownDashboardPage) {
     // 如果满级并且没有关闭转职入口，则战斗前标签用红色显示
-    if (roleStatus.level === 150) {
+    if (page.role!.level === 150) {
         if (!SetupLoader.isCareerTransferEntranceDisabled(credential.id)) {
             $("#refreshButton")
                 .closest("td")
