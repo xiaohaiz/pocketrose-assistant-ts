@@ -107,7 +107,9 @@ class PersonalPetEvolutionPage {
                 pet.specialDefense = parseInt(c8.text());
                 pet.speed = parseInt(c9.text());
                 pet.gender = "公";
-                malePetList.push(pet);
+                if (pet.selectable) {
+                    malePetList.push(pet);
+                }
             });
 
         const femalePetList: Pet[] = [];
@@ -138,7 +140,9 @@ class PersonalPetEvolutionPage {
                 pet.specialDefense = parseInt(c8.text());
                 pet.speed = parseInt(c9.text());
                 pet.gender = "母";
-                femalePetList.push(pet);
+                if (pet.selectable) {
+                    femalePetList.push(pet);
+                }
             });
 
         const evolutionPetList: Pet[] = [];
@@ -179,7 +183,9 @@ class PersonalPetEvolutionPage {
                 pet.after = c11.text();
                 pet.mapCount = parseInt(c12.text());
                 pet.evolution = parseInt(s2);
-                evolutionPetList.push(pet);
+                if (pet.selectable) {
+                    evolutionPetList.push(pet);
+                }
             });
 
         const degradationPetList: Pet[] = [];
@@ -215,7 +221,9 @@ class PersonalPetEvolutionPage {
                 pet.before = c10.text();
                 pet.after = c11.text();
                 pet.mapCount = parseInt(c12.text());
-                degradationPetList.push(pet);
+                if (pet.selectable) {
+                    degradationPetList.push(pet);
+                }
             });
 
         const page = new PersonalPetEvolutionPage();
