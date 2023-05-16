@@ -34,15 +34,28 @@ class TownDashboardPageProcessor extends PageProcessorCredentialSupport {
         $("input:text:last").attr("id", "messageInputText");
         $("input:submit[value='更新']").attr("id", "refreshButton");
 
-        $("th:contains('训练·战斗')")
-            .filter((idx, th) => {
-                return $(th).text() === "训练·战斗";
-            })
-            .next()
+        // Handle with buttons
+        $("#t5")
+            .find("form[action='battle.cgi']")
+            .parent()
             .attr("id", "battleCell")
             .next()
             .find("input:submit:first")
             .attr("id", "battleButton");
+        $("#t5")
+            .find("form[action='town.cgi']")
+            .parent()
+            .attr("id", "townCell")
+            .next()
+            .find("input:submit:first")
+            .attr("id", "townButton");
+        $("#t5")
+            .find("form[action='mydata.cgi']")
+            .next()
+            .attr("id", "personalCell")
+            .next()
+            .find("input:submit:first")
+            .attr("id", "personalButton");
 
         doProcess(credential, page);
     }
