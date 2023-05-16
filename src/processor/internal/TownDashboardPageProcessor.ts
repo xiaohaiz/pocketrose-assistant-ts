@@ -22,7 +22,15 @@ class TownDashboardPageProcessor extends PageProcessorCredentialSupport {
         $("center:first").attr("id", "systemAnnouncement");
         PageUtils.scrollIntoView("systemAnnouncement");
 
+        // --------------------------------------------------------------------
         // 标记页面上的元素
+        // --------------------------------------------------------------------
+
+        // 所有表格加id属性
+        $("table").each((idx, table) => {
+            const tableId = "t" + idx;
+            $(table).attr("id", tableId);
+        });
         $("input:text:last").attr("id", "messageInputText");
         $("input:submit[value='更新']").attr("id", "refreshButton");
 
@@ -108,7 +116,6 @@ function doProcess(credential: Credential, page: TownDashboardPage) {
                 return $(th).text() === "训练·战斗";
             })
             .closest("table")
-            .attr("id", "mainMenu")
             .find("tr:first")
             .find("td:first")
             .attr("colspan", 5)
@@ -432,10 +439,7 @@ function doRenderCareerTransferWarning(credential: Credential, page: TownDashboa
     // 如果满级并且没有关闭转职入口，则战斗前标签用红色显示
     if (page.role!.level === 150) {
         if (!SetupLoader.isCareerTransferEntranceDisabled(credential.id)) {
-            $("#refreshButton")
-                .closest("td")
-                .prev()
-                .css("color", "red");
+            $("#battleCell").css("background-color", "red");
         }
     }
 }
