@@ -76,22 +76,6 @@ class StorageUtils {
             if (key.startsWith("_pm_")) {
                 continue;
             }
-            // 忽略套装信息
-            if (key.startsWith("_pa_019_")) {
-                continue;
-            }
-            if (key.startsWith("_pa_020_")) {
-                continue;
-            }
-            if (key.startsWith("_pa_021_")) {
-                continue;
-            }
-            if (key.startsWith("_pa_022_")) {
-                continue;
-            }
-            if (key.startsWith("_pa_023_")) {
-                continue;
-            }
 
             const value = localStorage.getItem(key);
             if (value === null) {
