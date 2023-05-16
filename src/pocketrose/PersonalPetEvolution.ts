@@ -1,4 +1,5 @@
 import Credential from "../util/Credential";
+import MessageBoard from "../util/MessageBoard";
 import NetworkUtils from "../util/NetworkUtils";
 import PersonalPetEvolutionPage from "./PersonalPetEvolutionPage";
 
@@ -23,6 +24,21 @@ class PersonalPetEvolution {
                 NetworkUtils.post("mydata.cgi", request).then(html => {
                     const page = PersonalPetEvolutionPage.parse(html);
                     resolve(page);
+                });
+            });
+        })();
+    }
+
+    async propagate(fatherIndex: number, motherIndex: number): Promise<void> {
+        return await (() => {
+            return new Promise<void>(resolve => {
+                const request = this.#credential.asRequestMap();
+                request.set("selectfarther", fatherIndex.toString());
+                request.set("selectmother", motherIndex.toString());
+                request.set("mode", "PETBORN2");
+                NetworkUtils.post("mydata.cgi", request).then(html => {
+                    MessageBoard.processResponseMessage(html);
+                    resolve();
                 });
             });
         })();

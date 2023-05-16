@@ -23,7 +23,7 @@ abstract class AbstractPersonalPetManagementPageProcessor extends PageProcessorC
         html += "<table style='background-color:#888888;width:100%;text-align:center'>";
         html += "<tbody style='background-color:#F8F0E0'>";
         html += "<tr>";
-        html += "<td style='background-color:navy;color:yellowgreen;font-size:150%;font-weight:bold'>" +
+        html += "<td style='background-color:navy;color:yellowgreen;font-size:150%;font-weight:bold' id='pageTitle'>" +
             "＜＜  宠 物 管 理  ＞＞" +
             "</td>";
         html += "</tr>";

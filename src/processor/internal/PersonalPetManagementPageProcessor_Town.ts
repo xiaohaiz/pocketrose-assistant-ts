@@ -1335,6 +1335,9 @@ function doBindPropagateButton(credential: Credential, page: PersonalPetEvolutio
         if (!confirm("请确认要繁殖\"" + father.name + "\"和\"" + mother.name + "\"？")) {
             return;
         }
+        new PersonalPetEvolution(credential).propagate(fatherIndex, motherIndex).then(() => {
+            doRefresh(credential);
+        });
     });
 }
 
