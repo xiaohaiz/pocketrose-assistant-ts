@@ -1,8 +1,8 @@
-import Credential from "../util/Credential";
-import RoleLocation from "./RoleLocation";
-import NetworkUtils from "../util/NetworkUtils";
 import Coordinate from "../util/Coordinate";
+import Credential from "../util/Credential";
+import NetworkUtils from "../util/NetworkUtils";
 import StringUtils from "../util/StringUtils";
+import RoleLocation from "./RoleLocation";
 
 class RoleLocationLoader {
 
