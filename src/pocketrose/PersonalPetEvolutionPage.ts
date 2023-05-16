@@ -99,7 +99,7 @@ class PersonalPetEvolutionPage {
                 pet.specialAttack = parseInt(c7.text());
                 pet.specialDefense = parseInt(c8.text());
                 pet.speed = parseInt(c9.text());
-                pet.gender = "公";
+                pet.gender = "母";
                 femalePetList.push(pet);
             });
 
