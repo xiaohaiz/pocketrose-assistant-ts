@@ -599,6 +599,7 @@ function doRefresh(credential: Credential) {
         $("#propagateCell").html("").parent().hide();
         $("#evolutionCell").html("").parent().hide();
         $("#degradationCell").html("").parent().hide();
+        $("#consecrateCell").html("").parent().hide();
         $("#PET_BORN").hide();
 
         new PersonalStatus(credential).open().then(page => {
@@ -1289,6 +1290,8 @@ function doRenderPetBorn(credential: Credential, petList: Pet[]) {
 
             doBindDegradationButton(credential, evolutionPage);
         }
+
+
     });
 }
 
