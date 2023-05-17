@@ -1,3 +1,4 @@
+import Pokemon from "../core/Pokemon";
 import Constants from "../util/Constants";
 
 class PetProfile {
@@ -20,6 +21,9 @@ class PetProfile {
     catchRatio?: number;
     growExperience?: number;
 
+    get nameHtml() {
+        return Pokemon.pokemonWikiReplacement(this.name);
+    }
 
     get imageHtml() {
         const src = Constants.POCKET_DOMAIN + "/image/pet/" + this.picture;

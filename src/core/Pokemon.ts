@@ -1,29 +1,20 @@
+import SetupLoader from "../setup/SetupLoader";
+
 class Pokemon {
 
-    static processPokemonWikiReplacement() {
-        $('body *').each(function () {
-            $(this).contents().filter(function () {
-                return this.nodeType === 3;
-            }).each(function (idx, text) {
-                let newText = this.textContent!;
-                for (let i = 0; i < pokemonDictKeys.length; i++) {
-                    if (newText.includes(pokemonDictKeys[i])) {
-                        // @ts-ignore
-                        newText = newText.replace(pokemonDictKeys[i], pokemonDict[pokemonDictKeys[i]]);
-                    }
-                }
-                if (newText !== this.textContent) {
-                    const $newContent = $('<span>').html(newText);
-                    const parentElement = this.parentElement!;
-                    $(this).replaceWith($newContent);
-                    $(parentElement).children().each(function () {
-                        if (this.nodeType === 3) {
-                            $(this).replaceWith(this!.textContent!);
-                        }
-                    });
-                }
-            })
-        });
+    static pokemonWikiReplacement(source: string | undefined) {
+        if (source === undefined) {
+            return source;
+        }
+        if (!SetupLoader.isPokemonWikiEnabled()) {
+            return source;
+        }
+        // @ts-ignore
+        const target = pokemonDict[source];
+        if (target === undefined) {
+            return source;
+        }
+        return target;
     }
 }
 
@@ -523,7 +514,5 @@ const pokemonDict = {
     '鬼蝉蛹(292)': '<a href="https://wiki.52poke.com/wiki/%E8%84%B1%E5%A3%B3%E5%BF%8D%E8%80%85" target="_blank" rel="noopener noreferrer">脱壳忍者(292)</a>',
     '刺角昆(268)': '<a href="https://wiki.52poke.com/wiki/%E7%9B%BE%E7%94%B2%E8%8C%A7" target="_blank" rel="noopener noreferrer">盾甲茧(268)</a>'
 };
-
-const pokemonDictKeys = Object.keys(pokemonDict);
 
 export = Pokemon;

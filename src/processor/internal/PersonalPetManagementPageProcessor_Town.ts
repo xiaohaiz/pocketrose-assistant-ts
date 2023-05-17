@@ -383,7 +383,7 @@ function doBindPetFuture(petList: Pet[]) {
                     html += "<td rowspan='2' style='text-align:center'>" + petFuture.imageHtml + "</td>";
                     html += "</tr>";
                     html += "<tr style='background-color:black;color:wheat;font-weight:bold;text-align:center'>";
-                    html += "<td>" + petFuture.name + "</td>";
+                    html += "<td>" + petFuture.nameHtml + "</td>";
                     html += "<td>" + petFuture.totalBaseStats + "</td>";
                     html += "<td>" + petFuture.healthBaseStats + "</td>";
                     html += "<td>" + petFuture.attackBaseStats + "</td>";
@@ -432,7 +432,7 @@ function doBindPetFuture(petList: Pet[]) {
                     html += "<td rowspan='3' style='text-align:center'>" + petFuture.imageHtml + "</td>";
                     html += "</tr>";
                     html += "<tr style='background-color:black;color:wheat;font-weight:bold;text-align:center'>";
-                    html += "<td rowspan='2'>" + petFuture.name + "</td>";
+                    html += "<td rowspan='2'>" + petFuture.nameHtml + "</td>";
                     html += "<td rowspan='2'>" + petFuture.totalBaseStats + "</td>";
                     html += "<td>" + petFuture.healthBaseStats + "</td>";
                     html += "<td>" + petFuture.attackBaseStats + "</td>";
