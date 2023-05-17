@@ -1,4 +1,5 @@
 import FastLoginLoader from "../../core/FastLoginLoader";
+import SetupLoader from "../../setup/SetupLoader";
 import ButtonUtils from "../../util/ButtonUtils";
 import PageUtils from "../../util/PageUtils";
 import PageProcessor from "../PageProcessor";
@@ -20,6 +21,62 @@ class LoginDashboardPageProcessor implements PageProcessor {
         $("img:first")
             .attr("width", "64")
             .attr("height", "48");
+
+
+        const a = "<td style='vertical-align:bottom'></td>"
+        const layout = SetupLoader.getLoginPageLayout();
+        switch (layout) {
+            case 1:
+                $("#t0")
+                    .find("td:first")
+                    .css("vertical-align", "top");
+                $("#t1")
+                    .css("margin", "0px auto auto auto");
+                break;
+            case 2:
+                $("#t0")
+                    .find("td:first")
+                    .css("vertical-align", "bottom");
+                $("#t1")
+                    .css("margin", "auto auto 0px auto");
+                break;
+            case 3:
+                $("#t1")
+                    .css("margin", "auto auto auto 0px");
+                break;
+            case 4:
+                $("#t1")
+                    .css("margin", "auto 0px auto auto");
+                break;
+            case 5:
+                $("#t0")
+                    .find("td:first")
+                    .css("vertical-align", "top");
+                $("#t1")
+                    .css("margin", "0px auto auto 0px");
+                break;
+            case 6:
+                $("#t0")
+                    .find("td:first")
+                    .css("vertical-align", "bottom");
+                $("#t1")
+                    .css("margin", "auto auto 0px 0px");
+                break;
+            case 7:
+                $("#t0")
+                    .find("td:first")
+                    .css("vertical-align", "top");
+                $("#t1")
+                    .css("margin", "0px 0px auto auto");
+                break;
+            case 8:
+                $("#t0")
+                    .find("td:first")
+                    .css("vertical-align", "bottom");
+                $("#t1")
+                    .css("margin", "auto 0px 0px auto");
+                break;
+        }
 
         doProcess();
     }
