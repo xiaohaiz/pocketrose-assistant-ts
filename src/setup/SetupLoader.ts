@@ -233,7 +233,7 @@ class SetupLoader {
         return StorageUtils.getBoolean("_pa_034");
     }
 
-    static isTownDashboardShortcutButtonEnabled(): boolean {
+    static isAsciiTextButtonEnabled(): boolean {
         return StorageUtils.getBoolean("_pa_035");
     }
 

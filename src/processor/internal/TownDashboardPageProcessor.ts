@@ -58,6 +58,11 @@ class TownDashboardPageProcessor extends PageProcessorCredentialSupport {
             .attr("id", "personalButton");
 
         doProcess(credential, page);
+
+        if (SetupLoader.isAsciiTextButtonEnabled()) {
+            $("input:submit[value='更新']").val("RELOAD");
+            $("input:submit[value='行动']").val("ACTION");
+        }
     }
 
 }

@@ -12,7 +12,7 @@ class SetupItem035 implements SetupItem {
 }
 
 const code: string = "035";
-const name: string = "城市面板快捷钮";
+const name: string = "字母文本的按钮";
 const key: string = "_pa_" + code;
 
 function doRender() {
@@ -26,7 +26,7 @@ function doRender() {
 
     $("#setup_item_table").append($(html));
 
-    const value = SetupLoader.isTownDashboardShortcutButtonEnabled();
+    const value = SetupLoader.isAsciiTextButtonEnabled();
     $(".option_class_" + code + "[value='" + Number(value) + "']").prop("selected", true);
 
     $("#setup_" + code).on("click", function () {
