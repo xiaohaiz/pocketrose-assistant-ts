@@ -260,6 +260,15 @@ function doProcess(credential: Credential, page: TownDashboardPage) {
             .css("width", "100%")
             .next()
             .remove();
+    } else {
+        $("#t2")
+            .removeAttr("width")
+            .css("width", "95%")
+            .parent()
+            .css("width", "40%")
+            .next()
+            .removeAttr("width")
+            .css("width", "60%");
     }
 }
 
