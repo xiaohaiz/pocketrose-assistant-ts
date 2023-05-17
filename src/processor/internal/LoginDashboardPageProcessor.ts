@@ -1,11 +1,12 @@
 import FastLoginLoader from "../../core/FastLoginLoader";
+import ButtonUtils from "../../util/ButtonUtils";
 import PageUtils from "../../util/PageUtils";
 import PageProcessor from "../PageProcessor";
 
 class LoginDashboardPageProcessor implements PageProcessor {
 
     process(): void {
-        PageUtils.loadButtonStyle(28);
+        ButtonUtils.loadButtonStyle(28);
         PageUtils.fixCurrentPageBrokenImages();
         PageUtils.removeUnusedHyperLinks();
         PageUtils.removeGoogleAnalyticsScript();

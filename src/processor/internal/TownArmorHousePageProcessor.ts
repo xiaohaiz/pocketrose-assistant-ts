@@ -3,6 +3,7 @@ import TownArmorHouse from "../../pocketrose/TownArmorHouse";
 import TownArmorHousePage from "../../pocketrose/TownArmorHousePage";
 import TownBank from "../../pocketrose/TownBank";
 import BankUtils from "../../util/BankUtils";
+import ButtonUtils from "../../util/ButtonUtils";
 import Credential from "../../util/Credential";
 import MessageBoard from "../../util/MessageBoard";
 import PageUtils from "../../util/PageUtils";
@@ -12,9 +13,9 @@ import PageProcessorCredentialSupport from "../PageProcessorCredentialSupport";
 class TownArmorHousePageProcessor extends PageProcessorCredentialSupport {
 
     doProcess(credential: Credential, context?: PageProcessorContext): void {
-        PageUtils.loadButtonStyle(7);
-        PageUtils.loadButtonStyle(8);
-        PageUtils.loadButtonStyle(35);
+        ButtonUtils.loadButtonStyle(7);
+        ButtonUtils.loadButtonStyle(8);
+        ButtonUtils.loadButtonStyle(35);
         const page = TownArmorHouse.parsePage(PageUtils.currentPageHtml());
         this.#renderImmutablePage(credential, page);
         this.#renderMutablePage(credential, page);
