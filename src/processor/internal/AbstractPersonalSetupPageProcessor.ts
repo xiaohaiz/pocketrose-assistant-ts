@@ -196,8 +196,9 @@ abstract class AbstractPersonalSetupPageProcessor extends PageProcessorCredentia
     #bindRefreshButton(credential: Credential) {
         const instance = this;
         $("#refreshButton").on("click", function () {
-            $("#setup_item_table").html("");
             $(".dynamic_button").off("click");
+            $(".dynamic_select").off("change");
+            $("#setup_item_table").html("");
             instance.#render(credential);
         });
     }

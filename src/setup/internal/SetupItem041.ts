@@ -1,0 +1,69 @@
+import MessageBoard from "../../util/MessageBoard";
+import StorageUtils from "../../util/StorageUtils";
+import SetupItem from "../SetupItem";
+
+class SetupItem041 implements SetupItem {
+
+    render(id?: string): void {
+        doRender();
+    }
+
+}
+
+const code: string = "041";
+const name: string = "快捷按钮的样式";
+const key: string = "_pa_" + code;
+
+function doRender() {
+    let html = "";
+    html += "<tr>";
+    html += "<th style='background-color:#E8E8D0'>" + name + "</th>";
+    html += "<td style='background-color:#E8E8D0'></td>";
+    html += "<td style='background-color:#EFE0C0'><input type='button' class='dynamic_button' id='setup_" + code + "' value='设置'></td>";
+    html += "<td style='background-color:#E0D0B0;text-align:left'>" + doGenerateSetupItem() + "<span id='buttonSample'></span></td>";
+    html += "</tr>";
+
+    $("#setup_item_table").append($(html));
+
+    $(".select-041").on("change", event => {
+        const currentSelect = parseInt($(event.target).val() as string);
+        doGenerateButtonSample(currentSelect);
+    });
+
+    // const value = SetupLoader.isTownDashboardShortcutButtonEnabled();
+    // $(".option_class_" + code + "[value='" + Number(value) + "']").prop("selected", true);
+
+    $("#setup_" + code).on("click", function () {
+        doSaveSetupItem();
+    });
+}
+
+function doGenerateButtonSample(index: number) {
+    if (index < 0) {
+        $("#buttonSample").html("");
+        return;
+    }
+    if (index === 0) {
+        const button: string = "<button role='button'>SAMPLE</button>";
+        $("#buttonSample").html(button);
+        return;
+    }
+}
+
+function doGenerateSetupItem() {
+    let html = "";
+    html += "<select id='select_" + code + "' class='dynamic_select select-041'>";
+    html += "<option class='option_class_" + code + "' value='-1'>禁用</option>";
+    html += "<option class='option_class_" + code + "' value='0'>默认按钮</option>";
+    html += "</select>";
+    return html;
+}
+
+function doSaveSetupItem() {
+    const value = $("#select_" + code).val();
+    StorageUtils.set(key, value!.toString());
+    MessageBoard.publishMessage("<b style='color:red'>" + name + "</b>已经设置。");
+    $("#refreshButton").trigger("click");
+}
+
+export = SetupItem041;
