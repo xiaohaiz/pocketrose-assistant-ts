@@ -260,6 +260,10 @@ class SetupLoader {
     static getTownDashboardShortcutButton(): number {
         return StorageUtils.getInt("_pa_041", -1);
     }
+
+    static getLoginPageLayout(): number {
+        return StorageUtils.getInt("_pa_042", 0);
+    }
 }
 
 export = SetupLoader;
