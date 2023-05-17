@@ -20,7 +20,7 @@ abstract class AbstractPersonalSetupPageProcessor extends PageProcessorCredentia
     }
 
     doLoadButtonStyles(): number[] {
-        return [10005, 10028];
+        return [10005, 10007, 10008, 10016, 10024, 10028, 10032, 10033, 10035, 10062];
     }
 
     doProcess(credential: Credential) {

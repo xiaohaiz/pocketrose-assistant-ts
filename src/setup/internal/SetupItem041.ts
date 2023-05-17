@@ -69,8 +69,16 @@ function doGenerateSetupItem() {
     html += "<select id='select_" + code + "' class='dynamic_select select-041'>";
     html += "<option class='option_class_" + code + "' value='-1'>禁用</option>";
     html += "<option class='option_class_" + code + "' value='0'>默认按钮</option>";
-    html += "<option class='option_class_" + code + "' value='10005'>005</option>";
-    html += "<option class='option_class_" + code + "' value='10028'>028</option>";
+    html += "<option class='option_class_" + code + "' value='10005'>样式一</option>";
+    html += "<option class='option_class_" + code + "' value='10007'>样式二</option>";
+    html += "<option class='option_class_" + code + "' value='10008'>样式三</option>";
+    html += "<option class='option_class_" + code + "' value='10016'>样式四</option>";
+    html += "<option class='option_class_" + code + "' value='10024'>样式五</option>";
+    html += "<option class='option_class_" + code + "' value='10028'>样式六</option>";
+    html += "<option class='option_class_" + code + "' value='10032'>样式七</option>";
+    html += "<option class='option_class_" + code + "' value='10033'>样式八</option>";
+    html += "<option class='option_class_" + code + "' value='10035'>样式九</option>";
+    html += "<option class='option_class_" + code + "' value='10062'>样式十</option>";
     html += "</select>";
     return html;
 }
