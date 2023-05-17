@@ -47,6 +47,15 @@ class PersonalPetEvolutionPage {
         return null;
     }
 
+    findConsecratePet(index: number) {
+        for (const pet of this.consecratePetList!) {
+            if (pet.index === index) {
+                return pet;
+            }
+        }
+        return null;
+    }
+
     static parse(html: string): PersonalPetEvolutionPage {
         const role = new Role();
         $(html).find("td:contains('ＬＶ')")

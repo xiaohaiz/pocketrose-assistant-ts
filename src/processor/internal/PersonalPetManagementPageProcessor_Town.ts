@@ -1292,6 +1292,58 @@ function doRenderPetBorn(credential: Credential, petList: Pet[]) {
         }
 
 
+        if (evolutionPage.consecratePetList!.length > 0) {
+            $("#PET_BORN").show();
+            let html = "";
+            html += "<table style='border-width:0;background-color:#888888;text-align:center;width:100%;margin:auto'>";
+            html += "<tbody style='background-color:#F8F0E0'>";
+            html += "<tr>";
+            html += "<th style='background-color:darkred;font-weight:bold;font-size:120%;color:yellowgreen' colspan='14'>宠 物 献 祭</th>";
+            html += "</tr>";
+            html += "<tr>";
+            html += "<th style='background-color:#EFE0C0'></th>";
+            html += "<th style='background-color:#E8E8D0'>宠物名</th>";
+            html += "<th style='background-color:#E8E8D0'>等级</th>";
+            html += "<th style='background-color:#E8E8D0'>性别</th>";
+            html += "<th style='background-color:#E8E8D0'>攻击力</th>";
+            html += "<th style='background-color:#E8E8D0'>防御力</th>";
+            html += "<th style='background-color:#E8E8D0'>智力</th>";
+            html += "<th style='background-color:#E8E8D0'>精神力</th>";
+            html += "<th style='background-color:#E8E8D0'>速度</th>";
+            html += "<th style='background-color:#E8E8D0'>封印</th>";
+            html += "<th style='background-color:#E8E8D0'>超级封印</th>";
+            html += "</tr>";
+
+            for (const pet of evolutionPage.consecratePetList!) {
+                if (!pet.selectable) {
+                    continue;
+                }
+                const c = __findPet(pet.index!, petList)!;
+                html += "<tr>";
+                html += "<td style='background-color:#EFE0C0'>" + c.imageHtml + "</td>";
+                html += "<td style='background-color:#E8E8D0'>" + pet.name + "</td>";
+                html += "<td style='background-color:#E8E8D0'>" + pet.levelHtml + "</td>";
+                html += "<td style='background-color:#E8E8D0'>" + c.gender + "</td>";
+                html += "<td style='background-color:#E8E8D0'>" + pet.attackHtml + "</td>";
+                html += "<td style='background-color:#E8E8D0'>" + pet.defenseHtml + "</td>";
+                html += "<td style='background-color:#E8E8D0'>" + pet.specialAttackHtml + "</td>";
+                html += "<td style='background-color:#E8E8D0'>" + pet.specialDefenseHtml + "</td>";
+                html += "<td style='background-color:#E8E8D0'>" + pet.speedHtml + "</td>";
+                html += "<td style='background-color:#E8E8D0'>";
+                html += "<button role='button' class='PetUIButton sacrificeButton' id='sacrifice_" + pet.index + "'>牺牲</button>";
+                html += "</td>";
+                html += "<td style='background-color:#E8E8D0'>";
+                html += "<button role='button' class='PetUIButton consecrateButton' id='consecrate_" + pet.index + "'>献祭</button>";
+                html += "</td>";
+                html += "</tr>";
+            }
+
+            html += "</tbody>";
+            html += "</table>";
+            $("#consecrateCell").html(html).parent().show();
+
+            doBindConsecrateButton(credential, evolutionPage);
+        }
     });
 }
 
@@ -1374,6 +1426,41 @@ function doBindDegradationButton(credential: Credential, page: PersonalPetEvolut
         }
         new PersonalPetEvolution(credential).degrade(index).then(() => {
             doRefresh(credential);
+        });
+    });
+}
+
+function doBindConsecrateButton(credential: Credential, page: PersonalPetEvolutionPage) {
+    $(".sacrificeButton").on("click", event => {
+        const buttonId = $(event.target).attr("id")! as string;
+        const index = parseInt(StringUtils.substringAfterLast(buttonId, "_"));
+        const pet = page.findConsecratePet(index)!;
+        if (!confirm("请确认花费300万将\"" + pet.name + "\"还原回其自己的图鉴并得到一张藏宝图？")) {
+            return;
+        }
+        const bank = new TownBank(credential);
+        bank.withdraw(300).then(() => {
+            new PersonalPetEvolution(credential).sacrifice(index).then(() => {
+                bank.deposit().then(() => {
+                    doRefresh(credential);
+                });
+            });
+        });
+    });
+    $(".consecrateButton").on("click", event => {
+        const buttonId = $(event.target).attr("id")! as string;
+        const index = parseInt(StringUtils.substringAfterLast(buttonId, "_"));
+        const pet = page.findConsecratePet(index)!;
+        if (!confirm("请确认花费1000万将\"" + pet.name + "\"还原回随机一张图鉴并得到一张藏宝图？")) {
+            return;
+        }
+        const bank = new TownBank(credential);
+        bank.withdraw(1000).then(() => {
+            new PersonalPetEvolution(credential).consecrate(index).then(() => {
+                bank.deposit().then(() => {
+                    doRefresh(credential);
+                });
+            });
         });
     });
 }
