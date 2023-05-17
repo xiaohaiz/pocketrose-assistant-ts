@@ -1,6 +1,7 @@
 import Pet from "../../common/Pet";
 import Role from "../../common/Role";
 import PetProfileLoader from "../../core/PetProfileLoader";
+import PetRelationLoader from "../../core/PetRelationLoader";
 import CastleInformation from "../../pocketrose/CastleInformation";
 import CastleRanch from "../../pocketrose/CastleRanch";
 import GoldenCage from "../../pocketrose/GoldenCage";
@@ -1320,7 +1321,7 @@ function doRenderPetBorn(credential: Credential, petList: Pet[]) {
                 }
                 const c = __findPet(pet.index!, petList)!;
                 html += "<tr>";
-                html += "<td style='background-color:#EFE0C0'>" + c.imageHtml + "</td>";
+                html += "<td style='background-color:#EFE0C0' rowspan='3'>" + c.imageHtml + "</td>";
                 html += "<td style='background-color:#E8E8D0'>" + pet.nameHtml + "</td>";
                 html += "<td style='background-color:#E8E8D0'>" + pet.levelHtml + "</td>";
                 html += "<td style='background-color:#E8E8D0'>" + c.gender + "</td>";
@@ -1334,6 +1335,23 @@ function doRenderPetBorn(credential: Credential, petList: Pet[]) {
                 html += "</td>";
                 html += "<td style='background-color:#E8E8D0'>";
                 html += "<button role='button' class='PetUIButton consecrateButton' id='consecrate_" + pet.index + "'>献祭</button>";
+                html += "</td>";
+                html += "</tr>";
+
+                html += "<tr>";
+                html += "<td style='background-color:#E8E8D0;text-align:left;font-weight:bold;color:navy' colspan='10'>进化退化关系链</td>";
+                html += "</tr>";
+                html += "<tr>";
+                html += "<td style='background-color:#E8E8D0;text-align:left;height:64px' colspan='10'>";
+                for (const it of PetRelationLoader.getPetRelations(parseInt(c.code!))) {
+                    let pc = it.toString();
+                    if (it < 10) {
+                        pc = "00" + pc;
+                    } else if (it < 100) {
+                        pc = "0" + pc;
+                    }
+                    html += PetProfileLoader.load(pc)!.imageHtml;
+                }
                 html += "</td>";
                 html += "</tr>";
             }
