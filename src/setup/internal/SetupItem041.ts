@@ -15,12 +15,23 @@ const name: string = "快捷按钮的样式";
 const key: string = "_pa_" + code;
 
 function doRender() {
+    let t = "";
+    t += "<table style='border-width:0;background-color:transparent;margin:auto'>";
+    t += "</tbody>";
+    t += "<tr>";
+    t += "<td style='text-align: left'>" + doGenerateSetupItem() + "</td>";
+    t += "<td style='width:64px' id='buttonSample'></td>";
+    t += "<td style='width:100%'></td>"
+    t += "</tr>";
+    t += "</tbody>";
+    t += "</table>";
+
     let html = "";
     html += "<tr>";
     html += "<th style='background-color:#E8E8D0'>" + name + "</th>";
     html += "<td style='background-color:#E8E8D0'></td>";
     html += "<td style='background-color:#EFE0C0'><input type='button' class='dynamic_button' id='setup_" + code + "' value='设置'></td>";
-    html += "<td style='background-color:#E0D0B0;text-align:left'>" + doGenerateSetupItem() + "<span id='buttonSample'></span></td>";
+    html += "<td style='background-color:#E0D0B0;text-align:left'>" + t + "</td>";
     html += "</tr>";
 
     $("#setup_item_table").append($(html));
@@ -48,6 +59,9 @@ function doGenerateButtonSample(index: number) {
         $("#buttonSample").html(button);
         return;
     }
+
+    const button: string = "<button role='button' class='button-" + index + "'>SAMPLE</button>";
+    $("#buttonSample").html(button);
 }
 
 function doGenerateSetupItem() {
@@ -55,6 +69,8 @@ function doGenerateSetupItem() {
     html += "<select id='select_" + code + "' class='dynamic_select select-041'>";
     html += "<option class='option_class_" + code + "' value='-1'>禁用</option>";
     html += "<option class='option_class_" + code + "' value='0'>默认按钮</option>";
+    html += "<option class='option_class_" + code + "' value='10005'>005</option>";
+    html += "<option class='option_class_" + code + "' value='10028'>028</option>";
     html += "</select>";
     return html;
 }

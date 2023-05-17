@@ -19,6 +19,10 @@ abstract class AbstractPersonalSetupPageProcessor extends PageProcessorCredentia
         this.#setupItemManager = new SetupItemManager();
     }
 
+    doLoadButtonStyles(): number[] {
+        return [10005, 10028];
+    }
+
     doProcess(credential: Credential) {
         // 整个页面是放在一个大form里面，删除重组
         const lastDivHtml = $("div:last").html();
