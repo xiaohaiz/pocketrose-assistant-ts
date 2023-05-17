@@ -9,6 +9,7 @@ class PersonalPetEvolutionPage {
     femalePetList?: Pet[];
     evolutionPetList?: Pet[];
     degradationPetList?: Pet[];
+    consecratePetList?: Pet[];
 
     findMalePet(index: number) {
         for (const pet of this.malePetList!) {
@@ -226,12 +227,45 @@ class PersonalPetEvolutionPage {
                 }
             });
 
+        const consecratePetList: Pet[] = [];
+        $(html).find("input:submit[value='封印']:first")
+            .parent()
+            .find("table:first")
+            .find("input:radio")
+            .each((idx, radio) => {
+                const c1 = $(radio).parent();
+                const c2 = c1.next();
+                const c3 = c2.next();
+                const c4 = c3.next();
+                const c5 = c4.next();
+                const c6 = c5.next();
+                const c7 = c6.next();
+                const c8 = c7.next();
+                const c9 = c8.next();
+
+                const pet = new Pet();
+                pet.index = parseInt($(radio).val() as string);
+                pet.selectable = !$(radio).prop("disabled");
+                pet.using = c2.text() === "★";
+                pet.name = c3.text();
+                pet.level = parseInt(c4.text());
+                pet.attack = parseInt(c5.text());
+                pet.defense = parseInt(c6.text());
+                pet.specialAttack = parseInt(c7.text());
+                pet.specialDefense = parseInt(c8.text());
+                pet.speed = parseInt(c9.text());
+                if (pet.selectable) {
+                    consecratePetList.push(pet);
+                }
+            });
+
         const page = new PersonalPetEvolutionPage();
         page.role = role;
         page.malePetList = malePetList;
         page.femalePetList = femalePetList;
         page.evolutionPetList = evolutionPetList;
         page.degradationPetList = degradationPetList;
+        page.consecratePetList = consecratePetList;
         return page;
     }
 }
