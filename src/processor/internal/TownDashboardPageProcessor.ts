@@ -12,7 +12,7 @@ import PageProcessorCredentialSupport from "../PageProcessorCredentialSupport";
 class TownDashboardPageProcessor extends PageProcessorCredentialSupport {
 
     doLoadButtonStyles(): number[] {
-        return [7, 8, 16, 10028];
+        return [7, 8, 16, 10005, 10007, 10008, 10016, 10024, 10028, 10032, 10033, 10035, 10062];
     }
 
     doProcess(credential: Credential, context?: PageProcessorContext): void {
@@ -128,7 +128,9 @@ function doProcess(credential: Credential, page: TownDashboardPage) {
     doRenderLeaveTown();
     doRenderEventBoard();
 
-    if (SetupLoader.isTownDashboardShortcutButtonEnabled()) {
+    const bsId = SetupLoader.getTownDashboardShortcutButton();
+    if (bsId >= 0) {
+        const buttonClass = "button-" + bsId;
         $("th:contains('训练·战斗')")
             .filter((idx, th) => {
                 return $(th).text() === "训练·战斗";
@@ -152,22 +154,22 @@ function doProcess(credential: Credential, page: TownDashboardPage) {
             .find("th:first")
             .css("text-align", "right")
             .text("城市设施")
-            .before($("<td><button role='button' class='button-10028' id='shortcut1'>图鉴</button></td>"))
+            .before($("<td><button role='button' class='" + buttonClass + "' id='shortcut1'>图鉴</button></td>"))
             .parent()
             .next()
             .find("th:first")
             .css("text-align", "right")
-            .before($("<td><button role='button' class='button-10028' id='shortcut2'>装备</button></td>"))
+            .before($("<td><button role='button' class='" + buttonClass + "' id='shortcut2'>装备</button></td>"))
             .parent()
             .next()
             .find("th:first")
             .css("text-align", "right")
-            .before($("<td><button role='button' class='button-10028' id='shortcut3'>宠物</button></td>"))
+            .before($("<td><button role='button' class='" + buttonClass + "' id='shortcut3'>宠物</button></td>"))
             .parent()
             .next()
             .find("th:first")
             .css("text-align", "right")
-            .before($("<td><button role='button' class='button-10028' id='shortcut4'>职业</button></td>"))
+            .before($("<td><button role='button' class='" + buttonClass + "' id='shortcut4'>职业</button></td>"))
             .parent()
             .next()
             .find("th:first")
