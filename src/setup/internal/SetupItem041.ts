@@ -1,6 +1,7 @@
 import MessageBoard from "../../util/MessageBoard";
 import StorageUtils from "../../util/StorageUtils";
 import SetupItem from "../SetupItem";
+import SetupLoader from "../SetupLoader";
 
 class SetupItem041 implements SetupItem {
 
@@ -41,8 +42,9 @@ function doRender() {
         doGenerateButtonSample(currentSelect);
     });
 
-    // const value = SetupLoader.isTownDashboardShortcutButtonEnabled();
-    // $(".option_class_" + code + "[value='" + Number(value) + "']").prop("selected", true);
+    const value = SetupLoader.getTownDashboardShortcutButton();
+    $(".option_class_" + code + "[value='" + Number(value) + "']").prop("selected", true);
+    doGenerateButtonSample(value);
 
     $("#setup_" + code).on("click", function () {
         doSaveSetupItem();
