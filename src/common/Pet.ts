@@ -1,3 +1,4 @@
+import Pokemon from "../core/Pokemon";
 import SetupLoader from "../setup/SetupLoader";
 import Constants from "../util/Constants";
 import PageUtils from "../util/PageUtils";
@@ -42,6 +43,18 @@ class Pet {
     after?: string;
     mapCount?: number;
     evolution?: number;
+
+    get nameHtml() {
+        return Pokemon.pokemonWikiReplacement(this.name);
+    }
+
+    get beforeHtml() {
+        return Pokemon.pokemonWikiReplacement(this.before);
+    }
+
+    get afterHtml() {
+        return Pokemon.pokemonWikiReplacement(this.after);
+    }
 
     get imageHtml() {
         const src = Constants.POCKET_DOMAIN + "/image/pet/" + this.picture;

@@ -1240,8 +1240,8 @@ function doRenderPetBorn(credential: Credential, petList: Pet[]) {
                 html += "<td style='background-color:#E8E8D0'>" + pet.specialAttackHtml + "</td>";
                 html += "<td style='background-color:#E8E8D0'>" + pet.specialDefenseHtml + "</td>";
                 html += "<td style='background-color:#E8E8D0'>" + pet.speedHtml + "</td>";
-                html += "<td style='background-color:#E8E8D0'>" + pet.before + "</td>";
-                html += "<td style='background-color:#E8E8D0'>" + pet.after + "</td>";
+                html += "<td style='background-color:#E8E8D0'>" + pet.beforeHtml + "</td>";
+                html += "<td style='background-color:#E8E8D0'>" + pet.afterHtml + "</td>";
                 html += "<td style='background-color:#E8E8D0;width:64px;height:64px'>" + beforeHtml + "</td>";
                 html += "<td style='background-color:#E8E8D0;width:64px;height:64px'>" + afterHtml + "</td>";
                 html += "<td style='background-color:#E8E8D0'>" + pet.mapCount + "</td>";
@@ -1298,8 +1298,8 @@ function doRenderPetBorn(credential: Credential, petList: Pet[]) {
                 html += "<td style='background-color:#E8E8D0'>" + pet.specialAttackHtml + "</td>";
                 html += "<td style='background-color:#E8E8D0'>" + pet.specialDefenseHtml + "</td>";
                 html += "<td style='background-color:#E8E8D0'>" + pet.speedHtml + "</td>";
-                html += "<td style='background-color:#E8E8D0'>" + pet.before + "</td>";
-                html += "<td style='background-color:#E8E8D0'>" + pet.after + "</td>";
+                html += "<td style='background-color:#E8E8D0'>" + pet.beforeHtml + "</td>";
+                html += "<td style='background-color:#E8E8D0'>" + pet.afterHtml + "</td>";
                 html += "<td style='background-color:#E8E8D0;width:64px;height:64px'>" + beforeHtml + "</td>";
                 html += "<td style='background-color:#E8E8D0;width:64px;height:64px'>" + afterHtml + "</td>";
                 html += "<td style='background-color:#E8E8D0'>" + pet.mapCount + "</td>";
