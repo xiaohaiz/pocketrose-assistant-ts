@@ -48,6 +48,10 @@ class Pet {
         return Pokemon.pokemonWikiReplacement(this.name);
     }
 
+    get raceHtml() {
+        return Pokemon.pokemonWikiReplacement(this.race);
+    }
+
     get beforeHtml() {
         return Pokemon.pokemonWikiReplacement(this.before);
     }

@@ -134,7 +134,7 @@ function doRender(credential: Credential, petList: Pet[], studyStatus: number[])
             (pet.love! >= 100 ? "<b style='color:red'>" + pet.love + "</b>" : pet.love) +
             "</td>";
         html += "<td style='background-color:#E8E8D0'>" +
-            pet.race +
+            pet.raceHtml +
             "</td>";
         html += "<td style='background-color:#E8E8D0'>" +
             pet.attribute1 +
