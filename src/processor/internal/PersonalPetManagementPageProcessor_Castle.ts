@@ -5,6 +5,8 @@ import CastlePetExpressHouse from "../../pocketrose/CastlePetExpressHouse";
 import CastleRanch from "../../pocketrose/CastleRanch";
 import GoldenCage from "../../pocketrose/GoldenCage";
 import PersonalEquipmentManagement from "../../pocketrose/PersonalEquipmentManagement";
+import PersonalPetEvolution from "../../pocketrose/PersonalPetEvolution";
+import PersonalPetEvolutionPage from "../../pocketrose/PersonalPetEvolutionPage";
 import PersonalPetManagement from "../../pocketrose/PersonalPetManagement";
 import PersonalPetManagementPage from "../../pocketrose/PersonalPetManagementPage";
 import PersonalStatus from "../../pocketrose/PersonalStatus";
@@ -356,6 +358,8 @@ function doRender(credential: Credential, petList: Pet[], studyStatus: number[])
     if ($("#ranchState").text() === "on") {
         doRenderRanch(credential);
     }
+
+    doRenderPetBorn(credential, petList);
 }
 
 function doBindPetFuture(petList: Pet[]) {
@@ -599,6 +603,13 @@ function doRefresh(credential: Credential) {
         $("#pet_management_container").html("");
         // 清除牧场
         $("#ranchList").html("").parent().hide();
+
+        $("#propagateCell").html("").parent().hide();
+        $("#evolutionCell").html("").parent().hide();
+        $("#degradationCell").html("").parent().hide();
+        $("#consecrateCell").html("").parent().hide();
+        $("#PET_BORN").hide();
+
         // 使用新的宠物重新渲染PetUI
         doRender(credential, petList, petStudyStatus);
     });
@@ -1073,6 +1084,407 @@ function doBindSummonButton(credential: Credential) {
                 doRefresh(credential);
             });
         });
+}
+
+function __findPet(index: number, petList: Pet[]) {
+    for (const pet of petList) {
+        if (pet.index === index) {
+            return pet;
+        }
+    }
+    return null;
+}
+
+function doRenderPetBorn(credential: Credential, petList: Pet[]) {
+    new PersonalPetEvolution(credential).open().then(evolutionPage => {
+
+        if (evolutionPage.malePetList!.length > 0 && evolutionPage.femalePetList!.length > 0) {
+            $("#PET_BORN").show();
+            let html = "";
+            html += "<table style='border-width:0;background-color:#888888;text-align:center;width:100%;margin:auto'>";
+            html += "<tbody style='background-color:#F8F0E0'>";
+            html += "<tr>";
+            html += "<td style='width:50%;background-color:darkred;font-weight:bold;font-size:120%;color:greenyellow'>父 系 宠 物</td>";
+            html += "<td style='width:50%;background-color:darkgreen;font-weight:bold;font-size:120%;color:greenyellow'>母 系 宠 物</td>";
+            html += "</tr>";
+            html += "<tr>";
+            html += "<td style='width:50%'>";
+            html += "<table style='border-width:0;background-color:#888888;text-align:center;width:100%;margin:auto'>";
+            html += "<tbody style='background-color:#F8F0E0'>";
+            html += "<tr>";
+            html += "<th style='background-color:#EFE0C0'></th>";
+            html += "<th style='background-color:#E8E8D0'>宠物名</th>";
+            html += "<th style='background-color:#E8E8D0'>等级</th>";
+            html += "<th style='background-color:#E8E8D0'>性别</th>";
+            html += "<th style='background-color:#E8E8D0'>攻击力</th>";
+            html += "<th style='background-color:#E8E8D0'>防御力</th>";
+            html += "<th style='background-color:#E8E8D0'>智力</th>";
+            html += "<th style='background-color:#E8E8D0'>精神力</th>";
+            html += "<th style='background-color:#E8E8D0'>速度</th>";
+            html += "<th style='background-color:#E8E8D0'></th>";
+            html += "</tr>";
+            for (const male of evolutionPage.malePetList!) {
+                if (!male.selectable) {
+                    continue;
+                }
+                const pet = __findPet(male.index!, petList)!;
+                html += "<tr>";
+                html += "<td style='background-color:#EFE0C0'>" + pet.imageHtml + "</td>";
+                html += "<td style='background-color:#E8E8D0'>" + male.name + "</td>";
+                html += "<td style='background-color:#E8E8D0'>" + male.levelHtml + "</td>";
+                html += "<td style='background-color:#E8E8D0'>" + male.gender + "</td>";
+                html += "<td style='background-color:#E8E8D0'>" + male.attackHtml + "</td>";
+                html += "<td style='background-color:#E8E8D0'>" + male.defenseHtml + "</td>";
+                html += "<td style='background-color:#E8E8D0'>" + male.specialAttackHtml + "</td>";
+                html += "<td style='background-color:#E8E8D0'>" + male.specialDefenseHtml + "</td>";
+                html += "<td style='background-color:#E8E8D0'>" + male.speedHtml + "</td>";
+                html += "<td style='background-color:#E8E8D0'>";
+                html += "<button role='button' class='PetUIButton fatherButton' id='father_" + male.index + "' style='color:grey'>选择</button>";
+                html += "</td>";
+                html += "</tr>";
+            }
+            html += "</tbody>";
+            html += "</table>";
+            html += "</td>";
+            html += "<td style='width:50%'>";
+            html += "<table style='border-width:0;background-color:#888888;text-align:center;width:100%;margin:auto'>";
+            html += "<tbody style='background-color:#F8F0E0'>";
+            html += "<tr>";
+            html += "<th style='background-color:#EFE0C0'></th>";
+            html += "<th style='background-color:#E8E8D0'>宠物名</th>";
+            html += "<th style='background-color:#E8E8D0'>等级</th>";
+            html += "<th style='background-color:#E8E8D0'>性别</th>";
+            html += "<th style='background-color:#E8E8D0'>攻击力</th>";
+            html += "<th style='background-color:#E8E8D0'>防御力</th>";
+            html += "<th style='background-color:#E8E8D0'>智力</th>";
+            html += "<th style='background-color:#E8E8D0'>精神力</th>";
+            html += "<th style='background-color:#E8E8D0'>速度</th>";
+            html += "<th style='background-color:#E8E8D0'></th>";
+            html += "</tr>";
+            for (const female of evolutionPage.femalePetList!) {
+                if (!female.selectable) {
+                    continue;
+                }
+                const pet = __findPet(female.index!, petList)!;
+                html += "<tr>";
+                html += "<td style='background-color:#EFE0C0'>";
+                html += "<button role='button' class='PetUIButton motherButton' id='mother_" + female.index + "' style='color:grey'>选择</button>";
+                html += "</td>";
+                html += "<td style='background-color:#E8E8D0'>" + female.name + "</td>";
+                html += "<td style='background-color:#E8E8D0'>" + female.levelHtml + "</td>";
+                html += "<td style='background-color:#E8E8D0'>" + female.gender + "</td>";
+                html += "<td style='background-color:#E8E8D0'>" + female.attackHtml + "</td>";
+                html += "<td style='background-color:#E8E8D0'>" + female.defenseHtml + "</td>";
+                html += "<td style='background-color:#E8E8D0'>" + female.specialAttackHtml + "</td>";
+                html += "<td style='background-color:#E8E8D0'>" + female.specialDefenseHtml + "</td>";
+                html += "<td style='background-color:#E8E8D0'>" + female.speedHtml + "</td>";
+                html += "<td style='background-color:#E8E8D0'>" + pet.imageHtml + "</td>";
+                html += "</tr>";
+            }
+            html += "</tbody>";
+            html += "</table>";
+            html += "</td>";
+            html += "</tr>";
+            html += "<tr>";
+            html += "<td style='width:100%;text-align:center;background-color:#EFE0C0' colspan='2'>";
+            html += "<button role='button' class='PetUIButton' id='propagate'>繁殖选择的宠物</button>";
+            html += "</td>";
+            html += "</tr>";
+            html += "</tbody>";
+            html += "</table>";
+            $("#propagateCell").html(html).parent().show();
+
+            doBindPropagateButton(credential, evolutionPage);
+        }
+
+        if (evolutionPage.evolutionPetList!.length > 0) {
+            $("#PET_BORN").show();
+            let html = "";
+            html += "<table style='border-width:0;background-color:#888888;text-align:center;width:100%;margin:auto'>";
+            html += "<tbody style='background-color:#F8F0E0'>";
+            html += "<tr>";
+            html += "<th style='background-color:darkgreen;font-weight:bold;font-size:120%;color:yellowgreen' colspan='14'>宠 物 进 化</th>";
+            html += "</tr>";
+            html += "<tr>";
+            html += "<th style='background-color:#EFE0C0'>进化</th>";
+            html += "<th style='background-color:#E8E8D0'>宠物名</th>";
+            html += "<th style='background-color:#E8E8D0'>等级</th>";
+            html += "<th style='background-color:#E8E8D0'>性别</th>";
+            html += "<th style='background-color:#E8E8D0'>攻击力</th>";
+            html += "<th style='background-color:#E8E8D0'>防御力</th>";
+            html += "<th style='background-color:#E8E8D0'>智力</th>";
+            html += "<th style='background-color:#E8E8D0'>精神力</th>";
+            html += "<th style='background-color:#E8E8D0'>速度</th>";
+            html += "<th style='background-color:#E8E8D0'>进化前</th>";
+            html += "<th style='background-color:#E8E8D0'>进化后</th>";
+            html += "<th style='background-color:#E8E8D0'>进化前</th>";
+            html += "<th style='background-color:#E8E8D0'>进化后</th>";
+            html += "<th style='background-color:#E8E8D0'>图鉴数</th>";
+            html += "</tr>";
+
+            for (const pet of evolutionPage.evolutionPetList!) {
+                if (!pet.selectable) {
+                    continue;
+                }
+                const beforeHtml = PetProfileLoader.load(pet.beforeCode)!.imageHtml;
+                const afterHtml = PetProfileLoader.load(pet.afterCode)!.imageHtml;
+                html += "<tr>";
+                html += "<td style='background-color:#EFE0C0'>";
+                html += "<button role='button' class='PetUIButton evolutionButton' id='evolution_" + pet.index + "_" + pet.evolution + "'>进化</button>";
+                html += "</td>";
+                html += "<td style='background-color:#E8E8D0'>" + pet.name + "</td>";
+                html += "<td style='background-color:#E8E8D0'>" + pet.levelHtml + "</td>";
+                html += "<td style='background-color:#E8E8D0'>" + __findPet(pet.index!, petList)!.gender + "</td>";
+                html += "<td style='background-color:#E8E8D0'>" + pet.attackHtml + "</td>";
+                html += "<td style='background-color:#E8E8D0'>" + pet.defenseHtml + "</td>";
+                html += "<td style='background-color:#E8E8D0'>" + pet.specialAttackHtml + "</td>";
+                html += "<td style='background-color:#E8E8D0'>" + pet.specialDefenseHtml + "</td>";
+                html += "<td style='background-color:#E8E8D0'>" + pet.speedHtml + "</td>";
+                html += "<td style='background-color:#E8E8D0'>" + pet.before + "</td>";
+                html += "<td style='background-color:#E8E8D0'>" + pet.after + "</td>";
+                html += "<td style='background-color:#E8E8D0;width:64px;height:64px'>" + beforeHtml + "</td>";
+                html += "<td style='background-color:#E8E8D0;width:64px;height:64px'>" + afterHtml + "</td>";
+                html += "<td style='background-color:#E8E8D0'>" + pet.mapCount + "</td>";
+                html += "</tr>";
+            }
+
+            html += "</tbody>";
+            html += "</table>";
+            $("#evolutionCell").html(html).parent().show();
+
+            doBindEvolutionButton(credential, evolutionPage);
+        }
+
+        if (evolutionPage.degradationPetList!.length > 0) {
+            $("#PET_BORN").show();
+            let html = "";
+            html += "<table style='border-width:0;background-color:#888888;text-align:center;width:100%;margin:auto'>";
+            html += "<tbody style='background-color:#F8F0E0'>";
+            html += "<tr>";
+            html += "<th style='background-color:darkred;font-weight:bold;font-size:120%;color:yellowgreen' colspan='14'>宠 物 退 化</th>";
+            html += "</tr>";
+            html += "<tr>";
+            html += "<th style='background-color:#EFE0C0'>退化</th>";
+            html += "<th style='background-color:#E8E8D0'>宠物名</th>";
+            html += "<th style='background-color:#E8E8D0'>等级</th>";
+            html += "<th style='background-color:#E8E8D0'>性别</th>";
+            html += "<th style='background-color:#E8E8D0'>攻击力</th>";
+            html += "<th style='background-color:#E8E8D0'>防御力</th>";
+            html += "<th style='background-color:#E8E8D0'>智力</th>";
+            html += "<th style='background-color:#E8E8D0'>精神力</th>";
+            html += "<th style='background-color:#E8E8D0'>速度</th>";
+            html += "<th style='background-color:#E8E8D0'>退化前</th>";
+            html += "<th style='background-color:#E8E8D0'>退化后</th>";
+            html += "<th style='background-color:#E8E8D0'>退化前</th>";
+            html += "<th style='background-color:#E8E8D0'>退化后</th>";
+            html += "<th style='background-color:#E8E8D0'>图鉴数</th>";
+            html += "</tr>";
+
+            for (const pet of evolutionPage.degradationPetList!) {
+                if (!pet.selectable) {
+                    continue;
+                }
+                const beforeHtml = PetProfileLoader.load(pet.beforeCode)!.imageHtml;
+                const afterHtml = PetProfileLoader.load(pet.afterCode)!.imageHtml;
+                html += "<tr>";
+                html += "<td style='background-color:#EFE0C0'>";
+                html += "<button role='button' class='PetUIButton degradationButton' id='degradation_" + pet.index + "'>退化</button>";
+                html += "</td>";
+                html += "<td style='background-color:#E8E8D0'>" + pet.name + "</td>";
+                html += "<td style='background-color:#E8E8D0'>" + pet.levelHtml + "</td>";
+                html += "<td style='background-color:#E8E8D0'>" + __findPet(pet.index!, petList)!.gender + "</td>";
+                html += "<td style='background-color:#E8E8D0'>" + pet.attackHtml + "</td>";
+                html += "<td style='background-color:#E8E8D0'>" + pet.defenseHtml + "</td>";
+                html += "<td style='background-color:#E8E8D0'>" + pet.specialAttackHtml + "</td>";
+                html += "<td style='background-color:#E8E8D0'>" + pet.specialDefenseHtml + "</td>";
+                html += "<td style='background-color:#E8E8D0'>" + pet.speedHtml + "</td>";
+                html += "<td style='background-color:#E8E8D0'>" + pet.before + "</td>";
+                html += "<td style='background-color:#E8E8D0'>" + pet.after + "</td>";
+                html += "<td style='background-color:#E8E8D0;width:64px;height:64px'>" + beforeHtml + "</td>";
+                html += "<td style='background-color:#E8E8D0;width:64px;height:64px'>" + afterHtml + "</td>";
+                html += "<td style='background-color:#E8E8D0'>" + pet.mapCount + "</td>";
+                html += "</tr>";
+            }
+
+            html += "</tbody>";
+            html += "</table>";
+            $("#degradationCell").html(html).parent().show();
+
+            doBindDegradationButton(credential, evolutionPage);
+        }
+
+
+        if (evolutionPage.consecratePetList!.length > 0) {
+            $("#PET_BORN").show();
+            let html = "";
+            html += "<table style='border-width:0;background-color:#888888;text-align:center;width:100%;margin:auto'>";
+            html += "<tbody style='background-color:#F8F0E0'>";
+            html += "<tr>";
+            html += "<th style='background-color:darkred;font-weight:bold;font-size:120%;color:yellowgreen' colspan='14'>宠 物 献 祭</th>";
+            html += "</tr>";
+            html += "<tr>";
+            html += "<th style='background-color:#EFE0C0'></th>";
+            html += "<th style='background-color:#E8E8D0'>宠物名</th>";
+            html += "<th style='background-color:#E8E8D0'>等级</th>";
+            html += "<th style='background-color:#E8E8D0'>性别</th>";
+            html += "<th style='background-color:#E8E8D0'>攻击力</th>";
+            html += "<th style='background-color:#E8E8D0'>防御力</th>";
+            html += "<th style='background-color:#E8E8D0'>智力</th>";
+            html += "<th style='background-color:#E8E8D0'>精神力</th>";
+            html += "<th style='background-color:#E8E8D0'>速度</th>";
+            html += "<th style='background-color:#E8E8D0'>封印</th>";
+            html += "<th style='background-color:#E8E8D0'>超级封印</th>";
+            html += "</tr>";
+
+            for (const pet of evolutionPage.consecratePetList!) {
+                if (!pet.selectable) {
+                    continue;
+                }
+                const c = __findPet(pet.index!, petList)!;
+                html += "<tr>";
+                html += "<td style='background-color:#EFE0C0'>" + c.imageHtml + "</td>";
+                html += "<td style='background-color:#E8E8D0'>" + pet.name + "</td>";
+                html += "<td style='background-color:#E8E8D0'>" + pet.levelHtml + "</td>";
+                html += "<td style='background-color:#E8E8D0'>" + c.gender + "</td>";
+                html += "<td style='background-color:#E8E8D0'>" + pet.attackHtml + "</td>";
+                html += "<td style='background-color:#E8E8D0'>" + pet.defenseHtml + "</td>";
+                html += "<td style='background-color:#E8E8D0'>" + pet.specialAttackHtml + "</td>";
+                html += "<td style='background-color:#E8E8D0'>" + pet.specialDefenseHtml + "</td>";
+                html += "<td style='background-color:#E8E8D0'>" + pet.speedHtml + "</td>";
+                html += "<td style='background-color:#E8E8D0'>";
+                html += "<button role='button' class='PetUIButton sacrificeButton' id='sacrifice_" + pet.index + "'>牺牲</button>";
+                html += "</td>";
+                html += "<td style='background-color:#E8E8D0'>";
+                html += "<button role='button' class='PetUIButton consecrateButton' id='consecrate_" + pet.index + "'>献祭</button>";
+                html += "</td>";
+                html += "</tr>";
+            }
+
+            html += "</tbody>";
+            html += "</table>";
+            $("#consecrateCell").html(html).parent().show();
+
+            doBindConsecrateButton(credential, evolutionPage);
+        }
+    });
+}
+
+function doBindPropagateButton(credential: Credential, page: PersonalPetEvolutionPage) {
+    $(".fatherButton").on("click", event => {
+        const buttonId = $(event.target).attr("id")! as string;
+        if (PageUtils.isColorBlue(buttonId)) {
+            $(event.target).css("color", "grey");
+        } else if (PageUtils.isColorGrey(buttonId)) {
+            $(".fatherButton").css("color", "grey");
+            $(event.target).css("color", "blue");
+        }
+    });
+    $(".motherButton").on("click", event => {
+        const buttonId = $(event.target).attr("id")! as string;
+        if (PageUtils.isColorBlue(buttonId)) {
+            $(event.target).css("color", "grey");
+        } else if (PageUtils.isColorGrey(buttonId)) {
+            $(".motherButton").css("color", "grey");
+            $(event.target).css("color", "blue");
+        }
+    });
+    $("#propagate").on("click", () => {
+        const fatherButton = $(".fatherButton")
+            .filter((idx, button) => {
+                const buttonId = $(button).attr("id")! as string;
+                return PageUtils.isColorBlue(buttonId);
+            });
+        if (fatherButton.length === 0) {
+            MessageBoard.publishWarning("没有选择父系宠物！");
+            PageUtils.scrollIntoView("pageTitle");
+            return;
+        }
+        const motherButton = $(".motherButton")
+            .filter((idx, button) => {
+                const buttonId = $(button).attr("id")! as string;
+                return PageUtils.isColorBlue(buttonId);
+            });
+        if (motherButton.length === 0) {
+            MessageBoard.publishWarning("没有选择母系宠物！");
+            PageUtils.scrollIntoView("pageTitle");
+            return;
+        }
+        const fatherIndex = parseInt(StringUtils.substringAfterLast(fatherButton.attr("id")! as string, "_"));
+        const motherIndex = parseInt(StringUtils.substringAfterLast(motherButton.attr("id")! as string, "_"));
+        const father = page.findMalePet(fatherIndex)!;
+        const mother = page.findFemalePet(motherIndex)!;
+        if (!confirm("请确认要繁殖\"" + father.name + "\"和\"" + mother.name + "\"？")) {
+            return;
+        }
+        new PersonalPetEvolution(credential).propagate(fatherIndex, motherIndex).then(() => {
+            doRefresh(credential);
+        });
+    });
+}
+
+function doBindEvolutionButton(credential: Credential, page: PersonalPetEvolutionPage) {
+    $(".evolutionButton").on("click", event => {
+        const buttonId = $(event.target).attr("id")! as string;
+        const ss = buttonId.split("_");
+        const index = parseInt(ss[1]);
+        const evolution = parseInt(ss[2]);
+        const pet = page.findEvolutionPet(index, evolution)!;
+        if (!confirm("请确认将\"" + pet.name + "\"进化到\"" + pet.after + "\"？")) {
+            return;
+        }
+        new PersonalPetEvolution(credential).evolve(index, evolution).then(() => {
+            doRefresh(credential);
+        });
+    });
+}
+
+function doBindDegradationButton(credential: Credential, page: PersonalPetEvolutionPage) {
+    $(".degradationButton").on("click", event => {
+        const buttonId = $(event.target).attr("id")! as string;
+        const index = parseInt(StringUtils.substringAfterLast(buttonId, "_"));
+        const pet = page.findDegradationPet(index)!;
+        if (!confirm("请确认将\"" + pet.name + "\"退化到\"" + pet.after + "\"？")) {
+            return;
+        }
+        new PersonalPetEvolution(credential).degrade(index).then(() => {
+            doRefresh(credential);
+        });
+    });
+}
+
+function doBindConsecrateButton(credential: Credential, page: PersonalPetEvolutionPage) {
+    $(".sacrificeButton").on("click", event => {
+        const buttonId = $(event.target).attr("id")! as string;
+        const index = parseInt(StringUtils.substringAfterLast(buttonId, "_"));
+        const pet = page.findConsecratePet(index)!;
+        if (!confirm("请确认花费300万将\"" + pet.name + "\"还原回其自己的图鉴并得到一张藏宝图？")) {
+            return;
+        }
+        const bank = new CastleBank(credential);
+        bank.withdraw(300).then(() => {
+            new PersonalPetEvolution(credential).sacrifice(index).then(() => {
+                bank.deposit().then(() => {
+                    doRefresh(credential);
+                });
+            });
+        });
+    });
+    $(".consecrateButton").on("click", event => {
+        const buttonId = $(event.target).attr("id")! as string;
+        const index = parseInt(StringUtils.substringAfterLast(buttonId, "_"));
+        const pet = page.findConsecratePet(index)!;
+        if (!confirm("请确认花费1000万将\"" + pet.name + "\"还原回随机一张图鉴并得到一张藏宝图？")) {
+            return;
+        }
+        const bank = new CastleBank(credential);
+        bank.withdraw(1000).then(() => {
+            new PersonalPetEvolution(credential).consecrate(index).then(() => {
+                bank.deposit().then(() => {
+                    doRefresh(credential);
+                });
+            });
+        });
+    });
 }
 
 export = PersonalPetManagementPageProcessor_Castle;
