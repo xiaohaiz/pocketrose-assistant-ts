@@ -471,6 +471,7 @@ const BUTTON_STYLES: {} = {
         "  touch-action: manipulation;\n" +
         "  vertical-align: baseline;\n" +
         "  white-space: nowrap;\n" +
+        "  width: auto;\n" +
         "}\n" +
         "\n" +
         ".button-10007:hover,\n" +
@@ -509,6 +510,7 @@ const BUTTON_STYLES: {} = {
         "  touch-action: manipulation;\n" +
         "  vertical-align: baseline;\n" +
         "  white-space: nowrap;\n" +
+        "  width: auto;\n" +
         "}\n" +
         "\n" +
         ".button-10008:hover,\n" +
@@ -544,6 +546,7 @@ const BUTTON_STYLES: {} = {
         "  -webkit-user-select: none;\n" +
         "  touch-action: manipulation;\n" +
         "  white-space: pre;\n" +
+        "  width: auto;\n" +
         "}\n" +
         "\n" +
         ".button-10016:hover {\n" +
@@ -567,7 +570,7 @@ const BUTTON_STYLES: {} = {
         "  display: inline-block;\n" +
         "  font-size: 100%;\n" +
         "  font-weight: 800;\n" +
-        "  line-height: 16px;\n" +
+        "  /* line-height: 16px;\n */" +
         "  min-height: 0px;\n" +
         "  outline: 0;\n" +
         "  padding: 2px 2px;\n" +
@@ -578,6 +581,7 @@ const BUTTON_STYLES: {} = {
         "  -webkit-user-select: none;\n" +
         "  touch-action: manipulation;\n" +
         "  vertical-align: middle;\n" +
+        "  width: auto;\n" +
         "}\n" +
         "\n" +
         ".button-10024:hover,\n" +
@@ -678,6 +682,7 @@ const BUTTON_STYLES: {} = {
         "  user-select: none;\n" +
         "  -webkit-user-select: none;\n" +
         "  touch-action: manipulation;\n" +
+        "  width: auto;\n" +
         "}\n" +
         "\n" +
         ".button-10033:hover {\n" +
@@ -709,6 +714,7 @@ const BUTTON_STYLES: {} = {
         "  user-select: none;\n" +
         "  -webkit-user-select: none;\n" +
         "  touch-action: manipulation;\n" +
+        "  width: 100%;\n" +
         "}\n" +
         "\n" +
         ".button-10035:hover {\n" +
@@ -733,6 +739,7 @@ const BUTTON_STYLES: {} = {
         "  -webkit-user-select: none;\n" +
         "  touch-action: manipulation;\n" +
         "  white-space: nowrap;\n" +
+        "  width: auto;\n" +
         "}\n" +
         "\n" +
         ".button-10062:not([disabled]):focus {\n" +
