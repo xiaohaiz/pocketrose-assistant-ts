@@ -19,6 +19,10 @@ abstract class AbstractPersonalSetupPageProcessor extends PageProcessorCredentia
         this.#setupItemManager = new SetupItemManager();
     }
 
+    doLoadButtonStyles(): number[] {
+        return [10005, 10007, 10008, 10016, 10024, 10028, 10032, 10033, 10035, 10062];
+    }
+
     doProcess(credential: Credential) {
         // 整个页面是放在一个大form里面，删除重组
         const lastDivHtml = $("div:last").html();
@@ -196,8 +200,9 @@ abstract class AbstractPersonalSetupPageProcessor extends PageProcessorCredentia
     #bindRefreshButton(credential: Credential) {
         const instance = this;
         $("#refreshButton").on("click", function () {
-            $("#setup_item_table").html("");
             $(".dynamic_button").off("click");
+            $(".dynamic_select").off("change");
+            $("#setup_item_table").html("");
             instance.#render(credential);
         });
     }

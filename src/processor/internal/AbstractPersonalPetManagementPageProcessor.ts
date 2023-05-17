@@ -84,6 +84,9 @@ abstract class AbstractPersonalPetManagementPageProcessor extends PageProcessorC
         html += "<tr style='display:none'>";
         html += "<td id='degradationCell'></td>";
         html += "</tr>";
+        html += "<tr style='display:none'>";
+        html += "<td id='consecrateCell'></td>";
+        html += "</tr>";
         html += "</tody>";
         html += "</table>";
 
@@ -96,5 +99,6 @@ abstract class AbstractPersonalPetManagementPageProcessor extends PageProcessorC
 
     abstract doProcessWithPageParsed(credential: Credential, page: PersonalPetManagementPage, context?: PageProcessorContext): void;
 }
+
 
 export = AbstractPersonalPetManagementPageProcessor;

@@ -1,3 +1,4 @@
+import ButtonUtils from "../util/ButtonUtils";
 import Credential from "../util/Credential";
 import PageUtils from "../util/PageUtils";
 import PageProcessor from "./PageProcessor";
@@ -9,7 +10,7 @@ abstract class PageProcessorCredentialSupport implements PageProcessor {
         const buttons = this.doLoadButtonStyles();
         if (buttons.length > 0) {
             for (const button of buttons) {
-                PageUtils.loadButtonStyle(button);
+                ButtonUtils.loadButtonStyle(button);
             }
         }
 

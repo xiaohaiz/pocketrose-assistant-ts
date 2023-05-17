@@ -71,6 +71,34 @@ class PersonalPetEvolution {
             })
         })();
     }
+
+    async sacrifice(index: number): Promise<void> {
+        return await (() => {
+            return new Promise<void>(resolve => {
+                const request = this.#credential.asRequestMap();
+                request.set("select", index.toString());
+                request.set("mode", "PETBORN5");
+                NetworkUtils.post("mydata.cgi", request).then(html => {
+                    MessageBoard.processResponseMessage(html);
+                    resolve();
+                });
+            })
+        })();
+    }
+
+    async consecrate(index: number): Promise<void> {
+        return await (() => {
+            return new Promise<void>(resolve => {
+                const request = this.#credential.asRequestMap();
+                request.set("select", index.toString());
+                request.set("mode", "PETBORN6");
+                NetworkUtils.post("mydata.cgi", request).then(html => {
+                    MessageBoard.processResponseMessage(html);
+                    resolve();
+                });
+            })
+        })();
+    }
 }
 
 export = PersonalPetEvolution;

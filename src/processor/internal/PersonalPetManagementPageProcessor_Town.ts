@@ -1,6 +1,7 @@
 import Pet from "../../common/Pet";
 import Role from "../../common/Role";
 import PetProfileLoader from "../../core/PetProfileLoader";
+import PetRelationLoader from "../../core/PetRelationLoader";
 import CastleInformation from "../../pocketrose/CastleInformation";
 import CastleRanch from "../../pocketrose/CastleRanch";
 import GoldenCage from "../../pocketrose/GoldenCage";
@@ -85,7 +86,7 @@ function doRender(credential: Credential, petList: Pet[], studyStatus: number[],
             (pet.using ? "★" : "") +
             "</td>";
         html += "<td style='background-color:#E8E8D0' id='pet_name_" + pet.code + "' class='PetUIButton'>" +
-            "<b>" + pet.name + "</b>" +
+            "<b>" + pet.nameHtml + "</b>" +
             "</td>";
         html += "<td style='background-color:#E8E8D0'>" +
             pet.gender +
@@ -127,7 +128,7 @@ function doRender(credential: Credential, petList: Pet[], studyStatus: number[],
             (pet.love! >= 100 ? "<b style='color:red'>" + pet.love + "</b>" : pet.love) +
             "</td>";
         html += "<td style='background-color:#E8E8D0'>" +
-            pet.race +
+            pet.raceHtml +
             "</td>";
         html += "<td style='background-color:#E8E8D0'>" +
             pet.attribute1 +
@@ -383,7 +384,7 @@ function doBindPetFuture(petList: Pet[]) {
                     html += "<td rowspan='2' style='text-align:center'>" + petFuture.imageHtml + "</td>";
                     html += "</tr>";
                     html += "<tr style='background-color:black;color:wheat;font-weight:bold;text-align:center'>";
-                    html += "<td>" + petFuture.name + "</td>";
+                    html += "<td>" + petFuture.nameHtml + "</td>";
                     html += "<td>" + petFuture.totalBaseStats + "</td>";
                     html += "<td>" + petFuture.healthBaseStats + "</td>";
                     html += "<td>" + petFuture.attackBaseStats + "</td>";
@@ -432,7 +433,7 @@ function doBindPetFuture(petList: Pet[]) {
                     html += "<td rowspan='3' style='text-align:center'>" + petFuture.imageHtml + "</td>";
                     html += "</tr>";
                     html += "<tr style='background-color:black;color:wheat;font-weight:bold;text-align:center'>";
-                    html += "<td rowspan='2'>" + petFuture.name + "</td>";
+                    html += "<td rowspan='2'>" + petFuture.nameHtml + "</td>";
                     html += "<td rowspan='2'>" + petFuture.totalBaseStats + "</td>";
                     html += "<td>" + petFuture.healthBaseStats + "</td>";
                     html += "<td>" + petFuture.attackBaseStats + "</td>";
@@ -496,7 +497,7 @@ function doRenderGoldenCage(credential: Credential) {
         html += "</tr>";
         for (const pet of cagePetList) {
             html += "<tr>";
-            html += "<td style='background-color:#E8E8D0'>" + pet.name + "</td>";
+            html += "<td style='background-color:#E8E8D0'>" + pet.nameHtml + "</td>";
             html += "<td style='background-color:#E8E8D0'>" + pet.level + "</td>";
             html += "<td style='background-color:#E8E8D0'>" + pet.health + "/" + pet.maxHealth + "</td>";
             html += "<td style='background-color:#E8E8D0'>" + pet.attack + "</td>";
@@ -599,6 +600,7 @@ function doRefresh(credential: Credential) {
         $("#propagateCell").html("").parent().hide();
         $("#evolutionCell").html("").parent().hide();
         $("#degradationCell").html("").parent().hide();
+        $("#consecrateCell").html("").parent().hide();
         $("#PET_BORN").hide();
 
         new PersonalStatus(credential).open().then(page => {
@@ -1043,7 +1045,7 @@ function doRenderRanch(credential: Credential) {
 
         for (const pet of petList) {
             html += "<tr>";
-            html += "<td style='background-color:#E8E8D0'>" + pet.name + "</td>";
+            html += "<td style='background-color:#E8E8D0'>" + pet.nameHtml + "</td>";
             html += "<td style='background-color:#EFE0C0'>" + pet.levelHtml + "</td>";
             html += "<td style='background-color:#E0D0B0'>" + pet.healthHtml + "</td>";
             html += "<td style='background-color:#E0D0B0'>" + pet.attackHtml + "</td>";
@@ -1107,7 +1109,7 @@ function doRenderPetBorn(credential: Credential, petList: Pet[]) {
                 const pet = __findPet(male.index!, petList)!;
                 html += "<tr>";
                 html += "<td style='background-color:#EFE0C0'>" + pet.imageHtml + "</td>";
-                html += "<td style='background-color:#E8E8D0'>" + male.name + "</td>";
+                html += "<td style='background-color:#E8E8D0'>" + male.nameHtml + "</td>";
                 html += "<td style='background-color:#E8E8D0'>" + male.levelHtml + "</td>";
                 html += "<td style='background-color:#E8E8D0'>" + male.gender + "</td>";
                 html += "<td style='background-color:#E8E8D0'>" + male.attackHtml + "</td>";
@@ -1147,7 +1149,7 @@ function doRenderPetBorn(credential: Credential, petList: Pet[]) {
                 html += "<td style='background-color:#EFE0C0'>";
                 html += "<button role='button' class='PetUIButton motherButton' id='mother_" + female.index + "' style='color:grey'>选择</button>";
                 html += "</td>";
-                html += "<td style='background-color:#E8E8D0'>" + female.name + "</td>";
+                html += "<td style='background-color:#E8E8D0'>" + female.nameHtml + "</td>";
                 html += "<td style='background-color:#E8E8D0'>" + female.levelHtml + "</td>";
                 html += "<td style='background-color:#E8E8D0'>" + female.gender + "</td>";
                 html += "<td style='background-color:#E8E8D0'>" + female.attackHtml + "</td>";
@@ -1209,7 +1211,7 @@ function doRenderPetBorn(credential: Credential, petList: Pet[]) {
                 html += "<td style='background-color:#EFE0C0'>";
                 html += "<button role='button' class='PetUIButton evolutionButton' id='evolution_" + pet.index + "_" + pet.evolution + "'>进化</button>";
                 html += "</td>";
-                html += "<td style='background-color:#E8E8D0'>" + pet.name + "</td>";
+                html += "<td style='background-color:#E8E8D0'>" + pet.nameHtml + "</td>";
                 html += "<td style='background-color:#E8E8D0'>" + pet.levelHtml + "</td>";
                 html += "<td style='background-color:#E8E8D0'>" + __findPet(pet.index!, petList)!.gender + "</td>";
                 html += "<td style='background-color:#E8E8D0'>" + pet.attackHtml + "</td>";
@@ -1217,8 +1219,8 @@ function doRenderPetBorn(credential: Credential, petList: Pet[]) {
                 html += "<td style='background-color:#E8E8D0'>" + pet.specialAttackHtml + "</td>";
                 html += "<td style='background-color:#E8E8D0'>" + pet.specialDefenseHtml + "</td>";
                 html += "<td style='background-color:#E8E8D0'>" + pet.speedHtml + "</td>";
-                html += "<td style='background-color:#E8E8D0'>" + pet.before + "</td>";
-                html += "<td style='background-color:#E8E8D0'>" + pet.after + "</td>";
+                html += "<td style='background-color:#E8E8D0'>" + pet.beforeHtml + "</td>";
+                html += "<td style='background-color:#E8E8D0'>" + pet.afterHtml + "</td>";
                 html += "<td style='background-color:#E8E8D0;width:64px;height:64px'>" + beforeHtml + "</td>";
                 html += "<td style='background-color:#E8E8D0;width:64px;height:64px'>" + afterHtml + "</td>";
                 html += "<td style='background-color:#E8E8D0'>" + pet.mapCount + "</td>";
@@ -1267,7 +1269,7 @@ function doRenderPetBorn(credential: Credential, petList: Pet[]) {
                 html += "<td style='background-color:#EFE0C0'>";
                 html += "<button role='button' class='PetUIButton degradationButton' id='degradation_" + pet.index + "'>退化</button>";
                 html += "</td>";
-                html += "<td style='background-color:#E8E8D0'>" + pet.name + "</td>";
+                html += "<td style='background-color:#E8E8D0'>" + pet.nameHtml + "</td>";
                 html += "<td style='background-color:#E8E8D0'>" + pet.levelHtml + "</td>";
                 html += "<td style='background-color:#E8E8D0'>" + __findPet(pet.index!, petList)!.gender + "</td>";
                 html += "<td style='background-color:#E8E8D0'>" + pet.attackHtml + "</td>";
@@ -1275,8 +1277,8 @@ function doRenderPetBorn(credential: Credential, petList: Pet[]) {
                 html += "<td style='background-color:#E8E8D0'>" + pet.specialAttackHtml + "</td>";
                 html += "<td style='background-color:#E8E8D0'>" + pet.specialDefenseHtml + "</td>";
                 html += "<td style='background-color:#E8E8D0'>" + pet.speedHtml + "</td>";
-                html += "<td style='background-color:#E8E8D0'>" + pet.before + "</td>";
-                html += "<td style='background-color:#E8E8D0'>" + pet.after + "</td>";
+                html += "<td style='background-color:#E8E8D0'>" + pet.beforeHtml + "</td>";
+                html += "<td style='background-color:#E8E8D0'>" + pet.afterHtml + "</td>";
                 html += "<td style='background-color:#E8E8D0;width:64px;height:64px'>" + beforeHtml + "</td>";
                 html += "<td style='background-color:#E8E8D0;width:64px;height:64px'>" + afterHtml + "</td>";
                 html += "<td style='background-color:#E8E8D0'>" + pet.mapCount + "</td>";
@@ -1288,6 +1290,77 @@ function doRenderPetBorn(credential: Credential, petList: Pet[]) {
             $("#degradationCell").html(html).parent().show();
 
             doBindDegradationButton(credential, evolutionPage);
+        }
+
+
+        if (evolutionPage.consecratePetList!.length > 0) {
+            $("#PET_BORN").show();
+            let html = "";
+            html += "<table style='border-width:0;background-color:#888888;text-align:center;width:100%;margin:auto'>";
+            html += "<tbody style='background-color:#F8F0E0'>";
+            html += "<tr>";
+            html += "<th style='background-color:darkred;font-weight:bold;font-size:120%;color:yellowgreen' colspan='14'>宠 物 献 祭</th>";
+            html += "</tr>";
+            html += "<tr>";
+            html += "<th style='background-color:#EFE0C0'></th>";
+            html += "<th style='background-color:#E8E8D0'>宠物名</th>";
+            html += "<th style='background-color:#E8E8D0'>等级</th>";
+            html += "<th style='background-color:#E8E8D0'>性别</th>";
+            html += "<th style='background-color:#E8E8D0'>攻击力</th>";
+            html += "<th style='background-color:#E8E8D0'>防御力</th>";
+            html += "<th style='background-color:#E8E8D0'>智力</th>";
+            html += "<th style='background-color:#E8E8D0'>精神力</th>";
+            html += "<th style='background-color:#E8E8D0'>速度</th>";
+            html += "<th style='background-color:#E8E8D0'>封印</th>";
+            html += "<th style='background-color:#E8E8D0'>超级封印</th>";
+            html += "</tr>";
+
+            for (const pet of evolutionPage.consecratePetList!) {
+                if (!pet.selectable) {
+                    continue;
+                }
+                const c = __findPet(pet.index!, petList)!;
+                html += "<tr>";
+                html += "<td style='background-color:#EFE0C0' rowspan='3'>" + c.imageHtml + "</td>";
+                html += "<td style='background-color:#E8E8D0'>" + pet.nameHtml + "</td>";
+                html += "<td style='background-color:#E8E8D0'>" + pet.levelHtml + "</td>";
+                html += "<td style='background-color:#E8E8D0'>" + c.gender + "</td>";
+                html += "<td style='background-color:#E8E8D0'>" + pet.attackHtml + "</td>";
+                html += "<td style='background-color:#E8E8D0'>" + pet.defenseHtml + "</td>";
+                html += "<td style='background-color:#E8E8D0'>" + pet.specialAttackHtml + "</td>";
+                html += "<td style='background-color:#E8E8D0'>" + pet.specialDefenseHtml + "</td>";
+                html += "<td style='background-color:#E8E8D0'>" + pet.speedHtml + "</td>";
+                html += "<td style='background-color:#E8E8D0'>";
+                html += "<button role='button' class='PetUIButton sacrificeButton' id='sacrifice_" + pet.index + "'>牺牲</button>";
+                html += "</td>";
+                html += "<td style='background-color:#E8E8D0'>";
+                html += "<button role='button' class='PetUIButton consecrateButton' id='consecrate_" + pet.index + "'>献祭</button>";
+                html += "</td>";
+                html += "</tr>";
+
+                html += "<tr>";
+                html += "<td style='background-color:#E8E8D0;text-align:left;font-weight:bold;color:navy' colspan='10'>进化退化关系链</td>";
+                html += "</tr>";
+                html += "<tr>";
+                html += "<td style='background-color:#E8E8D0;text-align:left;height:64px' colspan='10'>";
+                for (const it of PetRelationLoader.getPetRelations(parseInt(c.code!))) {
+                    let pc = it.toString();
+                    if (it < 10) {
+                        pc = "00" + pc;
+                    } else if (it < 100) {
+                        pc = "0" + pc;
+                    }
+                    html += PetProfileLoader.load(pc)!.imageHtml;
+                }
+                html += "</td>";
+                html += "</tr>";
+            }
+
+            html += "</tbody>";
+            html += "</table>";
+            $("#consecrateCell").html(html).parent().show();
+
+            doBindConsecrateButton(credential, evolutionPage);
         }
     });
 }
@@ -1371,6 +1444,41 @@ function doBindDegradationButton(credential: Credential, page: PersonalPetEvolut
         }
         new PersonalPetEvolution(credential).degrade(index).then(() => {
             doRefresh(credential);
+        });
+    });
+}
+
+function doBindConsecrateButton(credential: Credential, page: PersonalPetEvolutionPage) {
+    $(".sacrificeButton").on("click", event => {
+        const buttonId = $(event.target).attr("id")! as string;
+        const index = parseInt(StringUtils.substringAfterLast(buttonId, "_"));
+        const pet = page.findConsecratePet(index)!;
+        if (!confirm("请确认花费300万将\"" + pet.name + "\"还原回其自己的图鉴并得到一张藏宝图？")) {
+            return;
+        }
+        const bank = new TownBank(credential);
+        bank.withdraw(300).then(() => {
+            new PersonalPetEvolution(credential).sacrifice(index).then(() => {
+                bank.deposit().then(() => {
+                    doRefresh(credential);
+                });
+            });
+        });
+    });
+    $(".consecrateButton").on("click", event => {
+        const buttonId = $(event.target).attr("id")! as string;
+        const index = parseInt(StringUtils.substringAfterLast(buttonId, "_"));
+        const pet = page.findConsecratePet(index)!;
+        if (!confirm("请确认花费1000万将\"" + pet.name + "\"还原回随机一张图鉴并得到一张藏宝图？")) {
+            return;
+        }
+        const bank = new TownBank(credential);
+        bank.withdraw(1000).then(() => {
+            new PersonalPetEvolution(credential).consecrate(index).then(() => {
+                bank.deposit().then(() => {
+                    doRefresh(credential);
+                });
+            });
         });
     });
 }

@@ -3,7 +3,7 @@ import StorageUtils from "../../util/StorageUtils";
 import SetupItem from "../SetupItem";
 import SetupLoader from "../SetupLoader";
 
-class SetupItem035 implements SetupItem {
+class SetupItem042 implements SetupItem {
 
     render(id?: string): void {
         doRender();
@@ -11,8 +11,8 @@ class SetupItem035 implements SetupItem {
 
 }
 
-const code: string = "035";
-const name: string = "字母文本的按钮";
+const code: string = "042";
+const name: string = "登陆页面的布局";
 const key: string = "_pa_" + code;
 
 function doRender() {
@@ -26,7 +26,7 @@ function doRender() {
 
     $("#setup_item_table").append($(html));
 
-    const value = SetupLoader.isAsciiTextButtonEnabled();
+    const value = SetupLoader.getLoginPageLayout();
     $(".option_class_" + code + "[value='" + Number(value) + "']").prop("selected", true);
 
     $("#setup_" + code).on("click", function () {
@@ -35,10 +35,16 @@ function doRender() {
 }
 
 function doGenerateSetupItem() {
-    let html = "";
-    html += "<select id='select_" + code + "'>";
-    html += "<option class='option_class_" + code + "' value='1'>启用</option>";
-    html += "<option class='option_class_" + code + "' value='0'>禁用</option>";
+    let html = "<select id='select_" + code + "'>";
+    html += "<option class='option_class_" + code + "' value='0'>居中</option>";
+    html += "<option class='option_class_" + code + "' value='1'>靠上</option>";
+    html += "<option class='option_class_" + code + "' value='2'>靠下</option>";
+    html += "<option class='option_class_" + code + "' value='3'>靠左</option>";
+    html += "<option class='option_class_" + code + "' value='4'>靠右</option>";
+    html += "<option class='option_class_" + code + "' value='5'>左上</option>";
+    html += "<option class='option_class_" + code + "' value='6'>左下</option>";
+    html += "<option class='option_class_" + code + "' value='7'>右上</option>";
+    html += "<option class='option_class_" + code + "' value='8'>右下</option>";
     html += "</select>";
     return html;
 }
@@ -50,4 +56,4 @@ function doSaveSetupItem() {
     $("#refreshButton").trigger("click");
 }
 
-export = SetupItem035;
+export = SetupItem042;

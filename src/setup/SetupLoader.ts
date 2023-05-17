@@ -233,7 +233,7 @@ class SetupLoader {
         return StorageUtils.getBoolean("_pa_034");
     }
 
-    static isTownDashboardShortcutButtonEnabled(): boolean {
+    static isAsciiTextButtonEnabled(): boolean {
         return StorageUtils.getBoolean("_pa_035");
     }
 
@@ -255,6 +255,14 @@ class SetupLoader {
 
     static isMobileMiniDashboardEnabled() {
         return StorageUtils.getBoolean("_pa_040");
+    }
+
+    static getTownDashboardShortcutButton(): number {
+        return StorageUtils.getInt("_pa_041", -1);
+    }
+
+    static getLoginPageLayout(): number {
+        return StorageUtils.getInt("_pa_042", 0);
     }
 }
 

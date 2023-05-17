@@ -12,7 +12,7 @@ import PageProcessorCredentialSupport from "../PageProcessorCredentialSupport";
 class TownDashboardPageProcessor extends PageProcessorCredentialSupport {
 
     doLoadButtonStyles(): number[] {
-        return [7, 8, 16, 10028];
+        return [7, 8, 16, 10005, 10007, 10008, 10016, 10024, 10028, 10032, 10033, 10035, 10062];
     }
 
     doProcess(credential: Credential, context?: PageProcessorContext): void {
@@ -34,17 +34,35 @@ class TownDashboardPageProcessor extends PageProcessorCredentialSupport {
         $("input:text:last").attr("id", "messageInputText");
         $("input:submit[value='更新']").attr("id", "refreshButton");
 
-        $("th:contains('训练·战斗')")
-            .filter((idx, th) => {
-                return $(th).text() === "训练·战斗";
-            })
-            .next()
+        // Handle with buttons
+        $("#t5")
+            .find("form[action='battle.cgi']")
+            .parent()
             .attr("id", "battleCell")
             .next()
             .find("input:submit:first")
             .attr("id", "battleButton");
+        $("#t5")
+            .find("form[action='town.cgi']")
+            .parent()
+            .attr("id", "townCell")
+            .next()
+            .find("input:submit:first")
+            .attr("id", "townButton");
+        $("#t5")
+            .find("form[action='mydata.cgi']")
+            .next()
+            .attr("id", "personalCell")
+            .next()
+            .find("input:submit:first")
+            .attr("id", "personalButton");
 
         doProcess(credential, page);
+
+        if (SetupLoader.isAsciiTextButtonEnabled()) {
+            $("input:submit[value='更新']").val("RELOAD");
+            $("input:submit[value='行动']").val("ACTION");
+        }
     }
 
 }
@@ -115,7 +133,9 @@ function doProcess(credential: Credential, page: TownDashboardPage) {
     doRenderLeaveTown();
     doRenderEventBoard();
 
-    if (SetupLoader.isTownDashboardShortcutButtonEnabled()) {
+    const bsId = SetupLoader.getTownDashboardShortcutButton();
+    if (bsId >= 0) {
+        const buttonClass = "button-" + bsId;
         $("th:contains('训练·战斗')")
             .filter((idx, th) => {
                 return $(th).text() === "训练·战斗";
@@ -139,22 +159,22 @@ function doProcess(credential: Credential, page: TownDashboardPage) {
             .find("th:first")
             .css("text-align", "right")
             .text("城市设施")
-            .before($("<td><button role='button' class='button-10028' id='shortcut1'>图鉴</button></td>"))
+            .before($("<td><button role='button' class='" + buttonClass + "' id='shortcut1'>图鉴</button></td>"))
             .parent()
             .next()
             .find("th:first")
             .css("text-align", "right")
-            .before($("<td><button role='button' class='button-10028' id='shortcut2'>装备</button></td>"))
+            .before($("<td><button role='button' class='" + buttonClass + "' id='shortcut2'>装备</button></td>"))
             .parent()
             .next()
             .find("th:first")
             .css("text-align", "right")
-            .before($("<td><button role='button' class='button-10028' id='shortcut3'>宠物</button></td>"))
+            .before($("<td><button role='button' class='" + buttonClass + "' id='shortcut3'>宠物</button></td>"))
             .parent()
             .next()
             .find("th:first")
             .css("text-align", "right")
-            .before($("<td><button role='button' class='button-10028' id='shortcut4'>职业</button></td>"))
+            .before($("<td><button role='button' class='" + buttonClass + "' id='shortcut4'>职业</button></td>"))
             .parent()
             .next()
             .find("th:first")
@@ -247,6 +267,15 @@ function doProcess(credential: Credential, page: TownDashboardPage) {
             .css("width", "100%")
             .next()
             .remove();
+    } else {
+        $("#t2")
+            .removeAttr("width")
+            .css("width", "95%")
+            .parent()
+            .css("width", "40%")
+            .next()
+            .removeAttr("width")
+            .css("width", "60%");
     }
 }
 
@@ -403,6 +432,7 @@ function doRenderPetManagementMenu() {
             .css("background-color", "yellow")
             .text("宠物管理");
         $("option[value='PET_SEND']").remove();
+        $("option[value='PETBORN']").remove();
     }
 }
 

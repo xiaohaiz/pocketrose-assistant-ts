@@ -235,7 +235,7 @@ function doRender(title: string, petList: PetProfile[]) {
         html += "<td style='background-color:#E8E8D0'>";
         html += pet.imageHtml;
         html += "</td>";
-        html += "<td style='background-color:#EFE0C0'>" + pet.name + "</td>";
+        html += "<td style='background-color:#EFE0C0'>" + pet.nameHtml + "</td>";
         html += "<td style='background-color:#E0D0B0;font-weight:bold;color:blue'>" + pet.totalBaseStats + "</td>";
         html += "<td style='background-color:#EFE0C0'>" + pet.healthBaseStats + "</td>";
         html += "<td style='background-color:#E0D0B0'>" + pet.attackBaseStats + "</td>";
