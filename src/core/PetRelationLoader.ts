@@ -1,16 +1,23 @@
 import PetProfile from "../common/PetProfile";
 
-class PetEvolutionLoader {
+class PetRelationLoader {
 
 
-    static load(code: number) {
+    static getPetRelations(code: number) {
         const profile = allProfiles().get(code)!;
 
         let sources: number[] = [];
         findSources(profile.source, sources);
         sources = sources.reverse();
 
+        let targets: number[] = [];
+        findTargets(profile, targets);
 
+        const codeList: number[] = [];
+        codeList.push(...sources);
+        codeList.push(code);
+        codeList.push(...targets);
+        return codeList;
     }
 
 
@@ -22,6 +29,16 @@ function findSources(profile: PetProfile | undefined, sources: number[]) {
     }
     sources.push(profile.id!);
     findSources(profile.source, sources);
+}
+
+function findTargets(profile: PetProfile, targets: number[]) {
+    if (profile.targets === undefined || profile.targets.length === 0) {
+        return;
+    }
+    for (const target of profile.targets) {
+        targets.push(target.id!);
+        findTargets(target, targets);
+    }
 }
 
 const PET_RELATIONSHIPS = {
@@ -288,4 +305,4 @@ function allProfiles() {
     return profiles;
 }
 
-export = PetEvolutionLoader;
+export = PetRelationLoader;
