@@ -416,6 +416,7 @@ function doRenderPetManagementMenu() {
             .css("background-color", "yellow")
             .text("宠物管理");
         $("option[value='PET_SEND']").remove();
+        $("option[value='PETBORN']").remove();
     }
 }
 
