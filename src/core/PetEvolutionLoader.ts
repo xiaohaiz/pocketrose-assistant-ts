@@ -1,4 +1,27 @@
+import PetProfile from "../common/PetProfile";
+
 class PetEvolutionLoader {
+
+
+    static load(code: number) {
+        const profile = allProfiles().get(code)!;
+
+        let sources: number[] = [];
+        findSources(profile.source, sources);
+        sources = sources.reverse();
+
+
+    }
+
+
+}
+
+function findSources(profile: PetProfile | undefined, sources: number[]) {
+    if (profile === undefined) {
+        return;
+    }
+    sources.push(profile.id!);
+    findSources(profile.source, sources);
 }
 
 const PET_RELATIONSHIPS = {
@@ -234,6 +257,35 @@ const PET_RELATIONSHIPS = {
     456: [457],
     458: [226],
     459: [460],
+};
+
+function allProfiles() {
+    const profiles = new Map<number, PetProfile>();
+    for (let i = 1; i <= 493; i++) {
+        const profile = new PetProfile();
+        profile.id = i;
+        profile.targets = [];
+        profiles.set(i, profile);
+    }
+
+    const keys = Object.keys(PET_RELATIONSHIPS);
+    for (const key of keys) {
+        const id = parseInt(key);
+        // @ts-ignore
+        const arr: [] = PET_RELATIONSHIPS[id];
+
+        if (arr === undefined) {
+            continue;
+        }
+        const parent = profiles.get(id)!;
+        for (const it of arr) {
+            const child = profiles.get(it)!;
+            child.source = parent;
+            parent.targets!.push(child);
+        }
+    }
+
+    return profiles;
 }
 
 export = PetEvolutionLoader;

@@ -21,6 +21,10 @@ class PetProfile {
     catchRatio?: number;
     growExperience?: number;
 
+    id?: number;
+    source?: PetProfile;
+    targets?: PetProfile[];
+
     get nameHtml() {
         return Pokemon.pokemonWikiReplacement(this.name);
     }
