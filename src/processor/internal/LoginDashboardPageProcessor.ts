@@ -11,6 +11,12 @@ class LoginDashboardPageProcessor implements PageProcessor {
         PageUtils.removeUnusedHyperLinks();
         PageUtils.removeGoogleAnalyticsScript();
 
+        $("table")
+            .each((idx, table) => {
+                const tableId = "t" + idx;
+                $(table).attr("id", tableId);
+            });
+
         $("img:first")
             .attr("width", "64")
             .attr("height", "48");
