@@ -92,7 +92,7 @@ function doRender(credential: Credential, petList: Pet[], studyStatus: number[])
             (pet.using ? "★" : "") +
             "</td>";
         html += "<td style='background-color:#E8E8D0' id='pet_name_" + pet.code + "' class='PetUIButton'>" +
-            "<b>" + pet.name + "</b>" +
+            "<b>" + pet.nameHtml + "</b>" +
             "</td>";
         html += "<td style='background-color:#E8E8D0'>" +
             pet.gender +
@@ -505,7 +505,7 @@ function doRenderGoldenCage(credential: Credential) {
         html += "</tr>";
         for (const pet of cagePetList) {
             html += "<tr>";
-            html += "<td style='background-color:#E8E8D0'>" + pet.name + "</td>";
+            html += "<td style='background-color:#E8E8D0'>" + pet.nameHtml + "</td>";
             html += "<td style='background-color:#E8E8D0'>" + pet.level + "</td>";
             html += "<td style='background-color:#E8E8D0'>" + pet.health + "/" + pet.maxHealth + "</td>";
             html += "<td style='background-color:#E8E8D0'>" + pet.attack + "</td>";
@@ -1036,7 +1036,7 @@ function doRenderRanch(credential: Credential) {
 
         for (const pet of petList) {
             html += "<tr>";
-            html += "<td style='background-color:#E8E8D0'>" + pet.name + "</td>";
+            html += "<td style='background-color:#E8E8D0'>" + pet.nameHtml + "</td>";
             html += "<td style='background-color:#EFE0C0'>" + pet.levelHtml + "</td>";
             html += "<td style='background-color:#E0D0B0'>" + pet.healthHtml + "</td>";
             html += "<td style='background-color:#E0D0B0'>" + pet.attackHtml + "</td>";
@@ -1130,7 +1130,7 @@ function doRenderPetBorn(credential: Credential, petList: Pet[]) {
                 const pet = __findPet(male.index!, petList)!;
                 html += "<tr>";
                 html += "<td style='background-color:#EFE0C0'>" + pet.imageHtml + "</td>";
-                html += "<td style='background-color:#E8E8D0'>" + male.name + "</td>";
+                html += "<td style='background-color:#E8E8D0'>" + male.nameHtml + "</td>";
                 html += "<td style='background-color:#E8E8D0'>" + male.levelHtml + "</td>";
                 html += "<td style='background-color:#E8E8D0'>" + male.gender + "</td>";
                 html += "<td style='background-color:#E8E8D0'>" + male.attackHtml + "</td>";
@@ -1170,7 +1170,7 @@ function doRenderPetBorn(credential: Credential, petList: Pet[]) {
                 html += "<td style='background-color:#EFE0C0'>";
                 html += "<button role='button' class='PetUIButton motherButton' id='mother_" + female.index + "' style='color:grey'>选择</button>";
                 html += "</td>";
-                html += "<td style='background-color:#E8E8D0'>" + female.name + "</td>";
+                html += "<td style='background-color:#E8E8D0'>" + female.nameHtml + "</td>";
                 html += "<td style='background-color:#E8E8D0'>" + female.levelHtml + "</td>";
                 html += "<td style='background-color:#E8E8D0'>" + female.gender + "</td>";
                 html += "<td style='background-color:#E8E8D0'>" + female.attackHtml + "</td>";
@@ -1232,7 +1232,7 @@ function doRenderPetBorn(credential: Credential, petList: Pet[]) {
                 html += "<td style='background-color:#EFE0C0'>";
                 html += "<button role='button' class='PetUIButton evolutionButton' id='evolution_" + pet.index + "_" + pet.evolution + "'>进化</button>";
                 html += "</td>";
-                html += "<td style='background-color:#E8E8D0'>" + pet.name + "</td>";
+                html += "<td style='background-color:#E8E8D0'>" + pet.nameHtml + "</td>";
                 html += "<td style='background-color:#E8E8D0'>" + pet.levelHtml + "</td>";
                 html += "<td style='background-color:#E8E8D0'>" + __findPet(pet.index!, petList)!.gender + "</td>";
                 html += "<td style='background-color:#E8E8D0'>" + pet.attackHtml + "</td>";
@@ -1290,7 +1290,7 @@ function doRenderPetBorn(credential: Credential, petList: Pet[]) {
                 html += "<td style='background-color:#EFE0C0'>";
                 html += "<button role='button' class='PetUIButton degradationButton' id='degradation_" + pet.index + "'>退化</button>";
                 html += "</td>";
-                html += "<td style='background-color:#E8E8D0'>" + pet.name + "</td>";
+                html += "<td style='background-color:#E8E8D0'>" + pet.nameHtml + "</td>";
                 html += "<td style='background-color:#E8E8D0'>" + pet.levelHtml + "</td>";
                 html += "<td style='background-color:#E8E8D0'>" + __findPet(pet.index!, petList)!.gender + "</td>";
                 html += "<td style='background-color:#E8E8D0'>" + pet.attackHtml + "</td>";
@@ -1343,7 +1343,7 @@ function doRenderPetBorn(credential: Credential, petList: Pet[]) {
                 const c = __findPet(pet.index!, petList)!;
                 html += "<tr>";
                 html += "<td style='background-color:#EFE0C0'>" + c.imageHtml + "</td>";
-                html += "<td style='background-color:#E8E8D0'>" + pet.name + "</td>";
+                html += "<td style='background-color:#E8E8D0'>" + pet.nameHtml + "</td>";
                 html += "<td style='background-color:#E8E8D0'>" + pet.levelHtml + "</td>";
                 html += "<td style='background-color:#E8E8D0'>" + c.gender + "</td>";
                 html += "<td style='background-color:#E8E8D0'>" + pet.attackHtml + "</td>";
