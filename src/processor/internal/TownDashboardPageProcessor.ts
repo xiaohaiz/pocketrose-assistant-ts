@@ -59,6 +59,16 @@ class TownDashboardPageProcessor extends PageProcessorCredentialSupport {
 
         doProcess(credential, page);
 
+        if (SetupLoader.isHideCountryInformationEnabled()) {
+            $("font:contains('城市的支配国')")
+                .filter((idx, font) => $(font).text().startsWith("城市的支配国"))
+                .parent()
+                .parent().hide()
+                .next().hide()
+                .next().hide()
+                .next().hide();
+        }
+
         if (SetupLoader.isAsciiTextButtonEnabled()) {
             $("input:submit[value='更新']").val("RELOAD");
             $("input:submit[value='行动']").val("ACTION");
