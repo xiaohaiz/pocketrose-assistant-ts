@@ -176,7 +176,8 @@ class PageUtils {
             $("." + className)
                 .off("click")
                 .off("mouseenter")
-                .off("mouseleave");
+                .off("mouseleave")
+                .off("change");
         }
     }
 }

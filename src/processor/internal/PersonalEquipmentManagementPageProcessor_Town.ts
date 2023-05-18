@@ -1,6 +1,7 @@
 import Equipment from "../../common/Equipment";
 import EquipmentSet from "../../common/EquipmentSet";
 import EquipmentSetLoader from "../../core/EquipmentSetLoader";
+import FastLoginLoader from "../../core/FastLoginLoader";
 import NpcLoader from "../../core/NpcLoader";
 import TownLoader from "../../core/TownLoader";
 import CastleEquipmentExpressHouse from "../../pocketrose/CastleEquipmentExpressHouse";
@@ -272,6 +273,19 @@ class PersonalEquipmentManagementPageProcessor_Town extends AbstractPersonalEqui
         html += "</tr>";
         html += "<tr>";
         html += "<td style='text-align:right' colspan='2'>";
+        if (SetupLoader.isFastLoginEnabled()) {
+            const fastNames = FastLoginLoader.loadAllFastLoginNames();
+            if (fastNames.length > 0) {
+                html += "<select id='fastNameSelect' class='mutableButton-1'>";
+                html += "<option value=''>快速选人</option>"
+                for (const fastName of fastNames) {
+                    // noinspection JSDeprecatedSymbols
+                    const v = "fastName_" + escape(fastName);
+                    html += "<option value='" + v + "'>" + fastName + "</option>";
+                }
+                html += "</select>";
+            }
+        }
         html += "<input type='text' id='searchName' size='15' maxlength='20'>";
         html += "<input type='button' id='searchButton' class='mutableButton-1' value='找人'>";
         html += "<select id='peopleSelect'><option value=''>选择发送对象</select>";
@@ -299,6 +313,20 @@ class PersonalEquipmentManagementPageProcessor_Town extends AbstractPersonalEqui
         html += "</table>";
 
         $("#equipmentList").html(html).parent().show();
+
+        if ($("#fastNameSelect").length > 0) {
+            $("#fastNameSelect").on("change", () => {
+                let s = $("#fastNameSelect").val() as string;
+                if (s === "") {
+                    return;
+                }
+                s = StringUtils.substringAfter(s, "fastName_");
+                // noinspection JSDeprecatedSymbols
+                s = unescape(s);
+                $("#searchName").val(s);
+                $("#searchButton").trigger("click");
+            });
+        }
 
         if (SetupLoader.isCastleKeeperEnabled()) {
             new CastleInformation().load(page.role!.name!).then(() => {
