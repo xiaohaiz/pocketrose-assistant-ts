@@ -5,6 +5,24 @@ class PersonalMirrorPage {
 
     mirrorList?: Mirror[];
 
+    findByIndex(index: number) {
+        for (const mirror of this.mirrorList!) {
+            if (mirror.index === index) {
+                return mirror;
+            }
+        }
+        return null;
+    }
+
+    findByCategory(category: string) {
+        for (const mirror of this.mirrorList!) {
+            if (mirror.category === category) {
+                return mirror;
+            }
+        }
+        return null;
+    }
+
     static parse(html: string) {
         const mirrorList: Mirror[] = [];
 

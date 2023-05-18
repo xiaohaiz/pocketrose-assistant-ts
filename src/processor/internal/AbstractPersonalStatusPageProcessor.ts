@@ -1,5 +1,6 @@
 import Role from "../../common/Role";
 import PersonalStatus from "../../pocketrose/PersonalStatus";
+import PersonalStatusPage from "../../pocketrose/PersonalStatusPage";
 import SetupLoader from "../../setup/SetupLoader";
 import Credential from "../../util/Credential";
 import PageUtils from "../../util/PageUtils";
@@ -33,6 +34,8 @@ abstract class AbstractPersonalStatusPageProcessor extends PageProcessorCredenti
         $("p:last").attr("id", "returnButtonContainer");
         this.doGenerateReturnButton(page.role!, "returnButtonContainer");
         this.doBindReturnButton();
+
+        this.doPostRenderPage(credential, page, context);
     }
 
     abstract doGenerateHiddenForm(credential: Credential, containerId: string): void;
@@ -40,6 +43,9 @@ abstract class AbstractPersonalStatusPageProcessor extends PageProcessorCredenti
     abstract doGenerateReturnButton(role: Role, containerId: string): void;
 
     abstract doBindReturnButton(): void;
+
+    doPostRenderPage(credential: Credential, page: PersonalStatusPage, context?: PageProcessorContext) {
+    }
 
     #renderPage(role: Role) {
         // 调整表格的宽度
