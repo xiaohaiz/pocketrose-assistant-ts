@@ -68,7 +68,7 @@ abstract class AbstractPersonalPetManagementPageProcessor extends PageProcessorC
         $("#messageBoard")
             .css("background-color", "black")
             .css("color", "white")
-            .css("height", "96");
+            .css("height", "176");
         MessageBoard.resetMessageBoard("全新的宠物管理UI为您带来不一样的感受，试试把鼠标停留在宠物图片上有惊喜。<br>" +
             "手机用户请试试单击宠物名字那一栏。");
 
