@@ -1,5 +1,6 @@
 import Pet from "../../common/Pet";
 import Role from "../../common/Role";
+import FastLoginLoader from "../../core/FastLoginLoader";
 import PetProfileLoader from "../../core/PetProfileLoader";
 import PetRelationLoader from "../../core/PetRelationLoader";
 import CastleInformation from "../../pocketrose/CastleInformation";
@@ -158,6 +159,19 @@ function doRender(credential: Credential, petList: Pet[], studyStatus: number[],
         html += "</tr>";
     }
     html += "<tr><td style='background-color:#EFE0C0;text-align:right' colspan='20'>";
+    if (SetupLoader.isFastLoginEnabled()) {
+        const fastNames = FastLoginLoader.loadAllFastLoginNames();
+        if (fastNames.length > 0) {
+            html += "<select id='fastNameSelect' class='PetUIButton'>";
+            html += "<option value=''>快速选人</option>"
+            for (const fastName of fastNames) {
+                // noinspection JSDeprecatedSymbols
+                const v = "fastName_" + escape(fastName);
+                html += "<option value='" + v + "'>" + fastName + "</option>";
+            }
+            html += "</select>";
+        }
+    }
     html += "<input type='text' id='receiverName' size='15' maxlength='20'>";
     html += "<input type='button' class='PetUIButton' id='searchReceiverButton' value='找人'>";
     html += "<select name='eid' id='receiverCandidates'><option value=''>选择发送对象</select>";
@@ -187,6 +201,20 @@ function doRender(credential: Credential, petList: Pet[], studyStatus: number[],
     html += "</table>";
 
     $("#pet_management_container").html(html);
+
+    if ($("#fastNameSelect").length > 0) {
+        $("#fastNameSelect").on("change", () => {
+            let s = $("#fastNameSelect").val() as string;
+            if (s === "") {
+                return;
+            }
+            s = StringUtils.substringAfter(s, "fastName_");
+            // noinspection JSDeprecatedSymbols
+            s = unescape(s);
+            $("#receiverName").val(s);
+            $("#searchReceiverButton").trigger("click");
+        });
+    }
 
     if ($("#goldenCageIndex").text() === "none") {
         $("#openCageButton").hide();
@@ -590,7 +618,7 @@ function doRefresh(credential: Credential) {
 
         $(".pet_picture_class").off("mouseenter").off("mouseleave");
         // 解除当前所有的按钮
-        $(".PetUIButton").off("click");
+        $(".PetUIButton").off("click").off("change");
         // 清除PetUI的内容
         $("#pet_management_container").html("");
         // 清除牧场
