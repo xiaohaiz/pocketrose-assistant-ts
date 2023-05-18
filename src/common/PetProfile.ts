@@ -1,5 +1,6 @@
 import Pokemon from "../core/Pokemon";
 import Constants from "../util/Constants";
+import StringUtils from "../util/StringUtils";
 
 class PetProfile {
 
@@ -20,10 +21,18 @@ class PetProfile {
     speedEffort?: number;
     catchRatio?: number;
     growExperience?: number;
+    spellList?: string[];
 
     id?: number;
     source?: PetProfile;
     targets?: PetProfile[];
+
+    parseName(name: string) {
+        this.name = name;
+        if (name.includes("(") && name.includes(")")) {
+            this.code = StringUtils.substringBetween(name, "(", ")");
+        }
+    }
 
     get nameHtml() {
         return Pokemon.pokemonWikiReplacement(this.name);

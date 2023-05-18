@@ -1,0 +1,4 @@
+class TownPetProfileHouse {
+}
+
+export = TownPetProfileHouse;

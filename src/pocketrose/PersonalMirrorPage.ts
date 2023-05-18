@@ -45,7 +45,7 @@ class PersonalMirrorPage {
             mirror.specialDefense = parseInt(c14.text());
             mirror.speed = parseInt(c15.text());
             mirror.career = c16.text();
-            mirror.spell = StringUtils.substringBefore(c17.text(), "(");
+            mirror.spell = StringUtils.substringBefore(c17.text(), "(威力");
             mirror.experience = parseInt(c18.text());
 
             mirrorList.push(mirror);
