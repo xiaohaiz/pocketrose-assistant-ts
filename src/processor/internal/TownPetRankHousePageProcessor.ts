@@ -257,8 +257,8 @@ function doRender(title: string, petList: PetProfile[], allPet?: boolean) {
     for (let i = 0; i < max; i++) {
         const pet = petList[i];
         html += "<tr>";
-        html += "<th style='background-color:#E8E8D0'>" + (i + 1) + "</th>";
-        html += "<td style='background-color:#E8E8D0'>";
+        html += "<th style='background-color:#E8E8D0' rowspan='2'>" + (i + 1) + "</th>";
+        html += "<td style='background-color:#E8E8D0' rowspan='2'>";
         html += pet.imageHtml;
         html += "</td>";
         html += "<td style='background-color:#EFE0C0'>" + pet.nameHtml + "</td>";
@@ -279,6 +279,12 @@ function doRender(title: string, petList: PetProfile[], allPet?: boolean) {
         html += "<td style='background-color:#EFE0C0'>" + pet.catchRatio + "</td>";
         html += "<td style='background-color:#EFE0C0'>" + pet.growExperience + "</td>";
         html += "<td style='background-color:#E8E8D0'>" + pet.perfectCapacity + "</td>";
+        html += "</tr>";
+
+        html += "<tr>";
+        html += "<td style='background-color:#EFE0C0;text-align:left' colspan='18'>";
+        html += pet.spellText();
+        html += "</td>";
         html += "</tr>";
     }
 

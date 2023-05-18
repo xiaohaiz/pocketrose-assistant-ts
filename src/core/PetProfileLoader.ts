@@ -43,6 +43,15 @@ class PetProfileLoader {
         }
         return profileList;
     }
+
+    static loadSpellText(code: string) {
+        // @ts-ignore
+        const spells: string[] = PET_SPELLS[code];
+        if (spells === undefined) {
+            return "";
+        }
+        return spells.join(" ");
+    }
 }
 
 function doParse(code: string, config: {}) {

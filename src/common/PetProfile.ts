@@ -1,3 +1,4 @@
+import PetSpellLoader from "../core/PetSpellLoader";
 import Pokemon from "../core/Pokemon";
 import Constants from "../util/Constants";
 import StringUtils from "../util/StringUtils";
@@ -112,6 +113,10 @@ class PetProfile {
             this.perfectSpeed;
     }
 
+    spellText(): string {
+        const code = StringUtils.substringBetween(this.name!, "(", ")");
+        return PetSpellLoader.loadSpells(code);
+    }
 }
 
 export = PetProfile;
