@@ -86,7 +86,7 @@ function doRender(credential: Credential, petList: Pet[], studyStatus: number[],
         html += "<td style='background-color:#EFE0C0' rowspan='2'>" +
             (pet.using ? "★" : "") +
             "</td>";
-        html += "<td style='background-color:#E8E8D0' id='pet_name_" + pet.code + "' class='PetUIButton'>" +
+        html += "<td style='background-color:#E8E8D0'>" +
             "<b>" + pet.nameHtml + "</b>" +
             "</td>";
         html += "<td style='background-color:#E8E8D0'>" +
@@ -385,55 +385,6 @@ function doRender(credential: Credential, petList: Pet[], studyStatus: number[],
 function doBindPetFuture(petList: Pet[]) {
     for (const pet of petList) {
         const code = pet.code!;
-        if ($("#pet_name_" + code).length > 0) {
-            $("#pet_name_" + code)
-                .on("click", function () {
-                    const petFuture = PetProfileLoader.load(code)!;
-                    let html = "";
-                    html += "<table style='width:100%;border-width:0;background-color:wheat;margin:auto'>";
-                    html += "<tbody>";
-                    html += "<tr style='background-color:black;color:wheat'>";
-                    html += "<th>名字</th>";
-                    html += "<th>总族</th>";
-                    html += "<th>命族</th>";
-                    html += "<th>攻族</th>";
-                    html += "<th>防族</th>";
-                    html += "<th>智族</th>";
-                    html += "<th>精族</th>";
-                    html += "<th>速族</th>";
-                    html += "<th>命努</th>";
-                    html += "<th>攻努</th>";
-                    html += "<th>防努</th>";
-                    html += "<th>智努</th>";
-                    html += "<th>精努</th>";
-                    html += "<th>速努</th>";
-                    html += "<th>捕获</th>";
-                    html += "<th>成长</th>";
-                    html += "<td rowspan='2' style='text-align:center'>" + petFuture.imageHtml + "</td>";
-                    html += "</tr>";
-                    html += "<tr style='background-color:black;color:wheat;font-weight:bold;text-align:center'>";
-                    html += "<td>" + petFuture.nameHtml + "</td>";
-                    html += "<td>" + petFuture.totalBaseStats + "</td>";
-                    html += "<td>" + petFuture.healthBaseStats + "</td>";
-                    html += "<td>" + petFuture.attackBaseStats + "</td>";
-                    html += "<td>" + petFuture.defenseBaseStats + "</td>";
-                    html += "<td>" + petFuture.specialAttackBaseStats + "</td>";
-                    html += "<td>" + petFuture.specialDefenseBaseStats + "</td>";
-                    html += "<td>" + petFuture.speedBaseStats + "</td>";
-                    html += "<td>" + petFuture.healthEffort + "</td>";
-                    html += "<td>" + petFuture.attackEffort + "</td>";
-                    html += "<td>" + petFuture.defenseEffort + "</td>";
-                    html += "<td>" + petFuture.specialAttackEffort + "</td>";
-                    html += "<td>" + petFuture.specialDefenseEffort + "</td>";
-                    html += "<td>" + petFuture.speedEffort + "</td>";
-                    html += "<td>" + petFuture.catchRatio + "</td>";
-                    html += "<td>" + petFuture.growExperience + "</td>";
-                    html += "</tr>";
-                    html += "</tbody>";
-                    html += "</table>";
-                    $("#messageBoard").html(html);
-                });
-        }
         if ($("#pet_picture_" + code).length > 0) {
             $("#pet_picture_" + code)
                 .on("mouseenter", function () {
@@ -616,7 +567,7 @@ function doRefresh(credential: Credential) {
         const petList = petPage.petList!;
         const petStudyStatus = petPage.petStudyStatus!;
 
-        $(".pet_picture_class").off("mouseenter").off("mouseleave");
+        $(".pet_picture_class").off("mouseenter").off("mouseleave").off("click");
         // 解除当前所有的按钮
         $(".PetUIButton").off("click").off("change");
         // 清除PetUI的内容
