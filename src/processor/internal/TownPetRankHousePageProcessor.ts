@@ -1,6 +1,5 @@
 import PetProfile from "../../common/PetProfile";
 import PetProfileLoader from "../../core/PetProfileLoader";
-import TownPetProfileHouse from "../../pocketrose/TownPetProfileHouse";
 import Credential from "../../util/Credential";
 import PageProcessorContext from "../PageProcessorContext";
 import PageProcessorCredentialSupport from "../PageProcessorCredentialSupport";
@@ -12,37 +11,9 @@ class TownPetRankHousePageProcessor extends PageProcessorCredentialSupport {
     }
 
     doProcess(credential: Credential, context?: PageProcessorContext): void {
-
-        a(credential, 1);
-
         doProcess(credential);
     }
 
-}
-
-function a(credential: Credential, i: number) {
-    if (i > 493) {
-        return;
-    }
-    let code = i.toString();
-    if (i < 10) {
-        code = "00" + code;
-    } else if (i < 100) {
-        code = "0" + code;
-    }
-    new TownPetProfileHouse(credential).load(code).then(p => {
-        const profile = p.profile!
-
-        let s = "";
-        for (const it of profile.spellList!) {
-            s += "\"" + it + "\",";
-        }
-        s = "[" + s + "]";
-
-        console.log("\"" + profile.code + "\":" + s);
-
-        a(credential, i + 1);
-    })
 }
 
 function doProcess(credential: Credential) {
