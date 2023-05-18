@@ -264,6 +264,10 @@ class SetupLoader {
     static getLoginPageLayout(): number {
         return StorageUtils.getInt("_pa_042", 0);
     }
+
+    static isHideCountryInformationEnabled() {
+        return StorageUtils.getBoolean("_pa_043");
+    }
 }
 
 export = SetupLoader;
