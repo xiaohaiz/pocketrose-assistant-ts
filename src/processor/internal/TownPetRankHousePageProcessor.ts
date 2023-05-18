@@ -6,10 +6,6 @@ import PageProcessorCredentialSupport from "../PageProcessorCredentialSupport";
 
 class TownPetRankHousePageProcessor extends PageProcessorCredentialSupport {
 
-    doLoadButtonStyles(): number[] {
-        return [89];
-    }
-
     doProcess(credential: Credential, context?: PageProcessorContext): void {
         doProcess(credential);
     }
@@ -63,32 +59,32 @@ function doProcess(credential: Credential) {
     html += "</tr>";
     html += "<tr>";
     html += "<td style='background-color:#F8F0E0;text-align:center'>";
-    html += "<input type='button' class='button-89' id='total_base_stats_rank' value='族值ＴＯＰ３０'>";
-    html += "<input type='button' class='button-89' id='health_rank' value='生命ＴＯＰ３０'>";
-    html += "<input type='button' class='button-89' id='attack_rank' value='攻击ＴＯＰ３０'>";
-    html += "<input type='button' class='button-89' id='defense_rank' value='防御ＴＯＰ３０'>";
-    html += "<input type='button' class='button-89' id='special_attack_rank' value='智力ＴＯＰ３０'>";
-    html += "<input type='button' class='button-89' id='special_defense_rank' value='精神ＴＯＰ３０'>";
-    html += "<input type='button' class='button-89' id='speed_rank' value='速度ＴＯＰ３０'>";
-    html += "<input type='button' class='button-89' id='capacity_rank' value='能力ＴＯＰ３０'>";
+    html += "<input type='button' id='total_base_stats_rank' value='族值ＴＯＰ３０'>";
+    html += "<input type='button' id='health_rank' value='生命ＴＯＰ３０'>";
+    html += "<input type='button' id='attack_rank' value='攻击ＴＯＰ３０'>";
+    html += "<input type='button' id='defense_rank' value='防御ＴＯＰ３０'>";
+    html += "<input type='button' id='special_attack_rank' value='智力ＴＯＰ３０'>";
+    html += "<input type='button' id='special_defense_rank' value='精神ＴＯＰ３０'>";
+    html += "<input type='button' id='speed_rank' value='速度ＴＯＰ３０'>";
+    html += "<input type='button' id='capacity_rank' value='能力ＴＯＰ３０'>";
     html += "</td>";
     html += "</tr>";
     html += "<tr>";
     html += "<td style='background-color:#F8F0E0;text-align:center'>";
-    html += "<input type='button' class='button-89' id='r_total_base_stats_rank' value='族值垫底的３０'>";
-    html += "<input type='button' class='button-89' id='r_health_rank' value='生命垫底的３０'>";
-    html += "<input type='button' class='button-89' id='r_attack_rank' value='攻击垫底的３０'>";
-    html += "<input type='button' class='button-89' id='r_defense_rank' value='防御垫底的３０'>";
-    html += "<input type='button' class='button-89' id='r_special_attack_rank' value='智力垫底的３０'>";
-    html += "<input type='button' class='button-89' id='r_special_defense_rank' value='精神垫底的３０'>";
-    html += "<input type='button' class='button-89' id='r_speed_rank' value='速度垫底的３０'>";
-    html += "<input type='button' class='button-89' id='r_capacity_rank' value='能力垫底的３０'>";
+    html += "<input type='button' id='r_total_base_stats_rank' value='族值垫底的３０'>";
+    html += "<input type='button' id='r_health_rank' value='生命垫底的３０'>";
+    html += "<input type='button' id='r_attack_rank' value='攻击垫底的３０'>";
+    html += "<input type='button' id='r_defense_rank' value='防御垫底的３０'>";
+    html += "<input type='button' id='r_special_attack_rank' value='智力垫底的３０'>";
+    html += "<input type='button' id='r_special_defense_rank' value='精神垫底的３０'>";
+    html += "<input type='button' id='r_speed_rank' value='速度垫底的３０'>";
+    html += "<input type='button' id='r_capacity_rank' value='能力垫底的３０'>";
     html += "</td>";
     html += "</tr>";
     html += "<tr>";
     html += "<td style='background-color:#F8F0E0;text-align:center'>";
     html += "<input type='text' id='spellName' value='' size='20'>";
-    html += "<input type='button' class='button-89' id='searchSpellButton' value='根据技能查询宠物'>";
+    html += "<input type='button' id='searchSpellButton' value='根据技能查询宠物'>";
     html += "</td>";
     html += "</tr>";
     html += "<tr style='display:none'>";
