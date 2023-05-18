@@ -40,6 +40,8 @@ function a(credential: Credential, i: number) {
         s = "[" + s + "]";
 
         console.log("\"" + profile.code + "\":" + s);
+
+        a(credential, i + 1);
     })
 }
 
