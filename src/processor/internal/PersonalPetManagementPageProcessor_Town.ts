@@ -3,6 +3,7 @@ import Role from "../../common/Role";
 import FastLoginLoader from "../../core/FastLoginLoader";
 import PetProfileLoader from "../../core/PetProfileLoader";
 import PetRelationLoader from "../../core/PetRelationLoader";
+import PetSpellLoader from "../../core/PetSpellLoader";
 import CastleInformation from "../../pocketrose/CastleInformation";
 import CastleRanch from "../../pocketrose/CastleRanch";
 import GoldenCage from "../../pocketrose/GoldenCage";
@@ -86,7 +87,7 @@ function doRender(credential: Credential, petList: Pet[], studyStatus: number[],
         html += "<td style='background-color:#EFE0C0' rowspan='2'>" +
             (pet.using ? "★" : "") +
             "</td>";
-        html += "<td style='background-color:#E8E8D0' id='pet_name_" + pet.code + "' class='PetUIButton'>" +
+        html += "<td style='background-color:#E8E8D0'>" +
             "<b>" + pet.nameHtml + "</b>" +
             "</td>";
         html += "<td style='background-color:#E8E8D0'>" +
@@ -327,7 +328,7 @@ function doRender(credential: Credential, petList: Pet[], studyStatus: number[],
         $("#pet_spell_study_4").css("color", "grey");
     }
 
-    doBindPetFuture(petList);
+    doBindPetProfile(petList);
     // 绑定按钮点击事件处理
     doBind(credential, petList);
 
@@ -382,120 +383,96 @@ function doRender(credential: Credential, petList: Pet[], studyStatus: number[],
     doRenderPetBorn(credential, petList);
 }
 
-function doBindPetFuture(petList: Pet[]) {
+function doBindPetProfile(petList: Pet[]) {
     for (const pet of petList) {
         const code = pet.code!;
-        if ($("#pet_name_" + code).length > 0) {
-            $("#pet_name_" + code)
-                .on("click", function () {
-                    const petFuture = PetProfileLoader.load(code)!;
-                    let html = "";
-                    html += "<table style='width:100%;border-width:0;background-color:wheat;margin:auto'>";
-                    html += "<tbody>";
-                    html += "<tr style='background-color:black;color:wheat'>";
-                    html += "<th>名字</th>";
-                    html += "<th>总族</th>";
-                    html += "<th>命族</th>";
-                    html += "<th>攻族</th>";
-                    html += "<th>防族</th>";
-                    html += "<th>智族</th>";
-                    html += "<th>精族</th>";
-                    html += "<th>速族</th>";
-                    html += "<th>命努</th>";
-                    html += "<th>攻努</th>";
-                    html += "<th>防努</th>";
-                    html += "<th>智努</th>";
-                    html += "<th>精努</th>";
-                    html += "<th>速努</th>";
-                    html += "<th>捕获</th>";
-                    html += "<th>成长</th>";
-                    html += "<td rowspan='2' style='text-align:center'>" + petFuture.imageHtml + "</td>";
-                    html += "</tr>";
-                    html += "<tr style='background-color:black;color:wheat;font-weight:bold;text-align:center'>";
-                    html += "<td>" + petFuture.nameHtml + "</td>";
-                    html += "<td>" + petFuture.totalBaseStats + "</td>";
-                    html += "<td>" + petFuture.healthBaseStats + "</td>";
-                    html += "<td>" + petFuture.attackBaseStats + "</td>";
-                    html += "<td>" + petFuture.defenseBaseStats + "</td>";
-                    html += "<td>" + petFuture.specialAttackBaseStats + "</td>";
-                    html += "<td>" + petFuture.specialDefenseBaseStats + "</td>";
-                    html += "<td>" + petFuture.speedBaseStats + "</td>";
-                    html += "<td>" + petFuture.healthEffort + "</td>";
-                    html += "<td>" + petFuture.attackEffort + "</td>";
-                    html += "<td>" + petFuture.defenseEffort + "</td>";
-                    html += "<td>" + petFuture.specialAttackEffort + "</td>";
-                    html += "<td>" + petFuture.specialDefenseEffort + "</td>";
-                    html += "<td>" + petFuture.speedEffort + "</td>";
-                    html += "<td>" + petFuture.catchRatio + "</td>";
-                    html += "<td>" + petFuture.growExperience + "</td>";
-                    html += "</tr>";
-                    html += "</tbody>";
-                    html += "</table>";
-                    $("#messageBoard").html(html);
-                });
-        }
         if ($("#pet_picture_" + code).length > 0) {
             $("#pet_picture_" + code)
                 .on("mouseenter", function () {
-                    const petFuture = PetProfileLoader.load(code)!;
-                    let html = "";
-                    html += "<table style='width:100%;border-width:0;background-color:wheat;margin:auto'>";
-                    html += "<tbody>";
-                    html += "<tr style='background-color:black;color:wheat'>";
-                    html += "<th>名字</th>";
-                    html += "<th>总族</th>";
-                    html += "<th>命族</th>";
-                    html += "<th>攻族</th>";
-                    html += "<th>防族</th>";
-                    html += "<th>智族</th>";
-                    html += "<th>精族</th>";
-                    html += "<th>速族</th>";
-                    html += "<th>命努</th>";
-                    html += "<th>攻努</th>";
-                    html += "<th>防努</th>";
-                    html += "<th>智努</th>";
-                    html += "<th>精努</th>";
-                    html += "<th>速努</th>";
-                    html += "<th>捕获</th>";
-                    html += "<th>成长</th>";
-                    html += "<td rowspan='3' style='text-align:center'>" + petFuture.imageHtml + "</td>";
-                    html += "</tr>";
-                    html += "<tr style='background-color:black;color:wheat;font-weight:bold;text-align:center'>";
-                    html += "<td rowspan='2'>" + petFuture.nameHtml + "</td>";
-                    html += "<td rowspan='2'>" + petFuture.totalBaseStats + "</td>";
-                    html += "<td>" + petFuture.healthBaseStats + "</td>";
-                    html += "<td>" + petFuture.attackBaseStats + "</td>";
-                    html += "<td>" + petFuture.defenseBaseStats + "</td>";
-                    html += "<td>" + petFuture.specialAttackBaseStats + "</td>";
-                    html += "<td>" + petFuture.specialDefenseBaseStats + "</td>";
-                    html += "<td>" + petFuture.speedBaseStats + "</td>";
-                    html += "<td rowspan='2'>" + petFuture.healthEffort + "</td>";
-                    html += "<td rowspan='2'>" + petFuture.attackEffort + "</td>";
-                    html += "<td rowspan='2'>" + petFuture.defenseEffort + "</td>";
-                    html += "<td rowspan='2'>" + petFuture.specialAttackEffort + "</td>";
-                    html += "<td rowspan='2'>" + petFuture.specialDefenseEffort + "</td>";
-                    html += "<td rowspan='2'>" + petFuture.speedEffort + "</td>";
-                    html += "<td rowspan='2'>" + petFuture.catchRatio + "</td>";
-                    html += "<td rowspan='2'>" + petFuture.growExperience + "</td>";
-                    html += "</tr>";
-                    html += "<tr style='background-color:black;color:wheat;font-weight:bold;text-align:center'>";
-                    html += "<td>" + petFuture.perfectHealth + "</td>";
-                    html += "<td>" + petFuture.perfectAttack + "</td>";
-                    html += "<td>" + petFuture.perfectDefense + "</td>";
-                    html += "<td>" + petFuture.perfectSpecialAttack + "</td>";
-                    html += "<td>" + petFuture.perfectSpecialDefense + "</td>";
-                    html += "<td>" + petFuture.perfectSpeed + "</td>";
-                    html += "</tr>";
-                    html += "</tbody>";
-                    html += "</table>";
-                    $("#messageBoard").html(html);
+                    doRenderPetProfile(code);
                 })
                 .on("mouseleave", function () {
                     MessageBoard.resetMessageBoard("全新的宠物管理UI为您带来不一样的感受，试试把鼠标停留在宠物图片上有惊喜。<br>" +
                         "手机用户请试试单击宠物名字那一栏。");
+                })
+                .on("click", () => {
+                    doRenderPetProfile(code);
                 });
         }
     }
+}
+
+function doRenderPetProfile(code: string) {
+    const profile = PetProfileLoader.load(code)!;
+    let html = "";
+    html += "<table style='width:100%;border-width:0;background-color:wheat;margin:auto'>";
+    html += "<tbody>";
+    html += "<tr style='background-color:black;color:wheat'>";
+    html += "<th>名字</th>";
+    html += "<th>总族</th>";
+    html += "<th>命族</th>";
+    html += "<th>攻族</th>";
+    html += "<th>防族</th>";
+    html += "<th>智族</th>";
+    html += "<th>精族</th>";
+    html += "<th>速族</th>";
+    html += "<th>命努</th>";
+    html += "<th>攻努</th>";
+    html += "<th>防努</th>";
+    html += "<th>智努</th>";
+    html += "<th>精努</th>";
+    html += "<th>速努</th>";
+    html += "<th>捕获</th>";
+    html += "<th>成长</th>";
+    html += "<td rowspan='5' style='text-align:center'>" + profile.imageHtml + "</td>";
+    html += "</tr>";
+    html += "<tr style='background-color:black;color:wheat;font-weight:bold;text-align:center'>";
+    html += "<td rowspan='2'>" + profile.nameHtml + "</td>";
+    html += "<td rowspan='2'>" + profile.totalBaseStats + "</td>";
+    html += "<td>" + profile.healthBaseStats + "</td>";
+    html += "<td>" + profile.attackBaseStats + "</td>";
+    html += "<td>" + profile.defenseBaseStats + "</td>";
+    html += "<td>" + profile.specialAttackBaseStats + "</td>";
+    html += "<td>" + profile.specialDefenseBaseStats + "</td>";
+    html += "<td>" + profile.speedBaseStats + "</td>";
+    html += "<td rowspan='2'>" + profile.healthEffort + "</td>";
+    html += "<td rowspan='2'>" + profile.attackEffort + "</td>";
+    html += "<td rowspan='2'>" + profile.defenseEffort + "</td>";
+    html += "<td rowspan='2'>" + profile.specialAttackEffort + "</td>";
+    html += "<td rowspan='2'>" + profile.specialDefenseEffort + "</td>";
+    html += "<td rowspan='2'>" + profile.speedEffort + "</td>";
+    html += "<td rowspan='2'>" + profile.catchRatio + "</td>";
+    html += "<td rowspan='2'>" + profile.growExperience + "</td>";
+    html += "</tr>";
+    html += "<tr style='background-color:black;color:wheat;font-weight:bold;text-align:center'>";
+    html += "<td>" + profile.perfectHealth + "</td>";
+    html += "<td>" + profile.perfectAttack + "</td>";
+    html += "<td>" + profile.perfectDefense + "</td>";
+    html += "<td>" + profile.perfectSpecialAttack + "</td>";
+    html += "<td>" + profile.perfectSpecialDefense + "</td>";
+    html += "<td>" + profile.perfectSpeed + "</td>";
+    html += "</tr>";
+    html += "<tr style='background-color:black;color:wheat;font-weight:bold;text-align:left'>";
+    html += "<td colspan='16'>";
+    html += PetSpellLoader.loadSpells(profile.code!);
+    html += "</td>";
+    html += "</tr>";
+    html += "<tr style='background-color:black;color:wheat;font-weight:bold;text-align:left'>";
+    html += "<td colspan='16' style='height:64px'>";
+    for (const it of PetRelationLoader.getPetRelations(parseInt(profile.code!))) {
+        let pc = it.toString();
+        if (it < 10) {
+            pc = "00" + pc;
+        } else if (it < 100) {
+            pc = "0" + pc;
+        }
+        html += PetProfileLoader.load(pc)!.imageHtml;
+    }
+    html += "</td>";
+    html += "</tr>";
+    html += "</tbody>";
+    html += "</table>";
+    $("#messageBoard").html(html);
 }
 
 function doRenderGoldenCage(credential: Credential) {
@@ -616,7 +593,7 @@ function doRefresh(credential: Credential) {
         const petList = petPage.petList!;
         const petStudyStatus = petPage.petStudyStatus!;
 
-        $(".pet_picture_class").off("mouseenter").off("mouseleave");
+        $(".pet_picture_class").off("mouseenter").off("mouseleave").off("click");
         // 解除当前所有的按钮
         $(".PetUIButton").off("click").off("change");
         // 清除PetUI的内容
@@ -1359,10 +1336,14 @@ function doRenderPetBorn(credential: Credential, petList: Pet[]) {
                 html += "<td style='background-color:#E8E8D0'>" + pet.specialDefenseHtml + "</td>";
                 html += "<td style='background-color:#E8E8D0'>" + pet.speedHtml + "</td>";
                 html += "<td style='background-color:#E8E8D0'>";
-                html += "<button role='button' class='PetUIButton sacrificeButton' id='sacrifice_" + pet.index + "'>牺牲</button>";
+                if (!SetupLoader.isOnlyConsecrateInitialPetEnabled() || (SetupLoader.isOnlyConsecrateInitialPetEnabled() && pet.level === 1)) {
+                    html += "<button role='button' class='PetUIButton sacrificeButton' id='sacrifice_" + pet.index + "'>牺牲</button>";
+                }
                 html += "</td>";
                 html += "<td style='background-color:#E8E8D0'>";
-                html += "<button role='button' class='PetUIButton consecrateButton' id='consecrate_" + pet.index + "'>献祭</button>";
+                if (!SetupLoader.isOnlyConsecrateInitialPetEnabled() || (SetupLoader.isOnlyConsecrateInitialPetEnabled() && pet.level === 1)) {
+                    html += "<button role='button' class='PetUIButton consecrateButton' id='consecrate_" + pet.index + "'>献祭</button>";
+                }
                 html += "</td>";
                 html += "</tr>";
 

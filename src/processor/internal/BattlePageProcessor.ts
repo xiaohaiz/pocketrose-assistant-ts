@@ -25,7 +25,7 @@ class BattlePageProcessor extends PageProcessorCredentialSupport {
         PageUtils.fixCurrentPageBrokenImages();
 
         const pageText = $("body:first").text();
-        doRenderPrompt(pageText);
+        const harvest = doRenderPrompt(pageText);
 
         $('input[value="返回住宿"]').attr('id', 'lodgeButton');
         $('input[value="返回修理"]').attr('id', 'repairButton');
@@ -93,7 +93,7 @@ class BattlePageProcessor extends PageProcessorCredentialSupport {
         } else {
             if (SetupLoader.isNormalFlashBattleEnabled()) {
                 const petUpgrade = doCheckIfPetUpgrade();
-                if (!petUpgrade) {
+                if (!harvest && !petUpgrade) {
                     $("input:submit[tabindex='1']").trigger("click");
                 }
             }
@@ -104,8 +104,10 @@ class BattlePageProcessor extends PageProcessorCredentialSupport {
 function doRenderPrompt(pageText: string) {
     if (pageText.includes("入手！")) {
         doRenderBattleHarvestPrompt();
+        return true;
     } else {
         doRenderNormalBattlePrompt();
+        return false;
     }
 }
 

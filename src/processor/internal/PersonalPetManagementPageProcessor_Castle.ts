@@ -10,6 +10,7 @@ import PersonalPetEvolutionPage from "../../pocketrose/PersonalPetEvolutionPage"
 import PersonalPetManagement from "../../pocketrose/PersonalPetManagement";
 import PersonalPetManagementPage from "../../pocketrose/PersonalPetManagementPage";
 import PersonalStatus from "../../pocketrose/PersonalStatus";
+import SetupLoader from "../../setup/SetupLoader";
 import Credential from "../../util/Credential";
 import MessageBoard from "../../util/MessageBoard";
 import NetworkUtils from "../../util/NetworkUtils";
@@ -1352,10 +1353,14 @@ function doRenderPetBorn(credential: Credential, petList: Pet[]) {
                 html += "<td style='background-color:#E8E8D0'>" + pet.specialDefenseHtml + "</td>";
                 html += "<td style='background-color:#E8E8D0'>" + pet.speedHtml + "</td>";
                 html += "<td style='background-color:#E8E8D0'>";
-                html += "<button role='button' class='PetUIButton sacrificeButton' id='sacrifice_" + pet.index + "'>牺牲</button>";
+                if (!SetupLoader.isOnlyConsecrateInitialPetEnabled() || (SetupLoader.isOnlyConsecrateInitialPetEnabled() && pet.level === 1)) {
+                    html += "<button role='button' class='PetUIButton sacrificeButton' id='sacrifice_" + pet.index + "'>牺牲</button>";
+                }
                 html += "</td>";
                 html += "<td style='background-color:#E8E8D0'>";
-                html += "<button role='button' class='PetUIButton consecrateButton' id='consecrate_" + pet.index + "'>献祭</button>";
+                if (!SetupLoader.isOnlyConsecrateInitialPetEnabled() || (SetupLoader.isOnlyConsecrateInitialPetEnabled() && pet.level === 1)) {
+                    html += "<button role='button' class='PetUIButton consecrateButton' id='consecrate_" + pet.index + "'>献祭</button>";
+                }
                 html += "</td>";
                 html += "</tr>";
             }

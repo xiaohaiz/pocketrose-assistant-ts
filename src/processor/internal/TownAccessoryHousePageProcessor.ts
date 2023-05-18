@@ -12,7 +12,7 @@ import PageProcessorCredentialSupport from "../PageProcessorCredentialSupport";
 class TownAccessoryHousePageProcessor extends PageProcessorCredentialSupport {
 
     doLoadButtonStyles(): number[] {
-        return [35, 89];
+        return [35];
     }
 
     doProcess(credential: Credential, context?: PageProcessorContext): void {
@@ -155,7 +155,7 @@ class TownAccessoryHousePageProcessor extends PageProcessorCredentialSupport {
                 html += "<td style='background-color:#E8E8D0'>";
                 if (equipment.isSellable) {
                     html += "<input type='button' value='出售' " +
-                        "id='sell_" + equipment.index! + "' class='mutableButton button-89'>";
+                        "id='sell_" + equipment.index! + "' class='mutableButton'>";
                 } else {
                     html += PageUtils.generateInvisibleButton("#E8E8D0");
                 }
@@ -225,7 +225,7 @@ class TownAccessoryHousePageProcessor extends PageProcessorCredentialSupport {
                 html += "<td style='background-color:#E8E8D0'>";
                 if (spaceCount > 0) {
                     html += "<input type='button' value='购买' " +
-                        "id='buy_" + merchandise.index! + "' class='dynamic_button_class button-89'>";
+                        "id='buy_" + merchandise.index! + "' class='dynamic_button_class'>";
                 }
                 html += "</td>";
                 html += "<td style='background-color:#EFE0C0'>" + merchandise.specialityHtml + "</td>";
