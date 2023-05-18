@@ -268,6 +268,10 @@ class SetupLoader {
     static isHideCountryInformationEnabled() {
         return StorageUtils.getBoolean("_pa_043");
     }
+
+    static isOnlyConsecrateInitialPetEnabled() {
+        return StorageUtils.getBoolean("_pa_044");
+    }
 }
 
 export = SetupLoader;
