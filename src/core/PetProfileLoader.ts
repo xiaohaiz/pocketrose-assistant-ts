@@ -23,6 +23,26 @@ class PetProfileLoader {
         }
         return futureList;
     }
+
+    static searchBySpellName(spellName: string): PetProfile[] {
+        const codeList: string[] = [];
+        const codes = Object.keys(PET_SPELLS);
+        for (const code of codes) {
+            // @ts-ignore
+            const spells: string[] = PET_SPELLS[code];
+            for (const spell of spells) {
+                if (spell.includes(spellName)) {
+                    codeList.push(code);
+                    break;
+                }
+            }
+        }
+        const profileList: PetProfile[] = [];
+        for (const code of codeList) {
+            profileList.push(PetProfileLoader.load(code)!);
+        }
+        return profileList;
+    }
 }
 
 function doParse(code: string, config: {}) {
