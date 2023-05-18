@@ -32,6 +32,17 @@ class FastLoginLoader {
         return fastLogin;
     }
 
+    static loadAllFastLoginNames() {
+        const names: string[] = [];
+        for (let i = 0; i < 50; i++) {
+            const fastLogin = FastLoginLoader.loadFastLogin(i);
+            if (fastLogin === null) {
+                continue;
+            }
+            names.push(fastLogin.name!);
+        }
+        return names;
+    }
 }
 
 function doCheckConfigAvailability(config: {}): boolean {

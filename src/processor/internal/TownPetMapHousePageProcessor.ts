@@ -102,7 +102,7 @@ class TownPetMapHousePageProcessor extends PageProcessorCredentialSupport {
             }
 
             const configList: FastLogin[] = [];
-            for (let i = 0; i < 10; i++) {
+            for (let i = 0; i < 50; i++) {
                 const config = FastLoginLoader.loadFastLogin(i);
                 if (config === null) {
                     continue;

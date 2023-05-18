@@ -85,6 +85,12 @@ function doProcess(credential: Credential) {
     html += "<input type='button' class='button-89' id='r_capacity_rank' value='能力垫底的３０'>";
     html += "</td>";
     html += "</tr>";
+    html += "<tr>";
+    html += "<td style='background-color:#F8F0E0;text-align:center'>";
+    html += "<input type='text' id='spellName' value='' size='20'>";
+    html += "<input type='button' class='button-89' id='searchSpellButton' value='根据技能查询宠物'>";
+    html += "</td>";
+    html += "</tr>";
     html += "<tr style='display:none'>";
     html += "<td id='pet_rank_cell'></td>";
     html += "</tr>";
@@ -93,7 +99,7 @@ function doProcess(credential: Credential) {
     doGenerateHiddenForm(credential);
     doBindReturnButton();
     doBindRankButton();
-
+    doBindSearchButton();
 }
 
 function doGenerateHiddenForm(credential: Credential) {
@@ -197,7 +203,23 @@ function doBindRankButton() {
     });
 }
 
-function doRender(title: string, petList: PetProfile[]) {
+function doBindSearchButton() {
+    $("#searchSpellButton").on("click", () => {
+        const t = $("#spellName").val();
+        if (t === undefined) {
+            return;
+        }
+        const spellName = (t as string).trim();
+        if (spellName === "") {
+            return;
+        }
+        const petList = PetProfileLoader.searchBySpellName(spellName);
+        petList.sort((a, b) => a.code!.localeCompare(b.code!));
+        doRender("技 能 （" + spellName + "）", petList, true);
+    });
+}
+
+function doRender(title: string, petList: PetProfile[], allPet?: boolean) {
     let html = "";
     html += "<table style='border-width:0;background-color:#888888;margin:auto;width:100%'>";
     html += "<tbody style='background-color:#F8F0E0;text-align:center'>";
@@ -228,11 +250,15 @@ function doRender(title: string, petList: PetProfile[]) {
     html += "<th style='background-color:#E8E8D0'>最大能力</th>";
     html += "</tr>";
 
-    for (let i = 0; i < 30; i++) {
+    let max = 30;
+    if (allPet !== undefined) {
+        max = petList.length;
+    }
+    for (let i = 0; i < max; i++) {
         const pet = petList[i];
         html += "<tr>";
-        html += "<th style='background-color:#E8E8D0'>" + (i + 1) + "</th>";
-        html += "<td style='background-color:#E8E8D0'>";
+        html += "<th style='background-color:#E8E8D0' rowspan='2'>" + (i + 1) + "</th>";
+        html += "<td style='background-color:#E8E8D0' rowspan='2'>";
         html += pet.imageHtml;
         html += "</td>";
         html += "<td style='background-color:#EFE0C0'>" + pet.nameHtml + "</td>";
@@ -253,6 +279,12 @@ function doRender(title: string, petList: PetProfile[]) {
         html += "<td style='background-color:#EFE0C0'>" + pet.catchRatio + "</td>";
         html += "<td style='background-color:#EFE0C0'>" + pet.growExperience + "</td>";
         html += "<td style='background-color:#E8E8D0'>" + pet.perfectCapacity + "</td>";
+        html += "</tr>";
+
+        html += "<tr>";
+        html += "<td style='background-color:#EFE0C0;text-align:left' colspan='18'>";
+        html += pet.spellText();
+        html += "</td>";
         html += "</tr>";
     }
 

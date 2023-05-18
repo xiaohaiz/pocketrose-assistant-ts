@@ -1,4 +1,5 @@
 import PetProfile from "../common/PetProfile";
+import PetSpellLoader from "./PetSpellLoader";
 
 class PetProfileLoader {
 
@@ -23,6 +24,16 @@ class PetProfileLoader {
         }
         return futureList;
     }
+
+    static searchBySpellName(spellName: string): PetProfile[] {
+        const codeList: string[] = PetSpellLoader.searchBySpellName(spellName);
+        const profileList: PetProfile[] = [];
+        for (const code of codeList) {
+            profileList.push(PetProfileLoader.load(code)!);
+        }
+        return profileList;
+    }
+
 }
 
 function doParse(code: string, config: {}) {

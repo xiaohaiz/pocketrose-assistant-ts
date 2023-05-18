@@ -1,7 +1,8 @@
-import PageInterceptor from "../PageInterceptor";
 import LocationStateMachine from "../../core/LocationStateMachine";
-import PersonalStatusPageProcessor_Town from "../../processor/internal/PersonalStatusPageProcessor_Town";
 import PersonalStatusPageProcessor_Castle from "../../processor/internal/PersonalStatusPageProcessor_Castle";
+import PersonalStatusPageProcessor_Town from "../../processor/internal/PersonalStatusPageProcessor_Town";
+import PageProcessorContext from "../../processor/PageProcessorContext";
+import PageInterceptor from "../PageInterceptor";
 
 class PersonalStatusPageInterceptor implements PageInterceptor {
 
@@ -18,8 +19,10 @@ class PersonalStatusPageInterceptor implements PageInterceptor {
     intercept(): void {
         LocationStateMachine.create()
             .load()
-            .whenInTown(() => {
-                this.#inTownProcessor.process();
+            .whenInTown(townId => {
+                const context = new PageProcessorContext();
+                context.set("townId", townId!);
+                this.#inTownProcessor.process(context);
             })
             .whenInCastle(() => {
                 this.#inCastleProcessor.process();
