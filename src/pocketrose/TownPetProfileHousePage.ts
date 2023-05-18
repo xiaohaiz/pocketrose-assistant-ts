@@ -5,7 +5,7 @@ class TownPetProfileHousePage {
 
     profile?: PetProfile;
 
-    static parse(html: TownPetProfileHousePage) {
+    static parse(html: string) {
         const profile = new PetProfile();
         profile.spellList = [];
         $(html)
