@@ -9,6 +9,19 @@ class PetSpellLoader {
         return spells.join(" ");
     }
 
+    static searchBySpellName(spellName: string): string[] {
+        const codeList: string[] = [];
+        const codes = Object.keys(PET_SPELLS);
+        for (const code of codes) {
+            // @ts-ignore
+            const spells: string[] = PET_SPELLS[code];
+            if (spells.includes(spellName)) {
+                codeList.push(code);
+            }
+        }
+        return codeList;
+    }
+
 }
 
 // 灭亡歌 => 灭亡之歌
