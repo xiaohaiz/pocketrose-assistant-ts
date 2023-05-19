@@ -7,6 +7,10 @@ import PageProcessorCredentialSupport from "../PageProcessorCredentialSupport";
 
 abstract class AbstractPersonalProfilePageProcessor extends PageProcessorCredentialSupport {
 
+    doLoadButtonStyles(): number[] {
+        return [35];
+    }
+
     doProcess(credential: Credential, context?: PageProcessorContext) {
         // 删除老页面的所有元素
         $("center:first").html("").hide();
@@ -45,7 +49,8 @@ abstract class AbstractPersonalProfilePageProcessor extends PageProcessorCredent
         html += "</tr>";
         html += "<tr>";
         html += "<td id='menuCell' style='background-color:#F8F0E0;text-align:center'>";
-        html += "<button role='button' id='returnButton'>返回</button>";
+        html += "<button role='button' id='reloadButton' class='button-35'>刷新个人面板</button>&nbsp;&nbsp;&nbsp;";
+        html += "<button role='button' id='returnButton' class='button-35'>返回</button>";
         html += "</td>";
         html += "</tr>";
         html += "</tbody>";
@@ -66,6 +71,10 @@ abstract class AbstractPersonalProfilePageProcessor extends PageProcessorCredent
             .css("background-color", "black")
             .css("color", "wheat")
             .html(this.#welcomeMessageHtml());
+
+        $("#reloadButton").on("click", () => {
+            this.#reload(credential, context);
+        });
 
         this.doBindReturnButton(credential, context);
 
@@ -180,6 +189,17 @@ abstract class AbstractPersonalProfilePageProcessor extends PageProcessorCredent
 
             this.doLoadBankAccount(credential);
         });
+    }
+
+    #reloadPersonalStatus(credential: Credential, context?: PageProcessorContext) {
+        $("#personalStatus").html("");
+        this.#renderPersonalStatus(credential, context);
+    }
+
+    #reload(credential: Credential, context?: PageProcessorContext) {
+        $("#messageBoardManager").html(NpcLoader.randomNpcImageHtml());
+        $("#messageBoard").html(this.#welcomeMessageHtml());
+        this.#reloadPersonalStatus(credential, context);
     }
 }
 
