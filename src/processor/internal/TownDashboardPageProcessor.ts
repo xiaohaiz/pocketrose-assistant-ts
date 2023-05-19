@@ -285,6 +285,42 @@ function doProcess(credential: Credential, page: TownDashboardPage) {
             .css("width", "100%")
             .next()
             .remove();
+
+        if (SetupLoader.isMobileMenuMoveBottomEnabled()) {
+            $("#t4")
+                .find("tr:first")
+                .attr("id", "menuROW")
+                .before($("<tr id='ROW1'><td></td></tr><tr id='ROW2'><td></td></tr>"));
+
+            const h1 = $("#menuROW")
+                .next()
+                .find("td:first")
+                .html();
+            $("#menuROW")
+                .next()
+                .find("td:first")
+                .html("")
+                .parent()
+                .hide();
+
+            const h2 = $("#menuROW")
+                .next()
+                .next()
+                .find("td:first")
+                .html();
+            $("#menuROW")
+                .next()
+                .next()
+                .find("td:first")
+                .html("")
+                .parent()
+                .hide();
+
+            $("#ROW1")
+                .find("td:first").html(h1);
+            $("#ROW2")
+                .find("td:first").html(h2);
+        }
     } else {
         $("#t2")
             .removeAttr("width")
