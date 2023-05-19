@@ -5,6 +5,7 @@ import CastlePostHousePageInterceptor from "./internal/CastlePostHousePageInterc
 import LoginDashboardPageInterceptor from "./internal/LoginDashboardPageInterceptor";
 import MapDashboardPageInterceptor from "./internal/MapDashboardPageInterceptor";
 import MapPostHousePageInterceptor from "./internal/MapPostHousePageInterceptor";
+import MetroDashboardPageInterceptor from "./internal/MetroDashboardPageInterceptor";
 import NationInformationPageInterceptor from "./internal/NationInformationPageInterceptor";
 import PersonalCareerManagementPageInterceptor from "./internal/PersonalCareerManagementPageInterceptor";
 import PersonalEquipmentManagementPageInterceptor from "./internal/PersonalEquipmentManagementPageInterceptor";
@@ -40,6 +41,7 @@ class PageInterceptorManager {
             new LoginDashboardPageInterceptor(),
             new MapDashboardPageInterceptor(),
             new MapPostHousePageInterceptor(),
+            new MetroDashboardPageInterceptor(),
             new NationInformationPageInterceptor(),
             new PersonalCareerManagementPageInterceptor(),
             new PersonalEquipmentManagementPageInterceptor(),
