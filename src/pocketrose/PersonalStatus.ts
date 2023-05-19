@@ -118,6 +118,8 @@ function doParsePage(pageHtml: string): PersonalStatusPage {
     s = $(td).text();
     if (s === "野外") {
         role.location = "WILD";
+    } else if (s === "地铁区域") {
+        role.location = "METRO";
     } else if (s.includes("(") && s.includes(")")) {
         role.location = "CASTLE";
         const castle = new Castle();
