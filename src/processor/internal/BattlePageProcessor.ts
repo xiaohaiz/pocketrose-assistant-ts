@@ -20,7 +20,7 @@ class BattlePageProcessor extends PageProcessorCredentialSupport {
         if (SetupLoader.isMobileMiniDashboardEnabled()) {
             let lastIndex = -1;
             $("table:first > tbody:first > tr")
-                .each((idx, tr) => {
+                .each(idx => {
                     lastIndex = idx;
                 });
             $("table:first > tbody:first > tr")
@@ -46,25 +46,33 @@ class BattlePageProcessor extends PageProcessorCredentialSupport {
                 .find("b:first")
                 .find("p")
                 .each((idx, p) => {
-                    lastIndex = idx;
+                    const text = $(p).text();
+                    if (text.startsWith("第") && text.includes("回合")) {
+                        lastIndex = idx;
+                    }
                 });
 
             $("#last2")
                 .find("b:first")
                 .find("p")
                 .each((idx, p) => {
-                    if (lastIndex !== idx) {
-                        $(p).hide();
-                    } else {
-                        $(p).attr("id", "last3");
+                    const text = $(p).text();
+                    if (text.startsWith("第") && text.includes("回合")) {
+                        if (idx !== lastIndex) {
+                            $(p).hide();
+                        } else {
+                            $(p).attr("id", "lastTurn");
+                        }
                     }
                 });
-            $("#last3")
-                .find("table:first")
-                .hide();
-            $("#last3")
+            $("#lastTurn")
                 .find("table:eq(1)")
                 .hide();
+
+            $("#last2")
+                .next()
+                .next()
+                .attr("id", "last3");
         }
     }
 
