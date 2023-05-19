@@ -97,6 +97,10 @@ function doRender(credential: Credential, candidateList: string[]) {
     $("#CareerUI").html(html);
 
     new PersonalStatus(credential).load().then(role => {
+        if (role.task !== "没有任务！") {
+            MessageBoard.publishMessage("当前任务：<b style='color:yellow;font-size:150%'>" + role.task + "</b>");
+        }
+
         doRenderRoleStatus(role);
 
         if (role.level! > 50) {
