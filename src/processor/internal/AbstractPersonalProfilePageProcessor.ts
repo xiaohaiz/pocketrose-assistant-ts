@@ -1,4 +1,5 @@
 import NpcLoader from "../../core/NpcLoader";
+import PersonalStatus from "../../pocketrose/PersonalStatus";
 import Credential from "../../util/Credential";
 import MessageBoard from "../../util/MessageBoard";
 import PageProcessorContext from "../PageProcessorContext";
@@ -54,7 +55,7 @@ abstract class AbstractPersonalProfilePageProcessor extends PageProcessorCredent
 
         $("#pageTitleCell")
             .css("text-align", "center")
-            .css("font-size", "150%")
+            .css("font-size", "180%")
             .css("font-weight", "bold")
             .css("background-color", "navy")
             .css("color", "yellowgreen")
@@ -67,6 +68,8 @@ abstract class AbstractPersonalProfilePageProcessor extends PageProcessorCredent
             .html(this.#welcomeMessageHtml());
 
         this.doBindReturnButton(credential, context);
+
+        this.#renderPersonalStatus(credential, context);
     }
 
     #welcomeMessageHtml() {
@@ -74,6 +77,30 @@ abstract class AbstractPersonalProfilePageProcessor extends PageProcessorCredent
     }
 
     abstract doBindReturnButton(credential: Credential, context?: PageProcessorContext): void;
+
+
+    #renderPersonalStatus(credential: Credential, context?: PageProcessorContext) {
+        new PersonalStatus(credential, context?.get("townId")).open().then(page => {
+            const role = page.role!;
+            let html = "";
+            html += "<table style='text-align:center;border-width:0;margin:auto;width:100%'>";
+            html += "<tbody>";
+            html += "<tr>";
+            html += "<td style='background-color:#E8E8D0;font-size:150%;font-weight:bold;color:navy' colspan='2'>" + role.name + "</td>";
+            html += "</tr>";
+            html += "<tr>";
+            html += "<td style='width:80px;background-color:#E8E8D0' rowspan='2'>" + role.imageHtml + "</td>"
+            html += "<td style='width:100%'></td>";
+            html += "</tr>";
+            html += "<tr>";
+            html += "<td style='width:100%'></td>";
+            html += "</tr>";
+            html += "</tbody>";
+            html += "</table>";
+
+            $("#personalStatus").html(html);
+        });
+    }
 }
 
 export = AbstractPersonalProfilePageProcessor;
