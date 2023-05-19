@@ -286,6 +286,41 @@ function doProcess(credential: Credential, page: TownDashboardPage) {
             .next()
             .remove();
 
+        // 手机极简模式下，继续放大
+        if (enlargeRatio > 0) {
+            let fontSize = 100 * enlargeRatio;
+            $("#townCell")
+                .removeAttr("height")
+                .find("select:first")
+                .css("font-size", fontSize + "%");
+            $("#townButton")
+                .css("height", "100%");
+            $("#personalCell")
+                .removeAttr("height")
+                .find("select:first")
+                .css("font-size", fontSize + "%");
+            $("#personalButton")
+                .css("height", "100%");
+
+            $("option[value='COUNTRY_ALL_TALK']")
+                .parent()
+                .css("font-size", fontSize + "%")
+                .parent()
+                .removeAttr("height")
+                .next()
+                .find("input:submit:first")
+                .css("height", "100%");
+
+            $("option[value='KING']")
+                .parent()
+                .css("font-size", fontSize + "%")
+                .parent()
+                .removeAttr("height")
+                .next()
+                .find("input:submit:first")
+                .css("height", "100%");
+        }
+
         if (SetupLoader.isMobileMenuMoveBottomEnabled()) {
             $("#t4")
                 .find("tr:first")
@@ -321,6 +356,22 @@ function doProcess(credential: Credential, page: TownDashboardPage) {
             $("#ROW2")
                 .find("td:first").html(h2);
         }
+
+        const colspan = bsId > 0 ? 4 : 3;
+        $("#battleCell")
+            .parent()
+            .after($("<tr><td colspan='" + colspan + "'>　</td></tr>"));
+        $("#townCell")
+            .parent()
+            .after($("<tr><td colspan='" + colspan + "'>　</td></tr>"));
+        $("#personalCell")
+            .parent()
+            .after($("<tr><td colspan='" + colspan + "'>　</td></tr>"));
+        $("option[value='COUNTRY_ALL_TALK']")
+            .parent()
+            .parent()
+            .parent()
+            .after($("<tr><td colspan='" + colspan + "'>　</td></tr>"));
     } else {
         $("#t2")
             .removeAttr("width")
