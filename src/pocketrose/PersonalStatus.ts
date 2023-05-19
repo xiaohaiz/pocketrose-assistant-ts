@@ -111,11 +111,6 @@ function doParsePage(pageHtml: string): PersonalStatusPage {
     td = $(tr).find("td:eq(3)");
     role.pet = $(td).text();
 
-    tr = $(table).find("tr:eq(8)");
-    td = $(tr).find("td:eq(3)");
-    s = $(td).text();
-    role.additionalLuck = parseInt(s);
-
     tr = $(table).find("tr:eq(9)");
     td = $(tr).find("td:eq(1)");
     role.attribute = $(td).text();
@@ -144,9 +139,26 @@ function doParsePage(pageHtml: string): PersonalStatusPage {
         }
     }
 
+    tr = $(table).find("tr:eq(10)");
+    td = $(tr).find("td:eq(3)");
+    s = $(td).text();
+    role.additionalLuck = parseInt(s);
+
     tr = $(table).find("tr:eq(11)");
     td = $(tr).find("td:eq(1)");
     role.task = $(td).text();
+
+    tr = $(table).find("tr:eq(14)");
+    td = $(tr).find("td:eq(1)");
+    role.consecrateRP = parseInt($(td).text());
+    td = $(tr).find("td:eq(3)");
+    role.additionalRP = parseInt($(td).text());
+
+    tr = $(table).find("tr:eq(15)");
+    td = $(tr).find("td:eq(1)");
+    role.mirrorIndex = parseInt($(td).text());
+    td = $(tr).find("td:eq(3)");
+    role.mirrorCount = parseInt($(td).text());
 
     tr = $(table).find("tr:eq(16)");
     td = $(tr).find("td:first");
@@ -186,7 +198,7 @@ function doParsePage(pageHtml: string): PersonalStatusPage {
         }
     }
 
-    role.hasMirror = pageHtml.includes("所有其他分身");
+    role.hasMirror = role.mirrorCount! > 0;
 
     const page = new PersonalStatusPage();
     page.role = role;
