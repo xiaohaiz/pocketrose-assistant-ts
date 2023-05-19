@@ -16,6 +16,56 @@ class BattlePageProcessor extends PageProcessorCredentialSupport {
 
     doProcess(credential: Credential): void {
         this.#doProcess(credential);
+
+        if (SetupLoader.isMobileMiniDashboardEnabled()) {
+            let lastIndex = -1;
+            $("table:first > tbody:first > tr")
+                .each((idx, tr) => {
+                    lastIndex = idx;
+                });
+            $("table:first > tbody:first > tr")
+                .each((idx, tr) => {
+                    if (idx !== lastIndex) {
+                        $(tr).hide();
+                    } else {
+                        $(tr).attr("id", "last1");
+                    }
+                });
+            lastIndex = -1;
+            $("#last1")
+                .find("td:first")
+                .find("table:first")
+                .find("tbody:first")
+                .find("tr:first")
+                .find("td:first")
+                .find("center:first")
+                .find("h1:first").hide()
+                .next()
+                .find("font:first")
+                .attr("id", "last2")
+                .find("b:first")
+                .find("p")
+                .each((idx, p) => {
+                    lastIndex = idx;
+                });
+
+            $("#last2")
+                .find("b:first")
+                .find("p")
+                .each((idx, p) => {
+                    if (lastIndex !== idx) {
+                        $(p).hide();
+                    } else {
+                        $(p).attr("id", "last3");
+                    }
+                });
+            $("#last3")
+                .find("table:first")
+                .hide();
+            $("#last3")
+                .find("table:eq(1)")
+                .hide();
+        }
     }
 
     #doProcess(credential: Credential): void {
