@@ -118,6 +118,9 @@ function doParsePage(pageHtml: string): PersonalStatusPage {
     s = $(td).text();
     if (s === "野外") {
         role.location = "WILD";
+    } else if (s === "地铁区域") {
+        role.location = "METRO";
+    } else if (s === "唐朝") {
     } else if (s.includes("(") && s.includes(")")) {
         role.location = "CASTLE";
         const castle = new Castle();
@@ -136,11 +139,33 @@ function doParsePage(pageHtml: string): PersonalStatusPage {
         }
     }
 
+    tr = $(table).find("tr:eq(10)");
+    td = $(tr).find("td:eq(3)");
+    s = $(td).text();
+    role.additionalLuck = parseInt(s);
+
     tr = $(table).find("tr:eq(11)");
     td = $(tr).find("td:eq(1)");
     role.task = $(td).text();
 
+    tr = $(table).find("tr:eq(14)");
+    td = $(tr).find("td:eq(1)");
+    role.consecrateRP = parseInt($(td).text());
+    td = $(tr).find("td:eq(3)");
+    role.additionalRP = parseInt($(td).text());
+
+    tr = $(table).find("tr:eq(15)");
+    td = $(tr).find("td:eq(1)");
+    role.mirrorIndex = parseInt($(td).text());
+    td = $(tr).find("td:eq(3)");
+    role.mirrorCount = parseInt($(td).text());
+
     tr = $(table).find("tr:eq(16)");
+    td = $(tr).find("td:first");
+    s = $(td).text();
+    role.battleCount = parseInt(StringUtils.substringBefore(s, " 战"));
+    role.battleWinCount = parseInt(StringUtils.substringBetween(s, "战 ", " 胜"));
+
     td = $(tr).find("td:eq(2)");
     role.experience = parseInt($(td).text());
     td = $(tr).find("td:eq(4)");
@@ -173,7 +198,7 @@ function doParsePage(pageHtml: string): PersonalStatusPage {
         }
     }
 
-    role.hasMirror = pageHtml.includes("所有其他分身");
+    role.hasMirror = role.mirrorCount! > 0;
 
     const page = new PersonalStatusPage();
     page.role = role;

@@ -1,6 +1,6 @@
-import PageInterceptor from "../PageInterceptor";
 import LocationStateMachine from "../../core/LocationStateMachine";
 import MapDashboardPageProcessor from "../../processor/internal/MapDashboardPageProcessor";
+import PageInterceptor from "../PageInterceptor";
 
 class MapDashboardPageInterceptor implements PageInterceptor {
 
@@ -8,7 +8,7 @@ class MapDashboardPageInterceptor implements PageInterceptor {
 
     accept(cgi: string, pageText: string): boolean {
         if (cgi === "map.cgi" || cgi === "status.cgi") {
-            return pageText.includes("请选择移动的格数");
+            return pageText.includes("请选择移动的格数") && !pageText.includes("迪斯尼乐园");
         }
         return false;
     }

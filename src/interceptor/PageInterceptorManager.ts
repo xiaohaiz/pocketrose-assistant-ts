@@ -5,14 +5,17 @@ import CastlePostHousePageInterceptor from "./internal/CastlePostHousePageInterc
 import LoginDashboardPageInterceptor from "./internal/LoginDashboardPageInterceptor";
 import MapDashboardPageInterceptor from "./internal/MapDashboardPageInterceptor";
 import MapPostHousePageInterceptor from "./internal/MapPostHousePageInterceptor";
+import MetroDashboardPageInterceptor from "./internal/MetroDashboardPageInterceptor";
 import NationInformationPageInterceptor from "./internal/NationInformationPageInterceptor";
 import PersonalCareerManagementPageInterceptor from "./internal/PersonalCareerManagementPageInterceptor";
 import PersonalEquipmentManagementPageInterceptor from "./internal/PersonalEquipmentManagementPageInterceptor";
 import PersonalFastLoginPageInterceptor from "./internal/PersonalFastLoginPageInterceptor";
 import PersonalPetManagementPageInterceptor from "./internal/PersonalPetManagementPageInterceptor";
+import PersonalProfilePageInterceptor from "./internal/PersonalProfilePageInterceptor";
 import PersonalSalaryPageInterceptor from "./internal/PersonalSalaryPageInterceptor";
 import PersonalSetupPageInterceptor from "./internal/PersonalSetupPageInterceptor";
 import PersonalStatusPageInterceptor from "./internal/PersonalStatusPageInterceptor";
+import TangDashboardPageInterceptor from "./internal/TangDashboardPageInterceptor";
 import TownAccessoryHousePageInterceptor from "./internal/TownAccessoryHousePageInterceptor";
 import TownAdventureGuildPageInterceptor from "./internal/TownAdventureGuildPageInterceptor";
 import TownArmorHousePageInterceptor from "./internal/TownArmorHousePageInterceptor";
@@ -40,14 +43,17 @@ class PageInterceptorManager {
             new LoginDashboardPageInterceptor(),
             new MapDashboardPageInterceptor(),
             new MapPostHousePageInterceptor(),
+            new MetroDashboardPageInterceptor(),
             new NationInformationPageInterceptor(),
             new PersonalCareerManagementPageInterceptor(),
             new PersonalEquipmentManagementPageInterceptor(),
             new PersonalFastLoginPageInterceptor(),
             new PersonalPetManagementPageInterceptor(),
+            new PersonalProfilePageInterceptor(),
             new PersonalSalaryPageInterceptor(),
             new PersonalSetupPageInterceptor(),
             new PersonalStatusPageInterceptor(),
+            new TangDashboardPageInterceptor(),
             new TownAccessoryHousePageInterceptor(),
             new TownAdventureGuildPageInterceptor(),
             new TownArmorHousePageInterceptor(),

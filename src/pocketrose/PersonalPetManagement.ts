@@ -1,5 +1,6 @@
 import Pet from "../common/Pet";
 import Credential from "../util/Credential";
+import MessageBoard from "../util/MessageBoard";
 import NetworkUtils from "../util/NetworkUtils";
 import StringUtils from "../util/StringUtils";
 import PersonalPetManagementPage from "./PersonalPetManagementPage";
@@ -25,6 +26,20 @@ class PersonalPetManagement {
                 NetworkUtils.post("mydata.cgi", request).then(html => {
                     const page = PersonalPetManagement.parsePage(html);
                     resolve(page);
+                });
+            });
+        })();
+    }
+
+    async set(index: number): Promise<void> {
+        return await (() => {
+            return new Promise<void>(resolve => {
+                const request = this.#credential.asRequestMap();
+                request.set("select", index.toString());
+                request.set("mode", "CHOOSEPET");
+                NetworkUtils.post("mydata.cgi", request).then(html => {
+                    MessageBoard.processResponseMessage(html);
+                    resolve();
                 });
             });
         })();

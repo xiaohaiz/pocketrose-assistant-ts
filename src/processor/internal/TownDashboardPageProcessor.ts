@@ -161,30 +161,30 @@ function doProcess(credential: Credential, page: TownDashboardPage) {
             .parent()
             .next()
             .find("th:first")
-            .attr("colspan", 3)
             .css("text-align", "right")
             .text("训练战斗")
+            .before($("<td style='vertical-align:bottom'><button role='button' class='" + buttonClass + "' id='shortcut0'>个人</button></td>"))
             .parent()
             .next()
             .find("th:first")
             .css("text-align", "right")
             .text("城市设施")
-            .before($("<td><button role='button' class='" + buttonClass + "' id='shortcut1'>图鉴</button></td>"))
+            .before($("<td style='vertical-align:bottom'><button role='button' class='" + buttonClass + "' id='shortcut1'>图鉴</button></td>"))
             .parent()
             .next()
             .find("th:first")
             .css("text-align", "right")
-            .before($("<td><button role='button' class='" + buttonClass + "' id='shortcut2'>装备</button></td>"))
+            .before($("<td style='vertical-align:bottom'><button role='button' class='" + buttonClass + "' id='shortcut2'>装备</button></td>"))
             .parent()
             .next()
             .find("th:first")
             .css("text-align", "right")
-            .before($("<td><button role='button' class='" + buttonClass + "' id='shortcut3'>宠物</button></td>"))
+            .before($("<td style='vertical-align:bottom'><button role='button' class='" + buttonClass + "' id='shortcut3'>宠物</button></td>"))
             .parent()
             .next()
             .find("th:first")
             .css("text-align", "right")
-            .before($("<td><button role='button' class='" + buttonClass + "' id='shortcut4'>职业</button></td>"))
+            .before($("<td style='vertical-align:bottom'><button role='button' class='" + buttonClass + "' id='shortcut4'>职业</button></td>"))
             .parent()
             .next()
             .find("th:first")
@@ -199,6 +199,14 @@ function doProcess(credential: Credential, page: TownDashboardPage) {
             .attr("colspan", 5)
 
 
+        $("#shortcut0").on("click", () => {
+            $("option[value='RANK_REMAKE']")
+                .prop("selected", true)
+                .closest("td")
+                .next()
+                .find("input:submit:first")
+                .trigger("click");
+        });
         $("#shortcut1").on("click", () => {
             $("option[value='PETMAP']")
                 .prop("selected", true)
@@ -277,6 +285,42 @@ function doProcess(credential: Credential, page: TownDashboardPage) {
             .css("width", "100%")
             .next()
             .remove();
+
+        if (SetupLoader.isMobileMenuMoveBottomEnabled()) {
+            $("#t4")
+                .find("tr:first")
+                .attr("id", "menuROW")
+                .before($("<tr id='ROW1'><td></td></tr><tr id='ROW2'><td></td></tr>"));
+
+            const h1 = $("#menuROW")
+                .next()
+                .find("td:first")
+                .html();
+            $("#menuROW")
+                .next()
+                .find("td:first")
+                .html("")
+                .parent()
+                .hide();
+
+            const h2 = $("#menuROW")
+                .next()
+                .next()
+                .find("td:first")
+                .html();
+            $("#menuROW")
+                .next()
+                .next()
+                .find("td:first")
+                .html("")
+                .parent()
+                .hide();
+
+            $("#ROW1")
+                .find("td:first").html(h1);
+            $("#ROW2")
+                .find("td:first").html(h2);
+        }
     } else {
         $("#t2")
             .removeAttr("width")

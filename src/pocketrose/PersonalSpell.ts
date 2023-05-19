@@ -1,5 +1,6 @@
 import Spell from "../common/Spell";
 import Credential from "../util/Credential";
+import MessageBoard from "../util/MessageBoard";
 import NetworkUtils from "../util/NetworkUtils";
 import StringUtils from "../util/StringUtils";
 import PersonalSpellPage from "./PersonalSpellPage";
@@ -25,6 +26,20 @@ class PersonalSpell {
                 NetworkUtils.post("mydata.cgi", request).then(html => {
                     const page = PersonalSpell.parsePage(html);
                     resolve(page);
+                });
+            });
+        })();
+    }
+
+    async set(spellId: string): Promise<void> {
+        return await (() => {
+            return new Promise<void>(resolve => {
+                const request = this.#credential.asRequestMap();
+                request.set("ktec_no", spellId);
+                request.set("mode", "MAGIC_SET");
+                NetworkUtils.post("mydata.cgi", request).then(html => {
+                    MessageBoard.processResponseMessage(html);
+                    resolve();
                 });
             });
         })();

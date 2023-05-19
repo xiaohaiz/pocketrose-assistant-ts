@@ -1,6 +1,6 @@
 import StorageUtils from "../util/StorageUtils";
-import LocationState from "./LocationState";
 import StringUtils from "../util/StringUtils";
+import LocationState from "./LocationState";
 
 /**
  * Location state machine, local storage is required.
@@ -46,6 +46,26 @@ class LocationStateMachine {
             .text();
         s = StringUtils.substringBetween(s, "现在位置(", ")");
         StorageUtils.set(this.#storageKey, "WILD/" + s);
+    }
+
+    inMetro() {
+        let s = $("td:contains('现在位置')")
+            .filter(function () {
+                return $(this).text().startsWith("\n      现在位置");
+            })
+            .text();
+        s = StringUtils.substringBetween(s, "现在位置(", ")");
+        StorageUtils.set(this.#storageKey, "METRO/" + s);
+    }
+
+    inTang() {
+        let s = $("td:contains('现在位置')")
+            .filter(function () {
+                return $(this).text().startsWith("\n      现在位置");
+            })
+            .text();
+        s = StringUtils.substringBetween(s, "现在位置(", ")");
+        StorageUtils.set(this.#storageKey, "TANG/" + s);
     }
 
     load(): LocationState {
