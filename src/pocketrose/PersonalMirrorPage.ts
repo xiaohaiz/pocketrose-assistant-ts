@@ -49,7 +49,7 @@ class PersonalMirrorPage {
             const mirror = new Mirror();
             mirror.index = parseInt($(radio).val() as string);
             mirror.category = c2.text();
-            mirror.image = StringUtils.substringAfterSlash(c3.find("img:first").attr("src")!);
+            mirror.image = StringUtils.substringAfterLast(c3.find("img:first").attr("src")!, "/");
             mirror.name = c4.text();
             mirror.gender = c5.text();
             mirror.health = parseInt(c6.text());

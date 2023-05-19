@@ -1,6 +1,7 @@
 import Role from "../../common/Role";
 import NpcLoader from "../../core/NpcLoader";
 import PersonalEquipmentManagement from "../../pocketrose/PersonalEquipmentManagement";
+import PersonalMirror from "../../pocketrose/PersonalMirror";
 import PersonalPetManagement from "../../pocketrose/PersonalPetManagement";
 import PersonalSpell from "../../pocketrose/PersonalSpell";
 import PersonalStatus from "../../pocketrose/PersonalStatus";
@@ -28,6 +29,7 @@ abstract class AbstractPersonalProfilePageProcessor extends PageProcessorCredent
         this.#renderPersonalStatus(credential, context);
         this.#renderEquipmentStatus(credential, context);
         this.#renderPetStatus(credential, context);
+        this.#renderMirrorStatus(credential, context);
     }
 
     #renderImmutablePage(credential: Credential, context?: PageProcessorContext) {
@@ -66,6 +68,9 @@ abstract class AbstractPersonalProfilePageProcessor extends PageProcessorCredent
         html += "</tr>";
         html += "<tr>";
         html += "<td id='petStatus'></td>"
+        html += "</tr>";
+        html += "<tr>";
+        html += "<td id='mirrorStatus'></td>"
         html += "</tr>";
         html += "<tr>";
         html += "<td id='menuCell' style='background-color:#F8F0E0;text-align:center'>";
@@ -438,19 +443,87 @@ abstract class AbstractPersonalProfilePageProcessor extends PageProcessorCredent
         });
     }
 
+    #renderMirrorStatus(credential: Credential, context?: PageProcessorContext) {
+        const personalMirror = new PersonalMirror(credential, context?.get("townId"));
+        personalMirror.open().then(page => {
+            const mirrorList = page.mirrorList!;
+            let html = "";
+            html += "<table style='text-align:center;border-width:0;margin:auto;width:100%'>";
+            html += "<tbody>";
+            html += "<tr>";
+            html += "<th style='background-color:yellowgreen;font-size:120%;font-weight:bold;color:navy' colspan='15'>分 身 状 态</th>";
+            html += "</tr>";
+            html += "<tr style='color:yellowgreen'>";
+            html += "<th style='background-color:darkred'>类别</th>";
+            html += "<th style='background-color:darkgreen'>头像</th>";
+            html += "<th style='background-color:darkred'>姓名</th>";
+            html += "<th style='background-color:darkgreen'>性别</th>";
+            html += "<th style='background-color:darkred'>ＨＰ</th>";
+            html += "<th style='background-color:darkgreen'>ＭＰ</th>";
+            html += "<th style='background-color:darkred'>属性</th>";
+            html += "<th style='background-color:darkgreen'>攻击</th>";
+            html += "<th style='background-color:darkred'>防御</th>";
+            html += "<th style='background-color:darkgreen'>智力</th>";
+            html += "<th style='background-color:darkred'>精神</th>";
+            html += "<th style='background-color:darkgreen'>速度</th>";
+            html += "<th style='background-color:darkred'>职业</th>";
+            html += "<th style='background-color:darkgreen'>技能</th>";
+            html += "<th style='background-color:darkred'>经验</th>";
+            html += "</tr>";
+
+            for (const mirror of mirrorList) {
+                html += "<tr>";
+                html += "<td style='background-color:#E0D0B0'>";
+                html += "<button role='button' class='mirrorButton' id='mirror_" + mirror.index + "'>" + mirror.category + "</button>";
+                html += "</td>";
+                html += "<td style='background-color:#E0D0C0;width:64px;height:64px'>" + mirror.imageHtml + "</td>";
+                html += "<td style='background-color:#E0D0B0'>" + mirror.name + "</td>";
+                html += "<td style='background-color:#E0D0C0'>" + mirror.gender + "</td>";
+                html += "<td style='background-color:#E0D0B0'>" + mirror.healthHtml + "</td>";
+                html += "<td style='background-color:#E0D0C0'>" + mirror.manaHtml + "</td>";
+                html += "<td style='background-color:#E0D0B0'>" + mirror.attribute + "</td>";
+                html += "<td style='background-color:#E0D0C0'>" + mirror.attack + "</td>";
+                html += "<td style='background-color:#E0D0B0'>" + mirror.defense + "</td>";
+                html += "<td style='background-color:#E0D0C0'>" + mirror.specialAttack + "</td>";
+                html += "<td style='background-color:#E0D0B0'>" + mirror.specialDefense + "</td>";
+                html += "<td style='background-color:#E0D0C0'>" + mirror.speed + "</td>";
+                html += "<td style='background-color:#E0D0B0'>" + mirror.career + "</td>";
+                html += "<td style='background-color:#E0D0C0'>" + mirror.spell + "</td>";
+                html += "<td style='background-color:#E0D0B0'>" + mirror.experience + "</td>";
+                html += "</tr>";
+            }
+
+            html += "</tbody>";
+            html += "</table>";
+
+            $("#mirrorStatus").html(html);
+
+            $(".mirrorButton").on("click", event => {
+                const buttonId = $(event.target).attr("id") as string;
+                const index = parseInt(StringUtils.substringAfter(buttonId, "mirror_"));
+                personalMirror.change(index).then(() => {
+                    this.#reload(credential, context);
+                });
+            });
+        });
+    }
+
     #reload(credential: Credential, context?: PageProcessorContext) {
         $("#personalStatus").html("");
         $("#spellStatus").html("");
         $("#equipmentStatus").html("");
         $("#petStatus").html("");
+        $("#mirrorStatus").html("");
 
         $(".spellButton").off("click");
         $(".equipmentButton").off("click");
         $(".petButton").off("click");
+        $(".mirrorButton").off("click");
 
         this.#renderPersonalStatus(credential, context);
         this.#renderEquipmentStatus(credential, context);
         this.#renderPetStatus(credential, context);
+        this.#renderMirrorStatus(credential, context);
     }
 }
 
