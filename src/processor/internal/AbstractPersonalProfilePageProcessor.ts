@@ -269,7 +269,8 @@ abstract class AbstractPersonalProfilePageProcessor extends PageProcessorCredent
     }
 
     #renderEquipmentStatus(credential: Credential, context?: PageProcessorContext) {
-        new PersonalEquipmentManagement(credential, context?.get("townId")).open().then(page => {
+        const personalEquipment = new PersonalEquipmentManagement(credential, context?.get("townId"));
+        personalEquipment.open().then(page => {
             const equipmentList = page.equipmentList!;
 
             let html = "";
@@ -304,7 +305,10 @@ abstract class AbstractPersonalProfilePageProcessor extends PageProcessorCredent
                     continue;
                 }
                 html += "<tr>";
-                html += "<td style='background-color:#E0D0B0'></td>";
+                html += "<td style='background-color:#E0D0B0'>";
+                let title = equipment.using! ? "卸下" : "装备";
+                html += "<button role='button' class='equipmentButton' id='equipment_" + equipment.index + "'>" + title + "</button>";
+                html += "</td>";
                 html += "<td style='background-color:#E0D0C0'>" + equipment.usingHTML + "</td>";
                 html += "<td style='background-color:#E0D0B0'>" + equipment.nameHTML + "</td>";
                 html += "<td style='background-color:#E0D0C0'>" + equipment.category + "</td>";
@@ -329,6 +333,16 @@ abstract class AbstractPersonalProfilePageProcessor extends PageProcessorCredent
             html += "</table>";
 
             $("#equipmentStatus").html(html);
+
+            $(".equipmentButton").on("click", event => {
+                const buttonId = $(event.target).attr("id") as string;
+                const index = parseInt(StringUtils.substringAfter(buttonId, "equipment_"));
+                personalEquipment.use([index]).then(() => {
+                    $("#equipmentStatus").html("");
+                    $(".equipmentButton").off("click");
+                    this.#renderEquipmentStatus(credential, context);
+                });
+            });
         });
     }
 
