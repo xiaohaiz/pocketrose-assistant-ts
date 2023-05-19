@@ -1,7 +1,11 @@
+import Role from "../../common/Role";
 import NpcLoader from "../../core/NpcLoader";
+import PersonalSpell from "../../pocketrose/PersonalSpell";
 import PersonalStatus from "../../pocketrose/PersonalStatus";
 import Credential from "../../util/Credential";
 import MessageBoard from "../../util/MessageBoard";
+import PageUtils from "../../util/PageUtils";
+import StringUtils from "../../util/StringUtils";
 import PageProcessorContext from "../PageProcessorContext";
 import PageProcessorCredentialSupport from "../PageProcessorCredentialSupport";
 
@@ -17,6 +21,9 @@ abstract class AbstractPersonalProfilePageProcessor extends PageProcessorCredent
 
         // 老页面没有什么有价值的数据，直接渲染新页面
         this.#renderImmutablePage(credential, context);
+
+        // 渲染动态页面
+        this.#renderPersonalStatus(credential, context);
     }
 
     #renderImmutablePage(credential: Credential, context?: PageProcessorContext) {
@@ -48,6 +55,9 @@ abstract class AbstractPersonalProfilePageProcessor extends PageProcessorCredent
         html += "<td id='personalStatus'></td>"
         html += "</tr>";
         html += "<tr>";
+        html += "<td id='spellStatus'></td>"
+        html += "</tr>";
+        html += "<tr>";
         html += "<td id='menuCell' style='background-color:#F8F0E0;text-align:center'>";
         html += "<button role='button' id='reloadButton' class='button-35'>刷新个人面板</button>&nbsp;&nbsp;&nbsp;";
         html += "<button role='button' id='returnButton' class='button-35'>返回</button>";
@@ -73,12 +83,13 @@ abstract class AbstractPersonalProfilePageProcessor extends PageProcessorCredent
             .html(this.#welcomeMessageHtml());
 
         $("#reloadButton").on("click", () => {
+            PageUtils.scrollIntoView("pageTitleCell");
+            $("#messageBoardManager").html(NpcLoader.randomNpcImageHtml());
+            $("#messageBoard").html(this.#welcomeMessageHtml());
             this.#reload(credential, context);
         });
 
         this.doBindReturnButton(credential, context);
-
-        this.#renderPersonalStatus(credential, context);
     }
 
     #welcomeMessageHtml() {
@@ -188,18 +199,76 @@ abstract class AbstractPersonalProfilePageProcessor extends PageProcessorCredent
             $("#personalStatus").html(html);
 
             this.doLoadBankAccount(credential);
+
+            // 加载完用户才能加载技能。。。
+            this.#renderSpellStatus(credential, role, context);
         });
     }
 
-    #reloadPersonalStatus(credential: Credential, context?: PageProcessorContext) {
-        $("#personalStatus").html("");
-        this.#renderPersonalStatus(credential, context);
+    #renderSpellStatus(credential: Credential, role: Role, context?: PageProcessorContext) {
+        const personalSpell = new PersonalSpell(credential, context?.get("townId"));
+        personalSpell.open().then(page => {
+            const spellList = page.spellList!;
+
+            let html = "";
+            html += "<table style='text-align:center;border-width:0;margin:auto;width:100%'>";
+            html += "<tbody>";
+            html += "<tr>";
+            html += "<th style='background-color:yellowgreen;font-size:120%;font-weight:bold;color:navy' colspan='6'>技 能 状 态</th>";
+            html += "</tr>";
+            html += "<tr style='color:yellowgreen'>";
+            html += "<th style='background-color:darkred'>使用</th>";
+            html += "<th style='background-color:darkgreen'>技能</th>";
+            html += "<th style='background-color:darkred'>威力</th>";
+            html += "<th style='background-color:darkgreen'>确率</th>";
+            html += "<th style='background-color:darkred'>ＰＰ</th>";
+            html += "<th style='background-color:darkgreen'>评分</th>";
+            html += "</tr>";
+
+            for (const spell of spellList) {
+                const using = spell.name === role.spell;
+                html += "<tr>";
+                html += "<td style='background-color:#E0D0B0'>" + (using ? "★" : "") + "</td>";
+                html += "<td style='background-color:#E0D0C0'>";
+                if (using) {
+                    html += "<button role='button' class='spellButton' id='spell_" + spell.id + "' " +
+                        "style='color:blue'>" + spell.name + "</button>";
+                } else {
+                    html += "<button role='button' class='spellButton' id='spell_" + spell.id + "' " +
+                        "style='color:grey'>" + spell.name + "</button>";
+                }
+                html += "</td>";
+                html += "<td style='background-color:#E0D0B0'>" + spell.power + "</td>";
+                html += "<td style='background-color:#E0D0C0'>" + spell.accuracy + "</td>";
+                html += "<td style='background-color:#E0D0B0'>" + spell.pp + "</td>";
+                html += "<td style='background-color:#E0D0C0'>" + spell.score + "</td>";
+                html += "</tr>";
+            }
+
+            html += "</tbody>";
+            html += "</table>";
+
+            $("#spellStatus").html(html);
+
+            $(".spellButton").on("click", event => {
+                const buttonId = $(event.target).attr("id") as string;
+                if (PageUtils.isColorBlue(buttonId)) {
+                    return;
+                }
+                const spellId = StringUtils.substringAfter(buttonId, "spell_");
+                personalSpell.set(spellId).then(() => {
+                    this.#reload(credential, context);
+                });
+            });
+        });
     }
 
     #reload(credential: Credential, context?: PageProcessorContext) {
-        $("#messageBoardManager").html(NpcLoader.randomNpcImageHtml());
-        $("#messageBoard").html(this.#welcomeMessageHtml());
-        this.#reloadPersonalStatus(credential, context);
+        $("#personalStatus").html("");
+        $("#spellStatus").html("");
+        $(".spellButton").off("click");
+
+        this.#renderPersonalStatus(credential, context);
     }
 }
 
