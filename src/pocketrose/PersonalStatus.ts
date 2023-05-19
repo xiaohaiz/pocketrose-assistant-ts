@@ -111,6 +111,11 @@ function doParsePage(pageHtml: string): PersonalStatusPage {
     td = $(tr).find("td:eq(3)");
     role.pet = $(td).text();
 
+    tr = $(table).find("tr:eq(8)");
+    td = $(tr).find("td:eq(3)");
+    s = $(td).text();
+    role.additionalLuck = parseInt(s);
+
     tr = $(table).find("tr:eq(9)");
     td = $(tr).find("td:eq(1)");
     role.attribute = $(td).text();
