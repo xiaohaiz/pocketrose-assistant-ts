@@ -1,4 +1,5 @@
 import TownLoader from "../../core/TownLoader";
+import TownBank from "../../pocketrose/TownBank";
 import Credential from "../../util/Credential";
 import PageUtils from "../../util/PageUtils";
 import PageProcessorContext from "../PageProcessorContext";
@@ -16,6 +17,12 @@ class PersonalProfilePageProcessor_Town extends AbstractPersonalProfilePageProce
         }
         $("#returnButton").on("click", () => {
             $("#returnTown").trigger("click");
+        });
+    }
+
+    doLoadBankAccount(credential: Credential, context?: PageProcessorContext): void {
+        new TownBank(credential, context?.get("townId")).load().then(account => {
+            $("#roleSaving").text(account.saving + " GOLD");
         });
     }
 

@@ -78,6 +78,8 @@ abstract class AbstractPersonalProfilePageProcessor extends PageProcessorCredent
 
     abstract doBindReturnButton(credential: Credential, context?: PageProcessorContext): void;
 
+    abstract doLoadBankAccount(credential: Credential, context?: PageProcessorContext): void;
+
 
     #renderPersonalStatus(credential: Credential, context?: PageProcessorContext) {
         new PersonalStatus(credential, context?.get("townId")).open().then(page => {
@@ -175,6 +177,8 @@ abstract class AbstractPersonalProfilePageProcessor extends PageProcessorCredent
             html += "</table>";
 
             $("#personalStatus").html(html);
+
+            this.doLoadBankAccount(credential);
         });
     }
 }
