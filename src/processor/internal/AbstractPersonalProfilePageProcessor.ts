@@ -109,7 +109,7 @@ abstract class AbstractPersonalProfilePageProcessor extends PageProcessorCredent
             html += "<td style='background-color:#E0D0C0'>" + role.unit + "</td>";
             html += "<td style='background-color:#E0D0B0'>" + role.attribute + "</td>";
             html += "<td style='background-color:#E0D0C0'>" + role.career + "</td>";
-            html += "<td style='background-color:#E0D0B0'>" + role.battleCount + "</td>";
+            html += "<td style='background-color:#E0D0B0'>" + role.battleCount + "/" + role.battleWinCount + "</td>";
             html += "</tr>";
             html += "</tbody>";
             html += "</table>";

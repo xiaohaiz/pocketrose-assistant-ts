@@ -144,6 +144,11 @@ function doParsePage(pageHtml: string): PersonalStatusPage {
     role.task = $(td).text();
 
     tr = $(table).find("tr:eq(16)");
+    td = $(tr).find("td:first");
+    s = $(td).text();
+    role.battleCount = parseInt(StringUtils.substringBefore(s, " 战"));
+    role.battleWinCount = parseInt(StringUtils.substringBetween(s, "战 ", " 胜"));
+
     td = $(tr).find("td:eq(2)");
     role.experience = parseInt($(td).text());
     td = $(tr).find("td:eq(4)");
