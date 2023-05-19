@@ -23,7 +23,7 @@ class Role {
     speed?: number;                 // 速度
     pet?: string;                   // 当前宠物
     attribute?: string;             // 属性
-    location?: string;              // 所在位置(TOWN|CASTLE|WILD|METRO)
+    location?: string;              // 所在位置(TOWN|CASTLE|WILD|METRO|TANG)
     town?: Town;
     castle?: Castle;
     additionalLuck?: number;        // 装备附加幸运

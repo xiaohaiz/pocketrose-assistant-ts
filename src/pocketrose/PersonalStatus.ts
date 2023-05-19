@@ -120,6 +120,7 @@ function doParsePage(pageHtml: string): PersonalStatusPage {
         role.location = "WILD";
     } else if (s === "地铁区域") {
         role.location = "METRO";
+    } else if (s === "唐朝") {
     } else if (s.includes("(") && s.includes(")")) {
         role.location = "CASTLE";
         const castle = new Castle();
