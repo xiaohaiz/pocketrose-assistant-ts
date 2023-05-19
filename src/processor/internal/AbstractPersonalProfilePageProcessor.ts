@@ -1,6 +1,7 @@
 import Role from "../../common/Role";
 import NpcLoader from "../../core/NpcLoader";
 import PersonalEquipmentManagement from "../../pocketrose/PersonalEquipmentManagement";
+import PersonalPetManagement from "../../pocketrose/PersonalPetManagement";
 import PersonalSpell from "../../pocketrose/PersonalSpell";
 import PersonalStatus from "../../pocketrose/PersonalStatus";
 import Credential from "../../util/Credential";
@@ -26,6 +27,7 @@ abstract class AbstractPersonalProfilePageProcessor extends PageProcessorCredent
         // 渲染动态页面
         this.#renderPersonalStatus(credential, context);
         this.#renderEquipmentStatus(credential, context);
+        this.#renderPetStatus(credential, context);
     }
 
     #renderImmutablePage(credential: Credential, context?: PageProcessorContext) {
@@ -61,6 +63,9 @@ abstract class AbstractPersonalProfilePageProcessor extends PageProcessorCredent
         html += "</tr>";
         html += "<tr>";
         html += "<td id='equipmentStatus'></td>"
+        html += "</tr>";
+        html += "<tr>";
+        html += "<td id='petStatus'></td>"
         html += "</tr>";
         html += "<tr>";
         html += "<td id='menuCell' style='background-color:#F8F0E0;text-align:center'>";
@@ -346,16 +351,106 @@ abstract class AbstractPersonalProfilePageProcessor extends PageProcessorCredent
         });
     }
 
+    #renderPetStatus(credential: Credential, context?: PageProcessorContext) {
+        const personalPet = new PersonalPetManagement(credential, context?.get("townId"));
+        personalPet.open().then(page => {
+            const petList = page.petList!;
+
+            let html = "";
+            html += "<table style='text-align:center;border-width:0;margin:auto;width:100%'>";
+            html += "<tbody>";
+            html += "<tr>";
+            html += "<th style='background-color:yellowgreen;font-size:120%;font-weight:bold;color:navy' colspan='19'>宠 物 状 态</th>";
+            html += "</tr>";
+            html += "<tr style='color:yellowgreen'>";
+            html += "<th style='background-color:darkred'></th>";
+            html += "<th style='background-color:darkgreen'>使用</th>";
+            html += "<th style='background-color:darkred'>名字</th>";
+            html += "<th style='background-color:darkgreen'>性别</th>";
+            html += "<th style='background-color:darkred'>等级</th>";
+            html += "<th style='background-color:darkgreen'>生命</th>";
+            html += "<th style='background-color:darkred'>攻击</th>";
+            html += "<th style='background-color:darkgreen'>防御</th>";
+            html += "<th style='background-color:darkred'>智力</th>";
+            html += "<th style='background-color:darkgreen'>精神</th>";
+            html += "<th style='background-color:darkred'>速度</th>";
+            html += "<th style='background-color:darkgreen'>技1</th>";
+            html += "<th style='background-color:darkred'>技2</th>";
+            html += "<th style='background-color:darkgreen'>技3</th>";
+            html += "<th style='background-color:darkred'>技4</th>";
+            html += "<th style='background-color:darkgreen'>亲密</th>";
+            html += "<th style='background-color:darkred'>种类</th>";
+            html += "<th style='background-color:darkgreen'>属1</th>";
+            html += "<th style='background-color:darkred'>属2</th>";
+            html += "</tr>";
+
+            for (const pet of petList) {
+                html += "<tr>";
+                html += "<td style='background-color:#E0D0B0;width:64px;height:64px' rowspan='2'>";
+                html += pet.imageHtml;
+                html += "</td>";
+                html += "<td style='background-color:#E0D0C0' rowspan='2'>" + pet.usingHtml + "</td>";
+                html += "<td style='background-color:#E0D0B0'>" + pet.nameHtml + "</td>";
+                html += "<td style='background-color:#E0D0C0'>" + pet.gender + "</td>";
+                html += "<td style='background-color:#E0D0B0'>" + pet.levelHtml + "</td>";
+                html += "<td style='background-color:#E0D0C0'>" + pet.healthHtml + "</td>";
+                html += "<td style='background-color:#E0D0B0'>" + pet.attackHtml + "</td>";
+                html += "<td style='background-color:#E0D0C0'>" + pet.defenseHtml + "</td>";
+                html += "<td style='background-color:#E0D0B0'>" + pet.specialAttackHtml + "</td>";
+                html += "<td style='background-color:#E0D0C0'>" + pet.specialDefenseHtml + "</td>";
+                html += "<td style='background-color:#E0D0B0'>" + pet.speedHtml + "</td>";
+                html += "<td style='background-color:#E0D0C0'>" + pet.spell1 + "</td>";
+                html += "<td style='background-color:#E0D0B0'>" + pet.spell2 + "</td>";
+                html += "<td style='background-color:#E0D0C0'>" + pet.spell3 + "</td>";
+                html += "<td style='background-color:#E0D0B0'>" + pet.spell4 + "</td>";
+                html += "<td style='background-color:#E0D0C0'>" + pet.love + "</td>";
+                html += "<td style='background-color:#E0D0B0'>" + pet.raceHtml + "</td>";
+                html += "<td style='background-color:#E0D0C0'>" + pet.attribute1 + "</td>";
+                html += "<td style='background-color:#E0D0B0'>" + pet.attribute2 + "</td>";
+                html += "</tr>";
+
+                html += "<tr>";
+                html += "<td style='background-color:#E0D0B0;text-align:left' colspan='17'>";
+                const title = pet.using! ? "卸下" : "使用";
+                html += "<button role='button' id='pet_" + pet.index + "' class='petButton'>" + title + "</button>";
+                html += "</td>";
+                html += "</tr>";
+            }
+
+            html += "</tbody>";
+            html += "</table>";
+
+            $("#petStatus").html(html);
+
+            $(".petButton").on("click", event => {
+                const buttonId = $(event.target).attr("id") as string;
+                let index = parseInt(StringUtils.substringAfter(buttonId, "pet_"));
+                const pet = page.findPet(index)!;
+                if (pet.using) {
+                    index = -1;
+                }
+                personalPet.set(index).then(() => {
+                    $("#petStatus").html("");
+                    $(".petButton").off("click");
+                    this.#renderPetStatus(credential, context);
+                });
+            });
+        });
+    }
+
     #reload(credential: Credential, context?: PageProcessorContext) {
         $("#personalStatus").html("");
         $("#spellStatus").html("");
         $("#equipmentStatus").html("");
+        $("#petStatus").html("");
 
         $(".spellButton").off("click");
         $(".equipmentButton").off("click");
+        $(".petButton").off("click");
 
         this.#renderPersonalStatus(credential, context);
         this.#renderEquipmentStatus(credential, context);
+        this.#renderPetStatus(credential, context);
     }
 }
 

@@ -32,7 +32,7 @@ class PersonalSpell {
     }
 
     async set(spellId: string): Promise<void> {
-        return (() => {
+        return await (() => {
             return new Promise<void>(resolve => {
                 const request = this.#credential.asRequestMap();
                 request.set("ktec_no", spellId);
