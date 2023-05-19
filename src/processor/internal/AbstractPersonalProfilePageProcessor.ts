@@ -1,5 +1,6 @@
 import Role from "../../common/Role";
 import NpcLoader from "../../core/NpcLoader";
+import PersonalEquipmentManagement from "../../pocketrose/PersonalEquipmentManagement";
 import PersonalSpell from "../../pocketrose/PersonalSpell";
 import PersonalStatus from "../../pocketrose/PersonalStatus";
 import Credential from "../../util/Credential";
@@ -24,6 +25,7 @@ abstract class AbstractPersonalProfilePageProcessor extends PageProcessorCredent
 
         // 渲染动态页面
         this.#renderPersonalStatus(credential, context);
+        this.#renderEquipmentStatus(credential, context);
     }
 
     #renderImmutablePage(credential: Credential, context?: PageProcessorContext) {
@@ -56,6 +58,9 @@ abstract class AbstractPersonalProfilePageProcessor extends PageProcessorCredent
         html += "</tr>";
         html += "<tr>";
         html += "<td id='spellStatus'></td>"
+        html += "</tr>";
+        html += "<tr>";
+        html += "<td id='equipmentStatus'></td>"
         html += "</tr>";
         html += "<tr>";
         html += "<td id='menuCell' style='background-color:#F8F0E0;text-align:center'>";
@@ -263,12 +268,80 @@ abstract class AbstractPersonalProfilePageProcessor extends PageProcessorCredent
         });
     }
 
+    #renderEquipmentStatus(credential: Credential, context?: PageProcessorContext) {
+        new PersonalEquipmentManagement(credential, context?.get("townId")).open().then(page => {
+            const equipmentList = page.equipmentList!;
+
+            let html = "";
+            html += "<table style='text-align:center;border-width:0;margin:auto;width:100%'>";
+            html += "<tbody>";
+            html += "<tr>";
+            html += "<th style='background-color:yellowgreen;font-size:120%;font-weight:bold;color:navy' colspan='18'>装 备 状 态</th>";
+            html += "</tr>";
+            html += "<tr style='color:yellowgreen'>";
+            html += "<th style='background-color:darkred'>使用</th>";
+            html += "<th style='background-color:darkgreen'>装备</th>";
+            html += "<th style='background-color:darkred'>名字</th>";
+            html += "<th style='background-color:darkgreen'>种类</th>";
+            html += "<th style='background-color:darkred'>效果</th>";
+            html += "<th style='background-color:darkgreen'>重量</th>";
+            html += "<th style='background-color:darkred'>耐久</th>";
+            html += "<th style='background-color:darkgreen'>职需</th>";
+            html += "<th style='background-color:darkred'>攻需</th>";
+            html += "<th style='background-color:darkgreen'>防需</th>";
+            html += "<th style='background-color:darkred'>智需</th>";
+            html += "<th style='background-color:darkgreen'>精需</th>";
+            html += "<th style='background-color:darkred'>速需</th>";
+            html += "<th style='background-color:darkgreen'>威＋</th>";
+            html += "<th style='background-color:darkred'>重＋</th>";
+            html += "<th style='background-color:darkgreen'>幸＋</th>";
+            html += "<th style='background-color:darkred'>经验</th>";
+            html += "<th style='background-color:darkgreen'>属性</th>";
+            html += "</tr>";
+
+            for (const equipment of equipmentList) {
+                if (!equipment.isWeapon && !equipment.isArmor && !equipment.isAccessory) {
+                    continue;
+                }
+                html += "<tr>";
+                html += "<td style='background-color:#E0D0B0'></td>";
+                html += "<td style='background-color:#E0D0C0'>" + equipment.usingHTML + "</td>";
+                html += "<td style='background-color:#E0D0B0'>" + equipment.nameHTML + "</td>";
+                html += "<td style='background-color:#E0D0C0'>" + equipment.category + "</td>";
+                html += "<td style='background-color:#E0D0B0'>" + equipment.power + "</td>";
+                html += "<td style='background-color:#E0D0C0'>" + equipment.weight + "</td>";
+                html += "<td style='background-color:#E0D0B0'>" + equipment.endureHtml + "</td>";
+                html += "<td style='background-color:#E0D0C0'>" + equipment.requiredCareerHtml + "</td>";
+                html += "<td style='background-color:#E0D0B0'>" + equipment.requiredAttackHtml + "</td>";
+                html += "<td style='background-color:#E0D0C0'>" + equipment.requiredDefenseHtml + "</td>";
+                html += "<td style='background-color:#E0D0B0'>" + equipment.requiredSpecialAttackHtml + "</td>";
+                html += "<td style='background-color:#E0D0C0'>" + equipment.requiredSpecialDefenseHtml + "</td>";
+                html += "<td style='background-color:#E0D0B0'>" + equipment.requiredSpeedHtml + "</td>";
+                html += "<td style='background-color:#E0D0C0'>" + equipment.additionalPowerHtml + "</td>";
+                html += "<td style='background-color:#E0D0B0'>" + equipment.additionalWeightHtml + "</td>";
+                html += "<td style='background-color:#E0D0C0'>" + equipment.additionalLuckHtml + "</td>";
+                html += "<td style='background-color:#E0D0B0'>" + equipment.experienceHTML + "</td>";
+                html += "<td style='background-color:#E0D0C0'>" + equipment.attributeHtml + "</td>";
+                html += "</tr>";
+            }
+
+            html += "</tbody>";
+            html += "</table>";
+
+            $("#equipmentStatus").html(html);
+        });
+    }
+
     #reload(credential: Credential, context?: PageProcessorContext) {
         $("#personalStatus").html("");
         $("#spellStatus").html("");
+        $("#equipmentStatus").html("");
+
         $(".spellButton").off("click");
+        $(".equipmentButton").off("click");
 
         this.#renderPersonalStatus(credential, context);
+        this.#renderEquipmentStatus(credential, context);
     }
 }
 
