@@ -58,6 +58,16 @@ class LocationStateMachine {
         StorageUtils.set(this.#storageKey, "METRO/" + s);
     }
 
+    inTang() {
+        let s = $("td:contains('现在位置')")
+            .filter(function () {
+                return $(this).text().startsWith("\n      现在位置");
+            })
+            .text();
+        s = StringUtils.substringBetween(s, "现在位置(", ")");
+        StorageUtils.set(this.#storageKey, "TANG/" + s);
+    }
+
     load(): LocationState {
         const location = StorageUtils.get(this.#storageKey);
         return new LocationState(location);
