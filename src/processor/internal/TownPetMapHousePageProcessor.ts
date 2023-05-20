@@ -21,10 +21,6 @@ class TownPetMapHousePageProcessor extends PageProcessorCredentialSupport {
     doProcess(credential: Credential, context?: PageProcessorContext): void {
         const page = TownPetMapHouse.parsePage(PageUtils.currentPageHtml());
         this.#renderImmutablePage(credential, page, context);
-
-        new RolePetManager(credential).triggerRolePetStatusUpdate().then(() => {
-            MessageBoard.publishMessage("宠物信息已存储。");
-        });
     }
 
     #renderImmutablePage(credential: Credential, page: TownPetMapHousePage, context?: PageProcessorContext) {
@@ -76,11 +72,14 @@ class TownPetMapHousePageProcessor extends PageProcessorCredentialSupport {
             returnTitle = "返回" + town.name;
         }
         html = "";
+        html += "<button role='button' id='updateButton'>更新宠物信息</button>";
         html += "<input type='text' id='petCode' size='10' maxlength='10'>";
         html += "<button role='button' id='searchButton'>查找图鉴</button>";
         html += "<button role='button' id='listPetButton'>列出所有宠物</button>";
         html += "<button role='button' id='returnButton'>" + returnTitle + "</button>";
         $("#pageMenuContainer").html(html);
+
+        this.#bindUpdateButton(credential);
         this.#bindSearchButton(credential);
         this.#bindListPetButton()
         $("#returnButton").on("click", () => {
@@ -99,6 +98,18 @@ class TownPetMapHousePageProcessor extends PageProcessorCredentialSupport {
         $("table:eq(2)")
             .attr("id", "t1")
             .css("width", "100%");
+    }
+
+    #bindUpdateButton(credential: Credential) {
+        $("#updateButton").on("click", () => {
+            $("input:text").prop("disabled", true);
+            $("button").prop("disabled", true);
+            new RolePetManager(credential).triggerRolePetStatusUpdate().then(() => {
+                MessageBoard.publishMessage("宠物信息已存储。");
+                $("input:text").prop("disabled", false);
+                $("button").prop("disabled", false);
+            });
+        });
     }
 
     #bindSearchButton(credential: Credential) {
