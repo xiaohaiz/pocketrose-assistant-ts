@@ -22,6 +22,7 @@ class FastLoginLoader {
             return null;
         }
         const fastLogin = new FastLogin();
+        fastLogin.index = code;
         // @ts-ignore
         fastLogin.name = config.name;
         // @ts-ignore
