@@ -2,11 +2,13 @@ import _ from "lodash";
 import Castle from "../common/Castle";
 import Equipment from "../common/Equipment";
 import Pet from "../common/Pet";
+import SetupLoader from "../config/SetupLoader";
 import CastleInformation from "../pocketrose/CastleInformation";
 import CastleRanch from "../pocketrose/CastleRanch";
 import GoldenCage from "../pocketrose/GoldenCage";
 import PersonalEquipmentManagement from "../pocketrose/PersonalEquipmentManagement";
 import PersonalPetManagement from "../pocketrose/PersonalPetManagement";
+import TownPetMapHouse from "../pocketrose/TownPetMapHouse";
 import Credential from "../util/Credential";
 import StorageUtils from "../util/StorageUtils";
 
@@ -16,6 +18,37 @@ class RolePetManager {
 
     constructor(credential: Credential) {
         this.#credential = credential;
+    }
+
+    async triggerPetMapUpdate(endure: number): Promise<void> {
+        return await (() => {
+            return new Promise<void>(resolve => {
+                const savePetMapBattleCount = SetupLoader.getSavePetMapBattleCount();
+                if (savePetMapBattleCount > 0 && endure % savePetMapBattleCount === 0) {
+                    new TownPetMapHouse(this.#credential).open().then(page => {
+                        StorageUtils.set("_pm_" + this.#credential.id, page.asText());
+                        resolve();
+                    });
+                } else {
+                    resolve();
+                }
+            });
+        })();
+    }
+
+    async triggerPetStatusUpdate(endure: number): Promise<void> {
+        return await (() => {
+            return new Promise<void>(resolve => {
+                const savePetBattleCount = SetupLoader.getSavePetBattleCount();
+                if (savePetBattleCount > 0 && endure % savePetBattleCount === 0) {
+                    this.triggerRolePetStatusUpdate().then(() => {
+                        resolve();
+                    });
+                } else {
+                    resolve();
+                }
+            });
+        })();
     }
 
     async triggerRolePetStatusUpdate(): Promise<void> {
