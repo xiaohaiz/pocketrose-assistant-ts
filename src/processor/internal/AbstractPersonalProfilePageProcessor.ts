@@ -49,7 +49,7 @@ abstract class AbstractPersonalProfilePageProcessor extends PageProcessorCredent
         html += "<td id='hiddenCell-2'></td>";      // 跳转到装备管理
         html += "</tr>";
         html += "<tr style='display:none'>";
-        html += "<td id='hiddenCell-3'></td>";
+        html += "<td id='hiddenCell-3'></td>";      // 跳转到宠物管理
         html += "</tr>";
         html += "<tr style='display:none'>";
         html += "<td id='hiddenCell-4'></td>";
@@ -76,7 +76,8 @@ abstract class AbstractPersonalProfilePageProcessor extends PageProcessorCredent
         html += "<td id='menuCell' style='background-color:#F8F0E0;text-align:center'>";
         html += "<button role='button' id='reloadButton' class='button-35'>刷新个人面板</button>&nbsp;&nbsp;&nbsp;";
         html += "<button role='button' id='returnButton' class='button-35'>返回</button>&nbsp;&nbsp;&nbsp;";
-        html += "<button role='button' id='equipmentManagementButton' class='button-35'>进入装备管理</button>";
+        html += "<button role='button' id='equipmentManagementButton' class='button-35'>进入装备管理</button>&nbsp;&nbsp;&nbsp;";
+        html += "<button role='button' id='petManagementButton' class='button-35'>进入宠物管理</button>";
         html += "</td>";
         html += "</tr>";
         html += "</tbody>";
@@ -110,6 +111,11 @@ abstract class AbstractPersonalProfilePageProcessor extends PageProcessorCredent
         $("#hiddenCell-2").html(PageUtils.generateEquipmentManagementForm(credential));
         $("#equipmentManagementButton").on("click", () => {
             $("#openEquipmentManagement").trigger("click");
+        });
+
+        $("#hiddenCell-3").html(PageUtils.generatePetManagementForm(credential));
+        $("#petManagementButton").on("click", () => {
+            $("#openPetManagement").trigger("click");
         });
 
     }
