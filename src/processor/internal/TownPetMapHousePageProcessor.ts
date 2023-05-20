@@ -20,7 +20,9 @@ class TownPetMapHousePageProcessor extends PageProcessorCredentialSupport {
         const page = TownPetMapHouse.parsePage(PageUtils.currentPageHtml());
         this.#renderImmutablePage(credential, page, context);
 
-        new RolePetManager(credential).updatePetStatus().then();
+        new RolePetManager(credential).triggerRolePetStatusUpdate().then(() => {
+            MessageBoard.publishMessage("宠物信息已存储。");
+        });
     }
 
     #renderImmutablePage(credential: Credential, page: TownPetMapHousePage, context?: PageProcessorContext) {

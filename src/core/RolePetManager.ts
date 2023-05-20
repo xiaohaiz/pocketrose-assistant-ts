@@ -1,3 +1,4 @@
+import _ from "lodash";
 import Castle from "../common/Castle";
 import Equipment from "../common/Equipment";
 import Pet from "../common/Pet";
@@ -7,8 +8,7 @@ import GoldenCage from "../pocketrose/GoldenCage";
 import PersonalEquipmentManagement from "../pocketrose/PersonalEquipmentManagement";
 import PersonalPetManagement from "../pocketrose/PersonalPetManagement";
 import Credential from "../util/Credential";
-import StringUtils from "../util/StringUtils";
-import Pokemon from "./Pokemon";
+import StorageUtils from "../util/StorageUtils";
 
 class RolePetManager {
 
@@ -18,15 +18,39 @@ class RolePetManager {
         this.#credential = credential;
     }
 
-    async updatePetStatus(): Promise<void> {
+    async triggerRolePetStatusUpdate(): Promise<void> {
         return await (() => {
             return new Promise<void>(resolve => {
                 this.findAllRecognizedPets().then(petList => {
+                    const petStatusList: string[] = [];
                     for (const pet of petList) {
-                        const code = StringUtils.substringBetween(pet.name!, "(", ")");
-                        const s = code + ":" + pet.level + ":" + pet.gender + ":" + pet.location;
-                        console.log(s)
+                        let s = "";
+                        s += pet.name;
+                        s += "/";
+                        s += pet.gender;
+                        s += "/";
+                        s += pet.level;
+                        s += "/";
+                        s += pet.maxHealth;
+                        s += "/";
+                        s += pet.attack;
+                        s += "/";
+                        s += pet.defense;
+                        s += "/";
+                        s += pet.specialAttack;
+                        s += "/";
+                        s += pet.specialDefense;
+                        s += "/";
+                        s += pet.speed;
+                        s += "/";
+                        s += pet.location;
+                        petStatusList.push(s);
                     }
+
+                    const key = "_ps_" + this.#credential.id;
+                    const value = _.join(petStatusList, " ");
+                    StorageUtils.set(key, value);
+
                     resolve();
                 });
             });
@@ -67,10 +91,8 @@ function doFindPersonalPets(credential: Credential,
                             handler: () => void) {
     new PersonalPetManagement(credential).open().then(petPage => {
         for (const pet of petPage.petList!) {
-            if (Pokemon.isInitialPetName(pet.name)) {
-                pet.location = "P";
-                allPetList.push(pet);
-            }
+            pet.location = "P";
+            allPetList.push(pet);
         }
         doFindCagePets(credential, allPetList, goldenCage, castle, handler);
     });
@@ -86,10 +108,8 @@ function doFindCagePets(credential: Credential,
     } else {
         new GoldenCage(credential).open(goldenCage.index!).then(cagePage => {
             for (const pet of cagePage.petList!) {
-                if (Pokemon.isInitialPetName(pet.name)) {
-                    pet.location = "C";
-                    allPetList.push(pet);
-                }
+                pet.location = "C";
+                allPetList.push(pet);
             }
             doFindCastlePets(credential, allPetList, castle, handler);
         });
@@ -105,10 +125,8 @@ function doFindCastlePets(credential: Credential,
     } else {
         new CastleRanch(credential).enter().then(ranchPage => {
             for (const pet of ranchPage.ranchPetList!) {
-                if (Pokemon.isInitialPetName(pet.name)) {
-                    pet.location = "R";
-                    allPetList.push(pet);
-                }
+                pet.location = "R";
+                allPetList.push(pet);
             }
             handler();
         });
