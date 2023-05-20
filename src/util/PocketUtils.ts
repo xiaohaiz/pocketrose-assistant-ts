@@ -10,6 +10,15 @@ class PocketUtils {
         return _.padStart(s, 3, "0");
     }
 
+    static asRequest(map: Map<string, string>) {
+        const result = {};
+        map.forEach(function (value, key) {
+            // @ts-ignore
+            result[key] = value;
+        });
+        return result;
+    }
+
 }
 
 export = PocketUtils;

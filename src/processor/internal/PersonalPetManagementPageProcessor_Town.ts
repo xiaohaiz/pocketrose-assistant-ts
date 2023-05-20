@@ -19,6 +19,7 @@ import Credential from "../../util/Credential";
 import MessageBoard from "../../util/MessageBoard";
 import NetworkUtils from "../../util/NetworkUtils";
 import PageUtils from "../../util/PageUtils";
+import PocketUtils from "../../util/PocketUtils";
 import StringUtils from "../../util/StringUtils";
 import PageProcessorContext from "../PageProcessorContext";
 import AbstractPersonalPetManagementPageProcessor from "./AbstractPersonalPetManagementPageProcessor";
@@ -460,13 +461,8 @@ function doRenderPetProfile(code: string) {
     html += "<tr style='background-color:black;color:wheat;font-weight:bold;text-align:left'>";
     html += "<td colspan='16' style='height:64px'>";
     for (const it of PetRelationLoader.getPetRelations(parseInt(profile.code!))) {
-        let pc = it.toString();
-        if (it < 10) {
-            pc = "00" + pc;
-        } else if (it < 100) {
-            pc = "0" + pc;
-        }
-        html += PetProfileLoader.load(pc)!.imageHtml;
+        const petCode = PocketUtils.asPetCode(it);
+        html += PetProfileLoader.load(petCode)!.imageHtml;
     }
     html += "</td>";
     html += "</tr>";
@@ -1353,13 +1349,8 @@ function doRenderPetBorn(credential: Credential, petList: Pet[]) {
                 html += "<tr>";
                 html += "<td style='background-color:#E8E8D0;text-align:left;height:64px' colspan='10'>";
                 for (const it of PetRelationLoader.getPetRelations(parseInt(c.code!))) {
-                    let pc = it.toString();
-                    if (it < 10) {
-                        pc = "00" + pc;
-                    } else if (it < 100) {
-                        pc = "0" + pc;
-                    }
-                    html += PetProfileLoader.load(pc)!.imageHtml;
+                    const petCode = PocketUtils.asPetCode(it);
+                    html += PetProfileLoader.load(petCode)!.imageHtml;
                 }
                 html += "</td>";
                 html += "</tr>";
