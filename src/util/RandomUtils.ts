@@ -1,8 +1,6 @@
-class RandomUtils {
+import _ from "lodash";
 
-    static randomInt(min: number, max: number) {
-        return Math.floor(Math.random() * (max - min + 1)) + min;
-    }
+class RandomUtils {
 
     static randomElement<T>(list: T[]): T | null {
         if (list.length === 0) {
@@ -11,7 +9,7 @@ class RandomUtils {
         if (list.length === 1) {
             return list[0];
         }
-        const idx = RandomUtils.randomInt(0, list.length - 1);
+        const idx = _.random(0, list.length - 1);
         return list[idx];
     }
 }
