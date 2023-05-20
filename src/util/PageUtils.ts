@@ -195,6 +195,18 @@ class PageUtils {
         return html;
     }
 
+    static generateCareerManagementForm(credential: Credential) {
+        let html = "";
+        // noinspection HtmlUnknownTarget
+        html += "<form action='mydata.cgi' method='post'>";
+        html += "<input type='hidden' name='id' value='" + credential.id + "'>";
+        html += "<input type='hidden' name='pass' value='" + credential.pass + "'>"
+        html += "<input type='hidden' name='mode' value='CHANGE_OCCUPATION'>";
+        html += "<input type='submit' id='openCareerManagement'>";
+        html += "</form>";
+        return html;
+    }
+
     static unbindEventBySpecifiedClass(className: string) {
         if ($("." + className).length > 0) {
             $("." + className)
