@@ -27,6 +27,20 @@ class ConfigManager {
     }
 
     /**
+     * 从JSON导入配置
+     * @param json Configs' json
+     */
+    static importFromJson(json: string) {
+        const allConfigs = JSON.parse(json);
+        const keys = Object.keys(allConfigs);
+        for (const key of keys) {
+            // @ts-ignore
+            const value = allConfigs[key];
+            StorageUtils.set(key, value);
+        }
+    }
+
+    /**
      * 清理所有的配置数据。
      */
     static purge() {

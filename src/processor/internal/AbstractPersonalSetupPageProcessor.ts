@@ -8,7 +8,6 @@ import TreasureBag from "../../pocketrose/TreasureBag";
 import Credential from "../../util/Credential";
 import MessageBoard from "../../util/MessageBoard";
 import PageUtils from "../../util/PageUtils";
-import StorageUtils from "../../util/StorageUtils";
 import PageProcessorCredentialSupport from "../PageProcessorCredentialSupport";
 
 abstract class AbstractPersonalSetupPageProcessor extends PageProcessorCredentialSupport {
@@ -109,13 +108,7 @@ abstract class AbstractPersonalSetupPageProcessor extends PageProcessorCredentia
                 return;
             }
             const json = $("#allConfigs").val() as string;
-            const allConfigs = JSON.parse(json);
-            const keys = Object.keys(allConfigs);
-            for (const key of keys) {
-                // @ts-ignore
-                const value = allConfigs[key];
-                StorageUtils.set(key, value);
-            }
+            ConfigManager.importFromJson(json);
             MessageBoard.publishMessage("助手设置信息已经导入！");
             PageUtils.scrollIntoView("pageTitle");
             $("#refreshButton").trigger("click");
