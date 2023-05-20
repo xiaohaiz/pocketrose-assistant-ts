@@ -1,5 +1,6 @@
 import SetupLoader from "../../config/SetupLoader";
 import NpcLoader from "../../core/NpcLoader";
+import RolePetManager from "../../core/RolePetManager";
 import TownPetMapHouse from "../../pocketrose/TownPetMapHouse";
 import CommentBoard from "../../util/CommentBoard";
 import Credential from "../../util/Credential";
@@ -179,6 +180,10 @@ function doPostBattle(credential: Credential, pageText: string): void {
                 StorageUtils.set("_pm_" + credential.id, page.asText());
             });
         }
+    }
+    const savePetBattleCount = SetupLoader.getSavePetBattleCount();
+    if (savePetBattleCount > 0 && endure % savePetBattleCount === 0) {
+        new RolePetManager(credential).triggerRolePetStatusUpdate().then();
     }
 
     if (shouldRepair(reportText, endure)) {
