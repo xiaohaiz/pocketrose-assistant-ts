@@ -1,9 +1,10 @@
 import _ from "lodash";
+import StorageUtils from "../util/StorageUtils";
 
 class ConfigManager {
 
     /**
-     * 导出助手配置信息，包括快速登陆的配置。
+     * 导出助手配置数据，包括快速登陆的数据。
      */
     static exportAsJson() {
         const s = {};
@@ -23,6 +24,26 @@ class ConfigManager {
             }
         }
         return JSON.stringify(s);
+    }
+
+    /**
+     * 清理所有的配置数据。
+     */
+    static purge() {
+        const candidates: string[] = [];
+        for (let i = 0; i < localStorage.length; i++) {
+            const key = localStorage.key(i);
+            if (key === null) {
+                continue;
+            }
+            if (_.startsWith(key, "_pa_") || _.startsWith(key, "_fl_")) {
+                // 只清理配置数据
+                candidates.push(key);
+            }
+        }
+        for (const candidate of candidates) {
+            StorageUtils.remove(candidate);
+        }
     }
 }
 
