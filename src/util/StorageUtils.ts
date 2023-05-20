@@ -1,3 +1,5 @@
+import _ from "lodash";
+
 class StorageUtils {
 
     static set(key: string, value: string) {
@@ -16,10 +18,13 @@ class StorageUtils {
         const candidates: string[] = [];
         for (let i = 0; i < localStorage.length; i++) {
             const key = localStorage.key(i);
-            if (key === null || key.startsWith("_lc_")) {
+            if (key === null) {
                 continue;
             }
-            candidates.push(key);
+            if (_.startsWith(key, "_pa_") || _.startsWith(key, "_fl_")) {
+                // 只清理配置数据
+                candidates.push(key);
+            }
         }
         for (const candidate of candidates) {
             StorageUtils.remove(candidate);
@@ -68,21 +73,15 @@ class StorageUtils {
             if (key === null) {
                 continue;
             }
-            // 忽略位置信息
-            if (key.startsWith("_lc_")) {
-                continue;
+            if (_.startsWith(key, "_pa_") || _.startsWith(key, "_fl_")) {
+                // 只导出配置信息
+                const value = localStorage.getItem(key);
+                if (value === null) {
+                    continue;
+                }
+                // @ts-ignore
+                s[key] = value;
             }
-            // 忽略图鉴信息
-            if (key.startsWith("_pm_")) {
-                continue;
-            }
-
-            const value = localStorage.getItem(key);
-            if (value === null) {
-                continue;
-            }
-            // @ts-ignore
-            s[key] = value;
         }
         return JSON.stringify(s);
     }
