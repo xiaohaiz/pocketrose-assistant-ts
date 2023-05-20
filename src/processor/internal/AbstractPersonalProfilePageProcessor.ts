@@ -46,36 +46,37 @@ abstract class AbstractPersonalProfilePageProcessor extends PageProcessorCredent
         html += "<td id='hiddenCell-1'></td>"       // 预留给返回城市/城堡功能
         html += "</tr>";
         html += "<tr style='display:none'>";
-        html += "<td id='hiddenCell-2'></td>"
+        html += "<td id='hiddenCell-2'></td>";      // 跳转到装备管理
         html += "</tr>";
         html += "<tr style='display:none'>";
-        html += "<td id='hiddenCell-3'></td>"
+        html += "<td id='hiddenCell-3'></td>";
         html += "</tr>";
         html += "<tr style='display:none'>";
-        html += "<td id='hiddenCell-4'></td>"
+        html += "<td id='hiddenCell-4'></td>";
         html += "</tr>";
         html += "<tr style='display:none'>";
-        html += "<td id='hiddenCell-5'></td>"
+        html += "<td id='hiddenCell-5'></td>";
         html += "</tr>";
         html += "<tr>";
-        html += "<td id='personalStatus'></td>"
+        html += "<td id='personalStatus'></td>";
         html += "</tr>";
         html += "<tr>";
-        html += "<td id='spellStatus'></td>"
+        html += "<td id='spellStatus'></td>";
         html += "</tr>";
         html += "<tr>";
-        html += "<td id='equipmentStatus'></td>"
+        html += "<td id='equipmentStatus'></td>";
         html += "</tr>";
         html += "<tr>";
-        html += "<td id='petStatus'></td>"
+        html += "<td id='petStatus'></td>";
         html += "</tr>";
         html += "<tr>";
-        html += "<td id='mirrorStatus'></td>"
+        html += "<td id='mirrorStatus'></td>";
         html += "</tr>";
         html += "<tr>";
         html += "<td id='menuCell' style='background-color:#F8F0E0;text-align:center'>";
         html += "<button role='button' id='reloadButton' class='button-35'>刷新个人面板</button>&nbsp;&nbsp;&nbsp;";
-        html += "<button role='button' id='returnButton' class='button-35'>返回</button>";
+        html += "<button role='button' id='returnButton' class='button-35'>返回</button>&nbsp;&nbsp;&nbsp;";
+        html += "<button role='button' id='equipmentManagementButton' class='button-35'>进入装备管理</button>";
         html += "</td>";
         html += "</tr>";
         html += "</tbody>";
@@ -105,6 +106,12 @@ abstract class AbstractPersonalProfilePageProcessor extends PageProcessorCredent
         });
 
         this.doBindReturnButton(credential, context);
+
+        $("#hiddenCell-2").html(PageUtils.generateEquipmentManagementForm(credential));
+        $("#equipmentManagementButton").on("click", () => {
+            $("#openEquipmentManagement").trigger("click");
+        });
+
     }
 
     #welcomeMessageHtml() {

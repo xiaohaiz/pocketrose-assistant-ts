@@ -12,6 +12,8 @@ class PersonalProfilePageProcessor_Castle extends AbstractPersonalProfilePagePro
         const castleName = context?.get("castleName");
         if (castleName !== undefined) {
             $("#returnButton").text("返回" + castleName);
+        } else {
+            $("#returnButton").text("返回城堡");
         }
         $("#returnButton").on("click", () => {
             $("#returnCastle").trigger("click");
