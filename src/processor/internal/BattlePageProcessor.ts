@@ -16,6 +16,64 @@ class BattlePageProcessor extends PageProcessorCredentialSupport {
 
     doProcess(credential: Credential): void {
         this.#doProcess(credential);
+
+        if (SetupLoader.isMobileMiniDashboardEnabled()) {
+            let lastIndex = -1;
+            $("table:first > tbody:first > tr")
+                .each(idx => {
+                    lastIndex = idx;
+                });
+            $("table:first > tbody:first > tr")
+                .each((idx, tr) => {
+                    if (idx !== lastIndex) {
+                        $(tr).hide();
+                    } else {
+                        $(tr).attr("id", "last1");
+                    }
+                });
+            lastIndex = -1;
+            $("#last1")
+                .find("td:first")
+                .find("table:first")
+                .find("tbody:first")
+                .find("tr:first")
+                .find("td:first")
+                .find("center:first")
+                .find("h1:first").hide()
+                .next()
+                .find("font:first")
+                .attr("id", "last2")
+                .find("b:first")
+                .find("p")
+                .each((idx, p) => {
+                    const text = $(p).text();
+                    if (text.startsWith("第") && text.includes("回合")) {
+                        lastIndex = idx;
+                    }
+                });
+
+            $("#last2")
+                .find("b:first")
+                .find("p")
+                .each((idx, p) => {
+                    const text = $(p).text();
+                    if (text.startsWith("第") && text.includes("回合")) {
+                        if (idx !== lastIndex) {
+                            $(p).hide();
+                        } else {
+                            $(p).attr("id", "lastTurn");
+                        }
+                    }
+                });
+            $("#lastTurn")
+                .find("table:eq(1)")
+                .hide();
+
+            $("#last2")
+                .next()
+                .next()
+                .attr("id", "last3");
+        }
     }
 
     #doProcess(credential: Credential): void {

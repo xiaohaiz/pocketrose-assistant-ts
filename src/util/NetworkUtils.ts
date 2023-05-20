@@ -1,5 +1,5 @@
 import MessageBoard from "./MessageBoard";
-import ObjectUtils from "./ObjectUtils";
+import PocketUtils from "./PocketUtils";
 
 class NetworkUtils {
 
@@ -24,7 +24,7 @@ class NetworkUtils {
     static async post(cgi: string, request: Map<string, string>): Promise<string> {
         const action = (cgi: string, request: Map<string, string>) => {
             return new Promise<string>(resolve => {
-                const body = ObjectUtils.convertMapToObject(request);
+                const body = PocketUtils.asRequest(request);
                 NetworkUtils.sendPostRequest(cgi, body, function (html) {
                     resolve(html);
                 });

@@ -14,6 +14,8 @@ class PersonalProfilePageProcessor_Town extends AbstractPersonalProfilePageProce
         if (townId !== undefined) {
             const town = TownLoader.getTownById(townId)!;
             $("#returnButton").text("返回" + town.name);
+        } else {
+            $("#returnButton").text("返回城市");
         }
         $("#returnButton").on("click", () => {
             $("#returnTown").trigger("click");

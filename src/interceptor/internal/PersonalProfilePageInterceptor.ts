@@ -1,4 +1,5 @@
 import LocationStateMachine from "../../core/LocationStateMachine";
+import PersonalProfilePageProcessor_Castle from "../../processor/internal/PersonalProfilePageProcessor_Castle";
 import PersonalProfilePageProcessor_Town from "../../processor/internal/PersonalProfilePageProcessor_Town";
 import PageProcessorContext from "../../processor/PageProcessorContext";
 import PageInterceptor from "../PageInterceptor";
@@ -6,6 +7,7 @@ import PageInterceptor from "../PageInterceptor";
 class PersonalProfilePageInterceptor implements PageInterceptor {
 
     readonly #inTownProcessor = new PersonalProfilePageProcessor_Town();
+    readonly #inCastleProcessor = new PersonalProfilePageProcessor_Castle();
 
     accept(cgi: string, pageText: string): boolean {
         if (cgi === "mydata.cgi") {
@@ -18,9 +20,10 @@ class PersonalProfilePageInterceptor implements PageInterceptor {
         LocationStateMachine.create()
             .load()
             .whenInTown(townId => {
-                const context = new PageProcessorContext();
-                context.set("townId", townId!);
-                this.#inTownProcessor.process(context);
+                this.#inTownProcessor.process(PageProcessorContext.withTownId(townId));
+            })
+            .whenInCastle(castleName => {
+                this.#inCastleProcessor.process(PageProcessorContext.withCastleName(castleName));
             })
             .fork();
     }

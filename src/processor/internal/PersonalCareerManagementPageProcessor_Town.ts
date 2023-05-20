@@ -14,7 +14,7 @@ import NetworkUtils from "../../util/NetworkUtils";
 import PageProcessorContext from "../PageProcessorContext";
 import AbstractPersonalCareerManagementPageProcessor from "./AbstractPersonalCareerManagementPageProcessor";
 
-class PersonalCareerManagementPageProcessor extends AbstractPersonalCareerManagementPageProcessor {
+class PersonalCareerManagementPageProcessor_Town extends AbstractPersonalCareerManagementPageProcessor {
 
     doProcessPageParsed(credential: Credential, page: PersonalCareerManagementPage, context?: PageProcessorContext): void {
         const candidateList = page.careerList!;
@@ -451,4 +451,4 @@ function doCalculateRecommendationCareers(role: Role, careerCandidateList: strin
     return recommendations;
 }
 
-export = PersonalCareerManagementPageProcessor;
+export = PersonalCareerManagementPageProcessor_Town;
