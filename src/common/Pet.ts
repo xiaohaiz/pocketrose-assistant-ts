@@ -44,6 +44,8 @@ class Pet {
     mapCount?: number;
     evolution?: number;
 
+    location?: string;  // P/C/R
+
     get nameHtml() {
         return Pokemon.pokemonWikiReplacement(this.name);
     }

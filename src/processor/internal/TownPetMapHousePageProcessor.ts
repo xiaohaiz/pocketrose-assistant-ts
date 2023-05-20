@@ -1,6 +1,7 @@
 import FastLogin from "../../common/FastLogin";
 import PetMap from "../../common/PetMap";
 import FastLoginLoader from "../../core/FastLoginLoader";
+import RolePetManager from "../../core/RolePetManager";
 import TownLoader from "../../core/TownLoader";
 import PersonalStatus from "../../pocketrose/PersonalStatus";
 import TownPetMapHouse from "../../pocketrose/TownPetMapHouse";
@@ -18,6 +19,8 @@ class TownPetMapHousePageProcessor extends PageProcessorCredentialSupport {
     doProcess(credential: Credential, context?: PageProcessorContext): void {
         const page = TownPetMapHouse.parsePage(PageUtils.currentPageHtml());
         this.#renderImmutablePage(credential, page, context);
+
+        new RolePetManager(credential).updatePetStatus().then();
     }
 
     #renderImmutablePage(credential: Credential, page: TownPetMapHousePage, context?: PageProcessorContext) {

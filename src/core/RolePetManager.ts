@@ -7,6 +7,7 @@ import GoldenCage from "../pocketrose/GoldenCage";
 import PersonalEquipmentManagement from "../pocketrose/PersonalEquipmentManagement";
 import PersonalPetManagement from "../pocketrose/PersonalPetManagement";
 import Credential from "../util/Credential";
+import StringUtils from "../util/StringUtils";
 import Pokemon from "./Pokemon";
 
 class RolePetManager {
@@ -15,6 +16,21 @@ class RolePetManager {
 
     constructor(credential: Credential) {
         this.#credential = credential;
+    }
+
+    async updatePetStatus(): Promise<void> {
+        return await (() => {
+            return new Promise<void>(resolve => {
+                this.findAllRecognizedPets().then(petList => {
+                    for (const pet of petList) {
+                        const code = StringUtils.substringBetween(pet.name!, "(", ")");
+                        const s = code + ":" + pet.level + ":" + pet.gender + ":" + pet.location;
+                        console.log(s)
+                    }
+                    resolve();
+                });
+            });
+        })();
     }
 
     async findAllRecognizedPets(): Promise<Pet[]> {
@@ -27,7 +43,7 @@ class RolePetManager {
                     const goldenCage = equipmentPage.findGoldenCage();
 
                     new CastleInformation().load(roleName)
-                        .catch(castle => {
+                        .then(castle => {
                             doFindPersonalPets(this.#credential, allPetList, goldenCage, castle, () => {
                                 resolve(allPetList);
                             });
@@ -52,6 +68,7 @@ function doFindPersonalPets(credential: Credential,
     new PersonalPetManagement(credential).open().then(petPage => {
         for (const pet of petPage.petList!) {
             if (Pokemon.isInitialPetName(pet.name)) {
+                pet.location = "P";
                 allPetList.push(pet);
             }
         }
@@ -70,6 +87,7 @@ function doFindCagePets(credential: Credential,
         new GoldenCage(credential).open(goldenCage.index!).then(cagePage => {
             for (const pet of cagePage.petList!) {
                 if (Pokemon.isInitialPetName(pet.name)) {
+                    pet.location = "C";
                     allPetList.push(pet);
                 }
             }
@@ -88,6 +106,7 @@ function doFindCastlePets(credential: Credential,
         new CastleRanch(credential).enter().then(ranchPage => {
             for (const pet of ranchPage.ranchPetList!) {
                 if (Pokemon.isInitialPetName(pet.name)) {
+                    pet.location = "R";
                     allPetList.push(pet);
                 }
             }
