@@ -1,11 +1,12 @@
 import LocationStateMachine from "../../core/LocationStateMachine";
-import PersonalCareerManagementPageProcessor from "../../processor/internal/PersonalCareerManagementPageProcessor";
+import PersonalCareerManagementPageProcessor_Town
+    from "../../processor/internal/PersonalCareerManagementPageProcessor_Town";
 import SetupLoader from "../../setup/SetupLoader";
 import PageInterceptor from "../PageInterceptor";
 
 class PersonalCareerManagementPageInterceptor implements PageInterceptor {
 
-    readonly #processor = new PersonalCareerManagementPageProcessor();
+    readonly #processor = new PersonalCareerManagementPageProcessor_Town();
 
     accept(cgi: string, pageText: string): boolean {
         if (cgi === "mydata.cgi") {
