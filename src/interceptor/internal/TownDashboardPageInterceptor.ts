@@ -1,10 +1,10 @@
-import PageInterceptor from "../PageInterceptor";
 import LocationStateMachine from "../../core/LocationStateMachine";
-import TownDashboardPageProcessor from "../../processor/internal/TownDashboardPageProcessor";
+import TownDashboardPageProcessor2 from "../../processor/internal/TownDashboardPageProcessor2";
+import PageInterceptor from "../PageInterceptor";
 
 class TownDashboardPageInterceptor implements PageInterceptor {
 
-    readonly #processor = new TownDashboardPageProcessor();
+    readonly #processor = new TownDashboardPageProcessor2();
 
     accept(cgi: string, pageText: string): boolean {
         if (cgi === "status.cgi" || cgi === "town.cgi") {
