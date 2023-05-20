@@ -1,9 +1,9 @@
+import SetupLoader from "../../config/SetupLoader";
 import LocationStateMachine from "../../core/LocationStateMachine";
 import PersonalPetManagementPageProcessor_Castle
     from "../../processor/internal/PersonalPetManagementPageProcessor_Castle";
 import PersonalPetManagementPageProcessor_Town from "../../processor/internal/PersonalPetManagementPageProcessor_Town";
 import PageProcessorContext from "../../processor/PageProcessorContext";
-import SetupLoader from "../../setup/SetupLoader";
 import PageInterceptor from "../PageInterceptor";
 
 class PersonalPetManagementPageInterceptor implements PageInterceptor {

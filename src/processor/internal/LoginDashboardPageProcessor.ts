@@ -1,5 +1,5 @@
+import SetupLoader from "../../config/SetupLoader";
 import FastLoginLoader from "../../core/FastLoginLoader";
-import SetupLoader from "../../setup/SetupLoader";
 import ButtonUtils from "../../util/ButtonUtils";
 import PageUtils from "../../util/PageUtils";
 import PageProcessor from "../PageProcessor";

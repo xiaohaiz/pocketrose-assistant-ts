@@ -1,5 +1,5 @@
+import SetupLoader from "../config/SetupLoader";
 import TownLoader from "../core/TownLoader";
-import SetupLoader from "../setup/SetupLoader";
 import Coordinate from "../util/Coordinate";
 import PageUtils from "../util/PageUtils";
 import StringUtils from "../util/StringUtils";

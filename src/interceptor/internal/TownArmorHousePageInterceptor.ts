@@ -1,6 +1,6 @@
+import SetupLoader from "../../config/SetupLoader";
 import LocationStateMachine from "../../core/LocationStateMachine";
 import TownArmorHousePageProcessor from "../../processor/internal/TownArmorHousePageProcessor";
-import SetupLoader from "../../setup/SetupLoader";
 import PageInterceptor from "../PageInterceptor";
 
 class TownArmorHousePageInterceptor implements PageInterceptor {

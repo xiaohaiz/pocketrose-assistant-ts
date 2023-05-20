@@ -1,4 +1,4 @@
-import SetupLoader from "../setup/SetupLoader";
+import SetupLoader from "../config/SetupLoader";
 
 class Pokemon {
 

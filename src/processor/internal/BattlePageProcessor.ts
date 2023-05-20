@@ -1,6 +1,6 @@
+import SetupLoader from "../../config/SetupLoader";
 import NpcLoader from "../../core/NpcLoader";
 import TownPetMapHouse from "../../pocketrose/TownPetMapHouse";
-import SetupLoader from "../../setup/SetupLoader";
 import CommentBoard from "../../util/CommentBoard";
 import Credential from "../../util/Credential";
 import PageUtils from "../../util/PageUtils";
