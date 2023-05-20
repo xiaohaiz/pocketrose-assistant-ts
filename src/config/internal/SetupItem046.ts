@@ -37,6 +37,7 @@ function doRender() {
 function doGenerateSetupItem() {
     let html = "<select id='select_" + code + "'>";
     html += "<option class='option_class_" + code + "' value='-1'>禁用</option>";
+    html += "<option class='option_class_" + code + "' value='10'>10战更新</option>";
     html += "<option class='option_class_" + code + "' value='50'>50战更新</option>";
     html += "<option class='option_class_" + code + "' value='100'>100战更新</option>";
     html += "</select>";

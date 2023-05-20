@@ -7,6 +7,7 @@ import Credential from "../../util/Credential";
 import PageUtils from "../../util/PageUtils";
 import StorageUtils from "../../util/StorageUtils";
 import StringUtils from "../../util/StringUtils";
+import TimeoutUtils from "../../util/TimeoutUtils";
 import PageProcessorCredentialSupport from "../PageProcessorCredentialSupport";
 
 class BattlePageProcessor extends PageProcessorCredentialSupport {
@@ -125,7 +126,7 @@ class BattlePageProcessor extends PageProcessorCredentialSupport {
         $('#depositButton').parent().prepend($('<input type="hidden" name="azukeru" value="all">'));
         $('input[value="BANK"]').attr('value', 'BANK_SELL');
 
-        doPostBattle(credential, pageText);
+        const flashBattleDelay = doPostBattle(credential, pageText);
 
         // 如果强制推荐启用，则删除其余所有的按钮
         if (SetupLoader.isBattleForceRecommendationEnabled()) {
@@ -147,13 +148,25 @@ class BattlePageProcessor extends PageProcessorCredentialSupport {
         // 十二宫极速战斗
         if (pageText.includes("＜＜ - 十二神殿 - ＞＞")) {
             if (SetupLoader.isZodiacFlashBattleEnabled()) {
-                $("input:submit[tabindex='1']").trigger("click");
+                if (flashBattleDelay) {
+                    TimeoutUtils.execute(2000, () => {
+                        $("input:submit[tabindex='1']").trigger("click");
+                    });
+                } else {
+                    $("input:submit[tabindex='1']").trigger("click");
+                }
             }
         } else {
             if (SetupLoader.isNormalFlashBattleEnabled()) {
                 const petUpgrade = doCheckIfPetUpgrade();
                 if (!harvest && !petUpgrade) {
-                    $("input:submit[tabindex='1']").trigger("click");
+                    if (flashBattleDelay) {
+                        TimeoutUtils.execute(2000, () => {
+                            $("input:submit[tabindex='1']").trigger("click");
+                        });
+                    } else {
+                        $("input:submit[tabindex='1']").trigger("click");
+                    }
                 }
             }
         }
@@ -170,26 +183,28 @@ function doRenderPrompt(pageText: string) {
     }
 }
 
-function doPostBattle(credential: Credential, pageText: string): void {
+function doPostBattle(credential: Credential, pageText: string): boolean {
     const reportText = $("#ueqtweixin").text();
     const endure = findRecoverItemEndure(reportText);
+
+    let flashBattleDelay = false;
     const savePetMapBattleCount = SetupLoader.getSavePetMapBattleCount();
-    if (savePetMapBattleCount > 0) {
-        if (endure % savePetMapBattleCount === 0) {
-            new TownPetMapHouse(credential).open().then(page => {
-                StorageUtils.set("_pm_" + credential.id, page.asText());
-            });
-        }
+    if (savePetMapBattleCount > 0 && endure % savePetMapBattleCount === 0) {
+        flashBattleDelay = true;
+        new TownPetMapHouse(credential).open().then(page => {
+            StorageUtils.set("_pm_" + credential.id, page.asText());
+        });
     }
     const savePetBattleCount = SetupLoader.getSavePetBattleCount();
     if (savePetBattleCount > 0 && endure % savePetBattleCount === 0) {
+        flashBattleDelay = true;
         new RolePetManager(credential).triggerRolePetStatusUpdate().then();
     }
 
     if (shouldRepair(reportText, endure)) {
         // 优先修理按钮
         $("#repairButton").attr("tabIndex", 1);
-        return;
+        return flashBattleDelay;
     }
 
     const mode = determinePostBattleBehaviour(pageText, endure);
@@ -202,6 +217,7 @@ function doPostBattle(credential: Credential, pageText: string): void {
     if (mode === 3) {
         $("#returnButton").attr('tabIndex', 1);
     }
+    return flashBattleDelay;
 }
 
 function findRecoverItemEndure(reportText: string): number {
