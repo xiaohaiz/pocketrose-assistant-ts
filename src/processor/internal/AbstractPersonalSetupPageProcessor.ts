@@ -125,7 +125,7 @@ abstract class AbstractPersonalSetupPageProcessor extends PageProcessorCredentia
             if (!confirm("请再次确认要清除助手的所有设置？")) {
                 return;
             }
-            StorageUtils.purge();
+            ConfigManager.purge();
             MessageBoard.publishMessage("所有助手设置信息已经清除！");
             PageUtils.scrollIntoView("pageTitle");
             $("#refreshButton").trigger("click");

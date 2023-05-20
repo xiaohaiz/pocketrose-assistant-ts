@@ -1,5 +1,3 @@
-import _ from "lodash";
-
 class StorageUtils {
 
     static set(key: string, value: string) {
@@ -12,23 +10,6 @@ class StorageUtils {
 
     static remove(key: string) {
         localStorage.removeItem(key);
-    }
-
-    static purge() {
-        const candidates: string[] = [];
-        for (let i = 0; i < localStorage.length; i++) {
-            const key = localStorage.key(i);
-            if (key === null) {
-                continue;
-            }
-            if (_.startsWith(key, "_pa_") || _.startsWith(key, "_fl_")) {
-                // 只清理配置数据
-                candidates.push(key);
-            }
-        }
-        for (const candidate of candidates) {
-            StorageUtils.remove(candidate);
-        }
     }
 
     static getString(key: string) {
