@@ -5,7 +5,7 @@ class ConfigManager {
     /**
      * 导出助手配置信息，包括快速登陆的配置。
      */
-    static export() {
+    static exportAsJson() {
         const s = {};
         for (let i = 0; i < localStorage.length; i++) {
             const key = localStorage.key(i);

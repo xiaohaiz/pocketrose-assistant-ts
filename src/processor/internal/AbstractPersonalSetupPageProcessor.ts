@@ -1,4 +1,5 @@
 import Equipment from "../../common/Equipment";
+import ConfigManager from "../../config/ConfigManager";
 import SetupItemManager from "../../config/SetupItemManager";
 import EquipmentLoader from "../../core/EquipmentLoader";
 import PersonalEquipmentManagement from "../../pocketrose/PersonalEquipmentManagement";
@@ -100,7 +101,7 @@ abstract class AbstractPersonalSetupPageProcessor extends PageProcessorCredentia
         this.doBindReturnButton("returnButton");
 
         $("#exportButton").on("click", () => {
-            const allConfigs = StorageUtils.dumpLocalStorage();
+            const allConfigs = ConfigManager.exportAsJson();
             $("#allConfigs").val(allConfigs);
         });
         $("#importButton").on("click", () => {
