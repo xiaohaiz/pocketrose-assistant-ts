@@ -1,6 +1,7 @@
 import _ from "lodash";
 import SetupLoader from "../../config/SetupLoader";
 import NpcLoader from "../../core/NpcLoader";
+import PetLocalStorage from "../../core/PetLocalStorage";
 import BattlePage from "../../pocketrose/BattlePage";
 import CommentBoard from "../../util/CommentBoard";
 import Credential from "../../util/Credential";
@@ -102,22 +103,22 @@ function processBattle(credential: Credential, page: BattlePage, context: PagePr
 
     // 重新定义按钮的行为
     $("#returnButton").on("click", () => {
-        doBeforeReturn(credential, page, context).then(() => {
+        doBeforeReturn(credential, context).then(() => {
             $("#returnTown").trigger("click");
         });
     });
     $("#depositButton").on("click", () => {
-        doBeforeReturn(credential, page, context).then(() => {
+        doBeforeReturn(credential, context).then(() => {
             $("#deposit").trigger("click");
         });
     });
     $("#repairButton").on("click", () => {
-        doBeforeReturn(credential, page, context).then(() => {
+        doBeforeReturn(credential, context).then(() => {
             $("#repair").trigger("click");
         });
     });
     $("#lodgeButton").on("click", () => {
-        doBeforeReturn(credential, page, context).then(() => {
+        doBeforeReturn(credential, context).then(() => {
             $("#lodge").trigger("click");
         });
     });
@@ -479,10 +480,20 @@ function renderMinimalBattle() {
         });
 }
 
-async function doBeforeReturn(credential: Credential, page: BattlePage, context: PageProcessorContext): Promise<void> {
+async function doBeforeReturn(credential: Credential, context: PageProcessorContext): Promise<void> {
     return await (() => {
         return new Promise<void>(resolve => {
-            resolve();
+            const battleCount = parseBattleCount(context);
+            const petLocalStorage = new PetLocalStorage(credential);
+            petLocalStorage
+                .triggerUpdatePetMap(battleCount)
+                .then(() => {
+                    petLocalStorage
+                        .triggerUpdatePetStatus(battleCount)
+                        .then(() => {
+                            resolve();
+                        });
+                });
         });
     })();
 }

@@ -7,6 +7,9 @@ import StringUtils from "../../util/StringUtils";
 import PageProcessorContext from "../PageProcessorContext";
 import PageProcessorCredentialSupport from "../PageProcessorCredentialSupport";
 
+/**
+ * @deprecated
+ */
 class BattlePageProcessor extends PageProcessorCredentialSupport {
 
     doLoadButtonStyles(): number[] {
