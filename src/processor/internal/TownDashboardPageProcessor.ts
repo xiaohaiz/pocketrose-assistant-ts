@@ -372,6 +372,12 @@ function doProcess(credential: Credential, page: TownDashboardPage) {
                 .find("td:first").html(h1);
             $("#ROW2")
                 .find("td:first").html(h2);
+
+            $("#t6")
+                .find("th:first")
+                .removeAttr("height")
+                .css("font-weight", "bold")
+                .css("font-size", "200%");
         }
 
         const colspan = bsId > 0 ? 4 : 3;
