@@ -8,6 +8,11 @@ import PageProcessorCredentialSupport from "../PageProcessorCredentialSupport";
 class BattlePageProcessor2 extends PageProcessorCredentialSupport {
 
     doProcess(credential: Credential, context?: PageProcessorContext): void {
+        if (context === undefined) {
+            // context is required for battle processing
+            return;
+        }
+
         // 给所有的表格加上id，便于后续解析的定位
         $("table").each((idx, table) => {
             const tableId = "t" + idx;
@@ -16,9 +21,39 @@ class BattlePageProcessor2 extends PageProcessorCredentialSupport {
             }
         });
 
+        // 解析页面的反馈的数据
         const page = parsePage();
+
+        // 开始正式处理战斗页面
+        processBattle(credential, page, context);
     }
 
+}
+
+function processBattle(credential: Credential, page: BattlePage, context: PageProcessorContext) {
+    // 删除原来所有的表单
+    $("form").remove();
+
+    // 在页面中添加隐藏的表格用于准备自定义的表单
+    let html = "";
+    html += "<tr style='display:none'>";
+    html += "<td id='hidden-1'></td>";
+    html += "</tr>";
+    html += "<tr style='display:none'>";
+    html += "<td id='hidden-2'></td>";
+    html += "</tr>";
+    html += "<tr style='display:none'>";
+    html += "<td id='hidden-3'></td>";
+    html += "</tr>";
+    html += "<tr style='display:none'>";
+    html += "<td id='hidden-4'></td>";
+    html += "</tr>";
+    html += "<tr style='display:none'>";
+    html += "<td id='hidden-5'></td>";
+    html += "</tr>";
+    $("#t0")
+        .find("tr:first")
+        .after($(html));
 }
 
 function parsePage() {
