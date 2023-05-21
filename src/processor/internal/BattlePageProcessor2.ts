@@ -8,6 +8,14 @@ import PageProcessorCredentialSupport from "../PageProcessorCredentialSupport";
 class BattlePageProcessor2 extends PageProcessorCredentialSupport {
 
     doProcess(credential: Credential, context?: PageProcessorContext): void {
+        // 给所有的表格加上id，便于后续解析的定位
+        $("table").each((idx, table) => {
+            const tableId = "t" + idx;
+            if ($(table).attr("id") === undefined) {
+                $(table).attr("id", tableId);
+            }
+        });
+
         const page = parsePage();
     }
 
@@ -50,6 +58,13 @@ function parsePage() {
     if (endureList.length > 0) {
         page.lowestEndure = _.min(endureList);
     }
+
+    page.roleName = $("#t2")
+        .find("tr:first")
+        .next()
+        .next()
+        .find("td:eq(1)").text();
+
 
     return page;
 }
