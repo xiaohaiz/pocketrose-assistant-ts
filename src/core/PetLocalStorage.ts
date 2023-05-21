@@ -2,6 +2,7 @@ import _ from "lodash";
 import Castle from "../common/Castle";
 import Equipment from "../common/Equipment";
 import Pet from "../common/Pet";
+import SetupLoader from "../config/SetupLoader";
 import CastleInformation from "../pocketrose/CastleInformation";
 import CastleRanch from "../pocketrose/CastleRanch";
 import GoldenCage from "../pocketrose/GoldenCage";
@@ -17,6 +18,30 @@ class PetLocalStorage {
 
     constructor(credential: Credential) {
         this.#credential = credential;
+    }
+
+    async triggerUpdatePetMap(battleCount: number): Promise<void> {
+        return await (() => {
+            return new Promise<void>(resolve => {
+                let doUpdate = false;
+                const key = "_pmbc_" + this.#credential.id;
+                const configCount = SetupLoader.getSavePetMapBattleCount();
+                if (battleCount > 0 && configCount > 0 && battleCount % configCount === 0) {
+                    const lastUpdateBattleCount = StorageUtils.getInt(key, 0);
+                    if (lastUpdateBattleCount === 0 || lastUpdateBattleCount !== battleCount) {
+                        doUpdate = true;
+                    }
+                }
+                if (doUpdate) {
+                    this.updatePetMap().then(() => {
+                        StorageUtils.set(key, battleCount.toString());
+                        resolve();
+                    });
+                } else {
+                    resolve();
+                }
+            });
+        })();
     }
 
     async updatePetMap(): Promise<void> {
