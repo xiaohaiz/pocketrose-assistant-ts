@@ -65,6 +65,48 @@ function parsePage() {
         .next()
         .find("td:eq(1)").text();
 
+    $("#t5")
+        .find("td:contains('＜怪物＞')")
+        .filter((idx, td) => $(td).text() === "＜怪物＞")
+        .each((idx, td) => {
+            let monsterTable = $(td).closest("table");
+            let roleTable = monsterTable.parent().prev().find("table:first");
+
+            roleTable
+                .find("tr:first")
+                .next()
+                .next()
+                .find("td:eq(1)")
+                .each((i, td) => {
+                    let s = StringUtils.substringBefore($(td).text(), " / ");
+                    page.roleHealth = parseInt(s);
+                })
+                .next()
+                .each((i, td) => {
+                    let s = StringUtils.substringBefore($(td).text(), " / ");
+                    page.roleMana = parseInt(s);
+                })
+
+            monsterTable
+                .find("tr:first")
+                .next()
+                .next()
+                .find("td:eq(1)")
+                .each((i, td) => {
+                    let s = StringUtils.substringBefore($(td).text(), " / ");
+                    page.monsterHealth = parseInt(s);
+                })
+        });
+
+
+    if (page.roleHealth! === 0) {
+        page.battleResult = "战败";
+    } else if (page.monsterHealth! === 0) {
+        page.battleResult = "战胜";
+    } else {
+        page.battleResult = "平手";
+    }
+
 
     return page;
 }
