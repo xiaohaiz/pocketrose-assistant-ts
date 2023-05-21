@@ -50,8 +50,7 @@ class ConfigManager {
             if (key === null) {
                 continue;
             }
-            if (_.startsWith(key, "_pa_") || _.startsWith(key, "_fl_")) {
-                // 只清理配置数据
+            if (!_.startsWith(key, "_lc_")) {
                 candidates.push(key);
             }
         }
