@@ -1,5 +1,6 @@
 import SetupLoader from "../../config/SetupLoader";
 import EventHandler from "../../core/EventHandler";
+import PetLocalStorage from "../../core/PetLocalStorage";
 import TownDashboard from "../../pocketrose/TownDashboard";
 import TownDashboardPage from "../../pocketrose/TownDashboardPage";
 import Credential from "../../util/Credential";
@@ -57,6 +58,22 @@ class TownDashboardPageProcessor extends PageProcessorCredentialSupport {
             .find("input:submit:first")
             .attr("id", "personalButton");
 
+        $("input:submit").prop("disabled", true);
+        const battleCount = page.role!.battleCount!;
+        const petLocalStorage = new PetLocalStorage(credential);
+        petLocalStorage
+            .triggerUpdatePetMap(battleCount)
+            .then(() => {
+                petLocalStorage
+                    .triggerUpdatePetStatus(battleCount)
+                    .then(() => {
+                        $("input:submit").prop("disabled", false);
+                        this.#internalProcess(credential, page);
+                    });
+            });
+    }
+
+    #internalProcess(credential: Credential, page: TownDashboardPage) {
         doProcess(credential, page);
 
         if (SetupLoader.isHideCountryInformationEnabled()) {
