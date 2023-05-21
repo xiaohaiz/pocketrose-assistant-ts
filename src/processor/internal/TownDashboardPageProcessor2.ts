@@ -8,7 +8,7 @@ import PageProcessorCredentialSupport from "../PageProcessorCredentialSupport";
 class TownDashboardPageProcessor2 extends PageProcessorCredentialSupport {
 
     doLoadButtonStyles(): number[] {
-        return [16];
+        return [16, 10005, 10007, 10008, 10016, 10024, 10028, 10032, 10033, 10035, 10062];
     }
 
     doProcess(credential: Credential, context?: PageProcessorContext): void {
@@ -87,6 +87,7 @@ class TownDashboardPageProcessor2 extends PageProcessorCredentialSupport {
         // 页面标记完成，开始渲染页面
         // --------------------------------------------------------------------
         doRenderButtons();
+        doRenderShortcuts();
         doRenderCountryInformation();
     }
 
@@ -136,6 +137,102 @@ function doRenderButtons() {
         $("#country2Button").val("ACTION");
         $("#leaveButton").val("ACTION");
         $("#exitButton").val("ACTION");
+    }
+}
+
+function doRenderShortcuts() {
+    const bsId = SetupLoader.getTownDashboardShortcutButton();
+    if (bsId >= 0) {
+        const buttonClass = "button-" + bsId;
+        $("#t5")
+            .find("tr:first")
+            .find("td:first")
+            .attr("colspan", 5)
+            .parent()
+            .next()
+            .find("th:first")
+            .attr("colspan", 4)
+            .parent()
+            .next()
+            .find("th:first")
+            .css("text-align", "right")
+            .text("训练战斗")
+            .before($("<td style='vertical-align:bottom'><button role='button' class='" + buttonClass + "' id='shortcut0'>个人</button></td>"))
+            .parent()
+            .next()
+            .find("th:first")
+            .css("text-align", "right")
+            .text("城市设施")
+            .before($("<td style='vertical-align:bottom'><button role='button' class='" + buttonClass + "' id='shortcut1'>图鉴</button></td>"))
+            .parent()
+            .next()
+            .find("th:first")
+            .css("text-align", "right")
+            .before($("<td style='vertical-align:bottom'><button role='button' class='" + buttonClass + "' id='shortcut2'>装备</button></td>"))
+            .parent()
+            .next()
+            .find("th:first")
+            .css("text-align", "right")
+            .before($("<td style='vertical-align:bottom'><button role='button' class='" + buttonClass + "' id='shortcut3'>宠物</button></td>"))
+            .parent()
+            .next()
+            .find("th:first")
+            .css("text-align", "right")
+            .before($("<td style='vertical-align:bottom'><button role='button' class='" + buttonClass + "' id='shortcut4'>职业</button></td>"))
+            .parent()
+            .next()
+            .find("th:first")
+            .attr("colspan", 3)
+            .parent()
+            .next()
+            .find("th:first")
+            .attr("colspan", 4)
+            .parent()
+            .next()
+            .find("th:first")
+            .attr("colspan", 5)
+
+
+        $("#shortcut0").on("click", () => {
+            $("option[value='RANK_REMAKE']")
+                .prop("selected", true)
+                .closest("td")
+                .next()
+                .find("input:submit:first")
+                .trigger("click");
+        });
+        $("#shortcut1").on("click", () => {
+            $("option[value='PETMAP']")
+                .prop("selected", true)
+                .closest("td")
+                .next()
+                .find("input:submit:first")
+                .trigger("click");
+        });
+        $("#shortcut2").on("click", () => {
+            $("option[value='USE_ITEM']")
+                .prop("selected", true)
+                .closest("td")
+                .next()
+                .find("input:submit:first")
+                .trigger("click");
+        });
+        $("#shortcut3").on("click", () => {
+            $("option[value='PETSTATUS']")
+                .prop("selected", true)
+                .closest("td")
+                .next()
+                .find("input:submit:first")
+                .trigger("click");
+        });
+        $("#shortcut4").on("click", () => {
+            $("option[value='CHANGE_OCCUPATION']")
+                .prop("selected", true)
+                .closest("td")
+                .next()
+                .find("input:submit:first")
+                .trigger("click");
+        });
     }
 }
 
