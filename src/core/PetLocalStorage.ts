@@ -44,6 +44,30 @@ class PetLocalStorage {
         })();
     }
 
+    async triggerUpdatePetStatus(battleCount: number): Promise<void> {
+        return await (() => {
+            return new Promise<void>(resolve => {
+                let doUpdate = false;
+                const key = "_psbc_" + this.#credential.id;
+                const configCount = SetupLoader.getSavePetBattleCount();
+                if (battleCount > 0 && configCount > 0 && battleCount % configCount === 0) {
+                    const lastUpdateBattleCount = StorageUtils.getInt(key, 0);
+                    if (lastUpdateBattleCount === 0 || lastUpdateBattleCount !== battleCount) {
+                        doUpdate = true;
+                    }
+                }
+                if (doUpdate) {
+                    this.updatePetStatus().then(() => {
+                        StorageUtils.set(key, battleCount.toString());
+                        resolve();
+                    });
+                } else {
+                    resolve();
+                }
+            });
+        })();
+    }
+
     async updatePetMap(): Promise<void> {
         return await (() => {
             return new Promise<void>(resolve => {
