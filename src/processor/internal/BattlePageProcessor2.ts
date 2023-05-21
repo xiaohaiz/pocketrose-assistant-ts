@@ -103,21 +103,25 @@ function processBattle(credential: Credential, page: BattlePage, context: PagePr
 
     // 重新定义按钮的行为
     $("#returnButton").on("click", () => {
+        $("#returnButton").prop("disabled", true);
         doBeforeReturn(credential, context).then(() => {
             $("#returnTown").trigger("click");
         });
     });
     $("#depositButton").on("click", () => {
+        $("#depositButton").prop("disabled", true);
         doBeforeReturn(credential, context).then(() => {
             $("#deposit").trigger("click");
         });
     });
     $("#repairButton").on("click", () => {
+        $("#repairButton").prop("disabled", true);
         doBeforeReturn(credential, context).then(() => {
             $("#repair").trigger("click");
         });
     });
     $("#lodgeButton").on("click", () => {
+        $("#lodgeButton").prop("disabled", true);
         doBeforeReturn(credential, context).then(() => {
             $("#lodge").trigger("click");
         });
