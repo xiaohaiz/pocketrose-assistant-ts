@@ -404,6 +404,9 @@ function generateLodgeForm(credential: Credential) {
 }
 
 function renderMinimalBattle() {
+    if (!SetupLoader.isMobileMiniDashboardEnabled()) {
+        return;
+    }
     $("table:first")
         .find("tr:first")
         .next()
