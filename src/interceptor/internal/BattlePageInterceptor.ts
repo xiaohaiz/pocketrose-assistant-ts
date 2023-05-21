@@ -1,11 +1,11 @@
 import LocationStateMachine from "../../core/LocationStateMachine";
-import BattlePageProcessor from "../../processor/internal/BattlePageProcessor";
+import BattlePageProcessor2 from "../../processor/internal/BattlePageProcessor2";
 import PageProcessorContext from "../../processor/PageProcessorContext";
 import PageInterceptor from "../PageInterceptor";
 
 class BattlePageInterceptor implements PageInterceptor {
 
-    readonly #processor = new BattlePageProcessor();
+    readonly #processor = new BattlePageProcessor2();
 
     accept(cgi: string, pageText: string): boolean {
         if (cgi === "battle.cgi") {

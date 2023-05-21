@@ -14,8 +14,6 @@ class BattlePageProcessor extends PageProcessorCredentialSupport {
     }
 
     doProcess(credential: Credential, context?: PageProcessorContext): void {
-        console.log(context?.get("townId"))
-        console.log(context?.get("battleCount"))
         this.#internalProcess(credential);
     }
 
