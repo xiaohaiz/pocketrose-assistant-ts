@@ -1,3 +1,4 @@
+import SetupLoader from "../../config/SetupLoader";
 import TownDashboardPage from "../../pocketrose/TownDashboardPage";
 import Credential from "../../util/Credential";
 import PageUtils from "../../util/PageUtils";
@@ -71,6 +72,30 @@ class TownDashboardPageProcessor2 extends PageProcessorCredentialSupport {
             .find("form[action='exit.cgi']")
             .find("input:submit:first")
             .attr("id", "exitButton");
+
+        // 根据设置修改按钮文本
+        if (SetupLoader.isAsciiTextButtonEnabled()) {
+            $("#refreshButton").val("RELOAD");
+            $("#battleButton").val("BATTLE");
+            $("#townButton").val("ACTION");
+            $("#personalButton").val("ACTION");
+            $("#country1Button").val("ACTION");
+            $("#country2Button").val("ACTION");
+            $("#leaveButton").val("ACTION");
+            $("#exitButton").val("ACTION");
+        }
+
+        // 根据设置隐藏城市支配国信息
+        if (SetupLoader.isHideCountryInformationEnabled()) {
+            $("#t6")
+                .find("font:contains('城市的支配国')")
+                .filter((idx, font) => $(font).text().startsWith("城市的支配国"))
+                .parent()
+                .parent().hide()
+                .next().hide()
+                .next().hide()
+                .next().hide();
+        }
     }
 
 
