@@ -1,3 +1,4 @@
+import _ from "lodash";
 import Castle from "../common/Castle";
 import Equipment from "../common/Equipment";
 import Pet from "../common/Pet";
@@ -25,6 +26,45 @@ class PetLocalStorage {
                     const value = page.asText();
                     const key = "_pm_" + this.#credential.id;
                     StorageUtils.set(key, value);
+                    resolve();
+                });
+            });
+        })();
+    }
+
+    async updatePetStatus(): Promise<void> {
+        return await (() => {
+            return new Promise<void>(resolve => {
+                this.#findAllPets().then(petList => {
+                    const petStatusList: string[] = [];
+                    for (const pet of petList) {
+                        let s = "";
+                        s += pet.name;
+                        s += "/";
+                        s += pet.gender;
+                        s += "/";
+                        s += pet.level;
+                        s += "/";
+                        s += pet.maxHealth;
+                        s += "/";
+                        s += pet.attack;
+                        s += "/";
+                        s += pet.defense;
+                        s += "/";
+                        s += pet.specialAttack;
+                        s += "/";
+                        s += pet.specialDefense;
+                        s += "/";
+                        s += pet.speed;
+                        s += "/";
+                        s += pet.location;
+                        petStatusList.push(s);
+                    }
+
+                    const key = "_ps_" + this.#credential.id;
+                    const value = _.join(petStatusList, " ");
+                    StorageUtils.set(key, value);
+
                     resolve();
                 });
             });
