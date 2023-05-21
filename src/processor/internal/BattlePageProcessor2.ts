@@ -11,6 +11,10 @@ import PageProcessorCredentialSupport from "../PageProcessorCredentialSupport";
 
 class BattlePageProcessor2 extends PageProcessorCredentialSupport {
 
+    doLoadButtonStyles(): number[] {
+        return [90];
+    }
+
     doProcess(credential: Credential, context?: PageProcessorContext): void {
         if (context === undefined || context.get("battleCount") === undefined) {
             // context is required for battle processing
@@ -69,6 +73,32 @@ function processBattle(credential: Credential, page: BattlePage, context: PagePr
             "<div style='padding-top:10px;padding-bottom:10px'><button role='button' id='repairButton'>返回修理</button></div>" +
             "<div style='padding-top:10px;padding-bottom:10px'><button role='button' id='lodgeButton'>返回住宿</button></div>" +
             ""));
+
+    // 根据设置是否变成大按钮
+    if (SetupLoader.isBattleLargeButtonEnabled()) {
+        $("#returnButton").addClass("button-90");
+        $("#depositButton").addClass("button-90");
+        $("#repairButton").addClass("button-90");
+        $("#lodgeButton").addClass("button-90");
+    }
+
+    // 根据设置的内容修改按钮的台词
+    let buttonText = SetupLoader.getBattleReturnButtonText();
+    if (buttonText !== "") {
+        $("#returnButton").text(_.escape(buttonText));
+    }
+    buttonText = SetupLoader.getBattleLodgeButtonText();
+    if (buttonText !== "") {
+        $("#lodgeButton").text(_.escape(buttonText));
+    }
+    buttonText = SetupLoader.getBattleRepairButtonText();
+    if (buttonText !== "") {
+        $("#repairButton").text(_.escape(buttonText));
+    }
+    buttonText = SetupLoader.getBattleDepositButtonText();
+    if (buttonText !== "") {
+        $("#depositButton").text(_.escape(buttonText));
+    }
 
     // 重新定义按钮的行为
     $("#returnButton").on("click", () => {
