@@ -10,7 +10,7 @@ import StringUtils from "../../util/StringUtils";
 import PageProcessorContext from "../PageProcessorContext";
 import PageProcessorCredentialSupport from "../PageProcessorCredentialSupport";
 
-class BattlePageProcessor2 extends PageProcessorCredentialSupport {
+class BattlePageProcessor extends PageProcessorCredentialSupport {
 
     doLoadButtonStyles(): number[] {
         return [90];
@@ -502,4 +502,4 @@ async function doBeforeReturn(credential: Credential, context: PageProcessorCont
     })();
 }
 
-export = BattlePageProcessor2;
+export = BattlePageProcessor;
