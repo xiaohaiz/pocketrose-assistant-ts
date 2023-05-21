@@ -1,4 +1,5 @@
 import Pet from "../../common/Pet";
+import SetupLoader from "../../config/SetupLoader";
 import PetProfileLoader from "../../core/PetProfileLoader";
 import CastleBank from "../../pocketrose/CastleBank";
 import CastlePetExpressHouse from "../../pocketrose/CastlePetExpressHouse";
@@ -10,7 +11,6 @@ import PersonalPetEvolutionPage from "../../pocketrose/PersonalPetEvolutionPage"
 import PersonalPetManagement from "../../pocketrose/PersonalPetManagement";
 import PersonalPetManagementPage from "../../pocketrose/PersonalPetManagementPage";
 import PersonalStatus from "../../pocketrose/PersonalStatus";
-import SetupLoader from "../../setup/SetupLoader";
 import Credential from "../../util/Credential";
 import MessageBoard from "../../util/MessageBoard";
 import NetworkUtils from "../../util/NetworkUtils";

@@ -253,6 +253,10 @@ class SetupLoader {
         return StorageUtils.getInt("_pa_039", 20);
     }
 
+    static getSavePetBattleCount(): number {
+        return StorageUtils.getInt("_pa_046", 50);
+    }
+
     static isMobileMiniDashboardEnabled() {
         return StorageUtils.getBoolean("_pa_040");
     }

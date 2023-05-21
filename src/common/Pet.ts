@@ -1,5 +1,5 @@
+import SetupLoader from "../config/SetupLoader";
 import Pokemon from "../core/Pokemon";
-import SetupLoader from "../setup/SetupLoader";
 import Constants from "../util/Constants";
 import PageUtils from "../util/PageUtils";
 import StringUtils from "../util/StringUtils";
@@ -43,6 +43,8 @@ class Pet {
     after?: string;
     mapCount?: number;
     evolution?: number;
+
+    location?: string;  // P/C/R
 
     get nameHtml() {
         return Pokemon.pokemonWikiReplacement(this.name);

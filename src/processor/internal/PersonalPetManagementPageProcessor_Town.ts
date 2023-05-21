@@ -1,5 +1,6 @@
 import Pet from "../../common/Pet";
 import Role from "../../common/Role";
+import SetupLoader from "../../config/SetupLoader";
 import FastLoginLoader from "../../core/FastLoginLoader";
 import PetProfileLoader from "../../core/PetProfileLoader";
 import PetRelationLoader from "../../core/PetRelationLoader";
@@ -14,7 +15,6 @@ import PersonalPetManagement from "../../pocketrose/PersonalPetManagement";
 import PersonalPetManagementPage from "../../pocketrose/PersonalPetManagementPage";
 import PersonalStatus from "../../pocketrose/PersonalStatus";
 import TownBank from "../../pocketrose/TownBank";
-import SetupLoader from "../../setup/SetupLoader";
 import Credential from "../../util/Credential";
 import MessageBoard from "../../util/MessageBoard";
 import NetworkUtils from "../../util/NetworkUtils";

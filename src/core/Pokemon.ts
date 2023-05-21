@@ -1,4 +1,4 @@
-import SetupLoader from "../setup/SetupLoader";
+import SetupLoader from "../config/SetupLoader";
 
 class Pokemon {
 
@@ -15,6 +15,11 @@ class Pokemon {
             return source;
         }
         return target;
+    }
+
+    static isInitialPetName(petName: string | undefined) {
+        // @ts-ignore
+        return petName !== undefined && pokemonDict[petName] !== undefined;
     }
 }
 

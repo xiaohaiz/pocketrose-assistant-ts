@@ -1,13 +1,13 @@
 import Equipment from "../../common/Equipment";
+import ConfigManager from "../../config/ConfigManager";
+import SetupItemManager from "../../config/SetupItemManager";
 import EquipmentLoader from "../../core/EquipmentLoader";
 import PersonalEquipmentManagement from "../../pocketrose/PersonalEquipmentManagement";
 import PersonalStatus from "../../pocketrose/PersonalStatus";
 import TreasureBag from "../../pocketrose/TreasureBag";
-import SetupItemManager from "../../setup/SetupItemManager";
 import Credential from "../../util/Credential";
 import MessageBoard from "../../util/MessageBoard";
 import PageUtils from "../../util/PageUtils";
-import StorageUtils from "../../util/StorageUtils";
 import PageProcessorCredentialSupport from "../PageProcessorCredentialSupport";
 
 abstract class AbstractPersonalSetupPageProcessor extends PageProcessorCredentialSupport {
@@ -100,7 +100,7 @@ abstract class AbstractPersonalSetupPageProcessor extends PageProcessorCredentia
         this.doBindReturnButton("returnButton");
 
         $("#exportButton").on("click", () => {
-            const allConfigs = StorageUtils.dumpLocalStorage();
+            const allConfigs = ConfigManager.exportAsJson();
             $("#allConfigs").val(allConfigs);
         });
         $("#importButton").on("click", () => {
@@ -108,13 +108,7 @@ abstract class AbstractPersonalSetupPageProcessor extends PageProcessorCredentia
                 return;
             }
             const json = $("#allConfigs").val() as string;
-            const allConfigs = JSON.parse(json);
-            const keys = Object.keys(allConfigs);
-            for (const key of keys) {
-                // @ts-ignore
-                const value = allConfigs[key];
-                StorageUtils.set(key, value);
-            }
+            ConfigManager.importFromJson(json);
             MessageBoard.publishMessage("助手设置信息已经导入！");
             PageUtils.scrollIntoView("pageTitle");
             $("#refreshButton").trigger("click");
@@ -124,7 +118,7 @@ abstract class AbstractPersonalSetupPageProcessor extends PageProcessorCredentia
             if (!confirm("请再次确认要清除助手的所有设置？")) {
                 return;
             }
-            StorageUtils.purge();
+            ConfigManager.purge();
             MessageBoard.publishMessage("所有助手设置信息已经清除！");
             PageUtils.scrollIntoView("pageTitle");
             $("#refreshButton").trigger("click");

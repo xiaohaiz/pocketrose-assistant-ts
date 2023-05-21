@@ -1,5 +1,6 @@
 import Equipment from "../../common/Equipment";
 import EquipmentSet from "../../common/EquipmentSet";
+import SetupLoader from "../../config/SetupLoader";
 import EquipmentSetLoader from "../../core/EquipmentSetLoader";
 import FastLoginLoader from "../../core/FastLoginLoader";
 import NpcLoader from "../../core/NpcLoader";
@@ -15,7 +16,6 @@ import TownDashboard from "../../pocketrose/TownDashboard";
 import TownEquipmentExpressHouse from "../../pocketrose/TownEquipmentExpressHouse";
 import TownForgeHouse from "../../pocketrose/TownForgeHouse";
 import TreasureBag from "../../pocketrose/TreasureBag";
-import SetupLoader from "../../setup/SetupLoader";
 import CommentBoard from "../../util/CommentBoard";
 import Credential from "../../util/Credential";
 import MessageBoard from "../../util/MessageBoard";

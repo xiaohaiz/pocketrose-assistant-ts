@@ -1,7 +1,8 @@
+import SetupLoader from "../../config/SetupLoader";
 import EventHandler from "../../core/EventHandler";
+import PetLocalStorage from "../../core/PetLocalStorage";
 import TownDashboard from "../../pocketrose/TownDashboard";
 import TownDashboardPage from "../../pocketrose/TownDashboardPage";
-import SetupLoader from "../../setup/SetupLoader";
 import Credential from "../../util/Credential";
 import NetworkUtils from "../../util/NetworkUtils";
 import PageUtils from "../../util/PageUtils";
@@ -57,6 +58,22 @@ class TownDashboardPageProcessor extends PageProcessorCredentialSupport {
             .find("input:submit:first")
             .attr("id", "personalButton");
 
+        $("input:submit").prop("disabled", true);
+        const battleCount = page.role!.battleCount!;
+        const petLocalStorage = new PetLocalStorage(credential);
+        petLocalStorage
+            .triggerUpdatePetMap(battleCount)
+            .then(() => {
+                petLocalStorage
+                    .triggerUpdatePetStatus(battleCount)
+                    .then(() => {
+                        $("input:submit").prop("disabled", false);
+                        this.#internalProcess(credential, page);
+                    });
+            });
+    }
+
+    #internalProcess(credential: Credential, page: TownDashboardPage) {
         doProcess(credential, page);
 
         if (SetupLoader.isHideCountryInformationEnabled()) {
@@ -246,9 +263,9 @@ function doProcess(credential: Credential, page: TownDashboardPage) {
         // 手机版极简主页。。尝试简化
         $("center:first").remove();
         $("br:first").remove();
-        $("#t0")
-            .find("tr:first")
-            .remove();
+        // $("#t0")
+        //     .find("tr:first")
+        //     .remove();
 
         $("#t1")
             .find("tr:first")
@@ -355,6 +372,12 @@ function doProcess(credential: Credential, page: TownDashboardPage) {
                 .find("td:first").html(h1);
             $("#ROW2")
                 .find("td:first").html(h2);
+
+            $("#t6")
+                .find("th:first")
+                .removeAttr("height")
+                .css("font-weight", "bold")
+                .css("font-size", "200%");
         }
 
         const colspan = bsId > 0 ? 4 : 3;

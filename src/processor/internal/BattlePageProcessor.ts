@@ -1,10 +1,8 @@
+import SetupLoader from "../../config/SetupLoader";
 import NpcLoader from "../../core/NpcLoader";
-import TownPetMapHouse from "../../pocketrose/TownPetMapHouse";
-import SetupLoader from "../../setup/SetupLoader";
 import CommentBoard from "../../util/CommentBoard";
 import Credential from "../../util/Credential";
 import PageUtils from "../../util/PageUtils";
-import StorageUtils from "../../util/StorageUtils";
 import StringUtils from "../../util/StringUtils";
 import PageProcessorCredentialSupport from "../PageProcessorCredentialSupport";
 
@@ -15,6 +13,10 @@ class BattlePageProcessor extends PageProcessorCredentialSupport {
     }
 
     doProcess(credential: Credential): void {
+        this.#internalProcess(credential);
+    }
+
+    #internalProcess(credential: Credential) {
         this.#doProcess(credential);
 
         if (SetupLoader.isMobileMiniDashboardEnabled()) {
@@ -169,17 +171,9 @@ function doRenderPrompt(pageText: string) {
     }
 }
 
-function doPostBattle(credential: Credential, pageText: string): void {
+function doPostBattle(credential: Credential, pageText: string) {
     const reportText = $("#ueqtweixin").text();
     const endure = findRecoverItemEndure(reportText);
-    const savePetMapBattleCount = SetupLoader.getSavePetMapBattleCount();
-    if (savePetMapBattleCount > 0) {
-        if (endure % savePetMapBattleCount === 0) {
-            new TownPetMapHouse(credential).open().then(page => {
-                StorageUtils.set("_pm_" + credential.id, page.asText());
-            });
-        }
-    }
 
     if (shouldRepair(reportText, endure)) {
         // 优先修理按钮

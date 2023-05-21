@@ -1,6 +1,6 @@
+import SetupLoader from "../../config/SetupLoader";
 import LocationStateMachine from "../../core/LocationStateMachine";
 import PersonalFastLoginPageProcessor from "../../processor/internal/PersonalFastLoginPageProcessor";
-import SetupLoader from "../../setup/SetupLoader";
 import PageInterceptor from "../PageInterceptor";
 
 class PersonalFastLoginPageInterceptor implements PageInterceptor {
