@@ -1,6 +1,5 @@
 import SetupLoader from "../../config/SetupLoader";
 import NpcLoader from "../../core/NpcLoader";
-import RolePetManager from "../../core/RolePetManager";
 import CommentBoard from "../../util/CommentBoard";
 import Credential from "../../util/Credential";
 import PageUtils from "../../util/PageUtils";
@@ -14,15 +13,7 @@ class BattlePageProcessor extends PageProcessorCredentialSupport {
     }
 
     doProcess(credential: Credential): void {
-        const reportText = $("#ueqtweixin").text();
-        const endure = findRecoverItemEndure(reportText);
-
-        const pm = new RolePetManager(credential);
-        pm.triggerPetMapUpdate(endure).then(() => {
-            pm.triggerPetStatusUpdate(endure).then(() => {
-                this.#internalProcess(credential);
-            });
-        });
+        this.#internalProcess(credential);
     }
 
     #internalProcess(credential: Credential) {
