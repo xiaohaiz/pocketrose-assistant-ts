@@ -247,6 +247,18 @@ function parsePage() {
         page.battleResult = "平手";
     }
 
+    page.harvestList = [];
+    $("table:eq(5)")
+        .find("p")
+        .filter((idx, p) => $(p).text().includes("入手！"))
+        .each((idx, p) => {
+            _.split($(p).html(), "<br>").forEach(it => {
+                if (it.endsWith("入手！")) {
+                    page.harvestList!.push(it);
+                }
+            });
+        });
+
     return page;
 }
 

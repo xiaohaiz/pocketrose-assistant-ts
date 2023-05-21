@@ -12,6 +12,7 @@ class BattlePage {
     roleMaxMana?: number;           // 角色最大魔力
     monsterHealth?: number;         // 怪物剩余生命
     battleResult?: string;          // 战斗结果
+    harvestList?: string[];         // 入手列表
 
     constructor() {
         this.treasureBattle = false;
