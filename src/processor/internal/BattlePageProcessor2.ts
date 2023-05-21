@@ -1,6 +1,8 @@
 import _ from "lodash";
 import SetupLoader from "../../config/SetupLoader";
+import NpcLoader from "../../core/NpcLoader";
 import BattlePage from "../../pocketrose/BattlePage";
+import CommentBoard from "../../util/CommentBoard";
 import Credential from "../../util/Credential";
 import PageUtils from "../../util/PageUtils";
 import StringUtils from "../../util/StringUtils";
@@ -105,6 +107,51 @@ function processBattle(credential: Credential, page: BattlePage, context: PagePr
         case "回":
             $("#returnButton").attr("tabindex", 1);
             break;
+    }
+
+    // 入手情况的渲染
+    renderHarvestMessage(page);
+}
+
+function renderHarvestMessage(page: BattlePage) {
+    if (page.harvestList!.length === 0) {
+        const prompt = SetupLoader.getNormalBattlePrompt();
+        if (prompt["person"] !== undefined && prompt["person"] !== "NONE") {
+            let person = prompt["person"];
+            let imageHtml: string;
+            if (person === "SELF") {
+                imageHtml = PageUtils.findFirstRoleImageHtml()!;
+            } else if (person === "RANDOM") {
+                imageHtml = NpcLoader.randomPlayerImageHtml()!;
+            } else {
+                imageHtml = NpcLoader.getNpcImageHtml(person)!;
+            }
+            CommentBoard.createCommentBoard(imageHtml);
+            $("#commentBoard")
+                .css("text-align", "center")
+                .css("background-color", "black")
+                .css("color", "greenyellow");
+            CommentBoard.writeMessage(_.escape(prompt["text"]));
+        }
+    } else {
+        const prompt = SetupLoader.getBattleHarvestPrompt();
+        if (prompt["person"] !== undefined && prompt["person"] !== "NONE") {
+            let person = prompt["person"];
+            let imageHtml: string;
+            if (person === "SELF") {
+                imageHtml = PageUtils.findFirstRoleImageHtml()!;
+            } else if (person === "RANDOM") {
+                imageHtml = NpcLoader.randomPlayerImageHtml()!;
+            } else {
+                imageHtml = NpcLoader.getNpcImageHtml(person)!;
+            }
+            CommentBoard.createCommentBoard(imageHtml);
+            $("#commentBoard").css("text-align", "center");
+            for (const it of page.harvestList!) {
+                CommentBoard.writeMessage("<b style='font-size:150%'>" + it + "</b><br>");
+            }
+            CommentBoard.writeMessage(_.escape(prompt["text"]));
+        }
     }
 }
 
