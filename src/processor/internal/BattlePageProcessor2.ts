@@ -8,18 +8,10 @@ import PageProcessorCredentialSupport from "../PageProcessorCredentialSupport";
 class BattlePageProcessor2 extends PageProcessorCredentialSupport {
 
     doProcess(credential: Credential, context?: PageProcessorContext): void {
-        if (context === undefined) {
+        if (context === undefined || context.get("battleCount") === undefined) {
             // context is required for battle processing
             return;
         }
-
-        // 给所有的表格加上id，便于后续解析的定位
-        $("table").each((idx, table) => {
-            const tableId = "t" + idx;
-            if ($(table).attr("id") === undefined) {
-                $(table).attr("id", tableId);
-            }
-        });
 
         // 解析页面的反馈的数据
         const page = parsePage();
@@ -51,7 +43,7 @@ function processBattle(credential: Credential, page: BattlePage, context: PagePr
     html += "<tr style='display:none'>";
     html += "<td id='hidden-5'></td>";
     html += "</tr>";
-    $("#t0")
+    $("table:first")
         .find("tr:first")
         .after($(html));
 }
@@ -94,13 +86,7 @@ function parsePage() {
         page.lowestEndure = _.min(endureList);
     }
 
-    page.roleName = $("#t2")
-        .find("tr:first")
-        .next()
-        .next()
-        .find("td:eq(1)").text();
-
-    $("#t5")
+    $("table:eq(5)")
         .find("td:contains('＜怪物＞')")
         .filter((idx, td) => $(td).text() === "＜怪物＞")
         .each((idx, td) => {
