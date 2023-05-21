@@ -21,7 +21,8 @@ class LocationStateMachine {
 
     inTown() {
         const townId = $("input:hidden[name='townid']:last").val() as string;
-        StorageUtils.set(this.#storageKey, "TOWN/" + townId);
+        const battleCount = parseInt($("input:hidden[name='ktotal']").val() as string);
+        StorageUtils.set(this.#storageKey, "TOWN/" + townId + "/" + battleCount);
     }
 
     inCastle() {
