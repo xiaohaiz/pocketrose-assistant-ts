@@ -7,6 +7,10 @@ import PageProcessorCredentialSupport from "../PageProcessorCredentialSupport";
 
 class TownDashboardPageProcessor2 extends PageProcessorCredentialSupport {
 
+    doLoadButtonStyles(): number[] {
+        return [16];
+    }
+
     doProcess(credential: Credential, context?: PageProcessorContext): void {
         // --------------------------------------------------------------------
         // 解析城市主页面的内容
@@ -25,11 +29,11 @@ class TownDashboardPageProcessor2 extends PageProcessorCredentialSupport {
             $(table).attr("id", tableId);
         });
         // 标记聊天输入文本框
-        $("input:text:last").attr("id", "messageInputText");
+        $("input:text:last")
+            .attr("id", "messageInputText");
         // 标记更新按钮
         $("input:submit[value='更新']")
-            .attr("id", "refreshButton")
-            .css("height", "100%");
+            .attr("id", "refreshButton");
         // 标记菜单所有的按钮
         $("#t5")
             .find("form[action='battle.cgi']")
@@ -37,77 +41,116 @@ class TownDashboardPageProcessor2 extends PageProcessorCredentialSupport {
             .attr("id", "battleCell")
             .next()
             .find("input:submit:first")
-            .attr("id", "battleButton")
-            .css("height", "100%");
+            .attr("id", "battleButton");
         $("#t5")
             .find("form[action='town.cgi']")
             .parent()
             .attr("id", "townCell")
             .next()
             .find("input:submit:first")
-            .attr("id", "townButton")
-            .css("height", "100%");
+            .attr("id", "townButton");
         $("#t5")
             .find("form[action='mydata.cgi']")
             .next()
             .attr("id", "personalCell")
             .next()
             .find("input:submit:first")
-            .attr("id", "personalButton")
-            .css("height", "100%");
+            .attr("id", "personalButton");
         $("#t5")
             .find("form[action='country.cgi']:first")
             .next()
             .attr("id", "country1Cell")
             .next()
             .find("input:submit:first")
-            .attr("id", "country1Button")
-            .css("height", "100%");
+            .attr("id", "country1Button");
         $("#t5")
             .find("form[action='country.cgi']:eq(1)")
             .next()
             .attr("id", "country2Cell")
             .next()
             .find("input:submit:first")
-            .attr("id", "country2Button")
-            .css("height", "100%");
+            .attr("id", "country2Button");
         $("#t5")
             .find("form[action='map.cgi']")
             .find("input:submit:first")
             .attr("id", "leaveButton")
-            .css("height", "100%");
+            .parent()
+            .parent()
+            .removeAttr("colspan")
+            .before($("<td></td>"));
         $("#t5")
             .find("form[action='exit.cgi']")
             .find("input:submit:first")
-            .attr("id", "exitButton")
-            .css("height", "100%");
+            .attr("id", "exitButton");
 
-        // 根据设置修改按钮文本
-        if (SetupLoader.isAsciiTextButtonEnabled()) {
-            $("#refreshButton").val("RELOAD");
-            $("#battleButton").val("BATTLE");
-            $("#townButton").val("ACTION");
-            $("#personalButton").val("ACTION");
-            $("#country1Button").val("ACTION");
-            $("#country2Button").val("ACTION");
-            $("#leaveButton").val("ACTION");
-            $("#exitButton").val("ACTION");
-        }
-
-        // 根据设置隐藏城市支配国信息
-        if (SetupLoader.isHideCountryInformationEnabled()) {
-            $("#t6")
-                .find("font:contains('城市的支配国')")
-                .filter((idx, font) => $(font).text().startsWith("城市的支配国"))
-                .parent()
-                .parent().hide()
-                .next().hide()
-                .next().hide()
-                .next().hide();
-        }
+        // --------------------------------------------------------------------
+        // 页面标记完成，开始渲染页面
+        // --------------------------------------------------------------------
+        doRenderButtons();
+        doRenderCountryInformation();
     }
 
 
+}
+
+function doRenderButtons() {
+    $("#refreshButton")
+        .addClass("button-16")
+        .css("width", "100%")
+        .css("height", "100%");
+    $("#battleButton")
+        .addClass("button-16")
+        .css("width", "100%")
+        .css("height", "100%");
+    $("#townButton")
+        .addClass("button-16")
+        .css("width", "100%")
+        .css("height", "100%");
+    $("#personalButton")
+        .addClass("button-16")
+        .css("width", "100%")
+        .css("height", "100%");
+    $("#country1Button")
+        .addClass("button-16")
+        .css("width", "100%")
+        .css("height", "100%");
+    $("#country2Button")
+        .addClass("button-16")
+        .css("width", "100%")
+        .css("height", "100%");
+    $("#leaveButton")
+        .addClass("button-16")
+        .css("width", "100%")
+        .css("height", "100%");
+    $("#exitButton")
+        .addClass("button-16")
+        .css("width", "100%")
+        .css("height", "100%");
+    // 根据设置修改按钮文本
+    if (SetupLoader.isAsciiTextButtonEnabled()) {
+        $("#refreshButton").val("RELOAD");
+        $("#battleButton").val("BATTLE");
+        $("#townButton").val("ACTION");
+        $("#personalButton").val("ACTION");
+        $("#country1Button").val("ACTION");
+        $("#country2Button").val("ACTION");
+        $("#leaveButton").val("ACTION");
+        $("#exitButton").val("ACTION");
+    }
+}
+
+function doRenderCountryInformation() {
+    // 根据设置隐藏城市支配国信息
+    if (SetupLoader.isHideCountryInformationEnabled()) {
+        $("#t6")
+            .find("font:contains('城市的支配国')")
+            .filter((idx, font) => $(font).text().startsWith("城市的支配国"))
+            .parent()
+            .parent().hide()
+            .next().hide()
+            .next().hide()
+            .next().hide();
+    }
 }
 
 export = TownDashboardPageProcessor2;
