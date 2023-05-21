@@ -17,7 +17,7 @@ class PageProcessorContext {
         return this.#context.get(key);
     }
 
-    static withTownId(townId: string | undefined) {
+    static withTownId2(townId: string | undefined) {
         const context = new PageProcessorContext();
         if (townId !== undefined) {
             context.set("townId", townId);
@@ -25,7 +25,7 @@ class PageProcessorContext {
         return context;
     }
 
-    static withCastleName(castleName: string | undefined) {
+    static withCastleName2(castleName: string | undefined) {
         const context = new PageProcessorContext();
         if (castleName !== undefined) {
             context.set("castleName", castleName);

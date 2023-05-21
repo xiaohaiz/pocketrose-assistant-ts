@@ -26,10 +26,10 @@ class PersonalCareerManagementPageInterceptor implements PageInterceptor {
         LocationStateMachine.create()
             .load()
             .whenInTown(townId => {
-                this.#inTownProcessor.process(PageProcessorContext.withTownId(townId));
+                this.#inTownProcessor.process(PageProcessorContext.withTownId2(townId));
             })
             .whenInCastle(castleName => {
-                this.#inCastleProcessor.process(PageProcessorContext.withCastleName(castleName));
+                this.#inCastleProcessor.process(PageProcessorContext.withCastleName2(castleName));
             })
             .fork();
     }
