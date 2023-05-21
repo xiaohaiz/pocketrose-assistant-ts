@@ -1,4 +1,5 @@
 import _ from "lodash";
+import SetupLoader from "../../config/SetupLoader";
 import BattlePage from "../../pocketrose/BattlePage";
 import Credential from "../../util/Credential";
 import PageUtils from "../../util/PageUtils";
@@ -90,6 +91,61 @@ function processBattle(credential: Credential, page: BattlePage, context: PagePr
     });
 }
 
+function doRecommendation(page: BattlePage, context: PageProcessorContext): string {
+    const battleCount = parseBattleCount(context);
+    if (battleCount % 100 === 0) {
+        // 每100战强制修理
+        return "修";
+    }
+    if (page.lowestEndure! < SetupLoader.getRepairMinLimitation()) {
+        // 有装备耐久度低于阈值了，强制修理
+        return "修";
+    }
+
+    if (page.battleResult === "战败") {
+        // 战败，转到住宿
+        return "宿";
+    }
+    if (page.zodiacBattle! && page.battleResult === "平手") {
+        // 十二宫战斗平手，视为战败，转到住宿
+        return "宿";
+    }
+
+    if (page.zodiacBattle! || page.treasureBattle!) {
+        // 十二宫战胜或者秘宝战胜，转到存钱
+        return "存";
+    }
+    let depositBattleCount = SetupLoader.getDepositBattleCount();
+    if (depositBattleCount > 0 && battleCount % depositBattleCount === 0) {
+        // 设置的存钱战数到了
+        return "存";
+    }
+
+    // 生命力低于最大值的配置比例，住宿推荐
+    if (SetupLoader.getLodgeHealthLostRatio() > 0 &&
+        (page.roleHealth! <= page.roleMaxHealth! * SetupLoader.getLodgeHealthLostRatio())) {
+        return "宿";
+    }
+    // 如果MANA小于50%并且小于配置点数，住宿推荐
+    if (SetupLoader.getLodgeManaLostPoint() > 0 &&
+        (page.roleMana! <= page.roleMaxMana! * 0.5 && page.roleMana! <= SetupLoader.getLodgeManaLostPoint())) {
+        return "宿";
+    }
+
+    if (SetupLoader.getDepositBattleCount() > 0) {
+        // 设置了定期存钱，但是没有到战数，那么就直接返回吧
+        return "回";
+    } else {
+        // 没有设置定期存钱，那就表示每战都存钱
+        return "存";
+    }
+}
+
+function parseBattleCount(context: PageProcessorContext) {
+    const s = context.get("battleCount")!;
+    return _.parseInt(s) + 1;
+}
+
 function parsePage() {
     const page = new BattlePage();
 
@@ -142,12 +198,16 @@ function parsePage() {
                 .find("td:eq(1)")
                 .each((i, td) => {
                     let s = StringUtils.substringBefore($(td).text(), " / ");
-                    page.roleHealth = parseInt(s);
+                    page.roleHealth = _.parseInt(s);
+                    s = StringUtils.substringAfter($(td).text(), " / ");
+                    page.roleMaxHealth = _.parseInt(s);
                 })
                 .next()
                 .each((i, td) => {
                     let s = StringUtils.substringBefore($(td).text(), " / ");
-                    page.roleMana = parseInt(s);
+                    page.roleMana = _.parseInt(s);
+                    s = StringUtils.substringAfter($(td).text(), " / ");
+                    page.roleMaxMana = _.parseInt(s);
                 })
 
             monsterTable
@@ -157,7 +217,7 @@ function parsePage() {
                 .find("td:eq(1)")
                 .each((i, td) => {
                     let s = StringUtils.substringBefore($(td).text(), " / ");
-                    page.monsterHealth = parseInt(s);
+                    page.monsterHealth = _.parseInt(s);
                 })
         });
 
