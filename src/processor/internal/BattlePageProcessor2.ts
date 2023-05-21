@@ -53,6 +53,41 @@ function processBattle(credential: Credential, page: BattlePage, context: PagePr
     generateDepositForm(credential);
     generateRepairForm(credential);
     generateLodgeForm(credential);
+
+    // 准备新的按钮
+    $("table:eq(5)")
+        .find("td:first")
+        .find("center:first")
+        .find("h1:first")
+        .next()
+        .append($("" +
+            "<div style='padding-top:10px;padding-bottom:10px'><button role='button' id='returnButton'>返回城市</button></div>" +
+            "<div style='padding-top:10px;padding-bottom:10px'><button role='button' id='depositButton'>返回银行</button></div>" +
+            "<div style='padding-top:10px;padding-bottom:10px'><button role='button' id='repairButton'>返回修理</button></div>" +
+            "<div style='padding-top:10px;padding-bottom:10px'><button role='button' id='lodgeButton'>返回住宿</button></div>" +
+            ""));
+
+    // 重新定义按钮的行为
+    $("#returnButton").on("click", () => {
+        doBeforeReturn(credential, page, context).then(() => {
+            $("#returnTown").trigger("click");
+        });
+    });
+    $("#depositButton").on("click", () => {
+        doBeforeReturn(credential, page, context).then(() => {
+            $("#deposit").trigger("click");
+        });
+    });
+    $("#repairButton").on("click", () => {
+        doBeforeReturn(credential, page, context).then(() => {
+            $("#repair").trigger("click");
+        });
+    });
+    $("#lodgeButton").on("click", () => {
+        doBeforeReturn(credential, page, context).then(() => {
+            $("#lodge").trigger("click");
+        });
+    });
 }
 
 function parsePage() {
@@ -181,7 +216,7 @@ function generateLodgeForm(credential: Credential) {
     $("#hidden-4").html(form);
 }
 
-async function doBeforeReturn(): Promise<void> {
+async function doBeforeReturn(credential: Credential, page: BattlePage, context: PageProcessorContext): Promise<void> {
     return await (() => {
         return new Promise<void>(resolve => {
             resolve();
