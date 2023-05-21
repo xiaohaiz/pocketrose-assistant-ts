@@ -263,9 +263,9 @@ function doProcess(credential: Credential, page: TownDashboardPage) {
         // 手机版极简主页。。尝试简化
         $("center:first").remove();
         $("br:first").remove();
-        $("#t0")
-            .find("tr:first")
-            .remove();
+        // $("#t0")
+        //     .find("tr:first")
+        //     .remove();
 
         $("#t1")
             .find("tr:first")
