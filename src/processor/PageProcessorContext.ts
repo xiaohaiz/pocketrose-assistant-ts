@@ -6,8 +6,10 @@ class PageProcessorContext {
         this.#context = new Map<string, string>();
     }
 
-    set(key: string, value: string): PageProcessorContext {
-        this.#context.set(key, value);
+    set(key: string, value: string | undefined): PageProcessorContext {
+        if (value !== undefined) {
+            this.#context.set(key, value);
+        }
         return this;
     }
 

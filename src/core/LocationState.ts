@@ -4,7 +4,7 @@ class LocationState {
 
     readonly #location: string | null;
 
-    #inTownHandler?: (townId?: string) => void;
+    #inTownHandler?: (townId?: string, battleCount?: string) => void;
     #inCastleHandler?: (castleName?: string) => void;
     #inMapHandler?: (coordinate?: Coordinate) => void;
 
@@ -12,7 +12,7 @@ class LocationState {
         this.#location = location;
     }
 
-    whenInTown(handler: (townId?: string) => void): LocationState {
+    whenInTown(handler: (townId?: string, battleCount?: string) => void): LocationState {
         this.#inTownHandler = handler;
         return this;
     }
@@ -34,7 +34,7 @@ class LocationState {
             return;
         }
         if (ss[0] === "TOWN") {
-            this.#inTownHandler?.(ss[1]);
+            this.#inTownHandler?.(ss[1], ss[2]);
         }
         if (ss[0] === "CASTLE") {
             this.#inCastleHandler?.(ss[1]);

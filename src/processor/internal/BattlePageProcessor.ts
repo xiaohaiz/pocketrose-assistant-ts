@@ -4,6 +4,7 @@ import CommentBoard from "../../util/CommentBoard";
 import Credential from "../../util/Credential";
 import PageUtils from "../../util/PageUtils";
 import StringUtils from "../../util/StringUtils";
+import PageProcessorContext from "../PageProcessorContext";
 import PageProcessorCredentialSupport from "../PageProcessorCredentialSupport";
 
 class BattlePageProcessor extends PageProcessorCredentialSupport {
@@ -12,7 +13,9 @@ class BattlePageProcessor extends PageProcessorCredentialSupport {
         return [90];
     }
 
-    doProcess(credential: Credential): void {
+    doProcess(credential: Credential, context?: PageProcessorContext): void {
+        console.log(context?.get("townId"))
+        console.log(context?.get("battleCount"))
         this.#internalProcess(credential);
     }
 

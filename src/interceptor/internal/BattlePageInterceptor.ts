@@ -1,6 +1,7 @@
-import PageInterceptor from "../PageInterceptor";
 import LocationStateMachine from "../../core/LocationStateMachine";
 import BattlePageProcessor from "../../processor/internal/BattlePageProcessor";
+import PageProcessorContext from "../../processor/PageProcessorContext";
+import PageInterceptor from "../PageInterceptor";
 
 class BattlePageInterceptor implements PageInterceptor {
 
@@ -20,8 +21,11 @@ class BattlePageInterceptor implements PageInterceptor {
     intercept(): void {
         LocationStateMachine.create()
             .load()
-            .whenInTown(() => {
-                this.#processor.process();
+            .whenInTown((townId, battleCount) => {
+                const context = new PageProcessorContext();
+                context.set("townId", townId);
+                context.set("battleCount", battleCount);
+                this.#processor.process(context);
             })
             .fork();
     }
