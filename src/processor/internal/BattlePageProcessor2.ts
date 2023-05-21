@@ -181,4 +181,12 @@ function generateLodgeForm(credential: Credential) {
     $("#hidden-4").html(form);
 }
 
+async function doBeforeReturn(): Promise<void> {
+    return await (() => {
+        return new Promise<void>(resolve => {
+            resolve();
+        });
+    })();
+}
+
 export = BattlePageProcessor2;
