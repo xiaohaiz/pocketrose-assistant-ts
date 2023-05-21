@@ -260,6 +260,11 @@ function doProcess(credential: Credential, page: TownDashboardPage) {
 
 
     if (SetupLoader.isMobileMiniDashboardEnabled()) {
+        let taxText: string | undefined = undefined;
+        if ($("#cityTaxCell").length > 0) {
+            taxText = $("#cityTaxCell").text();
+        }
+
         // 手机版极简主页。。尝试简化
         $("center:first").remove();
         $("br:first").remove();
@@ -287,7 +292,15 @@ function doProcess(credential: Credential, page: TownDashboardPage) {
             .next().hide()
             .next().hide()
             .next().hide()
-            .next().hide();
+            .next().hide().attr("id", "t6LastRow");
+
+        if (taxText !== undefined) {
+            $("#t6LastRow")
+                .after($("<tr><td>收益</td><th id='t6TaxCell'>" + taxText + "</th><td colspan='2'></td></tr>"));
+            if (parseInt(taxText) >= 50000) {
+                $("#t6TaxCell").css("color", "red");
+            }
+        }
 
         $("#t8")
             .find("tr:first")
@@ -709,7 +722,8 @@ function doRenderTownTax(credential: Credential, page: TownDashboardPage) {
                 .filter(function () {
                     return $(this).text() === "收益";
                 })
-                .next();
+                .next()
+                .attr("id", "cityTaxCell");
         }
         const tax = parseInt(td!.text());
         if (tax >= 50000) {
