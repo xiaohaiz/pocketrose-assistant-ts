@@ -3,7 +3,7 @@ import FastLogin from "../../common/FastLogin";
 import PetMap from "../../common/PetMap";
 import FastLoginLoader from "../../core/FastLoginLoader";
 import FastLoginManager from "../../core/FastLoginManager";
-import RolePetManager from "../../core/RolePetManager";
+import PetLocalStorage from "../../core/PetLocalStorage";
 import TownLoader from "../../core/TownLoader";
 import PersonalStatus from "../../pocketrose/PersonalStatus";
 import TownPetMapHouse from "../../pocketrose/TownPetMapHouse";
@@ -92,8 +92,6 @@ class TownPetMapHousePageProcessor extends PageProcessorCredentialSupport {
             html += "<br>" + petMapText;
             $("#messageBoard").html(html);
         }
-        StorageUtils.set("_pm_" + credential.id, petMapText);
-        MessageBoard.publishMessage("宠物图鉴信息已存储。");
 
         $("table:eq(2)")
             .attr("id", "t1")
@@ -104,10 +102,14 @@ class TownPetMapHousePageProcessor extends PageProcessorCredentialSupport {
         $("#updateButton").on("click", () => {
             $("input:text").prop("disabled", true);
             $("button").prop("disabled", true);
-            new RolePetManager(credential).triggerRolePetStatusUpdate().then(() => {
-                MessageBoard.publishMessage("宠物信息已存储。");
-                $("input:text").prop("disabled", false);
-                $("button").prop("disabled", false);
+            const petLocalStorage = new PetLocalStorage(credential);
+            petLocalStorage.updatePetMap().then(() => {
+                MessageBoard.publishMessage("宠物图鉴信息已存储。");
+                petLocalStorage.updatePetStatus().then(() => {
+                    MessageBoard.publishMessage("宠物信息已存储。");
+                    $("input:text").prop("disabled", false);
+                    $("button").prop("disabled", false);
+                });
             });
         });
     }
