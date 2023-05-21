@@ -27,7 +27,9 @@ class TownDashboardPageProcessor2 extends PageProcessorCredentialSupport {
         // 标记聊天输入文本框
         $("input:text:last").attr("id", "messageInputText");
         // 标记更新按钮
-        $("input:submit[value='更新']").attr("id", "refreshButton");
+        $("input:submit[value='更新']")
+            .attr("id", "refreshButton")
+            .css("height", "100%");
         // 标记菜单所有的按钮
         $("#t5")
             .find("form[action='battle.cgi']")
@@ -35,43 +37,50 @@ class TownDashboardPageProcessor2 extends PageProcessorCredentialSupport {
             .attr("id", "battleCell")
             .next()
             .find("input:submit:first")
-            .attr("id", "battleButton");
+            .attr("id", "battleButton")
+            .css("height", "100%");
         $("#t5")
             .find("form[action='town.cgi']")
             .parent()
             .attr("id", "townCell")
             .next()
             .find("input:submit:first")
-            .attr("id", "townButton");
+            .attr("id", "townButton")
+            .css("height", "100%");
         $("#t5")
             .find("form[action='mydata.cgi']")
             .next()
             .attr("id", "personalCell")
             .next()
             .find("input:submit:first")
-            .attr("id", "personalButton");
+            .attr("id", "personalButton")
+            .css("height", "100%");
         $("#t5")
             .find("form[action='country.cgi']:first")
             .next()
             .attr("id", "country1Cell")
             .next()
             .find("input:submit:first")
-            .attr("id", "country1Button");
+            .attr("id", "country1Button")
+            .css("height", "100%");
         $("#t5")
             .find("form[action='country.cgi']:eq(1)")
             .next()
             .attr("id", "country2Cell")
             .next()
             .find("input:submit:first")
-            .attr("id", "country2Button");
+            .attr("id", "country2Button")
+            .css("height", "100%");
         $("#t5")
             .find("form[action='map.cgi']")
             .find("input:submit:first")
-            .attr("id", "leaveButton");
+            .attr("id", "leaveButton")
+            .css("height", "100%");
         $("#t5")
             .find("form[action='exit.cgi']")
             .find("input:submit:first")
-            .attr("id", "exitButton");
+            .attr("id", "exitButton")
+            .css("height", "100%");
 
         // 根据设置修改按钮文本
         if (SetupLoader.isAsciiTextButtonEnabled()) {
