@@ -89,6 +89,23 @@ function processBattle(credential: Credential, page: BattlePage, context: PagePr
             $("#lodge").trigger("click");
         });
     });
+
+    // 根据返回方式推荐，设置相关按钮的tab优先级
+    const recommendation = doRecommendation(page, context);
+    switch (recommendation) {
+        case "修":
+            $("#repairButton").attr("tabindex", 1);
+            break;
+        case "宿":
+            $("#lodgeButton").attr("tabindex", 1);
+            break;
+        case "存":
+            $("#depositButton").attr("tabindex", 1);
+            break;
+        case "回":
+            $("#returnButton").attr("tabindex", 1);
+            break;
+    }
 }
 
 function doRecommendation(page: BattlePage, context: PageProcessorContext): string {
