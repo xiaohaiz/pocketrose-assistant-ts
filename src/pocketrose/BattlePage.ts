@@ -5,6 +5,7 @@ class BattlePage {
     juniorBattle?: boolean;         // 中级之塔
     seniorBattle?: boolean;         // 上级之洞窟
     zodiacBattle?: boolean;         // 十二神殿
+    petUpgrade?: boolean;           // 宠物是否升级
     lowestEndure?: number;          // 战斗后装备剩余最低耐久度（排除大师球、宗师球、超力怪兽球、宠物蛋）
     roleHealth?: number;            // 角色剩余生命
     roleMaxHealth?: number;         // 角色最大生命
@@ -20,6 +21,7 @@ class BattlePage {
         this.juniorBattle = false;
         this.seniorBattle = false;
         this.zodiacBattle = false;
+        this.petUpgrade = false;
         this.lowestEndure = 999;
     }
 }

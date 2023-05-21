@@ -162,6 +162,20 @@ function processBattle(credential: Credential, page: BattlePage, context: PagePr
 
     // 是否使用极简战斗界面
     renderMinimalBattle();
+
+    if (page.zodiacBattle!) {
+        // 十二宫极速战斗模式
+        if (SetupLoader.isZodiacFlashBattleEnabled()) {
+            $("button[tabindex='1']").trigger("click");
+        }
+    } else {
+        // 普通战斗极速模式
+        if (SetupLoader.isNormalFlashBattleEnabled()) {
+            if (!page.petUpgrade! && page.harvestList!.length === 0) {
+                $("button[tabindex='1']").trigger("click");
+            }
+        }
+    }
 }
 
 function renderHarvestMessage(page: BattlePage) {
@@ -277,6 +291,7 @@ function parsePage() {
     page.seniorBattle = battleField.includes("上级之洞窟");
     page.zodiacBattle = battleField.includes("十二神殿");
 
+    let petName = "";
     const endureList: number[] = [];
     for (const s of _.split($("#ueqtweixin").text(), "\n")) {
         if (_.endsWith(s, "耐久度")) {
@@ -293,6 +308,17 @@ function parsePage() {
             let t = StringUtils.substringBetween(s, "(剩余", "回)");
             let n = parseInt(t);
             endureList.push(n);
+        }
+        if (s.includes(" 获得 ") && s.includes(" 经验值.")) {
+            // 这一行是宠物获得经验值的那一行
+            // 记录下宠物名
+            petName = StringUtils.substringBefore(s, " 获得 ");
+        }
+        if (petName !== "") {
+            const searchString = petName + "等级上升！";
+            if (s.includes(searchString)) {
+                page.petUpgrade = true;
+            }
         }
     }
     if (endureList.length > 0) {
