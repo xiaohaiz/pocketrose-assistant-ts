@@ -164,81 +164,35 @@ function doProcess(credential: Credential, page: TownDashboardPage) {
             .parent()
             .next()
             .find("th:first")
-            .css("text-align", "right")
-            .text("训练战斗")
+            .html("")
             .before($("<td></td>"))
             .parent()
             .next()
             .find("th:first")
-            .css("text-align", "right")
-            .text("城市设施")
+            .html("<button role='button' class='" + buttonClass + "' id='shortcut5'>&nbsp;个人&nbsp;</button>")
             .before($("<td>" +
-                "<table style='background-color:transparent;border-width:0;border-spacing:0;margin:auto'>" +
-                "<tbody>" +
-                "<tr>" +
-                "<td>" +
-                "<button role='button' class='" + buttonClass + "' id='shortcut1'>鉴</button>" +
-                "</td>" +
-                "<td>" +
-                "<button role='button' class='" + buttonClass + "' id='shortcut5'>个</button>" +
-                "</td>" +
-                "</tr>" +
-                "</tbody>" +
-                "</table>" +
+                "<button role='button' class='" + buttonClass + "' id='shortcut1'>&nbsp;图鉴&nbsp;</button>" +
                 "</td>"))
             .parent()
             .next()
             .find("th:first")
-            .css("text-align", "right")
+            .html("<button role='button' class='" + buttonClass + "' id='shortcut6'>&nbsp;团队&nbsp;</button>")
             .before($("<td>" +
-                "<table style='background-color:transparent;border-width:0;border-spacing:0;margin:auto'>" +
-                "<tbody>" +
-                "<tr>" +
-                "<td>" +
-                "<button role='button' class='" + buttonClass + "' id='shortcut2'>装</button>" +
-                "</td>" +
-                "<td>" +
-                "<button role='button' class='" + buttonClass + "' id='shortcut6'>团</button>" +
-                "</td>" +
-                "</tr>" +
-                "</tbody>" +
-                "</table>" +
+                "<button role='button' class='" + buttonClass + "' id='shortcut2'>&nbsp;装备&nbsp;</button>" +
                 "</td>"))
             .parent()
             .next()
             .find("th:first")
-            .css("text-align", "right")
+            .html("<button role='button' class='" + buttonClass + "' id='shortcut7'>&nbsp;冒险&nbsp;</button>")
             .before($("<td>" +
-                "<table style='background-color:transparent;border-width:0;border-spacing:0;margin:auto'>" +
-                "<tbody>" +
-                "<tr>" +
-                "<td>" +
-                "<button role='button' class='" + buttonClass + "' id='shortcut3'>宠</button>" +
-                "</td>" +
-                "<td>" +
-                "<button role='button' class='" + buttonClass + "' id='shortcut7'>险</button>" +
-                "</td>" +
-                "</tr>" +
-                "</tbody>" +
-                "</table>" +
+                "<button role='button' class='" + buttonClass + "' id='shortcut3'>&nbsp;宠物&nbsp;</button>" +
                 "</td>"))
             .parent()
             .next()
             .find("th:first")
-            .css("text-align", "right")
+            .html("<button role='button' class='" + buttonClass + "' id='shortcut8'>&nbsp;设置&nbsp;</button>")
             .before($("<td>" +
-                "<table style='background-color:transparent;border-width:0;border-spacing:0;margin:auto'>" +
-                "<tbody>" +
-                "<tr>" +
-                "<td>" +
-                "<button role='button' class='" + buttonClass + "' id='shortcut4'>职</button>" +
-                "</td>" +
-                "<td>" +
-                "<button role='button' class='" + buttonClass + "' id='shortcut8'>设</button>" +
-                "</td>" +
-                "</tr>" +
-                "</tbody>" +
-                "</table>" +
+                "<button role='button' class='" + buttonClass + "' id='shortcut4'>&nbsp;职业&nbsp;</button>" +
                 "</td>"))
             .parent()
             .next()
