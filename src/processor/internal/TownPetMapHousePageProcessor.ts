@@ -243,7 +243,7 @@ class TownPetMapHousePageProcessor extends PageProcessorCredentialSupport {
                 for (const it of pets) {
                     const ss = _.split(it, "/");
                     html += "<tr>";
-                    html += "<td style='background-color:#E8E8D0'>" + ss[0] + "</td>";
+                    html += "<td style='background-color:#E8E8D0'>" + _.unescape(ss[0]) + "</td>";
                     html += "<td style='background-color:#E8E8B0'>" + ss[1] + "</td>";
                     html += "<td style='background-color:#E8E8D0'>" + ss[2] + "</td>";
                     html += "<td style='background-color:#E8E8B0'>" + ss[3] + "</td>";

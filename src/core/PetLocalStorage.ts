@@ -70,7 +70,7 @@ class PetLocalStorage {
                     const petStatusList: string[] = [];
                     for (const pet of petList) {
                         let s = "";
-                        s += pet.name;
+                        s += _.escape(pet.name);
                         s += "/";
                         s += pet.gender;
                         s += "/";
