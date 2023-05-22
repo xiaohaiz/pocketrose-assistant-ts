@@ -7,6 +7,7 @@ import PersonalEquipmentManagement from "../pocketrose/PersonalEquipmentManageme
 import PersonalEquipmentManagementPage from "../pocketrose/PersonalEquipmentManagementPage";
 import TreasureBag from "../pocketrose/TreasureBag";
 import Credential from "../util/Credential";
+import StorageUtils from "../util/StorageUtils";
 
 class EquipmentLocalStorage {
 
@@ -14,6 +15,50 @@ class EquipmentLocalStorage {
 
     constructor(credential: Credential) {
         this.#credential = credential;
+    }
+
+    async updateEquipmentStatus(): Promise<void> {
+        return await (() => {
+            return new Promise<void>(resolve => {
+                findAllEquipments(this.#credential).then(equipmentList => {
+
+                    const equipmentStatusList: string[] = [];
+                    let s = "";
+                    for (const equipment of equipmentList) {
+                        if (equipment.isItem && (equipment.name !== "宠物蛋" && equipment.name !== "藏宝图")) {
+                            continue;
+                        }
+                        s += _.escape(equipment.fullName);
+                        s += "/";
+                        s += equipment.category;
+                        s += "/";
+                        s += equipment.power;
+                        s += "/";
+                        s += equipment.weight;
+                        s += "/";
+                        s += equipment.endure;
+                        s += "/";
+                        s += equipment.additionalPower;
+                        s += "/";
+                        s += equipment.additionalWeight;
+                        s += "/";
+                        s += equipment.additionalLuck;
+                        s += "/";
+                        s += equipment.experience;
+                        s += "/";
+                        s += equipment.location;
+
+                        equipmentStatusList.push(s);
+                    }
+
+                    const key = "_es_" + this.#credential.id;
+                    const value = _.join(equipmentStatusList, " ");
+                    StorageUtils.set(key, value);
+
+                    resolve();
+                });
+            });
+        })();
     }
 }
 
