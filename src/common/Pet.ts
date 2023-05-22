@@ -1,3 +1,4 @@
+import _ from "lodash";
 import SetupLoader from "../config/SetupLoader";
 import Pokemon from "../core/Pokemon";
 import Constants from "../util/Constants";
@@ -131,7 +132,6 @@ class Pet {
         if (!SetupLoader.isExperienceProgressBarEnabled()) {
             return this.experience!.toString();
         }
-
         if (this.level! === 100) {
             return "<span title='满级' style='color:red'>MAX</span>";
         }
@@ -150,31 +150,65 @@ class Pet {
         return StringUtils.substringBetween(this.after!, "(", ")");
     }
 
-    static sortPetList(source: Pet[]): Pet[] {
-        const target: Pet[] = [];
-        target.push(...source);
-        if (!SetupLoader.isEquipmentPetSortEnabled()) {
-            return target;
+    get locationOrder() {
+        switch (this.location) {
+            case "P":
+                return 1;
+            case "C":
+                return 2;
+            case "R":
+                return 3;
+            default:
+                return 0;
         }
-        target.sort((a, b) => {
-            let ret = b.level! - a.level!;
-            if (ret !== 0) {
-                return ret;
-            }
-            let a1 = (a.name!.includes("(") && a.name!.includes(")")) ? 0 : 1;
-            let b1 = (b.name!.includes("(") && b.name!.includes(")")) ? 0 : 1;
-            ret = a1 - b1;
-            if (ret !== 0) {
-                return ret;
-            }
+    }
 
-            let a2 = (a.name!.includes("(") && a.name!.includes(")")) ?
-                StringUtils.substringBetween(a.name!, "(", ")") : a.name!;
-            let b2 = (b.name!.includes("(") && b.name!.includes(")")) ?
-                StringUtils.substringBetween(b.name!, "(", ")") : b.name!;
-            return a2.localeCompare(b2);
-        });
+    static parse(text: string): Pet {
+        const ss = _.split(text, "/");
+        const pet = new Pet();
+        pet.name = _.unescape(ss[0]);
+        pet.gender = ss[1];
+        pet.level = _.parseInt(ss[2]);
+        pet.maxHealth = _.parseInt(ss[3]);
+        pet.attack = _.parseInt(ss[4]);
+        pet.defense = _.parseInt(ss[5]);
+        pet.specialAttack = _.parseInt(ss[6]);
+        pet.specialDefense = _.parseInt(ss[7]);
+        pet.speed = _.parseInt(ss[8]);
+        pet.location = ss[9];
+        return pet;
+    }
+
+    static sortPetList(source: Pet[]): Pet[] {
+        const target = _.clone(source);
+        target.sort(Pet.sorter);
         return target;
+    }
+
+    static sorter(a: Pet, b: Pet): number {
+        if (!SetupLoader.isEquipmentPetSortEnabled()) {
+            return 0;
+        }
+        let ret = a.locationOrder - b.locationOrder;
+        if (ret !== 0) {
+            return ret;
+        }
+        ret = b.level! - a.level!;
+        if (ret !== 0) {
+            return ret;
+        }
+        let a1 = (a.name!.includes("(") && a.name!.includes(")")) ? 0 : 1;
+        let b1 = (b.name!.includes("(") && b.name!.includes(")")) ? 0 : 1;
+        ret = a1 - b1;
+        if (ret !== 0) {
+            return ret;
+        }
+
+        let a2 = (a.name!.includes("(") && a.name!.includes(")")) ?
+            StringUtils.substringBetween(a.name!, "(", ")") : a.name!;
+        let b2 = (b.name!.includes("(") && b.name!.includes(")")) ?
+            StringUtils.substringBetween(b.name!, "(", ")") : b.name!;
+        return a2.localeCompare(b2);
     }
 }
 
