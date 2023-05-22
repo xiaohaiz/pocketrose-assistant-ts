@@ -1,8 +1,6 @@
-import _ from "lodash";
 import FastLogin from "../../common/FastLogin";
 import PetMap from "../../common/PetMap";
 import FastLoginLoader from "../../core/FastLoginLoader";
-import FastLoginManager from "../../core/FastLoginManager";
 import PetLocalStorage from "../../core/PetLocalStorage";
 import TownLoader from "../../core/TownLoader";
 import PersonalStatus from "../../pocketrose/PersonalStatus";
@@ -75,13 +73,11 @@ class TownPetMapHousePageProcessor extends PageProcessorCredentialSupport {
         html += "<button role='button' id='updateButton'>更新宠物信息</button>";
         html += "<input type='text' id='petCode' size='10' maxlength='10'>";
         html += "<button role='button' id='searchButton'>查找图鉴</button>";
-        html += "<button role='button' id='listPetButton'>列出所有宠物</button>";
         html += "<button role='button' id='returnButton'>" + returnTitle + "</button>";
         $("#pageMenuContainer").html(html);
 
         this.#bindUpdateButton(credential);
         this.#bindSearchButton(credential);
-        this.#bindListPetButton()
         $("#returnButton").on("click", () => {
             $("#returnTown").trigger("click");
         });
@@ -209,61 +205,6 @@ class TownPetMapHousePageProcessor extends PageProcessorCredentialSupport {
         $("#t1").find("tbody:first").html(html);
     }
 
-    #bindListPetButton() {
-        $("#listPetButton").on("click", () => {
-            const configs = FastLoginManager.getAllFastLogins();
-            $("#t1").find("tbody:first").html("");
-            for (const config of configs) {
-                const key = "_ps_" + config.id;
-                const value = StorageUtils.get(key);
-                if (value === null || value === "") {
-                    continue;
-                }
-                const pets = _.split(value, "$$");
-
-                let html = "";
-                html += "<tr>";
-                html += "<td style='width:100%;text-align:center'>";
-                html += "<table style='margin:auto;border-width:0;text-align:center;background-color:#888888;width:100%'>";
-                html += "<tbody>";
-                html += "<tr>";
-                html += "<th style='background-color:#F8F0E0;vertical-align:center' rowspan='" + (pets.length + 1) + "'>" + config.name + "</th>"
-                html += "<th style='background-color:#F8F0E0'>名字</th>"
-                html += "<th style='background-color:#F8F0E0'>性别</th>"
-                html += "<th style='background-color:#F8F0E0'>等级</th>"
-                html += "<th style='background-color:#F8F0E0'>生命</th>"
-                html += "<th style='background-color:#F8F0E0'>攻击</th>"
-                html += "<th style='background-color:#F8F0E0'>防御</th>"
-                html += "<th style='background-color:#F8F0E0'>智力</th>"
-                html += "<th style='background-color:#F8F0E0'>精神</th>"
-                html += "<th style='background-color:#F8F0E0'>速度</th>"
-                html += "<th style='background-color:#F8F0E0'>位置</th>"
-                html += "</tr>";
-
-                for (const it of pets) {
-                    const ss = _.split(it, "/");
-                    html += "<tr>";
-                    html += "<td style='background-color:#E8E8D0'>" + _.unescape(ss[0]) + "</td>";
-                    html += "<td style='background-color:#E8E8B0'>" + ss[1] + "</td>";
-                    html += "<td style='background-color:#E8E8D0'>" + ss[2] + "</td>";
-                    html += "<td style='background-color:#E8E8B0'>" + ss[3] + "</td>";
-                    html += "<td style='background-color:#E8E8D0'>" + ss[4] + "</td>";
-                    html += "<td style='background-color:#E8E8B0'>" + ss[5] + "</td>";
-                    html += "<td style='background-color:#E8E8D0'>" + ss[6] + "</td>";
-                    html += "<td style='background-color:#E8E8B0'>" + ss[7] + "</td>";
-                    html += "<td style='background-color:#E8E8D0'>" + ss[8] + "</td>";
-                    html += "<td style='background-color:#E8E8B0'>" + ss[9] + "</td>";
-                    html += "</tr>";
-                }
-                html += "</tbody>";
-                html += "</table>";
-                html += "</td>";
-                html += "</tr>";
-
-                $("#t1").find("tbody:first").append($(html));
-            }
-        });
-    }
 }
 
 export = TownPetMapHousePageProcessor;
