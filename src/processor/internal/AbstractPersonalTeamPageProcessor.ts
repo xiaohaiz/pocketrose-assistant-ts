@@ -204,7 +204,26 @@ abstract class AbstractPersonalTeamPageProcessor extends PageProcessorCredential
 
     #bindListPetButton() {
         $("#listPetButton").on("click", () => {
-            $("#information").html("").parent().hide();
+            let html = "";
+            html += "<table style='margin:auto;border-width:0;text-align:center;background-color:#888888;width:100%'>";
+            html += "<tbody id='petStatusList'>";
+            html += "<tr>";
+            html += "<th style='background-color:#F8F0E0'>队员</th>";
+            html += "<th style='background-color:#F8F0E0'>名字</th>";
+            html += "<th style='background-color:#F8F0E0'>性别</th>";
+            html += "<th style='background-color:#F8F0E0'>等级</th>";
+            html += "<th style='background-color:#F8F0E0'>生命</th>";
+            html += "<th style='background-color:#F8F0E0'>攻击</th>";
+            html += "<th style='background-color:#F8F0E0'>防御</th>";
+            html += "<th style='background-color:#F8F0E0'>智力</th>";
+            html += "<th style='background-color:#F8F0E0'>精神</th>";
+            html += "<th style='background-color:#F8F0E0'>速度</th>";
+            html += "<th style='background-color:#F8F0E0'>位置</th>";
+            html += "</tr>";
+            html += "</tbody>";
+            html += "</table>";
+            $("#information").html(html).parent().hide();
+
             const configs = FastLoginManager.getAllFastLogins();
             for (const config of configs) {
                 const key = "_ps_" + config.id;
@@ -215,25 +234,14 @@ abstract class AbstractPersonalTeamPageProcessor extends PageProcessorCredential
                 const pets = _.split(value, "$$");
 
                 let html = "";
-                html += "<table style='margin:auto;border-width:0;text-align:center;background-color:#888888;width:100%'>";
-                html += "<tbody>";
-                html += "<tr>";
-                html += "<th style='background-color:#F8F0E0;vertical-align:center' rowspan='" + (pets.length + 1) + "'>" + config.name + "</th>"
-                html += "<th style='background-color:#F8F0E0'>名字</th>"
-                html += "<th style='background-color:#F8F0E0'>性别</th>"
-                html += "<th style='background-color:#F8F0E0'>等级</th>"
-                html += "<th style='background-color:#F8F0E0'>生命</th>"
-                html += "<th style='background-color:#F8F0E0'>攻击</th>"
-                html += "<th style='background-color:#F8F0E0'>防御</th>"
-                html += "<th style='background-color:#F8F0E0'>智力</th>"
-                html += "<th style='background-color:#F8F0E0'>精神</th>"
-                html += "<th style='background-color:#F8F0E0'>速度</th>"
-                html += "<th style='background-color:#F8F0E0'>位置</th>"
-                html += "</tr>";
+                let row = 0;
 
                 for (const it of pets) {
                     const ss = _.split(it, "/");
                     html += "<tr>";
+                    if (row === 0) {
+                        html += "<td style='background-color:#F8F0E0;vertical-align:center' rowspan='" + (pets.length) + "'>" + config.name + "</td>";
+                    }
                     html += "<td style='background-color:#E8E8D0'>" + _.unescape(ss[0]) + "</td>";
                     html += "<td style='background-color:#E8E8B0'>" + ss[1] + "</td>";
                     html += "<td style='background-color:#E8E8D0'>" + ss[2] + "</td>";
@@ -245,13 +253,13 @@ abstract class AbstractPersonalTeamPageProcessor extends PageProcessorCredential
                     html += "<td style='background-color:#E8E8D0'>" + ss[8] + "</td>";
                     html += "<td style='background-color:#E8E8B0'>" + ss[9] + "</td>";
                     html += "</tr>";
+                    row++;
                 }
-                html += "</tbody>";
-                html += "</table>";
 
-                $("#information").append($(html));
-                $("#information").parent().show();
+                $("#petStatusList").append($(html));
+
             }
+            $("#information").parent().show();
         });
     }
 }
