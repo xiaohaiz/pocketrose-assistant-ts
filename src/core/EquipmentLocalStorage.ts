@@ -43,11 +43,11 @@ class EquipmentLocalStorage {
                 findAllEquipments(this.#credential).then(equipmentList => {
 
                     const equipmentStatusList: string[] = [];
-                    let s = "";
                     for (const equipment of equipmentList) {
                         if (equipment.isItem && (equipment.name !== "宠物蛋" && equipment.name !== "藏宝图")) {
                             continue;
                         }
+                        let s = "";
                         s += _.escape(equipment.fullName);
                         s += "/";
                         s += equipment.category;
