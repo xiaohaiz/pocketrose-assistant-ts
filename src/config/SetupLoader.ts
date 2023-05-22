@@ -249,12 +249,16 @@ class SetupLoader {
         return StorageUtils.getBoolean("_pa_038");
     }
 
-    static getSavePetMapBattleCount(): number {
-        return StorageUtils.getInt("_pa_039", 20);
+    static isAutoPetMapStorageEnabled() {
+        return StorageUtils.getBoolean("_pa_039");
     }
 
-    static getSavePetBattleCount(): number {
-        return StorageUtils.getInt("_pa_046", 50);
+    static isAutoPetStatusStorageEnabled() {
+        return StorageUtils.getBoolean("_pa_046");
+    }
+
+    static isAutoEquipmentStatusStorageEnabled() {
+        return StorageUtils.getBoolean("_pa_047");
     }
 
     static isMobileMiniDashboardEnabled() {

@@ -9,6 +9,7 @@ import GoldenCage from "../pocketrose/GoldenCage";
 import PersonalEquipmentManagement from "../pocketrose/PersonalEquipmentManagement";
 import PersonalPetManagement from "../pocketrose/PersonalPetManagement";
 import TownPetMapHouse from "../pocketrose/TownPetMapHouse";
+import CommentBoard from "../util/CommentBoard";
 import Credential from "../util/Credential";
 import StorageUtils from "../util/StorageUtils";
 
@@ -23,11 +24,11 @@ class PetLocalStorage {
     async triggerUpdatePetMap(battleCount: number): Promise<void> {
         return await (() => {
             return new Promise<void>(resolve => {
-                const configCount = SetupLoader.getSavePetMapBattleCount();
-                if (battleCount > 0 && configCount > 0 && battleCount % configCount === 0) {
-                    this.updatePetMap().then(() => {
-                        resolve();
-                    });
+                // 自动保存启用时，战数尾数为83时，触发图鉴保存
+                const doStorage = (battleCount % 100 === 83 && SetupLoader.isAutoPetMapStorageEnabled());
+                if (doStorage) {
+                    CommentBoard.writeMessage("<br>开始更新宠物图鉴......");
+                    this.updatePetMap().then(() => resolve());
                 } else {
                     resolve();
                 }
@@ -38,11 +39,11 @@ class PetLocalStorage {
     async triggerUpdatePetStatus(battleCount: number): Promise<void> {
         return await (() => {
             return new Promise<void>(resolve => {
-                const configCount = SetupLoader.getSavePetBattleCount();
-                if (battleCount > 0 && configCount > 0 && battleCount % configCount === 0) {
-                    this.updatePetStatus().then(() => {
-                        resolve();
-                    });
+                // 自动保存启用时，战数尾数为89时，触发宠物保存
+                const doStorage = (battleCount % 100 === 89 && SetupLoader.isAutoPetStatusStorageEnabled());
+                if (doStorage) {
+                    CommentBoard.writeMessage("<br>开始更新宠物状态......");
+                    this.updatePetStatus().then(() => resolve());
                 } else {
                     resolve();
                 }
@@ -70,7 +71,7 @@ class PetLocalStorage {
                     const petStatusList: string[] = [];
                     for (const pet of petList) {
                         let s = "";
-                        s += pet.name;
+                        s += _.escape(pet.name);
                         s += "/";
                         s += pet.gender;
                         s += "/";
@@ -93,7 +94,7 @@ class PetLocalStorage {
                     }
 
                     const key = "_ps_" + this.#credential.id;
-                    const value = _.join(petStatusList, " ");
+                    const value = _.join(petStatusList, "$$");
                     StorageUtils.set(key, value);
 
                     resolve();

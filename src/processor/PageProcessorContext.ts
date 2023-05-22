@@ -17,21 +17,27 @@ class PageProcessorContext {
         return this.#context.get(key);
     }
 
-    static withTownId(townId: string | undefined) {
-        const context = new PageProcessorContext();
+    withTownId(townId: string | undefined): PageProcessorContext {
         if (townId !== undefined) {
-            context.set("townId", townId);
+            this.set("townId", townId);
         }
-        return context;
+        return this;
     }
 
-    static withCastleName(castleName: string | undefined) {
-        const context = new PageProcessorContext();
-        if (castleName !== undefined) {
-            context.set("castleName", castleName);
+    withBattleCount(battleCount: string | undefined): PageProcessorContext {
+        if (battleCount !== undefined) {
+            this.set("battleCount", battleCount);
         }
-        return context;
+        return this;
     }
+
+    withCastleName(castleName: string | undefined): PageProcessorContext {
+        if (castleName !== undefined) {
+            this.set("castleName", castleName);
+        }
+        return this;
+    }
+
 }
 
 export = PageProcessorContext;

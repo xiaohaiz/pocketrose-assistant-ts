@@ -1,5 +1,9 @@
+import _ from "lodash";
 import SetupLoader from "../../config/SetupLoader";
+import EquipmentLocalStorage from "../../core/EquipmentLocalStorage";
 import NpcLoader from "../../core/NpcLoader";
+import PetLocalStorage from "../../core/PetLocalStorage";
+import BattlePage from "../../pocketrose/BattlePage";
 import CommentBoard from "../../util/CommentBoard";
 import Credential from "../../util/Credential";
 import PageUtils from "../../util/PageUtils";
@@ -7,9 +11,6 @@ import StringUtils from "../../util/StringUtils";
 import PageProcessorContext from "../PageProcessorContext";
 import PageProcessorCredentialSupport from "../PageProcessorCredentialSupport";
 
-/**
- * @deprecated
- */
 class BattlePageProcessor extends PageProcessorCredentialSupport {
 
     doLoadButtonStyles(): number[] {
@@ -17,377 +18,303 @@ class BattlePageProcessor extends PageProcessorCredentialSupport {
     }
 
     doProcess(credential: Credential, context?: PageProcessorContext): void {
-        this.#internalProcess(credential);
+        if (context === undefined || context.get("battleCount") === undefined) {
+            // context is required for battle processing
+            return;
+        }
+
+        // 解析页面的反馈的数据
+        const page = parsePage();
+
+        // 开始正式处理战斗页面
+        processBattle(credential, page, context);
     }
 
-    #internalProcess(credential: Credential) {
-        this.#doProcess(credential);
-
-        if (SetupLoader.isMobileMiniDashboardEnabled()) {
-            let lastIndex = -1;
-            $("table:first > tbody:first > tr")
-                .each(idx => {
-                    lastIndex = idx;
-                });
-            $("table:first > tbody:first > tr")
-                .each((idx, tr) => {
-                    if (idx !== lastIndex) {
-                        $(tr).hide();
-                    } else {
-                        $(tr).attr("id", "last1");
-                    }
-                });
-            lastIndex = -1;
-            $("#last1")
-                .find("td:first")
-                .find("table:first")
-                .find("tbody:first")
-                .find("tr:first")
-                .find("td:first")
-                .find("center:first")
-                .find("h1:first").hide()
-                .next()
-                .find("font:first")
-                .attr("id", "last2")
-                .find("b:first")
-                .find("p")
-                .each((idx, p) => {
-                    const text = $(p).text();
-                    if (text.startsWith("第") && text.includes("回合")) {
-                        lastIndex = idx;
-                    }
-                });
-
-            $("#last2")
-                .find("b:first")
-                .find("p")
-                .each((idx, p) => {
-                    const text = $(p).text();
-                    if (text.startsWith("第") && text.includes("回合")) {
-                        if (idx !== lastIndex) {
-                            $(p).hide();
-                        } else {
-                            $(p).attr("id", "lastTurn");
-                        }
-                    }
-                });
-            $("#lastTurn")
-                .find("table:eq(1)")
-                .hide();
-
-            $("#last2")
-                .next()
-                .next()
-                .attr("id", "last3");
-        }
-    }
-
-    #doProcess(credential: Credential): void {
-        $('a[target="_blank"]').attr('tabIndex', -1);
-        PageUtils.removeUnusedHyperLinks();
-        PageUtils.removeGoogleAnalyticsScript();
-        PageUtils.fixCurrentPageBrokenImages();
-
-        const pageText = $("body:first").text();
-        const harvest = doRenderPrompt(pageText);
-
-        $('input[value="返回住宿"]').attr('id', 'lodgeButton');
-        $('input[value="返回修理"]').attr('id', 'repairButton');
-        $('input[value="返回城市"]').attr('id', 'returnButton');
-        $('input[value="返回更新"]').attr('id', 'updateButton');
-        $('input[value="返回银行"]').attr('id', 'depositButton');
-        if (SetupLoader.isBattleLargeButtonEnabled()) {
-            $("#lodgeButton").addClass("button-90");
-            $("#repairButton").addClass("button-90");
-            $("#returnButton").addClass("button-90");
-            $("#updateButton").addClass("button-90");
-            $("#depositButton").addClass("button-90");
-        }
-
-        // 根据设置的内容修改按钮的台词
-        let buttonText = SetupLoader.getBattleReturnButtonText();
-        if (buttonText !== "") {
-            $("#returnButton").val(buttonText);
-        }
-        buttonText = SetupLoader.getBattleLodgeButtonText();
-        if (buttonText !== "") {
-            $("#lodgeButton").val(buttonText);
-        }
-        buttonText = SetupLoader.getBattleRepairButtonText();
-        if (buttonText !== "") {
-            $("#repairButton").val(buttonText);
-        }
-        buttonText = SetupLoader.getBattleDepositButtonText();
-        if (buttonText !== "") {
-            $("#depositButton").val(buttonText);
-        }
-
-        // 修改返回修理按钮的行为，直接变成全部修理
-        $('#repairButton').parent().prepend($('<input type="hidden" name="arm_mode" value="all">'));
-        $('input[value="MY_ARM"]').attr('value', 'MY_ARM2');
-
-        // 修改返回银行按钮的行为，直接变成全部存入
-        $('#depositButton').parent().prepend($('<input type="hidden" name="azukeru" value="all">'));
-        $('input[value="BANK"]').attr('value', 'BANK_SELL');
-
-        doPostBattle(credential, pageText);
-
-        // 如果强制推荐启用，则删除其余所有的按钮
-        if (SetupLoader.isBattleForceRecommendationEnabled()) {
-            $("input:submit").each(function (_idx, submit) {
-                const tabIndex = $(submit).attr("tabIndex");
-                if (tabIndex === undefined || tabIndex === "" || parseInt(tabIndex) !== 1) {
-                    $(submit).parent().remove();
-                } else {
-                    $(submit).trigger("focus");
-                }
-            });
-        }
-        // 战斗页自动触底开启
-        if (SetupLoader.isBattleResultAutoScrollEnabled()) {
-            const buttonId = $("input:submit[tabindex='1']").attr("id");
-            document.getElementById(buttonId!)?.scrollIntoView();
-        }
-
-        // 十二宫极速战斗
-        if (pageText.includes("＜＜ - 十二神殿 - ＞＞")) {
-            if (SetupLoader.isZodiacFlashBattleEnabled()) {
-                $("input:submit[tabindex='1']").trigger("click");
-            }
-        } else {
-            if (SetupLoader.isNormalFlashBattleEnabled()) {
-                const petUpgrade = doCheckIfPetUpgrade();
-                if (!harvest && !petUpgrade) {
-                    $("input:submit[tabindex='1']").trigger("click");
-                }
-            }
-        }
-    }
 }
 
-function doRenderPrompt(pageText: string) {
-    if (pageText.includes("入手！")) {
-        doRenderBattleHarvestPrompt();
-        return true;
-    } else {
-        doRenderNormalBattlePrompt();
-        return false;
-    }
-}
+function processBattle(credential: Credential, page: BattlePage, context: PageProcessorContext) {
+    // 删除原来所有的表单
+    $("form").remove();
 
-function doPostBattle(credential: Credential, pageText: string) {
-    const reportText = $("#ueqtweixin").text();
-    const endure = findRecoverItemEndure(reportText);
+    // 在页面中添加隐藏的表格用于准备自定义的表单
+    let html = "";
+    html += "<tr style='display:none'>";
+    html += "<td id='hidden-1'></td>";
+    html += "</tr>";
+    html += "<tr style='display:none'>";
+    html += "<td id='hidden-2'></td>";
+    html += "</tr>";
+    html += "<tr style='display:none'>";
+    html += "<td id='hidden-3'></td>";
+    html += "</tr>";
+    html += "<tr style='display:none'>";
+    html += "<td id='hidden-4'></td>";
+    html += "</tr>";
+    html += "<tr style='display:none'>";
+    html += "<td id='hidden-5'></td>";
+    html += "</tr>";
+    $("table:first")
+        .find("tr:first")
+        .after($(html));
 
-    if (shouldRepair(reportText, endure)) {
-        // 优先修理按钮
-        $("#repairButton").attr("tabIndex", 1);
-        return;
-    }
+    // 准备新的表单
+    generateReturnForm(credential);
+    generateDepositForm(credential);
+    generateRepairForm(credential);
+    generateLodgeForm(credential);
 
-    const mode = determinePostBattleBehaviour(pageText, endure);
-    if (mode === 1) {
-        $("#lodgeButton").attr('tabIndex', 1);
-    }
-    if (mode === 2) {
-        $("#depositButton").attr('tabIndex', 1);
-    }
-    if (mode === 3) {
-        $("#returnButton").attr('tabIndex', 1);
-    }
-}
+    // 准备新的按钮
+    $("table:eq(5)")
+        .find("td:first")
+        .find("center:first")
+        .find("h1:first")
+        .next()
+        .append($("" +
+            "<div style='padding-top:10px;padding-bottom:10px'><button role='button' id='returnButton'>返回城市</button></div>" +
+            "<div style='padding-top:10px;padding-bottom:10px'><button role='button' id='depositButton'>返回银行</button></div>" +
+            "<div style='padding-top:10px;padding-bottom:10px'><button role='button' id='repairButton'>返回修理</button></div>" +
+            "<div style='padding-top:10px;padding-bottom:10px'><button role='button' id='lodgeButton'>返回住宿</button></div>" +
+            ""));
 
-function findRecoverItemEndure(reportText: string): number {
-    // 耐久度初始值10000以下的最大的质数，表示没有发现回血道具
-    let endure = 9973;
-    if (reportText.includes("(自动)使用。(剩余")) {
-        // 找到了回血道具
-        const s = StringUtils.substringBetween(reportText, "(自动)使用。(剩余", "回)");
-        endure = parseInt(s);
-    }
-    return endure;
-}
-
-function shouldRepair(reportText: string, endure: number): boolean {
-    if (endure % 100 === 0) {
-        // 当回血道具的耐久度掉到100整倍数时触发修理装备。
-        return true;
-    }
-
-    // 然后判断剩余的所有装备的耐久，只要有任意一件装备的耐久低于100，
-    // 也触发修理装备。这里需要注意的是要排除掉大师球、宗师球、怪兽球
-    // 和宠物蛋。。因此判断耐久在10~99区间吧，可以排除掉大师球和宗师球。
-    let sourceText = reportText;
-    const lowEndures: number[] = [];
-    for (let i = 0; i < 4; i++) {
-        // 最多查四次耐久度剩余
-        let startIndex = sourceText.indexOf("剩余");
-        if (startIndex != -1) {
-            sourceText = sourceText.substring(startIndex + 2);
-            let numbers = [];
-            for (let j = 0; j < sourceText.length; j++) {
-                if (sourceText[j] >= '0' && sourceText[j] <= '9') {
-                    numbers.push(sourceText[j]);
-                } else {
-                    let number = "";
-                    for (let k = 0; k < numbers.length; k++) {
-                        number += numbers[k];
-                    }
-                    numbers = [];
-                    if (parseInt(number) < SetupLoader.getRepairMinLimitation()) {
-                        lowEndures.push(parseInt(number));
-                    }
-                    break;
-                }
-            }
-        }
-    }
-    if (lowEndures.length === 0) {
-        // 没有装备耐久掉到阈值之下，忽略
-        return false;
+    // 根据设置是否变成大按钮
+    if (SetupLoader.isBattleLargeButtonEnabled()) {
+        $("#returnButton").addClass("button-90");
+        $("#depositButton").addClass("button-90");
+        $("#repairButton").addClass("button-90");
+        $("#lodgeButton").addClass("button-90");
     }
 
-    for (let idx = 0; idx < lowEndures.length; idx++) {
-        const currentEndure = lowEndures[idx];
-        if (reportText.indexOf("大师球剩余" + currentEndure + "耐久度") === -1 &&
-            reportText.indexOf("宗师球球剩余" + currentEndure + "耐久度") === -1 &&
-            reportText.indexOf("超力怪兽球剩余" + currentEndure + "耐久度") === -1 &&
-            reportText.indexOf("宠物蛋剩余" + currentEndure + "耐久度") === -1) {
-            // 这个低耐久的装备不是上述需要排除的，说明真的有装备耐久低了，需要修理
-            return true;
-        }
+    // 根据设置的内容修改按钮的台词
+    let buttonText = SetupLoader.getBattleReturnButtonText();
+    if (buttonText !== "") {
+        $("#returnButton").text(_.escape(buttonText));
+    }
+    buttonText = SetupLoader.getBattleLodgeButtonText();
+    if (buttonText !== "") {
+        $("#lodgeButton").text(_.escape(buttonText));
+    }
+    buttonText = SetupLoader.getBattleRepairButtonText();
+    if (buttonText !== "") {
+        $("#repairButton").text(_.escape(buttonText));
+    }
+    buttonText = SetupLoader.getBattleDepositButtonText();
+    if (buttonText !== "") {
+        $("#depositButton").text(_.escape(buttonText));
     }
 
-    return false;
-}
-
-/**
- * 1. 战败需要住宿
- * 2. 十二宫战斗胜利不需要住宿，直接存钱更好
- * 3. 战胜/平手情况下，检查生命力是否低于某个阈值
- * 返回值：
- * 1 - 表示住宿
- * 2 - 表示存钱
- * 3 - 表示返回
- * @param pageText
- * @param endure
- */
-function determinePostBattleBehaviour(pageText: string, endure: number): number {
-    if (!pageText.includes("将 怪物 全灭！")) {
-        // 没有战胜，直接去住宿吧
-        return 1;
-    }
-    if (pageText.includes("＜＜ - 十二神殿 - ＞＞") || pageText.includes("＜＜ - 秘宝之岛 - ＞＞")) {
-        // 十二宫和秘宝之岛战斗胜利不需要住宿，直接存钱更好
-        return 2;
-    }
-    let depositBattleCount = SetupLoader.getDepositBattleCount();
-    if (depositBattleCount > 0 && endure % depositBattleCount === 0) {
-        // 存钱战数到了
-        return 2;
-    }
-
-    // 通过第一个头像找到玩家的名字
-    const player = $("img:first").attr("alt")!;
-
-    // 获取玩家最后剩余的HP和MP
-    let health = 0;
-    let maxHealth = 0;
-    let mana = 0;
-    let maxMana = 0;
-    $("td:parent").each(function (_idx, td) {
-        if (player === $(td).text()) {
-            let healthText = $(td).next().text();
-            health = parseInt(StringUtils.substringBeforeSlash(healthText));
-            maxHealth = parseInt(StringUtils.substringAfterSlash(healthText));
-
-            let manaText = $(td).next().next().text();
-            mana = parseInt(StringUtils.substringBeforeSlash(manaText));
-            maxMana = parseInt(StringUtils.substringAfterSlash(manaText));
-        }
+    // 重新定义按钮的行为
+    $("#returnButton").on("click", () => {
+        $("#returnButton").prop("disabled", true);
+        doBeforeReturn(credential, context).then(() => {
+            $("#returnTown").trigger("click");
+        });
+    });
+    $("#depositButton").on("click", () => {
+        $("#depositButton").prop("disabled", true);
+        doBeforeReturn(credential, context).then(() => {
+            $("#deposit").trigger("click");
+        });
+    });
+    $("#repairButton").on("click", () => {
+        $("#repairButton").prop("disabled", true);
+        doBeforeReturn(credential, context).then(() => {
+            $("#repair").trigger("click");
+        });
+    });
+    $("#lodgeButton").on("click", () => {
+        $("#lodgeButton").prop("disabled", true);
+        doBeforeReturn(credential, context).then(() => {
+            $("#lodge").trigger("click");
+        });
     });
 
+    // 根据返回方式推荐，设置相关按钮的tab优先级
+    const recommendation = doRecommendation(page, context);
+    switch (recommendation) {
+        case "修":
+            $("#repairButton").attr("tabindex", 1);
+            break;
+        case "宿":
+            $("#lodgeButton").attr("tabindex", 1);
+            break;
+        case "存":
+            $("#depositButton").attr("tabindex", 1);
+            break;
+        case "回":
+            $("#returnButton").attr("tabindex", 1);
+            break;
+    }
+
+    // 入手情况的渲染
+    renderHarvestMessage(page);
+
+    // 如果强制推荐启用，则删除其余所有的按钮
+    if (SetupLoader.isBattleForceRecommendationEnabled()) {
+        $("button").each((idx, button) => {
+            const tabindex = $(button).attr("tabindex");
+            if (tabindex !== "1") {
+                $(button).parent().remove();
+            } else {
+                $(button).trigger("focus");
+            }
+        });
+    }
+
+    // 战斗页自动触底开启
+    if (SetupLoader.isBattleResultAutoScrollEnabled()) {
+        const buttonId = $("button[tabindex='1']").attr("id")!;
+        PageUtils.scrollIntoView(buttonId);
+    }
+
+    // 是否使用极简战斗界面
+    renderMinimalBattle();
+
+    if (page.zodiacBattle!) {
+        // 十二宫极速战斗模式
+        if (SetupLoader.isZodiacFlashBattleEnabled()) {
+            $("button[tabindex='1']").trigger("click");
+        }
+    } else {
+        // 普通战斗极速模式
+        if (SetupLoader.isNormalFlashBattleEnabled()) {
+            if (!page.petUpgrade! && page.harvestList!.length === 0) {
+                $("button[tabindex='1']").trigger("click");
+            }
+        }
+    }
+}
+
+function renderHarvestMessage(page: BattlePage) {
+    if (page.harvestList!.length === 0) {
+        const prompt = SetupLoader.getNormalBattlePrompt();
+        if (prompt["person"] !== undefined && prompt["person"] !== "NONE") {
+            let person = prompt["person"];
+            let imageHtml: string;
+            if (person === "SELF") {
+                imageHtml = PageUtils.findFirstRoleImageHtml()!;
+            } else if (person === "RANDOM") {
+                imageHtml = NpcLoader.randomPlayerImageHtml()!;
+            } else {
+                imageHtml = NpcLoader.getNpcImageHtml(person)!;
+            }
+            CommentBoard.createCommentBoard(imageHtml);
+            $("#commentBoard")
+                .css("text-align", "center")
+                .css("background-color", "black")
+                .css("color", "greenyellow");
+            CommentBoard.writeMessage(_.escape(prompt["text"]));
+        }
+    } else {
+        const prompt = SetupLoader.getBattleHarvestPrompt();
+        if (prompt["person"] !== undefined && prompt["person"] !== "NONE") {
+            let person = prompt["person"];
+            let imageHtml: string;
+            if (person === "SELF") {
+                imageHtml = PageUtils.findFirstRoleImageHtml()!;
+            } else if (person === "RANDOM") {
+                imageHtml = NpcLoader.randomPlayerImageHtml()!;
+            } else {
+                imageHtml = NpcLoader.getNpcImageHtml(person)!;
+            }
+            CommentBoard.createCommentBoard(imageHtml);
+            $("#commentBoard").css("text-align", "center");
+            for (const it of page.harvestList!) {
+                CommentBoard.writeMessage("<b style='font-size:150%'>" + it + "</b><br>");
+            }
+            CommentBoard.writeMessage(_.escape(prompt["text"]));
+        }
+    }
+}
+
+function doRecommendation(page: BattlePage, context: PageProcessorContext): string {
+    const battleCount = parseBattleCount(context);
+    if (battleCount % 100 === 0) {
+        // 每100战强制修理
+        return "修";
+    }
+    if (page.lowestEndure! < SetupLoader.getRepairMinLimitation()) {
+        // 有装备耐久度低于阈值了，强制修理
+        return "修";
+    }
+
+    if (page.battleResult === "战败") {
+        // 战败，转到住宿
+        return "宿";
+    }
+    if (page.zodiacBattle! && page.battleResult === "平手") {
+        // 十二宫战斗平手，视为战败，转到住宿
+        return "宿";
+    }
+
+    if (page.zodiacBattle! || page.treasureBattle!) {
+        // 十二宫战胜或者秘宝战胜，转到存钱
+        return "存";
+    }
+    let depositBattleCount = SetupLoader.getDepositBattleCount();
+    if (depositBattleCount > 0 && battleCount % depositBattleCount === 0) {
+        // 设置的存钱战数到了
+        return "存";
+    }
+
     // 生命力低于最大值的配置比例，住宿推荐
-    if (SetupLoader.getLodgeHealthLostRatio() > 0 && (health <= maxHealth * SetupLoader.getLodgeHealthLostRatio())) {
-        return 1;
+    if (SetupLoader.getLodgeHealthLostRatio() > 0 &&
+        (page.roleHealth! <= page.roleMaxHealth! * SetupLoader.getLodgeHealthLostRatio())) {
+        return "宿";
     }
     // 如果MANA小于50%并且小于配置点数，住宿推荐
-    if (SetupLoader.getLodgeManaLostPoint() > 0 && (mana <= maxMana * 0.5 && mana <= SetupLoader.getLodgeManaLostPoint())) {
-        return 1;
+    if (SetupLoader.getLodgeManaLostPoint() > 0 &&
+        (page.roleMana! <= page.roleMaxMana! * 0.5 && page.roleMana! <= SetupLoader.getLodgeManaLostPoint())) {
+        return "宿";
     }
 
     if (SetupLoader.getDepositBattleCount() > 0) {
         // 设置了定期存钱，但是没有到战数，那么就直接返回吧
-        return 3;
+        return "回";
     } else {
         // 没有设置定期存钱，那就表示每战都存钱
-        return 2;
+        return "存";
     }
 }
 
-function doRenderBattleHarvestPrompt() {
-    const prompt = SetupLoader.getBattleHarvestPrompt();
-    if (prompt["person"] !== undefined && prompt["person"] !== "NONE") {
-        const candidates: string[] = [];
-        $("p").each(function (_idx, p) {
-            if ($(p).text().includes("入手！")) {
-                const html = $(p).html();
-                html.split("<br>").forEach(it => {
-                    if (it.endsWith("入手！")) {
-                        candidates.push(it);
-                    }
-                });
-            }
-        });
-        if (candidates.length > 0) {
-            // @ts-ignore
-            let person = prompt["person"];
-            let imageHTML: string;
-            if (person === "SELF") {
-                imageHTML = PageUtils.findFirstRoleImageHtml()!;
-            } else if (person === "RANDOM") {
-                imageHTML = NpcLoader.randomPlayerImageHtml()!;
-            } else {
-                imageHTML = NpcLoader.getNpcImageHtml(person)!;
-            }
-
-            CommentBoard.createCommentBoard(imageHTML);
-            $("#commentBoard").css("text-align", "center");
-            for (const it of candidates) {
-                CommentBoard.writeMessage("<b style='font-size:150%'>" + it + "</b><br>");
-            }
-            // @ts-ignore
-            CommentBoard.writeMessage(PageUtils.convertHtmlToText(prompt["text"]));
-        }
-    }
+function parseBattleCount(context: PageProcessorContext) {
+    const s = context.get("battleCount")!;
+    return _.parseInt(s) + 1;
 }
 
-function doRenderNormalBattlePrompt() {
-    const prompt = SetupLoader.getNormalBattlePrompt();
-    if (prompt["person"] !== undefined && prompt["person"] !== "NONE") {
-        let person = prompt["person"];
-        let imageHTML: string;
-        if (person === "SELF") {
-            imageHTML = PageUtils.findFirstRoleImageHtml()!;
-        } else if (person === "RANDOM") {
-            imageHTML = NpcLoader.randomPlayerImageHtml()!;
-        } else {
-            imageHTML = NpcLoader.getNpcImageHtml(person)!;
-        }
-        CommentBoard.createCommentBoard(imageHTML);
-        $("#commentBoard")
-            .css("text-align", "center")
-            .css("background-color", "black")
-            .css("color", "greenyellow");
-        CommentBoard.writeMessage(PageUtils.convertHtmlToText(prompt["text"]));
-    }
-}
+function parsePage() {
+    const page = new BattlePage();
 
-function doCheckIfPetUpgrade() {
-    const reportText = $("#ueqtweixin").text();
+    const battleField = $("table:first")
+        .find("tbody:first")
+        .find("tr:first")
+        .find("td:first")
+        .find("font:first")
+        .find("b:first")
+        .text();
+    page.treasureBattle = battleField.includes("秘宝之岛");
+    page.primaryBattle = battleField.includes("初级之森");
+    page.juniorBattle = battleField.includes("中级之塔");
+    page.seniorBattle = battleField.includes("上级之洞窟");
+    page.zodiacBattle = battleField.includes("十二神殿");
+
     let petName = "";
-    let petUpgrade = false;
-    for (const s of reportText.split("\n")) {
+    const endureList: number[] = [];
+    for (const s of _.split($("#ueqtweixin").text(), "\n")) {
+        if (_.endsWith(s, "耐久度")) {
+            if (!s.includes("大师球") &&
+                !s.includes("宗师球") &&
+                !s.includes("超力怪兽球") &&
+                !s.includes("宠物蛋")) {
+                let t = StringUtils.substringBetween(s, "剩余", "耐久度");
+                let n = parseInt(t);
+                endureList.push(n);
+            }
+        }
+        if (_.endsWith(s, "回)")) {
+            let t = StringUtils.substringBetween(s, "(剩余", "回)");
+            let n = parseInt(t);
+            endureList.push(n);
+        }
         if (s.includes(" 获得 ") && s.includes(" 经验值.")) {
             // 这一行是宠物获得经验值的那一行
             // 记录下宠物名
@@ -396,12 +323,188 @@ function doCheckIfPetUpgrade() {
         if (petName !== "") {
             const searchString = petName + "等级上升！";
             if (s.includes(searchString)) {
-                petUpgrade = true;
-                break;
+                page.petUpgrade = true;
             }
         }
     }
-    return petUpgrade;
+    if (endureList.length > 0) {
+        page.lowestEndure = _.min(endureList);
+    }
+
+    $("table:eq(5)")
+        .find("td:contains('＜怪物＞')")
+        .filter((idx, td) => $(td).text() === "＜怪物＞")
+        .each((idx, td) => {
+            let monsterTable = $(td).closest("table");
+            let roleTable = monsterTable.parent().prev().find("table:first");
+
+            roleTable
+                .find("tr:first")
+                .next()
+                .next()
+                .find("td:eq(1)")
+                .each((i, td) => {
+                    let s = StringUtils.substringBefore($(td).text(), " / ");
+                    page.roleHealth = _.parseInt(s);
+                    s = StringUtils.substringAfter($(td).text(), " / ");
+                    page.roleMaxHealth = _.parseInt(s);
+                })
+                .next()
+                .each((i, td) => {
+                    let s = StringUtils.substringBefore($(td).text(), " / ");
+                    page.roleMana = _.parseInt(s);
+                    s = StringUtils.substringAfter($(td).text(), " / ");
+                    page.roleMaxMana = _.parseInt(s);
+                })
+
+            monsterTable
+                .find("tr:first")
+                .next()
+                .next()
+                .find("td:eq(1)")
+                .each((i, td) => {
+                    let s = StringUtils.substringBefore($(td).text(), " / ");
+                    page.monsterHealth = _.parseInt(s);
+                })
+        });
+
+
+    if (page.roleHealth! === 0) {
+        page.battleResult = "战败";
+    } else if (page.monsterHealth! === 0) {
+        page.battleResult = "战胜";
+    } else {
+        page.battleResult = "平手";
+    }
+
+    page.harvestList = [];
+    $("table:eq(5)")
+        .find("p")
+        .filter((idx, p) => $(p).text().includes("入手！"))
+        .each((idx, p) => {
+            _.split($(p).html(), "<br>").forEach(it => {
+                if (it.endsWith("入手！")) {
+                    page.harvestList!.push(it);
+                }
+            });
+        });
+
+    return page;
+}
+
+function generateReturnForm(credential: Credential) {
+    const form = PageUtils.generateReturnTownForm(credential);
+    $("#hidden-1").html(form);
+}
+
+function generateDepositForm(credential: Credential) {
+    let form = "";
+    // noinspection HtmlUnknownTarget
+    form += "<form action='town.cgi' method='post'>";
+    form += "<input type='hidden' name='id' value='" + credential.id + "'>";
+    form += "<input type='hidden' name='pass' value='" + credential.pass + "'>"
+    form += "<input type='hidden' name='azukeru' value='all'>";
+    form += "<input type='hidden' name='mode' value='BANK_SELL'>";
+    form += "<input type='submit' id='deposit'>";
+    form += "</form>";
+    $("#hidden-2").html(form);
+}
+
+function generateRepairForm(credential: Credential) {
+    let form = "";
+    // noinspection HtmlUnknownTarget
+    form += "<form action='town.cgi' method='post'>";
+    form += "<input type='hidden' name='id' value='" + credential.id + "'>";
+    form += "<input type='hidden' name='pass' value='" + credential.pass + "'>"
+    form += "<input type='hidden' name='arm_mode' value='all'>";
+    form += "<input type='hidden' name='mode' value='MY_ARM2'>";
+    form += "<input type='submit' id='repair'>";
+    form += "</form>";
+    $("#hidden-3").html(form);
+}
+
+function generateLodgeForm(credential: Credential) {
+    let form = "";
+    // noinspection HtmlUnknownTarget
+    form += "<form action='town.cgi' method='post'>";
+    form += "<input type='hidden' name='id' value='" + credential.id + "'>";
+    form += "<input type='hidden' name='pass' value='" + credential.pass + "'>"
+    form += "<input type='hidden' name='mode' value='RECOVERY'>";
+    form += "<input type='submit' id='lodge'>";
+    form += "</form>";
+    $("#hidden-4").html(form);
+}
+
+function renderMinimalBattle() {
+    if (!SetupLoader.isMobileMiniDashboardEnabled()) {
+        return;
+    }
+    $("table:first")
+        .find("tr:first")
+        .next()
+        .next()
+        .next()
+        .next()
+        .next()
+        .next().hide()
+        .next().hide()
+        .next().hide()
+        .next().hide();
+
+    let lastIndex = -1;
+    $("table:eq(5)")
+        .find("tbody:first")
+        .find("tr:first")
+        .find("td:first")
+        .find("center:first")
+        .find("h1:first").hide()
+        .next()
+        .find("font:first")
+        .find("b:first")
+        .attr("id", "battleRecordContainer")
+        .find("p")
+        .each((idx, p) => {
+            const text = $(p).text();
+            if (text.startsWith("第") && text.includes("回合")) {
+                lastIndex = idx;
+            }
+        });
+
+    $("#battleRecordContainer")
+        .find("p")
+        .each((idx, p) => {
+            const text = $(p).text();
+            if (text.startsWith("第") && text.includes("回合")) {
+                if (idx !== lastIndex) {
+                    $(p).hide();
+                } else {
+                    $(p).find("table:eq(1)")
+                        .hide();
+                }
+            }
+        });
+}
+
+async function doBeforeReturn(credential: Credential, context: PageProcessorContext): Promise<void> {
+    return await (() => {
+        return new Promise<void>(resolve => {
+            const battleCount = parseBattleCount(context);
+            const petLocalStorage = new PetLocalStorage(credential);
+            petLocalStorage
+                .triggerUpdatePetMap(battleCount)
+                .then(() => {
+                    petLocalStorage
+                        .triggerUpdatePetStatus(battleCount)
+                        .then(() => {
+                            new EquipmentLocalStorage(credential)
+                                .triggerUpdateEquipmentStatus(battleCount)
+                                .then(() => {
+                                    resolve();
+                                });
+                        });
+                });
+        });
+    })();
 }
 
 export = BattlePageProcessor;

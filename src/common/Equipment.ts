@@ -83,6 +83,8 @@ class Equipment {
     gemCount?: number;
     maxGemCount?: number;
 
+    location?: string;
+
     parseName(nameHtml: string) {
         this.nameHTML = PageUtils.fixBrokenImageIfNecessary(nameHtml);
         const s = PageUtils.convertHtmlToText(this.nameHTML);

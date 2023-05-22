@@ -3,7 +3,7 @@ import StorageUtils from "../../util/StorageUtils";
 import SetupItem from "../SetupItem";
 import SetupLoader from "../SetupLoader";
 
-class SetupItem039 implements SetupItem {
+class SetupItem047 implements SetupItem {
 
     render(id?: string): void {
         doRender();
@@ -11,8 +11,8 @@ class SetupItem039 implements SetupItem {
 
 }
 
-const code: string = "039";
-const name: string = "自动触发存图鉴";
+const code: string = "047";
+const name: string = "自动触发存装备";
 const key: string = "_pa_" + code;
 
 function doRender() {
@@ -26,7 +26,7 @@ function doRender() {
 
     $("#setup_item_table").append($(html));
 
-    const value = SetupLoader.isAutoPetMapStorageEnabled();
+    const value = SetupLoader.isAutoEquipmentStatusStorageEnabled();
     $(".option_class_" + code + "[value='" + Number(value) + "']").prop("selected", true);
 
     $("#setup_" + code).on("click", function () {
@@ -50,4 +50,4 @@ function doSaveSetupItem() {
     $("#refreshButton").trigger("click");
 }
 
-export = SetupItem039;
+export = SetupItem047;

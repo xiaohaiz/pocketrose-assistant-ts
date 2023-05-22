@@ -1,6 +1,5 @@
 import SetupLoader from "../../config/SetupLoader";
 import EventHandler from "../../core/EventHandler";
-import TownDashboard from "../../pocketrose/TownDashboard";
 import TownDashboardPage from "../../pocketrose/TownDashboardPage";
 import Credential from "../../util/Credential";
 import NetworkUtils from "../../util/NetworkUtils";
@@ -16,7 +15,7 @@ class TownDashboardPageProcessor extends PageProcessorCredentialSupport {
     }
 
     doProcess(credential: Credential, context?: PageProcessorContext): void {
-        const page = TownDashboard.parsePage(PageUtils.currentPageHtml());
+        const page = TownDashboardPage.parse(PageUtils.currentPageHtml());
 
         // 手机战斗返回后不在页面顶端，尝试自动触顶。
         $("center:first").attr("id", "systemAnnouncement");
@@ -165,30 +164,36 @@ function doProcess(credential: Credential, page: TownDashboardPage) {
             .parent()
             .next()
             .find("th:first")
-            .css("text-align", "right")
-            .text("训练战斗")
-            .before($("<td style='vertical-align:bottom'><button role='button' class='" + buttonClass + "' id='shortcut0'>个人</button></td>"))
+            .html("")
+            .before($("<td></td>"))
             .parent()
             .next()
             .find("th:first")
-            .css("text-align", "right")
-            .text("城市设施")
-            .before($("<td style='vertical-align:bottom'><button role='button' class='" + buttonClass + "' id='shortcut1'>图鉴</button></td>"))
+            .html("<button role='button' class='" + buttonClass + "' id='shortcut5'>&nbsp;个人&nbsp;</button>")
+            .before($("<td>" +
+                "<button role='button' class='" + buttonClass + "' id='shortcut1'>&nbsp;图鉴&nbsp;</button>" +
+                "</td>"))
             .parent()
             .next()
             .find("th:first")
-            .css("text-align", "right")
-            .before($("<td style='vertical-align:bottom'><button role='button' class='" + buttonClass + "' id='shortcut2'>装备</button></td>"))
+            .html("<button role='button' class='" + buttonClass + "' id='shortcut6'>&nbsp;团队&nbsp;</button>")
+            .before($("<td>" +
+                "<button role='button' class='" + buttonClass + "' id='shortcut2'>&nbsp;装备&nbsp;</button>" +
+                "</td>"))
             .parent()
             .next()
             .find("th:first")
-            .css("text-align", "right")
-            .before($("<td style='vertical-align:bottom'><button role='button' class='" + buttonClass + "' id='shortcut3'>宠物</button></td>"))
+            .html("<button role='button' class='" + buttonClass + "' id='shortcut7'>&nbsp;冒险&nbsp;</button>")
+            .before($("<td>" +
+                "<button role='button' class='" + buttonClass + "' id='shortcut3'>&nbsp;宠物&nbsp;</button>" +
+                "</td>"))
             .parent()
             .next()
             .find("th:first")
-            .css("text-align", "right")
-            .before($("<td style='vertical-align:bottom'><button role='button' class='" + buttonClass + "' id='shortcut4'>职业</button></td>"))
+            .html("<button role='button' class='" + buttonClass + "' id='shortcut8'>&nbsp;设置&nbsp;</button>")
+            .before($("<td>" +
+                "<button role='button' class='" + buttonClass + "' id='shortcut4'>&nbsp;职业&nbsp;</button>" +
+                "</td>"))
             .parent()
             .next()
             .find("th:first")
@@ -203,14 +208,6 @@ function doProcess(credential: Credential, page: TownDashboardPage) {
             .attr("colspan", 5)
 
 
-        $("#shortcut0").on("click", () => {
-            $("option[value='RANK_REMAKE']")
-                .prop("selected", true)
-                .closest("td")
-                .next()
-                .find("input:submit:first")
-                .trigger("click");
-        });
         $("#shortcut1").on("click", () => {
             $("option[value='PETMAP']")
                 .prop("selected", true)
@@ -237,6 +234,38 @@ function doProcess(credential: Credential, page: TownDashboardPage) {
         });
         $("#shortcut4").on("click", () => {
             $("option[value='CHANGE_OCCUPATION']")
+                .prop("selected", true)
+                .closest("td")
+                .next()
+                .find("input:submit:first")
+                .trigger("click");
+        });
+        $("#shortcut5").on("click", () => {
+            $("option[value='RANK_REMAKE']")
+                .prop("selected", true)
+                .closest("td")
+                .next()
+                .find("input:submit:first")
+                .trigger("click");
+        });
+        $("#shortcut6").on("click", () => {
+            $("option[value='BATTLE_MES']")
+                .prop("selected", true)
+                .closest("td")
+                .next()
+                .find("input:submit:first")
+                .trigger("click");
+        });
+        $("#shortcut7").on("click", () => {
+            $("option[value='CHANGEMAP']")
+                .prop("selected", true)
+                .closest("td")
+                .next()
+                .find("input:submit:first")
+                .trigger("click");
+        });
+        $("#shortcut8").on("click", () => {
+            $("option[value='LETTER']")
                 .prop("selected", true)
                 .closest("td")
                 .next()
@@ -543,6 +572,12 @@ function doRenderSetupMenu() {
     $("option[value='LETTER']")
         .css("background-color", "yellow")
         .text("口袋助手设置");
+    $("option[value='RANK_REMAKE']")
+        .css("background-color", "yellow")
+        .text("个人面板");
+    $("option[value='BATTLE_MES']")
+        .css("background-color", "yellow")
+        .text("团队面板");
 }
 
 function doRenderEquipmentManagementMenu() {
