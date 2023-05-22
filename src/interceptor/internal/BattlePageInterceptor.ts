@@ -22,9 +22,9 @@ class BattlePageInterceptor implements PageInterceptor {
         LocationStateMachine.create()
             .load()
             .whenInTown((townId, battleCount) => {
-                const context = new PageProcessorContext();
-                context.set("townId", townId);
-                context.set("battleCount", battleCount);
+                const context = new PageProcessorContext()
+                    .withTownId(townId)
+                    .withBattleCount(battleCount);
                 this.#processor.process(context);
             })
             .fork();
