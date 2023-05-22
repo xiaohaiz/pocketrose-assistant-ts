@@ -20,10 +20,14 @@ class PersonalProfilePageInterceptor implements PageInterceptor {
         LocationStateMachine.create()
             .load()
             .whenInTown(townId => {
-                this.#inTownProcessor.process(PageProcessorContext.withTownId2(townId));
+                const context = new PageProcessorContext()
+                    .withTownId(townId);
+                this.#inTownProcessor.process(context);
             })
             .whenInCastle(castleName => {
-                this.#inCastleProcessor.process(PageProcessorContext.withCastleName2(castleName));
+                const context = new PageProcessorContext()
+                    .withCastleName(castleName);
+                this.#inCastleProcessor.process(context);
             })
             .fork();
     }

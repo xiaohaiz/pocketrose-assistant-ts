@@ -38,21 +38,6 @@ class PageProcessorContext {
         return this;
     }
 
-    static withTownId2(townId: string | undefined) {
-        const context = new PageProcessorContext();
-        if (townId !== undefined) {
-            context.set("townId", townId);
-        }
-        return context;
-    }
-
-    static withCastleName2(castleName: string | undefined) {
-        const context = new PageProcessorContext();
-        if (castleName !== undefined) {
-            context.set("castleName", castleName);
-        }
-        return context;
-    }
 }
 
 export = PageProcessorContext;
