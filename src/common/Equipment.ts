@@ -1,3 +1,4 @@
+import _ from "lodash";
 import SetupLoader from "../config/SetupLoader";
 import TownLoader from "../core/TownLoader";
 import Coordinate from "../util/Coordinate";
@@ -82,8 +83,23 @@ class Equipment {
     priceHTML?: string;                  // 价格HTML代码
     gemCount?: number;
     maxGemCount?: number;
-
     location?: string;
+
+    static parse(text: string) {
+        const ss = _.split(text, "/");
+        const equipment = new Equipment();
+        equipment.parseName(_.unescape(ss[0]));
+        equipment.category = ss[1];
+        equipment.power = _.parseInt(ss[2]);
+        equipment.weight = _.parseInt(ss[3]);
+        equipment.endure = _.parseInt(ss[4]);
+        equipment.additionalPower = _.parseInt(ss[5]);
+        equipment.additionalWeight = _.parseInt(ss[6]);
+        equipment.additionalLuck = _.parseInt(ss[7]);
+        equipment.experience = _.parseInt(ss[8]);
+        equipment.location = ss[9];
+        return equipment;
+    }
 
     parseName(nameHtml: string) {
         this.nameHTML = PageUtils.fixBrokenImageIfNecessary(nameHtml);
