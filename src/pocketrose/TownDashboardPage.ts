@@ -43,22 +43,22 @@ class TownDashboardPage {
                 const text = $(td).text();
                 let idx = text.indexOf("Lv：");
                 let s = text.substring(idx);
-                role.level = parseInt(s.substring(3, s.indexOf(" ")));
+                role.level = _.parseInt(s.substring(3, s.indexOf(" ")));
                 idx = text.indexOf("攻击力：");
                 s = text.substring(idx);
-                role.attack = parseInt(s.substring(4, s.indexOf(" ")));
+                role.attack = _.parseInt(s.substring(4, s.indexOf(" ")));
                 idx = s.indexOf("防御力：");
                 s = s.substring(idx);
-                role.defense = parseInt(s.substring(4, s.indexOf(" ")));
+                role.defense = _.parseInt(s.substring(4, s.indexOf(" ")));
                 idx = s.indexOf("智力：");
                 s = s.substring(idx);
-                role.specialAttack = parseInt(s.substring(3, s.indexOf(" ")));
+                role.specialAttack = _.parseInt(s.substring(3, s.indexOf(" ")));
                 idx = s.indexOf("精神力：");
                 s = s.substring(idx);
-                role.specialDefense = parseInt(s.substring(4, s.indexOf(" ")));
+                role.specialDefense = _.parseInt(s.substring(4, s.indexOf(" ")));
                 idx = s.indexOf("速度：");
                 s = s.substring(idx);
-                role.speed = parseInt(s.substring(3));
+                role.speed = _.parseInt(s.substring(3));
             });
 
         return page;
