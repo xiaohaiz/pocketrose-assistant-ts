@@ -1,4 +1,6 @@
+import EquipmentLocalStorage from "../../core/EquipmentLocalStorage";
 import NpcLoader from "../../core/NpcLoader";
+import PetLocalStorage from "../../core/PetLocalStorage";
 import Credential from "../../util/Credential";
 import MessageBoard from "../../util/MessageBoard";
 import PageUtils from "../../util/PageUtils";
@@ -87,6 +89,8 @@ abstract class AbstractPersonalTeamPageProcessor extends PageProcessorCredential
 
         this.#bindRefreshButton();
         this.bindReturnButton(credential);
+        this.#bindUpdateEquipmentButton(credential);
+        this.#bindUpdatePetButton(credential);
     }
 
     #welcomeMessageHtml() {
@@ -104,6 +108,35 @@ abstract class AbstractPersonalTeamPageProcessor extends PageProcessorCredential
     }
 
     abstract bindReturnButton(credential: Credential): void;
+
+    #bindUpdateEquipmentButton(credential: Credential) {
+        $("#updateEquipmentButton").on("click", () => {
+            $("button").prop("disabled", true);
+            $("input").prop("disabled", true);
+            MessageBoard.publishMessage("开始更新装备数据......");
+            new EquipmentLocalStorage(credential).updateEquipmentStatus().then(() => {
+                MessageBoard.publishMessage("装备数据更新完成。");
+                $("button").prop("disabled", false);
+                $("input").prop("disabled", false);
+            });
+        });
+    }
+
+    #bindUpdatePetButton(credential: Credential) {
+        $("#updatePetButton").on("click", () => {
+            $("button").prop("disabled", true);
+            $("input").prop("disabled", true);
+            MessageBoard.publishMessage("开始更新宠物数据......");
+            const petLocalStorage = new PetLocalStorage(credential);
+            petLocalStorage.updatePetMap().then(() => {
+                petLocalStorage.updatePetStatus().then(() => {
+                    MessageBoard.publishMessage("宠物数据更新完成。");
+                    $("button").prop("disabled", false);
+                    $("input").prop("disabled", false);
+                });
+            });
+        });
+    }
 }
 
 
