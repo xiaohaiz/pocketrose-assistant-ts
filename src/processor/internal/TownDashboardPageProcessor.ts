@@ -254,14 +254,6 @@ function doProcess(credential: Credential, page: TownDashboardPage) {
             .attr("colspan", 5)
 
 
-        $("#shortcut0").on("click", () => {
-            $("option[value='RANK_REMAKE']")
-                .prop("selected", true)
-                .closest("td")
-                .next()
-                .find("input:submit:first")
-                .trigger("click");
-        });
         $("#shortcut1").on("click", () => {
             $("option[value='PETMAP']")
                 .prop("selected", true)
@@ -288,6 +280,38 @@ function doProcess(credential: Credential, page: TownDashboardPage) {
         });
         $("#shortcut4").on("click", () => {
             $("option[value='CHANGE_OCCUPATION']")
+                .prop("selected", true)
+                .closest("td")
+                .next()
+                .find("input:submit:first")
+                .trigger("click");
+        });
+        $("#shortcut5").on("click", () => {
+            $("option[value='RANK_REMAKE']")
+                .prop("selected", true)
+                .closest("td")
+                .next()
+                .find("input:submit:first")
+                .trigger("click");
+        });
+        $("#shortcut6").on("click", () => {
+            $("option[value='BATTLE_MES']")
+                .prop("selected", true)
+                .closest("td")
+                .next()
+                .find("input:submit:first")
+                .trigger("click");
+        });
+        $("#shortcut7").on("click", () => {
+            $("option[value='CHANGEMAP']")
+                .prop("selected", true)
+                .closest("td")
+                .next()
+                .find("input:submit:first")
+                .trigger("click");
+        });
+        $("#shortcut8").on("click", () => {
+            $("option[value='LETTER']")
                 .prop("selected", true)
                 .closest("td")
                 .next()
