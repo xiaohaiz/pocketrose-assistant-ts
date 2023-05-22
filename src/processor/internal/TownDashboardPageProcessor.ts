@@ -166,28 +166,80 @@ function doProcess(credential: Credential, page: TownDashboardPage) {
             .find("th:first")
             .css("text-align", "right")
             .text("训练战斗")
-            .before($("<td style='vertical-align:bottom'><button role='button' class='" + buttonClass + "' id='shortcut0'>个人</button></td>"))
+            .before($("<td></td>"))
             .parent()
             .next()
             .find("th:first")
             .css("text-align", "right")
             .text("城市设施")
-            .before($("<td style='vertical-align:bottom'><button role='button' class='" + buttonClass + "' id='shortcut1'>图鉴</button></td>"))
+            .before($("<td>" +
+                "<table style='background-color:transparent;border-width:0;border-spacing:0;margin:auto'>" +
+                "<tbody>" +
+                "<tr>" +
+                "<td>" +
+                "<button role='button' class='" + buttonClass + "' id='shortcut1'>鉴</button>" +
+                "</td>" +
+                "<td>" +
+                "<button role='button' class='" + buttonClass + "' id='shortcut5'>个</button>" +
+                "</td>" +
+                "</tr>" +
+                "</tbody>" +
+                "</table>" +
+                "</td>"))
             .parent()
             .next()
             .find("th:first")
             .css("text-align", "right")
-            .before($("<td style='vertical-align:bottom'><button role='button' class='" + buttonClass + "' id='shortcut2'>装备</button></td>"))
+            .before($("<td>" +
+                "<table style='background-color:transparent;border-width:0;border-spacing:0;margin:auto'>" +
+                "<tbody>" +
+                "<tr>" +
+                "<td>" +
+                "<button role='button' class='" + buttonClass + "' id='shortcut2'>装</button>" +
+                "</td>" +
+                "<td>" +
+                "<button role='button' class='" + buttonClass + "' id='shortcut6'>团</button>" +
+                "</td>" +
+                "</tr>" +
+                "</tbody>" +
+                "</table>" +
+                "</td>"))
             .parent()
             .next()
             .find("th:first")
             .css("text-align", "right")
-            .before($("<td style='vertical-align:bottom'><button role='button' class='" + buttonClass + "' id='shortcut3'>宠物</button></td>"))
+            .before($("<td>" +
+                "<table style='background-color:transparent;border-width:0;border-spacing:0;margin:auto'>" +
+                "<tbody>" +
+                "<tr>" +
+                "<td>" +
+                "<button role='button' class='" + buttonClass + "' id='shortcut3'>宠</button>" +
+                "</td>" +
+                "<td>" +
+                "<button role='button' class='" + buttonClass + "' id='shortcut7'>险</button>" +
+                "</td>" +
+                "</tr>" +
+                "</tbody>" +
+                "</table>" +
+                "</td>"))
             .parent()
             .next()
             .find("th:first")
             .css("text-align", "right")
-            .before($("<td style='vertical-align:bottom'><button role='button' class='" + buttonClass + "' id='shortcut4'>职业</button></td>"))
+            .before($("<td>" +
+                "<table style='background-color:transparent;border-width:0;border-spacing:0;margin:auto'>" +
+                "<tbody>" +
+                "<tr>" +
+                "<td>" +
+                "<button role='button' class='" + buttonClass + "' id='shortcut4'>职</button>" +
+                "</td>" +
+                "<td>" +
+                "<button role='button' class='" + buttonClass + "' id='shortcut8'>设</button>" +
+                "</td>" +
+                "</tr>" +
+                "</tbody>" +
+                "</table>" +
+                "</td>"))
             .parent()
             .next()
             .find("th:first")
