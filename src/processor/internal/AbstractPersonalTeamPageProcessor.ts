@@ -1,4 +1,5 @@
 import _ from "lodash";
+import Equipment from "../../common/Equipment";
 import EquipmentLocalStorage from "../../core/EquipmentLocalStorage";
 import FastLoginManager from "../../core/FastLoginManager";
 import NpcLoader from "../../core/NpcLoader";
@@ -189,25 +190,28 @@ abstract class AbstractPersonalTeamPageProcessor extends PageProcessorCredential
 
                 let html = "";
                 let row = 0;
-                for (const it of equipments) {
-                    const ss = _.split(it, "/");
-                    html += "<tr>";
-                    if (row === 0) {
-                        html += "<td style='background-color:#F8F0E0;vertical-align:center' rowspan='" + (equipments.length) + "'>" + config.name + "</td>";
-                    }
-                    html += "<td style='background-color:#E8E8D0'>" + _.unescape(ss[0]) + "</td>";
-                    html += "<td style='background-color:#E8E8B0'>" + ss[1] + "</td>";
-                    html += "<td style='background-color:#E8E8D0'>" + ss[2] + "</td>";
-                    html += "<td style='background-color:#E8E8B0'>" + ss[3] + "</td>";
-                    html += "<td style='background-color:#E8E8D0'>" + ss[4] + "</td>";
-                    html += "<td style='background-color:#E8E8B0'>" + ss[5] + "</td>";
-                    html += "<td style='background-color:#E8E8D0'>" + ss[6] + "</td>";
-                    html += "<td style='background-color:#E8E8B0'>" + ss[7] + "</td>";
-                    html += "<td style='background-color:#E8E8D0'>" + ss[8] + "</td>";
-                    html += "<td style='background-color:#E8E8B0'>" + ss[9] + "</td>";
-                    html += "</tr>";
-                    row++;
-                }
+
+                _.split(value, "$$")
+                    .map(it => Equipment.parse(it))
+                    .sort(Equipment.sorter)
+                    .forEach(it => {
+                        html += "<tr>";
+                        if (row === 0) {
+                            html += "<td style='background-color:#F8F0E0;vertical-align:center' rowspan='" + (equipments.length) + "'>" + config.name + "</td>";
+                        }
+                        html += "<td style='background-color:#E8E8D0;text-align:left'>" + it.fullName + "</td>";
+                        html += "<td style='background-color:#E8E8B0'>" + it.category + "</td>";
+                        html += "<td style='background-color:#E8E8D0'>" + it.power + "</td>";
+                        html += "<td style='background-color:#E8E8B0'>" + it.weight + "</td>";
+                        html += "<td style='background-color:#E8E8D0'>" + it.endure + "</td>";
+                        html += "<td style='background-color:#E8E8B0'>" + it.additionalPowerHtml + "</td>";
+                        html += "<td style='background-color:#E8E8D0'>" + it.additionalWeightHtml + "</td>";
+                        html += "<td style='background-color:#E8E8B0'>" + it.additionalLuckHtml + "</td>";
+                        html += "<td style='background-color:#E8E8D0'>" + it.experienceHTML + "</td>";
+                        html += "<td style='background-color:#E8E8B0'>" + it.location + "</td>";
+                        html += "</tr>";
+                        row++;
+                    });
 
                 $("#equipmentStatusList").append($(html));
             }

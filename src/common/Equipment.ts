@@ -144,6 +144,19 @@ class Equipment {
         this.price = parseInt(s);
     }
 
+    get locationOrder() {
+        switch (this.location) {
+            case "P":
+                return 1;
+            case "B":
+                return 2;
+            case "W":
+                return 3;
+            default:
+                return 0;
+        }
+    }
+
     get categoryOrder() {
         if (this.isWeapon) {
             return 1;
@@ -291,8 +304,12 @@ class Equipment {
         if (ratio === 1) {
             return "<span style='color:red' title='" + this.experience + "'>MAX</span>";
         }
-        const progressBar = PageUtils.generateProgressBarHTML(ratio);
-        return "<span title='" + this.experience + " (" + (ratio * 100).toFixed(2) + "%)'>" + progressBar + "</span>"
+        if (SetupLoader.isExperienceProgressBarEnabled()) {
+            const progressBar = PageUtils.generateProgressBarHTML(ratio);
+            return "<span title='" + this.experience + " (" + (ratio * 100).toFixed(2) + "%)'>" + progressBar + "</span>"
+        } else {
+            return this.experience!.toString();
+        }
     }
 
     get fullName() {
@@ -408,33 +425,38 @@ class Equipment {
     }
 
     static sortEquipmentList(source: Equipment[]): Equipment[] {
-        const target: Equipment[] = [];
-        target.push(...source);
-        if (!SetupLoader.isEquipmentPetSortEnabled()) {
-            return target;
-        }
-        target.sort((a, b) => {
-            let ret = a.categoryOrder - b.categoryOrder;
-            if (ret !== 0) {
-                return ret;
-            }
-            let a1 = a.star! ? 1 : 0;
-            let b1 = b.star! ? 1 : 0;
-            ret = a1 - b1;
-            if (ret !== 0) {
-                return ret;
-            }
-            ret = b.power! - a.power!;
-            if (ret !== 0) {
-                return ret;
-            }
-            ret = a.fullName!.localeCompare(b.fullName);
-            if (ret !== 0) {
-                return ret;
-            }
-            return b.additionalPower! - a.additionalPower!;
-        });
+        const target = _.clone(source);
+        target.sort(Equipment.sorter);
         return target;
+    }
+
+    static sorter(a: Equipment, b: Equipment): number {
+        if (!SetupLoader.isEquipmentPetSortEnabled()) {
+            return 0;
+        }
+        let ret = a.locationOrder - b.locationOrder;
+        if (ret !== 0) {
+            return ret;
+        }
+        ret = a.categoryOrder - b.categoryOrder;
+        if (ret !== 0) {
+            return ret;
+        }
+        let a1 = a.star! ? 1 : 0;
+        let b1 = b.star! ? 1 : 0;
+        ret = a1 - b1;
+        if (ret !== 0) {
+            return ret;
+        }
+        ret = b.power! - a.power!;
+        if (ret !== 0) {
+            return ret;
+        }
+        ret = a.fullName!.localeCompare(b.fullName);
+        if (ret !== 0) {
+            return ret;
+        }
+        return b.additionalPower! - a.additionalPower!;
     }
 }
 
