@@ -9,6 +9,7 @@ import GoldenCage from "../pocketrose/GoldenCage";
 import PersonalEquipmentManagement from "../pocketrose/PersonalEquipmentManagement";
 import PersonalPetManagement from "../pocketrose/PersonalPetManagement";
 import TownPetMapHouse from "../pocketrose/TownPetMapHouse";
+import CommentBoard from "../util/CommentBoard";
 import Credential from "../util/Credential";
 import StorageUtils from "../util/StorageUtils";
 
@@ -25,6 +26,7 @@ class PetLocalStorage {
             return new Promise<void>(resolve => {
                 const configCount = SetupLoader.getSavePetMapBattleCount();
                 if (battleCount > 0 && configCount > 0 && battleCount % configCount === 0) {
+                    CommentBoard.writeMessage("<br>开始更新宠物图鉴......");
                     this.updatePetMap().then(() => {
                         resolve();
                     });
@@ -40,6 +42,7 @@ class PetLocalStorage {
             return new Promise<void>(resolve => {
                 const configCount = SetupLoader.getSavePetBattleCount();
                 if (battleCount > 0 && configCount > 0 && battleCount % configCount === 0) {
+                    CommentBoard.writeMessage("<br>开始更新宠物状态......");
                     this.updatePetStatus().then(() => {
                         resolve();
                     });

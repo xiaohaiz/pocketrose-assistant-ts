@@ -1,5 +1,6 @@
 import _ from "lodash";
 import SetupLoader from "../../config/SetupLoader";
+import EquipmentLocalStorage from "../../core/EquipmentLocalStorage";
 import NpcLoader from "../../core/NpcLoader";
 import PetLocalStorage from "../../core/PetLocalStorage";
 import BattlePage from "../../pocketrose/BattlePage";
@@ -495,7 +496,11 @@ async function doBeforeReturn(credential: Credential, context: PageProcessorCont
                     petLocalStorage
                         .triggerUpdatePetStatus(battleCount)
                         .then(() => {
-                            resolve();
+                            new EquipmentLocalStorage(credential)
+                                .triggerUpdateEquipmentStatus(battleCount)
+                                .then(() => {
+                                    resolve();
+                                });
                         });
                 });
         });

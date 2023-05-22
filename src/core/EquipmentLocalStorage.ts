@@ -6,6 +6,7 @@ import CastleWarehouse from "../pocketrose/CastleWarehouse";
 import PersonalEquipmentManagement from "../pocketrose/PersonalEquipmentManagement";
 import PersonalEquipmentManagementPage from "../pocketrose/PersonalEquipmentManagementPage";
 import TreasureBag from "../pocketrose/TreasureBag";
+import CommentBoard from "../util/CommentBoard";
 import Credential from "../util/Credential";
 import StorageUtils from "../util/StorageUtils";
 
@@ -27,6 +28,7 @@ class EquipmentLocalStorage {
                 // 自动保存启用时，战数尾数为97时，触发装备保存
                 const doStorage = (battleCount % 100 === 97 && EquipmentLocalStorage.isAutoEquipmentStatusStorageEnabled());
                 if (doStorage) {
+                    CommentBoard.writeMessage("<br>开始更新装备状态......");
                     this.updateEquipmentStatus().then(() => resolve());
                 } else {
                     resolve();
