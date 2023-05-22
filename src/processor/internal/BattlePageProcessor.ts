@@ -13,10 +13,6 @@ import PageProcessorCredentialSupport from "../PageProcessorCredentialSupport";
 
 class BattlePageProcessor extends PageProcessorCredentialSupport {
 
-    doLoadButtonStyles(): number[] {
-        return [90];
-    }
-
     doProcess(credential: Credential, context?: PageProcessorContext): void {
         if (context === undefined || context.get("battleCount") === undefined) {
             // context is required for battle processing
@@ -78,10 +74,10 @@ function processBattle(credential: Credential, page: BattlePage, context: PagePr
 
     // 根据设置是否变成大按钮
     if (SetupLoader.isBattleLargeButtonEnabled()) {
-        $("#returnButton").addClass("button-90");
-        $("#depositButton").addClass("button-90");
-        $("#repairButton").addClass("button-90");
-        $("#lodgeButton").addClass("button-90");
+        $("#returnButton").css("font-size", "200%");
+        $("#depositButton").css("font-size", "200%");
+        $("#repairButton").css("font-size", "200%");
+        $("#lodgeButton").css("font-size", "200%");
     }
 
     // 根据设置的内容修改按钮的台词
