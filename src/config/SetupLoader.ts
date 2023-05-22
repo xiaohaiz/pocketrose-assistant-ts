@@ -257,6 +257,14 @@ class SetupLoader {
         return StorageUtils.getInt("_pa_046", 50);
     }
 
+    static isAutoPetMapStorageEnabled() {
+        return StorageUtils.getBoolean("_pa_039");
+    }
+
+    static isAutoPetStatusStorageEnabled() {
+        return StorageUtils.getBoolean("_pa_046");
+    }
+
     static isAutoEquipmentStatusStorageEnabled() {
         return StorageUtils.getBoolean("_pa_047");
     }

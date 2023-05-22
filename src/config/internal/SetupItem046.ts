@@ -12,7 +12,7 @@ class SetupItem046 implements SetupItem {
 }
 
 const code: string = "046";
-const name: string = "保存宠物的战数";
+const name: string = "自动触发存宠物";
 const key: string = "_pa_" + code;
 
 function doRender() {
@@ -26,7 +26,7 @@ function doRender() {
 
     $("#setup_item_table").append($(html));
 
-    const value = SetupLoader.getSavePetBattleCount();
+    const value = SetupLoader.isAutoPetStatusStorageEnabled();
     $(".option_class_" + code + "[value='" + Number(value) + "']").prop("selected", true);
 
     $("#setup_" + code).on("click", function () {
@@ -35,10 +35,10 @@ function doRender() {
 }
 
 function doGenerateSetupItem() {
-    let html = "<select id='select_" + code + "'>";
-    html += "<option class='option_class_" + code + "' value='-1'>禁用</option>";
-    html += "<option class='option_class_" + code + "' value='50'>50战更新</option>";
-    html += "<option class='option_class_" + code + "' value='100'>100战更新</option>";
+    let html = "";
+    html += "<select id='select_" + code + "'>";
+    html += "<option class='option_class_" + code + "' value='1'>启用</option>";
+    html += "<option class='option_class_" + code + "' value='0'>禁用</option>";
     html += "</select>";
     return html;
 }

@@ -12,7 +12,7 @@ class SetupItem039 implements SetupItem {
 }
 
 const code: string = "039";
-const name: string = "保存图鉴的战数";
+const name: string = "自动触发存图鉴";
 const key: string = "_pa_" + code;
 
 function doRender() {
@@ -26,7 +26,7 @@ function doRender() {
 
     $("#setup_item_table").append($(html));
 
-    const value = SetupLoader.getSavePetMapBattleCount();
+    const value = SetupLoader.isAutoPetMapStorageEnabled();
     $(".option_class_" + code + "[value='" + Number(value) + "']").prop("selected", true);
 
     $("#setup_" + code).on("click", function () {
@@ -35,12 +35,10 @@ function doRender() {
 }
 
 function doGenerateSetupItem() {
-    let html = "<select id='select_" + code + "'>";
-    html += "<option class='option_class_" + code + "' value='-1'>禁用</option>";
-    html += "<option class='option_class_" + code + "' value='10'>10战更新</option>";
-    html += "<option class='option_class_" + code + "' value='20'>20战更新</option>";
-    html += "<option class='option_class_" + code + "' value='50'>50战更新</option>";
-    html += "<option class='option_class_" + code + "' value='100'>100战更新</option>";
+    let html = "";
+    html += "<select id='select_" + code + "'>";
+    html += "<option class='option_class_" + code + "' value='1'>启用</option>";
+    html += "<option class='option_class_" + code + "' value='0'>禁用</option>";
     html += "</select>";
     return html;
 }

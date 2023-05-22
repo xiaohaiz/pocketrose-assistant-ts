@@ -12,7 +12,7 @@ class SetupItem047 implements SetupItem {
 }
 
 const code: string = "047";
-const name: string = "保存装备的战数";
+const name: string = "自动触发存装备";
 const key: string = "_pa_" + code;
 
 function doRender() {
