@@ -1,9 +1,12 @@
+import _ from "lodash";
 import EquipmentLocalStorage from "../../core/EquipmentLocalStorage";
+import FastLoginManager from "../../core/FastLoginManager";
 import NpcLoader from "../../core/NpcLoader";
 import PetLocalStorage from "../../core/PetLocalStorage";
 import Credential from "../../util/Credential";
 import MessageBoard from "../../util/MessageBoard";
 import PageUtils from "../../util/PageUtils";
+import StorageUtils from "../../util/StorageUtils";
 import PageProcessorContext from "../PageProcessorContext";
 import PageProcessorCredentialSupport from "../PageProcessorCredentialSupport";
 
@@ -81,7 +84,7 @@ abstract class AbstractPersonalTeamPageProcessor extends PageProcessorCredential
         html += "</td>";
         html += "</tr>";
         html += "<tr style='display:none'>";
-        html += "<td id='information' style='background-color:#F8F0E0'></td>";
+        html += "<td id='information' style='background-color:#F8F0E0;width:100%'></td>";
         html += "</tr>";
         $("#messageBoardContainer")
             .parent()
@@ -91,6 +94,8 @@ abstract class AbstractPersonalTeamPageProcessor extends PageProcessorCredential
         this.bindReturnButton(credential);
         this.#bindUpdateEquipmentButton(credential);
         this.#bindUpdatePetButton(credential);
+        this.#bindListEquipmentButton();
+        this.#bindListPetButton();
     }
 
     #welcomeMessageHtml() {
@@ -135,6 +140,112 @@ abstract class AbstractPersonalTeamPageProcessor extends PageProcessorCredential
                     $("input").prop("disabled", false);
                 });
             });
+        });
+    }
+
+    #bindListEquipmentButton() {
+        $("#listEquipmentButton").on("click", () => {
+            $("#information").html("").parent().hide();
+            const configs = FastLoginManager.getAllFastLogins();
+            for (const config of configs) {
+                const key = "_es_" + config.id;
+                const value = StorageUtils.get(key);
+                if (value === null || value === "") {
+                    continue;
+                }
+                const equipments = _.split(value, "$$");
+
+                let html = "";
+                html += "<table style='margin:auto;border-width:0;text-align:center;background-color:#888888;width:100%'>";
+                html += "<tbody>";
+                html += "<tr>";
+                html += "<th style='background-color:#F8F0E0;vertical-align:center' rowspan='" + (equipments.length + 1) + "'>" + config.name + "</th>"
+                html += "<th style='background-color:#F8F0E0'>名字</th>"
+                html += "<th style='background-color:#F8F0E0'>种类</th>"
+                html += "<th style='background-color:#F8F0E0'>效果</th>"
+                html += "<th style='background-color:#F8F0E0'>重量</th>"
+                html += "<th style='background-color:#F8F0E0'>耐久</th>"
+                html += "<th style='background-color:#F8F0E0'>威＋</th>"
+                html += "<th style='background-color:#F8F0E0'>重＋</th>"
+                html += "<th style='background-color:#F8F0E0'>幸＋</th>"
+                html += "<th style='background-color:#F8F0E0'>经验</th>"
+                html += "<th style='background-color:#F8F0E0'>位置</th>"
+                html += "</tr>";
+
+                for (const it of equipments) {
+                    const ss = _.split(it, "/");
+                    html += "<tr>";
+                    html += "<td style='background-color:#E8E8D0'>" + _.unescape(ss[0]) + "</td>";
+                    html += "<td style='background-color:#E8E8B0'>" + ss[1] + "</td>";
+                    html += "<td style='background-color:#E8E8D0'>" + ss[2] + "</td>";
+                    html += "<td style='background-color:#E8E8B0'>" + ss[3] + "</td>";
+                    html += "<td style='background-color:#E8E8D0'>" + ss[4] + "</td>";
+                    html += "<td style='background-color:#E8E8B0'>" + ss[5] + "</td>";
+                    html += "<td style='background-color:#E8E8D0'>" + ss[6] + "</td>";
+                    html += "<td style='background-color:#E8E8B0'>" + ss[7] + "</td>";
+                    html += "<td style='background-color:#E8E8D0'>" + ss[8] + "</td>";
+                    html += "<td style='background-color:#E8E8B0'>" + ss[9] + "</td>";
+                    html += "</tr>";
+                }
+                html += "</tbody>";
+                html += "</table>";
+
+                $("#information").append($(html));
+                $("#information").parent().show();
+            }
+        });
+    }
+
+    #bindListPetButton() {
+        $("#listPetButton").on("click", () => {
+            $("#information").html("").parent().hide();
+            const configs = FastLoginManager.getAllFastLogins();
+            for (const config of configs) {
+                const key = "_ps_" + config.id;
+                const value = StorageUtils.get(key);
+                if (value === null || value === "") {
+                    continue;
+                }
+                const pets = _.split(value, "$$");
+
+                let html = "";
+                html += "<table style='margin:auto;border-width:0;text-align:center;background-color:#888888;width:100%'>";
+                html += "<tbody>";
+                html += "<tr>";
+                html += "<th style='background-color:#F8F0E0;vertical-align:center' rowspan='" + (pets.length + 1) + "'>" + config.name + "</th>"
+                html += "<th style='background-color:#F8F0E0'>名字</th>"
+                html += "<th style='background-color:#F8F0E0'>性别</th>"
+                html += "<th style='background-color:#F8F0E0'>等级</th>"
+                html += "<th style='background-color:#F8F0E0'>生命</th>"
+                html += "<th style='background-color:#F8F0E0'>攻击</th>"
+                html += "<th style='background-color:#F8F0E0'>防御</th>"
+                html += "<th style='background-color:#F8F0E0'>智力</th>"
+                html += "<th style='background-color:#F8F0E0'>精神</th>"
+                html += "<th style='background-color:#F8F0E0'>速度</th>"
+                html += "<th style='background-color:#F8F0E0'>位置</th>"
+                html += "</tr>";
+
+                for (const it of pets) {
+                    const ss = _.split(it, "/");
+                    html += "<tr>";
+                    html += "<td style='background-color:#E8E8D0'>" + _.unescape(ss[0]) + "</td>";
+                    html += "<td style='background-color:#E8E8B0'>" + ss[1] + "</td>";
+                    html += "<td style='background-color:#E8E8D0'>" + ss[2] + "</td>";
+                    html += "<td style='background-color:#E8E8B0'>" + ss[3] + "</td>";
+                    html += "<td style='background-color:#E8E8D0'>" + ss[4] + "</td>";
+                    html += "<td style='background-color:#E8E8B0'>" + ss[5] + "</td>";
+                    html += "<td style='background-color:#E8E8D0'>" + ss[6] + "</td>";
+                    html += "<td style='background-color:#E8E8B0'>" + ss[7] + "</td>";
+                    html += "<td style='background-color:#E8E8D0'>" + ss[8] + "</td>";
+                    html += "<td style='background-color:#E8E8B0'>" + ss[9] + "</td>";
+                    html += "</tr>";
+                }
+                html += "</tbody>";
+                html += "</table>";
+
+                $("#information").append($(html));
+                $("#information").parent().show();
+            }
         });
     }
 }

@@ -219,7 +219,7 @@ class TownPetMapHousePageProcessor extends PageProcessorCredentialSupport {
                 if (value === null || value === "") {
                     continue;
                 }
-                const pets = _.split(value, " ");
+                const pets = _.split(value, "$$");
 
                 let html = "";
                 html += "<tr>";

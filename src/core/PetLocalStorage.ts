@@ -96,7 +96,7 @@ class PetLocalStorage {
                     }
 
                     const key = "_ps_" + this.#credential.id;
-                    const value = _.join(petStatusList, " ");
+                    const value = _.join(petStatusList, "$$");
                     StorageUtils.set(key, value);
 
                     resolve();

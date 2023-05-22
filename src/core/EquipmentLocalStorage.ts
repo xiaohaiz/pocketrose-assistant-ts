@@ -72,7 +72,7 @@ class EquipmentLocalStorage {
                     }
 
                     const key = "_es_" + this.#credential.id;
-                    const value = _.join(equipmentStatusList, " ");
+                    const value = _.join(equipmentStatusList, "$$");
                     StorageUtils.set(key, value);
 
                     resolve();
