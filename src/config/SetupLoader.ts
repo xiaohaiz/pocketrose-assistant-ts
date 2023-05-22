@@ -257,6 +257,10 @@ class SetupLoader {
         return StorageUtils.getInt("_pa_046", 50);
     }
 
+    static isAutoEquipmentStatusStorageEnabled() {
+        return StorageUtils.getBoolean("_pa_047");
+    }
+
     static isMobileMiniDashboardEnabled() {
         return StorageUtils.getBoolean("_pa_040");
     }

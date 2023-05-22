@@ -17,6 +17,24 @@ class EquipmentLocalStorage {
         this.#credential = credential;
     }
 
+    static isAutoEquipmentStatusStorageEnabled() {
+        return StorageUtils.getBoolean("_pa_047");
+    }
+
+    async triggerUpdateEquipmentStatus(battleCount: number): Promise<void> {
+        return await (() => {
+            return new Promise<void>(resolve => {
+                // 自动保存启用时，战数尾数为97时，触发装备保存
+                const doStorage = (battleCount % 100 === 97 && EquipmentLocalStorage.isAutoEquipmentStatusStorageEnabled());
+                if (doStorage) {
+                    this.updateEquipmentStatus().then(() => resolve());
+                } else {
+                    resolve();
+                }
+            });
+        })();
+    }
+
     async updateEquipmentStatus(): Promise<void> {
         return await (() => {
             return new Promise<void>(resolve => {
