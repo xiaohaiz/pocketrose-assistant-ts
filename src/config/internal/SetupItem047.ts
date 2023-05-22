@@ -26,7 +26,7 @@ function doRender() {
 
     $("#setup_item_table").append($(html));
 
-    const value = SetupLoader.isPokemonWikiEnabled();
+    const value = SetupLoader.isAutoEquipmentStatusStorageEnabled();
     $(".option_class_" + code + "[value='" + Number(value) + "']").prop("selected", true);
 
     $("#setup_" + code).on("click", function () {

@@ -1,6 +1,7 @@
 import _ from "lodash";
 import Castle from "../common/Castle";
 import Equipment from "../common/Equipment";
+import SetupLoader from "../config/SetupLoader";
 import CastleInformation from "../pocketrose/CastleInformation";
 import CastleWarehouse from "../pocketrose/CastleWarehouse";
 import PersonalEquipmentManagement from "../pocketrose/PersonalEquipmentManagement";
@@ -18,15 +19,11 @@ class EquipmentLocalStorage {
         this.#credential = credential;
     }
 
-    static isAutoEquipmentStatusStorageEnabled() {
-        return StorageUtils.getBoolean("_pa_047");
-    }
-
     async triggerUpdateEquipmentStatus(battleCount: number): Promise<void> {
         return await (() => {
             return new Promise<void>(resolve => {
                 // 自动保存启用时，战数尾数为97时，触发装备保存
-                const doStorage = (battleCount % 100 === 97 && EquipmentLocalStorage.isAutoEquipmentStatusStorageEnabled());
+                const doStorage = (battleCount % 100 === 97 && SetupLoader.isAutoEquipmentStatusStorageEnabled());
                 if (doStorage) {
                     CommentBoard.writeMessage("<br>开始更新装备状态......");
                     this.updateEquipmentStatus().then(() => resolve());
