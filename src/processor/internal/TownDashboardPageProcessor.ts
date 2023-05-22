@@ -618,6 +618,12 @@ function doRenderSetupMenu() {
     $("option[value='LETTER']")
         .css("background-color", "yellow")
         .text("口袋助手设置");
+    $("option[value='RANK_REMAKE']")
+        .css("background-color", "yellow")
+        .text("个人面板");
+    $("option[value='BATTLE_MES']")
+        .css("background-color", "yellow")
+        .text("团队面板");
 }
 
 function doRenderEquipmentManagementMenu() {
