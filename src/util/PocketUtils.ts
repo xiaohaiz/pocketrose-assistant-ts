@@ -1,6 +1,3 @@
-/**
- * 口袋相关的一些杂七杂八的工具函数集合。
- */
 import _ from "lodash";
 
 class PocketUtils {
@@ -19,6 +16,15 @@ class PocketUtils {
         return result;
     }
 
+    static checkAmount(amount: number) {
+        if (_.isNaN(amount)) {
+            return false;
+        }
+        if (!_.isInteger(amount)) {
+            return false;
+        }
+        return amount >= 0;
+    }
 }
 
 export = PocketUtils;
