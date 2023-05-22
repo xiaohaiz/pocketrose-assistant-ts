@@ -1,3 +1,4 @@
+import _ from "lodash";
 import Role from "../common/Role";
 import TownLoader from "../core/TownLoader";
 import StringUtils from "../util/StringUtils";
@@ -7,6 +8,7 @@ class TownDashboardPage {
     role?: Role;
     townId?: string;
     townCountry?: string;
+    townTax?: number;
 
     static parse(html: string) {
         const page = new TownDashboardPage();
@@ -15,6 +17,13 @@ class TownDashboardPage {
         role.canConsecrate = $(html).text().includes("可以进行下次祭奠了");
         role.battleCount = parseInt($(html).find("input:hidden[name='ktotal']").val() as string);
         role.country = StringUtils.substringBefore($(html).find("option[value='LOCAL_RULE']").text(), "国法");
+
+        const townTax = $(html)
+            .find("th:contains('收益')")
+            .filter((idx, th) => $(th).text() === "收益")
+            .next()
+            .text();
+        page.townTax = _.parseInt(townTax);
 
         page.townCountry = $(html).find("th:contains('支配下')")
             .filter(function () {

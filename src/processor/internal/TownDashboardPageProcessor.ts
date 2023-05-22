@@ -1,6 +1,5 @@
 import SetupLoader from "../../config/SetupLoader";
 import EventHandler from "../../core/EventHandler";
-import TownDashboard from "../../pocketrose/TownDashboard";
 import TownDashboardPage from "../../pocketrose/TownDashboardPage";
 import Credential from "../../util/Credential";
 import NetworkUtils from "../../util/NetworkUtils";
@@ -16,7 +15,7 @@ class TownDashboardPageProcessor extends PageProcessorCredentialSupport {
     }
 
     doProcess(credential: Credential, context?: PageProcessorContext): void {
-        const page = TownDashboard.parsePage(PageUtils.currentPageHtml());
+        const page = TownDashboardPage.parse(PageUtils.currentPageHtml());
 
         // 手机战斗返回后不在页面顶端，尝试自动触顶。
         $("center:first").attr("id", "systemAnnouncement");
