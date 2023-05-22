@@ -15,6 +15,7 @@ import PersonalProfilePageInterceptor from "./internal/PersonalProfilePageInterc
 import PersonalSalaryPageInterceptor from "./internal/PersonalSalaryPageInterceptor";
 import PersonalSetupPageInterceptor from "./internal/PersonalSetupPageInterceptor";
 import PersonalStatusPageInterceptor from "./internal/PersonalStatusPageInterceptor";
+import PersonalTeamPageInterceptor from "./internal/PersonalTeamPageInterceptor";
 import TangDashboardPageInterceptor from "./internal/TangDashboardPageInterceptor";
 import TownAccessoryHousePageInterceptor from "./internal/TownAccessoryHousePageInterceptor";
 import TownAdventureGuildPageInterceptor from "./internal/TownAdventureGuildPageInterceptor";
@@ -53,6 +54,7 @@ class PageInterceptorManager {
             new PersonalSalaryPageInterceptor(),
             new PersonalSetupPageInterceptor(),
             new PersonalStatusPageInterceptor(),
+            new PersonalTeamPageInterceptor(),
             new TangDashboardPageInterceptor(),
             new TownAccessoryHousePageInterceptor(),
             new TownAdventureGuildPageInterceptor(),
