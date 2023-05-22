@@ -1,4 +1,6 @@
 import _ from "lodash";
+import Equipment from "../../common/Equipment";
+import Pet from "../../common/Pet";
 import EquipmentLocalStorage from "../../core/EquipmentLocalStorage";
 import FastLoginManager from "../../core/FastLoginManager";
 import NpcLoader from "../../core/NpcLoader";
@@ -189,25 +191,28 @@ abstract class AbstractPersonalTeamPageProcessor extends PageProcessorCredential
 
                 let html = "";
                 let row = 0;
-                for (const it of equipments) {
-                    const ss = _.split(it, "/");
-                    html += "<tr>";
-                    if (row === 0) {
-                        html += "<td style='background-color:#F8F0E0;vertical-align:center' rowspan='" + (equipments.length) + "'>" + config.name + "</td>";
-                    }
-                    html += "<td style='background-color:#E8E8D0'>" + _.unescape(ss[0]) + "</td>";
-                    html += "<td style='background-color:#E8E8B0'>" + ss[1] + "</td>";
-                    html += "<td style='background-color:#E8E8D0'>" + ss[2] + "</td>";
-                    html += "<td style='background-color:#E8E8B0'>" + ss[3] + "</td>";
-                    html += "<td style='background-color:#E8E8D0'>" + ss[4] + "</td>";
-                    html += "<td style='background-color:#E8E8B0'>" + ss[5] + "</td>";
-                    html += "<td style='background-color:#E8E8D0'>" + ss[6] + "</td>";
-                    html += "<td style='background-color:#E8E8B0'>" + ss[7] + "</td>";
-                    html += "<td style='background-color:#E8E8D0'>" + ss[8] + "</td>";
-                    html += "<td style='background-color:#E8E8B0'>" + ss[9] + "</td>";
-                    html += "</tr>";
-                    row++;
-                }
+
+                equipments
+                    .map(it => Equipment.parse(it))
+                    .sort(Equipment.sorter)
+                    .forEach(it => {
+                        html += "<tr>";
+                        if (row === 0) {
+                            html += "<td style='background-color:#F8F0E0;vertical-align:center' rowspan='" + (equipments.length) + "'>" + config.name + "</td>";
+                        }
+                        html += "<td style='background-color:#E8E8D0;text-align:left'>" + it.fullName + "</td>";
+                        html += "<td style='background-color:#E8E8B0'>" + it.category + "</td>";
+                        html += "<td style='background-color:#E8E8D0'>" + it.power + "</td>";
+                        html += "<td style='background-color:#E8E8B0'>" + it.weight + "</td>";
+                        html += "<td style='background-color:#E8E8D0'>" + it.endure + "</td>";
+                        html += "<td style='background-color:#E8E8B0'>" + it.additionalPowerHtml + "</td>";
+                        html += "<td style='background-color:#E8E8D0'>" + it.additionalWeightHtml + "</td>";
+                        html += "<td style='background-color:#E8E8B0'>" + it.additionalLuckHtml + "</td>";
+                        html += "<td style='background-color:#E8E8D0'>" + it.experienceHTML + "</td>";
+                        html += "<td style='background-color:#E8E8B0'>" + it.location + "</td>";
+                        html += "</tr>";
+                        row++;
+                    });
 
                 $("#equipmentStatusList").append($(html));
             }
@@ -249,25 +254,27 @@ abstract class AbstractPersonalTeamPageProcessor extends PageProcessorCredential
                 let html = "";
                 let row = 0;
 
-                for (const it of pets) {
-                    const ss = _.split(it, "/");
-                    html += "<tr>";
-                    if (row === 0) {
-                        html += "<td style='background-color:#F8F0E0;vertical-align:center' rowspan='" + (pets.length) + "'>" + config.name + "</td>";
-                    }
-                    html += "<td style='background-color:#E8E8D0'>" + _.unescape(ss[0]) + "</td>";
-                    html += "<td style='background-color:#E8E8B0'>" + ss[1] + "</td>";
-                    html += "<td style='background-color:#E8E8D0'>" + ss[2] + "</td>";
-                    html += "<td style='background-color:#E8E8B0'>" + ss[3] + "</td>";
-                    html += "<td style='background-color:#E8E8D0'>" + ss[4] + "</td>";
-                    html += "<td style='background-color:#E8E8B0'>" + ss[5] + "</td>";
-                    html += "<td style='background-color:#E8E8D0'>" + ss[6] + "</td>";
-                    html += "<td style='background-color:#E8E8B0'>" + ss[7] + "</td>";
-                    html += "<td style='background-color:#E8E8D0'>" + ss[8] + "</td>";
-                    html += "<td style='background-color:#E8E8B0'>" + ss[9] + "</td>";
-                    html += "</tr>";
-                    row++;
-                }
+                pets
+                    .map(it => Pet.parse(it))
+                    .sort(Pet.sorter)
+                    .forEach(it => {
+                        html += "<tr>";
+                        if (row === 0) {
+                            html += "<td style='background-color:#F8F0E0;vertical-align:center' rowspan='" + (pets.length) + "'>" + config.name + "</td>";
+                        }
+                        html += "<td style='background-color:#E8E8D0;text-align:left'>" + it.nameHtml + "</td>";
+                        html += "<td style='background-color:#E8E8B0'>" + it.gender + "</td>";
+                        html += "<td style='background-color:#E8E8D0'>" + it.levelHtml + "</td>";
+                        html += "<td style='background-color:#E8E8B0'>" + it.maxHealth + "</td>";
+                        html += "<td style='background-color:#E8E8D0'>" + it.attackHtml + "</td>";
+                        html += "<td style='background-color:#E8E8B0'>" + it.defenseHtml + "</td>";
+                        html += "<td style='background-color:#E8E8D0'>" + it.specialAttackHtml + "</td>";
+                        html += "<td style='background-color:#E8E8B0'>" + it.specialDefenseHtml + "</td>";
+                        html += "<td style='background-color:#E8E8D0'>" + it.speedHtml + "</td>";
+                        html += "<td style='background-color:#E8E8B0'>" + it.location + "</td>";
+                        html += "</tr>";
+                        row++;
+                    });
 
                 $("#petStatusList").append($(html));
 
