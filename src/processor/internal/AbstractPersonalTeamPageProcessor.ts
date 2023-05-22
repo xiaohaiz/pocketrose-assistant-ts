@@ -90,6 +90,18 @@ abstract class AbstractPersonalTeamPageProcessor extends PageProcessorCredential
             .parent()
             .after($(html));
 
+        $("#information")
+            .parent()
+            .next()
+            .hide();
+
+        $("#messageBoardManager").on("click", () => {
+            $("#information")
+                .parent()
+                .next()
+                .toggle();
+        });
+
         this.#bindRefreshButton();
         this.bindReturnButton(credential);
         this.#bindUpdateEquipmentButton(credential);
@@ -99,7 +111,8 @@ abstract class AbstractPersonalTeamPageProcessor extends PageProcessorCredential
     }
 
     #welcomeMessageHtml() {
-        return "<b style='font-size:120%;color:wheat'>什么是团队？在我看来，共同配置在快速登陆里面的才能称为团队。</b>";
+        return "<b style='font-size:120%;color:wheat'>什么是团队？在我看来，共同配置在快速登陆里面的才能称为团队。</b><br>" +
+            "<b style='font-size:120%;color:yellow'>什么，你是想要修改战斗台词？单击我的头像即可。</b>";
     }
 
     #bindRefreshButton() {
