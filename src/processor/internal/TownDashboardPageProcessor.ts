@@ -18,8 +18,15 @@ class TownDashboardPageProcessor extends PageProcessorCredentialSupport {
         const page = TownDashboardPage.parse(PageUtils.currentPageHtml());
 
         // 手机战斗返回后不在页面顶端，尝试自动触顶。
-        $("center:first").attr("id", "systemAnnouncement");
+        $("center:first")
+            .attr("id", "systemAnnouncement");
+
         PageUtils.scrollIntoView("systemAnnouncement");
+        $("#systemAnnouncement")
+            .after($("<div id='version' style='color:navy;font-weight:bold;text-align:center;width:100%'></div>"));
+        // @ts-ignore
+        $("#version").html(__VERSION__);
+
 
         // --------------------------------------------------------------------
         // 标记页面上的元素

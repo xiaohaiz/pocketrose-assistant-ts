@@ -56,7 +56,7 @@ module.exports = {
             profile: true,
         }),
         new webpack.DefinePlugin({
-            __VERSION__: JSON.stringify('pocketrose assistant (' + buildVersion + ') ' + buildDate)
+            __VERSION__: JSON.stringify('Pocketrose Assistant (' + buildVersion + ') Build: ' + buildDate)
         }),
     ],
     performance: {
