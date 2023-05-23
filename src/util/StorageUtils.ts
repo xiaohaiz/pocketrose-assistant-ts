@@ -1,3 +1,8 @@
+import _ from "lodash";
+
+const pako = require("pako");
+const {encode, decode} = require("uint8-to-base64");
+
 class StorageUtils {
 
     static set(key: string, value: string) {
@@ -5,7 +10,17 @@ class StorageUtils {
     }
 
     static get(key: string): string | null {
-        return localStorage.getItem(key);
+        const value = localStorage.getItem(key);
+        if (value === null) {
+            return null;
+        }
+        if (_.startsWith(value, "DEFLATED:")) {
+            const base64 = value.substring(9);
+            const compressed = decode(base64);
+            return pako.inflate(compressed, {to: "string"});
+        } else {
+            return value;
+        }
     }
 
     static remove(key: string) {
