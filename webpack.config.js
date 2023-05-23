@@ -1,6 +1,10 @@
 const path = require('path');
 const webpack = require('webpack');
 
+const now = new Date();
+const buildVersion = '3.4.5'
+const buildDate = `${now.toLocaleString()}`;
+
 // noinspection JSUnresolvedReference
 module.exports = {
     entry: './src/Pocketrose.ts',
@@ -37,7 +41,7 @@ module.exports = {
                 "// @icon         data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==\n" +
                 "// @license      mit\n" +
                 "// @author       xiaohaiz,fugue\n" +
-                "// @version      3.0.0-SNAPSHOT\n" +
+                "// @version      " + buildVersion + "\n" +
                 "// @grant        unsafeWindow\n" +
                 "// @match        *://pocketrose.itsns.net.cn/*\n" +
                 "// @require      https://cdn.bootcdn.net/ajax/libs/jquery/3.6.4/jquery.min.js\n" +
@@ -47,8 +51,13 @@ module.exports = {
                 "// @unwrap\n" +
                 "// ==/UserScript==\n",
             raw: true
-        })
-
+        }),
+        new webpack.ProgressPlugin({
+            profile: true,
+        }),
+        new webpack.DefinePlugin({
+            __VERSION__: JSON.stringify('Pocketrose Assistant (' + buildVersion + ') Build: ' + buildDate)
+        }),
     ],
     performance: {
         hints: false,

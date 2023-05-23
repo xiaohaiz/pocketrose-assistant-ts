@@ -41,7 +41,7 @@ class EquipmentLocalStorage {
 
                     const equipmentStatusList: string[] = [];
                     for (const equipment of equipmentList) {
-                        if (equipment.isItem && (equipment.name !== "宠物蛋" && equipment.name !== "藏宝图")) {
+                        if (equipment.isItem && (equipment.name !== "宠物蛋" && equipment.name !== "藏宝图" && equipment.name !== "威力宝石")) {
                             continue;
                         }
                         let s = "";
