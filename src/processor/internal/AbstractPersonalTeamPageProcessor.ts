@@ -14,10 +14,6 @@ import PageProcessorCredentialSupport from "../PageProcessorCredentialSupport";
 
 abstract class AbstractPersonalTeamPageProcessor extends PageProcessorCredentialSupport {
 
-    doLoadButtonStyles(): number[] {
-        return [35];
-    }
-
     doProcess(credential: Credential, context?: PageProcessorContext) {
         $("table[height='100%']").removeAttr("height");
         $("form[action='status.cgi']").remove();
@@ -63,22 +59,16 @@ abstract class AbstractPersonalTeamPageProcessor extends PageProcessorCredential
         html += "<tbody>";
         html += "<tr>";
         html += "<td>";
-        html += "<button role='button' class='button-35' id='refreshButton'>刷新团队面板</button>";
+        html += "<button role='button' id='updateEquipmentButton'>更新装备数据</button>";
         html += "</td>";
         html += "<td>";
-        html += "<button role='button' class='button-35' id='returnButton'>离开团队面板</button>";
+        html += "<button role='button' id='updatePetButton'>更新宠物数据</button>";
         html += "</td>";
         html += "<td>";
-        html += "<button role='button' class='button-35' id='updateEquipmentButton'>更新装备数据</button>";
+        html += "<button role='button' id='listEquipmentButton'>团队装备列表</button>";
         html += "</td>";
         html += "<td>";
-        html += "<button role='button' class='button-35' id='updatePetButton'>更新宠物数据</button>";
-        html += "</td>";
-        html += "<td>";
-        html += "<button role='button' class='button-35' id='listEquipmentButton'>团队装备列表</button>";
-        html += "</td>";
-        html += "<td>";
-        html += "<button role='button' class='button-35' id='listPetButton'>团队宠物列表</button>";
+        html += "<button role='button' id='listPetButton'>团队宠物列表</button>";
         html += "</td>";
         html += "</tr>";
         html += "</tbody>";
@@ -92,10 +82,27 @@ abstract class AbstractPersonalTeamPageProcessor extends PageProcessorCredential
             .parent()
             .after($(html));
 
+        html = "";
+        html += "<tr>";
+        html += "<td style='background-color:#F8F0E0;text-align:center'>";
+        html += "<table style='background-color:transparent;margin:auto;border-spacing:0;border-width:0'>";
+        html += "<tbody>";
+        html += "<tr>";
+        html += "<td>";
+        html += "<button role='button' id='refreshButton'>刷新团队面板</button>";
+        html += "</td>";
+        html += "<td>";
+        html += "<button role='button' id='returnButton'>离开团队面板</button>";
+        html += "</td>";
+        html += "</tr>";
+        html += "</tbody>";
+        html += "</table>";
+        html += "</td>";
+        html += "</tr>";
         $("#information")
             .parent()
-            .next()
-            .hide();
+            .next().hide()
+            .after($(html));
 
         $("#messageBoardManager").on("click", () => {
             $("#information")
