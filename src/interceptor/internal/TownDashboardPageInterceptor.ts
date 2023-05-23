@@ -1,4 +1,3 @@
-import _ from "lodash";
 import LocationStateMachine from "../../core/LocationStateMachine";
 import TownDashboardPageProcessor from "../../processor/internal/TownDashboardPageProcessor";
 import PageInterceptor from "../PageInterceptor";
@@ -15,7 +14,6 @@ class TownDashboardPageInterceptor implements PageInterceptor {
     }
 
     intercept(): void {
-        console.log(">>>  " + _.VERSION)
         // Set current location state to TOWN.
         LocationStateMachine.create().inTown();
         this.#processor.process();
