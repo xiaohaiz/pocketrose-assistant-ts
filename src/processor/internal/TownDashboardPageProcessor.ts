@@ -276,11 +276,6 @@ function doProcess(credential: Credential, page: TownDashboardPage) {
 
 
     if (SetupLoader.isMobileMiniDashboardEnabled()) {
-        let taxText: string | undefined = undefined;
-        if ($("#cityTaxCell").length > 0) {
-            taxText = $("#cityTaxCell").text();
-        }
-
         // 手机版极简主页。。尝试简化
         $("center:first").remove();
         $("br:first").remove();
@@ -310,11 +305,17 @@ function doProcess(credential: Credential, page: TownDashboardPage) {
             .next().hide()
             .next().hide().attr("id", "t6LastRow");
 
-        if (taxText !== undefined) {
+        if (page.role!.country !== "在野" && page.role!.country === page.townCountry) {
+            const tax = page.townTax!;
             $("#t6LastRow")
-                .after($("<tr><td>收益</td><th id='t6TaxCell'>" + taxText + "</th><td colspan='2'></td></tr>"));
-            if (parseInt(taxText) >= 50000) {
-                $("#t6TaxCell").css("color", "red");
+                .after($("<tr><td>收益</td><th id='t6TaxCell'>" + tax + "</th><td colspan='2'></td></tr>"));
+            if (tax >= 50000) {
+                if (tax - Math.floor(tax / 50000) * 50000 <= 10000) {
+                    $("#t6TaxCell")
+                        .css("color", "white")
+                        .css("background-color", "green")
+                        .css("font-weight", "bold")
+                }
             }
         }
 

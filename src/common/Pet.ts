@@ -81,7 +81,7 @@ class Pet {
         }
         const ratio = this.level! / 100;
         const progressBar = PageUtils.generateProgressBarHTML(ratio);
-        return "<span title='" + ("LV " + this.level) + "'>" + progressBar + "</span>";
+        return "<span title='" + ("LV " + this.level) + "'>" + progressBar + "</span>&nbsp;<span>" + _.padStart(this.level!.toString(), 2, "0") + "</span>";
     }
 
     get healthHtml() {
@@ -148,6 +148,15 @@ class Pet {
 
     get afterCode(): string {
         return StringUtils.substringBetween(this.after!, "(", ")");
+    }
+
+    get capacity(): number {
+        return Math.floor(this.maxHealth! / 3) +
+            this.attack! +
+            this.defense! +
+            this.specialAttack! +
+            this.specialDefense! +
+            this.speed!;
     }
 
     get locationOrder() {

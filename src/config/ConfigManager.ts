@@ -36,7 +36,7 @@ class ConfigManager {
         for (const key of keys) {
             // @ts-ignore
             const value = allConfigs[key];
-            StorageUtils.set(key, value);
+            localStorage.setItem(key, value);
         }
     }
 
