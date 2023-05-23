@@ -3,11 +3,13 @@ import _ from "lodash";
 const pako = require("pako");
 const {encode, decode} = require("uint8-to-base64");
 
+const COMPRESS_THRESHOLD: number = 512;
+
 class StorageUtils {
 
     static set(key: string, value: string) {
         const plainValueSize = value.length;
-        if (plainValueSize <= 512) {
+        if (plainValueSize <= COMPRESS_THRESHOLD) {
             localStorage.setItem(key, value);
             return;
         }
