@@ -339,7 +339,9 @@ abstract class AbstractPersonalTeamPageProcessor extends PageProcessorCredential
             html += "<table style='margin:auto;border-width:0;text-align:center;background-color:#888888;width:100%'>";
             html += "<tbody>";
             html += "<tr>";
-            html += "<th style='background-color:#F8F0E0'></th>";
+            html += "<td colspan='11' style='background-color:#F8F0E0'>" + PetProfileLoader.generatePetProfileHtml(code) + "</td>";
+            html += "</tr>";
+            html += "<tr>";
             html += "<th style='background-color:#F8F0E0'>模拟</th>";
             html += "<th style='background-color:#F8F0E0'>名字</th>";
             html += "<th style='background-color:#F8F0E0'>性别</th>";
@@ -387,7 +389,6 @@ abstract class AbstractPersonalTeamPageProcessor extends PageProcessorCredential
                 }
 
                 html += "<tr>";
-                html += "<td style='background-color:#F8F0E0;width:64px;height:64px'>" + profile.imageHtml + "</td>";
                 html += "<td style='background-color:#E8E8D0;font-weight:bold'>#" + (i + 1) + "</td>";
                 html += "<td style='background-color:#E8E8B0;text-align:left'>" + p.nameHtml + "</td>";
                 html += "<td style='background-color:#E8E8D0'>" + p.gender + "</td>";
@@ -406,6 +407,11 @@ abstract class AbstractPersonalTeamPageProcessor extends PageProcessorCredential
             html += "</table>";
 
             $("#simulation").html(html).parent().show();
+
+            $("#petProfile-" + profile.code)
+                .css("background-color", "#888888")
+                .find("tbody:first")
+                .css("background-color", "#F8F0E0");
         });
     }
 }
