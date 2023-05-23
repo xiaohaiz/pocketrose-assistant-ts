@@ -171,8 +171,9 @@ function doProcess(credential: Credential, page: TownDashboardPage) {
             .parent()
             .next()
             .find("th:first")
-            .html("")
-            .before($("<td></td>"))
+            .attr("colspan", 3)
+            .css("vertical-align", "bottom")
+            .html("<button role='button' class='" + buttonClass + "' id='shortcut0' style='margin-bottom:8px'>&nbsp;使用手册&nbsp;</button>")
             .parent()
             .next()
             .find("th:first")
@@ -215,6 +216,14 @@ function doProcess(credential: Credential, page: TownDashboardPage) {
             .attr("colspan", 5)
 
 
+        $("#shortcut0").on("click", () => {
+            $("option[value='COU_MAKE']")
+                .prop("selected", true)
+                .closest("td")
+                .next()
+                .find("input:submit:first")
+                .trigger("click");
+        });
         $("#shortcut1").on("click", () => {
             $("option[value='PETMAP']")
                 .prop("selected", true)
