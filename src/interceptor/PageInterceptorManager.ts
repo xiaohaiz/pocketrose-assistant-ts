@@ -10,6 +10,7 @@ import NationInformationPageInterceptor from "./internal/NationInformationPageIn
 import PersonalCareerManagementPageInterceptor from "./internal/PersonalCareerManagementPageInterceptor";
 import PersonalEquipmentManagementPageInterceptor from "./internal/PersonalEquipmentManagementPageInterceptor";
 import PersonalFastLoginPageInterceptor from "./internal/PersonalFastLoginPageInterceptor";
+import PersonalManualPageInterceptor from "./internal/PersonalManualPageInterceptor";
 import PersonalPetManagementPageInterceptor from "./internal/PersonalPetManagementPageInterceptor";
 import PersonalProfilePageInterceptor from "./internal/PersonalProfilePageInterceptor";
 import PersonalSalaryPageInterceptor from "./internal/PersonalSalaryPageInterceptor";
@@ -49,6 +50,7 @@ class PageInterceptorManager {
             new PersonalCareerManagementPageInterceptor(),
             new PersonalEquipmentManagementPageInterceptor(),
             new PersonalFastLoginPageInterceptor(),
+            new PersonalManualPageInterceptor(),
             new PersonalPetManagementPageInterceptor(),
             new PersonalProfilePageInterceptor(),
             new PersonalSalaryPageInterceptor(),
