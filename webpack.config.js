@@ -47,8 +47,10 @@ module.exports = {
                 "// @unwrap\n" +
                 "// ==/UserScript==\n",
             raw: true
-        })
-
+        }),
+        new webpack.ProgressPlugin({
+            profile: true,
+        }),
     ],
     performance: {
         hints: false,
