@@ -6,7 +6,19 @@ const {encode, decode} = require("uint8-to-base64");
 class StorageUtils {
 
     static set(key: string, value: string) {
-        localStorage.setItem(key, value);
+        const plainValueSize = value.length;
+        if (plainValueSize <= 512) {
+            localStorage.setItem(key, value);
+            return;
+        }
+        const compressed = pako.deflate(value);
+        const compressedValue = "DEFLATED:" + encode(compressed);
+        const compressedValueSize = compressedValue.length;
+        if (compressedValueSize >= plainValueSize) {
+            localStorage.setItem(key, value);
+            return;
+        }
+        localStorage.setItem(key, compressedValue);
     }
 
     static get(key: string): string | null {
