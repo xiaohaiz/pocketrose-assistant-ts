@@ -8,7 +8,7 @@ import StringUtils from "../../util/StringUtils";
 import PageProcessorContext from "../PageProcessorContext";
 import PageProcessorCredentialSupport from "../PageProcessorCredentialSupport";
 
-abstract class AbstractPersonalStatusPageProcessor extends PageProcessorCredentialSupport {
+abstract class PersonalStatusPageProcessor extends PageProcessorCredentialSupport {
 
     protected constructor() {
         super();
@@ -121,4 +121,4 @@ abstract class AbstractPersonalStatusPageProcessor extends PageProcessorCredenti
 
 }
 
-export = AbstractPersonalStatusPageProcessor;
+export = PersonalStatusPageProcessor;

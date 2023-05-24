@@ -1,9 +1,9 @@
 import Role from "../../common/Role";
 import Credential from "../../util/Credential";
 import PageUtils from "../../util/PageUtils";
-import AbstractPersonalStatusPageProcessor from "./AbstractPersonalStatusPageProcessor";
+import PersonalStatusPageProcessor from "./PersonalStatusPageProcessor";
 
-class PersonalStatusPageProcessor_Castle extends AbstractPersonalStatusPageProcessor {
+class PersonalStatusPageProcessor_Castle extends PersonalStatusPageProcessor {
 
     constructor() {
         super();
