@@ -22,6 +22,7 @@ class CastleDashboardPageProcessor implements PageProcessor {
                 .css("background-color", "yellow")
                 .text("口袋银行城堡支行");
             $("option[value='CASTLE_SENDMONEY']").remove();
+            $("option[value='SALARY']").remove();
         }
         $("option[value='CASTLE_BUILDMACHINE']")
             .css("background-color", "yellow")
