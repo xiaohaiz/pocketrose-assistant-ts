@@ -3,9 +3,9 @@ import TownBank from "../../pocketrose/TownBank";
 import Credential from "../../util/Credential";
 import PageUtils from "../../util/PageUtils";
 import PageProcessorContext from "../PageProcessorContext";
-import AbstractPersonalSalaryPageProcessor from "./AbstractPersonalSalaryPageProcessor";
+import PersonalSalaryPageProcessor from "./PersonalSalaryPageProcessor";
 
-class PersonalSalaryPageProcessor_Town extends AbstractPersonalSalaryPageProcessor {
+class PersonalSalaryPageProcessor_Town extends PersonalSalaryPageProcessor {
 
     doGenerateHiddenForm(containerId: string, credential: Credential): void {
         const html = PageUtils.generateReturnTownForm(credential);

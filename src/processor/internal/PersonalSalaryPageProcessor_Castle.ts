@@ -2,9 +2,9 @@ import CastleBank from "../../pocketrose/CastleBank";
 import Credential from "../../util/Credential";
 import PageUtils from "../../util/PageUtils";
 import PageProcessorContext from "../PageProcessorContext";
-import AbstractPersonalSalaryPageProcessor from "./AbstractPersonalSalaryPageProcessor";
+import PersonalSalaryPageProcessor from "./PersonalSalaryPageProcessor";
 
-class PersonalSalaryPageProcessor_Castle extends AbstractPersonalSalaryPageProcessor {
+class PersonalSalaryPageProcessor_Castle extends PersonalSalaryPageProcessor {
 
     doGenerateHiddenForm(containerId: string, credential: Credential): void {
         const html = PageUtils.generateReturnCastleForm(credential);

@@ -4,7 +4,7 @@ import Credential from "../../util/Credential";
 import PageProcessorContext from "../PageProcessorContext";
 import PageProcessorCredentialSupport from "../PageProcessorCredentialSupport";
 
-abstract class AbstractPersonalSalaryPageProcessor extends PageProcessorCredentialSupport {
+abstract class PersonalSalaryPageProcessor extends PageProcessorCredentialSupport {
 
     doProcess(credential: Credential, context?: PageProcessorContext) {
 
@@ -63,4 +63,4 @@ abstract class AbstractPersonalSalaryPageProcessor extends PageProcessorCredenti
     abstract doBindDepositButton(credential: Credential, context?: PageProcessorContext): void;
 }
 
-export = AbstractPersonalSalaryPageProcessor;
+export = PersonalSalaryPageProcessor;
