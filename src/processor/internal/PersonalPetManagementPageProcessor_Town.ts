@@ -22,9 +22,9 @@ import PageUtils from "../../util/PageUtils";
 import PocketUtils from "../../util/PocketUtils";
 import StringUtils from "../../util/StringUtils";
 import PageProcessorContext from "../PageProcessorContext";
-import AbstractPersonalPetManagementPageProcessor from "./AbstractPersonalPetManagementPageProcessor";
+import PersonalPetManagementPageProcessor from "./PersonalPetManagementPageProcessor";
 
-class PersonalPetManagementPageProcessor_Town extends AbstractPersonalPetManagementPageProcessor {
+class PersonalPetManagementPageProcessor_Town extends PersonalPetManagementPageProcessor {
 
     doProcessWithPageParsed(credential: Credential, page: PersonalPetManagementPage, context?: PageProcessorContext): void {
         doProcess(credential, page.petList!, page.petStudyStatus!);

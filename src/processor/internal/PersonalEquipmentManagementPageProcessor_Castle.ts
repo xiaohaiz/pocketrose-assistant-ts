@@ -11,9 +11,9 @@ import MessageBoard from "../../util/MessageBoard";
 import PageUtils from "../../util/PageUtils";
 import StringUtils from "../../util/StringUtils";
 import PageProcessorContext from "../PageProcessorContext";
-import AbstractPersonalEquipmentManagementPageProcessor from "./AbstractPersonalEquipmentManagementPageProcessor";
+import PersonalEquipmentManagementPageProcessor from "./PersonalEquipmentManagementPageProcessor";
 
-class PersonalEquipmentManagementPageProcessor_Castle extends AbstractPersonalEquipmentManagementPageProcessor {
+class PersonalEquipmentManagementPageProcessor_Castle extends PersonalEquipmentManagementPageProcessor {
 
     doGeneratePageTitleHtml(context?: PageProcessorContext): string {
         if (context === undefined) {

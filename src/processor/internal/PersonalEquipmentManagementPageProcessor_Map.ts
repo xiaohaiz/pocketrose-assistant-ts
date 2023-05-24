@@ -7,9 +7,9 @@ import MessageBoard from "../../util/MessageBoard";
 import PageUtils from "../../util/PageUtils";
 import StringUtils from "../../util/StringUtils";
 import PageProcessorContext from "../PageProcessorContext";
-import AbstractPersonalEquipmentManagementPageProcessor from "./AbstractPersonalEquipmentManagementPageProcessor";
+import PersonalEquipmentManagementPageProcessor from "./PersonalEquipmentManagementPageProcessor";
 
-class PersonalEquipmentManagementPageProcessor_Map extends AbstractPersonalEquipmentManagementPageProcessor {
+class PersonalEquipmentManagementPageProcessor_Map extends PersonalEquipmentManagementPageProcessor {
 
     doGeneratePageTitleHtml(context?: PageProcessorContext): string {
         return "＜＜  装 备 管 理 （ 地 图 模 式 ）  ＞＞";

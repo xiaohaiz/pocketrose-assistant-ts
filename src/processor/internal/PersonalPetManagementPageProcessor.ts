@@ -8,7 +8,7 @@ import StringUtils from "../../util/StringUtils";
 import PageProcessorContext from "../PageProcessorContext";
 import PageProcessorCredentialSupport from "../PageProcessorCredentialSupport";
 
-abstract class AbstractPersonalPetManagementPageProcessor extends PageProcessorCredentialSupport {
+abstract class PersonalPetManagementPageProcessor extends PageProcessorCredentialSupport {
 
     doProcess(credential: Credential, context?: PageProcessorContext) {
         const page = PersonalPetManagement.parsePage(PageUtils.currentPageHtml());
@@ -101,4 +101,4 @@ abstract class AbstractPersonalPetManagementPageProcessor extends PageProcessorC
 }
 
 
-export = AbstractPersonalPetManagementPageProcessor;
+export = PersonalPetManagementPageProcessor;

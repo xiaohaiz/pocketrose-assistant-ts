@@ -17,9 +17,9 @@ import NetworkUtils from "../../util/NetworkUtils";
 import PageUtils from "../../util/PageUtils";
 import StringUtils from "../../util/StringUtils";
 import PageProcessorContext from "../PageProcessorContext";
-import AbstractPersonalPetManagementPageProcessor from "./AbstractPersonalPetManagementPageProcessor";
+import PersonalPetManagementPageProcessor from "./PersonalPetManagementPageProcessor";
 
-class PersonalPetManagementPageProcessor_Castle extends AbstractPersonalPetManagementPageProcessor {
+class PersonalPetManagementPageProcessor_Castle extends PersonalPetManagementPageProcessor {
 
     doProcessWithPageParsed(credential: Credential, page: PersonalPetManagementPage, context?: PageProcessorContext): void {
 
