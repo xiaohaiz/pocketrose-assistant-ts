@@ -1,17 +1,42 @@
 import SetupLoader from "../../config/SetupLoader";
 import EventHandler from "../../core/EventHandler";
+import MapBuilder from "../../core/MapBuilder";
+import MapDashboardPage from "../../pocketrose/MapDashboardPage";
 import Credential from "../../util/Credential";
 import PageUtils from "../../util/PageUtils";
 import StringUtils from "../../util/StringUtils";
+import PageProcessorContext from "../PageProcessorContext";
 import PageProcessorCredentialSupport from "../PageProcessorCredentialSupport";
 
 class MapDashboardPageProcessor extends PageProcessorCredentialSupport {
 
-    constructor() {
-        super();
-    }
+    doProcess(credential: Credential, context?: PageProcessorContext): void {
+        const page = MapDashboardPage.parse(PageUtils.currentPageHtml());
 
-    doProcess(credential: Credential): void {
+        $("table:first")
+            .find("tbody:first")
+            .find("> tr:eq(2)")
+            .attr("id", "mapRow");
+
+        let travelJournals = $("#mapRow")
+            .find("> td:last")
+            .html();
+
+        $("#mapRow").html("" +
+            "<td colspan='2'>" +
+            "<table style='background-color:transparent;margin:auto;width:100%'>" +
+            "<tbody>" +
+            "<tr>" +
+            "<td id='map' style='background-color:#F8F0E0'></td>" +
+            "<td id='travelJournals' style='background-color:#EFE0C0;width:100%'></td>" +
+            "</tr>" +
+            "</tbody>" +
+            "</table>" +
+            "</td>");
+        $("#map").html(MapBuilder.buildMapTable());
+        MapBuilder.updateTownBackgroundColor();
+        $("#travelJournals").html(travelJournals);
+
         this.#renderMenu();
         this.#renderExperience();
         this.#renderEventBoard();
