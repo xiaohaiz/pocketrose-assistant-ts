@@ -860,10 +860,11 @@ class PersonalEquipmentManagementPageProcessor_Town extends PersonalEquipmentMan
             html += "<tbody style='background-color:#F8F0E0;text-align:center'>";
             html += "<tr>";
             html += "<td style='background-color:darkred;color:wheat;font-weight:bold' " +
-                "colspan='16'>";
+                "colspan='17'>";
             html += "＜ 城 堡 仓 库 ＞";
             html += "</td>";
             html += "<tr>";
+            html += "<th style='background-color:#E0D0B0'>序号</th>";
             html += "<th style='background-color:#E8E8D0'>名字</th>";
             html += "<th style='background-color:#EFE0C0'>种类</th>";
             html += "<th style='background-color:#E0D0B0'>效果</th>";
@@ -882,8 +883,10 @@ class PersonalEquipmentManagementPageProcessor_Town extends PersonalEquipmentMan
             html += "<th style='background-color:#E0D0B0'>属性</th>";
             html += "</tr>";
 
+            let sequence = 0;
             for (const equipment of equipmentList) {
                 html += "<tr>";
+                html += "<th style='background-color:#E0D0B0'>" + (sequence++) + "</th>";
                 html += "<td style='background-color:#E8E8D0'>" + equipment.nameHTML + "</td>";
                 html += "<td style='background-color:#EFE0C0'>" + equipment.category + "</td>";
                 html += "<td style='background-color:#E0D0B0'>" + equipment.power + "</td>";
@@ -906,7 +909,7 @@ class PersonalEquipmentManagementPageProcessor_Town extends PersonalEquipmentMan
             // 城堡仓库菜单栏
             // ----------------------------------------------------------------
             html += "<tr>";
-            html += "<td style='background-color:#F8F0E0;text-align:center' colspan='18'>";
+            html += "<td style='background-color:#F8F0E0;text-align:center' colspan='17'>";
             html += "<table style='border-width:0;background-color:#F8F0E0;width:100%;margin:auto'>";
             html += "<tbody>";
             html += "<tr>";
