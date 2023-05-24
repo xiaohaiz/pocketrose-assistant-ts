@@ -674,6 +674,7 @@ function doRenderBankMenu() {
             .css("background-color", "yellow")
             .text("口袋银行");
         $("option[value='MONEY_SEND']").remove();
+        $("option[value='SALARY']").remove();
     }
 }
 
