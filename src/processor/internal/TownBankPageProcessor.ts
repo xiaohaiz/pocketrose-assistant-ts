@@ -101,9 +101,6 @@ class TownBankPageProcessor extends PageProcessorCredentialSupport {
         html += "<input type='text' id='withdrawAmount' value='' size='3' style='text-align:right'>0000 Gold&nbsp;&nbsp;&nbsp;";
         html += "<input type='button' id='withdrawButton' value='金取出' class='dynamicButton'>";
         html += "</p>";
-        // html += "<p id='p4'>";
-        // html += "&nbsp;&nbsp;&nbsp;";
-        // html += "</p>";
         $("#tr4")
             .next()
             .attr("id", "tr5")

@@ -100,9 +100,6 @@ class CastleBankPageProcessor extends PageProcessorCredentialSupport {
         html += "<input type='text' id='withdrawAmount' value='' size='3' style='text-align:right'>0000 Gold&nbsp;&nbsp;&nbsp;";
         html += "<input type='button' id='withdrawButton' value='金取出' class='dynamicButton'>";
         html += "</p>";
-        html += "<p id='p4'>";
-        html += "&nbsp;&nbsp;&nbsp;";
-        html += "</p>";
         $("#tr4")
             .next()
             .attr("id", "tr5")
@@ -134,6 +131,19 @@ class CastleBankPageProcessor extends PageProcessorCredentialSupport {
         html += "</td>";
         html += "</tr>";
         $("#tr5").after($(html));
+
+        html = "";
+        html += "<tr id='tr8'>";
+        html += "<td style='background-color:darkred;width:100%;text-align:center;font-weight:bold;color:aliceblue'>";
+        html += "＜ 领 取 俸 禄 ＞";
+        html += "</td>";
+        html += "</tr>";
+        html += "<tr id='tr9'>";
+        html += "<td style='background-color:#F8F0E0;width:100%;text-align:center'>";
+        html += "<input type='button' id='salaryButton' value='发薪' class='dynamicButton'>";
+        html += "</td>";
+        html += "</tr>";
+        $("#tr7").after($(html));
 
         // Bind immutable buttons
         $("#refreshButton").on("click", () => {
@@ -168,6 +178,21 @@ class CastleBankPageProcessor extends PageProcessorCredentialSupport {
         this.#bindDepositButton(credential, page.account!);
         this.#bindWithdrawButton(credential, page.account!);
         this.#bindTransferButton(credential, page.account!);
+
+        $("#salaryButton").on("click", () => {
+            const request = credential.asRequestMap();
+            request.set("mode", "SALARY");
+            NetworkUtils.post("mydata.cgi", request).then(html => {
+                MessageBoard.processResponseMessage(html);
+                if (html.includes("下次领取俸禄还需要等待")) {
+                    PageUtils.scrollIntoView("pageTitle");
+                    return;
+                }
+                new CastleBank(credential).deposit().then(() => {
+                    this.#refresh(credential);
+                });
+            });
+        });
     }
 
     #refresh(credential: Credential) {
