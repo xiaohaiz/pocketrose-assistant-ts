@@ -191,7 +191,7 @@ function doProcess(credential: Credential, page: TownDashboardPage) {
             .parent()
             .next()
             .find("th:first")
-            .html("<button role='button' class='" + buttonClass + "' id='shortcut7'>&nbsp;冒险&nbsp;</button>")
+            .html("<button role='button' class='" + buttonClass + "' id='shortcut7'>&nbsp;银行&nbsp;</button>")
             .before($("<td>" +
                 "<button role='button' class='" + buttonClass + "' id='shortcut3'>&nbsp;宠物&nbsp;</button>" +
                 "</td>"))
@@ -273,7 +273,7 @@ function doProcess(credential: Credential, page: TownDashboardPage) {
                 .trigger("click");
         });
         $("#shortcut7").on("click", () => {
-            $("option[value='CHANGEMAP']")
+            $("option[value='BANK']")
                 .prop("selected", true)
                 .closest("td")
                 .next()
