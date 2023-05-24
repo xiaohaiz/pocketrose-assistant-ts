@@ -1,10 +1,13 @@
 import SetupLoader from "../../config/SetupLoader";
 import EventHandler from "../../core/EventHandler";
 import MapBuilder from "../../core/MapBuilder";
+import TravelPlanBuilder from "../../core/TravelPlanBuilder";
+import TravelPlanExecutor from "../../core/TravelPlanExecutor";
 import CastleInformation from "../../pocketrose/CastleInformation";
 import MapDashboardPage from "../../pocketrose/MapDashboardPage";
 import Coordinate from "../../util/Coordinate";
 import Credential from "../../util/Credential";
+import MessageBoard from "../../util/MessageBoard";
 import PageUtils from "../../util/PageUtils";
 import StringUtils from "../../util/StringUtils";
 import PageProcessorContext from "../PageProcessorContext";
@@ -67,14 +70,16 @@ class MapDashboardPageProcessor extends PageProcessorCredentialSupport {
             .css("text-align", "center")
             .html($("#" + buttonId).val() as string);
 
-        this.#bindLocationButtons();
+        this.#bindLocationButtons(credential);
 
         this.#renderMenu();
         this.#renderExperience();
         this.#renderEventBoard();
     }
 
-    #bindLocationButtons() {
+    #bindLocationButtons(credential: Credential) {
+        const instance = this;
+
         $(".location_button_class")
             .on("mouseenter", function () {
                 $(this).css("background-color", "red");
@@ -88,6 +93,50 @@ class MapDashboardPageProcessor extends PageProcessorCredentialSupport {
                     $(this).removeAttr("style");
                 }
             });
+        $(".location_button_class").on("click", function () {
+            const ss = ($(this).attr("id") as string).split("_");
+            const x = parseInt(ss[1]);
+            const y = parseInt(ss[2]);
+            const coordinate = new Coordinate(x, y);
+
+            const confirmation = confirm("确认移动到坐标" + coordinate.asText() + "？");
+            if (!confirmation) {
+                return;
+            }
+
+            $("#mapRow")
+                .next().hide()
+                .next().hide()
+                .next().hide()
+                .next().hide();
+            MessageBoard.createMessageBoardStyleC("travelJournals");
+            $("#messageBoard")
+                .closest("table")
+                .css("height", "100%");
+            $("#messageBoard")
+                .parent()
+                .before($("<tr style='background-color:#EFE0C0'>" +
+                    "<td style='text-align:left'>坐标点：<span id='roleLocation' style='color:red'>-</span></td>" +
+                    "</tr>" +
+                    "<tr style='background-color:#EFE0C0'>" +
+                    "<td style='text-align:left'>计时器：<span id='countDownTimer' style='color:red'>-</span></td>" +
+                    "</tr>"));
+            $("#messageBoard")
+                .parent()
+                .after($("<tr style='background-color:#EFE0C0'>" +
+                    "<td style='text-align:center'><button role='button' id='refreshButton' disabled>移动中......</button></td>" +
+                    "</tr>"));
+
+            MessageBoard.resetMessageBoard("实时旅途动态播报：<br>");
+            //$("#visitRow").hide();
+            $(".location_button_class")
+                .prop("disabled", true)
+                .off("mouseenter")
+                .off("mouseleave");
+            //$("#menu").parent().show();
+
+            instance.#doTravelToLocation(credential, coordinate);
+        });
     }
 
     #renderMenu() {
@@ -158,6 +207,25 @@ class MapDashboardPageProcessor extends PageProcessorCredentialSupport {
         html += "</table>";
 
         $("#eventBoard").html(html);
+    }
+
+    #doTravelToLocation(credential: Credential, location: Coordinate) {
+        MessageBoard.publishMessage("目的地坐标：<span style='color:greenyellow'>" + location.asText() + "</span>");
+
+        const plan = TravelPlanBuilder.initializeTravelPlan(PageUtils.currentPageHtml());
+        plan.destination = location;
+        plan.credential = credential;
+        const executor = new TravelPlanExecutor(plan);
+        executor.execute()
+            .then(() => {
+                MessageBoard.publishMessage("旅途愉快，下次再见。");
+                $("#refreshButton")
+                    .prop("disabled", false)
+                    .text("到达了目的地" + location.asText())
+                    .on("click", () => {
+                        $("input:submit[value='更新']").trigger("click");
+                    });
+            });
     }
 }
 

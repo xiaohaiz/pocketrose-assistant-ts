@@ -26,6 +26,18 @@ class MessageBoard {
         $("#" + containerId).html(html);
     }
 
+    static createMessageBoardStyleC(containerId: string) {
+        let html = "";
+        html += "<table style='background-color:#888888;border-width:0;width:100%'>";
+        html += "<tbody>";
+        html += "<tr>";
+        html += "<td style='background-color:black;width:100%;color:white' id='messageBoard'></td>"
+        html += "</tr>";
+        html += "</tbody>";
+        html += "</table>";
+        $("#" + containerId).html(html);
+    }
+
     static resetMessageBoard(message: string) {
         if ($("#messageBoard").length === 0) {
             return;
