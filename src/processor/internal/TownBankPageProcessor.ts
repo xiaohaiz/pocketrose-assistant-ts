@@ -101,9 +101,9 @@ class TownBankPageProcessor extends PageProcessorCredentialSupport {
         html += "<input type='text' id='withdrawAmount' value='' size='3' style='text-align:right'>0000 Gold&nbsp;&nbsp;&nbsp;";
         html += "<input type='button' id='withdrawButton' value='金取出' class='dynamicButton'>";
         html += "</p>";
-        html += "<p id='p4'>";
-        html += "&nbsp;&nbsp;&nbsp;";
-        html += "</p>";
+        // html += "<p id='p4'>";
+        // html += "&nbsp;&nbsp;&nbsp;";
+        // html += "</p>";
         $("#tr4")
             .next()
             .attr("id", "tr5")
@@ -135,6 +135,19 @@ class TownBankPageProcessor extends PageProcessorCredentialSupport {
         html += "</td>";
         html += "</tr>";
         $("#tr5").after($(html));
+
+        html = "";
+        html += "<tr id='tr8'>";
+        html += "<td style='background-color:darkred;width:100%;text-align:center;font-weight:bold;color:aliceblue'>";
+        html += "＜ 领 取 俸 禄 ＞";
+        html += "</td>";
+        html += "</tr>";
+        html += "<tr id='tr9'>";
+        html += "<td style='background-color:#F8F0E0;width:100%;text-align:center'>";
+        html += "<input type='button' id='salaryButton' value='发薪' class='dynamicButton'>";
+        html += "</td>";
+        html += "</tr>";
+        $("#tr7").after($(html));
 
         this.#bindImmutableButtons(credential, town);
     }
@@ -266,6 +279,23 @@ class TownBankPageProcessor extends PageProcessorCredentialSupport {
                     MessageBoard.processResponseMessage(html);
                     bank.deposit()
                         .then(() => this.#refreshMutablePage(credential, town));
+                });
+            });
+        });
+        $("#salaryButton").on("click", () => {
+            const request = credential.asRequestMap();
+            request.set("mode", "SALARY");
+            if (town !== undefined) {
+                request.set("town", town.id);
+            }
+            NetworkUtils.post("mydata.cgi", request).then(html => {
+                MessageBoard.processResponseMessage(html);
+                if (html.includes("下次领取俸禄还需要等待")) {
+                    PageUtils.scrollIntoView("pageTitle");
+                    return;
+                }
+                new TownBank(credential, town?.id).deposit().then(() => {
+                    this.#refreshMutablePage(credential, town);
                 });
             });
         });
