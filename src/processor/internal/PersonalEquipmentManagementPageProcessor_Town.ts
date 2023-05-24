@@ -713,6 +713,12 @@ class PersonalEquipmentManagementPageProcessor_Town extends PersonalEquipmentMan
                 html += "</tr>";
             }
 
+            html += "<tr>";
+            html += "<td style='background-color:#F8F0E0;text-align:center' colspan='12'>";
+            html += "<b style='color:navy'>目前剩余空位数：</b><b style='color:red'>" + bagPage.spaceCount + "</b>";
+            html += "</td>";
+            html += "</tr>";
+
             // ----------------------------------------------------------------
             // 百宝袋菜单栏
             // ----------------------------------------------------------------
