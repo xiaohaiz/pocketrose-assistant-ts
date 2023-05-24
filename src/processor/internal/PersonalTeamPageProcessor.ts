@@ -15,7 +15,7 @@ import StringUtils from "../../util/StringUtils";
 import PageProcessorContext from "../PageProcessorContext";
 import PageProcessorCredentialSupport from "../PageProcessorCredentialSupport";
 
-abstract class AbstractPersonalTeamPageProcessor extends PageProcessorCredentialSupport {
+abstract class PersonalTeamPageProcessor extends PageProcessorCredentialSupport {
 
     doProcess(credential: Credential, context?: PageProcessorContext) {
         $("table[height='100%']").removeAttr("height");
@@ -493,4 +493,4 @@ abstract class AbstractPersonalTeamPageProcessor extends PageProcessorCredential
 }
 
 
-export = AbstractPersonalTeamPageProcessor;
+export = PersonalTeamPageProcessor;
