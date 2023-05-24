@@ -484,6 +484,7 @@ function doRenderGoldenCage(credential: Credential) {
         html += "<table style='border-width:0;background-color:#888888;text-align:center;width:100%'>";
         html += "<tbody style='background-color:#F8F0E0'>";
         html += "<tr>";
+        html += "<td style='background-color:#E8E8D0'>序号</td>";
         html += "<td style='background-color:#E8E8D0'>宠物名</td>";
         html += "<td style='background-color:#E8E8D0'>Ｌｖ</td>";
         html += "<td style='background-color:#E8E8D0'>ＨＰ</td>";
@@ -496,8 +497,10 @@ function doRenderGoldenCage(credential: Credential) {
         html += "<td style='background-color:#E8E8D0'>性别</td>";
         html += "<td style='background-color:#E8E8D0'>取出</td>";
         html += "</tr>";
+        let sequence = 1;
         for (const pet of cagePetList) {
             html += "<tr>";
+            html += "<th style='background-color:#E8E8D0'>" + (sequence++) + "</th>";
             html += "<td style='background-color:#E8E8D0'>" + pet.nameHtml + "</td>";
             html += "<td style='background-color:#E8E8D0'>" + pet.level + "</td>";
             html += "<td style='background-color:#E8E8D0'>" + pet.health + "/" + pet.maxHealth + "</td>";
@@ -513,6 +516,11 @@ function doRenderGoldenCage(credential: Credential) {
             html += "</td>";
             html += "</tr>";
         }
+        html += "<tr>";
+        html += "<td style='background-color:#E8E8D0' colspan='12'>";
+        html += "<b style='color:navy'>剩余空位数：</b><b style='color:red'>" + cagePage.spaceCount + "</b>";
+        html += "</td>";
+        html += "</tr>";
         html += "</tbody>";
         html += "</table>";
 
@@ -1028,10 +1036,11 @@ function doRenderRanch(credential: Credential) {
         html += "<table style='border-width:0;background-color:#888888;margin:auto;width:100%'>";
         html += "<tbody style='background-color:#F8F0E0;text-align:center'>";
         html += "<tr>";
-        html += "<td style='background-color:darkgreen;color:wheat;font-weight:bold' colspan='10'>";
+        html += "<td style='background-color:darkgreen;color:wheat;font-weight:bold' colspan='11'>";
         html += "＜ 城 堡 牧 场 ＞";
         html += "</td>";
         html += "<tr>";
+        html += "<th style='background-color:#E0D0B0'>序号</th>";
         html += "<th style='background-color:#E8E8D0'>名字</th>";
         html += "<th style='background-color:#EFE0C0'>等级</th>";
         html += "<th style='background-color:#E0D0B0'>生命</th>";
@@ -1043,9 +1052,10 @@ function doRenderRanch(credential: Credential) {
         html += "<th style='background-color:#EFE0C0'>经验</th>";
         html += "<th style='background-color:#EFE0C0'>性别</th>";
         html += "</tr>";
-
+        let sequence = 1;
         for (const pet of petList) {
             html += "<tr>";
+            html += "<th style='background-color:#E0D0B0'>" + (sequence++) + "</th>";
             html += "<td style='background-color:#E8E8D0'>" + pet.nameHtml + "</td>";
             html += "<td style='background-color:#EFE0C0'>" + pet.levelHtml + "</td>";
             html += "<td style='background-color:#E0D0B0'>" + pet.healthHtml + "</td>";

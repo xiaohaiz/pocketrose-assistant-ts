@@ -883,7 +883,7 @@ class PersonalEquipmentManagementPageProcessor_Town extends PersonalEquipmentMan
             html += "<th style='background-color:#E0D0B0'>属性</th>";
             html += "</tr>";
 
-            let sequence = 0;
+            let sequence = 1;
             for (const equipment of equipmentList) {
                 html += "<tr>";
                 html += "<th style='background-color:#E0D0B0'>" + (sequence++) + "</th>";
