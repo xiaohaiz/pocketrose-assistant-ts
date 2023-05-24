@@ -1,7 +1,9 @@
 import SetupLoader from "../../config/SetupLoader";
 import EventHandler from "../../core/EventHandler";
 import MapBuilder from "../../core/MapBuilder";
+import CastleInformation from "../../pocketrose/CastleInformation";
 import MapDashboardPage from "../../pocketrose/MapDashboardPage";
+import Coordinate from "../../util/Coordinate";
 import Credential from "../../util/Credential";
 import PageUtils from "../../util/PageUtils";
 import StringUtils from "../../util/StringUtils";
@@ -11,6 +13,10 @@ import PageProcessorCredentialSupport from "../PageProcessorCredentialSupport";
 class MapDashboardPageProcessor extends PageProcessorCredentialSupport {
 
     doProcess(credential: Credential, context?: PageProcessorContext): void {
+        if (context === undefined || context.get("coordinate") === undefined) {
+            return;
+        }
+
         const page = MapDashboardPage.parse(PageUtils.currentPageHtml());
 
         $("table:first")
@@ -34,12 +40,54 @@ class MapDashboardPageProcessor extends PageProcessorCredentialSupport {
             "</table>" +
             "</td>");
         $("#map").html(MapBuilder.buildMapTable());
-        MapBuilder.updateTownBackgroundColor();
         $("#travelJournals").html(travelJournals);
+
+        MapBuilder.updateTownBackgroundColor();
+
+        // 如果有必要的话绘制城堡
+        new CastleInformation()
+            .load(page.role!.name!)
+            .then(castle => {
+                const coordinate = castle.coordinate!;
+                const buttonId = "location_" + coordinate.x + "_" + coordinate.y;
+                $("#" + buttonId)
+                    .attr("value", "堡")
+                    .css("background-color", "fuchsia")
+                    .parent()
+                    .attr("title", "城堡" + coordinate.asText() + " " + castle.name)
+                    .attr("class", "color_fuchsia");
+            });
+
+        const coordinate = Coordinate.parse(context.get("coordinate")!);
+        const buttonId = "location_" + coordinate.x + "_" + coordinate.y;
+        $("#" + buttonId)
+            .closest("td")
+            .css("background-color", "black")
+            .css("color", "yellow")
+            .css("text-align", "center")
+            .html($("#" + buttonId).val() as string);
+
+        this.#bindLocationButtons();
 
         this.#renderMenu();
         this.#renderExperience();
         this.#renderEventBoard();
+    }
+
+    #bindLocationButtons() {
+        $(".location_button_class")
+            .on("mouseenter", function () {
+                $(this).css("background-color", "red");
+            })
+            .on("mouseleave", function () {
+                const s = $(this).parent().attr("class")!;
+                const c = StringUtils.substringAfter(s, "_");
+                if (c !== "none") {
+                    $(this).css("background-color", c);
+                } else {
+                    $(this).removeAttr("style");
+                }
+            });
     }
 
     #renderMenu() {
