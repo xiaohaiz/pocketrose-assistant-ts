@@ -72,7 +72,6 @@ class MapDashboardPageProcessor extends PageProcessorCredentialSupport {
 
         this.#bindLocationButtons(credential);
 
-        this.#renderMenu();
         this.#renderExperience();
         this.#renderEventBoard();
     }
@@ -137,12 +136,6 @@ class MapDashboardPageProcessor extends PageProcessorCredentialSupport {
 
             instance.#doTravelToLocation(credential, coordinate);
         });
-    }
-
-    #renderMenu() {
-        $("option[value='MAP_VISIT']")
-            .css("background-color", "yellow")
-            .text("拜访·驿站");
     }
 
     #renderExperience() {
