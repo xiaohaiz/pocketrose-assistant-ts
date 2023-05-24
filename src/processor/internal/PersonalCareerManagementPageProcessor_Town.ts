@@ -12,9 +12,9 @@ import Credential from "../../util/Credential";
 import MessageBoard from "../../util/MessageBoard";
 import NetworkUtils from "../../util/NetworkUtils";
 import PageProcessorContext from "../PageProcessorContext";
-import AbstractPersonalCareerManagementPageProcessor from "./AbstractPersonalCareerManagementPageProcessor";
+import PersonalCareerManagementPageProcessor from "./PersonalCareerManagementPageProcessor";
 
-class PersonalCareerManagementPageProcessor_Town extends AbstractPersonalCareerManagementPageProcessor {
+class PersonalCareerManagementPageProcessor_Town extends PersonalCareerManagementPageProcessor {
 
     doProcessPageParsed(credential: Credential, page: PersonalCareerManagementPage, context?: PageProcessorContext): void {
         const candidateList = page.careerList!;

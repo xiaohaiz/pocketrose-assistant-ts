@@ -5,7 +5,7 @@ import PageUtils from "../../util/PageUtils";
 import PageProcessorContext from "../PageProcessorContext";
 import PageProcessorCredentialSupport from "../PageProcessorCredentialSupport";
 
-abstract class AbstractPersonalCareerManagementPageProcessor extends PageProcessorCredentialSupport {
+abstract class PersonalCareerManagementPageProcessor extends PageProcessorCredentialSupport {
 
 
     doProcess(credential: Credential, context?: PageProcessorContext) {
@@ -17,4 +17,4 @@ abstract class AbstractPersonalCareerManagementPageProcessor extends PageProcess
 
 }
 
-export = AbstractPersonalCareerManagementPageProcessor;
+export = PersonalCareerManagementPageProcessor;

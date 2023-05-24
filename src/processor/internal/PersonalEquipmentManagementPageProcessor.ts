@@ -8,7 +8,7 @@ import PageUtils from "../../util/PageUtils";
 import PageProcessorContext from "../PageProcessorContext";
 import PageProcessorCredentialSupport from "../PageProcessorCredentialSupport";
 
-abstract class AbstractPersonalEquipmentManagementPageProcessor extends PageProcessorCredentialSupport {
+abstract class PersonalEquipmentManagementPageProcessor extends PageProcessorCredentialSupport {
 
     doLoadButtonStyles(): number[] {
         return [35];
@@ -246,4 +246,4 @@ abstract class AbstractPersonalEquipmentManagementPageProcessor extends PageProc
     abstract doRenderMutablePage(credential: Credential, page: PersonalEquipmentManagementPage, context?: PageProcessorContext): void;
 }
 
-export = AbstractPersonalEquipmentManagementPageProcessor;
+export = PersonalEquipmentManagementPageProcessor;

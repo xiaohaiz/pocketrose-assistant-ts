@@ -22,9 +22,9 @@ import MessageBoard from "../../util/MessageBoard";
 import PageUtils from "../../util/PageUtils";
 import StringUtils from "../../util/StringUtils";
 import PageProcessorContext from "../PageProcessorContext";
-import AbstractPersonalEquipmentManagementPageProcessor from "./AbstractPersonalEquipmentManagementPageProcessor";
+import PersonalEquipmentManagementPageProcessor from "./PersonalEquipmentManagementPageProcessor";
 
-class PersonalEquipmentManagementPageProcessor_Town extends AbstractPersonalEquipmentManagementPageProcessor {
+class PersonalEquipmentManagementPageProcessor_Town extends PersonalEquipmentManagementPageProcessor {
 
     doGeneratePageTitleHtml(context?: PageProcessorContext): string {
         if (context === undefined) {
@@ -665,9 +665,10 @@ class PersonalEquipmentManagementPageProcessor_Town extends AbstractPersonalEqui
             html += "<table style='border-width:0;background-color:#888888;text-align:center;width:100%;margin:auto'>";
             html += "<tbody>";
             html += "<tr>";
-            html += "<td style='background-color:darkgreen;color:wheat;font-weight:bold;font-size:120%;text-align:center' colspan='11'>＜ 百 宝 袋 ＞</td>";
+            html += "<td style='background-color:darkgreen;color:wheat;font-weight:bold;font-size:120%;text-align:center' colspan='12'>＜ 百 宝 袋 ＞</td>";
             html += "</tr>";
             html += "<tr>";
+            html += "<th style='background-color:#E0D0B0'>序号</th>"
             html += "<th style='background-color:#E8E8D0'>选择</th>"
             html += "<th style='background-color:#E0D0B0'>名字</th>"
             html += "<th style='background-color:#EFE0C0'>种类</th>"
@@ -681,8 +682,10 @@ class PersonalEquipmentManagementPageProcessor_Town extends AbstractPersonalEqui
             html += "<th style='background-color:#E8E8D0'>取出</th>"
             html += "</tr>";
 
+            let sequence = 1;
             for (const equipment of equipmentList) {
                 html += "<tr>";
+                html += "<th style='background-color:#E0D0B0'>" + (sequence++) + "</th>";
                 html += "<td style='background-color:#E8E8D0'>";
                 if (page.spaceCount > 0) {
                     html += "<input type='button' value='选择' " +
@@ -710,11 +713,17 @@ class PersonalEquipmentManagementPageProcessor_Town extends AbstractPersonalEqui
                 html += "</tr>";
             }
 
+            html += "<tr>";
+            html += "<td style='background-color:#F8F0E0;text-align:center' colspan='12'>";
+            html += "<b style='color:navy'>目前剩余空位数：</b><b style='color:red'>" + bagPage.spaceCount + "</b>";
+            html += "</td>";
+            html += "</tr>";
+
             // ----------------------------------------------------------------
             // 百宝袋菜单栏
             // ----------------------------------------------------------------
             html += "<tr>";
-            html += "<td style='background-color:#F8F0E0;text-align:center' colspan='11'>";
+            html += "<td style='background-color:#F8F0E0;text-align:center' colspan='12'>";
             html += "<table style='border-width:0;background-color:#F8F0E0;width:100%;margin:auto'>";
             html += "<tbody>";
             html += "<tr>";
@@ -851,10 +860,11 @@ class PersonalEquipmentManagementPageProcessor_Town extends AbstractPersonalEqui
             html += "<tbody style='background-color:#F8F0E0;text-align:center'>";
             html += "<tr>";
             html += "<td style='background-color:darkred;color:wheat;font-weight:bold' " +
-                "colspan='16'>";
+                "colspan='17'>";
             html += "＜ 城 堡 仓 库 ＞";
             html += "</td>";
             html += "<tr>";
+            html += "<th style='background-color:#E0D0B0'>序号</th>";
             html += "<th style='background-color:#E8E8D0'>名字</th>";
             html += "<th style='background-color:#EFE0C0'>种类</th>";
             html += "<th style='background-color:#E0D0B0'>效果</th>";
@@ -873,8 +883,10 @@ class PersonalEquipmentManagementPageProcessor_Town extends AbstractPersonalEqui
             html += "<th style='background-color:#E0D0B0'>属性</th>";
             html += "</tr>";
 
+            let sequence = 1;
             for (const equipment of equipmentList) {
                 html += "<tr>";
+                html += "<th style='background-color:#E0D0B0'>" + (sequence++) + "</th>";
                 html += "<td style='background-color:#E8E8D0'>" + equipment.nameHTML + "</td>";
                 html += "<td style='background-color:#EFE0C0'>" + equipment.category + "</td>";
                 html += "<td style='background-color:#E0D0B0'>" + equipment.power + "</td>";
@@ -897,7 +909,7 @@ class PersonalEquipmentManagementPageProcessor_Town extends AbstractPersonalEqui
             // 城堡仓库菜单栏
             // ----------------------------------------------------------------
             html += "<tr>";
-            html += "<td style='background-color:#F8F0E0;text-align:center' colspan='18'>";
+            html += "<td style='background-color:#F8F0E0;text-align:center' colspan='17'>";
             html += "<table style='border-width:0;background-color:#F8F0E0;width:100%;margin:auto'>";
             html += "<tbody>";
             html += "<tr>";

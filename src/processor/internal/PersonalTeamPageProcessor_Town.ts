@@ -1,8 +1,8 @@
 import Credential from "../../util/Credential";
 import PageUtils from "../../util/PageUtils";
-import AbstractPersonalTeamPageProcessor from "./AbstractPersonalTeamPageProcessor";
+import PersonalTeamPageProcessor from "./PersonalTeamPageProcessor";
 
-class PersonalTeamPageProcessor_Town extends AbstractPersonalTeamPageProcessor {
+class PersonalTeamPageProcessor_Town extends PersonalTeamPageProcessor {
 
     bindReturnButton(credential: Credential): void {
         const form = PageUtils.generateReturnTownForm(credential);

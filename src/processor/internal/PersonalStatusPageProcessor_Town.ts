@@ -5,9 +5,9 @@ import Credential from "../../util/Credential";
 import PageUtils from "../../util/PageUtils";
 import StringUtils from "../../util/StringUtils";
 import PageProcessorContext from "../PageProcessorContext";
-import AbstractPersonalStatusPageProcessor from "./AbstractPersonalStatusPageProcessor";
+import PersonalStatusPageProcessor from "./PersonalStatusPageProcessor";
 
-class PersonalStatusPageProcessor_Town extends AbstractPersonalStatusPageProcessor {
+class PersonalStatusPageProcessor_Town extends PersonalStatusPageProcessor {
 
     constructor() {
         super();

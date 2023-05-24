@@ -3,9 +3,9 @@ import TownBank from "../../pocketrose/TownBank";
 import Credential from "../../util/Credential";
 import PageUtils from "../../util/PageUtils";
 import PageProcessorContext from "../PageProcessorContext";
-import AbstractPersonalProfilePageProcessor from "./AbstractPersonalProfilePageProcessor";
+import PersonalProfilePageProcessor from "./PersonalProfilePageProcessor";
 
-class PersonalProfilePageProcessor_Town extends AbstractPersonalProfilePageProcessor {
+class PersonalProfilePageProcessor_Town extends PersonalProfilePageProcessor {
 
     doBindReturnButton(credential: Credential, context?: PageProcessorContext): void {
         const html = PageUtils.generateReturnTownForm(credential);

@@ -12,7 +12,7 @@ import StringUtils from "../../util/StringUtils";
 import PageProcessorContext from "../PageProcessorContext";
 import PageProcessorCredentialSupport from "../PageProcessorCredentialSupport";
 
-abstract class AbstractPersonalProfilePageProcessor extends PageProcessorCredentialSupport {
+abstract class PersonalProfilePageProcessor extends PageProcessorCredentialSupport {
 
     doLoadButtonStyles(): number[] {
         return [35];
@@ -546,4 +546,4 @@ abstract class AbstractPersonalProfilePageProcessor extends PageProcessorCredent
     }
 }
 
-export = AbstractPersonalProfilePageProcessor;
+export = PersonalProfilePageProcessor;

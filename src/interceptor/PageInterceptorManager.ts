@@ -4,7 +4,6 @@ import CastleDashboardPageInterceptor from "./internal/CastleDashboardPageInterc
 import CastlePostHousePageInterceptor from "./internal/CastlePostHousePageInterceptor";
 import LoginDashboardPageInterceptor from "./internal/LoginDashboardPageInterceptor";
 import MapDashboardPageInterceptor from "./internal/MapDashboardPageInterceptor";
-import MapPostHousePageInterceptor from "./internal/MapPostHousePageInterceptor";
 import MetroDashboardPageInterceptor from "./internal/MetroDashboardPageInterceptor";
 import NationInformationPageInterceptor from "./internal/NationInformationPageInterceptor";
 import PersonalCareerManagementPageInterceptor from "./internal/PersonalCareerManagementPageInterceptor";
@@ -13,7 +12,6 @@ import PersonalFastLoginPageInterceptor from "./internal/PersonalFastLoginPageIn
 import PersonalManualPageInterceptor from "./internal/PersonalManualPageInterceptor";
 import PersonalPetManagementPageInterceptor from "./internal/PersonalPetManagementPageInterceptor";
 import PersonalProfilePageInterceptor from "./internal/PersonalProfilePageInterceptor";
-import PersonalSalaryPageInterceptor from "./internal/PersonalSalaryPageInterceptor";
 import PersonalSetupPageInterceptor from "./internal/PersonalSetupPageInterceptor";
 import PersonalStatusPageInterceptor from "./internal/PersonalStatusPageInterceptor";
 import PersonalTeamPageInterceptor from "./internal/PersonalTeamPageInterceptor";
@@ -44,7 +42,6 @@ class PageInterceptorManager {
             new CastlePostHousePageInterceptor(),
             new LoginDashboardPageInterceptor(),
             new MapDashboardPageInterceptor(),
-            new MapPostHousePageInterceptor(),
             new MetroDashboardPageInterceptor(),
             new NationInformationPageInterceptor(),
             new PersonalCareerManagementPageInterceptor(),
@@ -53,7 +50,6 @@ class PageInterceptorManager {
             new PersonalManualPageInterceptor(),
             new PersonalPetManagementPageInterceptor(),
             new PersonalProfilePageInterceptor(),
-            new PersonalSalaryPageInterceptor(),
             new PersonalSetupPageInterceptor(),
             new PersonalStatusPageInterceptor(),
             new PersonalTeamPageInterceptor(),

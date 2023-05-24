@@ -10,7 +10,7 @@ import MessageBoard from "../../util/MessageBoard";
 import PageUtils from "../../util/PageUtils";
 import PageProcessorCredentialSupport from "../PageProcessorCredentialSupport";
 
-abstract class AbstractPersonalSetupPageProcessor extends PageProcessorCredentialSupport {
+abstract class PersonalSetupPageProcessor extends PageProcessorCredentialSupport {
 
     readonly #setupItemManager: SetupItemManager;
 
@@ -261,4 +261,4 @@ abstract class AbstractPersonalSetupPageProcessor extends PageProcessorCredentia
     abstract doBindReturnButton(returnButtonId: string): void;
 }
 
-export = AbstractPersonalSetupPageProcessor;
+export = PersonalSetupPageProcessor;
