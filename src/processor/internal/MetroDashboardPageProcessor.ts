@@ -50,47 +50,51 @@ class MetroDashboardPageProcessor extends PageProcessorCredentialSupport {
                 });
         }
 
-        // --------------------------------------------------------------------
-        // 身份
-        // --------------------------------------------------------------------
-        if (SetupLoader.isQiHanTitleEnabled()) {
-            $("td:contains('身份')")
-                .filter((idx, td) => $(td).text() === "身份")
-                .next()
-                .each((idx, th) => {
-                    let c = $(th).text();
-                    c = RankTitleLoader.transformTitle(c);
-                    $(th).text(c);
-                });
-        }
 
-        // --------------------------------------------------------------------
-        // 经验值
-        // --------------------------------------------------------------------
-        if (SetupLoader.isExperienceProgressBarEnabled()) {
-            $("td:contains('经验值')")
-                .filter(function () {
-                    return $(this).text() === "经验值";
-                })
-                .next()
-                .each(function (_idx, th) {
-                    const expText = $(th).text();
-                    const experience = parseInt(StringUtils.substringBefore(expText, " EX"));
-                    if (experience >= 14900) {
-                        $(th).css("color", "blue").text("MAX");
-                    } else {
-                        const level = Math.ceil(experience / 100) + 1;
-                        const ratio = level / 150;
-                        const progressBar = PageUtils.generateProgressBarHTML(ratio);
-                        $(th).html("<span title='" + expText + "'>" + progressBar + "</span>");
-                    }
-                });
-        }
-
+        renderRoleStatus();
         renderEventBoard();
     }
 
+}
 
+
+function renderRoleStatus() {
+    // --------------------------------------------------------------------
+    // 身份
+    // --------------------------------------------------------------------
+    if (SetupLoader.isQiHanTitleEnabled()) {
+        $("td:contains('身份')")
+            .filter((idx, td) => $(td).text() === "身份")
+            .next()
+            .each((idx, th) => {
+                let c = $(th).text();
+                c = RankTitleLoader.transformTitle(c);
+                $(th).text(c);
+            });
+    }
+
+    // --------------------------------------------------------------------
+    // 经验值
+    // --------------------------------------------------------------------
+    if (SetupLoader.isExperienceProgressBarEnabled()) {
+        $("td:contains('经验值')")
+            .filter(function () {
+                return $(this).text() === "经验值";
+            })
+            .next()
+            .each(function (_idx, th) {
+                const expText = $(th).text();
+                const experience = parseInt(StringUtils.substringBefore(expText, " EX"));
+                if (experience >= 14900) {
+                    $(th).css("color", "blue").text("MAX");
+                } else {
+                    const level = Math.ceil(experience / 100) + 1;
+                    const ratio = level / 150;
+                    const progressBar = PageUtils.generateProgressBarHTML(ratio);
+                    $(th).html("<span title='" + expText + "'>" + progressBar + "</span>");
+                }
+            });
+    }
 }
 
 function renderEventBoard() {
