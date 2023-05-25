@@ -24,39 +24,42 @@ class MetroDashboardPageProcessor extends PageProcessorCredentialSupport {
         // @ts-ignore
         $("#version").html(__VERSION__);
 
-        // --------------------------------------------------------------------
-        // 国家动员指令
-        // --------------------------------------------------------------------
-        if (SetupLoader.isQiHanTitleEnabled()) {
-            $("table:first")
-                .find("> tbody:first")
-                .find("> tr:eq(1)")
-                .find("> td:first")
-                .find("> form:first")
-                .find("> font:first")
-                .each((idx, font) => {
-                    let c = $(font).text();
-
-                    let b = StringUtils.substringAfterLast(c, "(");
-                    let a = StringUtils.substringBefore(c, "(" + b);
-                    b = StringUtils.substringBefore(b, ")");
-                    const ss = _.split(b, " ");
-                    const b1 = _.replace(ss[0], "部队", "");
-                    const b2 = RankTitleLoader.transformTitle(ss[1]);
-                    const b3 = ss[2];
-
-                    const s = a + "(" + b1 + " " + b2 + " " + b3 + ")";
-                    $(font).text(s);
-                });
-        }
 
 
+        renderMobilization();
         renderRoleStatus();
         renderEventBoard();
     }
 
 }
 
+function renderMobilization() {
+    // --------------------------------------------------------------------
+    // 国家动员指令
+    // --------------------------------------------------------------------
+    if (SetupLoader.isQiHanTitleEnabled()) {
+        $("table:first")
+            .find("> tbody:first")
+            .find("> tr:eq(1)")
+            .find("> td:first")
+            .find("> form:first")
+            .find("> font:first")
+            .each((idx, font) => {
+                let c = $(font).text();
+
+                let b = StringUtils.substringAfterLast(c, "(");
+                let a = StringUtils.substringBefore(c, "(" + b);
+                b = StringUtils.substringBefore(b, ")");
+                const ss = _.split(b, " ");
+                const b1 = _.replace(ss[0], "部队", "");
+                const b2 = RankTitleLoader.transformTitle(ss[1]);
+                const b3 = ss[2];
+
+                const s = a + "(" + b1 + " " + b2 + " " + b3 + ")";
+                $(font).text(s);
+            });
+    }
+}
 
 function renderRoleStatus() {
     // --------------------------------------------------------------------
