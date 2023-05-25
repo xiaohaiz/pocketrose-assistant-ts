@@ -333,6 +333,9 @@ function processTask(credential: Credential, roleTask: string) {
         case "过五关斩六将":
             doRenderTask9();
             break;
+        case "七擒孟获":
+            doRenderTask10();
+            break;
     }
 
     doBindLocationButton(credential);
@@ -560,9 +563,13 @@ function doRenderTask8() {
 
 function doRenderTask9() {
     let html = "";
-    html += "<li>【大魔导师】第一次转大魔导师时接到任务</li>";
-    html += "<li>(6,6)找诸葛亮对话，然后战斗，打赢后再对话</li>";
-    html += "<li>(6,6)好处:国资金+100w</li>";
+    html += "<li>【贤者】第一次转贤者时接到任务</li>";
+    html += "<li>(7,9)问、杀、问</li>";
+    html += "<li>(6,9)问、杀、问</li>";
+    html += "<li>(7,10)问、杀、问</li>";
+    html += "<li>(8,10)问、杀、问</li>";
+    html += "<li>(9,10)问、杀、问</li>";
+    html += "<li>好处:黄金笼子（可以存放更多宠物）</li>";
     $("#walkthrough").html(html);
 
     let buttonId = "location_7_9";
@@ -599,6 +606,22 @@ function doRenderTask9() {
         .css("background-color", "yellow")
         .parent()
         .attr("title", "秦琪")
+        .attr("class", "color_yellow");
+}
+
+function doRenderTask10() {
+    let html = "";
+    html += "<li>【狙击手】第一次转狙击手时接到任务</li>";
+    html += "<li>(0,4)问孟获一次按提示顺序依次打一个，每次打前都要问孟获，打完后问</li>";
+    html += "<li>好处:移动力+2</li>";
+    $("#walkthrough").html(html);
+
+    let buttonId = "location_0_4";
+    $("#" + buttonId)
+        .attr("value", "群")
+        .css("background-color", "yellow")
+        .parent()
+        .attr("title", "群")
         .attr("class", "color_yellow");
 }
 

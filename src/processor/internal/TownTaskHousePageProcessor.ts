@@ -351,6 +351,39 @@ function renderTask(credential: Credential, roleTask: string) {
     html += "</td>";
     html += "</tr>";
 
+    // --------------------------------------------------------------------
+    // 七擒孟获
+    // --------------------------------------------------------------------
+    html += "<tr>";
+    html += "<td style='background-color:#F8F0E0;width:72px;font-weight:bold'>七擒孟获</td>";
+    html += "<td style='background-color:#E8E8D0'>";
+    html += "<button role='button' class='taskButton getTask' id='t-10'>获取任务指南<button";
+    html += "</td>";
+    html += "<td style='background-color:#E8E8B0;text-align:left'>";
+    html += "<table style='background-color:transparent;margin:auto;border-spacing:0;border-width:0;width:100%'>";
+    html += "<tbody>";
+    html += "<tr>";
+    html += "<td>";
+    html += NpcLoader.getTaskNpcImageHtml("孟获");
+    html += "</td>";
+    html += "<td>";
+    html += NpcLoader.getTaskNpcImageHtml("董荼那");
+    html += "</td>";
+    html += "<td>";
+    html += NpcLoader.getTaskNpcImageHtml("孟优");
+    html += "</td>";
+    html += "<td>";
+    html += NpcLoader.getTaskNpcImageHtml("带来洞主");
+    html += "</td>";
+    html += "<td>";
+    html += NpcLoader.getTaskNpcImageHtml("祝融");
+    html += "</td>";
+    html += "</tr>";
+    html += "</tbody>";
+    html += "</table>";
+    html += "</td>";
+    html += "</tr>";
+
     html += "<tr>";
     html += "<td style='background-color:#F8F0E0;text-align:center' colspan='3'>";
     html += "<button role='button' class='taskButton cancelTask' id='t-0'>取消任务指南<button";
