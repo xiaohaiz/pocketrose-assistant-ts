@@ -30,9 +30,11 @@ class TownDashboardPageProcessor extends PageProcessorCredentialSupport {
         $("#version").html(__VERSION__);
 
         if (SetupLoader.isQiHanTitleEnabled()) {
-            $("table:first")
-                .find("tbody:first")
-                .find("> tr:eq(1)")
+            $("table:eq(1)")
+                .find("> tbody:first")
+                .find("> tr:first")
+                .find("> td:first")
+                .find("> form:first")
                 .find("> font:first")
                 .each((idx, font) => {
                     let c = $(font).text();

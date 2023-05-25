@@ -33,9 +33,11 @@ class MapDashboardPageProcessor extends PageProcessorCredentialSupport {
 
         if (SetupLoader.isQiHanTitleEnabled()) {
             $("table:first")
-                .find("tbody:first")
+                .find("> tbody:first")
                 .find("> tr:eq(1)")
-                .find("font:first")
+                .find("> td:first")
+                .find("> form:first")
+                .find("> font:first")
                 .each((idx, font) => {
                     let c = $(font).text();
 
