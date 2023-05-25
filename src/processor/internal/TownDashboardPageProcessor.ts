@@ -160,6 +160,9 @@ function doProcess(credential: Credential, page: TownDashboardPage) {
     $("option[value='COU_MAKE']")
         .css("background-color", "yellow")
         .text("口袋助手使用手册");
+    $("option[value='TENNIS']")
+        .css("background-color", "yellow")
+        .text("任务屋");
     doRenderBattleMenu(credential);
     doRenderPostHouseMenu();
     doRenderSetupMenu();
