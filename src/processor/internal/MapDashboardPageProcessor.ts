@@ -330,6 +330,9 @@ function processTask(credential: Credential, roleTask: string) {
         case "三顾茅庐":
             doRenderTask8();
             break;
+        case "过五关斩六将":
+            doRenderTask9();
+            break;
     }
 
     doBindLocationButton(credential);
@@ -552,6 +555,50 @@ function doRenderTask8() {
         .css("background-color", "yellow")
         .parent()
         .attr("title", "诸葛亮")
+        .attr("class", "color_yellow");
+}
+
+function doRenderTask9() {
+    let html = "";
+    html += "<li>【大魔导师】第一次转大魔导师时接到任务</li>";
+    html += "<li>(6,6)找诸葛亮对话，然后战斗，打赢后再对话</li>";
+    html += "<li>(6,6)好处:国资金+100w</li>";
+    $("#walkthrough").html(html);
+
+    let buttonId = "location_7_9";
+    $("#" + buttonId)
+        .attr("value", "孔")
+        .css("background-color", "yellow")
+        .parent()
+        .attr("title", "孔秀")
+        .attr("class", "color_yellow");
+    buttonId = "location_6_9";
+    $("#" + buttonId)
+        .attr("value", "群")
+        .css("background-color", "yellow")
+        .parent()
+        .attr("title", "群")
+        .attr("class", "color_yellow");
+    buttonId = "location_7_10";
+    $("#" + buttonId)
+        .attr("value", "卞")
+        .css("background-color", "yellow")
+        .parent()
+        .attr("title", "卞喜")
+        .attr("class", "color_yellow");
+    buttonId = "location_8_10";
+    $("#" + buttonId)
+        .attr("value", "王")
+        .css("background-color", "yellow")
+        .parent()
+        .attr("title", "王植")
+        .attr("class", "color_yellow");
+    buttonId = "location_9_10";
+    $("#" + buttonId)
+        .attr("value", "秦")
+        .css("background-color", "yellow")
+        .parent()
+        .attr("title", "秦琪")
         .attr("class", "color_yellow");
 }
 
