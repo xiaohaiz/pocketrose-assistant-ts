@@ -336,6 +336,9 @@ function processTask(credential: Credential, roleTask: string) {
         case "七擒孟获":
             doRenderTask10();
             break;
+        case "游五岳":
+            doRenderTask11();
+            break;
     }
 
     doBindLocationButton(credential);
@@ -622,6 +625,54 @@ function doRenderTask10() {
         .css("background-color", "yellow")
         .parent()
         .attr("title", "群")
+        .attr("class", "color_yellow");
+}
+
+function doRenderTask11() {
+    let html = "";
+    html += "<li>【吟游诗人】 第一次转吟游诗人时接到任务</li>";
+    html += "<li>(9,10)探索</li>";
+    html += "<li>(6,9)探索</li>";
+    html += "<li>(6,4)探索</li>";
+    html += "<li>(7,10)探索</li>";
+    html += "<li>(10,6)探索</li>";
+    html += "<li>好处:移动力+1</li>";
+    $("#walkthrough").html(html);
+
+    let buttonId = "location_9_10";
+    $("#" + buttonId)
+        .attr("value", "岳")
+        .css("background-color", "yellow")
+        .parent()
+        .attr("title", "岳")
+        .attr("class", "color_yellow");
+    buttonId = "location_6_9";
+    $("#" + buttonId)
+        .attr("value", "岳")
+        .css("background-color", "yellow")
+        .parent()
+        .attr("title", "岳")
+        .attr("class", "color_yellow");
+    buttonId = "location_6_4";
+    $("#" + buttonId)
+        .attr("value", "岳")
+        .css("background-color", "yellow")
+        .parent()
+        .attr("title", "岳")
+        .attr("class", "color_yellow");
+    buttonId = "location_7_10";
+    $("#" + buttonId)
+        .attr("value", "岳")
+        .css("background-color", "yellow")
+        .parent()
+        .attr("title", "岳")
+        .attr("class", "color_yellow");
+    buttonId = "location_10_6";
+    $("#" + buttonId)
+        .attr("value", "岳")
+        .css("background-color", "yellow")
+        .parent()
+        .attr("title", "岳")
         .attr("class", "color_yellow");
 }
 
