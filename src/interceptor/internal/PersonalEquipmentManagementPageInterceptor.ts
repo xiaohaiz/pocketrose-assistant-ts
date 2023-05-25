@@ -4,6 +4,8 @@ import PersonalEquipmentManagementPageProcessor_Castle
     from "../../processor/internal/PersonalEquipmentManagementPageProcessor_Castle";
 import PersonalEquipmentManagementPageProcessor_Map
     from "../../processor/internal/PersonalEquipmentManagementPageProcessor_Map";
+import PersonalEquipmentManagementPageProcessor_Metro
+    from "../../processor/internal/PersonalEquipmentManagementPageProcessor_Metro";
 import PersonalEquipmentManagementPageProcessor_Town
     from "../../processor/internal/PersonalEquipmentManagementPageProcessor_Town";
 import PageProcessorContext from "../../processor/PageProcessorContext";
@@ -14,6 +16,7 @@ class PersonalEquipmentManagementPageInterceptor implements PageInterceptor {
     readonly #inTownProcessor = new PersonalEquipmentManagementPageProcessor_Town();
     readonly #inCastleProcessor = new PersonalEquipmentManagementPageProcessor_Castle();
     readonly #inMapProcessor = new PersonalEquipmentManagementPageProcessor_Map();
+    readonly #inMetroProcessor = new PersonalEquipmentManagementPageProcessor_Metro();
 
     accept(cgi: string, pageText: string): boolean {
         if (cgi === "mydata.cgi") {
@@ -42,6 +45,9 @@ class PersonalEquipmentManagementPageInterceptor implements PageInterceptor {
                 const context = new PageProcessorContext();
                 context.set("coordinate", coordinate!.asText());
                 this.#inMapProcessor.process(context);
+            })
+            .whenInMetro(() => {
+                this.#inMetroProcessor.process();
             })
             .fork();
     }

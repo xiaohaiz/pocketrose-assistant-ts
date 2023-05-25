@@ -7,6 +7,7 @@ class LocationState {
     #inTownHandler?: (townId?: string, battleCount?: string) => void;
     #inCastleHandler?: (castleName?: string) => void;
     #inMapHandler?: (coordinate?: Coordinate) => void;
+    #inMetroHandler?: () => void;
 
     constructor(location: string | null) {
         this.#location = location;
@@ -27,6 +28,11 @@ class LocationState {
         return this;
     }
 
+    whenInMetro(handler: () => void): LocationState {
+        this.#inMetroHandler = handler;
+        return this;
+    }
+
     fork() {
         const ss = this.#location?.split("/");
         if (ss === undefined || ss.length === 0) {
@@ -42,6 +48,9 @@ class LocationState {
         if (ss[0] === "WILD") {
             const coordinate = Coordinate.parse(ss[1]);
             this.#inMapHandler?.(coordinate);
+        }
+        if (ss[0] === "METRO") {
+            this.#inMetroHandler?.();
         }
     }
 }
