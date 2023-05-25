@@ -1,6 +1,7 @@
 import _ from "lodash";
 import SetupLoader from "../../config/SetupLoader";
 import EventHandler from "../../core/EventHandler";
+import MapBuilder from "../../core/MapBuilder";
 import RankTitleLoader from "../../core/RankTitleLoader";
 import MetroDashboardPage from "../../pocketrose/MetroDashboardPage";
 import Credential from "../../util/Credential";
@@ -18,6 +19,7 @@ class MetroDashboardPageProcessor extends PageProcessorCredentialSupport {
         renderMobilization();
         renderRoleStatus();
         renderEventBoard();
+        renderMetroMap();
     }
 
 }
@@ -140,6 +142,25 @@ function renderEventBoard() {
     html += "</table>";
 
     $("#eventBoard").html(html);
+}
+
+function renderMetroMap() {
+    $("table:first")
+        .find("tbody:first")
+        .find("> tr:eq(2)")
+        .html("" +
+            "<td colspan='2' id='mapContainer'>" +
+            "<table style='background-color:transparent;margin:auto;width:100%'>" +
+            "<tbody>" +
+            "<tr>" +
+            "<td id='map' style='background-color:#F8F0E0'></td>" +
+            "<td id='menu' style='background-color:#EFE0C0;width:100%'></td>" +
+            "</tr>" +
+            "</tbody>" +
+            "</table>" +
+            "</td>");
+    $("#map").html(MapBuilder.buildBlankMapTable());
+
 }
 
 export = MetroDashboardPageProcessor;
