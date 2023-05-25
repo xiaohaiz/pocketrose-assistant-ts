@@ -28,6 +28,7 @@ import TownItemHousePageInterceptor from "./internal/TownItemHousePageIntercepto
 import TownPetMapHousePageInterceptor from "./internal/TownPetMapHousePageInterceptor";
 import TownPetRankHousePageInterceptor from "./internal/TownPetRankHousePageInterceptor";
 import TownPostHousePageInterceptor from "./internal/TownPostHousePageInterceptor";
+import TownTaskHousePageInterceptor from "./internal/TownTaskHousePageInterceptor";
 import TownWeaponHousePageInterceptor from "./internal/TownWeaponHousePageInterceptor";
 import PageInterceptor from "./PageInterceptor";
 
@@ -67,6 +68,7 @@ class PageInterceptorManager {
             new TownPetMapHousePageInterceptor(),
             new TownPetRankHousePageInterceptor(),
             new TownPostHousePageInterceptor(),
+            new TownTaskHousePageInterceptor(),
             new TownWeaponHousePageInterceptor(),
         ];
     }
