@@ -165,13 +165,28 @@ function renderMetroMap(credential: Credential, page: MetroDashboardPage) {
             "</td>");
     $("#map").html(MapBuilder.buildBlankMapTable());
 
-    const buttonId = "location_" + page.coordinate!.x + "_" + page.coordinate!.y;
+    let buttonId = "location_" + page.coordinate!.x + "_" + page.coordinate!.y;
     $("#" + buttonId)
         .closest("td")
         .css("background-color", "black")
         .css("color", "yellow")
         .css("text-align", "center")
         .html("你");
+
+    buttonId = "location_8_9";
+    $("#" + buttonId)
+        .attr("value", "雪")
+        .css("background-color", "fuchsia")
+        .parent()
+        .attr("title", "白雪公主和小矮人")
+        .attr("class", "color_fuchsia");
+    buttonId = "location_10_10";
+    $("#" + buttonId)
+        .attr("value", "匹")
+        .css("background-color", "fuchsia")
+        .parent()
+        .attr("title", "匹诺曹")
+        .attr("class", "color_fuchsia");
 
     let html = "";
     html += "<table style='background-color:transparent;margin:auto;width:100%'>";
