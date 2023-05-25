@@ -309,6 +309,9 @@ function processTask(credential: Credential, roleTask: string) {
         case "新手任务":
             doRenderTask1();
             break;
+        case "落凤坡":
+            doRenderTask2();
+            break;
     }
 
     doBindLocationButton(credential);
@@ -389,6 +392,30 @@ function doRenderTask1() {
         .css("background-color", "yellow")
         .parent()
         .attr("title", "瓦格纳")
+        .attr("class", "color_yellow");
+}
+
+function doRenderTask2() {
+    let html = "";
+    html += "<li>(6,6)找诸葛亮问落凤坡</li>";
+    html += "<li>(7,7)打庞统，打完问庞统搞定</li>";
+    html += "<li>(6,6)问诸葛亮完工</li>";
+    html += "<li>好处:可以修改人物属性</li>";
+    $("#walkthrough").html(html);
+
+    let buttonId = "location_6_6";
+    $("#" + buttonId)
+        .attr("value", "诸")
+        .css("background-color", "yellow")
+        .parent()
+        .attr("title", "诸葛亮")
+        .attr("class", "color_yellow");
+    buttonId = "location_7_7";
+    $("#" + buttonId)
+        .attr("value", "庞")
+        .css("background-color", "yellow")
+        .parent()
+        .attr("title", "庞统")
         .attr("class", "color_yellow");
 }
 

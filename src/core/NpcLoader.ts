@@ -80,6 +80,8 @@ class NpcLoader {
 
 const POCKET_TASK_NPC_IMAGES = {
     "瓦格纳": Constants.POCKET_DOMAIN + "/image/npc/005.jpg",
+    "庞统": Constants.POCKET_DOMAIN + "/image/npc/348.jpg",
+    "诸葛亮": Constants.POCKET_DOMAIN + "/image/npc/684.jpg",
 };
 
 const POCKET_NPC_IMAGES = {

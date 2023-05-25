@@ -117,16 +117,54 @@ function renderTask(credential: Credential, roleTask: string) {
     html += "<table style='margin:auto;border-width:0;text-align:center;background-color:#888888'>";
     html += "<tbody>";
 
+    html += "<tr>";
+    html += "<th style='background-color:#F8F0E0;width:72px'>任务名称</th>";
+    html += "<th style='background-color:#E8E8D0'>任务指南</th>";
+    html += "<th style='background-color:#E8E8B0'>相关人物</th>";
+    html += "</tr>";
+
     // --------------------------------------------------------------------
     // 新手任务
     // --------------------------------------------------------------------
     html += "<tr>";
-    html += "<td style='background-color:#F8F0E0;width:64px;height:64px'>";
-    html += NpcLoader.getTaskNpcImageHtml("瓦格纳");
-    html += "</td>";
-    html += "<td style='background-color:#E8E8B0;width:72px;font-weight:bold'>新手任务</td>";
+    html += "<td style='background-color:#F8F0E0;width:72px;font-weight:bold'>新手任务</td>";
     html += "<td style='background-color:#E8E8D0'>";
     html += "<button role='button' class='taskButton getTask' id='t-1'>获取任务指南<button";
+    html += "</td>";
+    html += "<td style='background-color:#E8E8B0;text-align:left'>";
+    html += "<table style='background-color:transparent;margin:auto;border-spacing:0;border-width:0;width:100%'>";
+    html += "<tbody>";
+    html += "<tr>";
+    html += "<td>";
+    html += NpcLoader.getTaskNpcImageHtml("瓦格纳");
+    html += "</td>";
+    html += "</tr>";
+    html += "</tbody>";
+    html += "</table>";
+    html += "</td>";
+    html += "</tr>";
+
+    // --------------------------------------------------------------------
+    // 落凤坡
+    // --------------------------------------------------------------------
+    html += "<tr>";
+    html += "<td style='background-color:#F8F0E0;width:72px;font-weight:bold'>落凤坡</td>";
+    html += "<td style='background-color:#E8E8D0'>";
+    html += "<button role='button' class='taskButton getTask' id='t-2'>获取任务指南<button";
+    html += "</td>";
+    html += "<td style='background-color:#E8E8B0;text-align:left'>";
+    html += "<table style='background-color:transparent;margin:auto;border-spacing:0;border-width:0;width:100%'>";
+    html += "<tbody>";
+    html += "<tr>";
+    html += "<td>";
+    html += NpcLoader.getTaskNpcImageHtml("诸葛亮");
+    html += "</td>";
+    html += "<td>";
+    html += NpcLoader.getTaskNpcImageHtml("庞统");
+    html += "</td>";
+    html += "</tr>";
+    html += "</tbody>";
+    html += "</table>";
     html += "</td>";
     html += "</tr>";
 
