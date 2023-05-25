@@ -48,6 +48,10 @@ const RANK_TITLES: string[] = [
 
 class RankTitleLoader {
 
+    static getAllRankTitles() {
+        return Object.keys(POCKET_RANK_TITLES);
+    }
+
     static transformTitle(title: string): string {
         // @ts-ignore
         const index = POCKET_RANK_TITLES[title];
