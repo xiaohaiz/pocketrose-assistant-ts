@@ -1,4 +1,3 @@
-import _ from "lodash";
 import SetupLoader from "../../config/SetupLoader";
 import EventHandler from "../../core/EventHandler";
 import RankTitleLoader from "../../core/RankTitleLoader";
@@ -157,21 +156,14 @@ function doProcess(credential: Credential, page: TownDashboardPage) {
     doRenderLeaveTown();
     doRenderEventBoard();
     if (SetupLoader.isQiHanTitleEnabled()) {
-        let contribution: number | undefined = undefined;
-        $("td:contains('贡献度')")
-            .filter((idx, td) => $(td).text() === "贡献度")
+        $("td:contains('身份')")
+            .filter((idx, td) => $(td).text() === "身份")
             .next()
-            .each((idx, td) => {
-                let c = $(td).text();
-                c = StringUtils.substringBefore(c, " p");
-                contribution = _.parseInt(c);
-            })
-            .prev()
-            .prev()
             .each((idx, th) => {
-                if (contribution !== undefined) {
-                    $(th).text(RankTitleLoader.loadTitle(contribution));
-                }
+                let c = $(th).text();
+                c = StringUtils.substringAfterLast(c, " ");
+                c = RankTitleLoader.transformTitle(c);
+                $(th).text(c);
             });
     }
 

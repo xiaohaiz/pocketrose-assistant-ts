@@ -1,4 +1,4 @@
-const POCKET_TITLE_RANKS = {
+const POCKET_RANK_TITLES = {
     "流浪者": 0,
     "平民": 1,
     "公民": 2,
@@ -22,7 +22,7 @@ const POCKET_TITLE_RANKS = {
     "皇族": 20,
 };
 
-const ROLE_TITLES: string[] = [
+const RANK_TITLES: string[] = [
     "流民",
     "公士",
     "上造",
@@ -48,11 +48,17 @@ const ROLE_TITLES: string[] = [
 
 class RankTitleLoader {
 
-    static loadTitle(contribution: number) {
+    static transformTitle(title: string): string {
+        // @ts-ignore
+        const index = POCKET_RANK_TITLES[title];
+        return RANK_TITLES[index];
+    }
+
+    static calculateTitle(contribution: number) {
         let idx = Math.ceil(contribution / 500);
         idx = Math.max(idx, 0);
         idx = Math.min(idx, 20);
-        return ROLE_TITLES[idx];
+        return RANK_TITLES[idx];
     }
 
 }
