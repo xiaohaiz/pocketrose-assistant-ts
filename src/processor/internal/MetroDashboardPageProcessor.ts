@@ -192,6 +192,9 @@ function renderMetroMap(credential: Credential, page: MetroDashboardPage) {
     html += "<table style='background-color:transparent;margin:auto;width:100%'>";
     html += "<tbody>";
     html += "<tr>";
+    html += "<td style='text-align:left' id='walkthrough'></td>";
+    html += "</tr>";
+    html += "<tr>";
     html += "<td style='text-align:left'>坐标点：<span id='roleLocation' style='color:red'>" + page.coordinate!.asText() + "</span></td>";
     html += "</tr>";
     html += "<tr>";
@@ -206,6 +209,21 @@ function renderMetroMap(credential: Credential, page: MetroDashboardPage) {
     html += "</tbody>";
     html += "</table>";
     $("#menu").html(html);
+
+    html = "";
+    html += "<b style='color:navy'>感谢末末倾情提供的齐心丹攻略</b><br>";
+    html += "<li>在(8,9)和白雪公主问话，选择‘齐心丹’</li>";
+    html += "<li>去(10,10)，选择据点转移</li>";
+    html += "<li>重装跟匹诺曹战斗，失败的话吃药补HP和MP，继续跟匹诺曹战斗，直到打赢</li>";
+    html += "<li>打赢后跟比诺曹谈话，选择‘抓住你了’</li>";
+    html += "<li>点击回到枫丹按钮</li>";
+    html += "<li>去客栈住宿补满HP和MP，换好打葫芦娃的7hit装和面具，设置打葫芦娃的血宠</li>";
+    html += "<li>回到迪士尼</li>";
+    html += "<li>在(8,9)和白雪公主问话，选择‘匹诺曹抓来了’</li>";
+    html += "<li>在(8,9)和七个小矮人问话，选择‘把心都交出来炼齐心丹’</li>";
+    html += "<li>跟七个小矮人战斗。失败的话，就返回住宿，然后继续从枫丹到迪斯尼乐园，跟七个小矮人战斗，直到打赢</li>";
+    html += "<li>打赢后跟小矮人谈话，七心宝石入手</li>";
+    $("#walkthrough").html(html);
 
     MessageBoard.createMessageBoardStyleC("messageBoardContainer");
     $("#messageBoard")
