@@ -324,6 +324,9 @@ function processTask(credential: Credential, roleTask: string) {
         case "赤壁之战":
             doRenderTask6();
             break;
+        case "走麦城":
+            doRenderTask7();
+            break;
     }
 
     doBindLocationButton(credential);
@@ -512,6 +515,24 @@ function doRenderTask6() {
         .css("background-color", "yellow")
         .parent()
         .attr("title", "庞统")
+        .attr("class", "color_yellow");
+}
+
+function doRenderTask7() {
+    let html = "";
+    html += "<li>【拳王】第一次转拳王时接到任务</li>";
+    html += "<li>(5,5)问关羽</li>";
+    html += "<li>(5,5)打吕蒙</li>";
+    html += "<li>(5,5)打徐晃</li>";
+    html += "<li>好处:移动力+1</li>";
+    $("#walkthrough").html(html);
+
+    let buttonId = "location_5_5";
+    $("#" + buttonId)
+        .attr("value", "群")
+        .css("background-color", "yellow")
+        .parent()
+        .attr("title", "群")
         .attr("class", "color_yellow");
 }
 

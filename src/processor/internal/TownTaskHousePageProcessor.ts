@@ -267,6 +267,33 @@ function renderTask(credential: Credential, roleTask: string) {
     html += "</td>";
     html += "</tr>";
 
+    // --------------------------------------------------------------------
+    // 走麦城
+    // --------------------------------------------------------------------
+    html += "<tr>";
+    html += "<td style='background-color:#F8F0E0;width:72px;font-weight:bold'>走麦城</td>";
+    html += "<td style='background-color:#E8E8D0'>";
+    html += "<button role='button' class='taskButton getTask' id='t-7'>获取任务指南<button";
+    html += "</td>";
+    html += "<td style='background-color:#E8E8B0;text-align:left'>";
+    html += "<table style='background-color:transparent;margin:auto;border-spacing:0;border-width:0;width:100%'>";
+    html += "<tbody>";
+    html += "<tr>";
+    html += "<td>";
+    html += NpcLoader.getTaskNpcImageHtml("关羽");
+    html += "</td>";
+    html += "<td>";
+    html += NpcLoader.getTaskNpcImageHtml("吕蒙");
+    html += "</td>";
+    html += "<td>";
+    html += NpcLoader.getTaskNpcImageHtml("徐晃");
+    html += "</td>";
+    html += "</tr>";
+    html += "</tbody>";
+    html += "</table>";
+    html += "</td>";
+    html += "</tr>";
+
     html += "<tr>";
     html += "<td style='background-color:#F8F0E0;text-align:center' colspan='3'>";
     html += "<button role='button' class='taskButton cancelTask' id='t-0'>取消任务指南<button";
