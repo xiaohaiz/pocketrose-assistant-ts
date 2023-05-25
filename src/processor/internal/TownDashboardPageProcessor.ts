@@ -156,22 +156,24 @@ function doProcess(credential: Credential, page: TownDashboardPage) {
     doRenderTownTax(credential, page);
     doRenderLeaveTown();
     doRenderEventBoard();
-    let contribution: number | undefined = undefined;
-    $("td:contains('贡献度')")
-        .filter((idx, td) => $(td).text() === "贡献度")
-        .next()
-        .each((idx, td) => {
-            let c = $(td).text();
-            c = StringUtils.substringBefore(c, " p");
-            contribution = _.parseInt(c);
-        })
-        .prev()
-        .prev()
-        .each((idx, th) => {
-            if (contribution !== undefined) {
-                $(th).text(RoleTitleLoader.loadTitle(contribution));
-            }
-        })
+    if (SetupLoader.isQiHanTitleEnabled()) {
+        let contribution: number | undefined = undefined;
+        $("td:contains('贡献度')")
+            .filter((idx, td) => $(td).text() === "贡献度")
+            .next()
+            .each((idx, td) => {
+                let c = $(td).text();
+                c = StringUtils.substringBefore(c, " p");
+                contribution = _.parseInt(c);
+            })
+            .prev()
+            .prev()
+            .each((idx, th) => {
+                if (contribution !== undefined) {
+                    $(th).text(RoleTitleLoader.loadTitle(contribution));
+                }
+            });
+    }
 
     const bsId = SetupLoader.getTownDashboardShortcutButton();
     if (bsId >= 0) {
