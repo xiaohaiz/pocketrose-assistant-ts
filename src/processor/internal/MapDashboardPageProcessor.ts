@@ -327,6 +327,9 @@ function processTask(credential: Credential, roleTask: string) {
         case "走麦城":
             doRenderTask7();
             break;
+        case "三顾茅庐":
+            doRenderTask8();
+            break;
     }
 
     doBindLocationButton(credential);
@@ -533,6 +536,22 @@ function doRenderTask7() {
         .css("background-color", "yellow")
         .parent()
         .attr("title", "群")
+        .attr("class", "color_yellow");
+}
+
+function doRenderTask8() {
+    let html = "";
+    html += "<li>【大魔导师】第一次转大魔导师时接到任务</li>";
+    html += "<li>(6,6)找诸葛亮对话，然后战斗，打赢后再对话</li>";
+    html += "<li>(6,6)好处:国资金+100w</li>";
+    $("#walkthrough").html(html);
+
+    let buttonId = "location_6_6";
+    $("#" + buttonId)
+        .attr("value", "诸")
+        .css("background-color", "yellow")
+        .parent()
+        .attr("title", "诸葛亮")
         .attr("class", "color_yellow");
 }
 
