@@ -160,12 +160,10 @@ class MapDashboardPageProcessor extends PageProcessorCredentialSupport {
                     "</tr>"));
 
             MessageBoard.resetMessageBoard("实时旅途动态播报：<br>");
-            //$("#visitRow").hide();
             $(".location_button_class")
                 .prop("disabled", true)
                 .off("mouseenter")
                 .off("mouseleave");
-            //$("#menu").parent().show();
 
             instance.#doTravelToLocation(credential, coordinate);
         });
