@@ -14,23 +14,24 @@ class MetroDashboardPageProcessor extends PageProcessorCredentialSupport {
     doProcess(credential: Credential, context?: PageProcessorContext): void {
         const page = MetroDashboardPage.parse(PageUtils.currentPageHtml());
 
-        // --------------------------------------------------------------------
-        // 系统公告
-        // --------------------------------------------------------------------
-        $("center:first")
-            .attr("id", "systemAnnouncement");
-        $("#systemAnnouncement")
-            .after($("<div id='version' style='color:navy;font-weight:bold;text-align:center;width:100%'></div>"));
-        // @ts-ignore
-        $("#version").html(__VERSION__);
-
-
-
+        renderAnnouncement();
         renderMobilization();
         renderRoleStatus();
         renderEventBoard();
     }
 
+}
+
+function renderAnnouncement() {
+    // --------------------------------------------------------------------
+    // 系统公告
+    // --------------------------------------------------------------------
+    $("center:first")
+        .attr("id", "systemAnnouncement");
+    $("#systemAnnouncement")
+        .after($("<div id='version' style='color:navy;font-weight:bold;text-align:center;width:100%'></div>"));
+    // @ts-ignore
+    $("#version").html(__VERSION__);
 }
 
 function renderMobilization() {
