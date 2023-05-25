@@ -15,6 +15,7 @@ import PersonalProfilePageInterceptor from "./internal/PersonalProfilePageInterc
 import PersonalSetupPageInterceptor from "./internal/PersonalSetupPageInterceptor";
 import PersonalStatusPageInterceptor from "./internal/PersonalStatusPageInterceptor";
 import PersonalTeamPageInterceptor from "./internal/PersonalTeamPageInterceptor";
+import RoleInformationPageInterceptor from "./internal/RoleInformationPageInterceptor";
 import TangDashboardPageInterceptor from "./internal/TangDashboardPageInterceptor";
 import TownAccessoryHousePageInterceptor from "./internal/TownAccessoryHousePageInterceptor";
 import TownAdventureGuildPageInterceptor from "./internal/TownAdventureGuildPageInterceptor";
@@ -27,6 +28,7 @@ import TownItemHousePageInterceptor from "./internal/TownItemHousePageIntercepto
 import TownPetMapHousePageInterceptor from "./internal/TownPetMapHousePageInterceptor";
 import TownPetRankHousePageInterceptor from "./internal/TownPetRankHousePageInterceptor";
 import TownPostHousePageInterceptor from "./internal/TownPostHousePageInterceptor";
+import TownTaskHousePageInterceptor from "./internal/TownTaskHousePageInterceptor";
 import TownWeaponHousePageInterceptor from "./internal/TownWeaponHousePageInterceptor";
 import PageInterceptor from "./PageInterceptor";
 
@@ -53,6 +55,7 @@ class PageInterceptorManager {
             new PersonalSetupPageInterceptor(),
             new PersonalStatusPageInterceptor(),
             new PersonalTeamPageInterceptor(),
+            new RoleInformationPageInterceptor(),
             new TangDashboardPageInterceptor(),
             new TownAccessoryHousePageInterceptor(),
             new TownAdventureGuildPageInterceptor(),
@@ -65,6 +68,7 @@ class PageInterceptorManager {
             new TownPetMapHousePageInterceptor(),
             new TownPetRankHousePageInterceptor(),
             new TownPostHousePageInterceptor(),
+            new TownTaskHousePageInterceptor(),
             new TownWeaponHousePageInterceptor(),
         ];
     }

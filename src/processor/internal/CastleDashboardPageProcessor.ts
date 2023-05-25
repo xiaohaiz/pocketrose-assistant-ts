@@ -1,5 +1,6 @@
 import SetupLoader from "../../config/SetupLoader";
 import EventHandler from "../../core/EventHandler";
+import RankTitleLoader from "../../core/RankTitleLoader";
 import PageUtils from "../../util/PageUtils";
 import StringUtils from "../../util/StringUtils";
 import PageProcessor from "../PageProcessor";
@@ -12,6 +13,7 @@ class CastleDashboardPageProcessor implements PageProcessor {
         PageUtils.removeGoogleAnalyticsScript();
 
         this.#renderMenu();
+        this.#renderRankTitle();
         this.#renderExperience();
         this.#renderEventBoard();
     }
@@ -51,6 +53,21 @@ class CastleDashboardPageProcessor implements PageProcessor {
                 .text("职业管理");
             $("option[value='MAGIC']").remove();
         }
+    }
+
+    #renderRankTitle() {
+        if (!SetupLoader.isQiHanTitleEnabled()) {
+            return;
+        }
+        $("td:contains('身份')")
+            .filter((idx, td) => $(td).text() === "身份")
+            .next()
+            .each((idx, th) => {
+                let c = $(th).text();
+                c = StringUtils.substringAfterLast(c, " ");
+                c = RankTitleLoader.transformTitle(c);
+                $(th).text(c);
+            });
     }
 
     #renderExperience() {

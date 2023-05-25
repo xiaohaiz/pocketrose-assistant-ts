@@ -1,7 +1,10 @@
 import LocationStateMachine from "../../core/LocationStateMachine";
+import MetroDashboardPageProcessor from "../../processor/internal/MetroDashboardPageProcessor";
 import PageInterceptor from "../PageInterceptor";
 
 class MetroDashboardPageInterceptor implements PageInterceptor {
+
+    readonly #processor = new MetroDashboardPageProcessor();
 
     accept(cgi: string, pageText: string): boolean {
         if (cgi === "map.cgi" || cgi === "status.cgi") {
@@ -13,8 +16,8 @@ class MetroDashboardPageInterceptor implements PageInterceptor {
     intercept(): void {
         // Set current location state to METRO.
         LocationStateMachine.create().inMetro();
+        this.#processor.process();
     }
-
 
 }
 

@@ -1,5 +1,7 @@
+import _ from "lodash";
 import SetupLoader from "../../config/SetupLoader";
 import EventHandler from "../../core/EventHandler";
+import RankTitleLoader from "../../core/RankTitleLoader";
 import TownDashboardPage from "../../pocketrose/TownDashboardPage";
 import Credential from "../../util/Credential";
 import NetworkUtils from "../../util/NetworkUtils";
@@ -26,6 +28,29 @@ class TownDashboardPageProcessor extends PageProcessorCredentialSupport {
             .after($("<div id='version' style='color:navy;font-weight:bold;text-align:center;width:100%'></div>"));
         // @ts-ignore
         $("#version").html(__VERSION__);
+
+        if (SetupLoader.isQiHanTitleEnabled()) {
+            $("table:eq(1)")
+                .find("> tbody:first")
+                .find("> tr:first")
+                .find("> td:first")
+                .find("> form:first")
+                .find("> font:first")
+                .each((idx, font) => {
+                    let c = $(font).text();
+
+                    let b = StringUtils.substringAfterLast(c, "(");
+                    let a = StringUtils.substringBefore(c, "(" + b);
+                    b = StringUtils.substringBefore(b, ")");
+                    const ss = _.split(b, " ");
+                    const b1 = _.replace(ss[0], "部队", "");
+                    const b2 = RankTitleLoader.transformTitle(ss[1]);
+                    const b3 = ss[2];
+
+                    const s = a + "(" + b1 + " " + b2 + " " + b3 + ")";
+                    $(font).text(s);
+                });
+        }
 
 
         // --------------------------------------------------------------------
@@ -135,6 +160,9 @@ function doProcess(credential: Credential, page: TownDashboardPage) {
     $("option[value='COU_MAKE']")
         .css("background-color", "yellow")
         .text("口袋助手使用手册");
+    $("option[value='TENNIS']")
+        .css("background-color", "yellow")
+        .text("任务屋");
     doRenderBattleMenu(credential);
     doRenderPostHouseMenu();
     doRenderSetupMenu();
@@ -154,6 +182,17 @@ function doProcess(credential: Credential, page: TownDashboardPage) {
     doRenderTownTax(credential, page);
     doRenderLeaveTown();
     doRenderEventBoard();
+    if (SetupLoader.isQiHanTitleEnabled()) {
+        $("td:contains('身份')")
+            .filter((idx, td) => $(td).text() === "身份")
+            .next()
+            .each((idx, th) => {
+                let c = $(th).text();
+                c = StringUtils.substringAfterLast(c, " ");
+                c = RankTitleLoader.transformTitle(c);
+                $(th).text(c);
+            });
+    }
 
     const bsId = SetupLoader.getTownDashboardShortcutButton();
     if (bsId >= 0) {

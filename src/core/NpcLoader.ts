@@ -65,7 +65,52 @@ class NpcLoader {
         return names;
     }
 
+    static getTaskNpcImageHtml(name: string) {
+        // @ts-ignore
+        const image = POCKET_TASK_NPC_IMAGES[name];
+        if (image === undefined) {
+            return null;
+        }
+        let s = StringUtils.substringAfterLast(image, "/");
+        let id = StringUtils.substringBefore(s, ".");
+        id = "n_" + id;
+        return "<img src='" + image + "' width='64' height='64' alt='" + name + "' id='" + id + "'>";
+    }
 }
+
+const POCKET_TASK_NPC_IMAGES = {
+    "瓦格纳": Constants.POCKET_DOMAIN + "/image/npc/005.jpg",      // 7,10
+    "吕布": Constants.POCKET_DOMAIN + "/image/npc/293.jpg",       // 8,11
+    "庞统": Constants.POCKET_DOMAIN + "/image/npc/348.jpg",       // 7,7
+    "司马懿": Constants.POCKET_DOMAIN + "/image/npc/395.jpg",       // 3,11
+    "赵云": Constants.POCKET_DOMAIN + "/image/npc/657.jpg",       // 8,11
+    "诸葛亮": Constants.POCKET_DOMAIN + "/image/npc/684.jpg",      // 6,6
+    "蒋干": Constants.POCKET_DOMAIN + "/image/npc/211.jpg",      // 8,5
+    "黄盖": Constants.POCKET_DOMAIN + "/image/npc/193.jpg",      // 8,5
+    "周瑜": Constants.POCKET_DOMAIN + "/image/npc/669.jpg",      // 8,5
+    "曹操": Constants.POCKET_DOMAIN + "/image/npc/018.jpg",      // 8,5
+    "关羽": Constants.POCKET_DOMAIN + "/image/npc/142.jpg",      // 5,5
+    "吕蒙": Constants.POCKET_DOMAIN + "/image/npc/299.jpg",      // 5,5
+    "徐晃": Constants.POCKET_DOMAIN + "/image/npc/536.jpg",      // 5,5
+
+    "孟获": Constants.POCKET_DOMAIN + "/image/npc/326.jpg",      // 0,4
+    "董荼那": Constants.POCKET_DOMAIN + "/image/npc/093.jpg",      // 0,4
+    "孟优": Constants.POCKET_DOMAIN + "/image/npc/327.jpg",      // 0,4
+    "带来洞主": Constants.POCKET_DOMAIN + "/image/npc/070.jpg",      // 0,4
+    "祝融": Constants.POCKET_DOMAIN + "/image/npc/688.jpg",      // 0,4
+
+    "黄忠": Constants.POCKET_DOMAIN + "/image/npc/197.jpg",      // 7,4
+    "张飞": Constants.POCKET_DOMAIN + "/image/npc/611.jpg",      // 10,7
+    "马超": Constants.POCKET_DOMAIN + "/image/npc/306.jpg",      // 1,14
+
+    "孔秀": Constants.POCKET_DOMAIN + "/image/npc/699.jpg",      // 7,9
+    "孟坦": Constants.POCKET_DOMAIN + "/image/npc/699.jpg",      // 6,9
+    "韩福": Constants.POCKET_DOMAIN + "/image/npc/699.jpg",      // 6,9
+    "卞喜": Constants.POCKET_DOMAIN + "/image/npc/699.jpg",      // 7,10
+    "王植": Constants.POCKET_DOMAIN + "/image/npc/699.jpg",      // 8,10
+    "秦琪": Constants.POCKET_DOMAIN + "/image/npc/699.jpg",      // 9,10
+    "东方不败": Constants.POCKET_DOMAIN + "/image/npc/dfbb.jpg",      // 5,10
+};
 
 const POCKET_NPC_IMAGES = {
 

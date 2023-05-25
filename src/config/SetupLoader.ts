@@ -284,6 +284,10 @@ class SetupLoader {
     static isOnlyConsecrateInitialPetEnabled() {
         return StorageUtils.getBoolean("_pa_044");
     }
+
+    static isQiHanTitleEnabled(): boolean {
+        return StorageUtils.getBoolean("_pa_048");
+    }
 }
 
 export = SetupLoader;
