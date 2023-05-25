@@ -1,3 +1,4 @@
+import _ from "lodash";
 import SetupLoader from "../../config/SetupLoader";
 import EventHandler from "../../core/EventHandler";
 import RankTitleLoader from "../../core/RankTitleLoader";
@@ -27,6 +28,27 @@ class TownDashboardPageProcessor extends PageProcessorCredentialSupport {
             .after($("<div id='version' style='color:navy;font-weight:bold;text-align:center;width:100%'></div>"));
         // @ts-ignore
         $("#version").html(__VERSION__);
+
+        if (SetupLoader.isQiHanTitleEnabled()) {
+            $("table:first")
+                .find("tbody:first")
+                .find("> tr:eq(1)")
+                .find("font:first")
+                .each((idx, font) => {
+                    let c = $(font).text();
+
+                    let b = StringUtils.substringAfterLast(c, "(");
+                    let a = StringUtils.substringBefore(c, "(" + b);
+                    b = StringUtils.substringBefore(b, ")");
+                    const ss = _.split(b, " ");
+                    const b1 = _.replace(ss[0], "部队", "");
+                    const b2 = RankTitleLoader.transformTitle(ss[1]);
+                    const b3 = ss[2];
+
+                    const s = a + "(" + b1 + " " + b2 + " " + b3 + ")";
+                    $(font).text(s);
+                });
+        }
 
 
         // --------------------------------------------------------------------
