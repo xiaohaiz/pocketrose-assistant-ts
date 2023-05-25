@@ -1,6 +1,7 @@
 import SetupLoader from "../../config/SetupLoader";
 import EventHandler from "../../core/EventHandler";
 import MapBuilder from "../../core/MapBuilder";
+import RankTitleLoader from "../../core/RankTitleLoader";
 import TravelPlanBuilder from "../../core/TravelPlanBuilder";
 import TravelPlanExecutor from "../../core/TravelPlanExecutor";
 import CastleInformation from "../../pocketrose/CastleInformation";
@@ -72,6 +73,7 @@ class MapDashboardPageProcessor extends PageProcessorCredentialSupport {
 
         this.#bindLocationButtons(credential);
 
+        this.#renderRankTitle();
         this.#renderExperience();
         this.#renderEventBoard();
     }
@@ -136,6 +138,20 @@ class MapDashboardPageProcessor extends PageProcessorCredentialSupport {
 
             instance.#doTravelToLocation(credential, coordinate);
         });
+    }
+
+    #renderRankTitle() {
+        if (!SetupLoader.isQiHanTitleEnabled()) {
+            return;
+        }
+        $("td:contains('身份')")
+            .filter((idx, td) => $(td).text() === "身份")
+            .next()
+            .each((idx, th) => {
+                let c = $(th).text();
+                c = RankTitleLoader.transformTitle(c);
+                $(th).text(c);
+            });
     }
 
     #renderExperience() {
