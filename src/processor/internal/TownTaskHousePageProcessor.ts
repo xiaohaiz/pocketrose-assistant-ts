@@ -1,6 +1,7 @@
 import NpcLoader from "../../core/NpcLoader";
 import TownLoader from "../../core/TownLoader";
 import Credential from "../../util/Credential";
+import PageUtils from "../../util/PageUtils";
 import StorageUtils from "../../util/StorageUtils";
 import PageProcessorContext from "../PageProcessorContext";
 import PageProcessorCredentialSupport from "../PageProcessorCredentialSupport";
@@ -85,6 +86,7 @@ class TownTaskHousePageProcessor extends PageProcessorCredentialSupport {
         html += "</tr>"
         html += "<tr>";
         html += "<td style='background-color:#F8F0E0;text-align:center'>";
+        html += "<button role='button' id='refreshButton'>刷新任务</button>";
         html += "<button role='button' id='returnButton'>返回" + TownLoader.getTownById(context?.get("townId")!)?.name + "</button>";
         html += "</td>";
         html += "</tr>"
@@ -96,16 +98,92 @@ class TownTaskHousePageProcessor extends PageProcessorCredentialSupport {
             .next().hide()
             .after($(html));
 
+        $("#refreshButton").on("click", () => {
+            PageUtils.scrollIntoView("pageTitle");
+            $("#messageBoardManager").html(NpcLoader.randomNpcImageHtml());
+            refresh(credential);
+        });
         $("#returnButton").on("click", () => {
             $("input:submit[value='返回城市']").trigger("click");
         });
+
+        renderTask(credential, roleTask);
     }
 
+}
+
+function renderTask(credential: Credential, roleTask: string) {
+    let html = "";
+    html += "<table style='margin:auto;border-width:0;text-align:center;background-color:#888888'>";
+    html += "<tbody>";
+
+    // --------------------------------------------------------------------
+    // 新手任务
+    // --------------------------------------------------------------------
+    html += "<tr>";
+    html += "<td style='background-color:#F8F0E0;width:64px;height:64px'>";
+    html += NpcLoader.getTaskNpcImageHtml("瓦格纳");
+    html += "</td>";
+    html += "<td style='background-color:#E8E8B0;width:72px;font-weight:bold'>新手任务</td>";
+    html += "<td style='background-color:#E8E8D0'>";
+    html += "<button role='button' class='taskButton getTask' id='t-1'>获取任务指南<button";
+    html += "</td>";
+    html += "</tr>";
+
+    html += "<tr>";
+    html += "<td style='background-color:#F8F0E0;text-align:center' colspan='3'>";
+    html += "<button role='button' class='taskButton cancelTask' id='t-0'>取消任务指南<button";
+    html += "</td>";
+    html += "</tr>";
+
+    html += "</tbody>";
+    html += "</table>";
+    $("#task").html(html);
+
+    if (roleTask === "") {
+        $(".cancelTask").prop("disabled", true);
+        doBindGetTaskButton(credential);
+    } else {
+        $(".getTask").prop("disabled", true);
+        doBindCancelTaskButton(credential);
+    }
+}
+
+function doBindGetTaskButton(credential: Credential) {
+    $(".getTask").on("click", event => {
+        const buttonId = $(event.target).attr("id")!;
+        const task = $("#" + buttonId)
+            .parent()
+            .prev()
+            .text();
+        const key = "_ct_" + credential.id;
+        StorageUtils.set(key, task);
+        refresh(credential);
+    });
+}
+
+function doBindCancelTaskButton(credential: Credential) {
+    $(".cancelTask").on("click", () => {
+        const key = "_ct_" + credential.id;
+        StorageUtils.remove(key);
+        refresh(credential);
+    });
 }
 
 function loadRoleTask(credential: Credential) {
     const key = "_ct_" + credential.id;
     return StorageUtils.getString(key);
+}
+
+function refresh(credential: Credential) {
+    $(".taskButton").off("click");
+    const roleTask = loadRoleTask(credential);
+    if (roleTask !== "") {
+        $("#roleTask").text(roleTask);
+    } else {
+        $("#roleTask").text("-");
+    }
+    renderTask(credential, roleTask);
 }
 
 export = TownTaskHousePageProcessor;

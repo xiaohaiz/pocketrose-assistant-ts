@@ -65,7 +65,22 @@ class NpcLoader {
         return names;
     }
 
+    static getTaskNpcImageHtml(name: string) {
+        // @ts-ignore
+        const image = POCKET_TASK_NPC_IMAGES[name];
+        if (image === undefined) {
+            return null;
+        }
+        let s = StringUtils.substringAfterLast(image, "/");
+        let id = StringUtils.substringBefore(s, ".");
+        id = "n_" + id;
+        return "<img src='" + image + "' width='64' height='64' alt='" + name + "' id='" + id + "'>";
+    }
 }
+
+const POCKET_TASK_NPC_IMAGES = {
+    "瓦格纳": Constants.POCKET_DOMAIN + "/image/npc/005.jpg",
+};
 
 const POCKET_NPC_IMAGES = {
 
