@@ -1,5 +1,6 @@
 import LocationStateMachine from "../../core/LocationStateMachine";
 import TownTaskHousePageProcessor from "../../processor/internal/TownTaskHousePageProcessor";
+import PageProcessorContext from "../../processor/PageProcessorContext";
 import PageInterceptor from "../PageInterceptor";
 
 class TownTaskHousePageInterceptor implements PageInterceptor {
@@ -16,8 +17,9 @@ class TownTaskHousePageInterceptor implements PageInterceptor {
     intercept(): void {
         LocationStateMachine.create()
             .load()
-            .whenInTown(() => {
-                this.#processor.process();
+            .whenInTown(townId => {
+                const context = new PageProcessorContext().withTownId(townId);
+                this.#processor.process(context);
             })
             .fork();
     }
