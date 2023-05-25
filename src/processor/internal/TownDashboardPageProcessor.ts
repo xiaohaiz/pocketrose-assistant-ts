@@ -1,7 +1,7 @@
 import _ from "lodash";
 import SetupLoader from "../../config/SetupLoader";
 import EventHandler from "../../core/EventHandler";
-import RoleTitleLoader from "../../core/RoleTitleLoader";
+import RankTitleLoader from "../../core/RankTitleLoader";
 import TownDashboardPage from "../../pocketrose/TownDashboardPage";
 import Credential from "../../util/Credential";
 import NetworkUtils from "../../util/NetworkUtils";
@@ -170,7 +170,7 @@ function doProcess(credential: Credential, page: TownDashboardPage) {
             .prev()
             .each((idx, th) => {
                 if (contribution !== undefined) {
-                    $(th).text(RoleTitleLoader.loadTitle(contribution));
+                    $(th).text(RankTitleLoader.loadTitle(contribution));
                 }
             });
     }

@@ -46,7 +46,7 @@ const ROLE_TITLES: string[] = [
     "彻侯"
 ];
 
-class RoleTitleLoader {
+class RankTitleLoader {
 
     static loadTitle(contribution: number) {
         let idx = Math.ceil(contribution / 500);
@@ -57,4 +57,4 @@ class RoleTitleLoader {
 
 }
 
-export = RoleTitleLoader;
+export = RankTitleLoader;
