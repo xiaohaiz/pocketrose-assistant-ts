@@ -318,6 +318,9 @@ function processTask(credential: Credential, roleTask: string) {
         case "葵花宝典":
             doRenderTask4();
             break;
+        case "五丈原":
+            doRenderTask5();
+            break;
     }
 
     doBindLocationButton(credential);
@@ -453,6 +456,22 @@ function doRenderTask4() {
         .css("background-color", "yellow")
         .parent()
         .attr("title", "东方不败")
+        .attr("class", "color_yellow");
+}
+
+function doRenderTask5() {
+    let html = "";
+    html += "<li>【剑圣】第一次转剑圣时接到任务</li>";
+    html += "<li>(3,11)找司马懿对话，然后战斗，打赢后再对话</li>";
+    html += "<li>好处:百宝袋（可以放更多东西）</li>";
+    $("#walkthrough").html(html);
+
+    let buttonId = "location_3_11";
+    $("#" + buttonId)
+        .attr("value", "司")
+        .css("background-color", "yellow")
+        .parent()
+        .attr("title", "司马懿")
         .attr("class", "color_yellow");
 }
 
