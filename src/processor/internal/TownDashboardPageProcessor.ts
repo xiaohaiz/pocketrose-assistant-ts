@@ -33,7 +33,7 @@ class TownDashboardPageProcessor extends PageProcessorCredentialSupport {
             $("table:first")
                 .find("tbody:first")
                 .find("> tr:eq(1)")
-                .find("font:first")
+                .find("> font:first")
                 .each((idx, font) => {
                     let c = $(font).text();
 
