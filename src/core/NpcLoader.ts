@@ -79,9 +79,12 @@ class NpcLoader {
 }
 
 const POCKET_TASK_NPC_IMAGES = {
-    "瓦格纳": Constants.POCKET_DOMAIN + "/image/npc/005.jpg",
-    "庞统": Constants.POCKET_DOMAIN + "/image/npc/348.jpg",
-    "诸葛亮": Constants.POCKET_DOMAIN + "/image/npc/684.jpg",
+    "瓦格纳": Constants.POCKET_DOMAIN + "/image/npc/005.jpg",      // 7,10
+    "吕布": Constants.POCKET_DOMAIN + "/image/npc/293.jpg",       // 8,11
+    "庞统": Constants.POCKET_DOMAIN + "/image/npc/348.jpg",       // 7,7
+    "赵云": Constants.POCKET_DOMAIN + "/image/npc/657.jpg",       // 8,11
+    "诸葛亮": Constants.POCKET_DOMAIN + "/image/npc/684.jpg",      // 6,6
+    "东方不败": Constants.POCKET_DOMAIN + "/image/npc/dfbb.jpg",      // 5,10
 };
 
 const POCKET_NPC_IMAGES = {

@@ -312,6 +312,12 @@ function processTask(credential: Credential, roleTask: string) {
         case "落凤坡":
             doRenderTask2();
             break;
+        case "辕门射戟":
+            doRenderTask3();
+            break;
+        case "葵花宝典":
+            doRenderTask4();
+            break;
     }
 
     doBindLocationButton(credential);
@@ -416,6 +422,37 @@ function doRenderTask2() {
         .css("background-color", "yellow")
         .parent()
         .attr("title", "庞统")
+        .attr("class", "color_yellow");
+}
+
+function doRenderTask3() {
+    let html = "";
+    html += "<li>(8,11)打吕布，可以无限次做这个任务</li>";
+    html += "<li>好处:得到饰品超力怪兽球20 5</li>";
+    html += "<li>(宠物捕获率*2)但是只能使用100次，不能修，不能卖</li>";
+    $("#walkthrough").html(html);
+
+    let buttonId = "location_8_11";
+    $("#" + buttonId)
+        .attr("value", "吕")
+        .css("background-color", "yellow")
+        .parent()
+        .attr("title", "吕布")
+        .attr("class", "color_yellow");
+}
+
+function doRenderTask4() {
+    let html = "";
+    html += "<li>(5,10)找东方不败对话,战斗,搞定</li>";
+    html += "<li>好处:[书籍]葵花宝典(变性)</li>";
+    $("#walkthrough").html(html);
+
+    let buttonId = "location_5_10";
+    $("#" + buttonId)
+        .attr("value", "东")
+        .css("background-color", "yellow")
+        .parent()
+        .attr("title", "东方不败")
         .attr("class", "color_yellow");
 }
 
