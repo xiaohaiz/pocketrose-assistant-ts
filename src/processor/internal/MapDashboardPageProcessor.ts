@@ -321,6 +321,9 @@ function processTask(credential: Credential, roleTask: string) {
         case "五丈原":
             doRenderTask5();
             break;
+        case "赤壁之战":
+            doRenderTask6();
+            break;
     }
 
     doBindLocationButton(credential);
@@ -472,6 +475,43 @@ function doRenderTask5() {
         .css("background-color", "yellow")
         .parent()
         .attr("title", "司马懿")
+        .attr("class", "color_yellow");
+}
+
+function doRenderTask6() {
+    let html = "";
+    html += "<li>【龙战士】第一次转龙战士时接到任务</li>";
+    html += "<li>(8,5)找蒋干对话</li>";
+    html += "<li>(6,6)找诸葛亮对话</li>";
+    html += "<li>(8,5)找黄盖对话</li>";
+    html += "<li>(7,7)找庞统对话</li>";
+    html += "<li>(6,6)找诸葛亮对话</li>";
+    html += "<li>(8,5)找周瑜对话，打赢周瑜</li>";
+    html += "<li>(8,5)找曹操对话，打赢曹操</li>";
+    html += "<li>(8,5)找曹操对话</li>";
+    html += "<li>好处:移动力+2</li>";
+    $("#walkthrough").html(html);
+
+    let buttonId = "location_8_5";
+    $("#" + buttonId)
+        .attr("value", "群")
+        .css("background-color", "yellow")
+        .parent()
+        .attr("title", "群")
+        .attr("class", "color_yellow");
+    buttonId = "location_6_6";
+    $("#" + buttonId)
+        .attr("value", "诸")
+        .css("background-color", "yellow")
+        .parent()
+        .attr("title", "诸葛亮")
+        .attr("class", "color_yellow");
+    buttonId = "location_7_7";
+    $("#" + buttonId)
+        .attr("value", "庞")
+        .css("background-color", "yellow")
+        .parent()
+        .attr("title", "庞统")
         .attr("class", "color_yellow");
 }
 

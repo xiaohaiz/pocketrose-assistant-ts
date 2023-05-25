@@ -231,6 +231,42 @@ function renderTask(credential: Credential, roleTask: string) {
     html += "</td>";
     html += "</tr>";
 
+    // --------------------------------------------------------------------
+    // 赤壁之战
+    // --------------------------------------------------------------------
+    html += "<tr>";
+    html += "<td style='background-color:#F8F0E0;width:72px;font-weight:bold'>赤壁之战</td>";
+    html += "<td style='background-color:#E8E8D0'>";
+    html += "<button role='button' class='taskButton getTask' id='t-6'>获取任务指南<button";
+    html += "</td>";
+    html += "<td style='background-color:#E8E8B0;text-align:left'>";
+    html += "<table style='background-color:transparent;margin:auto;border-spacing:0;border-width:0;width:100%'>";
+    html += "<tbody>";
+    html += "<tr>";
+    html += "<td>";
+    html += NpcLoader.getTaskNpcImageHtml("蒋干");
+    html += "</td>";
+    html += "<td>";
+    html += NpcLoader.getTaskNpcImageHtml("诸葛亮");
+    html += "</td>";
+    html += "<td>";
+    html += NpcLoader.getTaskNpcImageHtml("黄盖");
+    html += "</td>";
+    html += "<td>";
+    html += NpcLoader.getTaskNpcImageHtml("庞统");
+    html += "</td>";
+    html += "<td>";
+    html += NpcLoader.getTaskNpcImageHtml("周瑜");
+    html += "</td>";
+    html += "<td>";
+    html += NpcLoader.getTaskNpcImageHtml("曹操");
+    html += "</td>";
+    html += "</tr>";
+    html += "</tbody>";
+    html += "</table>";
+    html += "</td>";
+    html += "</tr>";
+
     html += "<tr>";
     html += "<td style='background-color:#F8F0E0;text-align:center' colspan='3'>";
     html += "<button role='button' class='taskButton cancelTask' id='t-0'>取消任务指南<button";
