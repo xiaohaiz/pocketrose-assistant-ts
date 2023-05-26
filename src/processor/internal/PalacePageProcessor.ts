@@ -2,8 +2,12 @@ import _ from "lodash";
 import NpcLoader from "../../core/NpcLoader";
 import TownLoader from "../../core/TownLoader";
 import PersonalStatus from "../../pocketrose/PersonalStatus";
+import TownBank from "../../pocketrose/TownBank";
 import Credential from "../../util/Credential";
 import MessageBoard from "../../util/MessageBoard";
+import NetworkUtils from "../../util/NetworkUtils";
+import PageUtils from "../../util/PageUtils";
+import TimeoutUtils from "../../util/TimeoutUtils";
 import PageProcessorContext from "../PageProcessorContext";
 import PageProcessorCredentialSupport from "../PageProcessorCredentialSupport";
 
@@ -56,7 +60,8 @@ class PalacePageProcessor extends PageProcessorCredentialSupport {
                 let html = "";
                 html += "<tr>";
                 html += "<td style='background-color:#E0D0B0'>计时器</td>";
-                html += "<td style='background-color:#E8E8D0;color:red;text-align:right;font-weight:bold' colspan='3'>-</td>";
+                html += "<td style='background-color:#E8E8D0;color:red;text-align:right;font-weight:bold' " +
+                    "colspan='3' id='countDownTimer'>-</td>";
                 html += "</tr>";
                 $(tr).after($(html));
             });
@@ -112,7 +117,7 @@ class PalacePageProcessor extends PageProcessorCredentialSupport {
             });
 
         renderMenu(context!);
-        renderTask();
+        renderTask(credential, context!);
     }
 
     #welcomeMessageHtml() {
@@ -135,7 +140,7 @@ function renderMenu(context: PageProcessorContext) {
             html += "<tbody>";
             html += "<tr>";
             html += "<td>";
-            html += "<button role='button' id='returnButton'>返回" + town.name + "</button>";
+            html += "<button role='button' class='palaceButton' id='returnButton'>返回" + town.name + "</button>";
             html += "</td>";
             html += "</tr>";
             html += "</tbody>";
@@ -147,7 +152,7 @@ function renderMenu(context: PageProcessorContext) {
         });
 }
 
-function renderTask() {
+function renderTask(credential: Credential, context: PageProcessorContext) {
     let html = "";
     html += "<table style='background-color:#888888;margin:auto;text-align:center'>";
     html += "<tbody style='background-color:#F8F0E0'>";
@@ -186,8 +191,8 @@ function renderTask() {
             html += "<td>" + title + "</td>";
             html += "<td>" + task + "</td>";
             if (!radio.prop("disabled")) {
-                html += "<td><button role='button' id='accept-" + index + "'>接受任务</button></td>";
-                html += "<td><button role='button' id='finish-" + index + "'>完成任务</button></td>";
+                html += "<td><button role='button' class='palaceButton' id='accept-" + index + "'>接受任务</button></td>";
+                html += "<td><button role='button' class='palaceButton' id='finish-" + index + "'>完成任务</button></td>";
             } else {
                 html += "<td><button role='button' id='accept-" + index + "' disabled>接受任务</button></td>";
                 html += "<td><button role='button' id='finish-" + index + "' disabled>完成任务</button></td>";
@@ -199,7 +204,7 @@ function renderTask() {
 
     html += "<tr>";
     html += "<td colspan='6'>";
-    html += "<button role='button' id='cancel' style='width:100%;background-color:red;color:white;font-weight:bold'>取 消 任 务</button>";
+    html += "<button role='button' class='palaceButton' id='cancel' style='width:100%;background-color:red;color:white;font-weight:bold'>取 消 任 务</button>";
     html += "</td>";
     html += "</tr>";
 
@@ -207,6 +212,38 @@ function renderTask() {
     html += "</table>";
 
     $("#task").html(html);
+
+    bindTaskButton(credential, context);
+}
+
+function bindTaskButton(credential: Credential, context: PageProcessorContext) {
+    $("#cancel").on("click", () => {
+        if (!confirm("请确认要取消当前任务么？")) {
+            return;
+        }
+        PageUtils.scrollIntoView("pageTitle");
+        $(".palaceButton").prop("disabled", true);
+        const bank = new TownBank(credential, context.get("townId"));
+        bank.withdraw(10).then(() => {
+            MessageBoard.publishMessage("请耐心等待计时器冷却...");
+            bank.load().then(account => {
+                $("#roleCash").text(account.cash + " GOLD");
+            });
+            TimeoutUtils.execute(55000, () => {
+                const request = credential.asRequestMap();
+                request.set("mode", "CANCELTASK");
+                NetworkUtils.post("country.cgi", request).then(html => {
+                    MessageBoard.processResponseMessage(html);
+                    bank.deposit().then(() => {
+                        bank.load().then(account => {
+                            $("#roleCash").text(account.cash + " GOLD");
+                        });
+                        $(".palaceButton").prop("disabled", false);
+                    });
+                });
+            });
+        });
+    });
 }
 
 
