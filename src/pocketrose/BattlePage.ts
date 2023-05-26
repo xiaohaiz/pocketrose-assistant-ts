@@ -14,6 +14,7 @@ class BattlePage {
     monsterHealth?: number;         // 怪物剩余生命
     battleResult?: string;          // 战斗结果
     harvestList?: string[];         // 入手列表
+    monsterTask?: boolean;          // 杀怪任务
 
     constructor() {
         this.treasureBattle = false;
