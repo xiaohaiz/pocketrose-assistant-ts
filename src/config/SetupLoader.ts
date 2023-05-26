@@ -288,6 +288,10 @@ class SetupLoader {
     static isQiHanTitleEnabled(): boolean {
         return StorageUtils.getBoolean("_pa_048");
     }
+
+    static isNewPalaceTaskEnabled(): boolean {
+        return StorageUtils.getBoolean("_pa_049");
+    }
 }
 
 export = SetupLoader;

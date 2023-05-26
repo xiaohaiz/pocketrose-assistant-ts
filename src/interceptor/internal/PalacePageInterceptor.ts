@@ -1,3 +1,4 @@
+import SetupLoader from "../../config/SetupLoader";
 import LocationStateMachine from "../../core/LocationStateMachine";
 import PalacePageProcessor from "../../processor/internal/PalacePageProcessor";
 import PageProcessorContext from "../../processor/PageProcessorContext";
@@ -15,6 +16,9 @@ class PalacePageInterceptor implements PageInterceptor {
     }
 
     intercept(): void {
+        if (!SetupLoader.isNewPalaceTaskEnabled()) {
+            return;
+        }
         LocationStateMachine.create()
             .load()
             .whenInTown(townId => {

@@ -110,22 +110,24 @@ class TownDashboardPageProcessor extends PageProcessorCredentialSupport {
             $("input:submit[value='行动']").val("ACTION");
         }
 
-        const monsterTask = new PalaceTaskManager(credential).monsterTaskHtml;
-        if (monsterTask !== "") {
-            $("#t5")
-                .find("> tbody:first")
-                .find("> tr:first")
-                .find("> td:first")
-                .each((i, td) => {
-                    const colspan = $(td).attr("colspan");
-                    $(td).parent()
-                        .after("" +
-                            "<tr>" +
-                            "<td colspan='" + colspan + "' " +
-                            "style='background-color:#F8F0E0;text-align:center;font-weight:bold'>" + monsterTask + "</td>" +
-                            "</tr>" +
-                            "");
-                });
+        if (SetupLoader.isNewPalaceTaskEnabled()) {
+            const monsterTask = new PalaceTaskManager(credential).monsterTaskHtml;
+            if (monsterTask !== "") {
+                $("#t5")
+                    .find("> tbody:first")
+                    .find("> tr:first")
+                    .find("> td:first")
+                    .each((i, td) => {
+                        const colspan = $(td).attr("colspan");
+                        $(td).parent()
+                            .after("" +
+                                "<tr>" +
+                                "<td colspan='" + colspan + "' " +
+                                "style='background-color:#F8F0E0;text-align:center;font-weight:bold'>" + monsterTask + "</td>" +
+                                "</tr>" +
+                                "");
+                    });
+            }
         }
     }
 

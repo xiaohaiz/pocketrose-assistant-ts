@@ -23,7 +23,7 @@ class BattlePageProcessor extends PageProcessorCredentialSupport {
         // 解析页面的反馈的数据
         const page = parsePage();
 
-        if (page.monsterTask!) {
+        if (SetupLoader.isNewPalaceTaskEnabled() && page.monsterTask!) {
             new PalaceTaskManager(credential).finishMonsterTask();
         }
 
