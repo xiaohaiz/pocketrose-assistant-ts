@@ -138,6 +138,7 @@ function renderTask(credential: Credential, roleTask: string) {
     html += "<td>";
     html += NpcLoader.getTaskNpcImageHtml("瓦格纳");
     html += "</td>";
+    html += "<td style='width:100%'></td>";
     html += "</tr>";
     html += "</tbody>";
     html += "</table>";
@@ -162,6 +163,7 @@ function renderTask(credential: Credential, roleTask: string) {
     html += "<td>";
     html += NpcLoader.getTaskNpcImageHtml("庞统");
     html += "</td>";
+    html += "<td style='width:100%'></td>";
     html += "</tr>";
     html += "</tbody>";
     html += "</table>";
@@ -183,6 +185,7 @@ function renderTask(credential: Credential, roleTask: string) {
     html += "<td>";
     html += NpcLoader.getTaskNpcImageHtml("吕布");
     html += "</td>";
+    html += "<td style='width:100%'></td>";
     html += "</tr>";
     html += "</tbody>";
     html += "</table>";
@@ -204,6 +207,7 @@ function renderTask(credential: Credential, roleTask: string) {
     html += "<td>";
     html += NpcLoader.getTaskNpcImageHtml("东方不败");
     html += "</td>";
+    html += "<td style='width:100%'></td>";
     html += "</tr>";
     html += "</tbody>";
     html += "</table>";
@@ -225,6 +229,7 @@ function renderTask(credential: Credential, roleTask: string) {
     html += "<td>";
     html += NpcLoader.getTaskNpcImageHtml("司马懿");
     html += "</td>";
+    html += "<td style='width:100%'></td>";
     html += "</tr>";
     html += "</tbody>";
     html += "</table>";
@@ -288,6 +293,7 @@ function renderTask(credential: Credential, roleTask: string) {
     html += "<td>";
     html += NpcLoader.getTaskNpcImageHtml("徐晃");
     html += "</td>";
+    html += "<td style='width:100%'></td>";
     html += "</tr>";
     html += "</tbody>";
     html += "</table>";
@@ -309,6 +315,7 @@ function renderTask(credential: Credential, roleTask: string) {
     html += "<td>";
     html += NpcLoader.getTaskNpcImageHtml("诸葛亮");
     html += "</td>";
+    html += "<td style='width:100%'></td>";
     html += "</tr>";
     html += "</tbody>";
     html += "</table>";
@@ -378,6 +385,7 @@ function renderTask(credential: Credential, roleTask: string) {
     html += "<td>";
     html += NpcLoader.getTaskNpcImageHtml("祝融");
     html += "</td>";
+    html += "<td style='width:100%'></td>";
     html += "</tr>";
     html += "</tbody>";
     html += "</table>";
@@ -431,6 +439,7 @@ function renderTask(credential: Credential, roleTask: string) {
     html += "<td>";
     html += NpcLoader.getTaskNpcImageHtml("马超");
     html += "</td>";
+    html += "<td style='width:100%'></td>";
     html += "</tr>";
     html += "</tbody>";
     html += "</table>";

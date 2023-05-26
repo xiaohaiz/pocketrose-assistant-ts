@@ -1,8 +1,9 @@
+// noinspection NodeCoreCodingAssistance
 const path = require('path');
 const webpack = require('webpack');
 
 const now = new Date();
-const buildVersion = '3.4.12'
+const buildVersion = '3.4.13-SNAPSHOT'
 const buildDate = `${now.toLocaleString()}`;
 
 // noinspection JSUnresolvedReference
