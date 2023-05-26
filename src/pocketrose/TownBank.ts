@@ -1,10 +1,10 @@
 import BankAccount from "../common/BankAccount";
 import Role from "../common/Role";
 import TownLoader from "../core/TownLoader";
-import BankUtils from "../util/BankUtils";
 import Credential from "../util/Credential";
 import MessageBoard from "../util/MessageBoard";
 import NetworkUtils from "../util/NetworkUtils";
+import PocketUtils from "../util/PocketUtils";
 import StringUtils from "../util/StringUtils";
 import TownBankPage from "./TownBankPage";
 
@@ -63,7 +63,7 @@ class TownBank {
     async withdraw(amount: number): Promise<void> {
         const action = () => {
             return new Promise<void>((resolve, reject) => {
-                if (!BankUtils.checkAmountAvailability(amount)) {
+                if (!PocketUtils.checkAmount(amount)) {
                     MessageBoard.publishWarning("无效的金额，必须是零或者正整数！");
                     reject();
                 } else {
@@ -101,7 +101,7 @@ class TownBank {
                         resolve();
                     });
                 } else {
-                    if (!BankUtils.checkAmountAvailability(amount)) {
+                    if (!PocketUtils.checkAmount(amount)) {
                         MessageBoard.publishWarning("无效的金额，必须是零或者正整数！");
                         reject();
                     } else {

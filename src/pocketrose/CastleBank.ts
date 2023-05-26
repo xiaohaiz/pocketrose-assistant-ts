@@ -1,9 +1,9 @@
 import BankAccount from "../common/BankAccount";
 import Role from "../common/Role";
-import BankUtils from "../util/BankUtils";
 import Credential from "../util/Credential";
 import MessageBoard from "../util/MessageBoard";
 import NetworkUtils from "../util/NetworkUtils";
+import PocketUtils from "../util/PocketUtils";
 import StringUtils from "../util/StringUtils";
 import CastleBankPage from "./CastleBankPage";
 
@@ -60,7 +60,7 @@ class CastleBank {
                         });
                 } else {
                     // deposit specified amount
-                    if (!BankUtils.checkAmountAvailability(amount)) {
+                    if (!PocketUtils.checkAmount(amount)) {
                         MessageBoard.publishWarning("非法的金额" + amount + "！");
                         reject();
                     } else if (amount === 0) {
