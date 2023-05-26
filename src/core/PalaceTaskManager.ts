@@ -69,9 +69,9 @@ class PalaceTaskManager {
         const a = ss[0];
         const b = ss[1];
 
-        const s1 = Pokemon.pokemonWikiReplacement(a);
-        const s2 = PetLocationLoader.getPetLocation(a);
-        const s3 = b === "1" ? "已完成" : "进行中";
+        const s1: string = Pokemon.pokemonWikiReplacement(a);
+        const s2: string = PetLocationLoader.getPetLocation(a)!;
+        const s3: string = b === "1" ? "<span style='color:blue'>已完成</span>" : "进行中";
 
         return "杀怪任务：" + s1 + " (" + s2 + ") " + s3;
     }
