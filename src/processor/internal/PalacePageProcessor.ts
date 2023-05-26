@@ -233,6 +233,29 @@ function bindTaskButton(credential: Credential, context: PageProcessorContext) {
                 $("input:radio[value='" + index + "']").prop("checked", true);
                 $("option[value='ACCEPTTASK']").prop("selected", true);
                 $("input:submit[value='OK']").trigger("click");
+            } else {
+                const request = credential.asRequestMap();
+                request.set("governid", "4");
+                request.set("mode", "ACCEPTTASK");
+                NetworkUtils.post("country.cgi", request).then(html => {
+                    MessageBoard.processResponseMessage(html);
+                    if (html.includes("请去战斗场所消灭")) {
+                        const monsterName = $(html)
+                            .find("h2:first")
+                            .find("> font:first")
+                            .text();
+                    } else if (html.includes("您当前的任务是杀掉")) {
+                        // 当前已经接受了任务
+                        const monsterName = $(html)
+                            .find("h3:first")
+                            .next()
+                            .find("> font:first")
+                            .find("> b:first")
+                            .find("> font:first")
+                            .text();
+                    }
+                    $(".palaceButton").prop("disabled", false);
+                });
             }
         });
     });
@@ -252,6 +275,25 @@ function bindTaskButton(credential: Credential, context: PageProcessorContext) {
                 $("input:radio[value='" + index + "']").prop("checked", true);
                 $("option[value='COMPLETETASK']").prop("selected", true);
                 $("input:submit[value='OK']").trigger("click");
+            } else {
+                const request = credential.asRequestMap();
+                request.set("governid", "4");
+                request.set("mode", "COMPLETETASK");
+                NetworkUtils.post("country.cgi", request).then(html => {
+                    MessageBoard.processResponseMessage(html);
+                    if (html.includes("你还没有完成杀掉")) {
+                        const monsterName = $(html)
+                            .find("h3:first")
+                            .next()
+                            .find("> font:first")
+                            .find("> b:first")
+                            .find("> font:first")
+                            .text();
+                    } else {
+                        // 完成了
+                    }
+                    $(".palaceButton").prop("disabled", false);
+                });
             }
         });
     });
