@@ -2,6 +2,7 @@ import _ from "lodash";
 import SetupLoader from "../../config/SetupLoader";
 import EquipmentLocalStorage from "../../core/EquipmentLocalStorage";
 import NpcLoader from "../../core/NpcLoader";
+import PalaceTaskManager from "../../core/PalaceTaskManager";
 import PetLocalStorage from "../../core/PetLocalStorage";
 import BattlePage from "../../pocketrose/BattlePage";
 import CommentBoard from "../../util/CommentBoard";
@@ -21,6 +22,10 @@ class BattlePageProcessor extends PageProcessorCredentialSupport {
 
         // 解析页面的反馈的数据
         const page = parsePage();
+
+        if (SetupLoader.isNewPalaceTaskEnabled() && page.monsterTask!) {
+            new PalaceTaskManager(credential).finishMonsterTask();
+        }
 
         // 开始正式处理战斗页面
         processBattle(credential, page, context);
@@ -384,6 +389,9 @@ function parsePage() {
                 }
             });
         });
+
+
+    page.monsterTask = PageUtils.currentPageHtml().includes("完成杀怪任务");
 
     return page;
 }

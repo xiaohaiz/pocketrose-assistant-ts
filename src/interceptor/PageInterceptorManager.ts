@@ -6,6 +6,7 @@ import LoginDashboardPageInterceptor from "./internal/LoginDashboardPageIntercep
 import MapDashboardPageInterceptor from "./internal/MapDashboardPageInterceptor";
 import MetroDashboardPageInterceptor from "./internal/MetroDashboardPageInterceptor";
 import NationInformationPageInterceptor from "./internal/NationInformationPageInterceptor";
+import PalacePageInterceptor from "./internal/PalacePageInterceptor";
 import PersonalCareerManagementPageInterceptor from "./internal/PersonalCareerManagementPageInterceptor";
 import PersonalEquipmentManagementPageInterceptor from "./internal/PersonalEquipmentManagementPageInterceptor";
 import PersonalFastLoginPageInterceptor from "./internal/PersonalFastLoginPageInterceptor";
@@ -46,6 +47,7 @@ class PageInterceptorManager {
             new MapDashboardPageInterceptor(),
             new MetroDashboardPageInterceptor(),
             new NationInformationPageInterceptor(),
+            new PalacePageInterceptor(),
             new PersonalCareerManagementPageInterceptor(),
             new PersonalEquipmentManagementPageInterceptor(),
             new PersonalFastLoginPageInterceptor(),

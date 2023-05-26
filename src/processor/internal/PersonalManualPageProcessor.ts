@@ -219,7 +219,7 @@ class PersonalManualPageProcessor extends PageProcessorCredentialSupport {
         html += "</td>";
         html += "<td id='m-7' style='background-color:#E8E8B0;width:72px;font-weight:bold'>宠物图鉴</td>";
         html += "<td style='background-color:#E8E8D0;text-align:left'>" +
-            "自动更新账号内图鉴信息，支持图鉴编号快速检索、团队辖内各成员图鉴持有情况查询，找图超级快" +
+            "自动更新账号内图鉴信息，支持图鉴编号快速检索、团队辖内各成员图鉴持有情况查询，找图超级快。" +
             "</td>";
         html += "</tr>";
 
@@ -271,7 +271,7 @@ class PersonalManualPageProcessor extends PageProcessorCredentialSupport {
         html += "</td>";
         html += "<td id='m-11' style='background-color:#E8E8B0;width:72px;font-weight:bold'>装备管理</td>";
         html += "<td style='background-color:#E8E8D0;text-align:left'>" +
-            "男装？女装？重装？套装？随心装？五款自由搭配，周一到周五不带重样儿的" +
+            "男装？女装？重装？套装？随心装？五款自由搭配，周一到周五不带重样儿的。" +
             "</td>";
         html += "</tr>";
 
@@ -299,7 +299,7 @@ class PersonalManualPageProcessor extends PageProcessorCredentialSupport {
         html += "<td style='background-color:#E8E8D0;text-align:left'>" +
             "转职顺序还要看国法？NONONONONO~~请来这里吧，清晰的职业发展规划、醒目的任务提醒，转残肯定是你RP不行啊。对了，战斗时出现" +
             "<span style='background-color:red;color:white'>红底=满级</span>；出现" +
-            "<span style='background-color:yellow'>黄底=该嗑药</span>了，好好定型哟，菜鸟们" +
+            "<span style='background-color:yellow'>黄底=该嗑药</span>了，好好定型哟，菜鸟们。" +
             "</td>";
         html += "</tr>";
 
@@ -326,6 +326,32 @@ class PersonalManualPageProcessor extends PageProcessorCredentialSupport {
         html += "<td id='m-15' style='background-color:#E8E8B0;width:72px;font-weight:bold'>团队面板</td>";
         html += "<td style='background-color:#E8E8D0;text-align:left'>" +
             "你可能不是一个人在战斗，装备、宠物都在谁身上，一目了然。当然穷人的家底一眼即可望穿~~~" +
+            "</td>";
+        html += "</tr>";
+
+        // --------------------------------------------------------------------
+        // 任务指南
+        // --------------------------------------------------------------------
+        html += "<tr>";
+        html += "<td style='background-color:#F8F0E0;width:64px'>";
+        html += NpcLoader.getNpcImageHtml("狐狸");
+        html += "</td>";
+        html += "<td id='m-16' style='background-color:#E8E8B0;width:72px;font-weight:bold'>任务指南</td>";
+        html += "<td style='background-color:#E8E8D0;text-align:left'>" +
+            "作为老菜鸟的一员，我其实也不会做任务，我都是看任务指南怎么说就怎么来的。" +
+            "</td>";
+        html += "</tr>";
+
+        // --------------------------------------------------------------------
+        // 皇宫任务
+        // --------------------------------------------------------------------
+        html += "<tr>";
+        html += "<td style='background-color:#F8F0E0;width:64px'>";
+        html += NpcLoader.getNpcImageHtml("小明");
+        html += "</td>";
+        html += "<td id='m-17' style='background-color:#E8E8B0;width:72px;font-weight:bold'>皇宫任务</td>";
+        html += "<td style='background-color:#E8E8D0;text-align:left'>" +
+            "杀怪！杀怪！杀怪啊！！！" +
             "</td>";
         html += "</tr>";
 
