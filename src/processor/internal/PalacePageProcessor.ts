@@ -221,7 +221,7 @@ function bindTaskButton(credential: Credential, context: PageProcessorContext) {
         PageUtils.scrollIntoView("pageTitle");
         const buttonId = $(event.target).attr("id") as string;
         const index = _.parseInt(_.split(buttonId, "-")[1]);
-        const noWait = confirm("请确认您当前是否已经读秒冷却完成了？");
+        const noWait = confirm("请确认您当前是否已经读秒冷却完成了？如果取消会自动开始读秒。");
         let timeout = 0;
         if (!noWait) {
             MessageBoard.publishMessage("请耐心等待计时器冷却...");
@@ -263,7 +263,7 @@ function bindTaskButton(credential: Credential, context: PageProcessorContext) {
         PageUtils.scrollIntoView("pageTitle");
         const buttonId = $(event.target).attr("id") as string;
         const index = _.parseInt(_.split(buttonId, "-")[1]);
-        const noWait = confirm("请确认您当前是否已经读秒冷却完成了？");
+        const noWait = confirm("请确认您当前是否已经读秒冷却完成了？如果取消会自动开始读秒。");
         let timeout = 0;
         if (!noWait) {
             MessageBoard.publishMessage("请耐心等待计时器冷却...");
