@@ -342,6 +342,19 @@ class PersonalManualPageProcessor extends PageProcessorCredentialSupport {
             "</td>";
         html += "</tr>";
 
+        // --------------------------------------------------------------------
+        // 皇宫任务
+        // --------------------------------------------------------------------
+        html += "<tr>";
+        html += "<td style='background-color:#F8F0E0;width:64px'>";
+        html += NpcLoader.getNpcImageHtml("小明");
+        html += "</td>";
+        html += "<td id='m-17' style='background-color:#E8E8B0;width:72px;font-weight:bold'>皇宫任务</td>";
+        html += "<td style='background-color:#E8E8D0;text-align:left'>" +
+            "杀怪！杀怪！杀怪啊！！！" +
+            "</td>";
+        html += "</tr>";
+
         html += "</tbody>";
         html += "</table>";
         $("#manual").html(html);
