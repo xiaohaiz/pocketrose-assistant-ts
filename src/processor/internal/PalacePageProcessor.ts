@@ -295,6 +295,7 @@ function bindTaskButton(credential: Credential, context: PageProcessorContext) {
                         new PalaceTaskManager(credential).updateMonsterTask(monsterName);
                     } else {
                         // 完成了
+                        new PalaceTaskManager(credential).completeMonsterTask();
                     }
                     $(".palaceButton").prop("disabled", false);
                 });
