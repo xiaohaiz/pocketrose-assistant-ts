@@ -159,13 +159,13 @@ class PersonalManualPageProcessor extends PageProcessorCredentialSupport {
         html += "</tr>";
 
         // --------------------------------------------------------------------
-        // 驿站系统
+        // 地图模式
         // --------------------------------------------------------------------
         html += "<tr>";
         html += "<td style='background-color:#F8F0E0;width:64px'>";
         html += NpcLoader.getNpcImageHtml("夜三");
         html += "</td>";
-        html += "<td id='m-3' style='background-color:#E8E8B0;width:72px;font-weight:bold'>驿站系统</td>";
+        html += "<td id='m-3' style='background-color:#E8E8B0;width:72px;font-weight:bold'>地图模式</td>";
         html += "<td style='background-color:#E8E8D0;text-align:left'>" +
             "给出城即迷路朋友们的导航系统。详细标注各国城市分布；选定目的地后，自动触发最优行进路线，包你旅途愉快心情好。" +
             "</td>";
