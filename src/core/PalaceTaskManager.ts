@@ -1,6 +1,8 @@
 import _ from "lodash";
 import Credential from "../util/Credential";
 import StorageUtils from "../util/StorageUtils";
+import PetLocationLoader from "./PetLocationLoader";
+import Pokemon from "./Pokemon";
 
 class PalaceTaskManager {
 
@@ -55,6 +57,23 @@ class PalaceTaskManager {
             delete json.monster;
             this.#save(json);
         }
+    }
+
+    get monsterTaskHtml(): string {
+        const json = this.#load();
+        const s = json.monster;
+        if (s === undefined) {
+            return "";
+        }
+        const ss = _.split(s, "/");
+        const a = ss[0];
+        const b = ss[1];
+
+        const s1 = Pokemon.pokemonWikiReplacement(a);
+        const s2 = PetLocationLoader.getPetLocation(a);
+        const s3 = b === "1" ? "已完成" : "进行中";
+
+        return "杀怪任务：" + s1 + " (" + s2 + ") " + s3;
     }
 }
 

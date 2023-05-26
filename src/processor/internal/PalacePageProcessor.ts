@@ -102,11 +102,8 @@ class PalacePageProcessor extends PageProcessorCredentialSupport {
                 html += "<tr style='display:none'>";
                 html += "<td id='hidden-3'></td>"
                 html += "</tr>";
-                html += "<tr>";
-                html += "<td id=''></td>"
-                html += "</tr>";
-                html += "<tr>";
-                html += "<td id='hidden-3'></td>"
+                html += "<tr style='display:none'>";
+                html += "<td id='prompt' style='background-color:#D4D4D4;font-weight:bold;text-align:center'></td>"
                 html += "</tr>";
                 html += "<tr>";
                 html += "<td id='task' style='background-color:#F8F0E0;text-align:center'></td>"
@@ -119,6 +116,7 @@ class PalacePageProcessor extends PageProcessorCredentialSupport {
 
         renderMenu(context!);
         renderTask(credential, context!);
+        renderPrompt(credential);
     }
 
     #welcomeMessageHtml() {
@@ -128,7 +126,6 @@ class PalacePageProcessor extends PageProcessorCredentialSupport {
             "少壮几时兮奈老何。" +
             "</b>";
     }
-
 
 }
 
@@ -217,6 +214,15 @@ function renderTask(credential: Credential, context: PageProcessorContext) {
     bindTaskButton(credential, context);
 }
 
+function renderPrompt(credential: Credential) {
+    const html = new PalaceTaskManager(credential).monsterTaskHtml;
+    if (html === "") {
+        $("#prompt").html("").parent().hide();
+    } else {
+        $("#prompt").html(html).parent().show();
+    }
+}
+
 function bindTaskButton(credential: Credential, context: PageProcessorContext) {
     $(".acceptButton").on("click", event => {
         PageUtils.scrollIntoView("pageTitle");
@@ -258,6 +264,7 @@ function bindTaskButton(credential: Credential, context: PageProcessorContext) {
                         new PalaceTaskManager(credential).updateMonsterTask(monsterName);
                     }
                     $(".palaceButton").prop("disabled", false);
+                    renderPrompt(credential);
                 });
             }
         });
@@ -298,6 +305,7 @@ function bindTaskButton(credential: Credential, context: PageProcessorContext) {
                         new PalaceTaskManager(credential).completeMonsterTask();
                     }
                     $(".palaceButton").prop("disabled", false);
+                    renderPrompt(credential);
                 });
             }
         });
@@ -319,11 +327,13 @@ function bindTaskButton(credential: Credential, context: PageProcessorContext) {
                 request.set("mode", "CANCELTASK");
                 NetworkUtils.post("country.cgi", request).then(html => {
                     MessageBoard.processResponseMessage(html);
+                    new PalaceTaskManager(credential).completeMonsterTask();
                     bank.deposit().then(() => {
                         bank.load().then(account => {
                             $("#roleCash").text(account.cash + " GOLD");
                         });
                         $(".palaceButton").prop("disabled", false);
+                        renderPrompt(credential);
                     });
                 });
             });

@@ -2,7 +2,7 @@ import _ from "lodash";
 
 class PetLocationLoader {
 
-    getPetLocation(name: string) {
+    static getPetLocation(name: string) {
         // @ts-ignore
         const value = pokemonStag[name];
         if (value === undefined) {
