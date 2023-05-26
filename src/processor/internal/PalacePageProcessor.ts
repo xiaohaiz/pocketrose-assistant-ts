@@ -46,6 +46,19 @@ class PalacePageProcessor extends PageProcessorCredentialSupport {
                 new PersonalStatus(credential, context?.get("townId")).load().then(role => {
                     $(td).text(role.name!);
                 });
+            })
+            .parent()
+            .next()
+            .find("> td:last")
+            .attr("id", "roleCash")
+            .parent()
+            .each((i, tr) => {
+                let html = "";
+                html += "<tr>";
+                html += "<td style='background-color:#E0D0B0'>计时器</td>";
+                html += "<td style='background-color:#E8E8D0;color:red;text-align:right;font-weight:bold' colspan='3'>-</td>";
+                html += "</tr>";
+                $(tr).after($(html));
             });
 
         $("#pageTitle")
@@ -144,6 +157,7 @@ function renderTask() {
     html += "<th>任务</th>";
     html += "<th>接受</th>";
     html += "<th>完成</th>";
+    html += "<th>花</th>";
     html += "</tr>";
 
     $("#hidden-0")
@@ -158,12 +172,14 @@ function renderTask() {
             const c2 = c1.next();
             const c3 = c2.next();
             const c4 = c3.next();
+            const c5 = c4.next();
 
             const radio = c1.find("> input:radio");
 
             const index = _.parseInt(radio.val() as string);
             const title = c3.text();
             const task = c4.text();
+            const flower = c5.text();
 
             html += "<tr>";
             html += "<td style='width:64px;height:64px'>" + NpcLoader.getTaskNpcImageHtml(title) + "</td>";
@@ -176,12 +192,13 @@ function renderTask() {
                 html += "<td><button role='button' id='accept-" + index + "' disabled>接受任务</button></td>";
                 html += "<td><button role='button' id='finish-" + index + "' disabled>完成任务</button></td>";
             }
+            html += "<td>" + flower + "</td>";
             html += "</tr>";
 
         });
 
     html += "<tr>";
-    html += "<td colspan='5'>";
+    html += "<td colspan='6'>";
     html += "<button role='button' id='cancel' style='width:100%;background-color:red;color:white;font-weight:bold'>取 消 任 务</button>";
     html += "</td>";
     html += "</tr>";
@@ -191,5 +208,6 @@ function renderTask() {
 
     $("#task").html(html);
 }
+
 
 export = PalacePageProcessor;
