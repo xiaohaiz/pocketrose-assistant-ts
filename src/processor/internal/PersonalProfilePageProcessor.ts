@@ -159,13 +159,13 @@ abstract class PersonalProfilePageProcessor extends PageProcessorCredentialSuppo
             html += "<th style='background-color:darkred'>战数</th>";
             html += "</tr>";
             html += "<tr>";
-            html += "<td style='background-color:#E0D0B0'>" + role.race + "</td>";
-            html += "<td style='background-color:#E0D0C0'>" + role.gender + "</td>";
-            html += "<td style='background-color:#E0D0B0'>" + role.country + "</td>";
-            html += "<td style='background-color:#E0D0C0'>" + role.unit + "</td>";
-            html += "<td style='background-color:#E0D0B0'>" + role.attribute + "</td>";
-            html += "<td style='background-color:#E0D0C0'>" + role.career + "</td>";
-            html += "<td style='background-color:#E0D0B0'>" + role.battleCount + "/" + role.battleWinCount + "</td>";
+            html += "<td style='background-color:#E8E8D0'>" + role.race + "</td>";
+            html += "<td style='background-color:#E8E8D0'>" + role.gender + "</td>";
+            html += "<td style='background-color:#E8E8D0'>" + role.country + "</td>";
+            html += "<td style='background-color:#E8E8D0'>" + role.unit + "</td>";
+            html += "<td style='background-color:#E8E8D0'>" + role.attribute + "</td>";
+            html += "<td style='background-color:#E8E8D0'>" + role.career + "</td>";
+            html += "<td style='background-color:#E8E8D0'>" + role.battleCount + "/" + role.battleWinCount + "</td>";
             html += "</tr>";
             html += "</tbody>";
             html += "</table>";
@@ -188,14 +188,14 @@ abstract class PersonalProfilePageProcessor extends PageProcessorCredentialSuppo
             html += "<th style='background-color:darkgreen'>速度</th>";
             html += "</tr>";
             html += "<tr>";
-            html += "<td style='background-color:#E0D0B0'>" + role.level + "</td>";
-            html += "<td style='background-color:#E0D0C0'>" + role.health + "/" + role.maxHealth + "</td>";
-            html += "<td style='background-color:#E0D0B0'>" + role.mana + "/" + role.maxMana + "</td>";
-            html += "<td style='background-color:#E0D0C0'>" + role.attack + "</td>";
-            html += "<td style='background-color:#E0D0B0'>" + role.defense + "</td>";
-            html += "<td style='background-color:#E0D0C0'>" + role.specialAttack + "</td>";
-            html += "<td style='background-color:#E0D0B0'>" + role.specialDefense + "</td>";
-            html += "<td style='background-color:#E0D0C0'>" + role.speed + "</td>";
+            html += "<td style='background-color:#E8E8D0'>" + role.level + "</td>";
+            html += "<td style='background-color:#E8E8D0'>" + role.health + "/" + role.maxHealth + "</td>";
+            html += "<td style='background-color:#E8E8D0'>" + role.mana + "/" + role.maxMana + "</td>";
+            html += "<td style='background-color:#E8E8D0'>" + role.attack + "</td>";
+            html += "<td style='background-color:#E8E8D0'>" + role.defense + "</td>";
+            html += "<td style='background-color:#E8E8D0'>" + role.specialAttack + "</td>";
+            html += "<td style='background-color:#E8E8D0'>" + role.specialDefense + "</td>";
+            html += "<td style='background-color:#E8E8D0'>" + role.speed + "</td>";
             html += "</tr>";
             html += "</tbody>";
             html += "</table>";
@@ -215,12 +215,12 @@ abstract class PersonalProfilePageProcessor extends PageProcessorCredentialSuppo
             html += "<th style='background-color:darkgreen'>存款</th>";
             html += "</tr>";
             html += "<tr>";
-            html += "<td style='background-color:#E0D0B0'>" + role.experience + "</td>";
-            html += "<td style='background-color:#E0D0C0'>" + role.additionalLuck + "</td>";
-            html += "<td style='background-color:#E0D0B0'>" + role.consecrateRP + "</td>";
-            html += "<td style='background-color:#E0D0C0'>" + role.additionalRP + "</td>";
-            html += "<td style='background-color:#E0D0B0'>" + role.cash + " GOLD</td>";
-            html += "<td style='background-color:#E0D0C0' id='roleSaving'></td>";
+            html += "<td style='background-color:#E8E8D0'>" + role.experience + "</td>";
+            html += "<td style='background-color:#E8E8D0'>" + role.additionalLuck + "</td>";
+            html += "<td style='background-color:#E8E8D0'>" + role.consecrateRP + "</td>";
+            html += "<td style='background-color:#E8E8D0'>" + role.additionalRP + "</td>";
+            html += "<td style='background-color:#E8E8D0'>" + role.cash + " GOLD</td>";
+            html += "<td style='background-color:#E8E8D0' id='roleSaving'></td>";
             html += "</tr>";
             html += "</tbody>";
             html += "</table>";
@@ -262,8 +262,8 @@ abstract class PersonalProfilePageProcessor extends PageProcessorCredentialSuppo
             for (const spell of spellList) {
                 const using = spell.name === role.spell;
                 html += "<tr>";
-                html += "<td style='background-color:#E0D0B0'>" + (using ? "★" : "") + "</td>";
-                html += "<td style='background-color:#E0D0C0'>";
+                html += "<td style='background-color:#E8E8D0'>" + (using ? "★" : "") + "</td>";
+                html += "<td style='background-color:#E8E8D0'>";
                 if (using) {
                     html += "<button role='button' class='spellButton' id='spell_" + spell.id + "' " +
                         "style='color:blue'>" + spell.name + "</button>";
@@ -272,10 +272,10 @@ abstract class PersonalProfilePageProcessor extends PageProcessorCredentialSuppo
                         "style='color:grey'>" + spell.name + "</button>";
                 }
                 html += "</td>";
-                html += "<td style='background-color:#E0D0B0'>" + spell.power + "</td>";
-                html += "<td style='background-color:#E0D0C0'>" + spell.accuracy + "</td>";
-                html += "<td style='background-color:#E0D0B0'>" + spell.pp + "</td>";
-                html += "<td style='background-color:#E0D0C0'>" + spell.score + "</td>";
+                html += "<td style='background-color:#E8E8D0'>" + spell.power + "</td>";
+                html += "<td style='background-color:#E8E8D0'>" + spell.accuracy + "</td>";
+                html += "<td style='background-color:#E8E8D0'>" + spell.pp + "</td>";
+                html += "<td style='background-color:#E8E8D0'>" + spell.score + "</td>";
                 html += "</tr>";
             }
 
@@ -334,27 +334,27 @@ abstract class PersonalProfilePageProcessor extends PageProcessorCredentialSuppo
                     continue;
                 }
                 html += "<tr>";
-                html += "<td style='background-color:#E0D0B0'>";
+                html += "<td style='background-color:#E8E8D0'>";
                 let title = equipment.using! ? "卸下" : "装备";
                 html += "<button role='button' class='equipmentButton' id='equipment_" + equipment.index + "'>" + title + "</button>";
                 html += "</td>";
-                html += "<td style='background-color:#E0D0C0'>" + equipment.usingHTML + "</td>";
-                html += "<td style='background-color:#E0D0B0'>" + equipment.nameHTML + "</td>";
-                html += "<td style='background-color:#E0D0C0'>" + equipment.category + "</td>";
-                html += "<td style='background-color:#E0D0B0'>" + equipment.power + "</td>";
-                html += "<td style='background-color:#E0D0C0'>" + equipment.weight + "</td>";
-                html += "<td style='background-color:#E0D0B0'>" + equipment.endureHtml + "</td>";
-                html += "<td style='background-color:#E0D0C0'>" + equipment.requiredCareerHtml + "</td>";
-                html += "<td style='background-color:#E0D0B0'>" + equipment.requiredAttackHtml + "</td>";
-                html += "<td style='background-color:#E0D0C0'>" + equipment.requiredDefenseHtml + "</td>";
-                html += "<td style='background-color:#E0D0B0'>" + equipment.requiredSpecialAttackHtml + "</td>";
-                html += "<td style='background-color:#E0D0C0'>" + equipment.requiredSpecialDefenseHtml + "</td>";
-                html += "<td style='background-color:#E0D0B0'>" + equipment.requiredSpeedHtml + "</td>";
-                html += "<td style='background-color:#E0D0C0'>" + equipment.additionalPowerHtml + "</td>";
-                html += "<td style='background-color:#E0D0B0'>" + equipment.additionalWeightHtml + "</td>";
-                html += "<td style='background-color:#E0D0C0'>" + equipment.additionalLuckHtml + "</td>";
-                html += "<td style='background-color:#E0D0B0'>" + equipment.experienceHTML + "</td>";
-                html += "<td style='background-color:#E0D0C0'>" + equipment.attributeHtml + "</td>";
+                html += "<td style='background-color:#E8E8D0'>" + equipment.usingHTML + "</td>";
+                html += "<td style='background-color:#E8E8D0'>" + equipment.nameHTML + "</td>";
+                html += "<td style='background-color:#E8E8D0'>" + equipment.category + "</td>";
+                html += "<td style='background-color:#E8E8D0'>" + equipment.power + "</td>";
+                html += "<td style='background-color:#E8E8D0'>" + equipment.weight + "</td>";
+                html += "<td style='background-color:#E8E8D0'>" + equipment.endureHtml + "</td>";
+                html += "<td style='background-color:#E8E8D0'>" + equipment.requiredCareerHtml + "</td>";
+                html += "<td style='background-color:#E8E8D0'>" + equipment.requiredAttackHtml + "</td>";
+                html += "<td style='background-color:#E8E8D0'>" + equipment.requiredDefenseHtml + "</td>";
+                html += "<td style='background-color:#E8E8D0'>" + equipment.requiredSpecialAttackHtml + "</td>";
+                html += "<td style='background-color:#E8E8D0'>" + equipment.requiredSpecialDefenseHtml + "</td>";
+                html += "<td style='background-color:#E8E8D0'>" + equipment.requiredSpeedHtml + "</td>";
+                html += "<td style='background-color:#E8E8D0'>" + equipment.additionalPowerHtml + "</td>";
+                html += "<td style='background-color:#E8E8D0'>" + equipment.additionalWeightHtml + "</td>";
+                html += "<td style='background-color:#E8E8D0'>" + equipment.additionalLuckHtml + "</td>";
+                html += "<td style='background-color:#E8E8D0'>" + equipment.experienceHTML + "</td>";
+                html += "<td style='background-color:#E8E8D0'>" + equipment.attributeHtml + "</td>";
                 html += "</tr>";
             }
 
@@ -410,31 +410,31 @@ abstract class PersonalProfilePageProcessor extends PageProcessorCredentialSuppo
 
             for (const pet of petList) {
                 html += "<tr>";
-                html += "<td style='background-color:#E0D0B0;width:64px;height:64px' rowspan='2'>";
+                html += "<td style='background-color:#E8E8D0;width:64px;height:64px' rowspan='2'>";
                 html += pet.imageHtml;
                 html += "</td>";
-                html += "<td style='background-color:#E0D0C0' rowspan='2'>" + pet.usingHtml + "</td>";
-                html += "<td style='background-color:#E0D0B0'>" + pet.nameHtml + "</td>";
-                html += "<td style='background-color:#E0D0C0'>" + pet.gender + "</td>";
-                html += "<td style='background-color:#E0D0B0'>" + pet.levelHtml + "</td>";
-                html += "<td style='background-color:#E0D0C0'>" + pet.healthHtml + "</td>";
-                html += "<td style='background-color:#E0D0B0'>" + pet.attackHtml + "</td>";
-                html += "<td style='background-color:#E0D0C0'>" + pet.defenseHtml + "</td>";
-                html += "<td style='background-color:#E0D0B0'>" + pet.specialAttackHtml + "</td>";
-                html += "<td style='background-color:#E0D0C0'>" + pet.specialDefenseHtml + "</td>";
-                html += "<td style='background-color:#E0D0B0'>" + pet.speedHtml + "</td>";
-                html += "<td style='background-color:#E0D0C0'>" + pet.spell1 + "</td>";
-                html += "<td style='background-color:#E0D0B0'>" + pet.spell2 + "</td>";
+                html += "<td style='background-color:#E8E8D0' rowspan='2'>" + pet.usingHtml + "</td>";
+                html += "<td style='background-color:#E8E8D0'>" + pet.nameHtml + "</td>";
+                html += "<td style='background-color:#E8E8D0'>" + pet.gender + "</td>";
+                html += "<td style='background-color:#E8E8D0'>" + pet.levelHtml + "</td>";
+                html += "<td style='background-color:#E8E8D0'>" + pet.healthHtml + "</td>";
+                html += "<td style='background-color:#E8E8D0'>" + pet.attackHtml + "</td>";
+                html += "<td style='background-color:#E8E8D0'>" + pet.defenseHtml + "</td>";
+                html += "<td style='background-color:#E8E8D0'>" + pet.specialAttackHtml + "</td>";
+                html += "<td style='background-color:#E8E8D0'>" + pet.specialDefenseHtml + "</td>";
+                html += "<td style='background-color:#E8E8D0'>" + pet.speedHtml + "</td>";
+                html += "<td style='background-color:#E8E8D0'>" + pet.spell1 + "</td>";
+                html += "<td style='background-color:#E8E8D0'>" + pet.spell2 + "</td>";
                 html += "<td style='background-color:#E0D0C0'>" + pet.spell3 + "</td>";
-                html += "<td style='background-color:#E0D0B0'>" + pet.spell4 + "</td>";
-                html += "<td style='background-color:#E0D0C0'>" + pet.love + "</td>";
-                html += "<td style='background-color:#E0D0B0'>" + pet.raceHtml + "</td>";
-                html += "<td style='background-color:#E0D0C0'>" + pet.attribute1 + "</td>";
-                html += "<td style='background-color:#E0D0B0'>" + pet.attribute2 + "</td>";
+                html += "<td style='background-color:#E8E8D0'>" + pet.spell4 + "</td>";
+                html += "<td style='background-color:#E8E8D0'>" + pet.love + "</td>";
+                html += "<td style='background-color:#E8E8D0'>" + pet.raceHtml + "</td>";
+                html += "<td style='background-color:#E8E8D0'>" + pet.attribute1 + "</td>";
+                html += "<td style='background-color:#E8E8D0'>" + pet.attribute2 + "</td>";
                 html += "</tr>";
 
                 html += "<tr>";
-                html += "<td style='background-color:#E0D0B0;text-align:left' colspan='17'>";
+                html += "<td style='background-color:#E8E8D0;text-align:left' colspan='17'>";
                 const title = pet.using! ? "卸下" : "使用";
                 html += "<button role='button' id='pet_" + pet.index + "' class='petButton'>" + title + "</button>";
                 html += "</td>";
@@ -492,23 +492,23 @@ abstract class PersonalProfilePageProcessor extends PageProcessorCredentialSuppo
 
             for (const mirror of mirrorList) {
                 html += "<tr>";
-                html += "<td style='background-color:#E0D0B0'>";
+                html += "<td style='background-color:#E8E8D0'>";
                 html += "<button role='button' class='mirrorButton' id='mirror_" + mirror.index + "'>" + mirror.category + "</button>";
                 html += "</td>";
-                html += "<td style='background-color:#E0D0C0;width:64px;height:64px'>" + mirror.imageHtml + "</td>";
-                html += "<td style='background-color:#E0D0B0'>" + mirror.name + "</td>";
-                html += "<td style='background-color:#E0D0C0'>" + mirror.gender + "</td>";
-                html += "<td style='background-color:#E0D0B0'>" + mirror.healthHtml + "</td>";
-                html += "<td style='background-color:#E0D0C0'>" + mirror.manaHtml + "</td>";
-                html += "<td style='background-color:#E0D0B0'>" + mirror.attribute + "</td>";
-                html += "<td style='background-color:#E0D0C0'>" + mirror.attack + "</td>";
-                html += "<td style='background-color:#E0D0B0'>" + mirror.defense + "</td>";
-                html += "<td style='background-color:#E0D0C0'>" + mirror.specialAttack + "</td>";
-                html += "<td style='background-color:#E0D0B0'>" + mirror.specialDefense + "</td>";
-                html += "<td style='background-color:#E0D0C0'>" + mirror.speed + "</td>";
-                html += "<td style='background-color:#E0D0B0'>" + mirror.career + "</td>";
-                html += "<td style='background-color:#E0D0C0'>" + mirror.spell + "</td>";
-                html += "<td style='background-color:#E0D0B0'>" + mirror.experience + "</td>";
+                html += "<td style='background-color:#E8E8D0;width:64px;height:64px'>" + mirror.imageHtml + "</td>";
+                html += "<td style='background-color:#E8E8D0'>" + mirror.name + "</td>";
+                html += "<td style='background-color:#E8E8D0'>" + mirror.gender + "</td>";
+                html += "<td style='background-color:#E8E8D0'>" + mirror.healthHtml + "</td>";
+                html += "<td style='background-color:#E8E8D0'>" + mirror.manaHtml + "</td>";
+                html += "<td style='background-color:#E8E8D0'>" + mirror.attribute + "</td>";
+                html += "<td style='background-color:#E8E8D0'>" + mirror.attack + "</td>";
+                html += "<td style='background-color:#E8E8D0'>" + mirror.defense + "</td>";
+                html += "<td style='background-color:#E8E8D0'>" + mirror.specialAttack + "</td>";
+                html += "<td style='background-color:#E8E8D0'>" + mirror.specialDefense + "</td>";
+                html += "<td style='background-color:#E8E8D0'>" + mirror.speed + "</td>";
+                html += "<td style='background-color:#E8E8D0'>" + mirror.career + "</td>";
+                html += "<td style='background-color:#E8E8D0'>" + mirror.spell + "</td>";
+                html += "<td style='background-color:#E8E8D0'>" + mirror.experience + "</td>";
                 html += "</tr>";
             }
 
