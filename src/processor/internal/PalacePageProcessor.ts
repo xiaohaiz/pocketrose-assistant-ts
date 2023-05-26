@@ -191,8 +191,8 @@ function renderTask(credential: Credential, context: PageProcessorContext) {
             html += "<td>" + title + "</td>";
             html += "<td>" + task + "</td>";
             if (!radio.prop("disabled")) {
-                html += "<td><button role='button' class='palaceButton' id='accept-" + index + "'>接受任务</button></td>";
-                html += "<td><button role='button' class='palaceButton' id='finish-" + index + "'>完成任务</button></td>";
+                html += "<td><button role='button' class='palaceButton acceptButton' id='accept-" + index + "'>接受任务</button></td>";
+                html += "<td><button role='button' class='palaceButton finishButton' id='finish-" + index + "'>完成任务</button></td>";
             } else {
                 html += "<td><button role='button' id='accept-" + index + "' disabled>接受任务</button></td>";
                 html += "<td><button role='button' id='finish-" + index + "' disabled>完成任务</button></td>";
@@ -217,18 +217,56 @@ function renderTask(credential: Credential, context: PageProcessorContext) {
 }
 
 function bindTaskButton(credential: Credential, context: PageProcessorContext) {
+    $(".acceptButton").on("click", event => {
+        PageUtils.scrollIntoView("pageTitle");
+        const buttonId = $(event.target).attr("id") as string;
+        const index = _.parseInt(_.split(buttonId, "-")[1]);
+        const noWait = confirm("请确认您当前是否已经读秒冷却完成了？");
+        let timeout = 0;
+        if (!noWait) {
+            MessageBoard.publishMessage("请耐心等待计时器冷却...");
+            timeout = 55000;
+        }
+        $(".palaceButton").prop("disabled", true);
+        TimeoutUtils.execute(timeout, () => {
+            if (index !== 4) {
+                $("input:radio[value='" + index + "']").prop("checked", true);
+                $("option[value='ACCEPTTASK']").prop("selected", true);
+                $("input:submit[value='OK']").trigger("click");
+            }
+        });
+    });
+    $(".finishButton").on("click", event => {
+        PageUtils.scrollIntoView("pageTitle");
+        const buttonId = $(event.target).attr("id") as string;
+        const index = _.parseInt(_.split(buttonId, "-")[1]);
+        const noWait = confirm("请确认您当前是否已经读秒冷却完成了？");
+        let timeout = 0;
+        if (!noWait) {
+            MessageBoard.publishMessage("请耐心等待计时器冷却...");
+            timeout = 55000;
+        }
+        $(".palaceButton").prop("disabled", true);
+        TimeoutUtils.execute(timeout, () => {
+            if (index !== 4) {
+                $("input:radio[value='" + index + "']").prop("checked", true);
+                $("option[value='COMPLETETASK']").prop("selected", true);
+                $("input:submit[value='OK']").trigger("click");
+            }
+        });
+    });
     $("#cancel").on("click", () => {
-        if (!confirm("请确认要取消当前任务么？")) {
+        if (!confirm("请确认要取消所有的任务么？")) {
             return;
         }
         PageUtils.scrollIntoView("pageTitle");
         $(".palaceButton").prop("disabled", true);
         const bank = new TownBank(credential, context.get("townId"));
         bank.withdraw(10).then(() => {
-            MessageBoard.publishMessage("请耐心等待计时器冷却...");
             bank.load().then(account => {
                 $("#roleCash").text(account.cash + " GOLD");
             });
+            MessageBoard.publishMessage("请耐心等待计时器冷却...");
             TimeoutUtils.execute(55000, () => {
                 const request = credential.asRequestMap();
                 request.set("mode", "CANCELTASK");
