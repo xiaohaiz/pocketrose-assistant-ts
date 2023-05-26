@@ -79,6 +79,13 @@ class NpcLoader {
 }
 
 const POCKET_TASK_NPC_IMAGES = {
+    "大司徒": Constants.POCKET_DOMAIN + "/image/npc/684.jpg",
+    "大司马": Constants.POCKET_DOMAIN + "/image/npc/018.jpg",
+    "大司空": Constants.POCKET_DOMAIN + "/image/npc/669.jpg",
+    "大司寇": Constants.POCKET_DOMAIN + "/image/npc/395.jpg",
+    "大司农": Constants.POCKET_DOMAIN + "/image/npc/348.jpg",
+
+
     "瓦格纳": Constants.POCKET_DOMAIN + "/image/npc/005.jpg",      // 7,10
     "吕布": Constants.POCKET_DOMAIN + "/image/npc/293.jpg",       // 8,11
     "庞统": Constants.POCKET_DOMAIN + "/image/npc/348.jpg",       // 7,7
