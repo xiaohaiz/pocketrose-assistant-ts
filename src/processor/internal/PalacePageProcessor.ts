@@ -1,5 +1,6 @@
 import _ from "lodash";
 import NpcLoader from "../../core/NpcLoader";
+import PalaceTaskManager from "../../core/PalaceTaskManager";
 import TownLoader from "../../core/TownLoader";
 import PersonalStatus from "../../pocketrose/PersonalStatus";
 import TownBank from "../../pocketrose/TownBank";
@@ -244,6 +245,7 @@ function bindTaskButton(credential: Credential, context: PageProcessorContext) {
                             .find("h2:first")
                             .find("> font:first")
                             .text();
+                        new PalaceTaskManager(credential).createMonsterTask(monsterName);
                     } else if (html.includes("您当前的任务是杀掉")) {
                         // 当前已经接受了任务
                         const monsterName = $(html)
@@ -253,6 +255,7 @@ function bindTaskButton(credential: Credential, context: PageProcessorContext) {
                             .find("> b:first")
                             .find("> font:first")
                             .text();
+                        new PalaceTaskManager(credential).updateMonsterTask(monsterName);
                     }
                     $(".palaceButton").prop("disabled", false);
                 });
@@ -289,6 +292,7 @@ function bindTaskButton(credential: Credential, context: PageProcessorContext) {
                             .find("> b:first")
                             .find("> font:first")
                             .text();
+                        new PalaceTaskManager(credential).updateMonsterTask(monsterName);
                     } else {
                         // 完成了
                     }
