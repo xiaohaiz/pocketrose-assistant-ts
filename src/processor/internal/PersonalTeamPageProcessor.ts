@@ -316,16 +316,14 @@ abstract class PersonalTeamPageProcessor extends PageProcessorCredentialSupport 
     #bindSimulationButton(allPetList: Pet[]) {
         allPetList.forEach(it => {
             const buttonId = "simulate-" + it.index;
-            if (it.level! === 100) {
-                // 宠物已经满级了
+            if (!Pokemon.isInitialPetName(it.name)) {
+                // 宠物已经改名了，不认识了
                 $("#" + buttonId).prop("disabled", true);
             } else {
-                if (!Pokemon.isInitialPetName(it.name)) {
-                    // 宠物已经改名了，不认识了
-                    $("#" + buttonId).prop("disabled", true);
-                } else {
-                    this.#doPetSimulation(it, buttonId);
+                if (it.level! === 100) {
+                    $("#" + buttonId).text("评估");
                 }
+                this.#doPetSimulation(it, buttonId);
             }
         });
     }
@@ -384,97 +382,146 @@ abstract class PersonalTeamPageProcessor extends PageProcessorCredentialSupport 
             html += "<td style='background-color:#E8E8D0;font-weight:bold;color:red'>" + pet.capacity + "</td>";
             html += "</tr>";
 
-            for (let i = 0; i < 10; i++) {
-                let p = _.clone(pet);
+            if (pet.level! < 100) {
+                for (let i = 0; i < 10; i++) {
+                    let p = _.clone(pet);
 
-                const delta = 100 - p.level!;
-                for (let j = 0; j < delta; j++) {
-                    p.level = p.level! + 1;
+                    const delta = 100 - p.level!;
+                    for (let j = 0; j < delta; j++) {
+                        p.level = p.level! + 1;
 
-                    // health
-                    let max = 20 + (profile.healthEffort! * 10);
-                    let add = _.random(0, max);
-                    totalAddHealth += add;
-                    p.maxHealth = p.maxHealth! + add;
-                    // attack
-                    max = profile.attackEffort! + 1;
-                    add = _.random(0, max);
-                    p.attack = p.attack! + add;
-                    totalAddAttack += add;
-                    // defense
-                    max = profile.defenseEffort! + 1;
-                    add = _.random(0, max);
-                    p.defense = p.defense! + add;
-                    totalAddDefense += add;
-                    // special attack
-                    max = profile.specialAttackEffort! + 1;
-                    add = _.random(0, max);
-                    p.specialAttack = p.specialAttack! + add;
-                    totalAddSpecialAttack += add;
-                    // special defense
-                    max = profile.specialDefenseEffort! + 1;
-                    add = _.random(0, max);
-                    p.specialDefense = p.specialDefense! + add;
-                    totalAddSpecialDefense += add;
-                    // speed
-                    max = profile.speedEffort! + 1;
-                    add = _.random(0, max);
-                    p.speed = p.speed! + add;
-                    totalAddSpeed += add;
+                        // health
+                        let max = 20 + (profile.healthEffort! * 10);
+                        let add = _.random(0, max);
+                        totalAddHealth += add;
+                        p.maxHealth = p.maxHealth! + add;
+                        // attack
+                        max = profile.attackEffort! + 1;
+                        add = _.random(0, max);
+                        p.attack = p.attack! + add;
+                        totalAddAttack += add;
+                        // defense
+                        max = profile.defenseEffort! + 1;
+                        add = _.random(0, max);
+                        p.defense = p.defense! + add;
+                        totalAddDefense += add;
+                        // special attack
+                        max = profile.specialAttackEffort! + 1;
+                        add = _.random(0, max);
+                        p.specialAttack = p.specialAttack! + add;
+                        totalAddSpecialAttack += add;
+                        // special defense
+                        max = profile.specialDefenseEffort! + 1;
+                        add = _.random(0, max);
+                        p.specialDefense = p.specialDefense! + add;
+                        totalAddSpecialDefense += add;
+                        // speed
+                        max = profile.speedEffort! + 1;
+                        add = _.random(0, max);
+                        p.speed = p.speed! + add;
+                        totalAddSpeed += add;
+                    }
+
+                    html += "<tr>";
+                    html += "<td style='background-color:#E8E8D0;font-weight:bold'>#" + (i + 1) + "</td>";
+                    html += "<td style='background-color:#E8E8B0;text-align:left'>" + p.nameHtml + "</td>";
+                    html += "<td style='background-color:#E8E8D0'>" + p.gender + "</td>";
+                    html += "<td style='background-color:#E8E8B0'>" + p.levelHtml + "</td>";
+                    html += "<td style='background-color:#E8E8D0'>" + p.maxHealth + "</td>";
+                    html += "<td style='background-color:#E8E8B0'>" + p.attackHtml + "</td>";
+                    html += "<td style='background-color:#E8E8D0'>" + p.defenseHtml + "</td>";
+                    html += "<td style='background-color:#E8E8B0'>" + p.specialAttackHtml + "</td>";
+                    html += "<td style='background-color:#E8E8D0'>" + p.specialDefenseHtml + "</td>";
+                    html += "<td style='background-color:#E8E8B0'>" + p.speedHtml + "</td>";
+                    html += "<td style='background-color:#E8E8D0;font-weight:bold;color:red'>" + p.capacity + "</td>";
+                    html += "</tr>";
+
+                    totalHealth += p.maxHealth!;
+                    totalAttack += p.attack!;
+                    totalDefense += p.defense!;
+                    totalSpecialAttack += p.specialAttack!;
+                    totalSpecialDefense += p.specialDefense!;
+                    totalSpeed += p.speed!;
+                    totalCapacity += p.capacity;
                 }
-
-                html += "<tr>";
-                html += "<td style='background-color:#E8E8D0;font-weight:bold'>#" + (i + 1) + "</td>";
-                html += "<td style='background-color:#E8E8B0;text-align:left'>" + p.nameHtml + "</td>";
-                html += "<td style='background-color:#E8E8D0'>" + p.gender + "</td>";
-                html += "<td style='background-color:#E8E8B0'>" + p.levelHtml + "</td>";
-                html += "<td style='background-color:#E8E8D0'>" + p.maxHealth + "</td>";
-                html += "<td style='background-color:#E8E8B0'>" + p.attackHtml + "</td>";
-                html += "<td style='background-color:#E8E8D0'>" + p.defenseHtml + "</td>";
-                html += "<td style='background-color:#E8E8B0'>" + p.specialAttackHtml + "</td>";
-                html += "<td style='background-color:#E8E8D0'>" + p.specialDefenseHtml + "</td>";
-                html += "<td style='background-color:#E8E8B0'>" + p.speedHtml + "</td>";
-                html += "<td style='background-color:#E8E8D0;font-weight:bold;color:red'>" + p.capacity + "</td>";
-                html += "</tr>";
-
-                totalHealth += p.maxHealth!;
-                totalAttack += p.attack!;
-                totalDefense += p.defense!;
-                totalSpecialAttack += p.specialAttack!;
-                totalSpecialDefense += p.specialDefense!;
-                totalSpeed += p.speed!;
-                totalCapacity += p.capacity;
+            } else {
+                totalHealth = pet.maxHealth! * 10;
+                totalAttack = pet.attack! * 10;
+                totalDefense = pet.defense! * 10;
+                totalSpecialAttack = pet.specialAttack! * 10;
+                totalSpecialDefense = pet.specialDefense! * 10;
+                totalSpeed = pet.speed! * 10;
+                totalCapacity = pet.capacity! * 10;
             }
 
+            const a0 = Math.ceil(totalHealth / 10);
+            const a1 = Math.ceil(totalAttack / 10);
+            const a2 = Math.ceil(totalDefense / 10);
+            const a3 = Math.ceil(totalSpecialAttack / 10);
+            const a4 = Math.ceil(totalSpecialDefense / 10);
+            const a5 = Math.ceil(totalSpeed / 10);
+            const a6 = Math.ceil(totalCapacity / 10);
+
+            if (pet.level! < 100) {
+                html += "<tr>";
+                html += "<td style='background-color:#E8E8D0;font-weight:bold' colspan='4'>平均结果</td>";
+                html += "<td style='background-color:#E8E8D0'>" + a0 + "</td>";
+                html += "<td style='background-color:#E8E8B0'>" + a1 + "</td>";
+                html += "<td style='background-color:#E8E8D0'>" + a2 + "</td>";
+                html += "<td style='background-color:#E8E8B0'>" + a3 + "</td>";
+                html += "<td style='background-color:#E8E8D0'>" + a4 + "</td>";
+                html += "<td style='background-color:#E8E8B0'>" + a5 + "</td>";
+                html += "<td style='background-color:#E8E8D0;font-weight:bold;color:red'>" + a6 + "</td>";
+                html += "</tr>";
+                html += "<tr>";
+                html += "<td style='background-color:#E8E8D0;font-weight:bold' colspan='4'>成长结果</td>";
+                html += "<td style='background-color:#E8E8D0'>" + (Math.ceil(totalHealth / 10) - pet.maxHealth!) + "</td>";
+                html += "<td style='background-color:#E8E8B0'>" + (Math.ceil(totalAttack / 10) - pet.attack!) + "</td>";
+                html += "<td style='background-color:#E8E8D0'>" + (Math.ceil(totalDefense / 10) - pet.defense!) + "</td>";
+                html += "<td style='background-color:#E8E8B0'>" + (Math.ceil(totalSpecialAttack / 10) - pet.specialAttack!) + "</td>";
+                html += "<td style='background-color:#E8E8D0'>" + (Math.ceil(totalSpecialDefense / 10) - pet.specialDefense!) + "</td>";
+                html += "<td style='background-color:#E8E8B0'>" + (Math.ceil(totalSpeed / 10) - pet.speed!) + "</td>";
+                html += "<td style='background-color:#E8E8D0;font-weight:bold;color:red'>" + (Math.ceil(totalCapacity / 10) - pet.capacity) + "</td>";
+                html += "</tr>";
+                html += "<tr>";
+                html += "<td style='background-color:#E8E8D0;font-weight:bold' colspan='4'>平均成长</td>";
+                html += "<td style='background-color:#E8E8D0'>" + (totalAddHealth / (10 * (100 - pet.level!))).toFixed(2) + "</td>";
+                html += "<td style='background-color:#E8E8B0'>" + (totalAddAttack / (10 * (100 - pet.level!))).toFixed(2) + "</td>";
+                html += "<td style='background-color:#E8E8D0'>" + (totalAddDefense / (10 * (100 - pet.level!))).toFixed(2) + "</td>";
+                html += "<td style='background-color:#E8E8B0'>" + (totalAddSpecialAttack / (10 * (100 - pet.level!))).toFixed(2) + "</td>";
+                html += "<td style='background-color:#E8E8D0'>" + (totalAddSpecialDefense / (10 * (100 - pet.level!))).toFixed(2) + "</td>";
+                html += "<td style='background-color:#E8E8B0'>" + (totalAddSpeed / (10 * (100 - pet.level!))).toFixed(2) + "</td>";
+                html += "<td style='background-color:#E8E8D0;font-weight:bold;color:red'></td>";
+                html += "</tr>";
+            }
             html += "<tr>";
-            html += "<td style='background-color:#E8E8D0;font-weight:bold' colspan='4'>平均结果</td>";
-            html += "<td style='background-color:#E8E8D0'>" + Math.ceil(totalHealth / 10) + "</td>";
-            html += "<td style='background-color:#E8E8B0'>" + Math.ceil(totalAttack / 10) + "</td>";
-            html += "<td style='background-color:#E8E8D0'>" + Math.ceil(totalDefense / 10) + "</td>";
-            html += "<td style='background-color:#E8E8B0'>" + Math.ceil(totalSpecialAttack / 10) + "</td>";
-            html += "<td style='background-color:#E8E8D0'>" + Math.ceil(totalSpecialDefense / 10) + "</td>";
-            html += "<td style='background-color:#E8E8B0'>" + Math.ceil(totalSpeed / 10) + "</td>";
-            html += "<td style='background-color:#E8E8D0;font-weight:bold;color:red'>" + Math.ceil(totalCapacity / 10) + "</td>";
+            html += "<td style='background-color:#E8E8D0;font-weight:bold' colspan='4'>顶级能力</td>";
+            html += "<td style='background-color:#E8E8D0;font-weight:bold;color:blue'>" + (profile.perfectHealth) + "</td>";
+            html += "<td style='background-color:#E8E8B0;font-weight:bold;color:blue'>" + (profile.perfectAttack) + "</td>";
+            html += "<td style='background-color:#E8E8D0;font-weight:bold;color:blue'>" + (profile.perfectDefense) + "</td>";
+            html += "<td style='background-color:#E8E8B0;font-weight:bold;color:blue'>" + (profile.perfectSpecialAttack) + "</td>";
+            html += "<td style='background-color:#E8E8D0;font-weight:bold;color:blue'>" + (profile.perfectSpecialDefense) + "</td>";
+            html += "<td style='background-color:#E8E8B0;font-weight:bold;color:blue'>" + (profile.perfectSpeed) + "</td>";
+            html += "<td style='background-color:#E8E8D0;font-weight:bold;color:red'>" + (profile.perfectCapacity) + "</td>";
             html += "</tr>";
+
+            const d0 = (Math.min(1, a0 / (profile.perfectHealth)) * 100);
+            const d1 = (Math.min(1, a1 / (profile.perfectAttack)) * 100);
+            const d2 = (Math.min(1, a2 / (profile.perfectDefense)) * 100);
+            const d3 = (Math.min(1, a3 / (profile.perfectSpecialAttack)) * 100);
+            const d4 = (Math.min(1, a4 / (profile.perfectSpecialDefense)) * 100);
+            const d5 = (Math.min(1, a5 / (profile.perfectSpeed)) * 100);
+            const d6 = (Math.min(1, a6 / (profile.perfectCapacity)) * 100);
+
             html += "<tr>";
-            html += "<td style='background-color:#E8E8D0;font-weight:bold' colspan='4'>成长结果</td>";
-            html += "<td style='background-color:#E8E8D0'>" + (Math.ceil(totalHealth / 10) - pet.maxHealth!) + "</td>";
-            html += "<td style='background-color:#E8E8B0'>" + (Math.ceil(totalAttack / 10) - pet.attack!) + "</td>";
-            html += "<td style='background-color:#E8E8D0'>" + (Math.ceil(totalDefense / 10) - pet.defense!) + "</td>";
-            html += "<td style='background-color:#E8E8B0'>" + (Math.ceil(totalSpecialAttack / 10) - pet.specialAttack!) + "</td>";
-            html += "<td style='background-color:#E8E8D0'>" + (Math.ceil(totalSpecialDefense / 10) - pet.specialDefense!) + "</td>";
-            html += "<td style='background-color:#E8E8B0'>" + (Math.ceil(totalSpeed / 10) - pet.speed!) + "</td>";
-            html += "<td style='background-color:#E8E8D0;font-weight:bold;color:red'>" + (Math.ceil(totalCapacity / 10) - pet.capacity) + "</td>";
-            html += "</tr>";
-            html += "<tr>";
-            html += "<td style='background-color:#E8E8D0;font-weight:bold' colspan='4'>平均成长</td>";
-            html += "<td style='background-color:#E8E8D0'>" + (totalAddHealth / (10 * (100 - pet.level!))).toFixed(2) + "</td>";
-            html += "<td style='background-color:#E8E8B0'>" + (totalAddAttack / (10 * (100 - pet.level!))).toFixed(2) + "</td>";
-            html += "<td style='background-color:#E8E8D0'>" + (totalAddDefense / (10 * (100 - pet.level!))).toFixed(2) + "</td>";
-            html += "<td style='background-color:#E8E8B0'>" + (totalAddSpecialAttack / (10 * (100 - pet.level!))).toFixed(2) + "</td>";
-            html += "<td style='background-color:#E8E8D0'>" + (totalAddSpecialDefense / (10 * (100 - pet.level!))).toFixed(2) + "</td>";
-            html += "<td style='background-color:#E8E8B0'>" + (totalAddSpeed / (10 * (100 - pet.level!))).toFixed(2) + "</td>";
-            html += "<td style='background-color:#E8E8D0;font-weight:bold;color:red'></td>";
+            html += "<td style='background-color:#E8E8D0;font-weight:bold' colspan='4'>能力差距</td>";
+            html += "<td style='background-color:#E8E8D0'>" + PageUtils.generateProgressBarHTML(d0 / 100) + d0.toFixed(2) + "%</td>";
+            html += "<td style='background-color:#E8E8B0'>" + PageUtils.generateProgressBarHTML(d1 / 100) + d1.toFixed(2) + "%</td>";
+            html += "<td style='background-color:#E8E8D0'>" + PageUtils.generateProgressBarHTML(d2 / 100) + d2.toFixed(2) + "%</td>";
+            html += "<td style='background-color:#E8E8B0'>" + PageUtils.generateProgressBarHTML(d3 / 100) + d3.toFixed(2) + "%</td>";
+            html += "<td style='background-color:#E8E8D0'>" + PageUtils.generateProgressBarHTML(d4 / 100) + d4.toFixed(2) + "%</td>";
+            html += "<td style='background-color:#E8E8B0'>" + PageUtils.generateProgressBarHTML(d5 / 100) + d5.toFixed(2) + "%</td>";
+            html += "<td style='background-color:#E8E8D0;font-weight:bold;color:red'>" + PageUtils.generateProgressBarHTML(d6 / 100) + d6.toFixed(2) + "%</td>";
             html += "</tr>";
 
             html += "</tbody>";

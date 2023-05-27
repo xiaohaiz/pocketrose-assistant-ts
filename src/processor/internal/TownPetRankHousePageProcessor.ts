@@ -133,6 +133,7 @@ function doProcess(credential: Credential) {
     html += "<td style='background-color:#F8F0E0;text-align:center'>";
     html += "<input type='text' id='spellName' value='' size='20'>";
     html += "<input type='button' id='searchSpellButton' value='根据技能查询宠物'>";
+    html += "<input type='button' id='petDetailButton' value='查询宠物详情'>";
     html += "</td>";
     html += "</tr>";
     html += "<tr style='display:none'>";
@@ -144,6 +145,7 @@ function doProcess(credential: Credential) {
     doBindReturnButton();
     doBindRankButton();
     doBindSearchButton();
+    doBindPetDetailButton();
 }
 
 function doGenerateHiddenForm(credential: Credential) {
@@ -261,6 +263,96 @@ function doBindSearchButton() {
         petList.sort((a, b) => a.code!.localeCompare(b.code!));
         doRender("技 能 （" + spellName + "）", petList, true);
     });
+}
+
+function doBindPetDetailButton() {
+    $("#petDetailButton").on("click", () => {
+        const t = $("#spellName").val();
+        if (t === undefined) {
+            return;
+        }
+        const petCode = (t as string).trim();
+        if (petCode === "") {
+            return;
+        }
+        const profile = PetProfileLoader.load(petCode);
+        if (profile === null) {
+            return;
+        }
+        doRenderPetDetail(profile);
+    });
+}
+
+function doRenderPetDetail(pet: PetProfile) {
+    let html = "";
+    html += "<table style='border-width:0;background-color:#888888;margin:auto;width:100%'>";
+    html += "<tbody style='background-color:#F8F0E0;text-align:center'>";
+    html += "<tr>";
+    html += "<td style='background-color:darkred;color:wheat;font-weight:bold' colspan='20'>";
+    html += "＜ " + pet.nameHtml + " ＞";
+    html += "</td>";
+    html += "<tr>";
+    html += "<th style='background-color:#E8E8D0'>形象</th>";
+    html += "<th style='background-color:#EFE0C0'>名字</th>";
+    html += "<th style='background-color:#E0D0B0'>总族值</th>";
+    html += "<th style='background-color:#EFE0C0'>生命族值</th>";
+    html += "<th style='background-color:#E0D0B0'>攻击族值</th>";
+    html += "<th style='background-color:#E0D0B0'>防御族值</th>";
+    html += "<th style='background-color:#EFE0C0'>智力族值</th>";
+    html += "<th style='background-color:#EFE0C0'>精神族值</th>";
+    html += "<th style='background-color:#E0D0B0'>速度族值</th>";
+    html += "<th style='background-color:#E0D0B0'>总努力</th>";
+    html += "<th style='background-color:#EFE0C0'>生命努力</th>";
+    html += "<th style='background-color:#E0D0B0'>攻击努力</th>";
+    html += "<th style='background-color:#E0D0B0'>防御努力</th>";
+    html += "<th style='background-color:#EFE0C0'>智力努力</th>";
+    html += "<th style='background-color:#EFE0C0'>精神努力</th>";
+    html += "<th style='background-color:#E0D0B0'>速度努力</th>";
+    html += "<th style='background-color:#EFE0C0'>捕获率</th>";
+    html += "<th style='background-color:#EFE0C0'>成长经验</th>";
+    html += "<th style='background-color:#E8E8D0'>最大能力</th>";
+    html += "</tr>";
+
+    html += "<tr>";
+    html += "<td style='background-color:#E8E8D0' rowspan='3'>";
+    html += pet.imageHtml;
+    html += "</td>";
+    html += "<td style='background-color:#EFE0C0' rowspan='2'>" + pet.nameHtml + "</td>";
+    html += "<td style='background-color:#E0D0B0;font-weight:bold;color:blue'  rowspan='2'>" + pet.totalBaseStats + "</td>";
+    html += "<td style='background-color:#EFE0C0'>" + pet.healthBaseStats + "</td>";
+    html += "<td style='background-color:#E0D0B0'>" + pet.attackBaseStats + "</td>";
+    html += "<td style='background-color:#E0D0B0'>" + pet.defenseBaseStats + "</td>";
+    html += "<td style='background-color:#EFE0C0'>" + pet.specialAttackBaseStats + "</td>";
+    html += "<td style='background-color:#EFE0C0'>" + pet.specialDefenseBaseStats + "</td>";
+    html += "<td style='background-color:#E0D0B0'>" + pet.speedBaseStats + "</td>";
+    html += "<td style='background-color:#E0D0B0;font-weight:bold;color:green' rowspan='2'>" + pet.totalEffort + "</td>";
+    html += "<td style='background-color:#EFE0C0' rowspan='2'>" + pet.healthEffort + "</td>";
+    html += "<td style='background-color:#E0D0B0' rowspan='2'>" + pet.attackEffort + "</td>";
+    html += "<td style='background-color:#E0D0B0' rowspan='2'>" + pet.defenseEffort + "</td>";
+    html += "<td style='background-color:#EFE0C0' rowspan='2'>" + pet.specialAttackEffort + "</td>";
+    html += "<td style='background-color:#EFE0C0' rowspan='2'>" + pet.specialDefenseEffort + "</td>";
+    html += "<td style='background-color:#E0D0B0' rowspan='2'>" + pet.speedEffort + "</td>";
+    html += "<td style='background-color:#EFE0C0' rowspan='2'>" + pet.catchRatio + "</td>";
+    html += "<td style='background-color:#EFE0C0' rowspan='2'>" + pet.growExperience + "</td>";
+    html += "<td style='background-color:#E8E8D0' rowspan='2'>" + pet.perfectCapacity + "</td>";
+    html += "</tr>";
+    html += "<tr>";
+    html += "<td style='background-color:#EFE0C0'>" + pet.perfectHealth + "</td>";
+    html += "<td style='background-color:#E0D0B0'>" + pet.perfectAttack + "</td>";
+    html += "<td style='background-color:#E0D0B0'>" + pet.perfectDefense + "</td>";
+    html += "<td style='background-color:#EFE0C0'>" + pet.perfectSpecialAttack + "</td>";
+    html += "<td style='background-color:#EFE0C0'>" + pet.perfectSpecialDefense + "</td>";
+    html += "<td style='background-color:#E0D0B0'>" + pet.perfectSpeed + "</td>";
+    html += "</tr>";
+    html += "<tr>";
+    html += "<td style='background-color:#EFE0C0;text-align:left' colspan='18'>";
+    html += pet.spellText();
+    html += "</td>";
+    html += "</tr>";
+
+    html += "</tbody>";
+    html += "</table>";
+    $("#pet_rank_cell").html(html).parent().show();
 }
 
 function doRender(title: string, petList: PetProfile[], allPet?: boolean) {
