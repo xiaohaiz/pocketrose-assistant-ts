@@ -2,11 +2,12 @@ import BattlePageInterceptor from "./internal/BattlePageInterceptor";
 import CastleBankPageInterceptor from "./internal/CastleBankPageInterceptor";
 import CastleDashboardPageInterceptor from "./internal/CastleDashboardPageInterceptor";
 import CastlePostHousePageInterceptor from "./internal/CastlePostHousePageInterceptor";
+import CountryPalacePageInterceptor from "./internal/CountryPalacePageInterceptor";
+import CountryTownStrengthenPageInterceptor from "./internal/CountryTownStrengthenPageInterceptor";
 import LoginDashboardPageInterceptor from "./internal/LoginDashboardPageInterceptor";
 import MapDashboardPageInterceptor from "./internal/MapDashboardPageInterceptor";
 import MetroDashboardPageInterceptor from "./internal/MetroDashboardPageInterceptor";
 import NationInformationPageInterceptor from "./internal/NationInformationPageInterceptor";
-import PalacePageInterceptor from "./internal/PalacePageInterceptor";
 import PersonalCareerManagementPageInterceptor from "./internal/PersonalCareerManagementPageInterceptor";
 import PersonalEquipmentManagementPageInterceptor from "./internal/PersonalEquipmentManagementPageInterceptor";
 import PersonalFastLoginPageInterceptor from "./internal/PersonalFastLoginPageInterceptor";
@@ -43,11 +44,12 @@ class PageInterceptorManager {
             new CastleBankPageInterceptor(),
             new CastleDashboardPageInterceptor(),
             new CastlePostHousePageInterceptor(),
+            new CountryPalacePageInterceptor(),
+            new CountryTownStrengthenPageInterceptor(),
             new LoginDashboardPageInterceptor(),
             new MapDashboardPageInterceptor(),
             new MetroDashboardPageInterceptor(),
             new NationInformationPageInterceptor(),
-            new PalacePageInterceptor(),
             new PersonalCareerManagementPageInterceptor(),
             new PersonalEquipmentManagementPageInterceptor(),
             new PersonalFastLoginPageInterceptor(),

@@ -2,6 +2,7 @@ import SetupLoader from "../../config/SetupLoader";
 import FastLoginLoader from "../../core/FastLoginLoader";
 import ButtonUtils from "../../util/ButtonUtils";
 import PageUtils from "../../util/PageUtils";
+import StorageUtils from "../../util/StorageUtils";
 import PageProcessor from "../PageProcessor";
 
 class LoginDashboardPageProcessor implements PageProcessor {
@@ -219,14 +220,22 @@ function doRender(configs: Map<number, {}>) {
 function doGenerateCell(configs: Map<number, {}>, code: number, handler?: () => void) {
     let count = 0;
     let html = "";
+    const lastLogin = StorageUtils.getString("_ll_");
     html += "<td style='background-color:#E8E8D0;width:20%;height:32px'>";
     let config = configs.get(code);
     if (config !== undefined) {
         count++;
         // @ts-ignore
         const name = config.name;
-        html += "<input type='button' class='fastLoginButton button-28' " +
-            "id='fastLogin_" + code + "' value='" + name + "'>";
+        // @ts-ignore
+        if (lastLogin === config.id) {
+            html += "<input type='button' class='fastLoginButton button-28' " +
+                "id='fastLogin_" + code + "' value='" + name + "' " +
+                "style='color:red'>";
+        } else {
+            html += "<input type='button' class='fastLoginButton button-28' " +
+                "id='fastLogin_" + code + "' value='" + name + "'>";
+        }
     }
     html += "</td>";
     if (count > 0 && handler !== undefined) {
@@ -247,6 +256,11 @@ function doBindFastLoginButton() {
             if (!doCheckConfigAvailability(config)) {
                 return;
             }
+
+            // 记录最后一次使用快速登陆的id
+            // @ts-ignore
+            StorageUtils.set("_ll_", config.id);
+
             // @ts-ignore
             $("#loginId").val(config.id);
             // @ts-ignore
