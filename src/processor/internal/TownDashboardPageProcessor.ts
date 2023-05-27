@@ -289,12 +289,16 @@ function doProcess(credential: Credential, page: TownDashboardPage) {
 
 
         $("#shortcut0").on("click", () => {
-            $("option[value='COU_MAKE']")
-                .prop("selected", true)
-                .closest("td")
-                .next()
-                .find("input:submit:first")
-                .trigger("click");
+            const extensionId = SetupLoader.getTownDashboardExtensionShortcutButton();
+            if (extensionId > 0) {
+                const es = ExtensionShortcutLoader.getExtensionShortcut(extensionId)!;
+                $("option[value='" + es[1] + "']")
+                    .prop("selected", true)
+                    .closest("td")
+                    .next()
+                    .find("input:submit:first")
+                    .trigger("click");
+            }
         });
         $("#shortcut1").on("click", () => {
             $("option[value='PETMAP']")
