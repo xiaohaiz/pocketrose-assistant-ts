@@ -446,15 +446,23 @@ abstract class PersonalTeamPageProcessor extends PageProcessorCredentialSupport 
                 totalCapacity += p.capacity;
             }
 
+            const a0 = Math.ceil(totalHealth / 10);
+            const a1 = Math.ceil(totalAttack / 10);
+            const a2 = Math.ceil(totalDefense / 10);
+            const a3 = Math.ceil(totalSpecialAttack / 10);
+            const a4 = Math.ceil(totalSpecialDefense / 10);
+            const a5 = Math.ceil(totalSpeed / 10);
+            const a6 = Math.ceil(totalCapacity / 10);
+
             html += "<tr>";
             html += "<td style='background-color:#E8E8D0;font-weight:bold' colspan='4'>平均结果</td>";
-            html += "<td style='background-color:#E8E8D0'>" + Math.ceil(totalHealth / 10) + "</td>";
-            html += "<td style='background-color:#E8E8B0'>" + Math.ceil(totalAttack / 10) + "</td>";
-            html += "<td style='background-color:#E8E8D0'>" + Math.ceil(totalDefense / 10) + "</td>";
-            html += "<td style='background-color:#E8E8B0'>" + Math.ceil(totalSpecialAttack / 10) + "</td>";
-            html += "<td style='background-color:#E8E8D0'>" + Math.ceil(totalSpecialDefense / 10) + "</td>";
-            html += "<td style='background-color:#E8E8B0'>" + Math.ceil(totalSpeed / 10) + "</td>";
-            html += "<td style='background-color:#E8E8D0;font-weight:bold;color:red'>" + Math.ceil(totalCapacity / 10) + "</td>";
+            html += "<td style='background-color:#E8E8D0'>" + a0 + "</td>";
+            html += "<td style='background-color:#E8E8B0'>" + a1 + "</td>";
+            html += "<td style='background-color:#E8E8D0'>" + a2 + "</td>";
+            html += "<td style='background-color:#E8E8B0'>" + a3 + "</td>";
+            html += "<td style='background-color:#E8E8D0'>" + a4 + "</td>";
+            html += "<td style='background-color:#E8E8B0'>" + a5 + "</td>";
+            html += "<td style='background-color:#E8E8D0;font-weight:bold;color:red'>" + a6 + "</td>";
             html += "</tr>";
             html += "<tr>";
             html += "<td style='background-color:#E8E8D0;font-weight:bold' colspan='4'>成长结果</td>";
@@ -475,6 +483,35 @@ abstract class PersonalTeamPageProcessor extends PageProcessorCredentialSupport 
             html += "<td style='background-color:#E8E8D0'>" + (totalAddSpecialDefense / (10 * (100 - pet.level!))).toFixed(2) + "</td>";
             html += "<td style='background-color:#E8E8B0'>" + (totalAddSpeed / (10 * (100 - pet.level!))).toFixed(2) + "</td>";
             html += "<td style='background-color:#E8E8D0;font-weight:bold;color:red'></td>";
+            html += "</tr>";
+            html += "<tr>";
+            html += "<td style='background-color:#E8E8D0;font-weight:bold' colspan='4'>顶级能力</td>";
+            html += "<td style='background-color:#E8E8D0;font-weight:bold;color:blue'>" + (profile.perfectHealth) + "</td>";
+            html += "<td style='background-color:#E8E8B0;font-weight:bold;color:blue'>" + (profile.perfectAttack) + "</td>";
+            html += "<td style='background-color:#E8E8D0;font-weight:bold;color:blue'>" + (profile.perfectDefense) + "</td>";
+            html += "<td style='background-color:#E8E8B0;font-weight:bold;color:blue'>" + (profile.perfectSpecialAttack) + "</td>";
+            html += "<td style='background-color:#E8E8D0;font-weight:bold;color:blue'>" + (profile.perfectSpecialDefense) + "</td>";
+            html += "<td style='background-color:#E8E8B0;font-weight:bold;color:blue'>" + (profile.perfectSpeed) + "</td>";
+            html += "<td style='background-color:#E8E8D0;font-weight:bold;color:red'>" + (profile.perfectCapacity) + "</td>";
+            html += "</tr>";
+
+            const d0 = (Math.min(1, a0 / (profile.perfectHealth)) * 100);
+            const d1 = (Math.min(1, a1 / (profile.perfectAttack)) * 100);
+            const d2 = (Math.min(1, a2 / (profile.perfectDefense)) * 100);
+            const d3 = (Math.min(1, a3 / (profile.perfectSpecialAttack)) * 100);
+            const d4 = (Math.min(1, a4 / (profile.perfectSpecialDefense)) * 100);
+            const d5 = (Math.min(1, a5 / (profile.perfectSpeed)) * 100);
+            const d6 = (Math.min(1, a6 / (profile.perfectCapacity)) * 100);
+
+            html += "<tr>";
+            html += "<td style='background-color:#E8E8D0;font-weight:bold' colspan='4'>能力差距</td>";
+            html += "<td style='background-color:#E8E8D0'>" + PageUtils.generateProgressBarHTML(d0 / 100) + d0.toFixed(2) + "%</td>";
+            html += "<td style='background-color:#E8E8B0'>" + PageUtils.generateProgressBarHTML(d1 / 100) + d1.toFixed(2) + "%</td>";
+            html += "<td style='background-color:#E8E8D0'>" + PageUtils.generateProgressBarHTML(d2 / 100) + d2.toFixed(2) + "%</td>";
+            html += "<td style='background-color:#E8E8B0'>" + PageUtils.generateProgressBarHTML(d3 / 100) + d3.toFixed(2) + "%</td>";
+            html += "<td style='background-color:#E8E8D0'>" + PageUtils.generateProgressBarHTML(d4 / 100) + d4.toFixed(2) + "%</td>";
+            html += "<td style='background-color:#E8E8B0'>" + PageUtils.generateProgressBarHTML(d5 / 100) + d5.toFixed(2) + "%</td>";
+            html += "<td style='background-color:#E8E8D0;font-weight:bold;color:red'>" + PageUtils.generateProgressBarHTML(d6 / 100) + d6.toFixed(2) + "%</td>";
             html += "</tr>";
 
             html += "</tbody>";
