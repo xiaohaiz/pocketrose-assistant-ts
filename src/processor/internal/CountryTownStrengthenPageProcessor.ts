@@ -98,7 +98,7 @@ class CountryTownStrengthenPageProcessor extends PageProcessorCredentialSupport 
             });
 
         let html = "";
-        html += "<table style='background-color:#888888'>";
+        html += "<table style='background-color:#888888;margin:auto'>";
         html += "<tbody>";
         html += "<tr style='background-color:red;color:white'>";
         html += "<th>内阁</th>";
@@ -122,7 +122,7 @@ class CountryTownStrengthenPageProcessor extends PageProcessorCredentialSupport 
         html += "<td style='background-color:#E8E8D0'>" +
             NpcLoader.getTaskNpcImageHtml("司马懿") +
             "</td>";
-        html += "<td style='background-color:#E8E8D0'>在野武将招募告示</td>";
+        html += "<td style='background-color:#E8E8D0'>在野招募告示</td>";
         html += "<td style='background-color:#E8E8D0'>" +
             "<input type='text' name='m2' size='40'>" +
             "</td>";
