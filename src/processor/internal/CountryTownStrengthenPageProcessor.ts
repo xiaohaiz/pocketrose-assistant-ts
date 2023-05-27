@@ -4,6 +4,8 @@ import TownLoader from "../../core/TownLoader";
 import PersonalStatus from "../../pocketrose/PersonalStatus";
 import Credential from "../../util/Credential";
 import MessageBoard from "../../util/MessageBoard";
+import NetworkUtils from "../../util/NetworkUtils";
+import PageUtils from "../../util/PageUtils";
 import PageProcessorContext from "../PageProcessorContext";
 import PageProcessorCredentialSupport from "../PageProcessorCredentialSupport";
 
@@ -112,7 +114,7 @@ class CountryTownStrengthenPageProcessor extends PageProcessorCredentialSupport 
             "</td>";
         html += "<td style='background-color:#E8E8D0'>国家动员指令</td>";
         html += "<td style='background-color:#E8E8D0'>" +
-            "<input type='text' name='m1' size='40'>" +
+            "<input type='text' id='m1' size='40'>" +
             "</td>";
         html += "<td style='background-color:#E8E8D0'>" +
             "<button role='button' id='p1'>下达</button>" +
@@ -124,7 +126,7 @@ class CountryTownStrengthenPageProcessor extends PageProcessorCredentialSupport 
             "</td>";
         html += "<td style='background-color:#E8E8D0'>在野招募告示</td>";
         html += "<td style='background-color:#E8E8D0'>" +
-            "<input type='text' name='m2' size='40'>" +
+            "<input type='text' id='m2' size='40'>" +
             "</td>";
         html += "<td style='background-color:#E8E8D0'>" +
             "<button role='button' id='p2'>发布</button>" +
@@ -133,6 +135,8 @@ class CountryTownStrengthenPageProcessor extends PageProcessorCredentialSupport 
         html += "</tbody>";
         html += "</table>";
         $("#instruction").html(html);
+
+        doBindPublishButton(credential);
     }
 
     #welcomeMessageHtml() {
@@ -140,6 +144,28 @@ class CountryTownStrengthenPageProcessor extends PageProcessorCredentialSupport 
             "军民团结如一人，试看天下谁能敌！" +
             "</b>";
     }
+}
+
+function doBindPublishButton(credential: Credential) {
+    $("#p1").on("click", () => {
+        PageUtils.scrollIntoView("pageTitle");
+        const msg = $("#m1").val();
+        if (msg === undefined || _.trim(msg as string) === "") {
+            MessageBoard.publishWarning("没有输入指令内容！");
+            return;
+        }
+        const msgForPublish = _.trim(msg as string);
+        const request = credential.asRequestMap();
+        request.set("m_0", "1");
+        request.set("azukeru", "1");
+        // noinspection JSDeprecatedSymbols
+        request.set("ins", escape(msgForPublish));
+        request.set("ins2", "");
+        request.set("mode", "COUNTRY_STR");
+        NetworkUtils.post("country.cgi", request).then(html => {
+            MessageBoard.processResponseMessage(html);
+        });
+    });
 }
 
 export = CountryTownStrengthenPageProcessor;
