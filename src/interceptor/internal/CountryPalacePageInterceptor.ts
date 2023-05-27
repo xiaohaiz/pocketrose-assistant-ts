@@ -1,12 +1,13 @@
 import SetupLoader from "../../config/SetupLoader";
 import LocationStateMachine from "../../core/LocationStateMachine";
-import PalacePageProcessor from "../../processor/internal/PalacePageProcessor";
+import CountryPalacePageProcessor from "../../processor/internal/CountryPalacePageProcessor";
+import PageProcessor from "../../processor/PageProcessor";
 import PageProcessorContext from "../../processor/PageProcessorContext";
 import PageInterceptor from "../PageInterceptor";
 
-class PalacePageInterceptor implements PageInterceptor {
+class CountryPalacePageInterceptor implements PageInterceptor {
 
-    readonly #processor = new PalacePageProcessor();
+    readonly #processor: PageProcessor = new CountryPalacePageProcessor();
 
     accept(cgi: string, pageText: string): boolean {
         if (cgi === "country.cgi") {
@@ -30,4 +31,4 @@ class PalacePageInterceptor implements PageInterceptor {
 
 }
 
-export = PalacePageInterceptor;
+export = CountryPalacePageInterceptor;

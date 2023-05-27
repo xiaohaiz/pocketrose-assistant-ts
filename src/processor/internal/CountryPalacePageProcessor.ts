@@ -12,7 +12,7 @@ import TimeoutUtils from "../../util/TimeoutUtils";
 import PageProcessorContext from "../PageProcessorContext";
 import PageProcessorCredentialSupport from "../PageProcessorCredentialSupport";
 
-class PalacePageProcessor extends PageProcessorCredentialSupport {
+class CountryPalacePageProcessor extends PageProcessorCredentialSupport {
 
     doProcess(credential: Credential, context?: PageProcessorContext): void {
         $("table[height='100%']").removeAttr("height");
@@ -342,4 +342,4 @@ function bindTaskButton(credential: Credential, context: PageProcessorContext) {
 }
 
 
-export = PalacePageProcessor;
+export = CountryPalacePageProcessor;
