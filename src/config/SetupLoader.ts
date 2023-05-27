@@ -273,6 +273,10 @@ class SetupLoader {
         return StorageUtils.getInt("_pa_041", -1);
     }
 
+    static getTownDashboardExtensionShortcutButton(): number {
+        return StorageUtils.getInt("_pa_050", 1);
+    }
+
     static getLoginPageLayout(): number {
         return StorageUtils.getInt("_pa_042", 0);
     }
