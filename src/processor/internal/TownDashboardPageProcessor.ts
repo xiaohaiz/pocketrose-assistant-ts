@@ -1,6 +1,7 @@
 import _ from "lodash";
 import SetupLoader from "../../config/SetupLoader";
 import EventHandler from "../../core/EventHandler";
+import ExtensionShortcutLoader from "../../core/ExtensionShortcutLoader";
 import PalaceTaskManager from "../../core/PalaceTaskManager";
 import RankTitleLoader from "../../core/RankTitleLoader";
 import TownDashboardPage from "../../pocketrose/TownDashboardPage";
@@ -234,8 +235,17 @@ function doProcess(credential: Credential, page: TownDashboardPage) {
             .next()
             .find("th:first")
             .attr("colspan", 3)
-            .css("vertical-align", "bottom")
-            .html("<button role='button' class='" + buttonClass + "' id='shortcut0' style='margin-bottom:8px'>&nbsp;使用手册&nbsp;</button>")
+            .each((_i, th) => {
+                const extensionId = SetupLoader.getTownDashboardExtensionShortcutButton();
+                if (extensionId > 0) {
+                    const es = ExtensionShortcutLoader.getExtensionShortcut(extensionId)!;
+                    const bt = "&nbsp;" + es[0] + "&nbsp;"
+                    $(th).css("vertical-align", "bottom")
+                        .html("<button role='button' class='" + buttonClass + "' id='shortcut0' style='margin-bottom:8px'>" + bt + "</button>")
+                } else {
+                    $(th).html("");
+                }
+            })
             .parent()
             .next()
             .find("th:first")
