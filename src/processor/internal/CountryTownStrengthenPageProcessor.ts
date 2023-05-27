@@ -166,6 +166,25 @@ function doBindPublishButton(credential: Credential) {
             MessageBoard.processResponseMessage(html);
         });
     });
+    $("#p2").on("click", () => {
+        PageUtils.scrollIntoView("pageTitle");
+        const msg = $("#m2").val();
+        if (msg === undefined || _.trim(msg as string) === "") {
+            MessageBoard.publishWarning("没有输入指令内容！");
+            return;
+        }
+        const msgForPublish = _.trim(msg as string);
+        const request = credential.asRequestMap();
+        request.set("m_0", "1");
+        request.set("azukeru", "1");
+        request.set("ins", "");
+        // noinspection JSDeprecatedSymbols
+        request.set("ins2", escape(msgForPublish));
+        request.set("mode", "COUNTRY_STR");
+        NetworkUtils.post("country.cgi", request).then(html => {
+            MessageBoard.processResponseMessage(html);
+        });
+    });
 }
 
 export = CountryTownStrengthenPageProcessor;
