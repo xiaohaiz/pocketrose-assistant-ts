@@ -96,6 +96,43 @@ class CountryTownStrengthenPageProcessor extends PageProcessorCredentialSupport 
                     $("input:submit[value='返回城市']").trigger("click");
                 });
             });
+
+        let html = "";
+        html += "<table style='background-color:#888888'>";
+        html += "<tbody>";
+        html += "<tr style='background-color:red;color:white'>";
+        html += "<th>内阁</th>";
+        html += "<th>指令</th>";
+        html += "<th>内容</th>";
+        html += "<th>发布</th>";
+        html += "<tr>";
+        html += "<tr>";
+        html += "<td style='background-color:#E8E8D0'>" +
+            NpcLoader.getTaskNpcImageHtml("诸葛亮") +
+            "</td>";
+        html += "<td style='background-color:#E8E8D0'>国家动员指令</td>";
+        html += "<td style='background-color:#E8E8D0'>" +
+            "<input type='text' name='m1' size='40'>" +
+            "</td>";
+        html += "<td style='background-color:#E8E8D0'>" +
+            "<button role='button' id='p1'>下达</button>" +
+            "</td>";
+        html += "<tr>";
+        html += "<tr>";
+        html += "<td style='background-color:#E8E8D0'>" +
+            NpcLoader.getTaskNpcImageHtml("司马懿") +
+            "</td>";
+        html += "<td style='background-color:#E8E8D0'>在野武将招募告示</td>";
+        html += "<td style='background-color:#E8E8D0'>" +
+            "<input type='text' name='m2' size='40'>" +
+            "</td>";
+        html += "<td style='background-color:#E8E8D0'>" +
+            "<button role='button' id='p2'>发布</button>" +
+            "</td>";
+        html += "<tr>";
+        html += "</tbody>";
+        html += "</table>";
+        $("#instruction").html(html);
     }
 
     #welcomeMessageHtml() {
