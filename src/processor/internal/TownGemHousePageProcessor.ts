@@ -7,11 +7,11 @@ import TownBank from "../../pocketrose/TownBank";
 import TownGemHouse from "../../pocketrose/TownGemHouse";
 import TownGemHousePage from "../../pocketrose/TownGemHousePage";
 import TownGemMeltHouse from "../../pocketrose/TownGemMeltHouse";
-import BankUtils from "../../util/BankUtils";
 import CommentBoard from "../../util/CommentBoard";
 import Credential from "../../util/Credential";
 import MessageBoard from "../../util/MessageBoard";
 import PageUtils from "../../util/PageUtils";
+import PocketUtils from "../../util/PocketUtils";
 import StringUtils from "../../util/StringUtils";
 import PageProcessorContext from "../PageProcessorContext";
 import PageProcessorCredentialSupport from "../PageProcessorCredentialSupport";
@@ -351,7 +351,7 @@ class TownGemHousePageProcessor extends PageProcessorCredentialSupport {
                 PageUtils.scrollIntoView("pageTitle");
                 return;
             }
-            const amount = BankUtils.calculateCashDifferenceAmount(page.role!.cash!, 5000000);
+            const amount = PocketUtils.calculateCashDifferenceAmount(page.role!.cash!, 5000000);
             const bank = new TownBank(credential, town.id);
             bank.withdraw(amount).then(() => {
                 new TownGemMeltHouse(credential, town.id).melt(index).then(() => {

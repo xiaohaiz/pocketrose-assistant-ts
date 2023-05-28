@@ -3,11 +3,11 @@ import NpcLoader from "../../core/NpcLoader";
 import TownLoader from "../../core/TownLoader";
 import TownBank from "../../pocketrose/TownBank";
 import TownBankPage from "../../pocketrose/TownBankPage";
-import BankUtils from "../../util/BankUtils";
 import Credential from "../../util/Credential";
 import MessageBoard from "../../util/MessageBoard";
 import NetworkUtils from "../../util/NetworkUtils";
 import PageUtils from "../../util/PageUtils";
+import PocketUtils from "../../util/PocketUtils";
 import PageProcessorContext from "../PageProcessorContext";
 import PageProcessorCredentialSupport from "../PageProcessorCredentialSupport";
 
@@ -265,7 +265,7 @@ class TownBankPageProcessor extends PageProcessorCredentialSupport {
                 return;
             }
 
-            const delta = BankUtils.calculateCashDifferenceAmount(page.account!.cash!, (amount + 10) * 10000);
+            const delta = PocketUtils.calculateCashDifferenceAmount(page.account!.cash!, (amount + 10) * 10000);
             const bank = new TownBank(credential, town?.id);
             bank.withdraw(delta).then(() => {
                 const request = credential.asRequestMap();

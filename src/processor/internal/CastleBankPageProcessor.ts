@@ -2,11 +2,11 @@ import BankAccount from "../../common/BankAccount";
 import NpcLoader from "../../core/NpcLoader";
 import CastleBank from "../../pocketrose/CastleBank";
 import CastleBankPage from "../../pocketrose/CastleBankPage";
-import BankUtils from "../../util/BankUtils";
 import Credential from "../../util/Credential";
 import MessageBoard from "../../util/MessageBoard";
 import NetworkUtils from "../../util/NetworkUtils";
 import PageUtils from "../../util/PageUtils";
+import PocketUtils from "../../util/PocketUtils";
 import StringUtils from "../../util/StringUtils";
 import PageProcessorContext from "../PageProcessorContext";
 import PageProcessorCredentialSupport from "../PageProcessorCredentialSupport";
@@ -303,7 +303,7 @@ class CastleBankPageProcessor extends PageProcessorCredentialSupport {
                 return;
             }
 
-            const delta = BankUtils.calculateCashDifferenceAmount(account.cash!, (amount + 10) * 10000);
+            const delta = PocketUtils.calculateCashDifferenceAmount(account.cash!, (amount + 10) * 10000);
             const bank = new CastleBank(credential);
             bank.withdraw(delta).then(() => {
                 const request = credential.asRequestMap();
