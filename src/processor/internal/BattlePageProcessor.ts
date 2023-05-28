@@ -163,6 +163,19 @@ function processBattle(credential: Credential, page: BattlePage, context: PagePr
     // 紧凑格式显示
     if (SetupLoader.isCompactBattleReportEnabled()) {
         $("#delim")
+            .parent()
+            .find("> font:first")
+            .find("> b:first")
+            .find("> p")
+            .each((idx, p) => {
+                $(p).find("> br")
+                    .each((idx, br) => {
+                        if ($(br).prev().is("br")) {
+                            $(br).hide();
+                        }
+                    });
+            });
+        $("#delim")
             .prev()
             .find("> b:first")
             .find("> font:first")
