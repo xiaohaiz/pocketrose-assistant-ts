@@ -1,5 +1,6 @@
 import Credential from "../util/Credential";
 import NetworkUtils from "../util/NetworkUtils";
+import ConversationPage from "./ConversationPage";
 
 class Conversation {
 
@@ -9,13 +10,14 @@ class Conversation {
         this.#credential = credential;
     }
 
-    async open(): Promise<void> {
+    async open(): Promise<ConversationPage> {
         return (() => {
-            return new Promise<void>(resolve => {
+            return new Promise<ConversationPage>(resolve => {
                 const request = this.#credential.asRequestMap();
                 request.set("mode", "MESSE_PRINT");
                 NetworkUtils.post("messe_print.cgi", request).then(html => {
-                    resolve();
+                    const page = ConversationPage.parse(html);
+                    resolve(page);
                 });
             });
         })();
