@@ -148,6 +148,7 @@ function processBattle(credential: Credential, page: BattlePage, context: PagePr
     }
 
     // 检查是否宠物有技能变化
+    let petLearnSpell = false;
     $("#delim")
         .prev()
         .find("> b:first")
@@ -156,6 +157,7 @@ function processBattle(credential: Credential, page: BattlePage, context: PagePr
         .each((idx, font) => {
             const ft = $(font).text();
             if (ft.includes("遗忘了技能") || ft.includes("学会了新技能")) {
+                petLearnSpell = true;
                 $(font).attr("color", "blue");
             }
         });
@@ -206,7 +208,7 @@ function processBattle(credential: Credential, page: BattlePage, context: PagePr
     } else {
         // 普通战斗极速模式
         if (SetupLoader.isNormalFlashBattleEnabled()) {
-            if (!page.petUpgrade! && page.harvestList!.length === 0) {
+            if (!petLearnSpell && page.harvestList!.length === 0) {
                 $("button[tabindex='1']").trigger("click");
             }
         }
