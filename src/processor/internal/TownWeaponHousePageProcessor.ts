@@ -11,14 +11,7 @@ import PocketUtils from "../../util/PocketUtils";
 import PageProcessorContext from "../PageProcessorContext";
 import PageProcessorCredentialSupport from "../PageProcessorCredentialSupport";
 
-/**
- * @deprecated
- */
 class TownWeaponHousePageProcessor extends PageProcessorCredentialSupport {
-
-    constructor() {
-        super();
-    }
 
     doProcess(credential: Credential, context?: PageProcessorContext): void {
         processPage(context!.get("townId")!);
