@@ -1,0 +1,4 @@
+class ConversationPage {
+}
+
+export = ConversationPage;
