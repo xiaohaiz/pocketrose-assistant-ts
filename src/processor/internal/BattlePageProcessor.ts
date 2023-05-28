@@ -71,6 +71,7 @@ function processBattle(credential: Credential, page: BattlePage, context: PagePr
         .find("h1:first")
         .next()
         .append($("" +
+            "<div style='display:none' id='delim'></div>" +
             "<div style='padding-top:10px;padding-bottom:10px'><button role='button' id='returnButton'>返回城市</button></div>" +
             "<div style='padding-top:10px;padding-bottom:10px'><button role='button' id='depositButton'>返回银行</button></div>" +
             "<div style='padding-top:10px;padding-bottom:10px'><button role='button' id='repairButton'>返回修理</button></div>" +
@@ -145,6 +146,19 @@ function processBattle(credential: Credential, page: BattlePage, context: PagePr
             $("#returnButton").attr("tabindex", 1);
             break;
     }
+
+    // 检查是否宠物有技能变化
+    $("#delim")
+        .prev()
+        .find("> b:first")
+        .find("> font:first")
+        .find(" > font[color='red']")
+        .each((idx, font) => {
+            const ft = $(font).text();
+            if (ft.includes("遗忘了技能") || ft.includes("学会了新技能")) {
+                $(font).attr("color", "blue");
+            }
+        });
 
     // 入手情况的渲染
     renderHarvestMessage(page);
