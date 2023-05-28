@@ -161,16 +161,18 @@ function processBattle(credential: Credential, page: BattlePage, context: PagePr
         });
 
     // 紧凑格式显示
-    $("#delim")
-        .prev()
-        .find("> b:first")
-        .find("> font:first")
-        .find("> br")
-        .each((idx, br) => {
-            if ($(br).prev().is("br")) {
-                $(br).hide();
-            }
-        });
+    if (SetupLoader.isCompactBattleReportEnabled()) {
+        $("#delim")
+            .prev()
+            .find("> b:first")
+            .find("> font:first")
+            .find("> br")
+            .each((idx, br) => {
+                if ($(br).prev().is("br")) {
+                    $(br).hide();
+                }
+            });
+    }
 
     // 入手情况的渲染
     renderHarvestMessage(page);
