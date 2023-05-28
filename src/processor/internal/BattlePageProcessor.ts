@@ -152,11 +152,23 @@ function processBattle(credential: Credential, page: BattlePage, context: PagePr
         .prev()
         .find("> b:first")
         .find("> font:first")
-        .find(" > font[color='red']")
+        .find("> font[color='red']")
         .each((idx, font) => {
             const ft = $(font).text();
             if (ft.includes("遗忘了技能") || ft.includes("学会了新技能")) {
                 $(font).attr("color", "blue");
+            }
+        });
+
+    // 紧凑格式显示
+    $("#delim")
+        .prev()
+        .find("> b:first")
+        .find("> font:first")
+        .find("> br")
+        .each((idx, br) => {
+            if ($(br).prev().is("br")) {
+                $(br).hide();
             }
         });
 
