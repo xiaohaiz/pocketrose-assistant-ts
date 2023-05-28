@@ -2,10 +2,10 @@ import NpcLoader from "../../core/NpcLoader";
 import TownAccessoryHouse from "../../pocketrose/TownAccessoryHouse";
 import TownAccessoryHousePage from "../../pocketrose/TownAccessoryHousePage";
 import TownBank from "../../pocketrose/TownBank";
-import BankUtils from "../../util/BankUtils";
 import Credential from "../../util/Credential";
 import MessageBoard from "../../util/MessageBoard";
 import PageUtils from "../../util/PageUtils";
+import PocketUtils from "../../util/PocketUtils";
 import PageProcessorContext from "../PageProcessorContext";
 import PageProcessorCredentialSupport from "../PageProcessorCredentialSupport";
 
@@ -279,7 +279,7 @@ class TownAccessoryHousePageProcessor extends PageProcessorCredentialSupport {
             const count = parseInt($("#count_" + index).val() as string);
             const merchandise = page.findMerchandise(index)!;
             const totalPrice = merchandise.price! * count;
-            const amount = BankUtils.calculateCashDifferenceAmount(page.role!.cash!, totalPrice);
+            const amount = PocketUtils.calculateCashDifferenceAmount(page.role!.cash!, totalPrice);
             if (!confirm("确认要购买" + count + "件“" + merchandise.name + "”？大约需要再支取" + amount + "万GOLD。")) {
                 return;
             }

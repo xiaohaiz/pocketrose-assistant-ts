@@ -25,6 +25,13 @@ class PocketUtils {
         }
         return amount >= 0;
     }
+
+    static calculateCashDifferenceAmount(cash: number, expect: number) {
+        if (cash >= expect) {
+            return 0;
+        }
+        return Math.ceil((expect - cash) / 10000);
+    }
 }
 
 export = PocketUtils;
