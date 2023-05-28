@@ -1,4 +1,7 @@
 import Equipment from "../../common/Equipment";
+import EquipmentSet from "../../common/EquipmentSet";
+import SetupLoader from "../../config/SetupLoader";
+import EquipmentSetLoader from "../../core/EquipmentSetLoader";
 import PersonalEquipmentManagement from "../../pocketrose/PersonalEquipmentManagement";
 import PersonalEquipmentManagementPage from "../../pocketrose/PersonalEquipmentManagementPage";
 import TreasureBag from "../../pocketrose/TreasureBag";
@@ -131,6 +134,15 @@ class PersonalEquipmentManagementPageProcessor_Metro extends PersonalEquipmentMa
         html += "<input type='button' id='closeBag' class='mutableButton-1' value='关闭百宝袋'>";
         html += "</td>";
         html += "</tr>";
+        html += "<tr>";
+        html += "<td style='text-align:right' colspan='2'>";
+        html += "<input type='button' class='mutableButton-1' id='setButton_A' value='套装Ａ' disabled>";
+        html += "<input type='button' class='mutableButton-1' id='setButton_B' value='套装Ｂ' disabled>";
+        html += "<input type='button' class='mutableButton-1' id='setButton_C' value='套装Ｃ' disabled>";
+        html += "<input type='button' class='mutableButton-1' id='setButton_D' value='套装Ｄ' disabled>";
+        html += "<input type='button' class='mutableButton-1' id='setButton_E' value='套装Ｅ' disabled>";
+        html += "</td>";
+        html += "</tr>";
         html += "</tbody>";
         html += "</table>";
         html += "</td>";
@@ -158,6 +170,12 @@ class PersonalEquipmentManagementPageProcessor_Metro extends PersonalEquipmentMa
         this.#bindStoreButton(credential, treasureBag, context);
         this.#bindOpenBagButton(credential, context);
         this.#bindCloseBagButton(credential, context);
+
+        this.#bindSetButton(credential, page, "A", context);
+        this.#bindSetButton(credential, page, "B", context);
+        this.#bindSetButton(credential, page, "C", context);
+        this.#bindSetButton(credential, page, "D", context);
+        this.#bindSetButton(credential, page, "E", context);
 
         if (treasureBag !== null && $("#bagState").text() === "on") {
             this.#doRenderStorageEquipmentList(credential, treasureBag, context);
@@ -424,6 +442,66 @@ class PersonalEquipmentManagementPageProcessor_Metro extends PersonalEquipmentMa
         });
     }
 
+    #bindSetButton(credential: Credential,
+                   page: PersonalEquipmentManagementPage,
+                   setId: string,
+                   context?: PageProcessorContext) {
+        let setConfig: {} | null = null;
+        switch (setId) {
+            case "A":
+                setConfig = SetupLoader.loadEquipmentSet_A(credential.id);
+                break;
+            case "B":
+                setConfig = SetupLoader.loadEquipmentSet_B(credential.id);
+                break;
+            case "C":
+                setConfig = SetupLoader.loadEquipmentSet_C(credential.id);
+                break;
+            case "D":
+                setConfig = SetupLoader.loadEquipmentSet_D(credential.id);
+                break;
+            case "E":
+                setConfig = SetupLoader.loadEquipmentSet_E(credential.id);
+                break;
+            default:
+                break;
+        }
+        if (!this.doCheckSetConfiguration(setConfig)) {
+            return;
+        }
+        const buttonId = "setButton_" + setId;
+        $("#" + buttonId).prop("disabled", false);
+
+        $("#" + buttonId).on("click", () => {
+            const set = new EquipmentSet();
+            set.initialize();
+
+            // @ts-ignore
+            set.weaponName = setConfig["weaponName"];
+            // @ts-ignore
+            if (setConfig["weaponStar"] !== undefined && setConfig["weaponStar"]) {
+                set.weaponName = "齐心★" + set.weaponName;
+            }
+            // @ts-ignore
+            set.armorName = setConfig["armorName"];
+            // @ts-ignore
+            if (setConfig["armorStar"] !== undefined && setConfig["armorStar"]) {
+                set.armorName = "齐心★" + set.armorName;
+            }
+            // @ts-ignore
+            set.accessoryName = setConfig["accessoryName"];
+            // @ts-ignore
+            if (setConfig["accessoryStar"] !== undefined && setConfig["accessoryStar"]) {
+                set.accessoryName = "齐心★" + set.accessoryName;
+            }
+
+            new EquipmentSetLoader(credential, page.equipmentList!).load(set)
+                .then(() => {
+                    this.doRefreshMutablePage(credential, context);
+                });
+
+        });
+    }
 }
 
 export = PersonalEquipmentManagementPageProcessor_Metro;
