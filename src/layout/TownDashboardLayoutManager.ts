@@ -1,5 +1,6 @@
 import TownDashboardLayout from "./TownDashboardLayout";
 import TownDashboardLayout001 from "./TownDashboardLayout001";
+import TownDashboardLayout002 from "./TownDashboardLayout002";
 
 class TownDashboardLayoutManager {
 
@@ -9,6 +10,7 @@ class TownDashboardLayoutManager {
         this.#buffer = new Map<number, TownDashboardLayout>();
         const list: TownDashboardLayout[] = [
             new TownDashboardLayout001(),
+            new TownDashboardLayout002(),
         ];
         list.forEach(it => {
             const id = it.id();
