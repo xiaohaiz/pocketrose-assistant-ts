@@ -1,6 +1,7 @@
 import _ from "lodash";
 import SetupLoader from "../../config/SetupLoader";
 import ExtensionShortcutLoader from "../../core/ExtensionShortcutLoader";
+import PalaceTaskManager from "../../core/PalaceTaskManager";
 import RankTitleLoader from "../../core/RankTitleLoader";
 import TownDashboardPage from "../../pocketrose/TownDashboardPage";
 import Credential from "../../util/Credential";
@@ -31,7 +32,7 @@ class TownDashboardPageProcessor2 extends PageProcessorCredentialSupport {
 
         doMarkElement();
         doRenderMobilization();
-        doRenderMenu();
+        doRenderMenu(credential);
     }
 
 }
@@ -140,7 +141,12 @@ function doRenderMobilization() {
         });
 }
 
-function doRenderMenu() {
+function doRenderMenu(credential: Credential) {
+    // ------------------------------------------------------------------------
+    // 渲染菜单表格中的所有按钮
+    // height & width => 100%
+    // Use ASCII text (setup)
+    // ------------------------------------------------------------------------
     $("#refreshButton")
         .css("height", "100%")
         .css("width", "100%")
@@ -219,6 +225,9 @@ function doRenderMenu() {
             }
         });
 
+    // ------------------------------------------------------------------------
+    // 如果启用了配置则开始渲染快捷按钮
+    // ------------------------------------------------------------------------
     const bsId = SetupLoader.getTownDashboardShortcutButton();
     if (bsId > 0) {
         const buttonClass = "button-" + bsId;
@@ -323,6 +332,36 @@ function doRenderMenu() {
                 doBindShortcutButton("shortcut4", "CHANGE_OCCUPATION");
                 doBindShortcutButton("shortcut8", "LETTER");
             });
+    }
+
+    // ------------------------------------------------------------------------
+    // 增加皇宫任务的通知栏
+    // ------------------------------------------------------------------------
+    $("#messageNotification")
+        .parent()
+        .after("" +
+            "<tr style='display:none'>" +
+            "<td colspan='4' " +
+            "id='palaceTask' " +
+            "style='background-color:#F8F0E0;text-align:center;font-weight:bold'></td>" +
+            "</tr>" +
+            "");
+    if (SetupLoader.isNewPalaceTaskEnabled()) {
+        const monsterTask = new PalaceTaskManager(credential).monsterTaskHtml;
+        if (monsterTask !== "") {
+            $("#palaceTask").html(monsterTask).parent().show();
+        }
+    }
+
+    // ------------------------------------------------------------------------
+    // 根据配置决定是否隐藏出城和退出按钮
+    // ------------------------------------------------------------------------
+    if (SetupLoader.isHiddenLeaveAndExitEnabled()) {
+        $("#leaveButton")
+            .closest("tr")
+            .hide()
+            .next()
+            .hide();
     }
 }
 
