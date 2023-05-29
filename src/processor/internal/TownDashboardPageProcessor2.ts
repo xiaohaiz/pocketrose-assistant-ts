@@ -32,7 +32,7 @@ class TownDashboardPageProcessor2 extends PageProcessorCredentialSupport {
 
         doMarkElement();
         doRenderMobilization();
-        doRenderMenu(credential);
+        doRenderMenu(credential, page);
     }
 
 }
@@ -141,7 +141,7 @@ function doRenderMobilization() {
         });
 }
 
-function doRenderMenu(credential: Credential) {
+function doRenderMenu(credential: Credential, page: TownDashboardPage) {
     // ------------------------------------------------------------------------
     // 渲染菜单表格中的所有按钮
     // height & width => 100%
@@ -237,15 +237,20 @@ function doRenderMenu(credential: Credential) {
             .find("> th:first")
             .each((idx, th) => {
                 const extensionId = SetupLoader.getTownDashboardExtensionShortcutButton();
+                $(th).html("");
                 if (extensionId > 0) {
+                    let esButton = true;
                     const es = ExtensionShortcutLoader.getExtensionShortcut(extensionId)!;
-                    const bt = "&nbsp;" + es[0] + "&nbsp;"
-                    $(th).css("vertical-align", "bottom")
-                        .html("<button role='button' class='" + buttonClass + "' id='shortcut0' " +
-                            "style='margin-bottom:8px;white-space:nowrap'>" + bt + "</button>")
-                    _bindShortcutButton("shortcut0", es[1]);
-                } else {
-                    $(th).html("");
+                    if (es[0] === "城市收益") {
+                        esButton = _canCollectTownTax(page);
+                    }
+                    if (esButton) {
+                        const bt = "&nbsp;" + es[0] + "&nbsp;"
+                        $(th).css("vertical-align", "bottom")
+                            .html("<button role='button' class='" + buttonClass + "' id='shortcut0' " +
+                                "style='margin-bottom:8px;white-space:nowrap'>" + bt + "</button>")
+                        _bindShortcutButton("shortcut0", es[1]);
+                    }
                 }
             })
             .parent()
@@ -405,6 +410,9 @@ function doRenderMenu(credential: Credential) {
         $("option[value='MONEY_SEND']").remove();
         $("option[value='SALARY']").remove();
     }
+    if (SetupLoader.isCollectTownTaxDisabled()) {
+        $("option[value='MAKE_TOWN']").remove();
+    }
 }
 
 function _renderBattleMenu(credential: Credential) {
@@ -540,6 +548,21 @@ function _bindShortcutButton(buttonId: string, option: string) {
             .find("> input:submit:first")
             .trigger("click");
     });
+}
+
+function _canCollectTownTax(page: TownDashboardPage) {
+    if (SetupLoader.isCollectTownTaxDisabled()) {
+        return false;
+    }
+    if (page.role!.country !== "在野" && page.role!.country === page.townCountry) {
+        const tax = page.townTax!;
+        if (tax >= 50000) {
+            if (tax - Math.floor(tax / 50000) * 50000 <= 10000) {
+                return true;
+            }
+        }
+    }
+    return false;
 }
 
 export = TownDashboardPageProcessor2;
