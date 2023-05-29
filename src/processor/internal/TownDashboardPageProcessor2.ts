@@ -243,7 +243,7 @@ function doRenderMenu(credential: Credential) {
                     $(th).css("vertical-align", "bottom")
                         .html("<button role='button' class='" + buttonClass + "' id='shortcut0' " +
                             "style='margin-bottom:8px;white-space:nowrap'>" + bt + "</button>")
-                    doBindShortcutButton("shortcut0", es[1]);
+                    _bindShortcutButton("shortcut0", es[1]);
                 } else {
                     $(th).html("");
                 }
@@ -266,8 +266,8 @@ function doRenderMenu(credential: Credential) {
                 html += "</tbody>";
                 html += "</table>";
                 $(th).html(html);
-                doBindShortcutButton("shortcut1", "PETMAP");
-                doBindShortcutButton("shortcut5", "RANK_REMAKE");
+                _bindShortcutButton("shortcut1", "PETMAP");
+                _bindShortcutButton("shortcut5", "RANK_REMAKE");
             })
             .parent()
             .next()
@@ -287,8 +287,8 @@ function doRenderMenu(credential: Credential) {
                 html += "</tbody>";
                 html += "</table>";
                 $(th).html(html);
-                doBindShortcutButton("shortcut2", "USE_ITEM");
-                doBindShortcutButton("shortcut6", "BATTLE_MES");
+                _bindShortcutButton("shortcut2", "USE_ITEM");
+                _bindShortcutButton("shortcut6", "BATTLE_MES");
             })
             .parent()
             .next()
@@ -308,8 +308,8 @@ function doRenderMenu(credential: Credential) {
                 html += "</tbody>";
                 html += "</table>";
                 $(th).html(html);
-                doBindShortcutButton("shortcut3", "PETSTATUS");
-                doBindShortcutButton("shortcut7", "BANK");
+                _bindShortcutButton("shortcut3", "PETSTATUS");
+                _bindShortcutButton("shortcut7", "BANK");
             })
             .parent()
             .next()
@@ -329,8 +329,8 @@ function doRenderMenu(credential: Credential) {
                 html += "</tbody>";
                 html += "</table>";
                 $(th).html(html);
-                doBindShortcutButton("shortcut4", "CHANGE_OCCUPATION");
-                doBindShortcutButton("shortcut8", "LETTER");
+                _bindShortcutButton("shortcut4", "CHANGE_OCCUPATION");
+                _bindShortcutButton("shortcut8", "LETTER");
             });
     }
 
@@ -363,9 +363,138 @@ function doRenderMenu(credential: Credential) {
             .next()
             .hide();
     }
+
+    // ------------------------------------------------------------------------
+    // 渲染菜单项
+    // ------------------------------------------------------------------------
+    _renderBattleMenu(credential);
 }
 
-function doBindShortcutButton(buttonId: string, option: string) {
+function _renderBattleMenu(credential: Credential) {
+    const preference = SetupLoader.getBattlePlacePreference(credential.id);
+    let count = 0;
+    // @ts-ignore
+    if (preference["primary"]) {
+        count++;
+    }
+    // @ts-ignore
+    if (preference["junior"]) {
+        count++;
+    }
+    // @ts-ignore
+    if (preference["senior"]) {
+        count++;
+    }
+    // @ts-ignore
+    if (preference["zodiac"]) {
+        count++;
+    }
+    if (count === 0) {
+        // 没有设置战斗场所偏好，忽略
+        return;
+    }
+
+    // 设置了战斗场所偏好
+    $("select[name='level']").find("option").each(function (_idx, option) {
+        const text = $(option).text();
+        if (text.startsWith("秘宝之岛")) {
+            // do nothing, keep
+        } else if (text.startsWith("初级之森")) {
+            // do nothing, keep
+        } else if (text.startsWith("中级之塔")) {
+            // do nothing, keep
+        } else if (text.startsWith("上级之洞")) {
+            // do nothing, keep
+        } else if (text.startsWith("十二神殿")) {
+            // do nothing, keep
+        } else if (text.startsWith("------")) {
+            // do nothing, keep
+        } else {
+            $(option).remove();
+        }
+    });
+    $("select[name='level']").find("option").each(function (_idx, option) {
+        const text = $(option).text();
+        if (text.startsWith("初级之森")) {
+            // @ts-ignore
+            if (!preference["primary"]) {
+                $(option).remove();
+            }
+        } else if (text.startsWith("中级之塔")) {
+            // @ts-ignore
+            if (!preference["junior"]) {
+                $(option).remove();
+            }
+        } else if (text.startsWith("上级之洞")) {
+            // @ts-ignore
+            if (!preference["senior"]) {
+                $(option).remove();
+            }
+        } else if (text.startsWith("十二神殿")) {
+            // @ts-ignore
+            if (!preference["zodiac"]) {
+                $(option).remove();
+            }
+        }
+    });
+    // 删除连续的分隔线
+    let delimMatch = false;
+    $("select[name='level']").find("option").each(function (_idx, option) {
+        const text = $(option).text();
+        if (text.startsWith("------")) {
+            if (!delimMatch) {
+                delimMatch = true;
+            } else {
+                $(option).remove();
+            }
+        } else {
+            delimMatch = false;
+        }
+    });
+    // 删除头尾的分隔线
+    if ($("select[name='level']").find("option:last").text().startsWith("------")) {
+        $("select[name='level']").find("option:last").remove();
+    }
+    if ($("select[name='level']").find("option:first").text().startsWith("------")) {
+        $("select[name='level']").find("option:first").remove();
+    }
+
+    if (count === 1) {
+        // 只设置了一处战斗场所偏好
+        let formBattle = $("form[action='battle.cgi']");
+        let selectBattle = formBattle.find('select[name="level"]');
+        let btnBattle = formBattle.parent().next().find('input');
+        let inputDigits = '';
+        $(document).off('keydown.city').on('keydown.city', function (e) {
+            if ($("#messageInputText:focus").length > 0) {
+                // 当前的焦点在消息框，禁用按键辅助
+                return;
+            }
+            const key = e.key;
+            if (key !== undefined && !isNaN(parseInt(key))) {
+                inputDigits += key;
+            }
+            if (inputDigits.length === 2) {
+                switch (inputDigits) {
+                    case '11':
+                        selectBattle.find('option').eq(0).prop('selected', true);
+                        break;
+                    case '22':
+                        selectBattle.find('option').eq(1).prop('selected', true);
+                        break;
+                    default:
+                        inputDigits = '';
+                        break;
+                }
+                btnBattle.trigger("focus")
+                // 重置 inputDigits
+                inputDigits = '';
+            }
+        });
+    }
+}
+
+function _bindShortcutButton(buttonId: string, option: string) {
     $("#" + buttonId).on("click", () => {
         $("option[value='" + option + "']")
             .prop("selected", true)
