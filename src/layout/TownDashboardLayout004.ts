@@ -96,6 +96,21 @@ class TownDashboardLayout004 extends TownDashboardLayout {
                 t.remove();
                 $("#domesticMessageContainer").find("> table:first").html(s);
             });
+
+        $("#messageInputText")
+            .parent()
+            .next().hide()
+            .next().hide()
+            .parent()
+            .parent()
+            .prev()
+            .find("> th:first")
+            .find("> font:first")
+            .each((idx, font) => {
+                $(font).on("click", () => {
+                    $("input:submit[value='阅读留言']").trigger("click");
+                });
+            });
     }
 
 }
