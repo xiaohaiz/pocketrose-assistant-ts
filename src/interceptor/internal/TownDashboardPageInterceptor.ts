@@ -1,5 +1,6 @@
 import LocationStateMachine from "../../core/LocationStateMachine";
 import TownDashboardPageProcessor from "../../processor/internal/TownDashboardPageProcessor";
+import TownDashboardPageProcessor2 from "../../processor/internal/TownDashboardPageProcessor2";
 import PageInterceptor from "../PageInterceptor";
 
 class TownDashboardPageInterceptor implements PageInterceptor {
@@ -16,7 +17,8 @@ class TownDashboardPageInterceptor implements PageInterceptor {
     intercept(): void {
         // Set current location state to TOWN.
         LocationStateMachine.create().inTown();
-        this.#processor.process();
+        //this.#processor.process();
+        new TownDashboardPageProcessor2().process();
     }
 
 }
