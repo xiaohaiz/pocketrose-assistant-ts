@@ -234,6 +234,7 @@ function doRenderMenu() {
                     $(th).css("vertical-align", "bottom")
                         .html("<button role='button' class='" + buttonClass + "' id='shortcut0' " +
                             "style='margin-bottom:8px;white-space:nowrap'>" + bt + "</button>")
+                    doBindShortcutButton("shortcut0", es[1]);
                 } else {
                     $(th).html("");
                 }
@@ -256,6 +257,8 @@ function doRenderMenu() {
                 html += "</tbody>";
                 html += "</table>";
                 $(th).html(html);
+                doBindShortcutButton("shortcut1", "PETMAP");
+                doBindShortcutButton("shortcut5", "RANK_REMAKE");
             })
             .parent()
             .next()
@@ -275,6 +278,8 @@ function doRenderMenu() {
                 html += "</tbody>";
                 html += "</table>";
                 $(th).html(html);
+                doBindShortcutButton("shortcut2", "USE_ITEM");
+                doBindShortcutButton("shortcut6", "BATTLE_MES");
             })
             .parent()
             .next()
@@ -294,6 +299,8 @@ function doRenderMenu() {
                 html += "</tbody>";
                 html += "</table>";
                 $(th).html(html);
+                doBindShortcutButton("shortcut3", "PETSTATUS");
+                doBindShortcutButton("shortcut7", "BANK");
             })
             .parent()
             .next()
@@ -313,8 +320,21 @@ function doRenderMenu() {
                 html += "</tbody>";
                 html += "</table>";
                 $(th).html(html);
+                doBindShortcutButton("shortcut4", "CHANGE_OCCUPATION");
+                doBindShortcutButton("shortcut8", "LETTER");
             });
     }
+}
+
+function doBindShortcutButton(buttonId: string, option: string) {
+    $("#" + buttonId).on("click", () => {
+        $("option[value='" + option + "']")
+            .prop("selected", true)
+            .closest("td")
+            .next()
+            .find("> input:submit:first")
+            .trigger("click");
+    });
 }
 
 export = TownDashboardPageProcessor2;
