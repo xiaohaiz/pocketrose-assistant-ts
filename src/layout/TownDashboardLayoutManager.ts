@@ -1,3 +1,5 @@
+import Credential from "../util/Credential";
+import StorageUtils from "../util/StorageUtils";
 import TownDashboardLayout from "./TownDashboardLayout";
 import TownDashboardLayout001 from "./TownDashboardLayout001";
 import TownDashboardLayout002 from "./TownDashboardLayout002";
@@ -22,6 +24,14 @@ class TownDashboardLayoutManager {
 
     getLayout(id: number) {
         return this.#buffer.get(id);
+    }
+
+    static loadDashboardLayoutConfigId(credential: Credential) {
+        let value = StorageUtils.getInt("_pa_053_" + credential.id, 0);
+        if (value !== 0) {
+            return value;
+        }
+        return StorageUtils.getFloat("_pa_052", 1);
     }
 }
 

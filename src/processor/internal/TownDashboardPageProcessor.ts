@@ -41,7 +41,8 @@ class TownDashboardPageProcessor extends PageProcessorCredentialSupport {
         doRenderRoleStatus(credential, page);
         doRenderEnlargeMode();
 
-        LAYOUT_MANAGER.getLayout(SetupLoader.getTownDashboardLayout())?.render(credential, page);
+        const configId = TownDashboardLayoutManager.loadDashboardLayoutConfigId(credential);
+        LAYOUT_MANAGER.getLayout(configId)?.render(credential, page);
     }
 
 }

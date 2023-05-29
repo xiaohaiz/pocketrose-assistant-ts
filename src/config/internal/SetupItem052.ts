@@ -1,7 +1,6 @@
 import MessageBoard from "../../util/MessageBoard";
 import StorageUtils from "../../util/StorageUtils";
 import SetupItem from "../SetupItem";
-import SetupLoader from "../SetupLoader";
 
 class SetupItem052 implements SetupItem {
 
@@ -26,7 +25,7 @@ function doRender() {
 
     $("#setup_item_table").append($(html));
 
-    const value = SetupLoader.getTownDashboardLayout();
+    const value = StorageUtils.getFloat("_pa_052", 1);
     $(".option_class_" + code + "[value='" + Number(value) + "']").prop("selected", true);
 
     $("#setup_" + code).on("click", function () {
