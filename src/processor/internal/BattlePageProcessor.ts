@@ -4,6 +4,7 @@ import EquipmentLocalStorage from "../../core/EquipmentLocalStorage";
 import NpcLoader from "../../core/NpcLoader";
 import PalaceTaskManager from "../../core/PalaceTaskManager";
 import PetLocalStorage from "../../core/PetLocalStorage";
+import TownDashboardLayoutManager from "../../layout/TownDashboardLayoutManager";
 import BattlePage from "../../pocketrose/BattlePage";
 import CommentBoard from "../../util/CommentBoard";
 import Credential from "../../util/Credential";
@@ -198,7 +199,7 @@ function processBattle(credential: Credential, page: BattlePage, context: PagePr
     }
 
     // 是否使用极简战斗界面
-    renderMinimalBattle();
+    renderMinimalBattle(credential);
 
     if (page.zodiacBattle!) {
         // 十二宫极速战斗模式
@@ -469,8 +470,8 @@ function generateLodgeForm(credential: Credential) {
     $("#hidden-4").html(form);
 }
 
-function renderMinimalBattle() {
-    const layout = SetupLoader.getTownDashboardLayout();
+function renderMinimalBattle(credential: Credential) {
+    const layout = TownDashboardLayoutManager.loadDashboardLayoutConfigId(credential);
     if (layout === 2 || layout === 3) {
         $("table:first")
             .find("tr:first")
