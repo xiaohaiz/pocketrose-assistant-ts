@@ -528,6 +528,24 @@ function doRenderRoleStatus(credential: Credential, page: TownDashboardPage) {
                 $(th).text(c);
             }
         });
+
+    if (SetupLoader.isHideCountryInformationEnabled()) {
+        $("#rightPanel")
+            .find("> table:first")
+            .find("> tbody:first")
+            .find("> tr:eq(1)")
+            .find("> td:first")
+            .find("> table:first")
+            .find("> tbody:first")
+            .find("> tr:first")
+            .next()
+            .next()
+            .next()
+            .next().hide()
+            .next().hide()
+            .next().hide()
+            .next().hide();
+    }
 }
 
 function _renderBattleMenu(credential: Credential) {
