@@ -235,6 +235,17 @@ function doRenderMenu(credential: Credential, page: TownDashboardPage) {
         });
 
     // ------------------------------------------------------------------------
+    // 如果开启了祭奠状态的提醒
+    // ------------------------------------------------------------------------
+    if (SetupLoader.isConsecrateStateRecognizeEnabled(credential.id) && page.role!.canConsecrate!) {
+        $("#messageNotification")
+            .parent()
+            .next()
+            .find("> th:first")
+            .css("color", "red");
+    }
+
+    // ------------------------------------------------------------------------
     // 如果启用了配置则开始渲染快捷按钮
     // ------------------------------------------------------------------------
     const bsId = SetupLoader.getTownDashboardShortcutButton();
