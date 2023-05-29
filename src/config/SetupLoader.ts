@@ -261,10 +261,6 @@ class SetupLoader {
         return StorageUtils.getBoolean("_pa_047");
     }
 
-    static isMobileMiniDashboardEnabled() {
-        return StorageUtils.getBoolean("_pa_040");
-    }
-
     static getTownDashboardShortcutButton(): number {
         return StorageUtils.getInt("_pa_041", -1);
     }
