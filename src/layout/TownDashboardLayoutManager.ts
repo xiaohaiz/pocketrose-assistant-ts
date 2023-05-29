@@ -1,6 +1,7 @@
 import TownDashboardLayout from "./TownDashboardLayout";
 import TownDashboardLayout001 from "./TownDashboardLayout001";
 import TownDashboardLayout002 from "./TownDashboardLayout002";
+import TownDashboardLayout003 from "./TownDashboardLayout003";
 
 class TownDashboardLayoutManager {
 
@@ -11,6 +12,7 @@ class TownDashboardLayoutManager {
         const list: TownDashboardLayout[] = [
             new TownDashboardLayout001(),
             new TownDashboardLayout002(),
+            new TownDashboardLayout003(),
         ];
         list.forEach(it => {
             const id = it.id();
