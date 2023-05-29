@@ -1,11 +1,11 @@
 import LocationStateMachine from "../../core/LocationStateMachine";
-import TownDashboardPageProcessor from "../../processor/internal/TownDashboardPageProcessor";
 import TownDashboardPageProcessor2 from "../../processor/internal/TownDashboardPageProcessor2";
+import PageProcessor from "../../processor/PageProcessor";
 import PageInterceptor from "../PageInterceptor";
 
 class TownDashboardPageInterceptor implements PageInterceptor {
 
-    readonly #processor = new TownDashboardPageProcessor();
+    readonly #processor: PageProcessor = new TownDashboardPageProcessor2();
 
     accept(cgi: string, pageText: string): boolean {
         if (cgi === "status.cgi" || cgi === "town.cgi") {
@@ -17,8 +17,7 @@ class TownDashboardPageInterceptor implements PageInterceptor {
     intercept(): void {
         // Set current location state to TOWN.
         LocationStateMachine.create().inTown();
-        //this.#processor.process();
-        new TownDashboardPageProcessor2().process();
+        this.#processor.process();
     }
 
 }
