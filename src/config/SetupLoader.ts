@@ -265,10 +265,6 @@ class SetupLoader {
         return StorageUtils.getBoolean("_pa_040");
     }
 
-    static isMobileMenuMoveBottomEnabled() {
-        return StorageUtils.getBoolean("_pa_045");
-    }
-
     static getTownDashboardShortcutButton(): number {
         return StorageUtils.getInt("_pa_041", -1);
     }
