@@ -1,3 +1,4 @@
+import SetupLoader from "../config/SetupLoader";
 import TownDashboardPage from "../pocketrose/TownDashboardPage";
 import Credential from "../util/Credential";
 import TownDashboardLayout from "./TownDashboardLayout";
@@ -24,7 +25,16 @@ class TownDashboardLayout002 extends TownDashboardLayout {
 
         $("#rightPanel")
             .removeAttr("width")
-            .css("width", "100%");
+            .css("width", "100%")
+            .find("> table:first")
+            .find("> tbody:first")
+            .find("> tr:eq(1)")
+            .find("> td:first")
+            .find("> table:first")
+            .find("> tbody:first")
+            .find("> tr:first")
+            .find("> th:first")
+            .css("font-size", "200%");
 
         if (page.role!.country !== "在野" && page.role!.country === page.townCountry) {
             $("#rightPanel")
@@ -58,6 +68,25 @@ class TownDashboardLayout002 extends TownDashboardLayout {
             .css("width", "100%")
             .next().hide();
 
+        const enlargeRatio = SetupLoader.getEnlargeBattleRatio();
+        if (enlargeRatio > 0) {
+            const fontSize = 100 * enlargeRatio;
+            $("#battleCell")
+                .find("select:first")
+                .css("font-size", fontSize + "%");
+            $("#townCell")
+                .find("select:first")
+                .css("font-size", fontSize + "%");
+            $("#personalCell")
+                .find("select:first")
+                .css("font-size", fontSize + "%");
+            $("#countryNormalCell")
+                .find("select:first")
+                .css("font-size", fontSize + "%");
+            $("#countryAdvancedCell")
+                .find("select:first")
+                .css("font-size", fontSize + "%");
+        }
         $("#battleCell")
             .parent()
             .before($("<tr><td colspan='4'>　</td></tr>"))
