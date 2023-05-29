@@ -1,5 +1,6 @@
 import _ from "lodash";
 import SetupLoader from "../../config/SetupLoader";
+import EventHandler from "../../core/EventHandler";
 import ExtensionShortcutLoader from "../../core/ExtensionShortcutLoader";
 import PalaceTaskManager from "../../core/PalaceTaskManager";
 import RankTitleLoader from "../../core/RankTitleLoader";
@@ -33,6 +34,7 @@ class TownDashboardPageProcessor2 extends PageProcessorCredentialSupport {
         doMarkElement();
         doRenderMobilization();
         doRenderMenu(credential, page);
+        doRenderEventBoard();
     }
 
 }
@@ -413,6 +415,47 @@ function doRenderMenu(credential: Credential, page: TownDashboardPage) {
     if (SetupLoader.isCollectTownTaxDisabled()) {
         $("option[value='MAKE_TOWN']").remove();
     }
+}
+
+function doRenderEventBoard() {
+    $("td:contains('最近发生的事件')")
+        .filter(function () {
+            return $(this).text() === "最近发生的事件";
+        })
+        .parent()
+        .next()
+        .find("td:first")
+        .attr("id", "eventBoard");
+
+    const eventHtmlList: string[] = [];
+    $("#eventBoard").html()
+        .split("<br>")
+        .filter(it => it.endsWith(")"))
+        .map(function (it) {
+            // noinspection HtmlDeprecatedTag,XmlDeprecatedElement,HtmlDeprecatedAttribute
+            const header = "<font color=\"navy\">●</font>";
+            return StringUtils.substringAfter(it, header);
+        })
+        .map(function (it) {
+            return EventHandler.handleWithEventHtml(it);
+        })
+        .forEach(it => eventHtmlList.push(it));
+
+    let html = "";
+    html += "<table style='border-width:0;width:100%;height:100%;margin:auto'>";
+    html += "<tbody>";
+    eventHtmlList.forEach(it => {
+        html += "<tr>";
+        html += "<th style='color:navy;vertical-align:top'>●</th>";
+        html += "<td style='width:100%'>";
+        html += it;
+        html += "</td>";
+        html += "</tr>";
+    });
+    html += "</tbody>";
+    html += "</table>";
+
+    $("#eventBoard").html(html);
 }
 
 function _renderBattleMenu(credential: Credential) {
