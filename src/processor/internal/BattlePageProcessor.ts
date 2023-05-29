@@ -148,6 +148,7 @@ function processBattle(credential: Credential, page: BattlePage, context: PagePr
     }
 
     // 检查是否宠物有技能变化
+    let petLearnSpell = false;
     $("#delim")
         .prev()
         .find("> b:first")
@@ -156,6 +157,7 @@ function processBattle(credential: Credential, page: BattlePage, context: PagePr
         .each((idx, font) => {
             const ft = $(font).text();
             if (ft.includes("遗忘了技能") || ft.includes("学会了新技能")) {
+                petLearnSpell = true;
                 $(font).attr("color", "blue");
             }
         });
@@ -206,7 +208,7 @@ function processBattle(credential: Credential, page: BattlePage, context: PagePr
     } else {
         // 普通战斗极速模式
         if (SetupLoader.isNormalFlashBattleEnabled()) {
-            if (!page.petUpgrade! && page.harvestList!.length === 0) {
+            if (!petLearnSpell && page.harvestList!.length === 0) {
                 $("button[tabindex='1']").trigger("click");
             }
         }
@@ -468,53 +470,53 @@ function generateLodgeForm(credential: Credential) {
 }
 
 function renderMinimalBattle() {
-    if (!SetupLoader.isMobileMiniDashboardEnabled()) {
-        return;
-    }
-    $("table:first")
-        .find("tr:first")
-        .next()
-        .next()
-        .next()
-        .next()
-        .next()
-        .next().hide()
-        .next().hide()
-        .next().hide()
-        .next().hide();
+    const layout = SetupLoader.getTownDashboardLayout();
+    if (layout === 2 || layout === 3) {
+        $("table:first")
+            .find("tr:first")
+            .next()
+            .next()
+            .next()
+            .next()
+            .next()
+            .next().hide()
+            .next().hide()
+            .next().hide()
+            .next().hide();
 
-    let lastIndex = -1;
-    $("table:eq(5)")
-        .find("tbody:first")
-        .find("tr:first")
-        .find("td:first")
-        .find("center:first")
-        .find("h1:first").hide()
-        .next()
-        .find("font:first")
-        .find("b:first")
-        .attr("id", "battleRecordContainer")
-        .find("p")
-        .each((idx, p) => {
-            const text = $(p).text();
-            if (text.startsWith("第") && text.includes("回合")) {
-                lastIndex = idx;
-            }
-        });
-
-    $("#battleRecordContainer")
-        .find("p")
-        .each((idx, p) => {
-            const text = $(p).text();
-            if (text.startsWith("第") && text.includes("回合")) {
-                if (idx !== lastIndex) {
-                    $(p).hide();
-                } else {
-                    $(p).find("table:eq(1)")
-                        .hide();
+        let lastIndex = -1;
+        $("table:eq(5)")
+            .find("tbody:first")
+            .find("tr:first")
+            .find("td:first")
+            .find("center:first")
+            .find("h1:first").hide()
+            .next()
+            .find("font:first")
+            .find("b:first")
+            .attr("id", "battleRecordContainer")
+            .find("p")
+            .each((idx, p) => {
+                const text = $(p).text();
+                if (text.startsWith("第") && text.includes("回合")) {
+                    lastIndex = idx;
                 }
-            }
-        });
+            });
+
+        $("#battleRecordContainer")
+            .find("p")
+            .each((idx, p) => {
+                const text = $(p).text();
+                if (text.startsWith("第") && text.includes("回合")) {
+                    if (idx !== lastIndex) {
+                        $(p).hide();
+                    } else {
+                        $(p).find("table:eq(1)")
+                            .hide();
+                    }
+                }
+            });
+    }
 }
 
 async function doBeforeReturn(credential: Credential, context: PageProcessorContext): Promise<void> {

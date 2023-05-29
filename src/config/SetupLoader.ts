@@ -261,14 +261,6 @@ class SetupLoader {
         return StorageUtils.getBoolean("_pa_047");
     }
 
-    static isMobileMiniDashboardEnabled() {
-        return StorageUtils.getBoolean("_pa_040");
-    }
-
-    static isMobileMenuMoveBottomEnabled() {
-        return StorageUtils.getBoolean("_pa_045");
-    }
-
     static getTownDashboardShortcutButton(): number {
         return StorageUtils.getInt("_pa_041", -1);
     }
@@ -299,6 +291,10 @@ class SetupLoader {
 
     static isCompactBattleReportEnabled(): boolean {
         return StorageUtils.getBoolean("_pa_051");
+    }
+
+    static getTownDashboardLayout(): number {
+        return StorageUtils.getFloat("_pa_052", 1);
     }
 }
 

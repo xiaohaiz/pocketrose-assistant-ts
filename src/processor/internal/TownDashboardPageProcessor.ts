@@ -4,159 +4,572 @@ import EventHandler from "../../core/EventHandler";
 import ExtensionShortcutLoader from "../../core/ExtensionShortcutLoader";
 import PalaceTaskManager from "../../core/PalaceTaskManager";
 import RankTitleLoader from "../../core/RankTitleLoader";
+import TownDashboardLayoutManager from "../../layout/TownDashboardLayoutManager";
 import TownDashboardPage from "../../pocketrose/TownDashboardPage";
 import Credential from "../../util/Credential";
-import NetworkUtils from "../../util/NetworkUtils";
 import PageUtils from "../../util/PageUtils";
 import StringUtils from "../../util/StringUtils";
 import PageProcessorContext from "../PageProcessorContext";
 import PageProcessorCredentialSupport from "../PageProcessorCredentialSupport";
 
+const LAYOUT_MANAGER = new TownDashboardLayoutManager();
+
 class TownDashboardPageProcessor extends PageProcessorCredentialSupport {
 
     doLoadButtonStyles(): number[] {
-        return [7, 8, 16, 10005, 10007, 10008, 10016, 10024, 10028, 10032, 10033, 10035, 10062];
+        return [16, 10005, 10007, 10008, 10016, 10024, 10028, 10032, 10033, 10035, 10062];
     }
 
     doProcess(credential: Credential, context?: PageProcessorContext): void {
         const page = TownDashboardPage.parse(PageUtils.currentPageHtml());
 
-        // 手机战斗返回后不在页面顶端，尝试自动触顶。
         $("center:first")
-            .attr("id", "systemAnnouncement");
+            .attr("id", "systemAnnouncement")
+            .each((idx, center) => {
+                const id = $(center).attr("id")!;
+                // 手机战斗返回后不在页面顶端，尝试自动触顶。
+                PageUtils.scrollIntoView(id);
+                $(center).after($("<div id='version' style='color:navy;font-weight:bold;text-align:center;width:100%'></div>"));
+                // @ts-ignore
+                $("#version").html(__VERSION__);
+            });
 
-        PageUtils.scrollIntoView("systemAnnouncement");
-        $("#systemAnnouncement")
-            .after($("<div id='version' style='color:navy;font-weight:bold;text-align:center;width:100%'></div>"));
-        // @ts-ignore
-        $("#version").html(__VERSION__);
+        doMarkElement();
+        doRenderMobilization();
+        doRenderMenu(credential, page);
+        doRenderEventBoard();
+        doRenderRoleStatus(credential, page);
+        doRenderEnlargeMode();
 
-        if (SetupLoader.isQiHanTitleEnabled()) {
-            $("table:eq(1)")
-                .find("> tbody:first")
-                .find("> tr:first")
-                .find("> td:first")
-                .find("> form:first")
-                .find("> font:first")
-                .each((idx, font) => {
-                    let c = $(font).text();
-
-                    let b = StringUtils.substringAfterLast(c, "(");
-                    let a = StringUtils.substringBefore(c, "(" + b);
-                    b = StringUtils.substringBefore(b, ")");
-                    const ss = _.split(b, " ");
-                    const b1 = _.replace(ss[0], "部队", "");
-                    const b2 = RankTitleLoader.transformTitle(ss[1]);
-                    const b3 = ss[2];
-
-                    const s = a + "(" + b1 + " " + b2 + " " + b3 + ")";
-                    $(font).text(s);
-                });
-        }
-
-
-        // --------------------------------------------------------------------
-        // 标记页面上的元素
-        // --------------------------------------------------------------------
-
-        // 所有表格加id属性
-        $("table").each((idx, table) => {
-            const tableId = "t" + idx;
-            $(table).attr("id", tableId);
-        });
-        $("input:text:last").attr("id", "messageInputText");
-        $("input:submit[value='更新']").attr("id", "refreshButton");
-
-        // Handle with buttons
-        $("#t5")
-            .find("form[action='battle.cgi']")
-            .parent()
-            .attr("id", "battleCell")
-            .next()
-            .find("input:submit:first")
-            .attr("id", "battleButton");
-        $("#t5")
-            .find("form[action='town.cgi']")
-            .parent()
-            .attr("id", "townCell")
-            .next()
-            .find("input:submit:first")
-            .attr("id", "townButton");
-        $("#t5")
-            .find("form[action='mydata.cgi']")
-            .next()
-            .attr("id", "personalCell")
-            .next()
-            .find("input:submit:first")
-            .attr("id", "personalButton");
-
-        this.#internalProcess(credential, page);
-    }
-
-    #internalProcess(credential: Credential, page: TownDashboardPage) {
-        doProcess(credential, page);
-
-        if (SetupLoader.isHideCountryInformationEnabled()) {
-            $("font:contains('城市的支配国')")
-                .filter((idx, font) => $(font).text().startsWith("城市的支配国"))
-                .parent()
-                .parent().hide()
-                .next().hide()
-                .next().hide()
-                .next().hide();
-        }
-
-        if (SetupLoader.isAsciiTextButtonEnabled()) {
-            $("input:submit[value='更新']").val("RELOAD");
-            $("input:submit[value='行动']").val("ACTION");
-        }
-
-        if (SetupLoader.isNewPalaceTaskEnabled()) {
-            const monsterTask = new PalaceTaskManager(credential).monsterTaskHtml;
-            if (monsterTask !== "") {
-                $("#t5")
-                    .find("> tbody:first")
-                    .find("> tr:first")
-                    .find("> td:first")
-                    .each((i, td) => {
-                        const colspan = $(td).attr("colspan");
-                        $(td).parent()
-                            .after("" +
-                                "<tr>" +
-                                "<td colspan='" + colspan + "' " +
-                                "style='background-color:#F8F0E0;text-align:center;font-weight:bold'>" + monsterTask + "</td>" +
-                                "</tr>" +
-                                "");
-                    });
-            }
-        }
+        LAYOUT_MANAGER.getLayout(SetupLoader.getTownDashboardLayout())?.render(credential, page);
     }
 
 }
 
-function doProcess(credential: Credential, page: TownDashboardPage) {
-    let buttonChanged = false;
-    if (SetupLoader.isConsecrateStateRecognizeEnabled(credential.id)) {
-        buttonChanged = true;
-        if (PageUtils.currentPageHtml().includes("可以进行下次祭奠了")) {
-            $("#refreshButton").addClass("button-7");
-            $("input:submit[value='行动']").addClass("button-7");
-        } else {
-            $("#refreshButton").addClass("button-8");
-            $("input:submit[value='行动']").addClass("button-8");
+function doMarkElement() {
+    $("input:text:last").attr("id", "messageInputText");
+    $("input:submit[value='更新']").attr("id", "refreshButton");
+    $("table:first")
+        .find("> tbody:first")
+        .find("> tr:eq(1)")
+        .find("> td:first")
+        .find("> table:first")
+        .find("> tbody:first")
+        .find("> tr:first")
+        .find("> td:first")
+        .attr("id", "mobilization")
+        .parent()
+        .parent()
+        .find("> tr:eq(1)")
+        .find("> td:first")
+        .attr("id", "leftPanel")
+        .next()
+        .attr("id", "rightPanel")
+        .find("> table:first")
+        .find("> tbody:first")
+        .find("> tr:first")
+        .find("> td:first")
+        .find("> table:first")
+        .attr("id", "menuTable")
+        .find("> tbody:first")
+        .find("> tr:first")
+        .find("> td:first")
+        .attr("id", "messageNotification")
+        .parent()
+        .next()
+        .next()
+        .find("> td:first")
+        .attr("id", "battleCell")
+        .next()
+        .find("> input:submit:first")
+        .attr("id", "battleButton")
+        .parent()
+        .parent()
+        .next()
+        .find("> td:first")
+        .attr("id", "townCell")
+        .next()
+        .find("> input:submit:first")
+        .attr("id", "townButton")
+        .parent()
+        .parent()
+        .next()
+        .find("> td:first")
+        .attr("id", "personalCell")
+        .next()
+        .find("> input:submit:first")
+        .attr("id", "personalButton")
+        .parent()
+        .parent()
+        .next()
+        .find("> td:first")
+        .attr("id", "countryNormalCell")
+        .next()
+        .find("> input:submit:first")
+        .attr("id", "countryNormalButton")
+        .parent()
+        .parent()
+        .next()
+        .find("> td:first")
+        .attr("id", "countryAdvancedCell")
+        .next()
+        .find("> input:submit:first")
+        .attr("id", "countryAdvancedButton")
+        .parent()
+        .parent()
+        .next()
+        .find("> td:first")
+        .find("> form:first")
+        .find("> input:submit:first")
+        .attr("id", "leaveButton")
+        .parent()
+        .parent()
+        .parent()
+        .next()
+        .find("> td:first")
+        .find("> form:first")
+        .find("> input:submit:first")
+        .attr("id", "exitButton");
+}
+
+function doRenderMobilization() {
+    $("#mobilization")
+        .find("> form:first")
+        .find("> font:first")
+        .each((idx, font) => {
+            let c = $(font).text();
+            let b = StringUtils.substringAfterLast(c, "(");
+            let a = StringUtils.substringBefore(c, "(" + b);
+            b = StringUtils.substringBefore(b, ")");
+            const ss = _.split(b, " ");
+            const b1 = _.replace(ss[0], "部队", "");
+            const b2 = SetupLoader.isQiHanTitleEnabled() ? RankTitleLoader.transformTitle(ss[1]) : ss[1];
+            const b3 = ss[2];
+            const s = a + "(" + b1 + " " + b2 + " " + b3 + ")";
+            $(font).text(s);
+        });
+}
+
+function doRenderMenu(credential: Credential, page: TownDashboardPage) {
+    // ------------------------------------------------------------------------
+    // 渲染菜单表格中的所有按钮
+    // height & width => 100%
+    // Use ASCII text (setup)
+    // ------------------------------------------------------------------------
+    $("#refreshButton")
+        .css("height", "100%")
+        .css("width", "100%")
+        .addClass("button-16")
+        .each((idx, button) => {
+            if (SetupLoader.isAsciiTextButtonEnabled()) {
+                $(button).val("RELOAD");
+            }
+        });
+    $("#battleButton")
+        .css("height", "100%")
+        .css("width", "100%")
+        .addClass("button-16")
+        .each((idx, button) => {
+            if (SetupLoader.isAsciiTextButtonEnabled()) {
+                $(button).val("BATTLE");
+            }
+        });
+    $("#townButton")
+        .css("height", "100%")
+        .css("width", "100%")
+        .addClass("button-16")
+        .each((idx, button) => {
+            if (SetupLoader.isAsciiTextButtonEnabled()) {
+                $(button).val("ACTION");
+            }
+        });
+    $("#personalButton")
+        .css("height", "100%")
+        .css("width", "100%")
+        .addClass("button-16")
+        .each((idx, button) => {
+            if (SetupLoader.isAsciiTextButtonEnabled()) {
+                $(button).val("ACTION");
+            }
+        });
+    $("#countryNormalButton")
+        .css("height", "100%")
+        .css("width", "100%")
+        .addClass("button-16")
+        .each((idx, button) => {
+            if (SetupLoader.isAsciiTextButtonEnabled()) {
+                $(button).val("ACTION");
+            }
+        });
+    $("#countryAdvancedButton")
+        .css("height", "100%")
+        .css("width", "100%")
+        .addClass("button-16")
+        .each((idx, button) => {
+            if (SetupLoader.isAsciiTextButtonEnabled()) {
+                $(button).val("ACTION");
+            }
+        });
+    $("#leaveButton")
+        .css("height", "100%")
+        .css("width", "100%")
+        .addClass("button-16")
+        .each((idx, button) => {
+            if (SetupLoader.isAsciiTextButtonEnabled()) {
+                $(button).val("ACTION");
+            }
+        })
+        .parent()
+        .parent()
+        .attr("colspan", 1)
+        .prev()
+        .attr("colspan", 3);
+    $("#exitButton")
+        .css("height", "100%")
+        .css("width", "100%")
+        .addClass("button-16")
+        .each((idx, button) => {
+            if (SetupLoader.isAsciiTextButtonEnabled()) {
+                $(button).val("ACTION");
+            }
+        });
+
+    // ------------------------------------------------------------------------
+    // 如果开启了祭奠状态的提醒
+    // ------------------------------------------------------------------------
+    if (SetupLoader.isConsecrateStateRecognizeEnabled(credential.id) && page.role!.canConsecrate!) {
+        $("#messageNotification")
+            .parent()
+            .next()
+            .find("> th:first")
+            .css("color", "red");
+    }
+
+    // ------------------------------------------------------------------------
+    // 如果启用了配置则开始渲染快捷按钮
+    // ------------------------------------------------------------------------
+    const bsId = SetupLoader.getTownDashboardShortcutButton();
+    if (bsId > 0) {
+        const buttonClass = "button-" + bsId;
+        $("#menuTable")
+            .find("> tbody:first")
+            .find("> tr:eq(2)")
+            .find("> th:first")
+            .each((idx, th) => {
+                const extensionId = SetupLoader.getTownDashboardExtensionShortcutButton();
+                $(th).html("");
+                if (extensionId > 0) {
+                    let esButton = true;
+                    const es = ExtensionShortcutLoader.getExtensionShortcut(extensionId)!;
+                    if (es[0] === "城市收益") {
+                        esButton = _canCollectTownTax(page);
+                    }
+                    if (esButton) {
+                        const bt = "&nbsp;" + es[0] + "&nbsp;"
+                        $(th).css("vertical-align", "bottom")
+                            .html("<button role='button' class='" + buttonClass + "' id='shortcut0' " +
+                                "style='margin-bottom:8px;white-space:nowrap'>" + bt + "</button>")
+                        _bindShortcutButton("shortcut0", es[1]);
+                    }
+                }
+            })
+            .parent()
+            .next()
+            .find("> th:first")
+            .each((idx, th) => {
+                let html = "";
+                html += "<table style='background-color:transparent;border-spacing:0;border-width:0;margin:auto;text-align:center;width:100%'>";
+                html += "<tbody>";
+                html += "<tr>";
+                html += "<td>";
+                html += "<button role='button' class='" + buttonClass + "' id='shortcut1' style='white-space:nowrap'>&nbsp;图鉴&nbsp;</button>";
+                html += "</td>";
+                html += "<td>";
+                html += "<button role='button' class='" + buttonClass + "' id='shortcut5' style='white-space:nowrap'>&nbsp;个人&nbsp;</button>";
+                html += "</td>";
+                html += "</tr>";
+                html += "</tbody>";
+                html += "</table>";
+                $(th).html(html);
+                _bindShortcutButton("shortcut1", "PETMAP");
+                _bindShortcutButton("shortcut5", "RANK_REMAKE");
+            })
+            .parent()
+            .next()
+            .find("> th:first")
+            .each((idx, th) => {
+                let html = "";
+                html += "<table style='background-color:transparent;border-spacing:0;border-width:0;margin:auto;text-align:center;width:100%'>";
+                html += "<tbody>";
+                html += "<tr>";
+                html += "<td>";
+                html += "<button role='button' class='" + buttonClass + "' id='shortcut2' style='white-space:nowrap'>&nbsp;装备&nbsp;</button>";
+                html += "</td>";
+                html += "<td>";
+                html += "<button role='button' class='" + buttonClass + "' id='shortcut6' style='white-space:nowrap'>&nbsp;团队&nbsp;</button>";
+                html += "</td>";
+                html += "</tr>";
+                html += "</tbody>";
+                html += "</table>";
+                $(th).html(html);
+                _bindShortcutButton("shortcut2", "USE_ITEM");
+                _bindShortcutButton("shortcut6", "BATTLE_MES");
+            })
+            .parent()
+            .next()
+            .find("> th:first")
+            .each((idx, th) => {
+                let html = "";
+                html += "<table style='background-color:transparent;border-spacing:0;border-width:0;margin:auto;text-align:center;width:100%'>";
+                html += "<tbody>";
+                html += "<tr>";
+                html += "<td>";
+                html += "<button role='button' class='" + buttonClass + "' id='shortcut3' style='white-space:nowrap'>&nbsp;宠物&nbsp;</button>";
+                html += "</td>";
+                html += "<td>";
+                html += "<button role='button' class='" + buttonClass + "' id='shortcut7' style='white-space:nowrap'>&nbsp;银行&nbsp;</button>";
+                html += "</td>";
+                html += "</tr>";
+                html += "</tbody>";
+                html += "</table>";
+                $(th).html(html);
+                _bindShortcutButton("shortcut3", "PETSTATUS");
+                _bindShortcutButton("shortcut7", "BANK");
+            })
+            .parent()
+            .next()
+            .find("> th:first")
+            .each((idx, th) => {
+                let html = "";
+                html += "<table style='background-color:transparent;border-spacing:0;border-width:0;margin:auto;text-align:center;width:100%'>";
+                html += "<tbody>";
+                html += "<tr>";
+                html += "<td>";
+                html += "<button role='button' class='" + buttonClass + "' id='shortcut4' style='white-space:nowrap'>&nbsp;职业&nbsp;</button>";
+                html += "</td>";
+                html += "<td>";
+                html += "<button role='button' class='" + buttonClass + "' id='shortcut8' style='white-space:nowrap'>&nbsp;设置&nbsp;</button>";
+                html += "</td>";
+                html += "</tr>";
+                html += "</tbody>";
+                html += "</table>";
+                $(th).html(html);
+                _bindShortcutButton("shortcut4", "CHANGE_OCCUPATION");
+                _bindShortcutButton("shortcut8", "LETTER");
+            });
+    }
+
+    // ------------------------------------------------------------------------
+    // 增加皇宫任务的通知栏
+    // ------------------------------------------------------------------------
+    $("#messageNotification")
+        .parent()
+        .after("" +
+            "<tr style='display:none'>" +
+            "<td colspan='4' " +
+            "id='palaceTask' " +
+            "style='background-color:#F8F0E0;text-align:center;font-weight:bold'></td>" +
+            "</tr>" +
+            "");
+    if (SetupLoader.isNewPalaceTaskEnabled()) {
+        const monsterTask = new PalaceTaskManager(credential).monsterTaskHtml;
+        if (monsterTask !== "") {
+            $("#palaceTask").html(monsterTask).parent().show();
         }
     }
 
-    $("#refreshButton").attr("height", "100%");
-    $("input:submit[value='行动']").attr("height", "100%");
+    // ------------------------------------------------------------------------
+    // 根据配置决定是否隐藏出城和退出按钮
+    // ------------------------------------------------------------------------
+    if (SetupLoader.isHiddenLeaveAndExitEnabled()) {
+        $("#leaveButton")
+            .closest("tr")
+            .hide()
+            .next()
+            .hide();
+    }
 
+    // ------------------------------------------------------------------------
+    // 渲染菜单项
+    // ------------------------------------------------------------------------
+    _renderBattleMenu(credential);
+    $("option[value='INN']").text("客栈·驿站");
+    $("option[value='LETTER']").text("口袋助手设置");
+    $("option[value='RANK_REMAKE']").text("个人面板");
+    $("option[value='BATTLE_MES']").text("团队面板");
+    if (SetupLoader.isEquipmentManagementUIEnabled()) {
+        $("option[value='USE_ITEM']").text("装备管理");
+        $("option[value='ITEM_SEND']").remove();
+    }
+    if (SetupLoader.isPetManagementUIEnabled()) {
+        $("option[value='PETSTATUS']").text("宠物管理");
+        $("option[value='PET_SEND']").remove();
+        $("option[value='PETBORN']").remove();
+    }
+    if (SetupLoader.isCareerManagementUIEnabled()) {
+        $("option[value='CHANGE_OCCUPATION']").text("职业管理");
+        $("option[value='MAGIC']").remove();
+    }
+    if (SetupLoader.isPocketSuperMarketEnabled()) {
+        $("option[value='ARM_SHOP']").text("武器商店");
+        $("option[value='PRO_SHOP']").text("防具商店");
+        $("option[value='ACC_SHOP']").text("饰品商店");
+        $("option[value='ITEM_SHOP']").text("物品商店");
+    }
+    if (SetupLoader.isGemHouseUIEnabled()) {
+        $("option[value='BAOSHI_SHOP']").text("宝石镶嵌");
+        $("option[value='BAOSHI_DELSHOP']").remove();
+    }
+    $("option[value='PETPROFILE']").text("宠物排行榜");
+    $("option[value='CHANGEMAP']").text("冒险家公会");
+    if (SetupLoader.isFastLoginEnabled()) {
+        $("option[value='CHUJIA']").text("快速登陆设置");
+    }
+    if (SetupLoader.isPocketBankEnabled()) {
+        $("option[value='BANK']").text("口袋银行");
+        $("option[value='MONEY_SEND']").remove();
+        $("option[value='SALARY']").remove();
+    }
+    if (SetupLoader.isCollectTownTaxDisabled()) {
+        $("option[value='MAKE_TOWN']").remove();
+    }
+    $("option[value='COU_MAKE']").text("口袋助手使用手册");
+    $("option[value='TENNIS']").text("任务屋");
+}
+
+function doRenderEventBoard() {
+    $("td:contains('最近发生的事件')")
+        .filter(function () {
+            return $(this).text() === "最近发生的事件";
+        })
+        .parent()
+        .next()
+        .find("td:first")
+        .attr("id", "eventBoard");
+
+    const eventHtmlList: string[] = [];
+    $("#eventBoard").html()
+        .split("<br>")
+        .filter(it => it.endsWith(")"))
+        .map(function (it) {
+            // noinspection HtmlDeprecatedTag,XmlDeprecatedElement,HtmlDeprecatedAttribute
+            const header = "<font color=\"navy\">●</font>";
+            return StringUtils.substringAfter(it, header);
+        })
+        .map(function (it) {
+            return EventHandler.handleWithEventHtml(it);
+        })
+        .forEach(it => eventHtmlList.push(it));
+
+    let html = "";
+    html += "<table style='border-width:0;width:100%;height:100%;margin:auto'>";
+    html += "<tbody>";
+    eventHtmlList.forEach(it => {
+        html += "<tr>";
+        html += "<th style='color:navy;vertical-align:top'>●</th>";
+        html += "<td style='width:100%'>";
+        html += it;
+        html += "</td>";
+        html += "</tr>";
+    });
+    html += "</tbody>";
+    html += "</table>";
+
+    $("#eventBoard").html(html);
+}
+
+function doRenderRoleStatus(credential: Credential, page: TownDashboardPage) {
+    // 如果满级并且没有关闭转职入口，则战斗标签红底显示
+    if (page.role!.level === 150) {
+        if (!SetupLoader.isCareerTransferEntranceDisabled(credential.id)) {
+            $("#battleCell").css("background-color", "red");
+        }
+    }
+    // 如果没有满级但是有单项能力到达极限，战斗标签黄底显示
+    if (page.role!.level !== 150 && (page.role!.attack === 375 || page.role!.defense === 375
+        || page.role!.specialAttack === 375 || page.role!.specialDefense === 375 || page.role!.speed === 375)) {
+        $("#battleCell").css("background-color", "yellow");
+    }
+
+    $("#rightPanel")
+        .find("> table:first")
+        .find("> tbody:first")
+        .find("> tr:eq(1)")
+        .find("> td:first")
+        .find("> table:first")
+        .find("> tbody:first")
+        .find("> tr:first")
+        .find("> th:first")
+        .find("> font:first")
+        .html((idx, html) => {
+            const name = StringUtils.substringBefore(html, "(");
+            const unit = StringUtils.substringBetween(html, "(", "军)");
+            if (unit.includes("无所属")) {
+                return name + "&nbsp;&nbsp;&nbsp;" + page.role!.battleCount + "战";
+            } else {
+                return name + "(" + unit + ")" + "&nbsp;&nbsp;&nbsp;" + page.role!.battleCount + "战";
+            }
+        })
+        .parent()
+        .parent()
+        .next()
+        .next()
+        .find("> th:first")
+        .each((idx, th) => {
+            const text = $(th).text();
+            const cash = _.parseInt(StringUtils.substringBefore(text, " Gold"));
+            if (cash >= 1000000) {
+                $(th).css("color", "red");
+            }
+        })
+        .next()
+        .next()
+        .each((idx, th) => {
+            if (SetupLoader.isExperienceProgressBarEnabled()) {
+                if (page.role!.level === 150) {
+                    $(th).attr("style", "color: blue").text("MAX");
+                } else {
+                    const ratio = page.role!.level! / 150;
+                    const progressBar = PageUtils.generateProgressBarHTML(ratio);
+                    const exp = $(th).text();
+                    $(th).html("<span title='" + exp + "'>" + progressBar + "</span>");
+                }
+            }
+        })
+        .parent()
+        .next()
+        .find("> th:first")
+        .each((idx, th) => {
+            if (SetupLoader.isQiHanTitleEnabled()) {
+                let c = $(th).text();
+                c = StringUtils.substringAfterLast(c, " ");
+                c = RankTitleLoader.transformTitle(c);
+                $(th).text(c);
+            }
+        });
+
+    if (SetupLoader.isHideCountryInformationEnabled()) {
+        $("#rightPanel")
+            .find("> table:first")
+            .find("> tbody:first")
+            .find("> tr:eq(1)")
+            .find("> td:first")
+            .find("> table:first")
+            .find("> tbody:first")
+            .find("> tr:first")
+            .next()
+            .next()
+            .next()
+            .next().hide()
+            .next().hide()
+            .next().hide()
+            .next().hide();
+    }
+}
+
+function doRenderEnlargeMode() {
     const enlargeRatio = SetupLoader.getEnlargeBattleRatio();
     if (enlargeRatio > 0) {
-        if (!buttonChanged) {
-            $("#refreshButton").addClass("button-16");
-            $("input:submit[value='行动']").addClass("button-16");
-        }
-
         let fontSize = 100 * enlargeRatio;
         let picWidth = 80 * enlargeRatio;
         let picHeight = 40 * enlargeRatio;
@@ -170,366 +583,15 @@ function doProcess(credential: Credential, page: TownDashboardPage) {
             .attr("width", picWidth)
             .attr("height", picHeight)
             .before($("<br>"));
-        $("#battleButton")
-            .css("height", "100%");
 
         const clock = $("input:text[name='clock']");
         if (clock.length > 0) {
             clock.css("font-size", fontSize + "%");
         }
     }
-
-    $("option[value='COU_MAKE']")
-        .css("background-color", "yellow")
-        .text("口袋助手使用手册");
-    $("option[value='TENNIS']")
-        .css("background-color", "yellow")
-        .text("任务屋");
-    doRenderBattleMenu(credential);
-    doRenderPostHouseMenu();
-    doRenderSetupMenu();
-    doRenderEquipmentManagementMenu();
-    doRenderPetManagementMenu();
-    doRenderCareerManagementMenu();
-    doRenderAdventureGuildMenu();
-    doRenderSuperMarketMenu();
-    doRenderGemHouseMenu();
-    doRenderPetRankMenu();
-    doRenderFastLoginMenu();
-    doRenderBankMenu();
-
-    doRenderBattleCount(page);
-    doRenderCareerTransferWarning(credential, page);
-    doRenderRoleStatus(page);
-    doRenderTownTax(credential, page);
-    doRenderLeaveTown();
-    doRenderEventBoard();
-    if (SetupLoader.isQiHanTitleEnabled()) {
-        $("td:contains('身份')")
-            .filter((idx, td) => $(td).text() === "身份")
-            .next()
-            .each((idx, th) => {
-                let c = $(th).text();
-                c = StringUtils.substringAfterLast(c, " ");
-                c = RankTitleLoader.transformTitle(c);
-                $(th).text(c);
-            });
-    }
-
-    const bsId = SetupLoader.getTownDashboardShortcutButton();
-    if (bsId >= 0) {
-        const buttonClass = "button-" + bsId;
-        $("th:contains('训练·战斗')")
-            .filter((idx, th) => {
-                return $(th).text() === "训练·战斗";
-            })
-            .closest("table")
-            .find("tr:first")
-            .find("td:first")
-            .attr("colspan", 5)
-            .parent()
-            .next()
-            .find("th:first")
-            .attr("colspan", 4)
-            .parent()
-            .next()
-            .find("th:first")
-            .attr("colspan", 3)
-            .each((_i, th) => {
-                const extensionId = SetupLoader.getTownDashboardExtensionShortcutButton();
-                if (extensionId > 0) {
-                    const es = ExtensionShortcutLoader.getExtensionShortcut(extensionId)!;
-                    const bt = "&nbsp;" + es[0] + "&nbsp;"
-                    $(th).css("vertical-align", "bottom")
-                        .html("<button role='button' class='" + buttonClass + "' id='shortcut0' style='margin-bottom:8px'>" + bt + "</button>")
-                } else {
-                    $(th).html("");
-                }
-            })
-            .parent()
-            .next()
-            .find("th:first")
-            .html("<button role='button' class='" + buttonClass + "' id='shortcut5'>&nbsp;个人&nbsp;</button>")
-            .before($("<td>" +
-                "<button role='button' class='" + buttonClass + "' id='shortcut1'>&nbsp;图鉴&nbsp;</button>" +
-                "</td>"))
-            .parent()
-            .next()
-            .find("th:first")
-            .html("<button role='button' class='" + buttonClass + "' id='shortcut6'>&nbsp;团队&nbsp;</button>")
-            .before($("<td>" +
-                "<button role='button' class='" + buttonClass + "' id='shortcut2'>&nbsp;装备&nbsp;</button>" +
-                "</td>"))
-            .parent()
-            .next()
-            .find("th:first")
-            .html("<button role='button' class='" + buttonClass + "' id='shortcut7'>&nbsp;银行&nbsp;</button>")
-            .before($("<td>" +
-                "<button role='button' class='" + buttonClass + "' id='shortcut3'>&nbsp;宠物&nbsp;</button>" +
-                "</td>"))
-            .parent()
-            .next()
-            .find("th:first")
-            .html("<button role='button' class='" + buttonClass + "' id='shortcut8'>&nbsp;设置&nbsp;</button>")
-            .before($("<td>" +
-                "<button role='button' class='" + buttonClass + "' id='shortcut4'>&nbsp;职业&nbsp;</button>" +
-                "</td>"))
-            .parent()
-            .next()
-            .find("th:first")
-            .attr("colspan", 3)
-            .parent()
-            .next()
-            .find("th:first")
-            .attr("colspan", 4)
-            .parent()
-            .next()
-            .find("th:first")
-            .attr("colspan", 5)
-
-
-        $("#shortcut0").on("click", () => {
-            const extensionId = SetupLoader.getTownDashboardExtensionShortcutButton();
-            if (extensionId > 0) {
-                const es = ExtensionShortcutLoader.getExtensionShortcut(extensionId)!;
-                $("option[value='" + es[1] + "']")
-                    .prop("selected", true)
-                    .closest("td")
-                    .next()
-                    .find("input:submit:first")
-                    .trigger("click");
-            }
-        });
-        $("#shortcut1").on("click", () => {
-            $("option[value='PETMAP']")
-                .prop("selected", true)
-                .closest("td")
-                .next()
-                .find("input:submit:first")
-                .trigger("click");
-        });
-        $("#shortcut2").on("click", () => {
-            $("option[value='USE_ITEM']")
-                .prop("selected", true)
-                .closest("td")
-                .next()
-                .find("input:submit:first")
-                .trigger("click");
-        });
-        $("#shortcut3").on("click", () => {
-            $("option[value='PETSTATUS']")
-                .prop("selected", true)
-                .closest("td")
-                .next()
-                .find("input:submit:first")
-                .trigger("click");
-        });
-        $("#shortcut4").on("click", () => {
-            $("option[value='CHANGE_OCCUPATION']")
-                .prop("selected", true)
-                .closest("td")
-                .next()
-                .find("input:submit:first")
-                .trigger("click");
-        });
-        $("#shortcut5").on("click", () => {
-            $("option[value='RANK_REMAKE']")
-                .prop("selected", true)
-                .closest("td")
-                .next()
-                .find("input:submit:first")
-                .trigger("click");
-        });
-        $("#shortcut6").on("click", () => {
-            $("option[value='BATTLE_MES']")
-                .prop("selected", true)
-                .closest("td")
-                .next()
-                .find("input:submit:first")
-                .trigger("click");
-        });
-        $("#shortcut7").on("click", () => {
-            $("option[value='BANK']")
-                .prop("selected", true)
-                .closest("td")
-                .next()
-                .find("input:submit:first")
-                .trigger("click");
-        });
-        $("#shortcut8").on("click", () => {
-            $("option[value='LETTER']")
-                .prop("selected", true)
-                .closest("td")
-                .next()
-                .find("input:submit:first")
-                .trigger("click");
-        });
-    }
-
-
-    if (SetupLoader.isMobileMiniDashboardEnabled()) {
-        // 手机版极简主页。。尝试简化
-        $("center:first").remove();
-        $("br:first").remove();
-        // $("#t0")
-        //     .find("tr:first")
-        //     .remove();
-
-        $("#t1")
-            .find("tr:first")
-            .hide();
-
-        $("#t2")
-            .parent()
-            .next()
-            .removeAttr("width")
-            .css("width", "100%")
-            .prev()
-            .remove();
-
-        $("#t6")
-            .find("tr:first")
-            .next()
-            .next()
-            .next()
-            .next().hide()
-            .next().hide()
-            .next().hide()
-            .next().hide().attr("id", "t6LastRow");
-
-        if (page.role!.country !== "在野" && page.role!.country === page.townCountry) {
-            const tax = page.townTax!;
-            $("#t6LastRow")
-                .after($("<tr><td>收益</td><th id='t6TaxCell'>" + tax + "</th><td colspan='2'></td></tr>"));
-            if (tax >= 50000) {
-                if (tax - Math.floor(tax / 50000) * 50000 <= 10000) {
-                    $("#t6TaxCell")
-                        .css("color", "white")
-                        .css("background-color", "green")
-                        .css("font-weight", "bold")
-                }
-            }
-        }
-
-        $("#t8")
-            .find("tr:first")
-            .remove();
-
-        $("#t8")
-            .find("tr:first")
-            .next()
-            .find("td:first")
-            .attr("colspan", 2)
-            .removeAttr("width")
-            .css("width", "100%")
-            .next()
-            .remove();
-
-        // 手机极简模式下，继续放大
-        if (enlargeRatio > 0) {
-            let fontSize = 100 * enlargeRatio;
-            $("#townCell")
-                .removeAttr("height")
-                .find("select:first")
-                .css("font-size", fontSize + "%");
-            $("#townButton")
-                .css("height", "100%");
-            $("#personalCell")
-                .removeAttr("height")
-                .find("select:first")
-                .css("font-size", fontSize + "%");
-            $("#personalButton")
-                .css("height", "100%");
-
-            $("option[value='COUNTRY_ALL_TALK']")
-                .parent()
-                .css("font-size", fontSize + "%")
-                .parent()
-                .removeAttr("height")
-                .next()
-                .find("input:submit:first")
-                .css("height", "100%");
-
-            $("option[value='KING']")
-                .parent()
-                .css("font-size", fontSize + "%")
-                .parent()
-                .removeAttr("height")
-                .next()
-                .find("input:submit:first")
-                .css("height", "100%");
-        }
-
-        if (SetupLoader.isMobileMenuMoveBottomEnabled()) {
-            $("#t4")
-                .find("tr:first")
-                .attr("id", "menuROW")
-                .before($("<tr id='ROW1'><td></td></tr><tr id='ROW2'><td></td></tr>"));
-
-            const h1 = $("#menuROW")
-                .next()
-                .find("td:first")
-                .html();
-            $("#menuROW")
-                .next()
-                .find("td:first")
-                .html("")
-                .parent()
-                .hide();
-
-            const h2 = $("#menuROW")
-                .next()
-                .next()
-                .find("td:first")
-                .html();
-            $("#menuROW")
-                .next()
-                .next()
-                .find("td:first")
-                .html("")
-                .parent()
-                .hide();
-
-            $("#ROW1")
-                .find("td:first").html(h1);
-            $("#ROW2")
-                .find("td:first").html(h2);
-
-            $("#t6")
-                .find("th:first")
-                .removeAttr("height")
-                .css("font-weight", "bold")
-                .css("font-size", "200%");
-        }
-
-        const colspan = bsId > 0 ? 4 : 3;
-        $("#battleCell")
-            .parent()
-            .after($("<tr><td colspan='" + colspan + "'>　</td></tr>"));
-        $("#townCell")
-            .parent()
-            .after($("<tr><td colspan='" + colspan + "'>　</td></tr>"));
-        $("#personalCell")
-            .parent()
-            .after($("<tr><td colspan='" + colspan + "'>　</td></tr>"));
-        $("option[value='COUNTRY_ALL_TALK']")
-            .parent()
-            .parent()
-            .parent()
-            .after($("<tr><td colspan='" + colspan + "'>　</td></tr>"));
-    } else {
-        $("#t2")
-            .removeAttr("width")
-            .css("width", "95%")
-            .parent()
-            .css("width", "40%")
-            .next()
-            .removeAttr("width")
-            .css("width", "60%");
-    }
 }
 
-function doRenderBattleMenu(credential: Credential) {
+function _renderBattleMenu(credential: Credential) {
     const preference = SetupLoader.getBattlePlacePreference(credential.id);
     let count = 0;
     // @ts-ignore
@@ -651,284 +713,32 @@ function doRenderBattleMenu(credential: Credential) {
             }
         });
     }
-
-
 }
 
-function doRenderPostHouseMenu() {
-    $("option[value='INN']")
-        .css("background-color", "yellow")
-        .text("客栈·驿站");
-}
-
-function doRenderSetupMenu() {
-    $("option[value='LETTER']")
-        .css("background-color", "yellow")
-        .text("口袋助手设置");
-    $("option[value='RANK_REMAKE']")
-        .css("background-color", "yellow")
-        .text("个人面板");
-    $("option[value='BATTLE_MES']")
-        .css("background-color", "yellow")
-        .text("团队面板");
-}
-
-function doRenderEquipmentManagementMenu() {
-    if (SetupLoader.isEquipmentManagementUIEnabled()) {
-        $("option[value='USE_ITEM']")
-            .css("background-color", "yellow")
-            .text("装备管理");
-        $("option[value='ITEM_SEND']").remove();
-    }
-}
-
-function doRenderPetManagementMenu() {
-    if (SetupLoader.isPetManagementUIEnabled()) {
-        $("option[value='PETSTATUS']")
-            .css("background-color", "yellow")
-            .text("宠物管理");
-        $("option[value='PET_SEND']").remove();
-        $("option[value='PETBORN']").remove();
-    }
-}
-
-function doRenderCareerManagementMenu() {
-    if (SetupLoader.isCareerManagementUIEnabled()) {
-        $("option[value='CHANGE_OCCUPATION']")
-            .css("background-color", "yellow")
-            .text("职业管理");
-        $("option[value='MAGIC']").remove();
-    }
-}
-
-function doRenderSuperMarketMenu() {
-    if (SetupLoader.isPocketSuperMarketEnabled()) {
-        $("option[value='ARM_SHOP']")
-            .css("background-color", "yellow");
-        $("option[value='PRO_SHOP']")
-            .css("background-color", "yellow");
-        $("option[value='ACC_SHOP']")
-            .css("background-color", "yellow");
-        $("option[value='ITEM_SHOP']")
-            .css("background-color", "yellow");
-    }
-}
-
-function doRenderGemHouseMenu() {
-    if (SetupLoader.isGemHouseUIEnabled()) {
-        $("option[value='BAOSHI_SHOP']")
-            .css("background-color", "yellow")
-            .text("宝石屋");
-        $("option[value='BAOSHI_DELSHOP']")
-            .remove();
-    }
-}
-
-function doRenderPetRankMenu() {
-    $("option[value='PETPROFILE']")
-        .css("background-color", "yellow")
-        .text("宠物排行榜");
-}
-
-function doRenderAdventureGuildMenu() {
-    $("option[value='CHANGEMAP']")
-        .css("background-color", "yellow")
-        .text("冒险家公会");
-}
-
-function doRenderFastLoginMenu() {
-    if (SetupLoader.isFastLoginEnabled()) {
-        $("option[value='CHUJIA']")
-            .css("background-color", "yellow")
-            .text("快速登陆设置");
-    }
-}
-
-function doRenderBankMenu() {
-    if (SetupLoader.isPocketBankEnabled()) {
-        $("option[value='BANK']")
-            .css("background-color", "yellow")
-            .text("口袋银行");
-        $("option[value='MONEY_SEND']").remove();
-        $("option[value='SALARY']").remove();
-    }
-}
-
-function doRenderBattleCount(page: TownDashboardPage) {
-    $("td:contains('贡献度')")
-        .filter(function () {
-            return $(this).text() === "贡献度";
-        })
-        .closest("table")
-        .find("th:first")
-        .find("font:first")
-        .html(function (_idx, text) {
-            const name = StringUtils.substringBefore(text, "(");
-            const unit = StringUtils.substringBetween(text, "(", "军)");
-            if (unit.includes("无所属")) {
-                return name + "&nbsp;&nbsp;&nbsp;" + page.role!.battleCount + "战";
-            } else {
-                return name + "(" + unit + ")" + "&nbsp;&nbsp;&nbsp;" + page.role!.battleCount + "战";
-            }
-        });
-}
-
-function doRenderCareerTransferWarning(credential: Credential, page: TownDashboardPage) {
-    // 如果满级并且没有关闭转职入口，则战斗前标签用红色显示
-    if (page.role!.level === 150) {
-        if (!SetupLoader.isCareerTransferEntranceDisabled(credential.id)) {
-            $("#battleCell").css("background-color", "red");
-        }
-    }
-}
-
-function doRenderRoleStatus(page: TownDashboardPage) {
-    if (page.role!.level !== 150 && (page.role!.attack === 375 || page.role!.defense === 375
-        || page.role!.specialAttack === 375 || page.role!.specialDefense === 375 || page.role!.speed === 375)) {
-        $("#battleCell").css("background-color", "yellow");
-    }
-
-    $("td:parent").each(function (_idx, td) {
-        const text = $(td).text();
-        if (text === "经验值") {
-            if (SetupLoader.isExperienceProgressBarEnabled()) {
-                if (page.role!.level === 150) {
-                    $(td).next()
-                        .attr("style", "color: blue")
-                        .text("MAX");
-                } else {
-                    const ratio = page.role!.level! / 150;
-                    const progressBar = PageUtils.generateProgressBarHTML(ratio);
-                    const exp = $(td).next().text();
-                    $(td).next()
-                        .html("<span title='" + exp + "'>" + progressBar + "</span>");
-                }
-            }
-        }
-        if (text === "资金") {
-            const cashText = $(td).next().text();
-            const cash = cashText.substring(0, cashText.indexOf(" Gold"));
-            if (parseInt(cash) >= 1000000) {
-                $(td).next().css("color", "red");
-            }
-        }
+function _bindShortcutButton(buttonId: string, option: string) {
+    $("#" + buttonId).on("click", () => {
+        $("option[value='" + option + "']")
+            .prop("selected", true)
+            .closest("td")
+            .next()
+            .find("> input:submit:first")
+            .trigger("click");
     });
 }
 
-function doRenderTownTax(credential: Credential, page: TownDashboardPage) {
-    let td: JQuery | null = null;
-    const town = page.role!.town!;
-    if (town.name === "枫丹") {
-        td = $("th:contains('收益')")
-            .filter(function () {
-                return $(this).text() === "收益";
-            })
-            .next()
-            .removeAttr("align")
-            .css("text-align", "right")
-            .html("<span style='color:red' title='枫丹的收益不需要关心'>PRIVACY</span>");
-    }
+function _canCollectTownTax(page: TownDashboardPage) {
     if (SetupLoader.isCollectTownTaxDisabled()) {
-        $("option[value='MAKE_TOWN']").remove();
-        return;
+        return false;
     }
     if (page.role!.country !== "在野" && page.role!.country === page.townCountry) {
-        if (td === null) {
-            td = $("th:contains('收益')")
-                .filter(function () {
-                    return $(this).text() === "收益";
-                })
-                .next()
-                .attr("id", "cityTaxCell");
-        }
-        const tax = parseInt(td!.text());
+        const tax = page.townTax!;
         if (tax >= 50000) {
             if (tax - Math.floor(tax / 50000) * 50000 <= 10000) {
-                td!.css("color", "white")
-                    .css("background-color", "green")
-                    .css("font-weight", "bold")
-                    .attr("id", "tax_" + page.townId);
-                doBindTownTaxButton(credential, "tax_" + page.townId);
+                return true;
             }
         }
     }
-}
-
-function doRenderLeaveTown() {
-    if (!SetupLoader.isHiddenLeaveAndExitEnabled()) {
-        return;
-    }
-    $("th:contains('出城')")
-        .filter(function () {
-            return $(this).text() === "出城";
-        })
-        .parent()
-        .attr("id", "leaveTownRow")
-        .hide()
-        .next()
-        .attr("id", "safeExitRow")
-        .hide();
-
-    $("img:first").attr("id", "townImage");
-    $("#townImage").on("click", function () {
-        $("#leaveTownRow").toggle();
-        $("#safeExitRow").toggle();
-    });
-}
-
-function doRenderEventBoard() {
-    $("td:contains('最近发生的事件')")
-        .filter(function () {
-            return $(this).text() === "最近发生的事件";
-        })
-        .parent()
-        .next()
-        .find("td:first")
-        .attr("id", "eventBoard");
-
-    const eventHtmlList: string[] = [];
-    $("#eventBoard").html()
-        .split("<br>")
-        .filter(it => it.endsWith(")"))
-        .map(function (it) {
-            // noinspection HtmlDeprecatedTag,XmlDeprecatedElement,HtmlDeprecatedAttribute
-            const header = "<font color=\"navy\">●</font>";
-            return StringUtils.substringAfter(it, header);
-        })
-        .map(function (it) {
-            return EventHandler.handleWithEventHtml(it);
-        })
-        .forEach(it => eventHtmlList.push(it));
-
-    let html = "";
-    html += "<table style='border-width:0;width:100%;height:100%;margin:auto'>";
-    html += "<tbody>";
-    eventHtmlList.forEach(it => {
-        html += "<tr>";
-        html += "<th style='color:navy;vertical-align:top'>●</th>";
-        html += "<td style='width:100%'>";
-        html += it;
-        html += "</td>";
-        html += "</tr>";
-    });
-    html += "</tbody>";
-    html += "</table>";
-
-    $("#eventBoard").html(html);
-}
-
-function doBindTownTaxButton(credential: Credential, cellId: string) {
-    $("#" + cellId).on("dblclick", function () {
-        const townId = StringUtils.substringAfterLast($(this).attr("id") as string, "_");
-        const request = credential.asRequest();
-        // @ts-ignore
-        request.town = townId;
-        // @ts-ignore
-        request.mode = "MAKE_TOWN";
-        NetworkUtils.sendPostRequest("country.cgi", request, function () {
-            $("#refreshButton").trigger("click");
-        });
-    });
+    return false;
 }
 
 export = TownDashboardPageProcessor;

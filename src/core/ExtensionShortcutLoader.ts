@@ -23,6 +23,7 @@ const EXT_SHORTCUTS = {
     9: ["快速登陆", "CHUJIA"],
     10: ["宠物联赛", "PET_TZ"],
     11: ["宠物排行", "PETPROFILE"],
+    12: ["城市收益", "MAKE_TOWN"],
 };
 
 export = ExtensionShortcutLoader;

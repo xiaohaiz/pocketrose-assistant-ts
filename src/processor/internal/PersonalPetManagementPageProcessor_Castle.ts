@@ -1,6 +1,7 @@
 import Pet from "../../common/Pet";
 import SetupLoader from "../../config/SetupLoader";
 import PetProfileLoader from "../../core/PetProfileLoader";
+import PetSimulator from "../../core/PetSimulator";
 import CastleBank from "../../pocketrose/CastleBank";
 import CastlePetExpressHouse from "../../pocketrose/CastlePetExpressHouse";
 import CastleRanch from "../../pocketrose/CastleRanch";
@@ -152,6 +153,10 @@ function doRender(credential: Credential, petList: Pet[], studyStatus: number[])
         html += "</tr>";
         html += "<tr>";
         html += "<td colspan='18' style='text-align: left'>";        // 当前宠物的操作位置
+        html += "<table style='background-color:transparent;border-spacing:0;border-width:0;margin:auto;width:100%'>";
+        html += "<tbody>";
+        html += "<tr>";
+        html += "<td style='text-align:left'>";
         html += "<input type='button' class='PetUIButton' value='卸下' id='pet_" + pet.index + "_uninstall'>";
         html += "<input type='button' class='PetUIButton' value='使用' id='pet_" + pet.index + "_install'>";
         html += "<input type='button' class='PetUIButton' value='入笼' id='pet_" + pet.index + "_cage'>";
@@ -162,6 +167,13 @@ function doRender(credential: Credential, petList: Pet[], studyStatus: number[])
         html += "<input type='button' class='PetUIButton' value='发送' id='pet_" + pet.index + "_send'>";
         html += "<input type='button' class='PetUIButton' value='改名' id='pet_" + pet.index + "_rename'>&nbsp;";
         html += "<input type='text' id='pet_" + pet.index + "_name_text' size='15' maxlength='20'>";
+        html += "</td>";
+        html += "<td style='text-align:right'>";
+        html += new PetSimulator(pet).doSimulate().doGenerateHtml();
+        html += "</td>";
+        html += "</tr>";
+        html += "</tbody>";
+        html += "</table>";
         html += "</td>";
         html += "</tr>";
     }
