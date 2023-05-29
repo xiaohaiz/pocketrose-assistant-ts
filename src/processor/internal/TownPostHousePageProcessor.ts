@@ -18,13 +18,10 @@ import PageProcessorCredentialSupport from "../PageProcessorCredentialSupport";
 
 class TownPostHousePageProcessor extends PageProcessorCredentialSupport {
 
-    constructor() {
-        super();
-    }
-
     doProcess(credential: Credential, context?: PageProcessorContext): void {
         doProcess(credential);
     }
+
 }
 
 function doProcess(credential: Credential): void {
@@ -107,19 +104,32 @@ function doRenderEden(credential: Credential, lodgeExpense: number) {
     html += "<input type='hidden' name='mode' value='STATUS'>";
     html += "<input type='submit' id='returnSubmit'>";
     html += "</form>";
+    // noinspection HtmlUnknownTarget
+    html += "<form action='map.cgi' method='post' id='leaveForm'>";
+    html += "<input type='hidden' name='id' value='" + credential.id + "'>";
+    html += "<input type='hidden' name='pass' value='" + credential.pass + "'>";
+    html += "<input type='hidden' name='navi' value='on'>";
+    html += "<input type='hidden' name='out' value='1'>";
+    html += "<input type='hidden' name='mode' value='MAP_MOVE'>";
+    html += "<input type='submit' id='leaveSubmit'>";
+    html += "</form>";
     $("#eden").html(html);
 }
 
 function doRenderMenu() {
     $("#menu").html("" +
         "<input type='button' id='lodgeButton' value='宿泊'>" +
-        "<input type='button' id='returnButton' value='返回城市'>"
+        "<input type='button' id='returnButton' value='返回城市'>" +
+        "<input type='button' id='leaveButton' value='出城'>"
     );
     $("#lodgeButton").on("click", function () {
         $("#lodgeSubmit").trigger("click");
     });
     $("#returnButton").on("click", function () {
         $("#returnSubmit").trigger("click");
+    });
+    $("#leaveButton").on("click", () => {
+        $("#leaveSubmit").trigger("click");
     });
 }
 
