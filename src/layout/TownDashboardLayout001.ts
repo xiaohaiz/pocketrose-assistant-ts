@@ -18,6 +18,32 @@ class TownDashboardLayout001 extends TownDashboardLayout {
         $("#rightPanel")
             .removeAttr("width")
             .css("width", "60%");
+
+        $("#leftPanel")
+            .find("> table:first")
+            .find("> tbody:first")
+            .find("> tr:last")
+            .find("> td:first")
+            .find("> table:first")
+            .find("> tbody:first")
+            .find("> tr:eq(1)")
+            .find("> td:first")
+            .each((idx, td) => {
+                const town = page.role!.town!;
+                if (town.name === "枫丹") {
+                    $(td).css("color", "red")
+                        .css("font-weight", "bold")
+                        .attr("title", "枫丹的收益不需要关心")
+                        .html("PRIVACY");
+                } else if (page.role!.country !== "在野" && page.role!.country === page.townCountry) {
+                    const tax = page.townTax!;
+                    if (tax >= 50000 && (tax - Math.floor(tax / 50000) * 50000 <= 10000)) {
+                        $(td).css("color", "white")
+                            .css("background-color", "green")
+                            .css("font-weight", "bold")
+                    }
+                }
+            });
     }
 
 }
