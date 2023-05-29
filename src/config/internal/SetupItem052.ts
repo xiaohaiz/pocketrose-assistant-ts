@@ -38,6 +38,7 @@ function doGenerateSetupItem() {
     html += "<option class='option_class_" + code + "' value='1'>经典布局</option>";
     html += "<option class='option_class_" + code + "' value='2'>手机极简布局Ａ</option>";
     html += "<option class='option_class_" + code + "' value='3'>手机极简布局Ｂ</option>";
+    html += "<option class='option_class_" + code + "' value='4'>聊天布局</option>";
     html += "</select>";
     return html;
 }
