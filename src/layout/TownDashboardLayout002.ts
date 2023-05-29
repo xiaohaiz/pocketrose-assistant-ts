@@ -34,9 +34,10 @@ class TownDashboardLayout002 extends TownDashboardLayout {
                 .find("> td:first")
                 .find("> table:first")
                 .find("> tbody:first")
-                .each((idx, tbody) => {
+                .find("> tr:eq(3)")
+                .each((idx, tr) => {
                     const tax = page.townTax!;
-                    $(tbody).append($("<tr><td>收益</td><th id='townTax'>" + tax + "</th><td colspan='2'></td></tr>"));
+                    $(tr).after($("<tr><td>收益</td><th id='townTax'>" + tax + "</th><td colspan='2'></td></tr>"));
                     if (tax - Math.floor(tax / 50000) * 50000 <= 10000) {
                         $("#townTax")
                             .css("color", "white")
