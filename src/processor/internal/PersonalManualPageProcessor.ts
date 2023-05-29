@@ -141,7 +141,7 @@ class PersonalManualPageProcessor extends PageProcessorCredentialSupport {
         html += "</td>";
         html += "<td id='m-1' style='background-color:#E8E8B0;width:72px;font-weight:bold'>城市面板</td>";
         html += "<td style='background-color:#E8E8D0;text-align:left'>" +
-            "相信眼神像你这么好的人，是绝对不会开启老年辅助模式的，我猜的对不对？" +
+            "相信眼神像你这么好的人，是绝对不会开启老年辅助模式的，我猜的对不对？对了，记得自己去挑选合适的布局哦。" +
             "</td>";
         html += "</tr>";
 
