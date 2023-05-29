@@ -35,6 +35,7 @@ class TownDashboardPageProcessor2 extends PageProcessorCredentialSupport {
         doRenderMobilization();
         doRenderMenu(credential, page);
         doRenderEventBoard();
+        doRenderRoleStatus(credential, page);
     }
 
 }
@@ -456,6 +457,77 @@ function doRenderEventBoard() {
     html += "</table>";
 
     $("#eventBoard").html(html);
+}
+
+function doRenderRoleStatus(credential: Credential, page: TownDashboardPage) {
+    // 如果满级并且没有关闭转职入口，则战斗标签红底显示
+    if (page.role!.level === 150) {
+        if (!SetupLoader.isCareerTransferEntranceDisabled(credential.id)) {
+            $("#battleCell").css("background-color", "red");
+        }
+    }
+    // 如果没有满级但是有单项能力到达极限，战斗标签黄底显示
+    if (page.role!.level !== 150 && (page.role!.attack === 375 || page.role!.defense === 375
+        || page.role!.specialAttack === 375 || page.role!.specialDefense === 375 || page.role!.speed === 375)) {
+        $("#battleCell").css("background-color", "yellow");
+    }
+
+    $("#rightPanel")
+        .find("> table:first")
+        .find("> tbody:first")
+        .find("> tr:eq(1)")
+        .find("> td:first")
+        .find("> table:first")
+        .find("> tbody:first")
+        .find("> tr:first")
+        .find("> th:first")
+        .find("> font:first")
+        .html((idx, html) => {
+            const name = StringUtils.substringBefore(html, "(");
+            const unit = StringUtils.substringBetween(html, "(", "军)");
+            if (unit.includes("无所属")) {
+                return name + "&nbsp;&nbsp;&nbsp;" + page.role!.battleCount + "战";
+            } else {
+                return name + "(" + unit + ")" + "&nbsp;&nbsp;&nbsp;" + page.role!.battleCount + "战";
+            }
+        })
+        .parent()
+        .parent()
+        .next()
+        .next()
+        .find("> th:first")
+        .each((idx, th) => {
+            const text = $(th).text();
+            const cash = _.parseInt(StringUtils.substringBefore(text, " Gold"));
+            if (cash >= 1000000) {
+                $(th).css("color", "red");
+            }
+        })
+        .next()
+        .next()
+        .each((idx, th) => {
+            if (SetupLoader.isExperienceProgressBarEnabled()) {
+                if (page.role!.level === 150) {
+                    $(th).attr("style", "color: blue").text("MAX");
+                } else {
+                    const ratio = page.role!.level! / 150;
+                    const progressBar = PageUtils.generateProgressBarHTML(ratio);
+                    const exp = $(th).text();
+                    $(th).html("<span title='" + exp + "'>" + progressBar + "</span>");
+                }
+            }
+        })
+        .parent()
+        .next()
+        .find("> th:first")
+        .each((idx, th) => {
+            if (SetupLoader.isQiHanTitleEnabled()) {
+                let c = $(th).text();
+                c = StringUtils.substringAfterLast(c, " ");
+                c = RankTitleLoader.transformTitle(c);
+                $(th).text(c);
+            }
+        });
 }
 
 function _renderBattleMenu(credential: Credential) {
