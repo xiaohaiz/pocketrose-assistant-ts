@@ -26,6 +26,7 @@ class TownDashboardPageProcessor2 extends PageProcessorCredentialSupport {
 
         doMarkElement();
         doRenderMobilization();
+        doRenderMenu();
     }
 
 }
@@ -114,8 +115,6 @@ function doMarkElement() {
         .find("> form:first")
         .find("> input:submit:first")
         .attr("id", "exitButton");
-
-
 }
 
 function doRenderMobilization() {
@@ -133,6 +132,78 @@ function doRenderMobilization() {
             const b3 = ss[2];
             const s = a + "(" + b1 + " " + b2 + " " + b3 + ")";
             $(font).text(s);
+        });
+}
+
+function doRenderMenu() {
+    $("#refreshButton")
+        .css("height", "100%")
+        .css("width", "100%")
+        .each((idx, button) => {
+            if (SetupLoader.isAsciiTextButtonEnabled()) {
+                $(button).val("RELOAD");
+            }
+        });
+    $("#battleButton")
+        .css("height", "100%")
+        .css("width", "100%")
+        .each((idx, button) => {
+            if (SetupLoader.isAsciiTextButtonEnabled()) {
+                $(button).val("BATTLE");
+            }
+        });
+    $("#townButton")
+        .css("height", "100%")
+        .css("width", "100%")
+        .each((idx, button) => {
+            if (SetupLoader.isAsciiTextButtonEnabled()) {
+                $(button).val("ACTION");
+            }
+        });
+    $("#personalButton")
+        .css("height", "100%")
+        .css("width", "100%")
+        .each((idx, button) => {
+            if (SetupLoader.isAsciiTextButtonEnabled()) {
+                $(button).val("ACTION");
+            }
+        });
+    $("#countryNormalButton")
+        .css("height", "100%")
+        .css("width", "100%")
+        .each((idx, button) => {
+            if (SetupLoader.isAsciiTextButtonEnabled()) {
+                $(button).val("ACTION");
+            }
+        });
+    $("#countryAdvancedButton")
+        .css("height", "100%")
+        .css("width", "100%")
+        .each((idx, button) => {
+            if (SetupLoader.isAsciiTextButtonEnabled()) {
+                $(button).val("ACTION");
+            }
+        });
+    $("#leaveButton")
+        .css("height", "100%")
+        .css("width", "100%")
+        .each((idx, button) => {
+            if (SetupLoader.isAsciiTextButtonEnabled()) {
+                $(button).val("ACTION");
+            }
+        })
+        .parent()
+        .parent()
+        .attr("colspan", 1)
+        .prev()
+        .attr("colspan", 3);
+    $("#exitButton")
+        .css("height", "100%")
+        .css("width", "100%")
+        .each((idx, button) => {
+            if (SetupLoader.isAsciiTextButtonEnabled()) {
+                $(button).val("ACTION");
+            }
         });
 }
 
