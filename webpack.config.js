@@ -3,7 +3,7 @@ const path = require('path');
 const webpack = require('webpack');
 
 const now = new Date();
-const buildVersion = '3.5.1'
+const buildVersion = '3.5.2-SNAPSHOT'
 const buildDate = `${now.toLocaleString()}`;
 
 // noinspection JSUnresolvedReference
