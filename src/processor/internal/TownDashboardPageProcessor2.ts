@@ -36,6 +36,7 @@ class TownDashboardPageProcessor2 extends PageProcessorCredentialSupport {
         doRenderMenu(credential, page);
         doRenderEventBoard();
         doRenderRoleStatus(credential, page);
+        doRenderEnlargeMode();
     }
 
 }
@@ -416,6 +417,8 @@ function doRenderMenu(credential: Credential, page: TownDashboardPage) {
     if (SetupLoader.isCollectTownTaxDisabled()) {
         $("option[value='MAKE_TOWN']").remove();
     }
+    $("option[value='COU_MAKE']").text("口袋助手使用手册");
+    $("option[value='TENNIS']").text("任务屋");
 }
 
 function doRenderEventBoard() {
@@ -545,6 +548,30 @@ function doRenderRoleStatus(credential: Credential, page: TownDashboardPage) {
             .next().hide()
             .next().hide()
             .next().hide();
+    }
+}
+
+function doRenderEnlargeMode() {
+    const enlargeRatio = SetupLoader.getEnlargeBattleRatio();
+    if (enlargeRatio > 0) {
+        let fontSize = 100 * enlargeRatio;
+        let picWidth = 80 * enlargeRatio;
+        let picHeight = 40 * enlargeRatio;
+
+        $("#battleCell")
+            .removeAttr("height")
+            .find("select:first")
+            .css("font-size", fontSize + "%")
+            .parent()
+            .find("img:first")
+            .attr("width", picWidth)
+            .attr("height", picHeight)
+            .before($("<br>"));
+
+        const clock = $("input:text[name='clock']");
+        if (clock.length > 0) {
+            clock.css("font-size", fontSize + "%");
+        }
     }
 }
 
