@@ -14,7 +14,7 @@ import PageProcessorCredentialSupport from "../PageProcessorCredentialSupport";
 
 const LAYOUT_MANAGER = new TownDashboardLayoutManager();
 
-class TownDashboardPageProcessor2 extends PageProcessorCredentialSupport {
+class TownDashboardPageProcessor extends PageProcessorCredentialSupport {
 
     doLoadButtonStyles(): number[] {
         return [16, 10005, 10007, 10008, 10016, 10024, 10028, 10032, 10033, 10035, 10062];
@@ -741,4 +741,4 @@ function _canCollectTownTax(page: TownDashboardPage) {
     return false;
 }
 
-export = TownDashboardPageProcessor2;
+export = TownDashboardPageProcessor;
