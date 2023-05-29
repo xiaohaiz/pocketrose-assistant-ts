@@ -300,6 +300,10 @@ class SetupLoader {
     static isCompactBattleReportEnabled(): boolean {
         return StorageUtils.getBoolean("_pa_051");
     }
+
+    static getTownDashboardLayout(): number {
+        return StorageUtils.getFloat("_pa_052", 1);
+    }
 }
 
 export = SetupLoader;
