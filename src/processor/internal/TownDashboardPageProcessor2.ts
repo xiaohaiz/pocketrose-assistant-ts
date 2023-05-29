@@ -1,5 +1,6 @@
 import _ from "lodash";
 import SetupLoader from "../../config/SetupLoader";
+import ExtensionShortcutLoader from "../../core/ExtensionShortcutLoader";
 import RankTitleLoader from "../../core/RankTitleLoader";
 import TownDashboardPage from "../../pocketrose/TownDashboardPage";
 import Credential from "../../util/Credential";
@@ -9,6 +10,10 @@ import PageProcessorContext from "../PageProcessorContext";
 import PageProcessorCredentialSupport from "../PageProcessorCredentialSupport";
 
 class TownDashboardPageProcessor2 extends PageProcessorCredentialSupport {
+
+    doLoadButtonStyles(): number[] {
+        return [16, 10005, 10007, 10008, 10016, 10024, 10028, 10032, 10033, 10035, 10062];
+    }
 
     doProcess(credential: Credential, context?: PageProcessorContext): void {
         const page = TownDashboardPage.parse(PageUtils.currentPageHtml());
@@ -139,6 +144,7 @@ function doRenderMenu() {
     $("#refreshButton")
         .css("height", "100%")
         .css("width", "100%")
+        .addClass("button-16")
         .each((idx, button) => {
             if (SetupLoader.isAsciiTextButtonEnabled()) {
                 $(button).val("RELOAD");
@@ -147,6 +153,7 @@ function doRenderMenu() {
     $("#battleButton")
         .css("height", "100%")
         .css("width", "100%")
+        .addClass("button-16")
         .each((idx, button) => {
             if (SetupLoader.isAsciiTextButtonEnabled()) {
                 $(button).val("BATTLE");
@@ -155,6 +162,7 @@ function doRenderMenu() {
     $("#townButton")
         .css("height", "100%")
         .css("width", "100%")
+        .addClass("button-16")
         .each((idx, button) => {
             if (SetupLoader.isAsciiTextButtonEnabled()) {
                 $(button).val("ACTION");
@@ -163,6 +171,7 @@ function doRenderMenu() {
     $("#personalButton")
         .css("height", "100%")
         .css("width", "100%")
+        .addClass("button-16")
         .each((idx, button) => {
             if (SetupLoader.isAsciiTextButtonEnabled()) {
                 $(button).val("ACTION");
@@ -171,6 +180,7 @@ function doRenderMenu() {
     $("#countryNormalButton")
         .css("height", "100%")
         .css("width", "100%")
+        .addClass("button-16")
         .each((idx, button) => {
             if (SetupLoader.isAsciiTextButtonEnabled()) {
                 $(button).val("ACTION");
@@ -179,6 +189,7 @@ function doRenderMenu() {
     $("#countryAdvancedButton")
         .css("height", "100%")
         .css("width", "100%")
+        .addClass("button-16")
         .each((idx, button) => {
             if (SetupLoader.isAsciiTextButtonEnabled()) {
                 $(button).val("ACTION");
@@ -187,6 +198,7 @@ function doRenderMenu() {
     $("#leaveButton")
         .css("height", "100%")
         .css("width", "100%")
+        .addClass("button-16")
         .each((idx, button) => {
             if (SetupLoader.isAsciiTextButtonEnabled()) {
                 $(button).val("ACTION");
@@ -200,11 +212,109 @@ function doRenderMenu() {
     $("#exitButton")
         .css("height", "100%")
         .css("width", "100%")
+        .addClass("button-16")
         .each((idx, button) => {
             if (SetupLoader.isAsciiTextButtonEnabled()) {
                 $(button).val("ACTION");
             }
         });
+
+    const bsId = SetupLoader.getTownDashboardShortcutButton();
+    if (bsId > 0) {
+        const buttonClass = "button-" + bsId;
+        $("#menuTable")
+            .find("> tbody:first")
+            .find("> tr:eq(2)")
+            .find("> th:first")
+            .each((idx, th) => {
+                const extensionId = SetupLoader.getTownDashboardExtensionShortcutButton();
+                if (extensionId > 0) {
+                    const es = ExtensionShortcutLoader.getExtensionShortcut(extensionId)!;
+                    const bt = "&nbsp;" + es[0] + "&nbsp;"
+                    $(th).css("vertical-align", "bottom")
+                        .html("<button role='button' class='" + buttonClass + "' id='shortcut0' " +
+                            "style='margin-bottom:8px;white-space:nowrap'>" + bt + "</button>")
+                } else {
+                    $(th).html("");
+                }
+            })
+            .parent()
+            .next()
+            .find("> th:first")
+            .each((idx, th) => {
+                let html = "";
+                html += "<table style='background-color:transparent;border-spacing:0;border-width:0;margin:auto;text-align:center;width:100%'>";
+                html += "<tbody>";
+                html += "<tr>";
+                html += "<td>";
+                html += "<button role='button' class='" + buttonClass + "' id='shortcut1' style='white-space:nowrap'>&nbsp;图鉴&nbsp;</button>";
+                html += "</td>";
+                html += "<td>";
+                html += "<button role='button' class='" + buttonClass + "' id='shortcut5' style='white-space:nowrap'>&nbsp;个人&nbsp;</button>";
+                html += "</td>";
+                html += "</tr>";
+                html += "</tbody>";
+                html += "</table>";
+                $(th).html(html);
+            })
+            .parent()
+            .next()
+            .find("> th:first")
+            .each((idx, th) => {
+                let html = "";
+                html += "<table style='background-color:transparent;border-spacing:0;border-width:0;margin:auto;text-align:center;width:100%'>";
+                html += "<tbody>";
+                html += "<tr>";
+                html += "<td>";
+                html += "<button role='button' class='" + buttonClass + "' id='shortcut2' style='white-space:nowrap'>&nbsp;装备&nbsp;</button>";
+                html += "</td>";
+                html += "<td>";
+                html += "<button role='button' class='" + buttonClass + "' id='shortcut6' style='white-space:nowrap'>&nbsp;团队&nbsp;</button>";
+                html += "</td>";
+                html += "</tr>";
+                html += "</tbody>";
+                html += "</table>";
+                $(th).html(html);
+            })
+            .parent()
+            .next()
+            .find("> th:first")
+            .each((idx, th) => {
+                let html = "";
+                html += "<table style='background-color:transparent;border-spacing:0;border-width:0;margin:auto;text-align:center;width:100%'>";
+                html += "<tbody>";
+                html += "<tr>";
+                html += "<td>";
+                html += "<button role='button' class='" + buttonClass + "' id='shortcut3' style='white-space:nowrap'>&nbsp;宠物&nbsp;</button>";
+                html += "</td>";
+                html += "<td>";
+                html += "<button role='button' class='" + buttonClass + "' id='shortcut7' style='white-space:nowrap'>&nbsp;银行&nbsp;</button>";
+                html += "</td>";
+                html += "</tr>";
+                html += "</tbody>";
+                html += "</table>";
+                $(th).html(html);
+            })
+            .parent()
+            .next()
+            .find("> th:first")
+            .each((idx, th) => {
+                let html = "";
+                html += "<table style='background-color:transparent;border-spacing:0;border-width:0;margin:auto;text-align:center;width:100%'>";
+                html += "<tbody>";
+                html += "<tr>";
+                html += "<td>";
+                html += "<button role='button' class='" + buttonClass + "' id='shortcut4' style='white-space:nowrap'>&nbsp;职业&nbsp;</button>";
+                html += "</td>";
+                html += "<td>";
+                html += "<button role='button' class='" + buttonClass + "' id='shortcut8' style='white-space:nowrap'>&nbsp;设置&nbsp;</button>";
+                html += "</td>";
+                html += "</tr>";
+                html += "</tbody>";
+                html += "</table>";
+                $(th).html(html);
+            });
+    }
 }
 
 export = TownDashboardPageProcessor2;
