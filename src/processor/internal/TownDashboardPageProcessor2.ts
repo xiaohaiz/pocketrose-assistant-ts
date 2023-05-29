@@ -368,6 +368,43 @@ function doRenderMenu(credential: Credential) {
     // 渲染菜单项
     // ------------------------------------------------------------------------
     _renderBattleMenu(credential);
+    $("option[value='INN']").text("客栈·驿站");
+    $("option[value='LETTER']").text("口袋助手设置");
+    $("option[value='RANK_REMAKE']").text("个人面板");
+    $("option[value='BATTLE_MES']").text("团队面板");
+    if (SetupLoader.isEquipmentManagementUIEnabled()) {
+        $("option[value='USE_ITEM']").text("装备管理");
+        $("option[value='ITEM_SEND']").remove();
+    }
+    if (SetupLoader.isPetManagementUIEnabled()) {
+        $("option[value='PETSTATUS']").text("宠物管理");
+        $("option[value='PET_SEND']").remove();
+        $("option[value='PETBORN']").remove();
+    }
+    if (SetupLoader.isCareerManagementUIEnabled()) {
+        $("option[value='CHANGE_OCCUPATION']").text("职业管理");
+        $("option[value='MAGIC']").remove();
+    }
+    if (SetupLoader.isPocketSuperMarketEnabled()) {
+        $("option[value='ARM_SHOP']").text("武器商店");
+        $("option[value='PRO_SHOP']").text("防具商店");
+        $("option[value='ACC_SHOP']").text("饰品商店");
+        $("option[value='ITEM_SHOP']").text("物品商店");
+    }
+    if (SetupLoader.isGemHouseUIEnabled()) {
+        $("option[value='BAOSHI_SHOP']").text("宝石镶嵌");
+        $("option[value='BAOSHI_DELSHOP']").remove();
+    }
+    $("option[value='PETPROFILE']").text("宠物排行榜");
+    $("option[value='CHANGEMAP']").text("冒险家公会");
+    if (SetupLoader.isFastLoginEnabled()) {
+        $("option[value='CHUJIA']").text("快速登陆设置");
+    }
+    if (SetupLoader.isPocketBankEnabled()) {
+        $("option[value='BANK']").text("口袋银行");
+        $("option[value='MONEY_SEND']").remove();
+        $("option[value='SALARY']").remove();
+    }
 }
 
 function _renderBattleMenu(credential: Credential) {
