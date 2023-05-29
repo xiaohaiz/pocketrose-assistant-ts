@@ -24,14 +24,37 @@ class TownDashboardPageProcessor2 extends PageProcessorCredentialSupport {
                 $("#version").html(__VERSION__);
             });
 
-        doRenderRank();
+        doMarkElement();
+        doRenderMobilization();
     }
 
 }
 
-function doRenderRank() {
-    $("input[name='watch']")
+function doMarkElement() {
+    $("input:text:last").attr("id", "messageInputText");
+    $("input:submit[value='更新']").attr("id", "refreshButton");
+    $("table:first")
+        .find("> tbody:first")
+        .find("> tr:eq(1)")
+        .find("> td:first")
+        .find("> table:first")
+        .find("> tbody:first")
+        .find("> tr:first")
+        .find("> td:first")
+        .attr("id", "mobilization")
         .parent()
+        .parent()
+        .find("> tr:eq(1)")
+        .find("> td:first")
+        .attr("id", "leftPanel")
+        .next()
+        .attr("id", "rightPanel");
+
+}
+
+function doRenderMobilization() {
+    $("#mobilization")
+        .find("> form:first")
         .find("> font:first")
         .each((idx, font) => {
             let c = $(font).text();
