@@ -37,21 +37,19 @@ class TownDashboardLayout002 extends TownDashboardLayout {
             .find("> th:first")
             .css("font-size", "200%");
 
-        if (page.role!.country !== "在野" && page.role!.country === page.townCountry) {
-            $("#rightPanel")
-                .find("> table:first")
-                .find("> tbody:first")
-                .find("> tr:eq(1)")
-                .find("> td:first")
-                .find("> table:first")
-                .find("> tbody:first")
-                .find("> tr:eq(3)")
-                .each((idx, tr) => {
-                    const tax = page.townTax!;
-                    $(tr).after($("<tr><td>收益</td><th id='townTax'>" + tax + "</th><td colspan='2'></td></tr>"));
-                    new TownDashboardTaxManager(page).processTownTax($("#townTax"));
-                });
-        }
+        $("#rightPanel")
+            .find("> table:first")
+            .find("> tbody:first")
+            .find("> tr:eq(1)")
+            .find("> td:first")
+            .find("> table:first")
+            .find("> tbody:first")
+            .find("> tr:eq(3)")
+            .each((idx, tr) => {
+                const tax = page.townTax!;
+                $(tr).after($("<tr><td>收益</td><th id='townTax'>" + tax + "</th><td colspan='2'></td></tr>"));
+                new TownDashboardTaxManager(page).processTownTax($("#townTax"));
+            });
 
         $("table:first")
             .next()

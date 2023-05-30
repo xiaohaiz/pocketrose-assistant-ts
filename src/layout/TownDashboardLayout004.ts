@@ -35,21 +35,19 @@ class TownDashboardLayout004 extends TownDashboardLayout {
         $("#redPaperMessageContainer")
             .html("<table style='width:100%;background-color:#AA0000;border-width:0'></table>");
 
-        if (page.role!.country !== "在野" && page.role!.country === page.townCountry) {
-            $("#rightPanel")
-                .find("> table:first")
-                .find("> tbody:first")
-                .find("> tr:eq(1)")
-                .find("> td:first")
-                .find("> table:first")
-                .find("> tbody:first")
-                .find("> tr:eq(3)")
-                .each((idx, tr) => {
-                    const tax = page.townTax!;
-                    $(tr).after($("<tr><td>收益</td><th id='townTax'>" + tax + "</th><td colspan='2'></td></tr>"));
-                    new TownDashboardTaxManager(page).processTownTax($("#townTax"));
-                });
-        }
+        $("#rightPanel")
+            .find("> table:first")
+            .find("> tbody:first")
+            .find("> tr:eq(1)")
+            .find("> td:first")
+            .find("> table:first")
+            .find("> tbody:first")
+            .find("> tr:eq(3)")
+            .each((idx, tr) => {
+                const tax = page.townTax!;
+                $(tr).after($("<tr><td>收益</td><th id='townTax'>" + tax + "</th><td colspan='2'></td></tr>"));
+                new TownDashboardTaxManager(page).processTownTax($("#townTax"));
+            });
 
         let html = "";
         $("table:first")
