@@ -7,6 +7,7 @@ import BattlePage from "../pocketrose/BattlePage";
 import TownDashboardPage from "../pocketrose/TownDashboardPage";
 import Credential from "../util/Credential";
 import NetworkUtils from "../util/NetworkUtils";
+import StorageUtils from "../util/StorageUtils";
 import TownDashboardLayout from "./TownDashboardLayout";
 
 class TownDashboardLayout005 extends TownDashboardLayout {
@@ -72,6 +73,11 @@ class TownDashboardLayout005 extends TownDashboardLayout {
         generateRepairForm(credential);
         generateLodgeForm(credential);
 
+        const lastBattle = StorageUtils.getString("_lb_" + credential.id);
+        if (lastBattle !== "") {
+            $("#battlePanel").html(lastBattle);
+        }
+
         $("#battleButton")
             .attr("type", "button")
             .on("click", () => {
@@ -100,6 +106,8 @@ class TownDashboardLayout005 extends TownDashboardLayout {
                 NetworkUtils.post("battle.cgi", request).then(html => {
                     const page = BattlePage.parse(html);
                     $("#battlePanel").html(page.reportHtml!);
+
+                    StorageUtils.set("_lb_" + credential.id, page.reportHtml!);
 
                     const currentBattleCount = battleCount + 1;
                     const recommendation = doRecommendation(currentBattleCount, page);
