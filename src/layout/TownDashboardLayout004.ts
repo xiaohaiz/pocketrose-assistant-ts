@@ -28,6 +28,11 @@ class TownDashboardLayout004 extends TownDashboardLayout {
                 "<tr><td id='redPaperMessageContainer'></td></tr>" +
                 "<tr style='height:100%'><td></td></tr>"));
 
+        $("#personalMessageContainer")
+            .html("<table style='width:100%;background-color:#AA0000;border-width:0'></table>");
+        $("#redPaperMessageContainer")
+            .html("<table style='width:100%;background-color:#AA0000;border-width:0'></table>");
+
         if (page.role!.country !== "在野" && page.role!.country === page.townCountry) {
             $("#rightPanel")
                 .find("> table:first")
@@ -122,18 +127,26 @@ class TownDashboardLayout004 extends TownDashboardLayout {
             .find("> tr:eq(2)")
             .find("> td:first")
             .each((idx, td) => {
-                let t = $(td).find("> table:first");
-                let s = t.html();
-                t.remove();
+                let t1 = $(td).find("> table:first");
+                let t2 = $(td).find("> table:eq(1)");
+                let t3 = $(td).find("> table:eq(2)");
+                let s = t1.html();
                 $("#globalMessageContainer").find("> table:first").html(s);
+                s = t2.html();
+                $("#personalMessageContainer").find("> table:first").html(s);
+                s = t3.html();
+                $("#redPaperMessageContainer").find("> table:first").html(s);
             })
             .next()
             .each((idx, td) => {
                 let t = $(td).find("> table:first");
                 let s = t.html();
-                t.remove();
                 $("#domesticMessageContainer").find("> table:first").html(s);
             });
+
+        $("table:first")
+            .next()
+            .hide();
 
         $("#messageInputText")
             .parent()
