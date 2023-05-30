@@ -1,5 +1,7 @@
 import _ from "lodash";
 import SetupLoader from "../config/SetupLoader";
+import EquipmentLocalStorage from "../core/EquipmentLocalStorage";
+import PetLocalStorage from "../core/PetLocalStorage";
 import TownDashboardTaxManager from "../core/TownDashboardTaxManager";
 import BattlePage from "../pocketrose/BattlePage";
 import TownDashboardPage from "../pocketrose/TownDashboardPage";
@@ -141,6 +143,31 @@ class TownDashboardLayout005 extends TownDashboardLayout {
                     }
 
                     $(".battleButton").trigger("focus");
+
+                    $("#battleReturn").on("click", () => {
+                        $("#battleReturn").prop("disabled", true);
+                        doBeforeReturn(credential, currentBattleCount).then(() => {
+                            $("#refreshButton").trigger("click");
+                        });
+                    });
+                    $("#battleDeposit").on("click", () => {
+                        $("#battleDeposit").prop("disabled", true);
+                        doBeforeReturn(credential, currentBattleCount).then(() => {
+                            $("#deposit").trigger("click");
+                        });
+                    });
+                    $("#battleRepair").on("click", () => {
+                        $("#battleRepair").prop("disabled", true);
+                        doBeforeReturn(credential, currentBattleCount).then(() => {
+                            $("#repair").trigger("click");
+                        });
+                    });
+                    $("#battleLodge").on("click", () => {
+                        $("#battleLodge").prop("disabled", true);
+                        doBeforeReturn(credential, currentBattleCount).then(() => {
+                            $("#lodge").trigger("click");
+                        });
+                    });
                 });
             });
     }
@@ -232,6 +259,27 @@ function doRecommendation(battleCount: number, page: BattlePage): string {
         // 没有设置定期存钱，那就表示每战都存钱
         return "存";
     }
+}
+
+async function doBeforeReturn(credential: Credential, battleCount: number): Promise<void> {
+    return await (() => {
+        return new Promise<void>(resolve => {
+            const petLocalStorage = new PetLocalStorage(credential);
+            petLocalStorage
+                .triggerUpdatePetMap(battleCount)
+                .then(() => {
+                    petLocalStorage
+                        .triggerUpdatePetStatus(battleCount)
+                        .then(() => {
+                            new EquipmentLocalStorage(credential)
+                                .triggerUpdateEquipmentStatus(battleCount)
+                                .then(() => {
+                                    resolve();
+                                });
+                        });
+                });
+        });
+    })();
 }
 
 export = TownDashboardLayout005;
