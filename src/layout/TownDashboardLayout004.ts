@@ -1,4 +1,5 @@
 import SetupLoader from "../config/SetupLoader";
+import Conversation from "../pocketrose/Conversation";
 import TownDashboardPage from "../pocketrose/TownDashboardPage";
 import Credential from "../util/Credential";
 import TownDashboardLayout from "./TownDashboardLayout";
@@ -162,6 +163,40 @@ class TownDashboardLayout004 extends TownDashboardLayout {
                     $("input:submit[value='阅读留言']").trigger("click");
                 });
             });
+
+        // 启动自动刷新
+        // globalMessageContainer
+        // domesticMessageContainer
+        // personalMessageContainer
+        // redPaperMessageContainer
+        setInterval(() => {
+            new Conversation(credential).open().then(conversationPage => {
+                $("#globalMessageContainer")
+                    .find("> table:first")
+                    .html(conversationPage.globalMessageHtml!)
+                    .find("> tbody:first")
+                    .find("> tr")
+                    .filter(idx => idx >= 30)
+                    .each((idx, tr) => {
+                        $(tr).hide();
+                    });
+                $("#domesticMessageContainer")
+                    .find("> table:first")
+                    .html(conversationPage.domesticMessageHtml!)
+                    .find("> tbody:first")
+                    .find("> tr")
+                    .filter(idx => idx >= 10)
+                    .each((idx, tr) => {
+                        $(tr).hide();
+                    });
+                $("#personalMessageContainer")
+                    .find("> table:first")
+                    .html(conversationPage.personalMessageHtml!);
+                $("#redPaperMessageContainer")
+                    .find("> table:first")
+                    .html(conversationPage.redPaperMessageHtml!);
+            });
+        }, 5000);
     }
 
 }
