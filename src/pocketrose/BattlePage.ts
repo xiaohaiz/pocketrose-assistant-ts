@@ -20,7 +20,8 @@ class BattlePage {
     monsterTask?: boolean;          // 杀怪任务
     petLearnSpell?: boolean;        // 宠物是否学会新技能
 
-
+    roleImageHtml?: string;
+    monsterImageHtml?: string;
     reportHtml?: string;
 
     constructor() {
@@ -33,11 +34,56 @@ class BattlePage {
         this.lowestEndure = 999;
     }
 
+    get battleField() {
+        if (this.treasureBattle) {
+            return "＜ 秘 宝 之 岛 ＞";
+        }
+        if (this.primaryBattle) {
+            return "＜ 初 级 之 森 ＞";
+        }
+        if (this.juniorBattle) {
+            return "＜ 中 级 之 塔 ＞";
+        }
+        if (this.seniorBattle) {
+            return "＜ 上 级 之 洞 窟 ＞";
+        }
+        if (this.zodiacBattle) {
+            return "＜ 十 二 神 殿 ＞";
+        }
+        return "UNKNOWN";
+    }
+
     static parse(html: string) {
         const page = new BattlePage();
 
         let table = $(html).find("tbody:first").parent();
         let div = table.prev();
+
+        page.roleImageHtml = table.find("> tbody:first")
+            .find("> tr:eq(3)")
+            .find("> td:first")
+            .find("> table:first")
+            .find("> tbody:first")
+            .find("> tr:first")
+            .find("> td:first")
+            .find("> table:first")
+            .find("> tbody:first")
+            .find("> tr:eq(2)")
+            .find("> td:first")
+            .html();
+
+        page.monsterImageHtml = table.find("> tbody:first")
+            .find("> tr:eq(4)")
+            .find("> td:first")
+            .find("> table:first")
+            .find("> tbody:first")
+            .find("> tr:first")
+            .find("> td:first")
+            .find("> table:first")
+            .find("> tbody:first")
+            .find("> tr:eq(2)")
+            .find("> td:last")
+            .html();
 
         table.find("> tbody:first")
             .find("> tr:first")
@@ -185,6 +231,12 @@ class BattlePage {
             }
             p3 = _.replace(p3, "<br><br>", "<br>");
         }
+        p3 = "<p>" + page.roleImageHtml +
+            "&nbsp;&nbsp;&nbsp;<b style='font-size:300%;color:red'>VS</b>&nbsp;&nbsp;&nbsp;" +
+            page.monsterImageHtml + "</p>" + p3;
+
+        p3 = "<p><b style='color:navy;font-size:120%'>" + page.battleField + "</b></p>" + p3;
+
         page.reportHtml = p3;
 
         return page;
