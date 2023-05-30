@@ -101,6 +101,9 @@ class TownDashboardLayout005 extends TownDashboardLayout {
         $("#battleButton")
             .attr("type", "button")
             .on("click", () => {
+                $("#refreshButton").hide();
+                $("#battleButton").hide();
+
                 const request = credential.asRequestMap();
                 $("#battleCell")
                     .find("> form[action='battle.cgi']")
@@ -191,8 +194,6 @@ class TownDashboardLayout005 extends TownDashboardLayout {
                             break;
                     }
 
-                    $(".battleButton").trigger("focus");
-
                     $("#battleReturn").on("click", () => {
                         $("#battleReturn").prop("disabled", true);
                         doBeforeReturn(credential, currentBattleCount).then(() => {
@@ -222,11 +223,15 @@ class TownDashboardLayout005 extends TownDashboardLayout {
                         // 十二宫极速战斗模式
                         if (SetupLoader.isZodiacFlashBattleEnabled()) {
                             $(".battleButton").trigger("click");
+                        } else {
+                            $(".battleButton").trigger("focus");
                         }
                     } else {
                         // 普通战斗极速模式
                         if (SetupLoader.isNormalFlashBattleEnabled()) {
                             $(".battleButton").trigger("click");
+                        } else {
+                            $(".battleButton").trigger("focus");
                         }
                     }
                 });
