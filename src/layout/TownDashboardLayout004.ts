@@ -1,7 +1,8 @@
-import SetupLoader from "../config/SetupLoader";
+import TownDashboardTaxManager from "../core/TownDashboardTaxManager";
 import Conversation from "../pocketrose/Conversation";
 import TownDashboardPage from "../pocketrose/TownDashboardPage";
 import Credential from "../util/Credential";
+import StorageUtils from "../util/StorageUtils";
 import TownDashboardLayout from "./TownDashboardLayout";
 
 class TownDashboardLayout004 extends TownDashboardLayout {
@@ -34,36 +35,19 @@ class TownDashboardLayout004 extends TownDashboardLayout {
         $("#redPaperMessageContainer")
             .html("<table style='width:100%;background-color:#AA0000;border-width:0'></table>");
 
-        if (page.role!.country !== "在野" && page.role!.country === page.townCountry) {
-            $("#rightPanel")
-                .find("> table:first")
-                .find("> tbody:first")
-                .find("> tr:eq(1)")
-                .find("> td:first")
-                .find("> table:first")
-                .find("> tbody:first")
-                .find("> tr:eq(3)")
-                .each((idx, tr) => {
-                    const tax = page.townTax!;
-                    $(tr).after($("<tr><td>收益</td><th id='townTax'>" + tax + "</th><td colspan='2'></td></tr>"));
-                    if (tax - Math.floor(tax / 50000) * 50000 <= 10000) {
-                        $("#townTax")
-                            .css("color", "white")
-                            .css("background-color", "green")
-                            .css("font-weight", "bold")
-                            .on("click", () => {
-                                if (!SetupLoader.isCollectTownTaxDisabled()) {
-                                    $("option[value='MAKE_TOWN']")
-                                        .prop("selected", true)
-                                        .closest("td")
-                                        .next()
-                                        .find("> input:submit:first")
-                                        .trigger("click");
-                                }
-                            });
-                    }
-                });
-        }
+        $("#rightPanel")
+            .find("> table:first")
+            .find("> tbody:first")
+            .find("> tr:eq(1)")
+            .find("> td:first")
+            .find("> table:first")
+            .find("> tbody:first")
+            .find("> tr:eq(3)")
+            .each((idx, tr) => {
+                const tax = page.townTax!;
+                $(tr).after($("<tr><td>收益</td><th id='townTax'>" + tax + "</th><td colspan='2'></td></tr>"));
+                new TownDashboardTaxManager(page).processTownTax($("#townTax"));
+            });
 
         let html = "";
         $("table:first")
@@ -169,34 +153,37 @@ class TownDashboardLayout004 extends TownDashboardLayout {
         // domesticMessageContainer
         // personalMessageContainer
         // redPaperMessageContainer
-        setInterval(() => {
-            new Conversation(credential).open().then(conversationPage => {
-                $("#globalMessageContainer")
-                    .find("> table:first")
-                    .html(conversationPage.globalMessageHtml!)
-                    .find("> tbody:first")
-                    .find("> tr")
-                    .filter(idx => idx >= 30)
-                    .each((idx, tr) => {
-                        $(tr).hide();
-                    });
-                $("#domesticMessageContainer")
-                    .find("> table:first")
-                    .html(conversationPage.domesticMessageHtml!)
-                    .find("> tbody:first")
-                    .find("> tr")
-                    .filter(idx => idx >= 10)
-                    .each((idx, tr) => {
-                        $(tr).hide();
-                    });
-                $("#personalMessageContainer")
-                    .find("> table:first")
-                    .html(conversationPage.personalMessageHtml!);
-                $("#redPaperMessageContainer")
-                    .find("> table:first")
-                    .html(conversationPage.redPaperMessageHtml!);
-            });
-        }, 5000);
+        const autoRefresh = StorageUtils.getInt("_pa_040", 5);
+        if (autoRefresh > 1) {
+            setInterval(() => {
+                new Conversation(credential).open().then(conversationPage => {
+                    $("#globalMessageContainer")
+                        .find("> table:first")
+                        .html(conversationPage.globalMessageHtml!)
+                        .find("> tbody:first")
+                        .find("> tr")
+                        .filter(idx => idx >= 30)
+                        .each((idx, tr) => {
+                            $(tr).hide();
+                        });
+                    $("#domesticMessageContainer")
+                        .find("> table:first")
+                        .html(conversationPage.domesticMessageHtml!)
+                        .find("> tbody:first")
+                        .find("> tr")
+                        .filter(idx => idx >= 10)
+                        .each((idx, tr) => {
+                            $(tr).hide();
+                        });
+                    $("#personalMessageContainer")
+                        .find("> table:first")
+                        .html(conversationPage.personalMessageHtml!);
+                    $("#redPaperMessageContainer")
+                        .find("> table:first")
+                        .html(conversationPage.redPaperMessageHtml!);
+                });
+            }, autoRefresh * 1000);
+        }
     }
 
 }

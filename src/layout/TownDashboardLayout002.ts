@@ -1,4 +1,5 @@
 import SetupLoader from "../config/SetupLoader";
+import TownDashboardTaxManager from "../core/TownDashboardTaxManager";
 import TownDashboardPage from "../pocketrose/TownDashboardPage";
 import Credential from "../util/Credential";
 import TownDashboardLayout from "./TownDashboardLayout";
@@ -36,36 +37,19 @@ class TownDashboardLayout002 extends TownDashboardLayout {
             .find("> th:first")
             .css("font-size", "200%");
 
-        if (page.role!.country !== "在野" && page.role!.country === page.townCountry) {
-            $("#rightPanel")
-                .find("> table:first")
-                .find("> tbody:first")
-                .find("> tr:eq(1)")
-                .find("> td:first")
-                .find("> table:first")
-                .find("> tbody:first")
-                .find("> tr:eq(3)")
-                .each((idx, tr) => {
-                    const tax = page.townTax!;
-                    $(tr).after($("<tr><td>收益</td><th id='townTax'>" + tax + "</th><td colspan='2'></td></tr>"));
-                    if (tax - Math.floor(tax / 50000) * 50000 <= 10000) {
-                        $("#townTax")
-                            .css("color", "white")
-                            .css("background-color", "green")
-                            .css("font-weight", "bold")
-                            .on("click", () => {
-                                if (!SetupLoader.isCollectTownTaxDisabled()) {
-                                    $("option[value='MAKE_TOWN']")
-                                        .prop("selected", true)
-                                        .closest("td")
-                                        .next()
-                                        .find("> input:submit:first")
-                                        .trigger("click");
-                                }
-                            });
-                    }
-                });
-        }
+        $("#rightPanel")
+            .find("> table:first")
+            .find("> tbody:first")
+            .find("> tr:eq(1)")
+            .find("> td:first")
+            .find("> table:first")
+            .find("> tbody:first")
+            .find("> tr:eq(3)")
+            .each((idx, tr) => {
+                const tax = page.townTax!;
+                $(tr).after($("<tr><td>收益</td><th id='townTax'>" + tax + "</th><td colspan='2'></td></tr>"));
+                new TownDashboardTaxManager(page).processTownTax($("#townTax"));
+            });
 
         $("table:first")
             .next()
