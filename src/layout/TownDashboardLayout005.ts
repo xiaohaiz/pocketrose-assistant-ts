@@ -78,6 +78,26 @@ class TownDashboardLayout005 extends TownDashboardLayout {
             $("#battlePanel").html(lastBattle);
         }
 
+        // 战斗布局只支持以下战斗
+        $("select[name='level']").find("option").each(function (_idx, option) {
+            const text = $(option).text();
+            if (text.startsWith("秘宝之岛")) {
+                // do nothing, keep
+            } else if (text.startsWith("初级之森")) {
+                // do nothing, keep
+            } else if (text.startsWith("中级之塔")) {
+                // do nothing, keep
+            } else if (text.startsWith("上级之洞")) {
+                // do nothing, keep
+            } else if (text.startsWith("十二神殿")) {
+                // do nothing, keep
+            } else if (text.startsWith("------")) {
+                // do nothing, keep
+            } else {
+                $(option).remove();
+            }
+        });
+
         $("#battleButton")
             .attr("type", "button")
             .on("click", () => {
@@ -104,6 +124,27 @@ class TownDashboardLayout005 extends TownDashboardLayout {
                 const battleCount = _.parseInt(request.get("ktotal")!);
 
                 NetworkUtils.post("battle.cgi", request).then(html => {
+                    if (html.includes("ERROR !")) {
+                        let errMsg = $(html).find("font:first").html();
+                        errMsg = "<p style='color:red;font-size:200%'>" + errMsg + "</p>";
+                        $("#battlePanel").html(errMsg);
+                        StorageUtils.set("_lb_" + credential.id, errMsg);
+
+                        let buttonText = SetupLoader.getBattleReturnButtonText();
+                        buttonText = buttonText === "" ? "返回" : _.escape(buttonText);
+                        $("#battleMenu").html("" +
+                            "<button role='button' class='battleButton button-16' " +
+                            "id='battleReturn' style='font-size:150%'>" + buttonText + "</button>" +
+                            "")
+                            .parent().show();
+                        $("#battleReturn").on("click", () => {
+                            $("#battleReturn").prop("disabled", true);
+                            $("#refreshButton").trigger("click");
+                        });
+                        $(".battleButton").trigger("click");
+                        return;
+                    }
+
                     const page = BattlePage.parse(html);
                     $("#battlePanel").html(page.reportHtml!);
 
@@ -185,9 +226,7 @@ class TownDashboardLayout005 extends TownDashboardLayout {
                     } else {
                         // 普通战斗极速模式
                         if (SetupLoader.isNormalFlashBattleEnabled()) {
-                            if (!page.petLearnSpell! && page.harvestList!.length === 0) {
-                                $(".battleButton").trigger("click");
-                            }
+                            $(".battleButton").trigger("click");
                         }
                     }
                 });

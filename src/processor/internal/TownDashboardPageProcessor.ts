@@ -8,7 +8,9 @@ import TownDashboardLayoutManager from "../../layout/TownDashboardLayoutManager"
 import TownDashboardPage from "../../pocketrose/TownDashboardPage";
 import Credential from "../../util/Credential";
 import PageUtils from "../../util/PageUtils";
+import StorageUtils from "../../util/StorageUtils";
 import StringUtils from "../../util/StringUtils";
+import TimeoutUtils from "../../util/TimeoutUtils";
 import PageProcessorContext from "../PageProcessorContext";
 import PageProcessorCredentialSupport from "../PageProcessorCredentialSupport";
 
@@ -34,12 +36,21 @@ class TownDashboardPageProcessor extends PageProcessorCredentialSupport {
                 $("#version").html(__VERSION__);
             });
 
+        $("div:last")
+            .append($("" +
+                "<p style='display:none' id='eden-1'></p>" +
+                "<p style='display:none' id='eden-2'></p>" +
+                "<p style='display:none' id='eden-3'></p>" +
+                "<p style='display:none' id='eden-4'></p>" +
+                "<p style='display:none' id='eden-5'></p>"));
+
         doMarkElement();
         doRenderMobilization();
         doRenderMenu(credential, page);
         doRenderEventBoard();
         doRenderRoleStatus(credential, page);
         doRenderEnlargeMode();
+        doProcessSafeBattleButton();
 
         const configId = TownDashboardLayoutManager.loadDashboardLayoutConfigId(credential);
         LAYOUT_MANAGER.getLayout(configId)?.render(credential, page);
@@ -270,7 +281,14 @@ function doRenderMenu(credential: Credential, page: TownDashboardPage) {
                         $(th).css("vertical-align", "bottom")
                             .html("<button role='button' class='" + buttonClass + "' id='shortcut0' " +
                                 "style='margin-bottom:8px;white-space:nowrap'>" + bt + "</button>")
-                        _bindShortcutButton("shortcut0", es[1]);
+                        if (es[0] === "养精蓄锐") {
+                            $("#eden-1").html(PageUtils.generateFullRecoveryForm(credential));
+                            $("#shortcut0").on("click", () => {
+                                $("#fullRecovery").trigger("click");
+                            });
+                        } else {
+                            _bindShortcutButton("shortcut0", es[1]);
+                        }
                     }
                 }
             })
@@ -590,6 +608,46 @@ function doRenderEnlargeMode() {
             clock.css("font-size", fontSize + "%");
         }
     }
+}
+
+function doProcessSafeBattleButton() {
+    if (!StorageUtils.getBoolean("_pa_045")) {
+        return;
+    }
+    $("#battleButton")
+        .prop("disabled", true)
+        .css("color", "grey");
+
+    const clock = $("input:text[name='clock']");
+    if (clock.length === 0) {
+        // clock已经消失了，表示读秒已经完成，返回
+        $("#battleButton")
+            .prop("disabled", false)
+            .css("color", "blue");
+        return;
+    }
+
+    const remain = _.parseInt(clock.val()! as string);
+    if (remain > 2) {
+        const timeoutInMillis = (remain - 2) * 1000;
+        TimeoutUtils.execute(timeoutInMillis, () => {
+            _startSafeBattleButtonTimer(clock);
+        });
+    } else {
+        _startSafeBattleButtonTimer(clock);
+    }
+}
+
+function _startSafeBattleButtonTimer(clock: JQuery) {
+    const timer = setInterval(() => {
+        const remain = _.parseInt(clock.val()! as string);
+        if (remain <= 0) {
+            clearInterval(timer);
+            $("#battleButton")
+                .prop("disabled", false)
+                .css("color", "blue");
+        }
+    }, 200);
 }
 
 function _renderBattleMenu(credential: Credential) {
