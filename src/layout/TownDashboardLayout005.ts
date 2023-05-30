@@ -1,3 +1,5 @@
+import _ from "lodash";
+import SetupLoader from "../config/SetupLoader";
 import TownDashboardTaxManager from "../core/TownDashboardTaxManager";
 import BattlePage from "../pocketrose/BattlePage";
 import TownDashboardPage from "../pocketrose/TownDashboardPage";
@@ -91,11 +93,54 @@ class TownDashboardLayout005 extends TownDashboardLayout {
                         request.set("level", escape(value));
                     });
 
+                const battleCount = _.parseInt(request.get("ktotal")!);
+
                 NetworkUtils.post("battle.cgi", request).then(html => {
                     const page = BattlePage.parse(html);
                     $("#battlePanel").html(page.reportHtml!);
 
+                    const currentBattleCount = battleCount + 1;
+                    const recommendation = doRecommendation(currentBattleCount, page);
+                    switch (recommendation) {
+                        case "修":
+                            let bt1 = SetupLoader.getBattleRepairButtonText();
+                            bt1 = bt1 === "" ? "修理" : _.escape(bt1);
+                            $("#battleMenu").html("" +
+                                "<button role='button' class='battleButton button-16' " +
+                                "id='battleRepair' style='font-size:150%'>" + bt1 + "</button>" +
+                                "")
+                                .parent().show();
+                            break;
+                        case "宿":
+                            let bt2 = SetupLoader.getBattleLodgeButtonText();
+                            bt2 = bt2 === "" ? "住宿" : _.escape(bt2);
+                            $("#battleMenu").html("" +
+                                "<button role='button' class='battleButton button-16' " +
+                                "id='battleLodge' style='font-size:150%'>" + bt2 + "</button>" +
+                                "")
+                                .parent().show();
+                            break;
+                        case "存":
+                            let bt3 = SetupLoader.getBattleDepositButtonText();
+                            bt3 = bt3 === "" ? "存钱" : _.escape(bt3);
+                            $("#battleMenu").html("" +
+                                "<button role='button' class='battleButton button-16' " +
+                                "id='battleDeposit' style='font-size:150%'>" + bt3 + "</button>" +
+                                "")
+                                .parent().show();
+                            break;
+                        case "回":
+                            let bt4 = SetupLoader.getBattleReturnButtonText();
+                            bt4 = bt4 === "" ? "返回" : _.escape(bt4);
+                            $("#battleMenu").html("" +
+                                "<button role='button' class='battleButton button-16' " +
+                                "id='battleReturn' style='font-size:150%'>" + bt4 + "</button>" +
+                                "")
+                                .parent().show();
+                            break;
+                    }
 
+                    $(".battleButton").trigger("focus");
                 });
             });
     }
@@ -138,6 +183,55 @@ function generateLodgeForm(credential: Credential) {
     form += "<input type='submit' id='lodge'>";
     form += "</form>";
     $("#hidden-4").html(form);
+}
+
+function doRecommendation(battleCount: number, page: BattlePage): string {
+    if (battleCount % 100 === 0) {
+        // 每100战强制修理
+        return "修";
+    }
+    if (page.lowestEndure! < SetupLoader.getRepairMinLimitation()) {
+        // 有装备耐久度低于阈值了，强制修理
+        return "修";
+    }
+
+    if (page.battleResult === "战败") {
+        // 战败，转到住宿
+        return "宿";
+    }
+    if (page.zodiacBattle! && page.battleResult === "平手") {
+        // 十二宫战斗平手，视为战败，转到住宿
+        return "宿";
+    }
+
+    if (page.zodiacBattle! || page.treasureBattle!) {
+        // 十二宫战胜或者秘宝战胜，转到存钱
+        return "存";
+    }
+    let depositBattleCount = SetupLoader.getDepositBattleCount();
+    if (depositBattleCount > 0 && battleCount % depositBattleCount === 0) {
+        // 设置的存钱战数到了
+        return "存";
+    }
+
+    // 生命力低于最大值的配置比例，住宿推荐
+    if (SetupLoader.getLodgeHealthLostRatio() > 0 &&
+        (page.roleHealth! <= page.roleMaxHealth! * SetupLoader.getLodgeHealthLostRatio())) {
+        return "宿";
+    }
+    // 如果MANA小于50%并且小于配置点数，住宿推荐
+    if (SetupLoader.getLodgeManaLostPoint() > 0 &&
+        (page.roleMana! <= page.roleMaxMana! * 0.5 && page.roleMana! <= SetupLoader.getLodgeManaLostPoint())) {
+        return "宿";
+    }
+
+    if (SetupLoader.getDepositBattleCount() > 0) {
+        // 设置了定期存钱，但是没有到战数，那么就直接返回吧
+        return "回";
+    } else {
+        // 没有设置定期存钱，那就表示每战都存钱
+        return "存";
+    }
 }
 
 export = TownDashboardLayout005;
