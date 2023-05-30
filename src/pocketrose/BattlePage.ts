@@ -1,5 +1,4 @@
 import _ from "lodash";
-import PageUtils from "../util/PageUtils";
 import StringUtils from "../util/StringUtils";
 
 class BattlePage {
@@ -19,6 +18,7 @@ class BattlePage {
     battleResult?: string;          // 战斗结果
     harvestList?: string[];         // 入手列表
     monsterTask?: boolean;          // 杀怪任务
+    petLearnSpell?: boolean;        // 宠物是否学会新技能
 
 
     reportHtml?: string;
@@ -152,7 +152,8 @@ class BattlePage {
             });
 
 
-        page.monsterTask = PageUtils.currentPageHtml().includes("完成杀怪任务");
+        page.monsterTask = html.includes("完成杀怪任务");
+        page.petLearnSpell = html.includes("遗忘了技能") || html.includes("学会了新技能");
 
 
         let p1 = battleTable

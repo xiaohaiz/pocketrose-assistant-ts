@@ -64,6 +64,10 @@ class TownDashboardLayout005 extends TownDashboardLayout {
                 "<div style='display:none' id='hidden-5'></div>" +
                 "");
 
+        generateDepositForm(credential);
+        generateRepairForm(credential);
+        generateLodgeForm(credential);
+
         $("#battleButton")
             .attr("type", "button")
             .on("click", () => {
@@ -90,10 +94,50 @@ class TownDashboardLayout005 extends TownDashboardLayout {
                 NetworkUtils.post("battle.cgi", request).then(html => {
                     const page = BattlePage.parse(html);
                     $("#battlePanel").html(page.reportHtml!);
+
+
                 });
             });
     }
 
+}
+
+function generateDepositForm(credential: Credential) {
+    let form = "";
+    // noinspection HtmlUnknownTarget
+    form += "<form action='town.cgi' method='post'>";
+    form += "<input type='hidden' name='id' value='" + credential.id + "'>";
+    form += "<input type='hidden' name='pass' value='" + credential.pass + "'>"
+    form += "<input type='hidden' name='azukeru' value='all'>";
+    form += "<input type='hidden' name='mode' value='BANK_SELL'>";
+    form += "<input type='submit' id='deposit'>";
+    form += "</form>";
+    $("#hidden-2").html(form);
+}
+
+function generateRepairForm(credential: Credential) {
+    let form = "";
+    // noinspection HtmlUnknownTarget
+    form += "<form action='town.cgi' method='post'>";
+    form += "<input type='hidden' name='id' value='" + credential.id + "'>";
+    form += "<input type='hidden' name='pass' value='" + credential.pass + "'>"
+    form += "<input type='hidden' name='arm_mode' value='all'>";
+    form += "<input type='hidden' name='mode' value='MY_ARM2'>";
+    form += "<input type='submit' id='repair'>";
+    form += "</form>";
+    $("#hidden-3").html(form);
+}
+
+function generateLodgeForm(credential: Credential) {
+    let form = "";
+    // noinspection HtmlUnknownTarget
+    form += "<form action='town.cgi' method='post'>";
+    form += "<input type='hidden' name='id' value='" + credential.id + "'>";
+    form += "<input type='hidden' name='pass' value='" + credential.pass + "'>"
+    form += "<input type='hidden' name='mode' value='RECOVERY'>";
+    form += "<input type='submit' id='lodge'>";
+    form += "</form>";
+    $("#hidden-4").html(form);
 }
 
 export = TownDashboardLayout005;
