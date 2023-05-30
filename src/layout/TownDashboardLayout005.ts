@@ -185,9 +185,7 @@ class TownDashboardLayout005 extends TownDashboardLayout {
                     } else {
                         // 普通战斗极速模式
                         if (SetupLoader.isNormalFlashBattleEnabled()) {
-                            if (!page.petLearnSpell! && page.harvestList!.length === 0) {
-                                $(".battleButton").trigger("click");
-                            }
+                            $(".battleButton").trigger("click");
                         }
                     }
                 });
