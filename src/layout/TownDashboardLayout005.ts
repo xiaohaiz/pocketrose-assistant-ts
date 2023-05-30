@@ -101,14 +101,8 @@ class TownDashboardLayout005 extends TownDashboardLayout {
         $("#battleButton")
             .attr("type", "button")
             .on("click", () => {
-                // 开始战斗后，禁用其他的按钮
-                $("#returnButton").hide();
-                $("#battleButton")
-                    .prop("disabled", true)
-                    .css("color", "grey");
-                $("input:submit")
-                    .prop("disabled", true)
-                    .css("color", "grey");
+                $("#refreshButton").hide();
+                $("#battleButton").hide();
 
                 const request = credential.asRequestMap();
                 $("#battleCell")
