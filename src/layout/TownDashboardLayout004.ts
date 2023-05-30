@@ -21,7 +21,12 @@ class TownDashboardLayout004 extends TownDashboardLayout {
             .css("width", "60%")
             .find("> table:first")
             .find("> tbody:first")
-            .append($("<tr style='height:100%'><td></td></tr>"));
+            .append($("" +
+                "<tr><td style='color:navy;font-weight:bold;text-align:center'>＜ 私 屏 ＞</td></tr>" +
+                "<tr><td id='personalMessageContainer'></td></tr>" +
+                "<tr><td style='color:navy;font-weight:bold;text-align:center'>＜ 红 包 ＞</td></tr>" +
+                "<tr><td id='redPaperMessageContainer'></td></tr>" +
+                "<tr style='height:100%'><td></td></tr>"));
 
         if (page.role!.country !== "在野" && page.role!.country === page.townCountry) {
             $("#rightPanel")
@@ -101,7 +106,8 @@ class TownDashboardLayout004 extends TownDashboardLayout {
             .html("＜ 国 屏 ＞")
             .parent()
             .each((idx, tr) => {
-                let s = "<tr><td id='domesticMessageContainer'></td></tr>";
+                let s = "<tr><td id='domesticMessageContainer'></td></tr>" +
+                    "<tr style='height:100%'><td></td></tr>";
                 $(tr).after($(s));
             });
 
