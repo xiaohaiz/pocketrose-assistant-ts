@@ -29,7 +29,12 @@ class TownDashboardPageProcessor extends PageProcessorCredentialSupport {
                 const id = $(center).attr("id")!;
                 // 手机战斗返回后不在页面顶端，尝试自动触顶。
                 PageUtils.scrollIntoView(id);
-                $(center).after($("<div id='version' style='color:navy;font-weight:bold;text-align:center;width:100%'></div>"));
+                $(center).after($("<div id='version' style='color:navy;font-weight:bold;text-align:center;width:100%'></div>" +
+                    "<div style='display:none' id='eden-1'></div>" +
+                    "<div style='display:none' id='eden-2'></div>" +
+                    "<div style='display:none' id='eden-3'></div>" +
+                    "<div style='display:none' id='eden-4'></div>" +
+                    "<div style='display:none' id='eden-5'></div>"));
                 // @ts-ignore
                 $("#version").html(__VERSION__);
             });
