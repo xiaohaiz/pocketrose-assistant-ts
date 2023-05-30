@@ -12,10 +12,7 @@ class TownDashboardTaxManager {
     processTownTax(taxCell: JQuery) {
         const town = this.#page.role!.town!;
         if (town.name === "枫丹") {
-            taxCell.css("color", "red")
-                .css("font-weight", "bold")
-                .attr("title", "枫丹的收益不需要关心")
-                .html("PRIVACY");
+            taxCell.attr("title", "枫丹的收益不需要关心").html("PRIVACY");
             return;
         }
 
