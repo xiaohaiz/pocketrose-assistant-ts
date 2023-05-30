@@ -48,6 +48,7 @@ class TownDashboardLayout005 extends TownDashboardLayout {
             .find("> td:first")
             .removeAttr("bgcolor")
             .attr("id", "battlePanel")
+            .css("text-align", "center")
             .html("")
             .parent()
             .next()
@@ -86,7 +87,7 @@ class TownDashboardLayout005 extends TownDashboardLayout {
 
                 NetworkUtils.post("battle.cgi", request).then(html => {
                     const page = BattlePage.parse(html);
-                    console.log(JSON.stringify(page))
+                    $("#battlePanel").html(page.reportHtml!);
                 });
             });
     }

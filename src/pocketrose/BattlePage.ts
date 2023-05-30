@@ -20,6 +20,9 @@ class BattlePage {
     harvestList?: string[];         // 入手列表
     monsterTask?: boolean;          // 杀怪任务
 
+
+    reportHtml?: string;
+
     constructor() {
         this.treasureBattle = false;
         this.primaryBattle = false;
@@ -150,6 +153,38 @@ class BattlePage {
 
 
         page.monsterTask = PageUtils.currentPageHtml().includes("完成杀怪任务");
+
+
+        let p1 = battleTable
+            .find("> tbody:first")
+            .find("> tr:first")
+            .find("> td:first")
+            .find("> center:first")
+            .find("> h1:eq(1)")
+            .find("> font:first")
+            .find("> b:first")
+            .find("> p:last")
+            .html();
+
+        p1 = StringUtils.substringAfterLast(p1, "</tbody></table><br>");
+
+        let p2 = battleTable
+            .find("> tbody:first")
+            .find("> tr:first")
+            .find("> td:first")
+            .find("> center:first")
+            .find("> h1:eq(1)")
+            .find("> p:first")
+            .html();
+
+        let p3 = "<p><b><font size='3'>" + p1 + "</font></b></p>" + "<p>" + p2 + "</p>";
+        while (true) {
+            if (!p3.includes("<br><br>")) {
+                break;
+            }
+            p3 = _.replace(p3, "<br><br>", "<br>");
+        }
+        page.reportHtml = p3;
 
         return page;
     }
