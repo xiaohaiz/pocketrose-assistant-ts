@@ -53,7 +53,13 @@ class TownDashboardLayout005 extends TownDashboardLayout {
             .next()
             .css("height", "100%")
             .find("> td:first")
-            .html("");
+            .html("" +
+                "<div style='display:none' id='hidden-1'></div>" +
+                "<div style='display:none' id='hidden-2'></div>" +
+                "<div style='display:none' id='hidden-3'></div>" +
+                "<div style='display:none' id='hidden-4'></div>" +
+                "<div style='display:none' id='hidden-5'></div>" +
+                "");
 
         $("#battleButton")
             .attr("type", "button")
