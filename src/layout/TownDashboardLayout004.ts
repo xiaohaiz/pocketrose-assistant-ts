@@ -1,4 +1,4 @@
-import SetupLoader from "../config/SetupLoader";
+import TownDashboardTaxManager from "../core/TownDashboardTaxManager";
 import Conversation from "../pocketrose/Conversation";
 import TownDashboardPage from "../pocketrose/TownDashboardPage";
 import Credential from "../util/Credential";
@@ -46,22 +46,7 @@ class TownDashboardLayout004 extends TownDashboardLayout {
                 .each((idx, tr) => {
                     const tax = page.townTax!;
                     $(tr).after($("<tr><td>收益</td><th id='townTax'>" + tax + "</th><td colspan='2'></td></tr>"));
-                    if (tax - Math.floor(tax / 50000) * 50000 <= 10000) {
-                        $("#townTax")
-                            .css("color", "white")
-                            .css("background-color", "green")
-                            .css("font-weight", "bold")
-                            .on("click", () => {
-                                if (!SetupLoader.isCollectTownTaxDisabled()) {
-                                    $("option[value='MAKE_TOWN']")
-                                        .prop("selected", true)
-                                        .closest("td")
-                                        .next()
-                                        .find("> input:submit:first")
-                                        .trigger("click");
-                                }
-                            });
-                    }
+                    new TownDashboardTaxManager(page).processTownTax($("#townTax"));
                 });
         }
 
