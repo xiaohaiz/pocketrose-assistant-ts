@@ -53,6 +53,16 @@ class TownDashboardLayout002 extends TownDashboardLayout {
                             .css("color", "white")
                             .css("background-color", "green")
                             .css("font-weight", "bold")
+                            .on("click", () => {
+                                if (!SetupLoader.isCollectTownTaxDisabled()) {
+                                    $("option[value='MAKE_TOWN']")
+                                        .prop("selected", true)
+                                        .closest("td")
+                                        .next()
+                                        .find("> input:submit:first")
+                                        .trigger("click");
+                                }
+                            });
                     }
                 });
         }

@@ -1,3 +1,4 @@
+import SetupLoader from "../config/SetupLoader";
 import TownDashboardPage from "../pocketrose/TownDashboardPage";
 import Credential from "../util/Credential";
 import TownDashboardLayout from "./TownDashboardLayout";
@@ -41,6 +42,16 @@ class TownDashboardLayout001 extends TownDashboardLayout {
                         $(td).css("color", "white")
                             .css("background-color", "green")
                             .css("font-weight", "bold")
+                            .on("click", () => {
+                                if (!SetupLoader.isCollectTownTaxDisabled()) {
+                                    $("option[value='MAKE_TOWN']")
+                                        .prop("selected", true)
+                                        .closest("td")
+                                        .next()
+                                        .find("> input:submit:first")
+                                        .trigger("click");
+                                }
+                            });
                     }
                 }
             });
