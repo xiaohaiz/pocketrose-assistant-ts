@@ -29,15 +29,18 @@ class TownDashboardPageProcessor extends PageProcessorCredentialSupport {
                 const id = $(center).attr("id")!;
                 // 手机战斗返回后不在页面顶端，尝试自动触顶。
                 PageUtils.scrollIntoView(id);
-                $(center).after($("<div id='version' style='color:navy;font-weight:bold;text-align:center;width:100%'></div>" +
-                    "<div style='display:none' id='eden-1'></div>" +
-                    "<div style='display:none' id='eden-2'></div>" +
-                    "<div style='display:none' id='eden-3'></div>" +
-                    "<div style='display:none' id='eden-4'></div>" +
-                    "<div style='display:none' id='eden-5'></div>"));
+                $(center).after($("<div id='version' style='color:navy;font-weight:bold;text-align:center;width:100%'></div>"));
                 // @ts-ignore
                 $("#version").html(__VERSION__);
             });
+
+        $("div:last")
+            .append($("" +
+                "<p style='display:none' id='eden-1'></p>" +
+                "<p style='display:none' id='eden-2'></p>" +
+                "<p style='display:none' id='eden-3'></p>" +
+                "<p style='display:none' id='eden-4'></p>" +
+                "<p style='display:none' id='eden-5'></p>"));
 
         doMarkElement();
         doRenderMobilization();
@@ -275,7 +278,14 @@ function doRenderMenu(credential: Credential, page: TownDashboardPage) {
                         $(th).css("vertical-align", "bottom")
                             .html("<button role='button' class='" + buttonClass + "' id='shortcut0' " +
                                 "style='margin-bottom:8px;white-space:nowrap'>" + bt + "</button>")
-                        _bindShortcutButton("shortcut0", es[1]);
+                        if (es[0] === "养精蓄锐") {
+                            $("#eden-1").html(PageUtils.generateFullRecoveryForm(credential));
+                            $("#shortcut0").on("click", () => {
+                                $("#fullRecovery").trigger("click");
+                            });
+                        } else {
+                            _bindShortcutButton("shortcut0", es[1]);
+                        }
                     }
                 }
             })

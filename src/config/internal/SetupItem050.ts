@@ -49,6 +49,7 @@ function doGenerateSetupItem() {
     html += "<option class='option_class_" + code + "' value='10'>宠物联赛</option>";
     html += "<option class='option_class_" + code + "' value='11'>宠物排行</option>";
     html += "<option class='option_class_" + code + "' value='12'>城市收益</option>";
+    html += "<option class='option_class_" + code + "' value='13'>养精蓄锐</option>";
     html += "</select>";
     return html;
 }

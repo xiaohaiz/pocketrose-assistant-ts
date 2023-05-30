@@ -207,6 +207,18 @@ class PageUtils {
         return html;
     }
 
+    static generateFullRecoveryForm(credential: Credential) {
+        let form = "";
+        // noinspection HtmlUnknownTarget
+        form += "<form action='town.cgi' method='post'>";
+        form += "<input type='hidden' name='id' value='" + credential.id + "'>";
+        form += "<input type='hidden' name='pass' value='" + credential.pass + "'>"
+        form += "<input type='hidden' name='mode' value='RECOVERY'>";
+        form += "<input type='submit' id='fullRecovery'>";
+        form += "</form>";
+        return form;
+    }
+
     static unbindEventBySpecifiedClass(className: string) {
         if ($("." + className).length > 0) {
             $("." + className)

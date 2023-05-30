@@ -24,6 +24,7 @@ const EXT_SHORTCUTS = {
     10: ["宠物联赛", "PET_TZ"],
     11: ["宠物排行", "PETPROFILE"],
     12: ["城市收益", "MAKE_TOWN"],
+    13: ["养精蓄锐", ""],
 };
 
 export = ExtensionShortcutLoader;
