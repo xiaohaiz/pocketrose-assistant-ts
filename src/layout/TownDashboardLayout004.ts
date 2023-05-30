@@ -2,6 +2,7 @@ import TownDashboardTaxManager from "../core/TownDashboardTaxManager";
 import Conversation from "../pocketrose/Conversation";
 import TownDashboardPage from "../pocketrose/TownDashboardPage";
 import Credential from "../util/Credential";
+import StorageUtils from "../util/StorageUtils";
 import TownDashboardLayout from "./TownDashboardLayout";
 
 class TownDashboardLayout004 extends TownDashboardLayout {
@@ -154,34 +155,37 @@ class TownDashboardLayout004 extends TownDashboardLayout {
         // domesticMessageContainer
         // personalMessageContainer
         // redPaperMessageContainer
-        setInterval(() => {
-            new Conversation(credential).open().then(conversationPage => {
-                $("#globalMessageContainer")
-                    .find("> table:first")
-                    .html(conversationPage.globalMessageHtml!)
-                    .find("> tbody:first")
-                    .find("> tr")
-                    .filter(idx => idx >= 30)
-                    .each((idx, tr) => {
-                        $(tr).hide();
-                    });
-                $("#domesticMessageContainer")
-                    .find("> table:first")
-                    .html(conversationPage.domesticMessageHtml!)
-                    .find("> tbody:first")
-                    .find("> tr")
-                    .filter(idx => idx >= 10)
-                    .each((idx, tr) => {
-                        $(tr).hide();
-                    });
-                $("#personalMessageContainer")
-                    .find("> table:first")
-                    .html(conversationPage.personalMessageHtml!);
-                $("#redPaperMessageContainer")
-                    .find("> table:first")
-                    .html(conversationPage.redPaperMessageHtml!);
-            });
-        }, 5000);
+        const autoRefresh = StorageUtils.getInt("_pa_040", 5);
+        if (autoRefresh > 1) {
+            setInterval(() => {
+                new Conversation(credential).open().then(conversationPage => {
+                    $("#globalMessageContainer")
+                        .find("> table:first")
+                        .html(conversationPage.globalMessageHtml!)
+                        .find("> tbody:first")
+                        .find("> tr")
+                        .filter(idx => idx >= 30)
+                        .each((idx, tr) => {
+                            $(tr).hide();
+                        });
+                    $("#domesticMessageContainer")
+                        .find("> table:first")
+                        .html(conversationPage.domesticMessageHtml!)
+                        .find("> tbody:first")
+                        .find("> tr")
+                        .filter(idx => idx >= 10)
+                        .each((idx, tr) => {
+                            $(tr).hide();
+                        });
+                    $("#personalMessageContainer")
+                        .find("> table:first")
+                        .html(conversationPage.personalMessageHtml!);
+                    $("#redPaperMessageContainer")
+                        .find("> table:first")
+                        .html(conversationPage.redPaperMessageHtml!);
+                });
+            }, autoRefresh * 1000);
+        }
     }
 
 }
