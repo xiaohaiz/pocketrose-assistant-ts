@@ -8,7 +8,9 @@ import TownDashboardLayoutManager from "../../layout/TownDashboardLayoutManager"
 import TownDashboardPage from "../../pocketrose/TownDashboardPage";
 import Credential from "../../util/Credential";
 import PageUtils from "../../util/PageUtils";
+import StorageUtils from "../../util/StorageUtils";
 import StringUtils from "../../util/StringUtils";
+import TimeoutUtils from "../../util/TimeoutUtils";
 import PageProcessorContext from "../PageProcessorContext";
 import PageProcessorCredentialSupport from "../PageProcessorCredentialSupport";
 
@@ -48,6 +50,7 @@ class TownDashboardPageProcessor extends PageProcessorCredentialSupport {
         doRenderEventBoard();
         doRenderRoleStatus(credential, page);
         doRenderEnlargeMode();
+        doProcessSafeBattleButton();
 
         const configId = TownDashboardLayoutManager.loadDashboardLayoutConfigId(credential);
         LAYOUT_MANAGER.getLayout(configId)?.render(credential, page);
@@ -605,6 +608,46 @@ function doRenderEnlargeMode() {
             clock.css("font-size", fontSize + "%");
         }
     }
+}
+
+function doProcessSafeBattleButton() {
+    if (!StorageUtils.getBoolean("_pa_045")) {
+        return;
+    }
+    $("#battleButton")
+        .prop("disabled", true)
+        .css("color", "grey");
+
+    const clock = $("input:text[name='clock']");
+    if (clock.length === 0) {
+        // clock已经消失了，表示读秒已经完成，返回
+        $("#battleButton")
+            .prop("disabled", false)
+            .css("color", "blue");
+        return;
+    }
+
+    const remain = _.parseInt(clock.val()! as string);
+    if (remain > 2) {
+        const timeoutInMillis = (remain - 2) * 1000;
+        TimeoutUtils.execute(timeoutInMillis, () => {
+            _startSafeBattleButtonTimer(clock);
+        });
+    } else {
+        _startSafeBattleButtonTimer(clock);
+    }
+}
+
+function _startSafeBattleButtonTimer(clock: JQuery) {
+    const timer = setInterval(() => {
+        const remain = _.parseInt(clock.val()! as string);
+        if (remain <= 0) {
+            clearInterval(timer);
+            $("#battleButton")
+                .prop("disabled", false)
+                .css("color", "blue");
+        }
+    }, 200);
 }
 
 function _renderBattleMenu(credential: Credential) {
