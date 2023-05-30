@@ -168,6 +168,20 @@ class TownDashboardLayout005 extends TownDashboardLayout {
                             $("#lodge").trigger("click");
                         });
                     });
+
+                    if (page.zodiacBattle!) {
+                        // 十二宫极速战斗模式
+                        if (SetupLoader.isZodiacFlashBattleEnabled()) {
+                            $(".battleButton").trigger("click");
+                        }
+                    } else {
+                        // 普通战斗极速模式
+                        if (SetupLoader.isNormalFlashBattleEnabled()) {
+                            if (!page.petLearnSpell! && page.harvestList!.length === 0) {
+                                $(".battleButton").trigger("click");
+                            }
+                        }
+                    }
                 });
             });
     }
