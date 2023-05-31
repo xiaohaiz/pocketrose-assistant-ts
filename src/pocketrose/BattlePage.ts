@@ -22,6 +22,7 @@ class BattlePage {
 
     roleImageHtml?: string;
     roleNameHtml?: string;
+    petImageHtml?: string;
     monsterImageHtml?: string;
     monsterNameHtml?: string;
     reportHtml?: string;
@@ -174,6 +175,44 @@ class BattlePage {
             .find("> td:first")
             .find("> table:first");
 
+        const imgSrcList: string[] = [];
+        battleTable
+            .find("> tbody:first")
+            .find("> tr:first")
+            .find("> td:first")
+            .find("> center:first")
+            .find("> h1:eq(1)")
+            .find("> font:first")
+            .find("> b:first")
+            .find("> p:first")
+            .find("> table:first")
+            .find("> tbody:first")
+            .find("> tr")
+            .filter(idx => idx > 1)
+            .find("img")
+            .each((idx, img) => {
+                const src = $(img).attr("src")!;
+                imgSrcList.push(src);
+            });
+        if (imgSrcList.length === 3) {
+            // 在战斗的第一个回合的表格中找到3张图片，说明有宠物
+            const roleImageSrc = $(page.roleImageHtml!).attr("src")!;
+            const monsterImageSrc = $(page.monsterImageHtml!).attr("src")!;
+            let petImageSrc = "";
+            for (const imgSrc of imgSrcList) {
+                // 过滤掉角色图片和怪物图片剩下的就是宠物图片
+                if (imgSrc === roleImageSrc || imgSrc === monsterImageSrc) {
+                    continue;
+                }
+                petImageSrc = imgSrc;
+            }
+            if (petImageSrc === "") {
+                // 没有找到？那说明宠物图片和怪物图片是一个
+                petImageSrc = monsterImageSrc;
+            }
+            page.petImageHtml = "<img src='" + petImageSrc + "' alt='' width='64' height='64'>";
+        }
+
         battleTable
             .find("td:contains('＜怪物＞')")
             .filter((idx, td) => $(td).text() === "＜怪物＞")
@@ -316,6 +355,7 @@ function generateBattleReport(battleTable: JQuery, page: BattlePage) {
     report = "<p style='font-weight:bold'><font size='3'>" + brs + "</font></p>" + report;
 
     report = "<p>" + page.roleImageHtml +
+        (page.petImageHtml === undefined ? "" : page.petImageHtml) +
         "&nbsp;&nbsp;&nbsp;<b style='font-size:300%;color:red'>VS</b>&nbsp;&nbsp;&nbsp;" +
         page.monsterImageHtml + "</p>" + report;
 
