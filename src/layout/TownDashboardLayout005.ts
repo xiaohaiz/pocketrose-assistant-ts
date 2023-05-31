@@ -351,7 +351,7 @@ function _showReportElement(children: JQuery[], index: number) {
         return;
     }
     const child = children[index];
-    child.show(400, "linear", () => {
+    child.show("fast", "linear", () => {
         _showReportElement(children, index + 1);
     });
 }
