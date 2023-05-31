@@ -262,7 +262,7 @@ function doRenderMenu(credential: Credential, page: TownDashboardPage) {
     // 如果启用了配置则开始渲染快捷按钮
     // ------------------------------------------------------------------------
     const bsId = SetupLoader.getTownDashboardShortcutButton();
-    if (bsId > 0) {
+    if (bsId >= 0) {
         const buttonClass = "button-" + bsId;
         $("#menuTable")
             .find("> tbody:first")
