@@ -75,18 +75,23 @@ class TownDashboardLayout005 extends TownDashboardLayout {
 
         const lastBattle = StorageUtils.getString("_lb_" + credential.id);
         if (lastBattle !== "") {
-            const children: JQuery[] = [];
-            $("#battlePanel")
-                .html(lastBattle)
-                .find("> *")
-                .each((idx, child) => {
-                    const element = $(child);
-                    if (element.is("p") || element.is("b")) {
-                        element.hide();
-                        children.push(element);
-                    }
-                });
-            _showReportElement(children, 0);
+            if (StorageUtils.getBoolean("_pa_055")) {
+                const children: JQuery[] = [];
+                $("#battlePanel")
+                    .html(lastBattle)
+                    .find("> *")
+                    .each((idx, child) => {
+                        const element = $(child);
+                        if (element.is("p") || element.is("b")) {
+                            element.hide();
+                            children.push(element);
+                        }
+                    });
+                _showReportElement(children, 0);
+            } else {
+                $("#battlePanel")
+                    .html(lastBattle);
+            }
         }
 
         // 战斗布局只支持以下战斗
