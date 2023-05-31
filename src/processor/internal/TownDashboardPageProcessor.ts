@@ -615,16 +615,12 @@ function doProcessSafeBattleButton() {
     if (!StorageUtils.getBoolean("_pa_045")) {
         return;
     }
-    $("#battleButton")
-        .prop("disabled", true)
-        .css("color", "grey");
+    $("#battleButton").hide();
 
     const clock = $("input:text[name='clock']");
     if (clock.length === 0) {
         // clock已经消失了，表示读秒已经完成，返回
-        $("#battleButton")
-            .prop("disabled", false)
-            .css("color", "blue");
+        $("#battleButton").show();
         return;
     }
 
@@ -644,9 +640,7 @@ function _startSafeBattleButtonTimer(clock: JQuery) {
         const remain = _.parseInt(clock.val()! as string);
         if (remain <= 0) {
             clearInterval(timer);
-            $("#battleButton")
-                .prop("disabled", false)
-                .css("color", "blue");
+            $("#battleButton").show();
         }
     }, 200);
 }
