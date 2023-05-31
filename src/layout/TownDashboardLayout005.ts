@@ -75,7 +75,18 @@ class TownDashboardLayout005 extends TownDashboardLayout {
 
         const lastBattle = StorageUtils.getString("_lb_" + credential.id);
         if (lastBattle !== "") {
-            $("#battlePanel").html(lastBattle);
+            const children: JQuery[] = [];
+            $("#battlePanel")
+                .html(lastBattle)
+                .find("> *")
+                .each((idx, child) => {
+                    const element = $(child);
+                    if (element.is("p") || element.is("b")) {
+                        element.hide();
+                        children.push(element);
+                    }
+                });
+            _showReportElement(children, 0);
         }
 
         // 战斗布局只支持以下战斗
@@ -333,6 +344,16 @@ async function doBeforeReturn(credential: Credential, battleCount: number): Prom
                 });
         });
     })();
+}
+
+function _showReportElement(children: JQuery[], index: number) {
+    if (index === children.length) {
+        return;
+    }
+    const child = children[index];
+    child.show(400, "linear", () => {
+        _showReportElement(children, index + 1);
+    });
 }
 
 export = TownDashboardLayout005;
