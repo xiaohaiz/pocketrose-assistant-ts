@@ -21,7 +21,10 @@ class BattlePage {
     petLearnSpell?: boolean;        // 宠物是否学会新技能
 
     roleImageHtml?: string;
+    roleNameHtml?: string;
+    petImageHtml?: string;
     monsterImageHtml?: string;
+    monsterNameHtml?: string;
     reportHtml?: string;
 
     constructor() {
@@ -65,7 +68,7 @@ class BattlePage {
             .closest("table");
         let div = table.prev();
 
-        page.roleImageHtml = table.find("> tbody:first")
+        table.find("> tbody:first")
             .find("> tr:eq(3)")
             .find("> td:first")
             .find("> table:first")
@@ -76,9 +79,22 @@ class BattlePage {
             .find("> tbody:first")
             .find("> tr:eq(2)")
             .find("> td:first")
-            .html();
+            .next()
+            .html((idx, html) => {
+                page.roleNameHtml = html;
+                return html;
+            })
+            .prev()
+            .html((idx, html) => {
+                page.roleImageHtml = $("<td>" + html + "</td>")
+                    .find("> img:first")
+                    .attr("title", page.roleNameHtml!)
+                    .parent()
+                    .html();
+                return html;
+            })
 
-        page.monsterImageHtml = table.find("> tbody:first")
+        table.find("> tbody:first")
             .find("> tr:eq(4)")
             .find("> td:first")
             .find("> table:first")
@@ -88,8 +104,22 @@ class BattlePage {
             .find("> table:first")
             .find("> tbody:first")
             .find("> tr:eq(2)")
+            .find("> td:first")
+            .html((idx, html) => {
+                page.monsterNameHtml = html;
+                return html;
+            })
+            .parent()
             .find("> td:last")
-            .html();
+            .html((idx, html) => {
+                page.monsterImageHtml = $("<td>" + html + "</td>")
+                    .find("> img:first")
+                    .attr("title", page.monsterNameHtml!)
+                    .attr("alt", page.monsterNameHtml!)
+                    .parent()
+                    .html();
+                return html;
+            });
 
         table.find("> tbody:first")
             .find("> tr:first")
@@ -144,6 +174,44 @@ class BattlePage {
             .find("> tr:eq(5)")
             .find("> td:first")
             .find("> table:first");
+
+        const imgSrcList: string[] = [];
+        battleTable
+            .find("> tbody:first")
+            .find("> tr:first")
+            .find("> td:first")
+            .find("> center:first")
+            .find("> h1:eq(1)")
+            .find("> font:first")
+            .find("> b:first")
+            .find("> p:first")
+            .find("> table:first")
+            .find("> tbody:first")
+            .find("> tr")
+            .filter(idx => idx > 1)
+            .find("img")
+            .each((idx, img) => {
+                const src = $(img).attr("src")!;
+                imgSrcList.push(src);
+            });
+        if (imgSrcList.length === 3) {
+            // 在战斗的第一个回合的表格中找到3张图片，说明有宠物
+            const roleImageSrc = $(page.roleImageHtml!).attr("src")!;
+            const monsterImageSrc = $(page.monsterImageHtml!).attr("src")!;
+            let petImageSrc = "";
+            for (const imgSrc of imgSrcList) {
+                // 过滤掉角色图片和怪物图片剩下的就是宠物图片
+                if (imgSrc === roleImageSrc || imgSrc === monsterImageSrc) {
+                    continue;
+                }
+                petImageSrc = imgSrc;
+            }
+            if (petImageSrc === "") {
+                // 没有找到？那说明宠物图片和怪物图片是一个
+                petImageSrc = monsterImageSrc;
+            }
+            page.petImageHtml = "<img src='" + petImageSrc + "' alt='' width='64' height='64'>";
+        }
 
         battleTable
             .find("td:contains('＜怪物＞')")
@@ -274,7 +342,20 @@ function generateBattleReport(battleTable: JQuery, page: BattlePage) {
         report = _.replace(report, "<br><br>", "<br>");
     }
 
+    let brs = "";
+    if (page.battleResult === "战胜") {
+        brs = "<span style='color:indigo'>暴虎冯河，战胜了<span style='color:green'>" + page.monsterNameHtml + "</span>！</span>";
+    } else if (page.battleResult === "战败") {
+        brs = "<span style='color:indigo'>涕泗横流，被<span style='color:green'>" + page.monsterNameHtml + "</span>暴揍一顿！</span>"
+    } else {
+        brs = "<span style='color:indigo'>与<span style='color:green'>" + page.monsterNameHtml + "</span>拳来腿往不分高下！</span>";
+    }
+
+    // noinspection HtmlDeprecatedTag,HtmlDeprecatedAttribute,XmlDeprecatedElement
+    report = "<p style='font-weight:bold'><font size='3'>" + brs + "</font></p>" + report;
+
     report = "<p>" + page.roleImageHtml +
+        (page.petImageHtml === undefined ? "" : page.petImageHtml) +
         "&nbsp;&nbsp;&nbsp;<b style='font-size:300%;color:red'>VS</b>&nbsp;&nbsp;&nbsp;" +
         page.monsterImageHtml + "</p>" + report;
 
