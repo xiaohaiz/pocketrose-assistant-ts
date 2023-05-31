@@ -202,45 +202,116 @@ class BattlePage {
         page.petLearnSpell = html.includes("遗忘了技能") || html.includes("学会了新技能");
 
 
-        let p1 = battleTable
-            .find("> tbody:first")
-            .find("> tr:first")
-            .find("> td:first")
-            .find("> center:first")
-            .find("> h1:eq(1)")
-            .find("> font:first")
-            .find("> b:first")
-            .find("> p:last")
-            .html();
+        // let p1 = battleTable
+        //     .find("> tbody:first")
+        //     .find("> tr:first")
+        //     .find("> td:first")
+        //     .find("> center:first")
+        //     .find("> h1:eq(1)")
+        //     .find("> font:first")
+        //     .find("> b:first")
+        //     .find("> p:last")
+        //     .html();
+        //
+        // p1 = StringUtils.substringAfterLast(p1, "</tbody></table><br>");
+        //
+        // let p2 = battleTable
+        //     .find("> tbody:first")
+        //     .find("> tr:first")
+        //     .find("> td:first")
+        //     .find("> center:first")
+        //     .find("> h1:eq(1)")
+        //     .find("> p:first")
+        //     .html();
+        //
+        // let p3 = "<p><b><font size='3'>" + p1 + "</font></b></p>" + "<p>" + p2 + "</p>";
+        // while (true) {
+        //     if (!p3.includes("<br><br>")) {
+        //         break;
+        //     }
+        //     p3 = _.replace(p3, "<br><br>", "<br>");
+        // }
+        // p3 = "<p>" + page.roleImageHtml +
+        //     "&nbsp;&nbsp;&nbsp;<b style='font-size:300%;color:red'>VS</b>&nbsp;&nbsp;&nbsp;" +
+        //     page.monsterImageHtml + "</p>" + p3;
+        //
+        // p3 = "<p><b style='color:navy;font-size:120%'>" + page.battleField + "</b></p>" + p3;
+        //
+        // page.reportHtml = p3;
 
-        p1 = StringUtils.substringAfterLast(p1, "</tbody></table><br>");
-
-        let p2 = battleTable
-            .find("> tbody:first")
-            .find("> tr:first")
-            .find("> td:first")
-            .find("> center:first")
-            .find("> h1:eq(1)")
-            .find("> p:first")
-            .html();
-
-        let p3 = "<p><b><font size='3'>" + p1 + "</font></b></p>" + "<p>" + p2 + "</p>";
-        while (true) {
-            if (!p3.includes("<br><br>")) {
-                break;
-            }
-            p3 = _.replace(p3, "<br><br>", "<br>");
-        }
-        p3 = "<p>" + page.roleImageHtml +
-            "&nbsp;&nbsp;&nbsp;<b style='font-size:300%;color:red'>VS</b>&nbsp;&nbsp;&nbsp;" +
-            page.monsterImageHtml + "</p>" + p3;
-
-        p3 = "<p><b style='color:navy;font-size:120%'>" + page.battleField + "</b></p>" + p3;
-
-        page.reportHtml = p3;
+        generateBattleReport(battleTable, page);
 
         return page;
     }
+}
+
+function generateBattleReport(battleTable: JQuery, page: BattlePage) {
+    let lastTurnIndex = 0;  // 最后一个回合p元素对应的下标
+    battleTable
+        .find("> tbody:first")
+        .find("> tr:first")
+        .find("> td:first")
+        .find("> center:first")
+        .find("> h1:eq(1)")
+        .find("> font:first")
+        .find("> b:first")
+        .find("> p")
+        .each((idx, p) => {
+            const t = $(p).text();
+            if (_.startsWith(t, "第 ") && _.includes(t, " 回合")) {
+                lastTurnIndex = idx;
+            }
+        });
+
+    const pList: JQuery[] = [];
+    battleTable
+        .find("> tbody:first")
+        .find("> tr:first")
+        .find("> td:first")
+        .find("> center:first")
+        .find("> h1:eq(1)")
+        .find("> font:first")
+        .find("> b:first")
+        .find("> p")
+        .each((idx, p) => {
+            if (idx >= lastTurnIndex) {
+                pList.push($(p));
+            }
+        });
+
+    let p1 = pList[0].html();
+    p1 = StringUtils.substringAfterLast(p1, "</tbody></table><br>");
+
+    let p2 = "";
+    if (pList.length > 1) {
+        p2 = pList[1].html();
+    }
+
+    let p3 = battleTable
+        .find("> tbody:first")
+        .find("> tr:first")
+        .find("> td:first")
+        .find("> center:first")
+        .find("> h1:eq(1)")
+        .find("> p:first")
+        .html();
+
+    // noinspection HtmlDeprecatedTag,HtmlDeprecatedAttribute,XmlDeprecatedElement
+    let report = "<b><font size='3'>" + p1 + "</font></b><br><b><font size='3'>" + p2 + "</font></b><br>" + p3;
+    while (true) {
+        if (!report.includes("<br><br>")) {
+            break;
+        }
+        report = _.replace(report, "<br><br>", "<br>");
+    }
+
+    report = "<p>" + page.roleImageHtml +
+        "&nbsp;&nbsp;&nbsp;<b style='font-size:300%;color:red'>VS</b>&nbsp;&nbsp;&nbsp;" +
+        page.monsterImageHtml + "</p>" + report;
+
+    report = "<p><b style='color:navy;font-size:120%'>" + page.battleField + "</b></p>" + report;
+
+    page.reportHtml = report;
 }
 
 export = BattlePage;
