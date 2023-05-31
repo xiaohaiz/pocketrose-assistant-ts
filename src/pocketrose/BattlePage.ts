@@ -67,7 +67,7 @@ class BattlePage {
             .closest("table");
         let div = table.prev();
 
-        page.roleImageHtml = table.find("> tbody:first")
+        table.find("> tbody:first")
             .find("> tr:eq(3)")
             .find("> td:first")
             .find("> table:first")
@@ -78,7 +78,20 @@ class BattlePage {
             .find("> tbody:first")
             .find("> tr:eq(2)")
             .find("> td:first")
-            .html();
+            .next()
+            .html((idx, html) => {
+                page.roleNameHtml = html;
+                return html;
+            })
+            .prev()
+            .html((idx, html) => {
+                page.roleImageHtml = $("<td>" + html + "</td>")
+                    .find("> img:first")
+                    .attr("title", page.roleNameHtml!)
+                    .parent()
+                    .html();
+                return html;
+            })
 
         table.find("> tbody:first")
             .find("> tr:eq(4)")
