@@ -172,63 +172,86 @@ function doRenderMenu(credential: Credential, page: TownDashboardPage) {
         .css("height", "100%")
         .css("width", "100%")
         .css("min-height", "30px")
-        .addClass("button-10008")
         .val((idx, value) => {
             return SetupLoader.isAsciiTextButtonEnabled() ? "RELOAD" : value;
+        })
+        .each((idx, button) => {
+            const sId = SetupLoader.getTownDashboardMainButton();
+            if (sId !== 0) {
+                $(button).addClass("button-" + sId);
+            }
         });
 
     $("#battleButton")
         .css("height", "100%")
         .css("width", "100%")
-        .addClass("button-10008")
+        .val((idx, value) => {
+            return SetupLoader.isAsciiTextButtonEnabled() ? "BATTLE" : value;
+        })
         .each((idx, button) => {
-            if (SetupLoader.isAsciiTextButtonEnabled()) {
-                $(button).val("BATTLE");
+            const sId = SetupLoader.getTownDashboardMainButton();
+            if (sId !== 0) {
+                $(button).addClass("button-" + sId);
             }
         });
     $("#townButton")
         .css("height", "100%")
         .css("width", "100%")
-        .addClass("button-10008")
+        .val((idx, value) => {
+            return SetupLoader.isAsciiTextButtonEnabled() ? "ACTION" : value;
+        })
         .each((idx, button) => {
-            if (SetupLoader.isAsciiTextButtonEnabled()) {
-                $(button).val("ACTION");
+            const sId = SetupLoader.getTownDashboardMainButton();
+            if (sId !== 0) {
+                $(button).addClass("button-" + sId);
             }
         });
     $("#personalButton")
         .css("height", "100%")
         .css("width", "100%")
-        .addClass("button-10008")
+        .val((idx, value) => {
+            return SetupLoader.isAsciiTextButtonEnabled() ? "ACTION" : value;
+        })
         .each((idx, button) => {
-            if (SetupLoader.isAsciiTextButtonEnabled()) {
-                $(button).val("ACTION");
+            const sId = SetupLoader.getTownDashboardMainButton();
+            if (sId !== 0) {
+                $(button).addClass("button-" + sId);
             }
         });
     $("#countryNormalButton")
         .css("height", "100%")
         .css("width", "100%")
-        .addClass("button-10008")
+        .val((idx, value) => {
+            return SetupLoader.isAsciiTextButtonEnabled() ? "ACTION" : value;
+        })
         .each((idx, button) => {
-            if (SetupLoader.isAsciiTextButtonEnabled()) {
-                $(button).val("ACTION");
+            const sId = SetupLoader.getTownDashboardMainButton();
+            if (sId !== 0) {
+                $(button).addClass("button-" + sId);
             }
         });
     $("#countryAdvancedButton")
         .css("height", "100%")
         .css("width", "100%")
-        .addClass("button-10008")
+        .val((idx, value) => {
+            return SetupLoader.isAsciiTextButtonEnabled() ? "ACTION" : value;
+        })
         .each((idx, button) => {
-            if (SetupLoader.isAsciiTextButtonEnabled()) {
-                $(button).val("ACTION");
+            const sId = SetupLoader.getTownDashboardMainButton();
+            if (sId !== 0) {
+                $(button).addClass("button-" + sId);
             }
         });
     $("#leaveButton")
         .css("height", "100%")
         .css("width", "100%")
-        .addClass("button-10008")
+        .val((idx, value) => {
+            return SetupLoader.isAsciiTextButtonEnabled() ? "ACTION" : value;
+        })
         .each((idx, button) => {
-            if (SetupLoader.isAsciiTextButtonEnabled()) {
-                $(button).val("ACTION");
+            const sId = SetupLoader.getTownDashboardMainButton();
+            if (sId !== 0) {
+                $(button).addClass("button-" + sId);
             }
         })
         .parent()
@@ -239,10 +262,13 @@ function doRenderMenu(credential: Credential, page: TownDashboardPage) {
     $("#exitButton")
         .css("height", "100%")
         .css("width", "100%")
-        .addClass("button-10008")
+        .val((idx, value) => {
+            return SetupLoader.isAsciiTextButtonEnabled() ? "ACTION" : value;
+        })
         .each((idx, button) => {
-            if (SetupLoader.isAsciiTextButtonEnabled()) {
-                $(button).val("ACTION");
+            const sId = SetupLoader.getTownDashboardMainButton();
+            if (sId !== 0) {
+                $(button).addClass("button-" + sId);
             }
         });
 
@@ -254,14 +280,15 @@ function doRenderMenu(credential: Credential, page: TownDashboardPage) {
             .parent()
             .next()
             .find("> th:first")
-            .css("color", "red");
+            .css("color", "red")
+            .css("font-size", "120%");
     }
 
     // ------------------------------------------------------------------------
     // 如果启用了配置则开始渲染快捷按钮
     // ------------------------------------------------------------------------
     const bsId = SetupLoader.getTownDashboardShortcutButton();
-    if (bsId > 0) {
+    if (bsId >= 0) {
         const buttonClass = "button-" + bsId;
         $("#menuTable")
             .find("> tbody:first")
@@ -614,16 +641,12 @@ function doProcessSafeBattleButton() {
     if (!StorageUtils.getBoolean("_pa_045")) {
         return;
     }
-    $("#battleButton")
-        .prop("disabled", true)
-        .css("color", "grey");
+    $("#battleButton").hide();
 
     const clock = $("input:text[name='clock']");
     if (clock.length === 0) {
         // clock已经消失了，表示读秒已经完成，返回
-        $("#battleButton")
-            .prop("disabled", false)
-            .css("color", "blue");
+        $("#battleButton").show();
         return;
     }
 
@@ -643,9 +666,7 @@ function _startSafeBattleButtonTimer(clock: JQuery) {
         const remain = _.parseInt(clock.val()! as string);
         if (remain <= 0) {
             clearInterval(timer);
-            $("#battleButton")
-                .prop("disabled", false)
-                .css("color", "blue");
+            $("#battleButton").show();
         }
     }, 200);
 }

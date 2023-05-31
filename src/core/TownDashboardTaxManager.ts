@@ -1,11 +1,16 @@
 import SetupLoader from "../config/SetupLoader";
 import TownDashboardPage from "../pocketrose/TownDashboardPage";
+import Credential from "../util/Credential";
+import MessageBoard from "../util/MessageBoard";
+import NetworkUtils from "../util/NetworkUtils";
 
 class TownDashboardTaxManager {
 
+    readonly #credential: Credential;
     readonly #page: TownDashboardPage;
 
-    constructor(page: TownDashboardPage) {
+    constructor(credential: Credential, page: TownDashboardPage) {
+        this.#credential = credential;
         this.#page = page;
     }
 
@@ -33,12 +38,14 @@ class TownDashboardTaxManager {
                 .css("background-color", "green")
                 .css("font-weight", "bold")
                 .on("click", () => {
-                    $("option[value='MAKE_TOWN']")
-                        .prop("selected", true)
-                        .closest("td")
-                        .next()
-                        .find("> input:submit:first")
-                        .trigger("click");
+                    const request = this.#credential.asRequestMap();
+                    request.set("town", this.#page.townId!)
+                    request.set("mode", "MAKE_TOWN");
+                    NetworkUtils.post("country.cgi", request)
+                        .then(html => {
+                            MessageBoard.processResponseMessage(html);
+                            $("#refreshButton").trigger("click");
+                        });
                 });
         }
     }

@@ -11,13 +11,6 @@ class TownDashboardLayout002 extends TownDashboardLayout {
     }
 
     render(credential: Credential, page: TownDashboardPage): void {
-        $(".button-10008")
-            .each((idx, button) => {
-                $(button)
-                    .removeClass("button-10008")
-                    .addClass("button-10007");
-            });
-
         $("center:first").hide();
         $("br:first").hide();
 
@@ -55,7 +48,7 @@ class TownDashboardLayout002 extends TownDashboardLayout {
             .each((idx, tr) => {
                 const tax = page.townTax!;
                 $(tr).after($("<tr><td>收益</td><th id='townTax'>" + tax + "</th><td colspan='2'></td></tr>"));
-                new TownDashboardTaxManager(page).processTownTax($("#townTax"));
+                new TownDashboardTaxManager(credential, page).processTownTax($("#townTax"));
             });
 
         $("table:first")

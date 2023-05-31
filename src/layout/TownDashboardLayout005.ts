@@ -36,7 +36,7 @@ class TownDashboardLayout005 extends TownDashboardLayout {
             .each((idx, tr) => {
                 const tax = page.townTax!;
                 $(tr).after($("<tr><td>收益</td><th id='townTax'>" + tax + "</th><td colspan='2'></td></tr>"));
-                new TownDashboardTaxManager(page).processTownTax($("#townTax"));
+                new TownDashboardTaxManager(credential, page).processTownTax($("#townTax"));
             });
 
         $("#leftPanel")
@@ -136,7 +136,7 @@ class TownDashboardLayout005 extends TownDashboardLayout {
                         let buttonText = SetupLoader.getBattleReturnButtonText();
                         buttonText = buttonText === "" ? "返回" : _.escape(buttonText);
                         $("#battleMenu").html("" +
-                            "<button role='button' class='battleButton button-10008' " +
+                            "<button role='button' class='battleButton' " +
                             "id='battleReturn' style='font-size:150%'>" + buttonText + "</button>" +
                             "")
                             .parent().show();
@@ -160,7 +160,7 @@ class TownDashboardLayout005 extends TownDashboardLayout {
                             let bt1 = SetupLoader.getBattleRepairButtonText();
                             bt1 = bt1 === "" ? "修理" : _.escape(bt1);
                             $("#battleMenu").html("" +
-                                "<button role='button' class='battleButton button-10008' " +
+                                "<button role='button' class='battleButton' " +
                                 "id='battleRepair' style='font-size:150%'>" + bt1 + "</button>" +
                                 "")
                                 .parent().show();
@@ -169,7 +169,7 @@ class TownDashboardLayout005 extends TownDashboardLayout {
                             let bt2 = SetupLoader.getBattleLodgeButtonText();
                             bt2 = bt2 === "" ? "住宿" : _.escape(bt2);
                             $("#battleMenu").html("" +
-                                "<button role='button' class='battleButton button-10008' " +
+                                "<button role='button' class='battleButton' " +
                                 "id='battleLodge' style='font-size:150%'>" + bt2 + "</button>" +
                                 "")
                                 .parent().show();
@@ -178,7 +178,7 @@ class TownDashboardLayout005 extends TownDashboardLayout {
                             let bt3 = SetupLoader.getBattleDepositButtonText();
                             bt3 = bt3 === "" ? "存钱" : _.escape(bt3);
                             $("#battleMenu").html("" +
-                                "<button role='button' class='battleButton button-16' " +
+                                "<button role='button' class='battleButton' " +
                                 "id='battleDeposit' style='font-size:150%'>" + bt3 + "</button>" +
                                 "")
                                 .parent().show();
@@ -187,7 +187,7 @@ class TownDashboardLayout005 extends TownDashboardLayout {
                             let bt4 = SetupLoader.getBattleReturnButtonText();
                             bt4 = bt4 === "" ? "返回" : _.escape(bt4);
                             $("#battleMenu").html("" +
-                                "<button role='button' class='battleButton button-16' " +
+                                "<button role='button' class='battleButton' " +
                                 "id='battleReturn' style='font-size:150%'>" + bt4 + "</button>" +
                                 "")
                                 .parent().show();
