@@ -219,21 +219,8 @@ class TownDashboardLayout005 extends TownDashboardLayout {
                         });
                     });
 
-                    if (page.zodiacBattle!) {
-                        // 十二宫极速战斗模式
-                        if (SetupLoader.isZodiacFlashBattleEnabled()) {
-                            $(".battleButton").trigger("click");
-                        } else {
-                            $(".battleButton").trigger("focus");
-                        }
-                    } else {
-                        // 普通战斗极速模式
-                        if (SetupLoader.isNormalFlashBattleEnabled()) {
-                            $(".battleButton").trigger("click");
-                        } else {
-                            $(".battleButton").trigger("focus");
-                        }
-                    }
+                    // 战斗布局模式默认开启极速战斗
+                    $(".battleButton").trigger("click");
                 });
             });
     }
