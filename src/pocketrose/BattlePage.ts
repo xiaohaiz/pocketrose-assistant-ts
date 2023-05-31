@@ -303,6 +303,18 @@ function generateBattleReport(battleTable: JQuery, page: BattlePage) {
         report = _.replace(report, "<br><br>", "<br>");
     }
 
+    let brs = "";
+    if (page.battleResult === "战胜") {
+        brs = "<span style='color:indigo'>暴虎冯河，战胜了<span style='color:green'>" + page.monsterNameHtml + "</span>！</span>";
+    } else if (page.battleResult === "战败") {
+        brs = "<span style='color:indigo'>涕泗横流，被<span style='color:green'>" + page.monsterNameHtml + "</span>暴揍一顿！</span>"
+    } else {
+        brs = "<span style='color:indigo'>与<span style='color:green'>" + page.monsterNameHtml + "</span>拳来腿往不分高下！</span>";
+    }
+
+    // noinspection HtmlDeprecatedTag,HtmlDeprecatedAttribute,XmlDeprecatedElement
+    report = "<p style='font-weight:bold'><font size='3'>" + brs + "</font></p>" + report;
+
     report = "<p>" + page.roleImageHtml +
         "&nbsp;&nbsp;&nbsp;<b style='font-size:300%;color:red'>VS</b>&nbsp;&nbsp;&nbsp;" +
         page.monsterImageHtml + "</p>" + report;
