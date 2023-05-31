@@ -136,7 +136,7 @@ class TownDashboardLayout005 extends TownDashboardLayout {
                         let buttonText = SetupLoader.getBattleReturnButtonText();
                         buttonText = buttonText === "" ? "返回" : _.escape(buttonText);
                         $("#battleMenu").html("" +
-                            "<button role='button' class='battleButton button-16' " +
+                            "<button role='button' class='battleButton button-10008' " +
                             "id='battleReturn' style='font-size:150%'>" + buttonText + "</button>" +
                             "")
                             .parent().show();
@@ -160,7 +160,7 @@ class TownDashboardLayout005 extends TownDashboardLayout {
                             let bt1 = SetupLoader.getBattleRepairButtonText();
                             bt1 = bt1 === "" ? "修理" : _.escape(bt1);
                             $("#battleMenu").html("" +
-                                "<button role='button' class='battleButton button-16' " +
+                                "<button role='button' class='battleButton button-10008' " +
                                 "id='battleRepair' style='font-size:150%'>" + bt1 + "</button>" +
                                 "")
                                 .parent().show();
@@ -169,7 +169,7 @@ class TownDashboardLayout005 extends TownDashboardLayout {
                             let bt2 = SetupLoader.getBattleLodgeButtonText();
                             bt2 = bt2 === "" ? "住宿" : _.escape(bt2);
                             $("#battleMenu").html("" +
-                                "<button role='button' class='battleButton button-16' " +
+                                "<button role='button' class='battleButton button-10008' " +
                                 "id='battleLodge' style='font-size:150%'>" + bt2 + "</button>" +
                                 "")
                                 .parent().show();

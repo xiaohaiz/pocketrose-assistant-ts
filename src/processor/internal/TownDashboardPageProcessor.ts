@@ -19,7 +19,7 @@ const LAYOUT_MANAGER = new TownDashboardLayoutManager();
 class TownDashboardPageProcessor extends PageProcessorCredentialSupport {
 
     doLoadButtonStyles(): number[] {
-        return [16, 10005, 10007, 10008, 10016, 10024, 10028, 10032, 10033, 10035, 10062];
+        return [10005, 10007, 10008, 10016, 10024, 10028, 10032, 10033, 10035, 10062];
     }
 
     doProcess(credential: Credential, context?: PageProcessorContext): void {
@@ -171,16 +171,16 @@ function doRenderMenu(credential: Credential, page: TownDashboardPage) {
     $("#refreshButton")
         .css("height", "100%")
         .css("width", "100%")
-        .addClass("button-16")
-        .each((idx, button) => {
-            if (SetupLoader.isAsciiTextButtonEnabled()) {
-                $(button).val("RELOAD");
-            }
+        .css("min-height", "30px")
+        .addClass("button-10008")
+        .val((idx, value) => {
+            return SetupLoader.isAsciiTextButtonEnabled() ? "RELOAD" : value;
         });
+
     $("#battleButton")
         .css("height", "100%")
         .css("width", "100%")
-        .addClass("button-16")
+        .addClass("button-10008")
         .each((idx, button) => {
             if (SetupLoader.isAsciiTextButtonEnabled()) {
                 $(button).val("BATTLE");
@@ -189,7 +189,7 @@ function doRenderMenu(credential: Credential, page: TownDashboardPage) {
     $("#townButton")
         .css("height", "100%")
         .css("width", "100%")
-        .addClass("button-16")
+        .addClass("button-10008")
         .each((idx, button) => {
             if (SetupLoader.isAsciiTextButtonEnabled()) {
                 $(button).val("ACTION");
@@ -198,7 +198,7 @@ function doRenderMenu(credential: Credential, page: TownDashboardPage) {
     $("#personalButton")
         .css("height", "100%")
         .css("width", "100%")
-        .addClass("button-16")
+        .addClass("button-10008")
         .each((idx, button) => {
             if (SetupLoader.isAsciiTextButtonEnabled()) {
                 $(button).val("ACTION");
@@ -207,7 +207,7 @@ function doRenderMenu(credential: Credential, page: TownDashboardPage) {
     $("#countryNormalButton")
         .css("height", "100%")
         .css("width", "100%")
-        .addClass("button-16")
+        .addClass("button-10008")
         .each((idx, button) => {
             if (SetupLoader.isAsciiTextButtonEnabled()) {
                 $(button).val("ACTION");
@@ -216,7 +216,7 @@ function doRenderMenu(credential: Credential, page: TownDashboardPage) {
     $("#countryAdvancedButton")
         .css("height", "100%")
         .css("width", "100%")
-        .addClass("button-16")
+        .addClass("button-10008")
         .each((idx, button) => {
             if (SetupLoader.isAsciiTextButtonEnabled()) {
                 $(button).val("ACTION");
@@ -225,7 +225,7 @@ function doRenderMenu(credential: Credential, page: TownDashboardPage) {
     $("#leaveButton")
         .css("height", "100%")
         .css("width", "100%")
-        .addClass("button-16")
+        .addClass("button-10008")
         .each((idx, button) => {
             if (SetupLoader.isAsciiTextButtonEnabled()) {
                 $(button).val("ACTION");
@@ -239,7 +239,7 @@ function doRenderMenu(credential: Credential, page: TownDashboardPage) {
     $("#exitButton")
         .css("height", "100%")
         .css("width", "100%")
-        .addClass("button-16")
+        .addClass("button-10008")
         .each((idx, button) => {
             if (SetupLoader.isAsciiTextButtonEnabled()) {
                 $(button).val("ACTION");
