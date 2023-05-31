@@ -81,6 +81,7 @@ function doGenerateSetupItem() {
     html += "<option class='option_class_" + code + "' value='10033'>样式八</option>";
     html += "<option class='option_class_" + code + "' value='10035'>样式九</option>";
     html += "<option class='option_class_" + code + "' value='10062'>样式十</option>";
+    html += "<option class='option_class_" + code + "' value='10132'>样式十一</option>";
     html += "</select>";
     return html;
 }

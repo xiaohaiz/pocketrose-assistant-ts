@@ -19,7 +19,8 @@ const LAYOUT_MANAGER = new TownDashboardLayoutManager();
 class TownDashboardPageProcessor extends PageProcessorCredentialSupport {
 
     doLoadButtonStyles(): number[] {
-        return [10005, 10007, 10008, 10016, 10024, 10028, 10032, 10033, 10035, 10062];
+        return [10005, 10007, 10008, 10016, 10024, 10028, 10032, 10033, 10035, 10062,
+            10132];
     }
 
     doProcess(credential: Credential, context?: PageProcessorContext): void {

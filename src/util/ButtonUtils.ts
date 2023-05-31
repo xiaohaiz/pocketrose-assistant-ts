@@ -668,7 +668,7 @@ const BUTTON_STYLES: {} = {
         "}\n",
     "10033": ".button-10033 {\n" +
         "  background-color: #c2fbd7;\n" +
-        "  border-radius: 100px;\n" +
+        "  border-radius: 12px;\n" +
         "  box-shadow: rgba(44, 187, 99, .2) 0 -25px 18px -14px inset,rgba(44, 187, 99, .15) 0 1px 2px,rgba(44, 187, 99, .15) 0 2px 4px,rgba(44, 187, 99, .15) 0 4px 8px,rgba(44, 187, 99, .15) 0 8px 16px,rgba(44, 187, 99, .15) 0 16px 32px;\n" +
         "  color: green;\n" +
         "  cursor: pointer;\n" +
@@ -748,6 +748,36 @@ const BUTTON_STYLES: {} = {
         "\n" +
         ".button-10062:not([disabled]):hover {\n" +
         "  box-shadow: 0 0 .25rem rgba(0, 0, 0, 0.5), -.125rem -.125rem 1rem rgba(239, 71, 101, 0.5), .125rem .125rem 1rem rgba(255, 154, 90, 0.5);\n" +
+        "}\n",
+    "10132": ".button-10132 {\n" +
+        "  background-color: #f8f0e0;\n" +
+        "  border-radius: 4px;\n" +
+        "  color: #000;\n" +
+        "  cursor: pointer;\n" +
+        "  font-weight: bold;\n" +
+        "  padding: 2px 2px;\n" +
+        "  text-align: center;\n" +
+        "  transition: 200ms;\n" +
+        "  /* width: 100%;\n */" +
+        "  box-sizing: border-box;\n" +
+        "  border: 0;\n" +
+        "  font-size: 100%;\n" +
+        "  user-select: none;\n" +
+        "  -webkit-user-select: none;\n" +
+        "  touch-action: manipulation;\n" +
+        "}\n" +
+        "\n" +
+        ".button-10132:not(:disabled):hover,\n" +
+        ".button-10132:not(:disabled):focus {\n" +
+        "  outline: 0;\n" +
+        "  background: #e8e8d0;\n" +
+        "  box-shadow: 0 0 0 2px rgba(0,0,0,.2), 0 3px 8px 0 rgba(0,0,0,.15);\n" +
+        "}\n" +
+        "\n" +
+        ".button-10132:disabled {\n" +
+        "  filter: saturate(0.2) opacity(0.5);\n" +
+        "  -webkit-filter: saturate(0.2) opacity(0.5);\n" +
+        "  cursor: not-allowed;\n" +
         "}\n",
 };
 
