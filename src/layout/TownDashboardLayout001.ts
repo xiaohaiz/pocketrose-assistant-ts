@@ -30,7 +30,7 @@ class TownDashboardLayout001 extends TownDashboardLayout {
             .find("> tr:eq(1)")
             .find("> td:first")
             .each((idx, td) => {
-                new TownDashboardTaxManager(page).processTownTax($(td));
+                new TownDashboardTaxManager(credential, page).processTownTax($(td));
             });
     }
 

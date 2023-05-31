@@ -46,7 +46,7 @@ class TownDashboardLayout003 extends TownDashboardLayout {
             .find("> tbody:first")
             .prepend("<tr>" + tr1 + "</tr>");
 
-        new TownDashboardTaxManager(page).processTownTax($("#townTax"));
+        new TownDashboardTaxManager(credential, page).processTownTax($("#townTax"));
     }
 
 }
