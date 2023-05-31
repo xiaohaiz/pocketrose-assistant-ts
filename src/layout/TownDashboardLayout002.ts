@@ -11,13 +11,6 @@ class TownDashboardLayout002 extends TownDashboardLayout {
     }
 
     render(credential: Credential, page: TownDashboardPage): void {
-        $(".button-10008")
-            .each((idx, button) => {
-                $(button)
-                    .removeClass("button-10008")
-                    .addClass("button-10007");
-            });
-
         $("center:first").hide();
         $("br:first").hide();
 

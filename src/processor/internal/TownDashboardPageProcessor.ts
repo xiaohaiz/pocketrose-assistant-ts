@@ -172,63 +172,86 @@ function doRenderMenu(credential: Credential, page: TownDashboardPage) {
         .css("height", "100%")
         .css("width", "100%")
         .css("min-height", "30px")
-        .addClass("button-10008")
         .val((idx, value) => {
             return SetupLoader.isAsciiTextButtonEnabled() ? "RELOAD" : value;
+        })
+        .each((idx, button) => {
+            const sId = SetupLoader.getTownDashboardMainButton();
+            if (sId !== 0) {
+                $(button).addClass("button-" + sId);
+            }
         });
 
     $("#battleButton")
         .css("height", "100%")
         .css("width", "100%")
-        .addClass("button-10008")
+        .val((idx, value) => {
+            return SetupLoader.isAsciiTextButtonEnabled() ? "BATTLE" : value;
+        })
         .each((idx, button) => {
-            if (SetupLoader.isAsciiTextButtonEnabled()) {
-                $(button).val("BATTLE");
+            const sId = SetupLoader.getTownDashboardMainButton();
+            if (sId !== 0) {
+                $(button).addClass("button-" + sId);
             }
         });
     $("#townButton")
         .css("height", "100%")
         .css("width", "100%")
-        .addClass("button-10008")
+        .val((idx, value) => {
+            return SetupLoader.isAsciiTextButtonEnabled() ? "ACTION" : value;
+        })
         .each((idx, button) => {
-            if (SetupLoader.isAsciiTextButtonEnabled()) {
-                $(button).val("ACTION");
+            const sId = SetupLoader.getTownDashboardMainButton();
+            if (sId !== 0) {
+                $(button).addClass("button-" + sId);
             }
         });
     $("#personalButton")
         .css("height", "100%")
         .css("width", "100%")
-        .addClass("button-10008")
+        .val((idx, value) => {
+            return SetupLoader.isAsciiTextButtonEnabled() ? "ACTION" : value;
+        })
         .each((idx, button) => {
-            if (SetupLoader.isAsciiTextButtonEnabled()) {
-                $(button).val("ACTION");
+            const sId = SetupLoader.getTownDashboardMainButton();
+            if (sId !== 0) {
+                $(button).addClass("button-" + sId);
             }
         });
     $("#countryNormalButton")
         .css("height", "100%")
         .css("width", "100%")
-        .addClass("button-10008")
+        .val((idx, value) => {
+            return SetupLoader.isAsciiTextButtonEnabled() ? "ACTION" : value;
+        })
         .each((idx, button) => {
-            if (SetupLoader.isAsciiTextButtonEnabled()) {
-                $(button).val("ACTION");
+            const sId = SetupLoader.getTownDashboardMainButton();
+            if (sId !== 0) {
+                $(button).addClass("button-" + sId);
             }
         });
     $("#countryAdvancedButton")
         .css("height", "100%")
         .css("width", "100%")
-        .addClass("button-10008")
+        .val((idx, value) => {
+            return SetupLoader.isAsciiTextButtonEnabled() ? "ACTION" : value;
+        })
         .each((idx, button) => {
-            if (SetupLoader.isAsciiTextButtonEnabled()) {
-                $(button).val("ACTION");
+            const sId = SetupLoader.getTownDashboardMainButton();
+            if (sId !== 0) {
+                $(button).addClass("button-" + sId);
             }
         });
     $("#leaveButton")
         .css("height", "100%")
         .css("width", "100%")
-        .addClass("button-10008")
+        .val((idx, value) => {
+            return SetupLoader.isAsciiTextButtonEnabled() ? "ACTION" : value;
+        })
         .each((idx, button) => {
-            if (SetupLoader.isAsciiTextButtonEnabled()) {
-                $(button).val("ACTION");
+            const sId = SetupLoader.getTownDashboardMainButton();
+            if (sId !== 0) {
+                $(button).addClass("button-" + sId);
             }
         })
         .parent()
@@ -239,10 +262,13 @@ function doRenderMenu(credential: Credential, page: TownDashboardPage) {
     $("#exitButton")
         .css("height", "100%")
         .css("width", "100%")
-        .addClass("button-10008")
+        .val((idx, value) => {
+            return SetupLoader.isAsciiTextButtonEnabled() ? "ACTION" : value;
+        })
         .each((idx, button) => {
-            if (SetupLoader.isAsciiTextButtonEnabled()) {
-                $(button).val("ACTION");
+            const sId = SetupLoader.getTownDashboardMainButton();
+            if (sId !== 0) {
+                $(button).addClass("button-" + sId);
             }
         });
 
