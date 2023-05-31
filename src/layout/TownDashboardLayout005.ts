@@ -75,7 +75,23 @@ class TownDashboardLayout005 extends TownDashboardLayout {
 
         const lastBattle = StorageUtils.getString("_lb_" + credential.id);
         if (lastBattle !== "") {
-            $("#battlePanel").html(lastBattle);
+            if (StorageUtils.getBoolean("_pa_055")) {
+                const children: JQuery[] = [];
+                $("#battlePanel")
+                    .html(lastBattle)
+                    .find("> *")
+                    .each((idx, child) => {
+                        const element = $(child);
+                        if (element.is("p") || element.is("b")) {
+                            element.hide();
+                            children.push(element);
+                        }
+                    });
+                _showReportElement(children, 0);
+            } else {
+                $("#battlePanel")
+                    .html(lastBattle);
+            }
         }
 
         // 战斗布局只支持以下战斗
@@ -219,21 +235,8 @@ class TownDashboardLayout005 extends TownDashboardLayout {
                         });
                     });
 
-                    if (page.zodiacBattle!) {
-                        // 十二宫极速战斗模式
-                        if (SetupLoader.isZodiacFlashBattleEnabled()) {
-                            $(".battleButton").trigger("click");
-                        } else {
-                            $(".battleButton").trigger("focus");
-                        }
-                    } else {
-                        // 普通战斗极速模式
-                        if (SetupLoader.isNormalFlashBattleEnabled()) {
-                            $(".battleButton").trigger("click");
-                        } else {
-                            $(".battleButton").trigger("focus");
-                        }
-                    }
+                    // 战斗布局模式默认开启极速战斗
+                    $(".battleButton").trigger("click");
                 });
             });
     }
@@ -346,6 +349,16 @@ async function doBeforeReturn(credential: Credential, battleCount: number): Prom
                 });
         });
     })();
+}
+
+function _showReportElement(children: JQuery[], index: number) {
+    if (index === children.length) {
+        return;
+    }
+    const child = children[index];
+    child.show("fast", "linear", () => {
+        _showReportElement(children, index + 1);
+    });
 }
 
 export = TownDashboardLayout005;
