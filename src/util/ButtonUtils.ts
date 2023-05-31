@@ -648,7 +648,7 @@ const BUTTON_STYLES: {} = {
         "  width: 100%;\n" +
         "  box-sizing: border-box;\n" +
         "  border: 0;\n" +
-        "  font-size: 16px;\n" +
+        "  font-size: 100%;\n" +
         "  user-select: none;\n" +
         "  -webkit-user-select: none;\n" +
         "  touch-action: manipulation;\n" +
