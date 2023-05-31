@@ -254,7 +254,8 @@ function doRenderMenu(credential: Credential, page: TownDashboardPage) {
             .parent()
             .next()
             .find("> th:first")
-            .css("color", "red");
+            .css("color", "red")
+            .css("font-size", "120%");
     }
 
     // ------------------------------------------------------------------------
