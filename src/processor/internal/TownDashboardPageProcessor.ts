@@ -171,12 +171,12 @@ function doRenderMenu(credential: Credential, page: TownDashboardPage) {
     $("#refreshButton")
         .css("height", "100%")
         .css("width", "100%")
+        .css("min-height", "30px")
         .addClass("button-10008")
-        .each((idx, button) => {
-            if (SetupLoader.isAsciiTextButtonEnabled()) {
-                $(button).val("RELOAD");
-            }
+        .val((idx, value) => {
+            return SetupLoader.isAsciiTextButtonEnabled() ? "RELOAD" : value;
         });
+
     $("#battleButton")
         .css("height", "100%")
         .css("width", "100%")
