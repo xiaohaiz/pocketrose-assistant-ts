@@ -21,7 +21,9 @@ class BattlePage {
     petLearnSpell?: boolean;        // 宠物是否学会新技能
 
     roleImageHtml?: string;
+    roleNameHtml?: string;
     monsterImageHtml?: string;
+    monsterNameHtml?: string;
     reportHtml?: string;
 
     constructor() {
@@ -78,7 +80,7 @@ class BattlePage {
             .find("> td:first")
             .html();
 
-        page.monsterImageHtml = table.find("> tbody:first")
+        table.find("> tbody:first")
             .find("> tr:eq(4)")
             .find("> td:first")
             .find("> table:first")
@@ -88,8 +90,22 @@ class BattlePage {
             .find("> table:first")
             .find("> tbody:first")
             .find("> tr:eq(2)")
+            .find("> td:first")
+            .html((idx, html) => {
+                page.monsterNameHtml = html;
+                return html;
+            })
+            .parent()
             .find("> td:last")
-            .html();
+            .html((idx, html) => {
+                page.monsterImageHtml = $("<td>" + html + "</td>")
+                    .find("> img:first")
+                    .attr("title", page.monsterNameHtml!)
+                    .attr("alt", page.monsterNameHtml!)
+                    .parent()
+                    .html();
+                return html;
+            });
 
         table.find("> tbody:first")
             .find("> tr:first")
