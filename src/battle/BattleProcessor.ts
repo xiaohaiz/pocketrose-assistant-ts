@@ -3,7 +3,7 @@ import PalaceTaskManager from "../core/PalaceTaskManager";
 import Credential from "../util/Credential";
 import BattlePage from "./BattlePage";
 import BattleRecord from "./BattleRecord";
-import BattleRecordStorage from "./BattleRecordStorage";
+import BattleRecordStorageManager from "./BattleRecordStorageManager";
 
 class BattleProcessor {
 
@@ -48,7 +48,7 @@ class BattleProcessor {
         const record = new BattleRecord();
         record.id = this.#credential.id;
         record.html = this.obtainPage.reportHtml;
-        new BattleRecordStorage().write(record).then();
+        BattleRecordStorageManager.storage().write(record).then();
     }
 
     #doRecommendation(): string {

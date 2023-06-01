@@ -1,5 +1,7 @@
 import _ from "lodash";
 import BattleProcessor from "../battle/BattleProcessor";
+import BattleRecord from "../battle/BattleRecord";
+import BattleRecordStorageManager from "../battle/BattleRecordStorageManager";
 import SetupLoader from "../config/SetupLoader";
 import EquipmentLocalStorage from "../core/EquipmentLocalStorage";
 import PetLocalStorage from "../core/PetLocalStorage";
@@ -38,26 +40,29 @@ class TownDashboardLayout006 extends TownDashboardLayout {
         generateRepairForm(credential);
         generateLodgeForm(credential);
 
-        const lastBattle = StorageUtils.getString("_lb_" + credential.id);
-        if (lastBattle !== "") {
-            if (StorageUtils.getBoolean("_pa_055")) {
-                const children: JQuery[] = [];
-                $("#battlePanel")
-                    .html(lastBattle)
-                    .find("> *")
-                    .each((idx, child) => {
-                        const element = $(child);
-                        if (element.is("p") || element.is("b")) {
-                            element.hide();
-                            children.push(element);
-                        }
-                    });
-                _showReportElement(children, 0);
-            } else {
-                $("#battlePanel")
-                    .html(lastBattle);
+        BattleRecordStorageManager.storage().load(credential.id).then(record => {
+            const lastBattle = record.html!;
+            if (lastBattle !== "") {
+                if (StorageUtils.getBoolean("_pa_055")) {
+                    const children: JQuery[] = [];
+                    $("#battlePanel")
+                        .html(lastBattle)
+                        .find("> *")
+                        .each((idx, child) => {
+                            const element = $(child);
+                            if (element.is("p") || element.is("b")) {
+                                element.hide();
+                                children.push(element);
+                            }
+                        });
+                    _showReportElement(children, 0);
+                } else {
+                    $("#battlePanel")
+                        .html(lastBattle);
+                }
             }
-        }
+        });
+
 
         // 战斗布局只支持以下战斗
         $("select[name='level']").find("option").each(function (_idx, option) {
@@ -112,7 +117,11 @@ class TownDashboardLayout006 extends TownDashboardLayout {
                         let errMsg = $(html).find("font:first").html();
                         errMsg = "<p style='color:red;font-size:200%'>" + errMsg + "</p>";
                         $("#battlePanel").html(errMsg);
-                        StorageUtils.set("_lb_" + credential.id, errMsg);
+
+                        const record = new BattleRecord();
+                        record.id = credential.id;
+                        record.html = errMsg;
+                        BattleRecordStorageManager.storage().write(record).then();
 
                         let buttonText = SetupLoader.getBattleReturnButtonText();
                         buttonText = buttonText === "" ? "返回" : _.escape(buttonText);
@@ -135,9 +144,6 @@ class TownDashboardLayout006 extends TownDashboardLayout {
                     processor.doProcess();
 
                     $("#battlePanel").html(processor.obtainPage!.reportHtml!);
-
-                    StorageUtils.set("_lb_" + credential.id, processor.obtainPage!.reportHtml!);
-
 
                     const recommendation = processor.obtainRecommendation;
                     switch (recommendation) {
