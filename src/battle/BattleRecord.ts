@@ -1,11 +1,11 @@
 class BattleRecord {
 
     id?: string;
-    createTime?: number;
+    updateTime?: number;
     html?: string;
 
     constructor() {
-        this.createTime = new Date().getTime();
+        this.updateTime = new Date().getTime();
     }
 
     asObject() {
@@ -13,7 +13,7 @@ class BattleRecord {
         // @ts-ignore
         obj.id = this.id!;
         // @ts-ignore
-        obj.createTime = this.createTime!;
+        obj.updateTime = this.updateTime!;
         // @ts-ignore
         obj.html = this.html!;
         return obj;
