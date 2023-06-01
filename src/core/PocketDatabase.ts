@@ -40,6 +40,15 @@ class PocketDatabase {
                         unique: false
                     });
                 }
+
+                // ------------------------------------------------------------
+                // RolePetMap
+                // ------------------------------------------------------------
+                if (!db.objectStoreNames.contains("RolePetMap")) {
+                    db.createObjectStore("RolePetMap", {
+                        keyPath: "id", autoIncrement: false
+                    });
+                }
             };
         });
     };
