@@ -4,6 +4,8 @@ import EquipmentLocalStorage from "../core/EquipmentLocalStorage";
 import PetLocalStorage from "../core/PetLocalStorage";
 import TownDashboardTaxManager from "../core/TownDashboardTaxManager";
 import BattlePage from "../pocketrose/BattlePage";
+import PersonalEquipmentManagement from "../pocketrose/PersonalEquipmentManagement";
+import PersonalPetManagement from "../pocketrose/PersonalPetManagement";
 import TownDashboardPage from "../pocketrose/TownDashboardPage";
 import Credential from "../util/Credential";
 import NetworkUtils from "../util/NetworkUtils";
@@ -35,8 +37,77 @@ class TownDashboardLayout005 extends TownDashboardLayout {
             .find("> tr:eq(3)")
             .each((idx, tr) => {
                 const tax = page.townTax!;
-                $(tr).after($("<tr><td>收益</td><th id='townTax'>" + tax + "</th><td colspan='2'></td></tr>"));
+                $(tr).after($("<tr class='roleStatus'><td height='5'>收益</td><th id='townTax'>" + tax + "</th><td colspan='2'></td></tr>"));
                 new TownDashboardTaxManager(credential, page).processTownTax($("#townTax"));
+            });
+
+        $("#rightPanel")
+            .find("> table:first")
+            .find("> tbody:first")
+            .find("> tr:eq(1)")
+            .find("> td:first")
+            .find("> table:first")
+            .find("> tbody:first")
+            .find("> tr:first")
+            .find("> th:first")
+            .attr("id", "roleTitle")
+            .parent()
+            .next().addClass("roleStatus")
+            .next().addClass("roleStatus")
+            .next().addClass("roleStatus");
+
+        $("#roleTitle")
+            .parent()
+            .after($("<tr class='additionalStatus' style='display:none'><td colspan='4'></td></tr>"));
+
+        $("#roleTitle")
+            .find("> font:first")
+            .on("click", event => {
+                $(event.target).off("click");
+
+                new PersonalEquipmentManagement(credential, page.townId)
+                    .open()
+                    .then(equipmentPage => {
+                        new PersonalPetManagement(credential, page.townId)
+                            .open()
+                            .then(petPage => {
+
+                                let html = "";
+                                html += "<table style='text-align:center;margin:auto;border-width:1px;border-spacing:1px;width:100%'>";
+                                html += "<tbody>";
+                                for (const equipment of equipmentPage.equipmentList!) {
+                                    if (!equipment.using) {
+                                        continue;
+                                    }
+                                    html += "<tr>";
+                                    html += "<td style='background-color:#E8E8D0'>" + equipment.usingHTML + "</td>";
+                                    html += "<td style='background-color:#F8F0E0'>" + equipment.nameHTML + "</td>";
+                                    html += "<td style='background-color:#F8F0E0'>" + equipment.category + "</td>";
+                                    html += "<td style='background-color:#E8E8D0'>" + equipment.experienceHTML + "</td>";
+                                    html += "</tr>";
+                                }
+                                for (const pet of petPage.petList!) {
+                                    if (!pet.using) {
+                                        continue;
+                                    }
+                                    html += "<tr>";
+                                    html += "<td style='background-color:#E8E8D0'>" + pet.usingHtml + "</td>";
+                                    html += "<td style='background-color:#F8F0E0'>" + pet.nameHtml + "</td>";
+                                    html += "<td style='background-color:#F8F0E0'>" + pet.imageHtml + "</td>";
+                                    html += "<td style='background-color:#E8E8D0'>" + pet.levelHtml + "</td>";
+                                    html += "</tr>";
+                                }
+                                html += "</tbody>";
+                                html += "</table>";
+
+                                $(".additionalStatus")
+                                    .find("> td:first")
+                                    .html(html);
+
+                                $(".roleStatus").hide();
+                                $(".additionalStatus").show();
+                            });
+                    });
             });
 
         $("#leftPanel")
