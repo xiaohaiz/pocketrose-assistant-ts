@@ -2,7 +2,7 @@ import Constants from "../util/Constants";
 
 class PocketDatabase {
 
-    connectDB = () => {
+    static connectDatabase = () => {
         return new Promise<IDBDatabase>((resolve, reject) => {
             const request = window.indexedDB
                 .open(Constants.DATABASE_NAME, Constants.DATABASE_VERSION);

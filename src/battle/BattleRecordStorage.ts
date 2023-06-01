@@ -4,7 +4,7 @@ import BattleRecord from "./BattleRecord";
 class BattleRecordStorage {
 
     async load(id: string): Promise<BattleRecord> {
-        const db = await new PocketDatabase().connectDB();
+        const db = await PocketDatabase.connectDatabase();
         return await (() => {
             return new Promise<BattleRecord>((resolve, reject) => {
 
@@ -31,7 +31,7 @@ class BattleRecordStorage {
     }
 
     async write(record: BattleRecord): Promise<void> {
-        const db = await new PocketDatabase().connectDB();
+        const db = await PocketDatabase.connectDatabase();
         return await (() => {
             return new Promise<void>((resolve, reject) => {
                 const request = db.transaction(["BattleRecord"], "readwrite")

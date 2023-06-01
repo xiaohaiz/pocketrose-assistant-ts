@@ -4,7 +4,7 @@ import BattleResult from "./BattleResult";
 class BattleResultStorage {
 
     async load(id: string, monster: string): Promise<BattleResult> {
-        const db = await new PocketDatabase().connectDB();
+        const db = await PocketDatabase.connectDatabase();
         return await (() => {
             return new Promise<BattleResult>((resolve, reject) => {
 
@@ -35,7 +35,7 @@ class BattleResultStorage {
     }
 
     async win(id: string, monster: string): Promise<void> {
-        const db = await new PocketDatabase().connectDB();
+        const db = await PocketDatabase.connectDatabase();
         return await (() => {
             return new Promise<void>((resolve, reject) => {
                 this.load(id, monster)
@@ -71,7 +71,7 @@ class BattleResultStorage {
     }
 
     async lose(id: string, monster: string): Promise<void> {
-        const db = await new PocketDatabase().connectDB();
+        const db = await PocketDatabase.connectDatabase();
         return await (() => {
             return new Promise<void>((resolve, reject) => {
                 this.load(id, monster)
@@ -107,7 +107,7 @@ class BattleResultStorage {
     }
 
     async draw(id: string, monster: string): Promise<void> {
-        const db = await new PocketDatabase().connectDB();
+        const db = await PocketDatabase.connectDatabase();
         return await (() => {
             return new Promise<void>((resolve, reject) => {
                 this.load(id, monster)
