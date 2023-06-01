@@ -472,6 +472,12 @@ class PersonalEquipmentManagementPageProcessor_Metro extends PersonalEquipmentMa
         const buttonId = "setButton_" + setId;
         $("#" + buttonId).prop("disabled", false);
 
+        // @ts-ignore
+        if (setConfig["alias"] !== undefined) {
+            // @ts-ignore
+            $("#" + buttonId).val(setConfig["alias"]);
+        }
+
         $("#" + buttonId).on("click", () => {
             const set = new EquipmentSet();
             set.initialize();
