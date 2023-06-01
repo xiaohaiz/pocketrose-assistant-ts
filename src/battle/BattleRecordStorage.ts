@@ -1,33 +1,10 @@
-import Constants from "../util/Constants";
+import PocketDatabase from "../core/PocketDatabase";
 import BattleRecord from "./BattleRecord";
 
 class BattleRecordStorage {
 
-    readonly #connectDB = () => {
-        return new Promise<IDBDatabase>((resolve, reject) => {
-            const request = window.indexedDB.open(Constants.DATABASE_NAME);
-
-            request.onerror = reject;
-
-            request.onsuccess = () => {
-                resolve(request.result);
-            };
-
-            request.onupgradeneeded = event => {
-                // @ts-ignore
-                const db: IDBDatabase = event.target.result;
-
-                if (!db.objectStoreNames.contains("BattleRecord")) {
-                    db.createObjectStore("BattleRecord", {
-                        keyPath: "id", autoIncrement: false
-                    });
-                }
-            };
-        });
-    };
-
     async load(id: string): Promise<BattleRecord> {
-        const db = await this.#connectDB();
+        const db = await new PocketDatabase().connectDB();
         return await (() => {
             return new Promise<BattleRecord>((resolve, reject) => {
 
@@ -54,7 +31,7 @@ class BattleRecordStorage {
     }
 
     async write(record: BattleRecord): Promise<void> {
-        const db = await this.#connectDB();
+        const db = await new PocketDatabase().connectDB();
         return await (() => {
             return new Promise<void>((resolve, reject) => {
                 const request = db.transaction(["BattleRecord"], "readwrite")

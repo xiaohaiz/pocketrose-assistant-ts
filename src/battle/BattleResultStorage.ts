@@ -1,45 +1,16 @@
-import Constants from "../util/Constants";
+import PocketDatabase from "../core/PocketDatabase";
 import BattleResult from "./BattleResult";
 
 class BattleResultStorage {
 
-    readonly #connectDB = () => {
-        return new Promise<IDBDatabase>((resolve, reject) => {
-            const request = window.indexedDB.open(Constants.DATABASE_NAME);
-
-            request.onerror = reject;
-
-            request.onsuccess = () => {
-                resolve(request.result);
-            };
-
-            request.onupgradeneeded = event => {
-                // @ts-ignore
-                const db: IDBDatabase = event.target.result;
-
-                if (!db.objectStoreNames.contains("BattleResult")) {
-                    const store = db.createObjectStore("BattleResult", {
-                        keyPath: "id", autoIncrement: false
-                    });
-                    store.createIndex("roleId", "roleId", {
-                        unique: false
-                    });
-                    store.createIndex("monster", "monster", {
-                        unique: false
-                    });
-                }
-            };
-        });
-    };
-
     async load(id: string, monster: string): Promise<BattleResult> {
-        const db = await this.#connectDB();
+        const db = await new PocketDatabase().connectDB();
         return await (() => {
             return new Promise<BattleResult>((resolve, reject) => {
 
                 const request = db.transaction(["BattleResult"], "readonly")
                     .objectStore("BattleResult")
-                    .get(id);
+                    .get(id + "/" + monster);
 
 
                 request.onerror = reject;
@@ -64,7 +35,7 @@ class BattleResultStorage {
     }
 
     async win(id: string, monster: string): Promise<void> {
-        const db = await this.#connectDB();
+        const db = await new PocketDatabase().connectDB();
         return await (() => {
             return new Promise<void>((resolve, reject) => {
                 this.load(id, monster)
@@ -100,7 +71,7 @@ class BattleResultStorage {
     }
 
     async lose(id: string, monster: string): Promise<void> {
-        const db = await this.#connectDB();
+        const db = await new PocketDatabase().connectDB();
         return await (() => {
             return new Promise<void>((resolve, reject) => {
                 this.load(id, monster)
@@ -136,7 +107,7 @@ class BattleResultStorage {
     }
 
     async draw(id: string, monster: string): Promise<void> {
-        const db = await this.#connectDB();
+        const db = await new PocketDatabase().connectDB();
         return await (() => {
             return new Promise<void>((resolve, reject) => {
                 this.load(id, monster)
