@@ -40,11 +40,11 @@ class BattleResultStorage {
             return new Promise<void>((resolve, reject) => {
                 this.load(id, monster)
                     .then(exist => {
-                        const c = exist.winCount === undefined ? 0 : exist.winCount!
-                        const data = {
-                            id: exist.id,
-                            winCount: (c + 1)
-                        };
+                        let c = exist.winCount === undefined ? 0 : exist.winCount!
+                        c++;
+                        const data = exist.asObject();
+                        // @ts-ignore
+                        data.winCount = c;
                         const request = db.transaction(["BattleResult"], "readwrite")
                             .objectStore("BattleResult")
                             .put(data);
@@ -76,11 +76,11 @@ class BattleResultStorage {
             return new Promise<void>((resolve, reject) => {
                 this.load(id, monster)
                     .then(exist => {
-                        const c = exist.loseCount === undefined ? 0 : exist.loseCount!
-                        const data = {
-                            id: exist.id,
-                            loseCount: (c + 1)
-                        };
+                        let c = exist.loseCount === undefined ? 0 : exist.loseCount!
+                        c++;
+                        const data = exist.asObject();
+                        // @ts-ignore
+                        data.loseCount = c;
                         const request = db.transaction(["BattleResult"], "readwrite")
                             .objectStore("BattleResult")
                             .put(data);
@@ -112,11 +112,11 @@ class BattleResultStorage {
             return new Promise<void>((resolve, reject) => {
                 this.load(id, monster)
                     .then(exist => {
-                        const c = exist.drawCount === undefined ? 0 : exist.drawCount!
-                        const data = {
-                            id: exist.id,
-                            drawCount: (c + 1)
-                        };
+                        let c = exist.drawCount === undefined ? 0 : exist.drawCount!
+                        c++;
+                        const data = exist.asObject();
+                        // @ts-ignore
+                        data.drawCount = c;
                         const request = db.transaction(["BattleResult"], "readwrite")
                             .objectStore("BattleResult")
                             .put(data);
