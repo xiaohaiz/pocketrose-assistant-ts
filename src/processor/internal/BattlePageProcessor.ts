@@ -1,15 +1,14 @@
 import _ from "lodash";
 import BattlePage from "../../battle/BattlePage";
+import BattleProcessor from "../../battle/BattleProcessor";
 import SetupLoader from "../../config/SetupLoader";
 import EquipmentLocalStorage from "../../core/EquipmentLocalStorage";
 import NpcLoader from "../../core/NpcLoader";
-import PalaceTaskManager from "../../core/PalaceTaskManager";
 import PetLocalStorage from "../../core/PetLocalStorage";
 import TownDashboardLayoutManager from "../../layout/TownDashboardLayoutManager";
 import CommentBoard from "../../util/CommentBoard";
 import Credential from "../../util/Credential";
 import PageUtils from "../../util/PageUtils";
-import StringUtils from "../../util/StringUtils";
 import PageProcessorContext from "../PageProcessorContext";
 import PageProcessorCredentialSupport from "../PageProcessorCredentialSupport";
 
@@ -21,12 +20,13 @@ class BattlePageProcessor extends PageProcessorCredentialSupport {
             return;
         }
 
-        // 解析页面的反馈的数据
-        const page = parsePage();
+        // 解析当前的战数
+        const battleCount = parseBattleCount(context);
 
-        if (SetupLoader.isNewPalaceTaskEnabled() && page.monsterTask!) {
-            new PalaceTaskManager(credential).finishMonsterTask();
-        }
+        // 解析页面的反馈的数据
+        const processor = new BattleProcessor(credential, PageUtils.currentPageHtml(), battleCount);
+        processor.doProcess();
+        const page = processor.page!;
 
         // 开始正式处理战斗页面
         processBattle(credential, page, context);
@@ -311,120 +311,6 @@ function doRecommendation(page: BattlePage, context: PageProcessorContext): stri
 function parseBattleCount(context: PageProcessorContext) {
     const s = context.get("battleCount")!;
     return _.parseInt(s) + 1;
-}
-
-function parsePage() {
-    const page = new BattlePage();
-
-    const battleField = $("table:first")
-        .find("tbody:first")
-        .find("tr:first")
-        .find("td:first")
-        .find("font:first")
-        .find("b:first")
-        .text();
-    page.treasureBattle = battleField.includes("秘宝之岛");
-    page.primaryBattle = battleField.includes("初级之森");
-    page.juniorBattle = battleField.includes("中级之塔");
-    page.seniorBattle = battleField.includes("上级之洞窟");
-    page.zodiacBattle = battleField.includes("十二神殿");
-
-    let petName = "";
-    const endureList: number[] = [];
-    for (const s of _.split($("#ueqtweixin").text(), "\n")) {
-        if (_.endsWith(s, "耐久度")) {
-            if (!s.includes("大师球") &&
-                !s.includes("宗师球") &&
-                !s.includes("超力怪兽球") &&
-                !s.includes("宠物蛋")) {
-                let t = StringUtils.substringBetween(s, "剩余", "耐久度");
-                let n = parseInt(t);
-                endureList.push(n);
-            }
-        }
-        if (_.endsWith(s, "回)")) {
-            let t = StringUtils.substringBetween(s, "(剩余", "回)");
-            let n = parseInt(t);
-            endureList.push(n);
-        }
-        if (s.includes(" 获得 ") && s.includes(" 经验值.")) {
-            // 这一行是宠物获得经验值的那一行
-            // 记录下宠物名
-            petName = StringUtils.substringBefore(s, " 获得 ");
-        }
-        if (petName !== "") {
-            const searchString = petName + "等级上升！";
-            if (s.includes(searchString)) {
-                page.petUpgrade = true;
-            }
-        }
-    }
-    if (endureList.length > 0) {
-        page.lowestEndure = _.min(endureList);
-    }
-
-    $("table:eq(5)")
-        .find("td:contains('＜怪物＞')")
-        .filter((idx, td) => $(td).text() === "＜怪物＞")
-        .each((idx, td) => {
-            let monsterTable = $(td).closest("table");
-            let roleTable = monsterTable.parent().prev().find("table:first");
-
-            roleTable
-                .find("tr:first")
-                .next()
-                .next()
-                .find("td:eq(1)")
-                .each((i, td) => {
-                    let s = StringUtils.substringBefore($(td).text(), " / ");
-                    page.roleHealth = _.parseInt(s);
-                    s = StringUtils.substringAfter($(td).text(), " / ");
-                    page.roleMaxHealth = _.parseInt(s);
-                })
-                .next()
-                .each((i, td) => {
-                    let s = StringUtils.substringBefore($(td).text(), " / ");
-                    page.roleMana = _.parseInt(s);
-                    s = StringUtils.substringAfter($(td).text(), " / ");
-                    page.roleMaxMana = _.parseInt(s);
-                })
-
-            monsterTable
-                .find("tr:first")
-                .next()
-                .next()
-                .find("td:eq(1)")
-                .each((i, td) => {
-                    let s = StringUtils.substringBefore($(td).text(), " / ");
-                    page.monsterHealth = _.parseInt(s);
-                })
-        });
-
-
-    if (page.roleHealth! === 0) {
-        page.battleResult = "战败";
-    } else if (page.monsterHealth! === 0) {
-        page.battleResult = "战胜";
-    } else {
-        page.battleResult = "平手";
-    }
-
-    page.harvestList = [];
-    $("table:eq(5)")
-        .find("p")
-        .filter((idx, p) => $(p).text().includes("入手！"))
-        .each((idx, p) => {
-            _.split($(p).html(), "<br>").forEach(it => {
-                if (it.endsWith("入手！")) {
-                    page.harvestList!.push(it);
-                }
-            });
-        });
-
-
-    page.monsterTask = PageUtils.currentPageHtml().includes("完成杀怪任务");
-
-    return page;
 }
 
 function generateReturnForm(credential: Credential) {
