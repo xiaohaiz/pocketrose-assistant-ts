@@ -5,7 +5,7 @@ import EventHandler from "../../core/EventHandler";
 import ExtensionShortcutLoader from "../../core/ExtensionShortcutLoader";
 import PalaceTaskManager from "../../core/PalaceTaskManager";
 import RankTitleLoader from "../../core/RankTitleLoader";
-import TownDashboardLayoutManager from "../../layout/TownDashboardLayoutManager";
+import TownDashboardLayoutManager from "../../dashboard/TownDashboardLayoutManager";
 import TownDashboardPage from "../../pocketrose/TownDashboardPage";
 import Credential from "../../util/Credential";
 import PageUtils from "../../util/PageUtils";

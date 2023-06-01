@@ -5,7 +5,7 @@ import SetupLoader from "../../config/SetupLoader";
 import EquipmentLocalStorage from "../../core/EquipmentLocalStorage";
 import NpcLoader from "../../core/NpcLoader";
 import PetLocalStorage from "../../core/PetLocalStorage";
-import TownDashboardLayoutManager from "../../layout/TownDashboardLayoutManager";
+import TownDashboardLayoutManager from "../../dashboard/TownDashboardLayoutManager";
 import CommentBoard from "../../util/CommentBoard";
 import Credential from "../../util/Credential";
 import PageUtils from "../../util/PageUtils";
