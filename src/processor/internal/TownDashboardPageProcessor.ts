@@ -1,4 +1,5 @@
 import _ from "lodash";
+import BattleFieldConfigLoader from "../../config/BattleFieldConfigLoader";
 import SetupLoader from "../../config/SetupLoader";
 import EventHandler from "../../core/EventHandler";
 import ExtensionShortcutLoader from "../../core/ExtensionShortcutLoader";
@@ -673,7 +674,7 @@ function _startSafeBattleButtonTimer(clock: JQuery) {
 }
 
 function _renderBattleMenu(credential: Credential) {
-    const preference = SetupLoader.getBattlePlacePreference(credential.id);
+    const preference = new BattleFieldConfigLoader(credential).loadConfig();
     let count = 0;
     // @ts-ignore
     if (preference["primary"]) {

@@ -209,6 +209,9 @@ function doBindMapButton(credential: Credential) {
         // 准备切换到移动模式
         document.getElementById("title")?.scrollIntoView();
         MessageBoard.resetMessageBoard("我们将实时为你播报旅途的动态：<br>");
+        $("#leaveButton")
+            .prop("disabled", true)
+            .hide();
         $("#lodgeButton")
             .prop("disabled", true)
             .hide();

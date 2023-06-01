@@ -1,7 +1,7 @@
 import MessageBoard from "../../util/MessageBoard";
 import StorageUtils from "../../util/StorageUtils";
+import BattleFieldConfigLoader from "../BattleFieldConfigLoader";
 import SetupItem from "../SetupItem";
-import SetupLoader from "../SetupLoader";
 
 class SetupItem012 implements SetupItem {
 
@@ -17,7 +17,7 @@ const key: string = "_pa_" + code;
 
 function doRender(id: string) {
     let html = "";
-    html += "<tr id='battle_field_setup' style='display:none'>";
+    html += "<tr class='battle_field_setup' style='display:none'>";
     html += "<th style='background-color:red;color:wheat'>" + name + "</th>";
     html += "<td style='background-color:#E8E8D0'>★</td>";
     html += "<td style='background-color:#EFE0C0'><input type='button' class='dynamic_button' id='setup_" + code + "' value='设置'></td>";
@@ -26,7 +26,7 @@ function doRender(id: string) {
 
     $("#setup_item_table").append($(html));
 
-    const value = SetupLoader.getBattlePlacePreference(id);
+    let value = BattleFieldConfigLoader.loadCustomizedConfig(id);
     // @ts-ignore
     $("#primary_battle").prop("checked", value["primary"]);
     // @ts-ignore

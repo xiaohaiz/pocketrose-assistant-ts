@@ -23,6 +23,7 @@ class BattlePage {
     roleImageHtml?: string;
     roleNameHtml?: string;
     petImageHtml?: string;
+    petNameHtml?: string;
     monsterImageHtml?: string;
     monsterNameHtml?: string;
     reportHtml?: string;
@@ -214,6 +215,26 @@ class BattlePage {
         }
 
         battleTable
+            .find("> tbody:first")
+            .find("> tr:first")
+            .find("> td:first")
+            .find("> center:first")
+            .find("> h1:eq(1)")
+            .find("> font:first")
+            .find("> b:first")
+            .find("> p:first")
+            .find("> table:eq(1)")
+            .find("> tbody:first")
+            .find("> tr:first")
+            .find("> td:first")
+            .find("> table:first")
+            .find("> tbody:first")
+            .find("> tr:eq(4)")
+            .each((idx, tr) => {
+                page.petNameHtml = $(tr).find("> td:first").html();
+            });
+
+        battleTable
             .find("td:contains('＜怪物＞')")
             .filter((idx, td) => $(td).text() === "＜怪物＞")
             .each((idx, td) => {
@@ -353,6 +374,18 @@ function generateBattleReport(battleTable: JQuery, page: BattlePage) {
 
     // noinspection HtmlDeprecatedTag,HtmlDeprecatedAttribute,XmlDeprecatedElement
     report = "<p style='font-weight:bold'><font size='3'>" + brs + "</font></p>" + report;
+
+    // 展现宠物升级
+    if (page.petUpgrade! && page.petNameHtml !== undefined) {
+        let pu = "<span style='color:green'>" + page.petNameHtml + "</span> ";
+        if (page.petLearnSpell!) {
+            pu += "<span style='color:blue'>吐故纳新，扶摇直上！</span>";
+        } else {
+            pu += "<span style='color:indigo'>突飞猛进！</span>";
+        }
+        // noinspection HtmlDeprecatedTag,HtmlDeprecatedAttribute,XmlDeprecatedElement
+        report = "<p style='font-weight:bold'><font size='3'>" + pu + "</font></p>" + report;
+    }
 
     report = "<p>" + page.roleImageHtml +
         (page.petImageHtml === undefined ? "" : page.petImageHtml) +
