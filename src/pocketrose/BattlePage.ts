@@ -23,6 +23,7 @@ class BattlePage {
     roleImageHtml?: string;
     roleNameHtml?: string;
     petImageHtml?: string;
+    petNameHtml?: string;
     monsterImageHtml?: string;
     monsterNameHtml?: string;
     reportHtml?: string;
@@ -212,6 +213,26 @@ class BattlePage {
             }
             page.petImageHtml = "<img src='" + petImageSrc + "' alt='' width='64' height='64'>";
         }
+
+        battleTable
+            .find("> tbody:first")
+            .find("> tr:first")
+            .find("> td:first")
+            .find("> center:first")
+            .find("> h1:eq(1)")
+            .find("> font:first")
+            .find("> b:first")
+            .find("> p:first")
+            .find("> table:eq(1)")
+            .find("> tbody:first")
+            .find("> tr:first")
+            .find("> td:first")
+            .find("> table:first")
+            .find("> tbody:first")
+            .find("> tr:eq(4)")
+            .each((idx, tr) => {
+                page.petNameHtml = $(tr).find("> td:first").html();
+            });
 
         battleTable
             .find("td:contains('＜怪物＞')")
