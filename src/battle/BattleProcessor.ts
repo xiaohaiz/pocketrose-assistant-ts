@@ -18,6 +18,10 @@ class BattleProcessor {
         this.#battleCount = battleCount;
     }
 
+    get obtainBattleCount(): number {
+        return this.#battleCount;
+    }
+
     get obtainPage(): BattlePage {
         return this.page!;
     }

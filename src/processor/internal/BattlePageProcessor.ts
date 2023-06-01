@@ -15,26 +15,24 @@ import PageProcessorCredentialSupport from "../PageProcessorCredentialSupport";
 class BattlePageProcessor extends PageProcessorCredentialSupport {
 
     doProcess(credential: Credential, context?: PageProcessorContext): void {
-        if (context === undefined || context.get("battleCount") === undefined) {
-            // context is required for battle processing
-            return;
-        }
-
         // 解析当前的战数
         const battleCount = parseBattleCount(context);
+        if (battleCount === undefined) {
+            return;
+        }
 
         // 解析页面的反馈的数据
         const processor = new BattleProcessor(credential, PageUtils.currentPageHtml(), battleCount);
         processor.doProcess();
-        const page = processor.page!;
 
         // 开始正式处理战斗页面
-        processBattle(credential, page, context);
+        processBattle(credential, processor);
     }
 
 }
 
-function processBattle(credential: Credential, page: BattlePage, context: PageProcessorContext) {
+function processBattle(credential: Credential,
+                       processor: BattleProcessor) {
     // 删除原来所有的表单
     $("form").remove();
 
@@ -108,31 +106,31 @@ function processBattle(credential: Credential, page: BattlePage, context: PagePr
     // 重新定义按钮的行为
     $("#returnButton").on("click", () => {
         $("#returnButton").prop("disabled", true);
-        doBeforeReturn(credential, context).then(() => {
+        doBeforeReturn(credential, processor.obtainBattleCount).then(() => {
             $("#returnTown").trigger("click");
         });
     });
     $("#depositButton").on("click", () => {
         $("#depositButton").prop("disabled", true);
-        doBeforeReturn(credential, context).then(() => {
+        doBeforeReturn(credential, processor.obtainBattleCount).then(() => {
             $("#deposit").trigger("click");
         });
     });
     $("#repairButton").on("click", () => {
         $("#repairButton").prop("disabled", true);
-        doBeforeReturn(credential, context).then(() => {
+        doBeforeReturn(credential, processor.obtainBattleCount).then(() => {
             $("#repair").trigger("click");
         });
     });
     $("#lodgeButton").on("click", () => {
         $("#lodgeButton").prop("disabled", true);
-        doBeforeReturn(credential, context).then(() => {
+        doBeforeReturn(credential, processor.obtainBattleCount).then(() => {
             $("#lodge").trigger("click");
         });
     });
 
     // 根据返回方式推荐，设置相关按钮的tab优先级
-    const recommendation = doRecommendation(page, context);
+    const recommendation = processor.obtainRecommendation;
     switch (recommendation) {
         case "修":
             $("#repairButton").attr("tabindex", 1);
@@ -178,7 +176,7 @@ function processBattle(credential: Credential, page: BattlePage, context: PagePr
     }
 
     // 入手情况的渲染
-    renderHarvestMessage(page);
+    renderHarvestMessage(processor.obtainPage);
 
     // 如果强制推荐启用，则删除其余所有的按钮
     if (SetupLoader.isBattleForceRecommendationEnabled()) {
@@ -201,7 +199,7 @@ function processBattle(credential: Credential, page: BattlePage, context: PagePr
     // 是否使用极简战斗界面
     renderMinimalBattle(credential);
 
-    if (page.zodiacBattle!) {
+    if (processor.obtainPage.zodiacBattle!) {
         // 十二宫极速战斗模式
         if (SetupLoader.isZodiacFlashBattleEnabled()) {
             $("button[tabindex='1']").trigger("click");
@@ -209,7 +207,7 @@ function processBattle(credential: Credential, page: BattlePage, context: PagePr
     } else {
         // 普通战斗极速模式
         if (SetupLoader.isNormalFlashBattleEnabled()) {
-            if (!petLearnSpell && page.harvestList!.length === 0) {
+            if (!petLearnSpell && processor.obtainPage.harvestList!.length === 0) {
                 $("button[tabindex='1']").trigger("click");
             }
         }
@@ -258,58 +256,14 @@ function renderHarvestMessage(page: BattlePage) {
     }
 }
 
-function doRecommendation(page: BattlePage, context: PageProcessorContext): string {
-    const battleCount = parseBattleCount(context);
-    if (battleCount % 100 === 0) {
-        // 每100战强制修理
-        return "修";
+function parseBattleCount(context?: PageProcessorContext): number | undefined {
+    if (context === undefined) {
+        return undefined;
     }
-    if (page.lowestEndure! < SetupLoader.getRepairMinLimitation()) {
-        // 有装备耐久度低于阈值了，强制修理
-        return "修";
+    const s = context.get("battleCount");
+    if (s === undefined) {
+        return undefined;
     }
-
-    if (page.battleResult === "战败") {
-        // 战败，转到住宿
-        return "宿";
-    }
-    if (page.zodiacBattle! && page.battleResult === "平手") {
-        // 十二宫战斗平手，视为战败，转到住宿
-        return "宿";
-    }
-
-    if (page.zodiacBattle! || page.treasureBattle!) {
-        // 十二宫战胜或者秘宝战胜，转到存钱
-        return "存";
-    }
-    let depositBattleCount = SetupLoader.getDepositBattleCount();
-    if (depositBattleCount > 0 && battleCount % depositBattleCount === 0) {
-        // 设置的存钱战数到了
-        return "存";
-    }
-
-    // 生命力低于最大值的配置比例，住宿推荐
-    if (SetupLoader.getLodgeHealthLostRatio() > 0 &&
-        (page.roleHealth! <= page.roleMaxHealth! * SetupLoader.getLodgeHealthLostRatio())) {
-        return "宿";
-    }
-    // 如果MANA小于50%并且小于配置点数，住宿推荐
-    if (SetupLoader.getLodgeManaLostPoint() > 0 &&
-        (page.roleMana! <= page.roleMaxMana! * 0.5 && page.roleMana! <= SetupLoader.getLodgeManaLostPoint())) {
-        return "宿";
-    }
-
-    if (SetupLoader.getDepositBattleCount() > 0) {
-        // 设置了定期存钱，但是没有到战数，那么就直接返回吧
-        return "回";
-    } else {
-        // 没有设置定期存钱，那就表示每战都存钱
-        return "存";
-    }
-}
-
-function parseBattleCount(context: PageProcessorContext) {
-    const s = context.get("battleCount")!;
     return _.parseInt(s) + 1;
 }
 
@@ -406,10 +360,9 @@ function renderMinimalBattle(credential: Credential) {
     }
 }
 
-async function doBeforeReturn(credential: Credential, context: PageProcessorContext): Promise<void> {
+async function doBeforeReturn(credential: Credential, battleCount: number): Promise<void> {
     return await (() => {
         return new Promise<void>(resolve => {
-            const battleCount = parseBattleCount(context);
             const petLocalStorage = new PetLocalStorage(credential);
             petLocalStorage
                 .triggerUpdatePetMap(battleCount)
