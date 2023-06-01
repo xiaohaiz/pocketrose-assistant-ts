@@ -2,6 +2,8 @@ class Constants {
 
     static POCKET_DOMAIN: string = "https://pocketrose.itsns.net.cn/pocketrose";
 
+    static DATABASE_NAME: string = "pocketrose";
+
 }
 
 export = Constants;

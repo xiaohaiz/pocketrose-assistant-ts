@@ -1,5 +1,11 @@
 # pocketrose-assistant-ts
 
+### 版本 3.6.0-SNAPSHOT
+
+1. 战斗处理器结构优化。
+2. 修复战斗模式皇宫任务更新的缺失。
+3. 将战斗记录的存储从LocalStorage迁移到IndexedDB。
+
 ### 版本 3.5.20
 
 1. 驿站进入移动模式后隐藏出城按钮。

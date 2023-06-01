@@ -1,40 +1,38 @@
 import _ from "lodash";
+import BattlePage from "../../battle/BattlePage";
+import BattleProcessor from "../../battle/BattleProcessor";
 import SetupLoader from "../../config/SetupLoader";
 import EquipmentLocalStorage from "../../core/EquipmentLocalStorage";
 import NpcLoader from "../../core/NpcLoader";
-import PalaceTaskManager from "../../core/PalaceTaskManager";
 import PetLocalStorage from "../../core/PetLocalStorage";
 import TownDashboardLayoutManager from "../../layout/TownDashboardLayoutManager";
-import BattlePage from "../../pocketrose/BattlePage";
 import CommentBoard from "../../util/CommentBoard";
 import Credential from "../../util/Credential";
 import PageUtils from "../../util/PageUtils";
-import StringUtils from "../../util/StringUtils";
 import PageProcessorContext from "../PageProcessorContext";
 import PageProcessorCredentialSupport from "../PageProcessorCredentialSupport";
 
 class BattlePageProcessor extends PageProcessorCredentialSupport {
 
     doProcess(credential: Credential, context?: PageProcessorContext): void {
-        if (context === undefined || context.get("battleCount") === undefined) {
-            // context is required for battle processing
+        // 解析当前的战数
+        const battleCount = parseBattleCount(context);
+        if (battleCount === undefined) {
             return;
         }
 
         // 解析页面的反馈的数据
-        const page = parsePage();
-
-        if (SetupLoader.isNewPalaceTaskEnabled() && page.monsterTask!) {
-            new PalaceTaskManager(credential).finishMonsterTask();
-        }
+        const processor = new BattleProcessor(credential, PageUtils.currentPageHtml(), battleCount);
+        processor.doProcess();
 
         // 开始正式处理战斗页面
-        processBattle(credential, page, context);
+        processBattle(credential, processor);
     }
 
 }
 
-function processBattle(credential: Credential, page: BattlePage, context: PageProcessorContext) {
+function processBattle(credential: Credential,
+                       processor: BattleProcessor) {
     // 删除原来所有的表单
     $("form").remove();
 
@@ -108,31 +106,31 @@ function processBattle(credential: Credential, page: BattlePage, context: PagePr
     // 重新定义按钮的行为
     $("#returnButton").on("click", () => {
         $("#returnButton").prop("disabled", true);
-        doBeforeReturn(credential, context).then(() => {
+        doBeforeReturn(credential, processor.obtainBattleCount).then(() => {
             $("#returnTown").trigger("click");
         });
     });
     $("#depositButton").on("click", () => {
         $("#depositButton").prop("disabled", true);
-        doBeforeReturn(credential, context).then(() => {
+        doBeforeReturn(credential, processor.obtainBattleCount).then(() => {
             $("#deposit").trigger("click");
         });
     });
     $("#repairButton").on("click", () => {
         $("#repairButton").prop("disabled", true);
-        doBeforeReturn(credential, context).then(() => {
+        doBeforeReturn(credential, processor.obtainBattleCount).then(() => {
             $("#repair").trigger("click");
         });
     });
     $("#lodgeButton").on("click", () => {
         $("#lodgeButton").prop("disabled", true);
-        doBeforeReturn(credential, context).then(() => {
+        doBeforeReturn(credential, processor.obtainBattleCount).then(() => {
             $("#lodge").trigger("click");
         });
     });
 
     // 根据返回方式推荐，设置相关按钮的tab优先级
-    const recommendation = doRecommendation(page, context);
+    const recommendation = processor.obtainRecommendation;
     switch (recommendation) {
         case "修":
             $("#repairButton").attr("tabindex", 1);
@@ -178,7 +176,7 @@ function processBattle(credential: Credential, page: BattlePage, context: PagePr
     }
 
     // 入手情况的渲染
-    renderHarvestMessage(page);
+    renderHarvestMessage(processor.obtainPage);
 
     // 如果强制推荐启用，则删除其余所有的按钮
     if (SetupLoader.isBattleForceRecommendationEnabled()) {
@@ -201,7 +199,7 @@ function processBattle(credential: Credential, page: BattlePage, context: PagePr
     // 是否使用极简战斗界面
     renderMinimalBattle(credential);
 
-    if (page.zodiacBattle!) {
+    if (processor.obtainPage.zodiacBattle!) {
         // 十二宫极速战斗模式
         if (SetupLoader.isZodiacFlashBattleEnabled()) {
             $("button[tabindex='1']").trigger("click");
@@ -209,7 +207,7 @@ function processBattle(credential: Credential, page: BattlePage, context: PagePr
     } else {
         // 普通战斗极速模式
         if (SetupLoader.isNormalFlashBattleEnabled()) {
-            if (!petLearnSpell && page.harvestList!.length === 0) {
+            if (!petLearnSpell && processor.obtainPage.harvestList!.length === 0) {
                 $("button[tabindex='1']").trigger("click");
             }
         }
@@ -258,173 +256,15 @@ function renderHarvestMessage(page: BattlePage) {
     }
 }
 
-function doRecommendation(page: BattlePage, context: PageProcessorContext): string {
-    const battleCount = parseBattleCount(context);
-    if (battleCount % 100 === 0) {
-        // 每100战强制修理
-        return "修";
+function parseBattleCount(context?: PageProcessorContext): number | undefined {
+    if (context === undefined) {
+        return undefined;
     }
-    if (page.lowestEndure! < SetupLoader.getRepairMinLimitation()) {
-        // 有装备耐久度低于阈值了，强制修理
-        return "修";
+    const s = context.get("battleCount");
+    if (s === undefined) {
+        return undefined;
     }
-
-    if (page.battleResult === "战败") {
-        // 战败，转到住宿
-        return "宿";
-    }
-    if (page.zodiacBattle! && page.battleResult === "平手") {
-        // 十二宫战斗平手，视为战败，转到住宿
-        return "宿";
-    }
-
-    if (page.zodiacBattle! || page.treasureBattle!) {
-        // 十二宫战胜或者秘宝战胜，转到存钱
-        return "存";
-    }
-    let depositBattleCount = SetupLoader.getDepositBattleCount();
-    if (depositBattleCount > 0 && battleCount % depositBattleCount === 0) {
-        // 设置的存钱战数到了
-        return "存";
-    }
-
-    // 生命力低于最大值的配置比例，住宿推荐
-    if (SetupLoader.getLodgeHealthLostRatio() > 0 &&
-        (page.roleHealth! <= page.roleMaxHealth! * SetupLoader.getLodgeHealthLostRatio())) {
-        return "宿";
-    }
-    // 如果MANA小于50%并且小于配置点数，住宿推荐
-    if (SetupLoader.getLodgeManaLostPoint() > 0 &&
-        (page.roleMana! <= page.roleMaxMana! * 0.5 && page.roleMana! <= SetupLoader.getLodgeManaLostPoint())) {
-        return "宿";
-    }
-
-    if (SetupLoader.getDepositBattleCount() > 0) {
-        // 设置了定期存钱，但是没有到战数，那么就直接返回吧
-        return "回";
-    } else {
-        // 没有设置定期存钱，那就表示每战都存钱
-        return "存";
-    }
-}
-
-function parseBattleCount(context: PageProcessorContext) {
-    const s = context.get("battleCount")!;
     return _.parseInt(s) + 1;
-}
-
-function parsePage() {
-    const page = new BattlePage();
-
-    const battleField = $("table:first")
-        .find("tbody:first")
-        .find("tr:first")
-        .find("td:first")
-        .find("font:first")
-        .find("b:first")
-        .text();
-    page.treasureBattle = battleField.includes("秘宝之岛");
-    page.primaryBattle = battleField.includes("初级之森");
-    page.juniorBattle = battleField.includes("中级之塔");
-    page.seniorBattle = battleField.includes("上级之洞窟");
-    page.zodiacBattle = battleField.includes("十二神殿");
-
-    let petName = "";
-    const endureList: number[] = [];
-    for (const s of _.split($("#ueqtweixin").text(), "\n")) {
-        if (_.endsWith(s, "耐久度")) {
-            if (!s.includes("大师球") &&
-                !s.includes("宗师球") &&
-                !s.includes("超力怪兽球") &&
-                !s.includes("宠物蛋")) {
-                let t = StringUtils.substringBetween(s, "剩余", "耐久度");
-                let n = parseInt(t);
-                endureList.push(n);
-            }
-        }
-        if (_.endsWith(s, "回)")) {
-            let t = StringUtils.substringBetween(s, "(剩余", "回)");
-            let n = parseInt(t);
-            endureList.push(n);
-        }
-        if (s.includes(" 获得 ") && s.includes(" 经验值.")) {
-            // 这一行是宠物获得经验值的那一行
-            // 记录下宠物名
-            petName = StringUtils.substringBefore(s, " 获得 ");
-        }
-        if (petName !== "") {
-            const searchString = petName + "等级上升！";
-            if (s.includes(searchString)) {
-                page.petUpgrade = true;
-            }
-        }
-    }
-    if (endureList.length > 0) {
-        page.lowestEndure = _.min(endureList);
-    }
-
-    $("table:eq(5)")
-        .find("td:contains('＜怪物＞')")
-        .filter((idx, td) => $(td).text() === "＜怪物＞")
-        .each((idx, td) => {
-            let monsterTable = $(td).closest("table");
-            let roleTable = monsterTable.parent().prev().find("table:first");
-
-            roleTable
-                .find("tr:first")
-                .next()
-                .next()
-                .find("td:eq(1)")
-                .each((i, td) => {
-                    let s = StringUtils.substringBefore($(td).text(), " / ");
-                    page.roleHealth = _.parseInt(s);
-                    s = StringUtils.substringAfter($(td).text(), " / ");
-                    page.roleMaxHealth = _.parseInt(s);
-                })
-                .next()
-                .each((i, td) => {
-                    let s = StringUtils.substringBefore($(td).text(), " / ");
-                    page.roleMana = _.parseInt(s);
-                    s = StringUtils.substringAfter($(td).text(), " / ");
-                    page.roleMaxMana = _.parseInt(s);
-                })
-
-            monsterTable
-                .find("tr:first")
-                .next()
-                .next()
-                .find("td:eq(1)")
-                .each((i, td) => {
-                    let s = StringUtils.substringBefore($(td).text(), " / ");
-                    page.monsterHealth = _.parseInt(s);
-                })
-        });
-
-
-    if (page.roleHealth! === 0) {
-        page.battleResult = "战败";
-    } else if (page.monsterHealth! === 0) {
-        page.battleResult = "战胜";
-    } else {
-        page.battleResult = "平手";
-    }
-
-    page.harvestList = [];
-    $("table:eq(5)")
-        .find("p")
-        .filter((idx, p) => $(p).text().includes("入手！"))
-        .each((idx, p) => {
-            _.split($(p).html(), "<br>").forEach(it => {
-                if (it.endsWith("入手！")) {
-                    page.harvestList!.push(it);
-                }
-            });
-        });
-
-
-    page.monsterTask = PageUtils.currentPageHtml().includes("完成杀怪任务");
-
-    return page;
 }
 
 function generateReturnForm(credential: Credential) {
@@ -520,10 +360,9 @@ function renderMinimalBattle(credential: Credential) {
     }
 }
 
-async function doBeforeReturn(credential: Credential, context: PageProcessorContext): Promise<void> {
+async function doBeforeReturn(credential: Credential, battleCount: number): Promise<void> {
     return await (() => {
         return new Promise<void>(resolve => {
-            const battleCount = parseBattleCount(context);
             const petLocalStorage = new PetLocalStorage(credential);
             petLocalStorage
                 .triggerUpdatePetMap(battleCount)
