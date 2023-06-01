@@ -380,7 +380,7 @@ function generateBattleReport(battleTable: JQuery, page: BattlePage) {
         for (const it of page.harvestList!) {
             harvest += "<b>" + it + "</b><br>";
         }
-        report = "<p style='font-size:300%'>" + harvest + "</p>" + report;
+        report = "<p style='font-size:250%'>" + harvest + "</p>" + report;
     }
 
     // 展现宠物升级
@@ -388,13 +388,11 @@ function generateBattleReport(battleTable: JQuery, page: BattlePage) {
         let pu = "<span style='color:green'>" + page.petNameHtml + "</span> ";
         if (page.petLearnSpell!) {
             pu += "<span style='color:blue'>吐故纳新，扶摇直上！</span>";
-            // noinspection HtmlDeprecatedTag,HtmlDeprecatedAttribute,XmlDeprecatedElement
-            report = "<p style='font-weight:bold;font-size:300%'>" + pu + "</p>" + report;
         } else {
             pu += "<span style='color:indigo'>突飞猛进！</span>";
-            // noinspection HtmlDeprecatedTag,HtmlDeprecatedAttribute,XmlDeprecatedElement
-            report = "<p style='font-weight:bold'><font size='3'>" + pu + "</font></p>" + report;
         }
+        // noinspection HtmlDeprecatedTag,HtmlDeprecatedAttribute,XmlDeprecatedElement
+        report = "<p style='font-weight:bold'><font size='3'>" + pu + "</font></p>" + report;
     }
 
     report = "<p>" + page.roleImageHtml +
