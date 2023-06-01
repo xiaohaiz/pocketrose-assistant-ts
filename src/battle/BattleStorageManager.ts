@@ -2,12 +2,12 @@ import BattleRecordStorage from "./BattleRecordStorage";
 
 const storage = new BattleRecordStorage();
 
-class BattleRecordStorageManager {
+class BattleStorageManager {
 
-    static storage() {
+    static getBattleRecordStorage() {
         return storage;
     }
 
 }
 
-export = BattleRecordStorageManager;
+export = BattleStorageManager;

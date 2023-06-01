@@ -1,7 +1,7 @@
 import _ from "lodash";
 import BattleProcessor from "../battle/BattleProcessor";
 import BattleRecord from "../battle/BattleRecord";
-import BattleRecordStorageManager from "../battle/BattleRecordStorageManager";
+import BattleStorageManager from "../battle/BattleStorageManager";
 import SetupLoader from "../config/SetupLoader";
 import EquipmentLocalStorage from "../core/EquipmentLocalStorage";
 import PetLocalStorage from "../core/PetLocalStorage";
@@ -40,7 +40,7 @@ class TownDashboardLayout006 extends TownDashboardLayout {
         generateRepairForm(credential);
         generateLodgeForm(credential);
 
-        BattleRecordStorageManager.storage().load(credential.id).then(record => {
+        BattleStorageManager.getBattleRecordStorage().load(credential.id).then(record => {
             const lastBattle = record.html!;
             if (lastBattle !== "") {
                 if (StorageUtils.getBoolean("_pa_055")) {
@@ -121,7 +121,7 @@ class TownDashboardLayout006 extends TownDashboardLayout {
                         const record = new BattleRecord();
                         record.id = credential.id;
                         record.html = errMsg;
-                        BattleRecordStorageManager.storage().write(record).then();
+                        BattleStorageManager.getBattleRecordStorage().write(record).then();
 
                         let buttonText = SetupLoader.getBattleReturnButtonText();
                         buttonText = buttonText === "" ? "返回" : _.escape(buttonText);
