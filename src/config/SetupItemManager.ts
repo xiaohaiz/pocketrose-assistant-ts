@@ -53,6 +53,7 @@ import SetupItem052 from "./internal/SetupItem052";
 import SetupItem053 from "./internal/SetupItem053";
 import SetupItem054 from "./internal/SetupItem054";
 import SetupItem055 from "./internal/SetupItem055";
+import SetupItem056 from "./internal/SetupItem056";
 import SetupItem from "./SetupItem";
 
 class SetupItemManager {
@@ -62,6 +63,7 @@ class SetupItemManager {
     constructor() {
         this.#setupItemList = [
             new SetupItem012(),
+            new SetupItem056(),
             new SetupItem029(),
             new SetupItem001(),
             new SetupItem002(),

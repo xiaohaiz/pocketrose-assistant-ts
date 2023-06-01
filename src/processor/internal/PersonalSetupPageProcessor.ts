@@ -140,8 +140,8 @@ abstract class PersonalSetupPageProcessor extends PageProcessorCredentialSupport
                     s3 === "20" &&
                     s4 === "20" &&
                     s5 === "2") {
-                    if ($("#battle_field_setup").length > 0) {
-                        $("#battle_field_setup").toggle();
+                    if ($(".battle_field_setup").length > 0) {
+                        $(".battle_field_setup").toggle();
                     }
                 }
 
