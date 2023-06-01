@@ -37,7 +37,7 @@ class TownDashboardLayout005 extends TownDashboardLayout {
             .find("> tr:eq(3)")
             .each((idx, tr) => {
                 const tax = page.townTax!;
-                $(tr).after($("<tr class='roleStatus'><td>收益</td><th id='townTax'>" + tax + "</th><td colspan='2'></td></tr>"));
+                $(tr).after($("<tr class='roleStatus'><td height='5'>收益</td><th id='townTax'>" + tax + "</th><td colspan='2'></td></tr>"));
                 new TownDashboardTaxManager(credential, page).processTownTax($("#townTax"));
             });
 
