@@ -378,7 +378,11 @@ function generateBattleReport(battleTable: JQuery, page: BattlePage) {
     // 展现宠物升级
     if (page.petUpgrade! && page.petNameHtml !== undefined) {
         let pu = "<span style='color:green'>" + page.petNameHtml + "</span> ";
-        pu += "<span style='color:blue'>吐故纳新，扶摇直上！</span>";
+        if (page.petLearnSpell!) {
+            pu += "<span style='color:blue'>吐故纳新，扶摇直上！</span>";
+        } else {
+            pu += "<span style='color:indigo'>突飞猛进！</span>";
+        }
         // noinspection HtmlDeprecatedTag,HtmlDeprecatedAttribute,XmlDeprecatedElement
         report = "<p style='font-weight:bold'><font size='3'>" + pu + "</font></p>" + report;
     }
