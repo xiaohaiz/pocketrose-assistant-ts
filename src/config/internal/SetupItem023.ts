@@ -1,3 +1,4 @@
+import _ from "lodash";
 import MessageBoard from "../../util/MessageBoard";
 import StorageUtils from "../../util/StorageUtils";
 import SetupItem from "../SetupItem";
@@ -27,6 +28,11 @@ function doRender(id: string) {
     $("#setup_item_table").append($(html));
 
     const value = SetupLoader.loadEquipmentSet_E(id);
+
+    if (value["alias"] !== undefined) {
+        $("#text_" + code).attr("placeholder", value["alias"]);
+    }
+
     if (value["weaponStar"] !== undefined && value["weaponStar"]) {
         $(".checkbox_" + code + "[value='weaponStar']").prop("checked", true);
     }
@@ -47,6 +53,9 @@ function doRender(id: string) {
 
 function doGenerateSetupItem() {
     let html = "";
+
+    html += "<input type='text' id='text_" + code + "' class='text_class_" + code + "' size='5' maxlength='10'>";
+
     html += "<input type='checkbox' name='star_" + code + "' class='checkbox_" + code + "' value='weaponStar'>★";
     const weaponList = $("#weapon_list").text().split(",");
     html += "<select name='weapon_" + code + "'>";
@@ -76,6 +85,13 @@ function doGenerateSetupItem() {
 
 function doSaveSetupItem(id: string) {
     const value = {};
+
+    const alias = $("#text_" + code).val();
+    if (alias !== undefined && _.trim(alias as string) !== "") {
+        // @ts-ignore
+        value["alias"] = _.trim(alias as string);
+    }
+
     $("input:checkbox[name='star_" + code + "']:checked").each(function (_idx, checkbox) {
         // @ts-ignore
         value[$(checkbox).val()] = true;
