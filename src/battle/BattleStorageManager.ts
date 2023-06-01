@@ -1,11 +1,17 @@
 import BattleRecordStorage from "./BattleRecordStorage";
+import BattleResultStorage from "./BattleResultStorage";
 
-const storage = new BattleRecordStorage();
+const battleRecordStorage = new BattleRecordStorage();
+const battleResultStorage = new BattleResultStorage();
 
 class BattleStorageManager {
 
     static getBattleRecordStorage() {
-        return storage;
+        return battleRecordStorage;
+    }
+
+    static getBattleResultStorage() {
+        return battleResultStorage;
     }
 
 }
