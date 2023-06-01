@@ -1,7 +1,6 @@
 import MessageBoard from "../../util/MessageBoard";
 import StorageUtils from "../../util/StorageUtils";
 import SetupItem from "../SetupItem";
-import SetupLoader from "../SetupLoader";
 
 class SetupItem012 implements SetupItem {
 
@@ -26,7 +25,21 @@ function doRender(id: string) {
 
     $("#setup_item_table").append($(html));
 
-    const value = SetupLoader.getBattlePlacePreference(id);
+    let value;
+    const s = StorageUtils.getString("_pa_012_" + id);
+    if (s === "") {
+        value = {};
+        // @ts-ignore
+        value["primary"] = false;
+        // @ts-ignore
+        value["junior"] = false;
+        // @ts-ignore
+        value["senior"] = false;
+        // @ts-ignore
+        value["zodiac"] = false;
+    } else {
+        value = JSON.parse(s);
+    }
     // @ts-ignore
     $("#primary_battle").prop("checked", value["primary"]);
     // @ts-ignore
