@@ -31,7 +31,7 @@ class BattleRecordStorage {
         return await (() => {
             return new Promise<BattleRecord>((resolve, reject) => {
 
-                const request = db.transaction(["BattleRecord"], "readwrite")
+                const request = db.transaction(["BattleRecord"], "readonly")
                     .objectStore("BattleRecord")
                     .get(id);
 
