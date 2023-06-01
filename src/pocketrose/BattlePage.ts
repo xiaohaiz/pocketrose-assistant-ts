@@ -375,6 +375,14 @@ function generateBattleReport(battleTable: JQuery, page: BattlePage) {
     // noinspection HtmlDeprecatedTag,HtmlDeprecatedAttribute,XmlDeprecatedElement
     report = "<p style='font-weight:bold'><font size='3'>" + brs + "</font></p>" + report;
 
+    // 展现宠物升级
+    if (page.petUpgrade! && page.petNameHtml !== undefined) {
+        let pu = "<span style='color:green'>" + page.petNameHtml + "</span> ";
+        pu += "<span style='color:blue'>吐故纳新，扶摇直上！</span>";
+        // noinspection HtmlDeprecatedTag,HtmlDeprecatedAttribute,XmlDeprecatedElement
+        report = "<p style='font-weight:bold'><font size='3'>" + pu + "</font></p>" + report;
+    }
+
     report = "<p>" + page.roleImageHtml +
         (page.petImageHtml === undefined ? "" : page.petImageHtml) +
         "&nbsp;&nbsp;&nbsp;<b style='font-size:300%;color:red'>VS</b>&nbsp;&nbsp;&nbsp;" +
