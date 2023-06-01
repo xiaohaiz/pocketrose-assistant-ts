@@ -50,25 +50,6 @@ class SetupLoader {
         return StorageUtils.getBoolean("_pa_011");
     }
 
-    static getBattlePlacePreference(id: string): {} {
-        let value;
-        const s = StorageUtils.getString("_pa_012_" + id);
-        if (s === "") {
-            value = {};
-            // @ts-ignore
-            value["primary"] = false;
-            // @ts-ignore
-            value["junior"] = false;
-            // @ts-ignore
-            value["senior"] = false;
-            // @ts-ignore
-            value["zodiac"] = false;
-        } else {
-            value = JSON.parse(s);
-        }
-        return value;
-    }
-
     static isPocketSuperMarketEnabled(): boolean {
         return StorageUtils.getBoolean("_pa_013");
     }
