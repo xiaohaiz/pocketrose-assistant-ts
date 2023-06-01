@@ -5,7 +5,7 @@ class BattleRecord {
     html?: string;
 
     constructor() {
-        this.createTime = new Date().getMilliseconds();
+        this.createTime = new Date().getTime();
     }
 
     asObject() {
