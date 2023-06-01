@@ -42,7 +42,6 @@ class BattleRecordStorage {
                     if (request.result) {
                         const record = new BattleRecord();
                         record.id = request.result.id;
-                        record.updateTime = request.result.updateTime;
                         record.html = request.result.html;
                         resolve(record);
                     } else {

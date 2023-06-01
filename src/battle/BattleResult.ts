@@ -1,15 +1,12 @@
 class BattleResult {
 
-    id?: string;
-    updateTime?: number;
+    id?: string;            // roleId/monster
+    roleId?: string;
     monster?: string;
     winCount?: number;
     loseCount?: number;
     drawCount?: number;
 
-    constructor() {
-        this.updateTime = new Date().getTime();
-    }
 }
 
 export = BattleResult;
