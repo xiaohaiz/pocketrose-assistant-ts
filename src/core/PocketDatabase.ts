@@ -4,7 +4,8 @@ class PocketDatabase {
 
     connectDB = () => {
         return new Promise<IDBDatabase>((resolve, reject) => {
-            const request = window.indexedDB.open(Constants.DATABASE_NAME, 2);
+            const request = window.indexedDB
+                .open(Constants.DATABASE_NAME, Constants.DATABASE_VERSION);
 
             request.onerror = reject;
 

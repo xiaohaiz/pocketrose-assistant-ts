@@ -4,6 +4,8 @@ class Constants {
 
     static DATABASE_NAME: string = "pocketrose";
 
+    static DATABASE_VERSION: number = 2;
+
 }
 
 export = Constants;
