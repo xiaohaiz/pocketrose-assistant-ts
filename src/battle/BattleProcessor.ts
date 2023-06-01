@@ -2,6 +2,8 @@ import SetupLoader from "../config/SetupLoader";
 import PalaceTaskManager from "../core/PalaceTaskManager";
 import Credential from "../util/Credential";
 import BattlePage from "./BattlePage";
+import BattleRecord from "./BattleRecord";
+import BattleRecordStorage from "./BattleRecordStorage";
 
 class BattleProcessor {
 
@@ -31,14 +33,22 @@ class BattleProcessor {
     }
 
     doProcess() {
+        // 解析战斗页面
         this.page = BattlePage.parse(this.#html);
+
+        // 确认后续行为
+        this.recommendation = this.#doRecommendation();
 
         // 检查是否完成了皇宫任务
         if (SetupLoader.isNewPalaceTaskEnabled() && this.page.monsterTask!) {
             new PalaceTaskManager(this.#credential).finishMonsterTask();
         }
 
-        this.recommendation = this.#doRecommendation();
+        // 写入战斗记录到DB
+        const record = new BattleRecord();
+        record.id = this.#credential.id;
+        record.html = this.obtainPage.reportHtml;
+        new BattleRecordStorage().write(record).then();
     }
 
     #doRecommendation(): string {

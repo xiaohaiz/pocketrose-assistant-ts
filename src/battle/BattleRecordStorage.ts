@@ -32,7 +32,7 @@ class BattleRecordStorage {
             return new Promise<void>((resolve, reject) => {
                 const request = db.transaction(["BattleRecord"], "readwrite")
                     .objectStore("BattleRecord")
-                    .add(record.asObject());
+                    .put(record.asObject());
 
                 request.onerror = reject;
 
