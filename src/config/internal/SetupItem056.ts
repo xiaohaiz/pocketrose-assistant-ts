@@ -1,5 +1,6 @@
 import MessageBoard from "../../util/MessageBoard";
 import StorageUtils from "../../util/StorageUtils";
+import BattleFieldConfigLoader from "../BattleFieldConfigLoader";
 import SetupItem from "../SetupItem";
 
 class SetupItem056 implements SetupItem {
@@ -25,29 +26,15 @@ function doRender() {
 
     $("#setup_item_table").append($(html));
 
-    let value;
-    const s = StorageUtils.getString(key);
-    if (s === "") {
-        value = {};
-        // @ts-ignore
-        value["primary"] = false;
-        // @ts-ignore
-        value["junior"] = false;
-        // @ts-ignore
-        value["senior"] = false;
-        // @ts-ignore
-        value["zodiac"] = false;
-    } else {
-        value = JSON.parse(s);
-    }
+    let value = BattleFieldConfigLoader.loadGlobalConfig();
     // @ts-ignore
-    $("#primary_battle").prop("checked", value["primary"]);
+    $("#primary_battle_global").prop("checked", value["primary"]);
     // @ts-ignore
-    $("#junior_battle").prop("checked", value["junior"]);
+    $("#junior_battle_global").prop("checked", value["junior"]);
     // @ts-ignore
-    $("#senior_battle").prop("checked", value["senior"]);
+    $("#senior_battle_global").prop("checked", value["senior"]);
     // @ts-ignore
-    $("#zodiac_battle").prop("checked", value["zodiac"]);
+    $("#zodiac_battle_global").prop("checked", value["zodiac"]);
 
     $("#setup_" + code).on("click", function () {
         doSaveSetupItem();
@@ -56,10 +43,10 @@ function doRender() {
 
 function doGenerateSetupItem() {
     let html = "";
-    html += "<input type='checkbox' class='checkbox_class_" + code + "' id='primary_battle'>初级之森";
-    html += "<input type='checkbox' class='checkbox_class_" + code + "' id='junior_battle'>中级之塔";
-    html += "<input type='checkbox' class='checkbox_class_" + code + "' id='senior_battle'>上级之洞";
-    html += "<input type='checkbox' class='checkbox_class_" + code + "' id='zodiac_battle'>十二神殿";
+    html += "<input type='checkbox' class='checkbox_class_" + code + "' id='primary_battle_global'>初级之森";
+    html += "<input type='checkbox' class='checkbox_class_" + code + "' id='junior_battle_global'>中级之塔";
+    html += "<input type='checkbox' class='checkbox_class_" + code + "' id='senior_battle_global'>上级之洞";
+    html += "<input type='checkbox' class='checkbox_class_" + code + "' id='zodiac_battle_global'>十二神殿";
     html += " <span style='color:blue'>全局设置优先级高于专属设置</span>";
     return html;
 }
@@ -67,13 +54,13 @@ function doGenerateSetupItem() {
 function doSaveSetupItem() {
     const value = {};
     // @ts-ignore
-    value["primary"] = $("#primary_battle").prop("checked");
+    value["primary"] = $("#primary_battle_global").prop("checked");
     // @ts-ignore
-    value["junior"] = $("#junior_battle").prop("checked");
+    value["junior"] = $("#junior_battle_global").prop("checked");
     // @ts-ignore
-    value["senior"] = $("#senior_battle").prop("checked");
+    value["senior"] = $("#senior_battle_global").prop("checked");
     // @ts-ignore
-    value["zodiac"] = $("#zodiac_battle").prop("checked");
+    value["zodiac"] = $("#zodiac_battle_global").prop("checked");
 
     StorageUtils.set(key, JSON.stringify(value));
     MessageBoard.publishMessage("<b style='color:red'>" + name + "</b>已经设置。");
