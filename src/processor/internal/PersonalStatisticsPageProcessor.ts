@@ -293,6 +293,58 @@ function doBindButton() {
                 html += "</table>";
                 html += "</td>";
                 html += "</tr>";
+                html += "<tr>";
+                html += "<td>";
+                html += "<table style='background-color:#888888;border-width:1px;border-spacing:1px;text-align:center;width:100%;margin:auto'>";
+                html += "<tbody>";
+                html += "<tr>";
+                html += "<td colspan='5' style='background-color:navy;color:yellow;font-weight:bold;text-align:center'>四 天 王 占 比</td>";
+                html += "</tr>";
+                html += "<tr>";
+                html += "<th style='background-color:green;color:white'>天王</th>"
+                html += "<th style='background-color:green;color:white'>天王</th>"
+                html += "<th style='background-color:green;color:white'>战数</th>"
+                html += "<th style='background-color:green;color:white'>上洞战数</th>"
+                html += "<th style='background-color:green;color:white'>占比</th>"
+                html += "</tr>";
+                html += "<tr>";
+                html += "<td style='background-color:#F8F0E0'>" + PetProfileLoader.load("012")?.imageHtml + "</td>"
+                html += "<td style='background-color:#F8F0E0'>巴大蝴(012)</td>"
+                html += "<td style='background-color:#F8F0E0'>" + h1 + "</td>"
+                html += "<td style='background-color:#F8F0E0'>" + bc3 + "</td>"
+                html += "<td style='background-color:#F8F0E0;text-align:left'>" + PageUtils.generateProgressBarWithPercentage(h1 / bc3) + "</td>"
+                html += "</tr>";
+                html += "<tr>";
+                html += "<td style='background-color:#F8F0E0'>" + PetProfileLoader.load("136")?.imageHtml + "</td>"
+                html += "<td style='background-color:#F8F0E0'>火精灵(136)</td>"
+                html += "<td style='background-color:#F8F0E0'>" + h2 + "</td>"
+                html += "<td style='background-color:#F8F0E0'>" + bc3 + "</td>"
+                html += "<td style='background-color:#F8F0E0;text-align:left'>" + PageUtils.generateProgressBarWithPercentage(h2 / bc3) + "</td>"
+                html += "</tr>";
+                html += "<tr>";
+                html += "<td style='background-color:#F8F0E0'>" + PetProfileLoader.load("224")?.imageHtml + "</td>"
+                html += "<td style='background-color:#F8F0E0'>石章鱼(224)</td>"
+                html += "<td style='background-color:#F8F0E0'>" + h3 + "</td>"
+                html += "<td style='background-color:#F8F0E0'>" + bc3 + "</td>"
+                html += "<td style='background-color:#F8F0E0;text-align:left'>" + PageUtils.generateProgressBarWithPercentage(h3 / bc3) + "</td>"
+                html += "</tr>";
+                html += "<tr>";
+                html += "<td style='background-color:#F8F0E0'>" + PetProfileLoader.load("257")?.imageHtml + "</td>"
+                html += "<td style='background-color:#F8F0E0'>火鸡战士(257)</td>"
+                html += "<td style='background-color:#F8F0E0'>" + h4 + "</td>"
+                html += "<td style='background-color:#F8F0E0'>" + bc3 + "</td>"
+                html += "<td style='background-color:#F8F0E0;text-align:left'>" + PageUtils.generateProgressBarWithPercentage(h4 / bc3) + "</td>"
+                html += "</tr>";
+                html += "<tr>";
+                html += "<td style='background-color:#F8F0E0;font-weight:bold' colspan='2'>四 天 王</td>"
+                html += "<td style='background-color:#F8F0E0'>" + (h1 + h2 + h3 + h4) + "</td>"
+                html += "<td style='background-color:#F8F0E0'>" + bc3 + "</td>"
+                html += "<td style='background-color:#F8F0E0;text-align:left'>" + PageUtils.generateProgressBarWithPercentage((h1 + h2 + h3 + h4) / bc3) + "</td>"
+                html += "</tr>";
+                html += "</tbody>";
+                html += "</table>";
+                html += "</td>";
+                html += "</tr>";
                 html += "</tbody>";
                 html += "</table>";
 
