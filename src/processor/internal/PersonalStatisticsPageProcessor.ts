@@ -5,6 +5,7 @@ import NpcLoader from "../../core/NpcLoader";
 import PetProfileLoader from "../../core/PetProfileLoader";
 import Credential from "../../util/Credential";
 import MessageBoard from "../../util/MessageBoard";
+import PageUtils from "../../util/PageUtils";
 import StringUtils from "../../util/StringUtils";
 import PageProcessorContext from "../PageProcessorContext";
 import PageProcessorCredentialSupport from "../PageProcessorCredentialSupport";
@@ -214,6 +215,7 @@ function doBindButton() {
                 html += "<th style='background-color:green;color:white'>平手数</th>"
                 html += "<th style='background-color:green;color:white'>总战数</th>"
                 html += "<th style='background-color:green;color:white'>胜率</th>"
+                html += "<th style='background-color:green;color:white'>占比</th>"
                 html += "</tr>";
                 html += "<tr>";
                 html += "<td style='background-color:#F8F0E0'>-</td>"
@@ -221,7 +223,8 @@ function doBindButton() {
                 html += "<td style='background-color:#F8F0E0'>" + totalLoseCount + "</td>"
                 html += "<td style='background-color:#F8F0E0'>" + totalDrawCount + "</td>"
                 html += "<td style='background-color:#F8F0E0'>" + totalBattleCount + "</td>"
-                html += "<td style='background-color:#F8F0E0'>" + (totalWinRatio * 100).toFixed(2) + "%</td>"
+                html += "<td style='background-color:#F8F0E0;text-align:left'>" + PageUtils.generateProgressBarWithPercentage(totalWinRatio) + "</td>"
+                html += "<td style='background-color:#F8F0E0;text-align:left'>-</td>"
                 html += "</tr>";
                 html += "<tr>";
                 html += "<td style='background-color:#F8F0E0'>初森</td>"
@@ -229,7 +232,8 @@ function doBindButton() {
                 html += "<td style='background-color:#F8F0E0'>" + lc1 + "</td>"
                 html += "<td style='background-color:#F8F0E0'>" + dc1 + "</td>"
                 html += "<td style='background-color:#F8F0E0'>" + bc1 + "</td>"
-                html += "<td style='background-color:#F8F0E0'>" + (wr1 * 100).toFixed(2) + "%</td>"
+                html += "<td style='background-color:#F8F0E0;text-align:left'>" + PageUtils.generateProgressBarWithPercentage(wr1) + "</td>"
+                html += "<td style='background-color:#F8F0E0;text-align:left'>" + PageUtils.generateProgressBarWithPercentage(bc1 / totalBattleCount) + "</td>"
                 html += "</tr>";
                 html += "<tr>";
                 html += "<td style='background-color:#F8F0E0'>中塔</td>"
@@ -237,7 +241,8 @@ function doBindButton() {
                 html += "<td style='background-color:#F8F0E0'>" + lc2 + "</td>"
                 html += "<td style='background-color:#F8F0E0'>" + dc2 + "</td>"
                 html += "<td style='background-color:#F8F0E0'>" + bc2 + "</td>"
-                html += "<td style='background-color:#F8F0E0'>" + (wr2 * 100).toFixed(2) + "%</td>"
+                html += "<td style='background-color:#F8F0E0;text-align:left'>" + PageUtils.generateProgressBarWithPercentage(wr2) + "</td>"
+                html += "<td style='background-color:#F8F0E0;text-align:left'>" + PageUtils.generateProgressBarWithPercentage(bc2 / totalBattleCount) + "</td>"
                 html += "</tr>";
                 html += "<tr>";
                 html += "<td style='background-color:#F8F0E0'>上洞</td>"
@@ -245,7 +250,8 @@ function doBindButton() {
                 html += "<td style='background-color:#F8F0E0'>" + lc3 + "</td>"
                 html += "<td style='background-color:#F8F0E0'>" + dc3 + "</td>"
                 html += "<td style='background-color:#F8F0E0'>" + bc3 + "</td>"
-                html += "<td style='background-color:#F8F0E0'>" + (wr3 * 100).toFixed(2) + "%</td>"
+                html += "<td style='background-color:#F8F0E0;text-align:left'>" + PageUtils.generateProgressBarWithPercentage(wr3) + "</td>"
+                html += "<td style='background-color:#F8F0E0;text-align:left'>" + PageUtils.generateProgressBarWithPercentage(bc3 / totalBattleCount) + "</td>"
                 html += "</tr>";
                 html += "<tr>";
                 html += "<td style='background-color:#F8F0E0'>十二宫</td>"
@@ -253,7 +259,8 @@ function doBindButton() {
                 html += "<td style='background-color:#F8F0E0'>" + lc4 + "</td>"
                 html += "<td style='background-color:#F8F0E0'>" + dc4 + "</td>"
                 html += "<td style='background-color:#F8F0E0'>" + bc4 + "</td>"
-                html += "<td style='background-color:#F8F0E0'>" + (wr4 * 100).toFixed(2) + "%</td>"
+                html += "<td style='background-color:#F8F0E0;text-align:left'>" + PageUtils.generateProgressBarWithPercentage(wr4) + "</td>"
+                html += "<td style='background-color:#F8F0E0;text-align:left'>" + PageUtils.generateProgressBarWithPercentage(bc4 / totalBattleCount) + "</td>"
                 html += "</tr>";
                 html += "</tbody>";
                 html += "</table>";
