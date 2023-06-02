@@ -12,7 +12,6 @@ import TownPetMapHouse from "../pocketrose/TownPetMapHouse";
 import RoleStorageManager from "../role/RoleStorageManager";
 import CommentBoard from "../util/CommentBoard";
 import Credential from "../util/Credential";
-import StorageUtils from "../util/StorageUtils";
 
 class PetLocalStorage {
 
@@ -96,11 +95,11 @@ class PetLocalStorage {
                         petStatusList.push(s);
                     }
 
-                    const key = "_ps_" + this.#credential.id;
-                    const value = _.join(petStatusList, "$$");
-                    StorageUtils.set(key, value);
-
-                    resolve();
+                    RoleStorageManager.getRolePetStatusStorage()
+                        .write(this.#credential.id, JSON.stringify(petStatusList))
+                        .then(() => {
+                            resolve();
+                        });
                 });
             });
         })();
