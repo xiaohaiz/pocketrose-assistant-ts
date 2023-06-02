@@ -1,3 +1,4 @@
+import _ from "lodash";
 import FastLogin from "../../common/FastLogin";
 import PetMap from "../../common/PetMap";
 import FastLoginLoader from "../../core/FastLoginLoader";
@@ -6,11 +7,10 @@ import TownLoader from "../../core/TownLoader";
 import PersonalStatus from "../../pocketrose/PersonalStatus";
 import TownPetMapHouse from "../../pocketrose/TownPetMapHouse";
 import TownPetMapHousePage from "../../pocketrose/TownPetMapHousePage";
+import RoleStorageManager from "../../role/RoleStorageManager";
 import Credential from "../../util/Credential";
 import MessageBoard from "../../util/MessageBoard";
 import PageUtils from "../../util/PageUtils";
-import StorageUtils from "../../util/StorageUtils";
-import StringUtils from "../../util/StringUtils";
 import PageProcessorContext from "../PageProcessorContext";
 import PageProcessorCredentialSupport from "../PageProcessorCredentialSupport";
 
@@ -151,58 +151,68 @@ class TownPetMapHousePageProcessor extends PageProcessorCredentialSupport {
     }
 
     #searchPetMap(petCode: string, configList: FastLogin[]) {
-        const foundList: string[] = [];
 
-        for (const config of configList) {
-            const key = "_pm_" + config.id;
-            const petMapText = StorageUtils.getString(key);
+        const roleIdList: string[] = [];
+        configList.forEach(it => {
+            const roleId = it.id!;
+            roleIdList.push(roleId);
+        });
 
-            if (petMapText !== "") {
-                for (const it of petMapText.split(" ")) {
-                    const code = StringUtils.substringBeforeSlash(it);
-                    if (code === petCode) {
-                        const count = parseInt(StringUtils.substringAfterSlash(it));
-                        foundList.push(config.name + "/" + code + "/" + count);
-                        break;
+        RoleStorageManager.getRolePetMapStorage()
+            .loads(roleIdList)
+            .then(dataMap => {
+                const foundList: string[] = [];
+                for (const config of configList) {
+                    const data = dataMap.get(config.id!);
+                    if (data === undefined) {
+                        continue;
+                    }
+                    const pmList = JSON.parse(data.json!);
+                    for (const it of pmList) {
+                        if (it.code === petCode) {
+                            const count = _.parseInt(it.count);
+                            foundList.push(config.name + "/" + petCode + "/" + count);
+                            break;
+                        }
                     }
                 }
-            }
-        }
 
-        if (foundList.length === 0) {
-            MessageBoard.publishWarning("没有找到图鉴" + petCode + "的信息！");
-            PageUtils.scrollIntoView("pageTitle");
-            $("#t1").find("tbody:first").html("");
-            return;
-        }
+                if (foundList.length === 0) {
+                    MessageBoard.publishWarning("没有找到图鉴" + petCode + "的信息！");
+                    PageUtils.scrollIntoView("pageTitle");
+                    $("#t1").find("tbody:first").html("");
+                    return;
+                }
 
-        const petMap = new PetMap();
-        petMap.code = petCode;
-        petMap.picture = petCode + ".png";
-        let html = "";
-        html += "<tr>";
-        html += "<td>";
-        html += petMap.imageHtml;
-        html += "</td>";
-        html += "<td style='width:100%;text-align:center'>";
-        html += "<table style='margin:auto;border-width:0;text-align:center;background-color:#888888'>";
-        html += "<tbody>";
-        html += "<tr>";
-        html += "<th style='background-color:#F8F0E0'>持有人</th>"
-        html += "<th style='background-color:#F8F0E0'>数量</th>"
-        html += "</tr>";
-        for (const found of foundList) {
-            const ss = found.split("/");
-            html += "<tr>";
-            html += "<td style='background-color:#E8E8D0'>" + ss[0] + "</td>";
-            html += "<td style='background-color:#E8E8B0'>" + ss[2] + "</td>";
-            html += "</tr>";
-        }
-        html += "</tbody>";
-        html += "</table>";
-        html += "</td>";
-        html += "</tr>";
-        $("#t1").find("tbody:first").html(html);
+                const petMap = new PetMap();
+                petMap.code = petCode;
+                petMap.picture = petCode + ".png";
+                let html = "";
+                html += "<tr>";
+                html += "<td>";
+                html += petMap.imageHtml;
+                html += "</td>";
+                html += "<td style='width:100%;text-align:center'>";
+                html += "<table style='margin:auto;border-width:0;text-align:center;background-color:#888888'>";
+                html += "<tbody>";
+                html += "<tr>";
+                html += "<th style='background-color:#F8F0E0'>持有人</th>"
+                html += "<th style='background-color:#F8F0E0'>数量</th>"
+                html += "</tr>";
+                for (const found of foundList) {
+                    const ss = found.split("/");
+                    html += "<tr>";
+                    html += "<td style='background-color:#E8E8D0'>" + ss[0] + "</td>";
+                    html += "<td style='background-color:#E8E8B0'>" + ss[2] + "</td>";
+                    html += "</tr>";
+                }
+                html += "</tbody>";
+                html += "</table>";
+                html += "</td>";
+                html += "</tr>";
+                $("#t1").find("tbody:first").html(html);
+            });
+
     }
 
 }
