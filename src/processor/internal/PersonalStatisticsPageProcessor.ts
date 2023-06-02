@@ -165,11 +165,31 @@ function doBindButton() {
                 let dc4 = 0;
                 let wr4;
 
+                let h1 = 0;
+                let h2 = 0;
+                let h3 = 0;
+                let h4 = 0;
+
                 candidate.forEach(it => {
                     totalBattleCount += it.obtainTotalCount;
                     totalWinCount += it.obtainWinCount;
                     totalLoseCount += it.obtainLoseCount;
                     totalDrawCount += it.obtainDrawCount;
+
+                    switch (it.monster!) {
+                        case "巴大蝴(012)":
+                            h1 += it.obtainTotalCount;
+                            break;
+                        case "火精灵(136)":
+                            h2 += it.obtainTotalCount;
+                            break;
+                        case "石章鱼(224)":
+                            h3 += it.obtainTotalCount;
+                            break;
+                        case "火鸡战士(257)":
+                            h4 += it.obtainTotalCount;
+                            break;
+                    }
 
                     switch (it.obtainBattleField) {
                         case "初森":
@@ -208,6 +228,9 @@ function doBindButton() {
                 let html = "";
                 html += "<table style='background-color:#888888;border-width:1px;border-spacing:1px;text-align:center;width:100%;margin:auto'>";
                 html += "<tbody>";
+                html += "<tr>";
+                html += "<td colspan='7' style='background-color:navy;color:yellow;font-weight:bold;text-align:center'>战 斗 统 计</td>";
+                html += "</tr>";
                 html += "<tr>";
                 html += "<th style='background-color:green;color:white'>战场</th>"
                 html += "<th style='background-color:green;color:white'>战胜数</th>"
