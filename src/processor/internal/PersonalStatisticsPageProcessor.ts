@@ -1,3 +1,4 @@
+import _ from "lodash";
 import BattleStorageManager from "../../battle/BattleStorageManager";
 import FastLoginManager from "../../core/FastLoginManager";
 import NpcLoader from "../../core/NpcLoader";
@@ -107,6 +108,9 @@ class PersonalStatisticsPageProcessor extends PageProcessorCredentialSupport {
         $("#operation").append($(html));
 
         $("#operation")
+            .append($("<input type='text' id='monster' size='5'>"));
+
+        $("#operation")
             .append($("<button role='button' id='b-1'>战斗统计总览</button>"));
 
         doBindButton();
@@ -121,10 +125,13 @@ class PersonalStatisticsPageProcessor extends PageProcessorCredentialSupport {
 function doBindButton() {
     $("#b-1").on("click", () => {
         const target = $("#teamMemberSelect").val()! as string;
+        const monster = _.trim($("#monster").val()! as string);
         BattleStorageManager.getBattleResultStorage()
             .loads()
             .then(resultList => {
-                const candidate = resultList.filter(it => target === "" || it.roleId === target);
+                const candidate = resultList
+                    .filter(it => target === "" || it.roleId === target)
+                    .filter(it => monster === "" || it.monster!.includes(monster));
 
                 let totalBattleCount = 0;
                 let totalWinCount = 0;
