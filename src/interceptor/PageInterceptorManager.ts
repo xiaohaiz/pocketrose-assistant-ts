@@ -17,6 +17,7 @@ import PersonalManualPageInterceptor from "./internal/PersonalManualPageIntercep
 import PersonalPetManagementPageInterceptor from "./internal/PersonalPetManagementPageInterceptor";
 import PersonalProfilePageInterceptor from "./internal/PersonalProfilePageInterceptor";
 import PersonalSetupPageInterceptor from "./internal/PersonalSetupPageInterceptor";
+import PersonalStatisticsPageInterceptor from "./internal/PersonalStatisticsPageInterceptor";
 import PersonalStatusPageInterceptor from "./internal/PersonalStatusPageInterceptor";
 import PersonalTeamPageInterceptor from "./internal/PersonalTeamPageInterceptor";
 import RoleInformationPageInterceptor from "./internal/RoleInformationPageInterceptor";
@@ -61,6 +62,7 @@ class PageInterceptorManager {
             new PersonalPetManagementPageInterceptor(),
             new PersonalProfilePageInterceptor(),
             new PersonalSetupPageInterceptor(),
+            new PersonalStatisticsPageInterceptor(),
             new PersonalStatusPageInterceptor(),
             new PersonalTeamPageInterceptor(),
             new RoleInformationPageInterceptor(),
