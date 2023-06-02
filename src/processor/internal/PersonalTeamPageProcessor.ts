@@ -11,7 +11,6 @@ import RoleStorageManager from "../../role/RoleStorageManager";
 import Credential from "../../util/Credential";
 import MessageBoard from "../../util/MessageBoard";
 import PageUtils from "../../util/PageUtils";
-import StorageUtils from "../../util/StorageUtils";
 import StringUtils from "../../util/StringUtils";
 import PageProcessorContext from "../PageProcessorContext";
 import PageProcessorCredentialSupport from "../PageProcessorCredentialSupport";
@@ -195,42 +194,46 @@ abstract class PersonalTeamPageProcessor extends PageProcessorCredentialSupport 
             $("#information").html(html).parent().hide();
 
             const configs = FastLoginManager.getAllFastLogins();
-            for (const config of configs) {
-                const key = "_es_" + config.id;
-                const value = StorageUtils.get(key);
-                if (value === null || value === "") {
-                    continue;
-                }
-                const equipments = _.split(value, "$$");
-
-                let html = "";
-                let row = 0;
-
-                equipments
-                    .map(it => Equipment.parse(it))
-                    .sort(Equipment.sorter)
-                    .forEach(it => {
-                        html += "<tr>";
-                        if (row === 0) {
-                            html += "<td style='background-color:#F8F0E0;vertical-align:center' rowspan='" + (equipments.length) + "'>" + config.name + "</td>";
+            const idList = configs.map(it => it.id!);
+            RoleStorageManager.getRoleEquipmentStatusStorage()
+                .loads(idList)
+                .then(dataMap => {
+                    for (const config of configs) {
+                        const data = dataMap.get(config.id!);
+                        if (data === undefined) {
+                            continue;
                         }
-                        html += "<td style='background-color:#E8E8D0;text-align:left'>" + it.fullName + "</td>";
-                        html += "<td style='background-color:#E8E8B0'>" + it.category + "</td>";
-                        html += "<td style='background-color:#E8E8D0'>" + it.power + "</td>";
-                        html += "<td style='background-color:#E8E8B0'>" + it.weight + "</td>";
-                        html += "<td style='background-color:#E8E8D0'>" + it.endure + "</td>";
-                        html += "<td style='background-color:#E8E8B0'>" + it.additionalPowerHtml + "</td>";
-                        html += "<td style='background-color:#E8E8D0'>" + it.additionalWeightHtml + "</td>";
-                        html += "<td style='background-color:#E8E8B0'>" + it.additionalLuckHtml + "</td>";
-                        html += "<td style='background-color:#E8E8D0'>" + it.experienceHTML + "</td>";
-                        html += "<td style='background-color:#E8E8B0'>" + it.location + "</td>";
-                        html += "</tr>";
-                        row++;
-                    });
+                        const equipments: string[] = JSON.parse(data.json!);
 
-                $("#equipmentStatusList").append($(html));
-            }
-            $("#information").parent().show();
+                        let html = "";
+                        let row = 0;
+
+                        equipments
+                            .map(it => Equipment.parse(it))
+                            .sort(Equipment.sorter)
+                            .forEach(it => {
+                                html += "<tr>";
+                                if (row === 0) {
+                                    html += "<td style='background-color:#F8F0E0;vertical-align:center' rowspan='" + (equipments.length) + "'>" + config.name + "</td>";
+                                }
+                                html += "<td style='background-color:#E8E8D0;text-align:left'>" + it.fullName + "</td>";
+                                html += "<td style='background-color:#E8E8B0'>" + it.category + "</td>";
+                                html += "<td style='background-color:#E8E8D0'>" + it.power + "</td>";
+                                html += "<td style='background-color:#E8E8B0'>" + it.weight + "</td>";
+                                html += "<td style='background-color:#E8E8D0'>" + it.endure + "</td>";
+                                html += "<td style='background-color:#E8E8B0'>" + it.additionalPowerHtml + "</td>";
+                                html += "<td style='background-color:#E8E8D0'>" + it.additionalWeightHtml + "</td>";
+                                html += "<td style='background-color:#E8E8B0'>" + it.additionalLuckHtml + "</td>";
+                                html += "<td style='background-color:#E8E8D0'>" + it.experienceHTML + "</td>";
+                                html += "<td style='background-color:#E8E8B0'>" + it.location + "</td>";
+                                html += "</tr>";
+                                row++;
+                            });
+
+                        $("#equipmentStatusList").append($(html));
+                    }
+                    $("#information").parent().show();
+                });
         });
     }
 

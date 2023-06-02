@@ -6,8 +6,9 @@
 2. 修复战斗模式皇宫任务更新的缺失。
 3. 将战斗记录的存储从LocalStorage迁移到IndexedDB。
 4. 存储每次战斗的结果数据，包括对手及胜负情况。
-5. 将宠物图鉴的存储从LocalStorage迁移到IndexedDB。
-6. 将宠物状态的存储从LocalStorage迁移到IndexedDB。
+5. 将宠物图鉴的存储从LocalStorage迁移到IndexedDB（需要更新数据后可查询）。
+6. 将宠物状态的存储从LocalStorage迁移到IndexedDB（需要更新数据后可查询）。
+7. 将装备状态的存储从LocalStorage迁移到IndexedDB（需要更新数据后可查询）。
 
 ### 版本 3.5.20
 
