@@ -4,6 +4,10 @@ import StringUtils from "../util/StringUtils";
 
 class NpcLoader {
 
+    static getZodiacNpcNames() {
+        return ZODIAC_NPC_LIST;
+    }
+
     static getNpcImageHtml(name: string) {
         // @ts-ignore
         const image = POCKET_NPC_IMAGES[name];
@@ -77,6 +81,21 @@ class NpcLoader {
         return "<img src='" + image + "' width='64' height='64' alt='" + name + "' id='" + id + "'>";
     }
 }
+
+const ZODIAC_NPC_LIST: string[] = [
+    "穆",
+    "阿鲁迪巴",
+    "撒加",
+    "迪斯马斯克",
+    "艾欧里亚",
+    "沙加",
+    "童虎",
+    "米罗",
+    "艾欧罗斯",
+    "修罗",
+    "卡妙",
+    "阿布罗狄",
+];
 
 const POCKET_TASK_NPC_IMAGES = {
     "大司徒": Constants.POCKET_DOMAIN + "/image/npc/684.jpg",

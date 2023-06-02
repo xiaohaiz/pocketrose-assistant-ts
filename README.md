@@ -1,12 +1,17 @@
 # pocketrose-assistant-ts
 
-### 版本 3.6.1
+### 版本 3.6.5-SNAPSHOT
 
 1. 战斗处理器结构优化。
 2. 修复战斗模式皇宫任务更新的缺失。
 3. 将战斗记录的存储从LocalStorage迁移到IndexedDB。
 4. 存储每次战斗的结果数据，包括对手及胜负情况。
-5. 将宠物图鉴的存储从LocalStorage迁移到IndexedDB。
+5. 将宠物图鉴的存储从LocalStorage迁移到IndexedDB（需要更新数据后可查询）。
+6. 将宠物状态的存储从LocalStorage迁移到IndexedDB（需要更新数据后可查询）。
+7. 将装备状态的存储从LocalStorage迁移到IndexedDB（需要更新数据后可查询）。
+8. 简单的战斗统计初版实现。
+9. 团队统计复用之前“点名”的页面，也可以在扩展按钮配置。
+10. 增加怪物胜率排行（胜率最低的前30）。
 
 ### 版本 3.5.20
 

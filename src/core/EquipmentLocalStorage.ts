@@ -7,9 +7,9 @@ import CastleWarehouse from "../pocketrose/CastleWarehouse";
 import PersonalEquipmentManagement from "../pocketrose/PersonalEquipmentManagement";
 import PersonalEquipmentManagementPage from "../pocketrose/PersonalEquipmentManagementPage";
 import TreasureBag from "../pocketrose/TreasureBag";
+import RoleStorageManager from "../role/RoleStorageManager";
 import CommentBoard from "../util/CommentBoard";
 import Credential from "../util/Credential";
-import StorageUtils from "../util/StorageUtils";
 
 class EquipmentLocalStorage {
 
@@ -68,11 +68,11 @@ class EquipmentLocalStorage {
                         equipmentStatusList.push(s);
                     }
 
-                    const key = "_es_" + this.#credential.id;
-                    const value = _.join(equipmentStatusList, "$$");
-                    StorageUtils.set(key, value);
-
-                    resolve();
+                    RoleStorageManager.getRoleEquipmentStatusStorage()
+                        .write(this.#credential.id, JSON.stringify(equipmentStatusList))
+                        .then(() => {
+                            resolve();
+                        });
                 });
             });
         })();

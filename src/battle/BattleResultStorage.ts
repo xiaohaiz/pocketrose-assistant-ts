@@ -3,6 +3,40 @@ import BattleResult from "./BattleResult";
 
 class BattleResultStorage {
 
+    async loads(): Promise<BattleResult[]> {
+        const db = await PocketDatabase.connectDatabase();
+        return await (() => {
+            return new Promise<BattleResult[]>((resolve, reject) => {
+
+                const request = db.transaction(["BattleResult"], "readonly")
+                    .objectStore("BattleResult")
+                    .getAll();
+
+                request.onerror = reject;
+
+                request.onsuccess = () => {
+                    if (request.result) {
+                        const resultList: BattleResult[] = [];
+                        for (const it of request.result) {
+                            const result = new BattleResult();
+                            result.id = it.id;
+                            result.roleId = it.roleId;
+                            result.monster = it.monster;
+                            result.winCount = it.winCount;
+                            result.loseCount = it.loseCount;
+                            result.drawCount = it.drawCount;
+                            resultList.push(result);
+                        }
+                        resolve(resultList);
+                    } else {
+                        reject();
+                    }
+                };
+
+            });
+        })();
+    }
+
     async load(id: string, monster: string): Promise<BattleResult> {
         const db = await PocketDatabase.connectDatabase();
         return await (() => {

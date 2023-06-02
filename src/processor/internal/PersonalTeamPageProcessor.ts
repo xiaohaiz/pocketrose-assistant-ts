@@ -7,10 +7,10 @@ import NpcLoader from "../../core/NpcLoader";
 import PetLocalStorage from "../../core/PetLocalStorage";
 import PetProfileLoader from "../../core/PetProfileLoader";
 import Pokemon from "../../core/Pokemon";
+import RoleStorageManager from "../../role/RoleStorageManager";
 import Credential from "../../util/Credential";
 import MessageBoard from "../../util/MessageBoard";
 import PageUtils from "../../util/PageUtils";
-import StorageUtils from "../../util/StorageUtils";
 import StringUtils from "../../util/StringUtils";
 import PageProcessorContext from "../PageProcessorContext";
 import PageProcessorCredentialSupport from "../PageProcessorCredentialSupport";
@@ -194,42 +194,46 @@ abstract class PersonalTeamPageProcessor extends PageProcessorCredentialSupport 
             $("#information").html(html).parent().hide();
 
             const configs = FastLoginManager.getAllFastLogins();
-            for (const config of configs) {
-                const key = "_es_" + config.id;
-                const value = StorageUtils.get(key);
-                if (value === null || value === "") {
-                    continue;
-                }
-                const equipments = _.split(value, "$$");
-
-                let html = "";
-                let row = 0;
-
-                equipments
-                    .map(it => Equipment.parse(it))
-                    .sort(Equipment.sorter)
-                    .forEach(it => {
-                        html += "<tr>";
-                        if (row === 0) {
-                            html += "<td style='background-color:#F8F0E0;vertical-align:center' rowspan='" + (equipments.length) + "'>" + config.name + "</td>";
+            const idList = configs.map(it => it.id!);
+            RoleStorageManager.getRoleEquipmentStatusStorage()
+                .loads(idList)
+                .then(dataMap => {
+                    for (const config of configs) {
+                        const data = dataMap.get(config.id!);
+                        if (data === undefined) {
+                            continue;
                         }
-                        html += "<td style='background-color:#E8E8D0;text-align:left'>" + it.fullName + "</td>";
-                        html += "<td style='background-color:#E8E8B0'>" + it.category + "</td>";
-                        html += "<td style='background-color:#E8E8D0'>" + it.power + "</td>";
-                        html += "<td style='background-color:#E8E8B0'>" + it.weight + "</td>";
-                        html += "<td style='background-color:#E8E8D0'>" + it.endure + "</td>";
-                        html += "<td style='background-color:#E8E8B0'>" + it.additionalPowerHtml + "</td>";
-                        html += "<td style='background-color:#E8E8D0'>" + it.additionalWeightHtml + "</td>";
-                        html += "<td style='background-color:#E8E8B0'>" + it.additionalLuckHtml + "</td>";
-                        html += "<td style='background-color:#E8E8D0'>" + it.experienceHTML + "</td>";
-                        html += "<td style='background-color:#E8E8B0'>" + it.location + "</td>";
-                        html += "</tr>";
-                        row++;
-                    });
+                        const equipments: string[] = JSON.parse(data.json!);
 
-                $("#equipmentStatusList").append($(html));
-            }
-            $("#information").parent().show();
+                        let html = "";
+                        let row = 0;
+
+                        equipments
+                            .map(it => Equipment.parse(it))
+                            .sort(Equipment.sorter)
+                            .forEach(it => {
+                                html += "<tr>";
+                                if (row === 0) {
+                                    html += "<td style='background-color:#F8F0E0;vertical-align:center' rowspan='" + (equipments.length) + "'>" + config.name + "</td>";
+                                }
+                                html += "<td style='background-color:#E8E8D0;text-align:left'>" + it.fullName + "</td>";
+                                html += "<td style='background-color:#E8E8B0'>" + it.category + "</td>";
+                                html += "<td style='background-color:#E8E8D0'>" + it.power + "</td>";
+                                html += "<td style='background-color:#E8E8B0'>" + it.weight + "</td>";
+                                html += "<td style='background-color:#E8E8D0'>" + it.endure + "</td>";
+                                html += "<td style='background-color:#E8E8B0'>" + it.additionalPowerHtml + "</td>";
+                                html += "<td style='background-color:#E8E8D0'>" + it.additionalWeightHtml + "</td>";
+                                html += "<td style='background-color:#E8E8B0'>" + it.additionalLuckHtml + "</td>";
+                                html += "<td style='background-color:#E8E8D0'>" + it.experienceHTML + "</td>";
+                                html += "<td style='background-color:#E8E8B0'>" + it.location + "</td>";
+                                html += "</tr>";
+                                row++;
+                            });
+
+                        $("#equipmentStatusList").append($(html));
+                    }
+                    $("#information").parent().show();
+                });
         });
     }
 
@@ -258,58 +262,65 @@ abstract class PersonalTeamPageProcessor extends PageProcessorCredentialSupport 
             html += "</table>";
             $("#information").html(html).parent().hide();
 
-            const allPetList: Pet[] = [];
-            let petIndex = 0;
-
             const configs = FastLoginManager.getAllFastLogins();
-            for (const config of configs) {
-                const key = "_ps_" + config.id;
-                const value = StorageUtils.get(key);
-                if (value === null || value === "") {
-                    continue;
-                }
-                const pets = _.split(value, "$$");
-                let html = "";
-                let row = 0;
-                pets
-                    .map(it => Pet.parse(it))
-                    .sort(Pet.sorter)
-                    .forEach(it => {
-                        it.index = petIndex++;
-                        allPetList.push(it);
 
-                        html += "<tr>";
-                        if (row === 0) {
-                            html += "<td style='background-color:#F8F0E0;vertical-align:center' rowspan='" + (pets.length) + "'>" + config.name + "</td>";
+            const idList = configs.map(it => it.id!);
+            RoleStorageManager.getRolePetStatusStorage()
+                .loads(idList)
+                .then(dataMap => {
+                    const allPetList: Pet[] = [];
+                    let petIndex = 0;
+
+                    for (const config of configs) {
+                        const data = dataMap.get(config.id!);
+                        if (data === undefined) {
+                            continue;
                         }
-                        html += "<td style='background-color:#E8E8D0;text-align:left'>" + it.nameHtml + "</td>";
-                        html += "<td style='background-color:#E8E8B0'>" + it.gender + "</td>";
-                        html += "<td style='background-color:#E8E8D0'>" + it.levelHtml + "</td>";
-                        html += "<td style='background-color:#E8E8B0'>" + it.maxHealth + "</td>";
-                        html += "<td style='background-color:#E8E8D0'>" + it.attackHtml + "</td>";
-                        html += "<td style='background-color:#E8E8B0'>" + it.defenseHtml + "</td>";
-                        html += "<td style='background-color:#E8E8D0'>" + it.specialAttackHtml + "</td>";
-                        html += "<td style='background-color:#E8E8B0'>" + it.specialDefenseHtml + "</td>";
-                        html += "<td style='background-color:#E8E8D0'>" + it.speedHtml + "</td>";
-                        html += "<td style='background-color:#E8E8B0'>" + it.location + "</td>";
-                        html += "<td style='background-color:#E8E8D0'>";
-                        html += "<button role='button' class='simulationButton' id='simulate-" + it.index + "'>模拟</button>";
-                        html += "</td>";
-                        html += "</tr>";
-                        row++;
-                    });
 
-                $("#petStatusList").append($(html));
-            }
+                        const pets: string[] = JSON.parse(data.json!);
+                        let html = "";
+                        let row = 0;
+                        pets.map(it => Pet.parse(it))
+                            .sort(Pet.sorter)
+                            .forEach(it => {
+                                it.index = petIndex++;
+                                allPetList.push(it);
 
-            html = "";
-            html += "<tr style='display:none'>";
-            html += "<td id='simulation' style='background-color:#F8F0E0' colspan='12'></td>";
-            html += "</tr>";
-            $("#petStatusList").append($(html));
-            this.#bindSimulationButton(allPetList);
+                                html += "<tr>";
+                                if (row === 0) {
+                                    html += "<td style='background-color:#F8F0E0;vertical-align:center' rowspan='" + (pets.length) + "'>" + config.name + "</td>";
+                                }
+                                html += "<td style='background-color:#E8E8D0;text-align:left'>" + it.nameHtml + "</td>";
+                                html += "<td style='background-color:#E8E8B0'>" + it.gender + "</td>";
+                                html += "<td style='background-color:#E8E8D0'>" + it.levelHtml + "</td>";
+                                html += "<td style='background-color:#E8E8B0'>" + it.maxHealth + "</td>";
+                                html += "<td style='background-color:#E8E8D0'>" + it.attackHtml + "</td>";
+                                html += "<td style='background-color:#E8E8B0'>" + it.defenseHtml + "</td>";
+                                html += "<td style='background-color:#E8E8D0'>" + it.specialAttackHtml + "</td>";
+                                html += "<td style='background-color:#E8E8B0'>" + it.specialDefenseHtml + "</td>";
+                                html += "<td style='background-color:#E8E8D0'>" + it.speedHtml + "</td>";
+                                html += "<td style='background-color:#E8E8B0'>" + it.location + "</td>";
+                                html += "<td style='background-color:#E8E8D0'>";
+                                html += "<button role='button' class='simulationButton' id='simulate-" + it.index + "'>模拟</button>";
+                                html += "</td>";
+                                html += "</tr>";
+                                row++;
+                            });
 
-            $("#information").parent().show();
+                        $("#petStatusList").append($(html));
+                    }
+
+                    html = "";
+                    html += "<tr style='display:none'>";
+                    html += "<td id='simulation' style='background-color:#F8F0E0' colspan='12'></td>";
+                    html += "</tr>";
+                    $("#petStatusList").append($(html));
+                    this.#bindSimulationButton(allPetList);
+
+                    $("#information").parent().show();
+                });
+
+
         });
     }
 
