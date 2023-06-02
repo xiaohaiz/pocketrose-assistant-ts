@@ -7,6 +7,7 @@
 3. 将战斗记录的存储从LocalStorage迁移到IndexedDB。
 4. 存储每次战斗的结果数据，包括对手及胜负情况。
 5. 将宠物图鉴的存储从LocalStorage迁移到IndexedDB。
+6. 将宠物状态的存储从LocalStorage迁移到IndexedDB。
 
 ### 版本 3.5.20
 
