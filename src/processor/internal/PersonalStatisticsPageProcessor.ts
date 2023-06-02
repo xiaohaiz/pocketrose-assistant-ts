@@ -2,8 +2,10 @@ import _ from "lodash";
 import BattleStorageManager from "../../battle/BattleStorageManager";
 import FastLoginManager from "../../core/FastLoginManager";
 import NpcLoader from "../../core/NpcLoader";
+import PetProfileLoader from "../../core/PetProfileLoader";
 import Credential from "../../util/Credential";
 import MessageBoard from "../../util/MessageBoard";
+import StringUtils from "../../util/StringUtils";
 import PageProcessorContext from "../PageProcessorContext";
 import PageProcessorCredentialSupport from "../PageProcessorCredentialSupport";
 
@@ -107,11 +109,10 @@ class PersonalStatisticsPageProcessor extends PageProcessorCredentialSupport {
         html += "</select>";
         $("#operation").append($(html));
 
-        $("#operation")
-            .append($("<input type='text' id='monster' size='5'>"));
+        $("#operation").append($("<input type='text' id='monster' size='5'>"));
 
-        $("#operation")
-            .append($("<button role='button' id='b-1'>战斗统计总览</button>"));
+        $("#operation").append($("<button role='button' id='b-1'>战斗统计总览</button>"));
+        $("#operation").append($("<button role='button' id='b-2'>怪物胜率排行</button>"));
 
         doBindButton();
     }
@@ -137,31 +138,31 @@ function doBindButton() {
                 let totalWinCount = 0;
                 let totalLoseCount = 0;
                 let totalDrawCount = 0;
-                let totalWinRatio = 0;
+                let totalWinRatio;
 
                 let bc1 = 0;
                 let wc1 = 0;
                 let lc1 = 0;
                 let dc1 = 0;
-                let wr1 = 0;
+                let wr1;
 
                 let bc2 = 0;
                 let wc2 = 0;
                 let lc2 = 0;
                 let dc2 = 0;
-                let wr2 = 0;
+                let wr2;
 
                 let bc3 = 0;
                 let wc3 = 0;
                 let lc3 = 0;
                 let dc3 = 0;
-                let wr3 = 0;
+                let wr3;
 
                 let bc4 = 0;
                 let wc4 = 0;
                 let lc4 = 0;
                 let dc4 = 0;
-                let wr4 = 0;
+                let wr4;
 
                 candidate.forEach(it => {
                     totalBattleCount += it.obtainTotalCount;
@@ -204,7 +205,7 @@ function doBindButton() {
                 wr4 = bc4 === 0 ? 0 : wc4 / bc4;
 
                 let html = "";
-                html += "<table style='background-color:#888888;border-width:1;border-spacing:1px;text-align:center;width:100%;margin:auto'>";
+                html += "<table style='background-color:#888888;border-width:1px;border-spacing:1px;text-align:center;width:100%;margin:auto'>";
                 html += "<tbody>";
                 html += "<tr>";
                 html += "<th style='background-color:green;color:white'>战场</th>"
@@ -254,6 +255,103 @@ function doBindButton() {
                 html += "<td style='background-color:#F8F0E0'>" + bc4 + "</td>"
                 html += "<td style='background-color:#F8F0E0'>" + (wr4 * 100).toFixed(2) + "%</td>"
                 html += "</tr>";
+                html += "</tbody>";
+                html += "</table>";
+
+                $("#statistics").html(html).parent().show();
+            });
+    });
+
+    $("#b-2").on("click", () => {
+        const target = $("#teamMemberSelect").val()! as string;
+
+        BattleStorageManager.getBattleResultStorage()
+            .loads()
+            .then(resultList => {
+                const map = {};
+
+                resultList
+                    .filter(it => target === "" || it.roleId === target)
+                    .filter(it => it.obtainBattleField !== "十二宫")
+                    .forEach(it => {
+                        const monsterName = it.monster!;
+                        // @ts-ignore
+                        if (map[monsterName] === undefined) {
+                            const m = {};
+                            // @ts-ignore
+                            m.name = monsterName;
+                            // @ts-ignore
+                            m.winCount = it.obtainWinCount;
+                            // @ts-ignore
+                            m.totalCount = it.obtainTotalCount;
+                            // @ts-ignore
+                            map[monsterName] = m;
+                        } else {
+                            // @ts-ignore
+                            const m: {} = map[monsterName];
+                            // @ts-ignore
+                            m.winCount = it.obtainWinCount + m.winCount;
+                            // @ts-ignore
+                            m.totalCount = it.obtainTotalCount + m.totalCount;
+                        }
+                    });
+
+                // @ts-ignore
+                const candidate: {}[] = Object.values(map)
+                    .sort((a, b) => {
+                        // @ts-ignore
+                        const r1 = a.winCount / a.totalCount;
+                        // @ts-ignore
+                        const r2 = b.winCount / b.totalCount;
+                        const ret = r1 - r2;
+                        if (ret !== 0) {
+                            return ret;
+                        }
+                        // @ts-ignore
+                        return a.name!.localeCompare(b.name!);
+                    });
+
+                const max = Math.min(30, candidate.length);
+
+                let html = "";
+                html += "<table style='background-color:#888888;border-width:1px;border-spacing:1px;text-align:center;width:100%;margin:auto'>";
+                html += "<tbody>";
+                html += "<tr>";
+                html += "<th style='background-color:green;color:white'>序号</th>"
+                html += "<th style='background-color:green;color:white'>怪物</th>"
+                html += "<th style='background-color:green;color:white'>怪物</th>"
+                html += "<th style='background-color:green;color:white'>战胜数</th>"
+                html += "<th style='background-color:green;color:white'>总战数</th>"
+                html += "<th style='background-color:green;color:white'>胜率</th>"
+                html += "</tr>";
+                for (let i = 0; i < max; i++) {
+                    const it = candidate[i];
+                    // @ts-ignore
+                    const monsterName = it.name!;
+                    let monsterImageHtml: string | null = null;
+                    if (monsterName.includes("(") && monsterName.includes(")")) {
+                        const code = StringUtils.substringBetween(monsterName, "(", ")");
+                        const profile = PetProfileLoader.load(code);
+                        if (profile !== null) {
+                            monsterImageHtml = profile.imageHtml;
+                        }
+                    }
+
+                    // @ts-ignore
+                    const winRatio = it.winCount / it.totalCount;
+
+                    html += "<tr>";
+                    html += "<td style='background-color:#F8F0E0;font-weight:bold'>" + (i + 1) + "</>";
+                    html += "<td style='background-color:#F8F0E0'>" + ((monsterImageHtml === null) ? "" : monsterImageHtml) + "</td>";
+                    html += "<td style='background-color:#F8F0E0;font-weight:bold'>" + monsterName + "</td>";
+                    // @ts-ignore
+                    html += "<td style='background-color:#F8F0E0;font-weight:bold'>" + it.winCount + "</td>";
+                    // @ts-ignore
+                    html += "<td style='background-color:#F8F0E0;font-weight:bold'>" + it.totalCount + "</td>";
+                    html += "<td style='background-color:#F8F0E0;font-weight:bold;color:red'>" + (winRatio * 100).toFixed(2) + "%</td>";
+                    html += "</tr>";
+                }
+
                 html += "</tbody>";
                 html += "</table>";
 
