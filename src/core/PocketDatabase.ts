@@ -49,6 +49,24 @@ class PocketDatabase {
                         keyPath: "id", autoIncrement: false
                     });
                 }
+
+                // ------------------------------------------------------------
+                // RolePetStatus
+                // ------------------------------------------------------------
+                if (!db.objectStoreNames.contains("RolePetStatus")) {
+                    db.createObjectStore("RolePetStatus", {
+                        keyPath: "id", autoIncrement: false
+                    });
+                }
+
+                // ------------------------------------------------------------
+                // RoleEquipmentStatus
+                // ------------------------------------------------------------
+                if (!db.objectStoreNames.contains("RoleEquipmentStatus")) {
+                    db.createObjectStore("RoleEquipmentStatus", {
+                        keyPath: "id", autoIncrement: false
+                    });
+                }
             };
         });
     };
