@@ -226,6 +226,10 @@ function doBindButton() {
                 wr4 = bc4 === 0 ? 0 : wc4 / bc4;
 
                 let html = "";
+                html += "<table style='background-color:transparent;border-width:0;border-spacing:0;text-align:center;width:100%;margin:auto'>";
+                html += "<tbody>";
+                html += "<tr>";
+                html += "<td>";
                 html += "<table style='background-color:#888888;border-width:1px;border-spacing:1px;text-align:center;width:100%;margin:auto'>";
                 html += "<tbody>";
                 html += "<tr>";
@@ -284,6 +288,10 @@ function doBindButton() {
                 html += "<td style='background-color:#F8F0E0'>" + bc4 + "</td>"
                 html += "<td style='background-color:#F8F0E0;text-align:left'>" + PageUtils.generateProgressBarWithPercentage(wr4) + "</td>"
                 html += "<td style='background-color:#F8F0E0;text-align:left'>" + PageUtils.generateProgressBarWithPercentage(bc4 / totalBattleCount) + "</td>"
+                html += "</tr>";
+                html += "</tbody>";
+                html += "</table>";
+                html += "</td>";
                 html += "</tr>";
                 html += "</tbody>";
                 html += "</table>";
