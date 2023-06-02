@@ -483,6 +483,7 @@ function doRenderMenu(credential: Credential, page: TownDashboardPage) {
     }
     $("option[value='COU_MAKE']").text("口袋助手使用手册");
     $("option[value='TENNIS']").text("任务屋");
+    $("option[value='DIANMING']").text("团队统计");
 }
 
 function doRenderEventBoard() {
