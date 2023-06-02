@@ -5,7 +5,7 @@ import EventHandler from "../../core/EventHandler";
 import ExtensionShortcutLoader from "../../core/ExtensionShortcutLoader";
 import PalaceTaskManager from "../../core/PalaceTaskManager";
 import RankTitleLoader from "../../core/RankTitleLoader";
-import TownDashboardLayoutManager from "../../layout/TownDashboardLayoutManager";
+import TownDashboardLayoutManager from "../../dashboard/TownDashboardLayoutManager";
 import TownDashboardPage from "../../pocketrose/TownDashboardPage";
 import Credential from "../../util/Credential";
 import PageUtils from "../../util/PageUtils";
@@ -766,7 +766,6 @@ function _renderBattleMenu(credential: Credential) {
         // 只设置了一处战斗场所偏好
         let formBattle = $("form[action='battle.cgi']");
         let selectBattle = formBattle.find('select[name="level"]');
-        let btnBattle = formBattle.parent().next().find('input');
         let inputDigits = '';
         $(document).off('keydown.city').on('keydown.city', function (e) {
             if ($("#messageInputText:focus").length > 0) {
@@ -789,7 +788,7 @@ function _renderBattleMenu(credential: Credential) {
                         inputDigits = '';
                         break;
                 }
-                btnBattle.trigger("focus")
+                $("#battleButton").trigger("focus");
                 // 重置 inputDigits
                 inputDigits = '';
             }

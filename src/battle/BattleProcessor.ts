@@ -1,9 +1,10 @@
 import SetupLoader from "../config/SetupLoader";
 import PalaceTaskManager from "../core/PalaceTaskManager";
 import Credential from "../util/Credential";
+import PageUtils from "../util/PageUtils";
 import BattlePage from "./BattlePage";
 import BattleRecord from "./BattleRecord";
-import BattleRecordStorageManager from "./BattleRecordStorageManager";
+import BattleStorageManager from "./BattleStorageManager";
 
 class BattleProcessor {
 
@@ -48,7 +49,23 @@ class BattleProcessor {
         const record = new BattleRecord();
         record.id = this.#credential.id;
         record.html = this.obtainPage.reportHtml;
-        BattleRecordStorageManager.storage().write(record).then();
+        BattleStorageManager.getBattleRecordStorage().write(record).then();
+
+        // 写入战斗结果
+        const monster = PageUtils.convertHtmlToText(this.page.monsterNameHtml!);
+        switch (this.page.battleResult!) {
+            case "战胜":
+                BattleStorageManager.getBattleResultStorage().win(this.#credential.id, monster).then();
+                break;
+            case "战败":
+                BattleStorageManager.getBattleResultStorage().lose(this.#credential.id, monster).then();
+                break;
+            case "平手":
+                BattleStorageManager.getBattleResultStorage().draw(this.#credential.id, monster).then();
+                break;
+            default:
+                break;
+        }
     }
 
     #doRecommendation(): string {

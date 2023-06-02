@@ -16,6 +16,19 @@ class TownPetMapHousePage {
         }
         return s;
     }
+
+    asJson() {
+        const list: {}[] = [];
+        for (const pm of this.petMapList!) {
+            const it = {};
+            // @ts-ignore
+            it.code = pm.code;
+            // @ts-ignore
+            it.count = pm.count;
+            list.push(it);
+        }
+        return JSON.stringify(list);
+    }
 }
 
 export = TownPetMapHousePage;
