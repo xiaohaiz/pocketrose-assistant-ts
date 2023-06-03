@@ -545,22 +545,24 @@ function doRoleCareerTransferStatistics() {
                         totalSpeedInherit += parseFloat(PageUtils.convertHtmlToText(data.speedInherit));
                     });
 
-                html += "<tr>";
-                html += "<td style='background-color:#F8F0E0' colspan='5'></td>"
-                html += "<td style='background-color:#F8F0E0;font-weight:bold' rowspan='2'>" + (totalHealthInherit.toFixed(2)) + "</td>"
-                html += "<td style='background-color:#F8F0E0'></td>"
-                html += "<td style='background-color:#F8F0E0;font-weight:bold' rowspan='2'>" + (totalManaInherit.toFixed(2)) + "</td>"
-                html += "<td style='background-color:#F8F0E0'></td>"
-                html += "<td style='background-color:#F8F0E0;font-weight:bold' rowspan='2'>" + (totalAttackInherit.toFixed(2)) + "</td>"
-                html += "<td style='background-color:#F8F0E0'></td>"
-                html += "<td style='background-color:#F8F0E0;font-weight:bold' rowspan='2'>" + (totalDefenseInherit.toFixed(2)) + "</td>"
-                html += "<td style='background-color:#F8F0E0'></td>"
-                html += "<td style='background-color:#F8F0E0;font-weight:bold' rowspan='2'>" + (totalSpecialAttackInherit.toFixed(2)) + "</td>"
-                html += "<td style='background-color:#F8F0E0'></td>"
-                html += "<td style='background-color:#F8F0E0;font-weight:bold' rowspan='2'>" + (totalSpecialDefenseInherit.toFixed(2)) + "</td>"
-                html += "<td style='background-color:#F8F0E0'></td>"
-                html += "<td style='background-color:#F8F0E0;font-weight:bold' rowspan='2'>" + (totalSpeedInherit.toFixed(2)) + "</td>"
-                html += "</tr>";
+                if (count > 0) {
+                    html += "<tr>";
+                    html += "<td style='background-color:#F8F0E0' colspan='5'></td>"
+                    html += "<td style='background-color:#F8F0E0;font-weight:bold' rowspan='2'>" + ((totalHealthInherit / count).toFixed(2)) + "</td>"
+                    html += "<td style='background-color:#F8F0E0'></td>"
+                    html += "<td style='background-color:#F8F0E0;font-weight:bold' rowspan='2'>" + ((totalManaInherit / count).toFixed(2)) + "</td>"
+                    html += "<td style='background-color:#F8F0E0'></td>"
+                    html += "<td style='background-color:#F8F0E0;font-weight:bold' rowspan='2'>" + ((totalAttackInherit / count).toFixed(2)) + "</td>"
+                    html += "<td style='background-color:#F8F0E0'></td>"
+                    html += "<td style='background-color:#F8F0E0;font-weight:bold' rowspan='2'>" + ((totalDefenseInherit / count).toFixed(2)) + "</td>"
+                    html += "<td style='background-color:#F8F0E0'></td>"
+                    html += "<td style='background-color:#F8F0E0;font-weight:bold' rowspan='2'>" + ((totalSpecialAttackInherit / count).toFixed(2)) + "</td>"
+                    html += "<td style='background-color:#F8F0E0'></td>"
+                    html += "<td style='background-color:#F8F0E0;font-weight:bold' rowspan='2'>" + ((totalSpecialDefenseInherit / count).toFixed(2)) + "</td>"
+                    html += "<td style='background-color:#F8F0E0'></td>"
+                    html += "<td style='background-color:#F8F0E0;font-weight:bold' rowspan='2'>" + ((totalSpeedInherit / count).toFixed(2)) + "</td>"
+                    html += "</tr>";
+                }
 
                 html += "</tbody>";
                 html += "</table>";
