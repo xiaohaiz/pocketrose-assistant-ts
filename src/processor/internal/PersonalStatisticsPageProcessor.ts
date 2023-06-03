@@ -475,6 +475,9 @@ function doRoleCareerTransferStatistics() {
                 html += "<table style='background-color:#888888;border-width:1px;border-spacing:1px;text-align:center;width:100%;margin:auto'>";
                 html += "<tbody>";
                 html += "<tr>";
+                html += "<td colspan='18' style='background-color:navy;color:yellow;font-weight:bold;text-align:center'>" + roleName + "转职统计</td>";
+                html += "</tr>";
+                html += "<tr>";
                 html += "<th style='background-color:green;color:white'>#</th>"
                 html += "<th style='background-color:green;color:white'>时间</th>"
                 html += "<th style='background-color:green;color:white'>职业</th>"
@@ -488,12 +491,20 @@ function doRoleCareerTransferStatistics() {
                 html += "<th style='background-color:green;color:white' colspan='2'>速度</th>"
                 html += "</tr>";
 
-                let sequence = 0;
+                let totalHealthInherit = 0;
+                let totalManaInherit = 0;
+                let totalAttackInherit = 0;
+                let totalDefenseInherit = 0;
+                let totalSpecialAttackInherit = 0;
+                let totalSpecialDefenseInherit = 0;
+                let totalSpeedInherit = 0;
+
+                let count = 0;
                 dataList.sort((a, b) => b.createTime! - a.createTime!)
                     .forEach(data => {
                         const transferTime = new Date(data.createTime!).toLocaleString();
                         html += "<tr>";
-                        html += "<td style='background-color:#F8F0E0' rowspan='2'>" + (++sequence) + "</td>"
+                        html += "<td style='background-color:#F8F0E0' rowspan='2'>" + (++count) + "</td>"
                         html += "<td style='background-color:#F8F0E0' rowspan='2'>" + transferTime + "</td>"
                         html += "<td style='background-color:#F8F0E0'>" + data.career_1 + "</td>"
                         html += "<td style='background-color:#F8F0E0'>" + data.level_1 + "</td>"
@@ -524,7 +535,32 @@ function doRoleCareerTransferStatistics() {
                         html += "<td style='background-color:#F8F0E0'>" + data.specialDefense_2 + "</td>"
                         html += "<td style='background-color:#F8F0E0'>" + data.speed_2 + "</td>"
                         html += "</tr>";
+
+                        totalHealthInherit += parseFloat(PageUtils.convertHtmlToText(data.healthInherit));
+                        totalManaInherit += parseFloat(PageUtils.convertHtmlToText(data.manaInherit));
+                        totalAttackInherit += parseFloat(PageUtils.convertHtmlToText(data.attackInherit));
+                        totalDefenseInherit += parseFloat(PageUtils.convertHtmlToText(data.defenseInherit));
+                        totalSpecialAttackInherit += parseFloat(PageUtils.convertHtmlToText(data.specialAttackInherit));
+                        totalSpecialDefenseInherit += parseFloat(PageUtils.convertHtmlToText(data.specialDefenseInherit));
+                        totalSpeedInherit += parseFloat(PageUtils.convertHtmlToText(data.speedInherit));
                     });
+
+                html += "<tr>";
+                html += "<td style='background-color:#F8F0E0' colspan='5'></td>"
+                html += "<td style='background-color:#F8F0E0;font-weight:bold' rowspan='2'>" + (totalHealthInherit.toFixed(2)) + "</td>"
+                html += "<td style='background-color:#F8F0E0'></td>"
+                html += "<td style='background-color:#F8F0E0;font-weight:bold' rowspan='2'>" + (totalManaInherit.toFixed(2)) + "</td>"
+                html += "<td style='background-color:#F8F0E0'></td>"
+                html += "<td style='background-color:#F8F0E0;font-weight:bold' rowspan='2'>" + (totalAttackInherit.toFixed(2)) + "</td>"
+                html += "<td style='background-color:#F8F0E0'></td>"
+                html += "<td style='background-color:#F8F0E0;font-weight:bold' rowspan='2'>" + (totalDefenseInherit.toFixed(2)) + "</td>"
+                html += "<td style='background-color:#F8F0E0'></td>"
+                html += "<td style='background-color:#F8F0E0;font-weight:bold' rowspan='2'>" + (totalSpecialAttackInherit.toFixed(2)) + "</td>"
+                html += "<td style='background-color:#F8F0E0'></td>"
+                html += "<td style='background-color:#F8F0E0;font-weight:bold' rowspan='2'>" + (totalSpecialDefenseInherit.toFixed(2)) + "</td>"
+                html += "<td style='background-color:#F8F0E0'></td>"
+                html += "<td style='background-color:#F8F0E0;font-weight:bold' rowspan='2'>" + (totalSpeedInherit.toFixed(2)) + "</td>"
+                html += "</tr>";
 
                 html += "</tbody>";
                 html += "</table>";
