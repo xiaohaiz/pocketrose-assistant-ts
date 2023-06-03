@@ -61,7 +61,15 @@ class RoleCareerTransfer {
 
     #formatRatio(ratio: number): string {
         const r = Math.max(0, Math.min(ratio, 1));
-        return r.toFixed(2);
+        let color;
+        if (r < 0.6) {
+            color = "red";
+        } else if (r < 0.8) {
+            color = "green";
+        } else {
+            color = "blue";
+        }
+        return "<span style='color:" + color + "'>" + r.toFixed(2) + "</span>";
     }
 
 }
