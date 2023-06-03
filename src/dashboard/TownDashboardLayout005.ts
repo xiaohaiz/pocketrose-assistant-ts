@@ -12,7 +12,6 @@ import TownDashboardPage from "../pocketrose/TownDashboardPage";
 import Credential from "../util/Credential";
 import NetworkUtils from "../util/NetworkUtils";
 import StorageUtils from "../util/StorageUtils";
-import StringUtils from "../util/StringUtils";
 import TownDashboardLayout from "./TownDashboardLayout";
 
 class TownDashboardLayout005 extends TownDashboardLayout {
@@ -122,35 +121,6 @@ class TownDashboardLayout005 extends TownDashboardLayout {
             .removeAttr("colspan")
             .parent()
             .after($("<tr style='height:100%'><td></td></tr>"));
-
-        $("#rightPanel")
-            .find("> table:first")
-            .find("> tbody:first")
-            .find("> tr:first")
-            .before($("<tr><th id='rightPanelTitle'></th></tr>"));
-
-        $("#rightPanelTitle")
-            .each((idx, th) => {
-                let roleName;
-                const tt = $("#roleTitle").text();
-                if (tt.includes("(") && tt.includes(")")) {
-                    roleName = StringUtils.substringBefore(tt, "(");
-                } else {
-                    roleName = StringUtils.substringBefore(tt, " ");
-                }
-                const bgcolor = $("#roleTitle").attr("bgcolor")!;
-                $(th).css("background-color", bgcolor);
-                $(th).css("color", "#FFF0FF");
-                // $(th).css("font-size", "medium");
-                $(th).html("" +
-                    "<font size='4'>" +
-                    roleName + " " +
-                    "<font size='3'>" +
-                    "(Lv" + (Math.max(1, Math.ceil(page.role!.experience! / 100))) + ")" +
-                    "</font>" +
-                    "</font>" +
-                    "");
-            });
 
         $("#leftPanel")
             .find("> table:first")
