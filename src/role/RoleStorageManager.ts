@@ -1,8 +1,13 @@
+import RoleCareerTransferStorage from "./RoleCareerTransferStorage";
 import RoleEquipmentStatusStorage from "./RoleEquipmentStatusStorage";
 import RolePetMapStorage from "./RolePetMapStorage";
 import RolePetStatusStorage from "./RolePetStatusStorage";
 
 class RoleStorageManager {
+
+    static getRoleCareerTransferStorage() {
+        return roleCareerTransferStorage;
+    }
 
     static getRolePetMapStorage() {
         return rolePetMapStorage;
@@ -17,6 +22,7 @@ class RoleStorageManager {
     }
 }
 
+const roleCareerTransferStorage = new RoleCareerTransferStorage();
 const rolePetMapStorage = new RolePetMapStorage();
 const rolePetStatusStorage = new RolePetStatusStorage();
 const roleEquipmentStatusStorage = new RoleEquipmentStatusStorage();
