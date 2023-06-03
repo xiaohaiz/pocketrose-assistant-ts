@@ -11,7 +11,7 @@ class RoleCareerTransferStorage {
                     .transaction(["RoleCareerTransfer"], "readonly")
                     .objectStore("RoleCareerTransfer")
                     .index("roleId")
-                    .get(roleId);
+                    .getAll(roleId);
 
                 request.onerror = reject;
 
@@ -40,7 +40,7 @@ class RoleCareerTransferStorage {
                             data.defense_2 = it.defense_2;
                             data.specialAttack_2 = it.specialAttack_2;
                             data.specialDefense_2 = it.specialDefense_2;
-                            data.speed_2 = it.speed_1;
+                            data.speed_2 = it.speed_2;
                             dataList.push(data);
                         }
                     }

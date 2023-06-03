@@ -3,6 +3,7 @@ import BattleStorageManager from "../../battle/BattleStorageManager";
 import FastLoginManager from "../../core/FastLoginManager";
 import NpcLoader from "../../core/NpcLoader";
 import PetProfileLoader from "../../core/PetProfileLoader";
+import RoleStorageManager from "../../role/RoleStorageManager";
 import Credential from "../../util/Credential";
 import MessageBoard from "../../util/MessageBoard";
 import PageUtils from "../../util/PageUtils";
@@ -65,6 +66,11 @@ class PersonalStatisticsPageProcessor extends PageProcessorCredentialSupport {
         html += "<tr>";
         html += "<td id='operation' style='text-align:center;background-color:#F8F0E0'></td>";
         html += "<tr>";
+        html += "<tr>";
+        html += "<td style='text-align:center;background-color:#F8F0E0'>";
+        html += "<button role='button' id='s-1'>转职数据统计</button>";
+        html += "</td>";
+        html += "<tr>";
         html += "<tr style='display:none'>";
         html += "<td id='statistics' style='text-align:center;background-color:#F8F0E0'></td>";
         html += "<tr>";
@@ -116,6 +122,7 @@ class PersonalStatisticsPageProcessor extends PageProcessorCredentialSupport {
         $("#operation").append($("<button role='button' id='b-2'>怪物胜率排行</button>"));
 
         doBindButton();
+        doRoleCareerTransferStatistics();
     }
 
     #welcomeMessageHtml() {
@@ -441,6 +448,83 @@ function doBindButton() {
                     html += "<td style='background-color:#F8F0E0;font-weight:bold;color:red'>" + (winRatio * 100).toFixed(2) + "%</td>";
                     html += "</tr>";
                 }
+
+                html += "</tbody>";
+                html += "</table>";
+
+                $("#statistics").html(html).parent().show();
+            });
+    });
+}
+
+function doRoleCareerTransferStatistics() {
+    $("#s-1").on("click", () => {
+        const target = $("#teamMemberSelect").val()! as string;
+        if (target === "") {
+            alert("请先选择一位队员！");
+            return;
+        }
+        RoleStorageManager.getRoleCareerTransferStorage()
+            .findByRoleId(target)
+            .then(dataList => {
+                const roleName = $("#teamMemberSelect")
+                    .find("> option:selected")
+                    .text();
+
+                let html = "";
+                html += "<table style='background-color:#888888;border-width:1px;border-spacing:1px;text-align:center;width:100%;margin:auto'>";
+                html += "<tbody>";
+                html += "<tr>";
+                html += "<th style='background-color:green;color:white'>#</th>"
+                html += "<th style='background-color:green;color:white'>时间</th>"
+                html += "<th style='background-color:green;color:white'>职业</th>"
+                html += "<th style='background-color:green;color:white'>等级</th>"
+                html += "<th style='background-color:green;color:white' colspan='2'>ＨＰ</th>"
+                html += "<th style='background-color:green;color:white' colspan='2'>ＭＰ</th>"
+                html += "<th style='background-color:green;color:white' colspan='2'>攻击</th>"
+                html += "<th style='background-color:green;color:white' colspan='2'>防御</th>"
+                html += "<th style='background-color:green;color:white' colspan='2'>智力</th>"
+                html += "<th style='background-color:green;color:white' colspan='2'>精神</th>"
+                html += "<th style='background-color:green;color:white' colspan='2'>速度</th>"
+                html += "</tr>";
+
+                let sequence = 0;
+                dataList.sort((a, b) => b.createTime! - a.createTime!)
+                    .forEach(data => {
+                        const transferTime = new Date(data.createTime!).toLocaleString();
+                        html += "<tr>";
+                        html += "<td style='background-color:#F8F0E0' rowspan='2'>" + (++sequence) + "</td>"
+                        html += "<td style='background-color:#F8F0E0' rowspan='2'>" + transferTime + "</td>"
+                        html += "<td style='background-color:#F8F0E0'>" + data.career_1 + "</td>"
+                        html += "<td style='background-color:#F8F0E0'>" + data.level_1 + "</td>"
+                        html += "<td style='background-color:#F8F0E0'>" + data.health_1 + "</td>"
+                        html += "<td style='background-color:#F8F0E0' rowspan='2'>" + data.healthInherit + "</td>"
+                        html += "<td style='background-color:#F8F0E0'>" + data.mana_1 + "</td>"
+                        html += "<td style='background-color:#F8F0E0' rowspan='2'>" + data.manaInherit + "</td>"
+                        html += "<td style='background-color:#F8F0E0'>" + data.attack_1 + "</td>"
+                        html += "<td style='background-color:#F8F0E0' rowspan='2'>" + data.attackInherit + "</td>"
+                        html += "<td style='background-color:#F8F0E0'>" + data.defense_1 + "</td>"
+                        html += "<td style='background-color:#F8F0E0' rowspan='2'>" + data.defenseInherit + "</td>"
+                        html += "<td style='background-color:#F8F0E0'>" + data.specialAttack_1 + "</td>"
+                        html += "<td style='background-color:#F8F0E0' rowspan='2'>" + data.specialAttackInherit + "</td>"
+                        html += "<td style='background-color:#F8F0E0'>" + data.specialDefense_1 + "</td>"
+                        html += "<td style='background-color:#F8F0E0' rowspan='2'>" + data.specialDefenseInherit + "</td>"
+                        html += "<td style='background-color:#F8F0E0'>" + data.speed_1 + "</td>"
+                        html += "<td style='background-color:#F8F0E0' rowspan='2'>" + data.speedInherit + "</td>"
+                        html += "</tr>";
+
+                        html += "<tr>";
+                        html += "<td style='background-color:#F8F0E0'>" + data.career_2 + "</td>"
+                        html += "<td style='background-color:#F8F0E0'>" + data.level_2 + "</td>"
+                        html += "<td style='background-color:#F8F0E0'>" + data.health_2 + "</td>"
+                        html += "<td style='background-color:#F8F0E0'>" + data.mana_2 + "</td>"
+                        html += "<td style='background-color:#F8F0E0'>" + data.attack_2 + "</td>"
+                        html += "<td style='background-color:#F8F0E0'>" + data.defense_2 + "</td>"
+                        html += "<td style='background-color:#F8F0E0'>" + data.specialAttack_2 + "</td>"
+                        html += "<td style='background-color:#F8F0E0'>" + data.specialDefense_2 + "</td>"
+                        html += "<td style='background-color:#F8F0E0'>" + data.speed_2 + "</td>"
+                        html += "</tr>";
+                    });
 
                 html += "</tbody>";
                 html += "</table>";

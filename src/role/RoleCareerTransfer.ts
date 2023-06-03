@@ -24,6 +24,46 @@ class RoleCareerTransfer {
     specialDefense_2?: number;
     speed_2?: number;
 
+    get healthInherit() {
+        const ratio = this.health_2! / this.health_1!;
+        return this.#formatRatio(ratio);
+    }
+
+    get manaInherit() {
+        const ratio = this.mana_2! / this.mana_1!;
+        return this.#formatRatio(ratio);
+    }
+
+    get attackInherit() {
+        const ratio = this.attack_2! / this.attack_1!;
+        return this.#formatRatio(ratio);
+    }
+
+    get defenseInherit() {
+        const ratio = this.defense_2! / this.defense_1!;
+        return this.#formatRatio(ratio);
+    }
+
+    get specialAttackInherit() {
+        const ratio = this.specialAttack_2! / this.specialAttack_1!;
+        return this.#formatRatio(ratio);
+    }
+
+    get specialDefenseInherit() {
+        const ratio = this.specialDefense_2! / this.specialDefense_1!;
+        return this.#formatRatio(ratio);
+    }
+
+    get speedInherit() {
+        const ratio = this.speed_2! / this.speed_1!;
+        return this.#formatRatio(ratio);
+    }
+
+    #formatRatio(ratio: number): string {
+        const r = Math.max(0, Math.min(ratio, 1));
+        return r.toFixed(2);
+    }
+
 }
 
 export = RoleCareerTransfer;
