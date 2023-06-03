@@ -1,5 +1,6 @@
 import Role from "../common/Role";
 import Credential from "../util/Credential";
+import MessageBoard from "../util/MessageBoard";
 import NetworkUtils from "../util/NetworkUtils";
 import StringUtils from "../util/StringUtils";
 import PersonalCareerManagementPage from "./PersonalCareerManagementPage";
@@ -26,6 +27,22 @@ class PersonalCareerManagement {
                     const page = PersonalCareerManagement.parsePage(html);
                     resolve(page);
                 });
+            });
+        })();
+    }
+
+    async transfer(careerId: number): Promise<void> {
+        return await (() => {
+            return new Promise<void>(resolve => {
+                const request = this.#credential.asRequestMap();
+                request.set("chara", "1");
+                request.set("mode", "JOB_CHANGE");
+                request.set("syoku_no", careerId.toString());
+                NetworkUtils.post("mydata.cgi", request)
+                    .then(html => {
+                        MessageBoard.processResponseMessage(html);
+                        resolve();
+                    });
             });
         })();
     }
