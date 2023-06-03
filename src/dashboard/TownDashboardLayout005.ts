@@ -112,6 +112,16 @@ class TownDashboardLayout005 extends TownDashboardLayout {
                     });
             });
 
+        // 在右面板最后增加一个新行，高度100%，保证格式显示不会变形。
+        $("#rightPanel")
+            .find("> table:first")
+            .find("> tbody:first")
+            .find("> tr:last")
+            .find("> td:first")
+            .removeAttr("colspan")
+            .parent()
+            .after($("<tr style='height:100%'><td></td></tr>"));
+
         $("#leftPanel")
             .find("> table:first")
             .find("> tbody:first")
