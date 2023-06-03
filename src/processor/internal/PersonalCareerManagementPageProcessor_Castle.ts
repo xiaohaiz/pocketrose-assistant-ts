@@ -383,17 +383,11 @@ function doBindCareerButton(credential: Credential) {
                 if (!confirm("请确认要转职到" + careerName + "？")) {
                     return;
                 }
-                const request = credential.asRequest();
-                // @ts-ignore
-                request["chara"] = "1";
-                // @ts-ignore
-                request["mode"] = "JOB_CHANGE";
-                // @ts-ignore
-                request["syoku_no"] = careerId;
-                NetworkUtils.sendPostRequest("mydata.cgi", request, function (html) {
-                    MessageBoard.processResponseMessage(html);
-                    doRefresh(credential);
-                });
+                new PersonalCareerManagement(credential)
+                    .transfer(careerId)
+                    .then(() => {
+                        doRefresh(credential);
+                    });
             });
         }
     }
