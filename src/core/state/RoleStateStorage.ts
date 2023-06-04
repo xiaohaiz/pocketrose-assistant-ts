@@ -1,5 +1,4 @@
 import PocketDatabase from "../PocketDatabase";
-import PalaceTask from "../task/PalaceTask";
 import RoleState from "./RoleState";
 
 class RoleStateStorage {
@@ -17,7 +16,7 @@ class RoleStateStorage {
 
                 request.onsuccess = () => {
                     if (request.result) {
-                        const data = new PalaceTask();
+                        const data = new RoleState();
                         data.id = request.result.id;
                         data.updateTime = request.result.updateTime;
                         data.location = request.result.location;
@@ -47,7 +46,7 @@ class RoleStateStorage {
                     .objectStore("RoleState")
                     .put(data);
                 request.onerror = reject;
-                request.onsuccess = resolve;
+                request.onsuccess = () => resolve();
             });
         })();
     }
