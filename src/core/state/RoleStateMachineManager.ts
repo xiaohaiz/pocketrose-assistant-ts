@@ -4,7 +4,7 @@ import StringUtils from "../../util/StringUtils";
 import RoleState from "./RoleState";
 import StateStorageManager from "./StateStorageManager";
 
-class RoleStateMachine {
+class RoleStateMachineManager {
 
     readonly #id: string;
 
@@ -12,9 +12,9 @@ class RoleStateMachine {
         this.#id = id;
     }
 
-    static create(): RoleStateMachine {
+    static create(): RoleStateMachineManager {
         const id = $("input:hidden[name='id']:last").val() as string;
-        return new RoleStateMachine(id);
+        return new RoleStateMachineManager(id);
     }
 
     async inTown(): Promise<RoleState> {
@@ -139,4 +139,4 @@ class RoleStateMachine {
     }
 }
 
-export = RoleStateMachine;
+export = RoleStateMachineManager;

@@ -1,4 +1,4 @@
-import RoleStateMachine from "../../core/state/RoleStateMachine";
+import RoleStateMachineManager from "../../core/state/RoleStateMachineManager";
 import PageInterceptor from "../PageInterceptor";
 
 class TangDashboardPageInterceptor implements PageInterceptor {
@@ -11,7 +11,7 @@ class TangDashboardPageInterceptor implements PageInterceptor {
     }
 
     intercept(): void {
-        RoleStateMachine.create().inTang().then();
+        RoleStateMachineManager.create().inTang().then();
     }
 
 }

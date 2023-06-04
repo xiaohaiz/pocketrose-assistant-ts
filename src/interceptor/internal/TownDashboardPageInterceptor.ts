@@ -1,5 +1,5 @@
 import LocationStateMachine from "../../core/state/LocationStateMachine";
-import RoleStateMachine from "../../core/state/RoleStateMachine";
+import RoleStateMachineManager from "../../core/state/RoleStateMachineManager";
 import TownDashboardPageProcessor from "../../processor/internal/TownDashboardPageProcessor";
 import PageProcessor from "../../processor/PageProcessor";
 import PageInterceptor from "../PageInterceptor";
@@ -16,7 +16,7 @@ class TownDashboardPageInterceptor implements PageInterceptor {
     }
 
     intercept(): void {
-        RoleStateMachine.create()
+        RoleStateMachineManager.create()
             .inTown()
             .then(() => {
                 LocationStateMachine.create().inTown();

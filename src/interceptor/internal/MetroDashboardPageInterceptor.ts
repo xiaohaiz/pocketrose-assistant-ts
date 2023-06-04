@@ -1,5 +1,5 @@
 import LocationStateMachine from "../../core/state/LocationStateMachine";
-import RoleStateMachine from "../../core/state/RoleStateMachine";
+import RoleStateMachineManager from "../../core/state/RoleStateMachineManager";
 import MetroDashboardPageProcessor from "../../processor/internal/MetroDashboardPageProcessor";
 import PageInterceptor from "../PageInterceptor";
 
@@ -15,7 +15,7 @@ class MetroDashboardPageInterceptor implements PageInterceptor {
     }
 
     intercept(): void {
-        RoleStateMachine.create()
+        RoleStateMachineManager.create()
             .inMetro()
             .then(() => {
                 LocationStateMachine.create().inMetro();
