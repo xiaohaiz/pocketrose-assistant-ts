@@ -172,8 +172,10 @@ class TownDashboardLayout005 extends TownDashboardLayout {
                     });
                 _showReportElement(children, 0);
             } else {
-                $("#battlePanel")
-                    .html(lastBattle);
+                if (lastBattle.includes("吐故纳新，扶摇直上")) {
+                    $("#battlePanel").css("background-color", "wheat");
+                }
+                $("#battlePanel").html(lastBattle);
             }
         });
 
