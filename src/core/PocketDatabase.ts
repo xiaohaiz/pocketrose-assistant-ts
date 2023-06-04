@@ -18,6 +18,15 @@ class PocketDatabase {
                 const db: IDBDatabase = event.target.result;
 
                 // ------------------------------------------------------------
+                // RoleState
+                // ------------------------------------------------------------
+                if (!db.objectStoreNames.contains("RoleState")) {
+                    db.createObjectStore("RoleState", {
+                        keyPath: "id", autoIncrement: false
+                    });
+                }
+
+                // ------------------------------------------------------------
                 // BattleRecord
                 // ------------------------------------------------------------
                 if (!db.objectStoreNames.contains("BattleRecord")) {
