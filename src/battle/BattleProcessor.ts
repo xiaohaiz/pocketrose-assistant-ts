@@ -1,5 +1,5 @@
 import SetupLoader from "../config/SetupLoader";
-import PalaceTaskManager from "../core/PalaceTaskManager";
+import PalaceTaskManager2 from "../core/PalaceTaskManager2";
 import Credential from "../util/Credential";
 import PageUtils from "../util/PageUtils";
 import BattlePage from "./BattlePage";
@@ -42,7 +42,7 @@ class BattleProcessor {
 
         // 检查是否完成了皇宫任务
         if (SetupLoader.isNewPalaceTaskEnabled() && this.page.monsterTask!) {
-            new PalaceTaskManager(this.#credential).finishMonsterTask();
+            new PalaceTaskManager2(this.#credential).finishMonsterTask();
         }
 
         // 写入战斗记录到DB

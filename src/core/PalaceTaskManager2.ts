@@ -4,7 +4,7 @@ import StorageUtils from "../util/StorageUtils";
 import PetLocationLoader from "./PetLocationLoader";
 import Pokemon from "./Pokemon";
 
-class PalaceTaskManager {
+class PalaceTaskManager2 {
 
     readonly #credential: Credential;
 
@@ -77,4 +77,4 @@ class PalaceTaskManager {
     }
 }
 
-export = PalaceTaskManager;
+export = PalaceTaskManager2;

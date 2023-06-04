@@ -3,7 +3,7 @@ import BattleFieldConfigLoader from "../../config/BattleFieldConfigLoader";
 import SetupLoader from "../../config/SetupLoader";
 import EventHandler from "../../core/EventHandler";
 import ExtensionShortcutLoader from "../../core/ExtensionShortcutLoader";
-import PalaceTaskManager from "../../core/PalaceTaskManager";
+import PalaceTaskManager2 from "../../core/PalaceTaskManager2";
 import RankTitleLoader from "../../core/RankTitleLoader";
 import TownDashboardLayoutManager from "../../dashboard/TownDashboardLayoutManager";
 import TownDashboardPage from "../../pocketrose/TownDashboardPage";
@@ -420,7 +420,7 @@ function doRenderMenu(credential: Credential, page: TownDashboardPage) {
             "</tr>" +
             "");
     if (SetupLoader.isNewPalaceTaskEnabled()) {
-        const monsterTask = new PalaceTaskManager(credential).monsterTaskHtml;
+        const monsterTask = new PalaceTaskManager2(credential).monsterTaskHtml;
         if (monsterTask !== "") {
             $("#palaceTask").html(monsterTask).parent().show();
         }

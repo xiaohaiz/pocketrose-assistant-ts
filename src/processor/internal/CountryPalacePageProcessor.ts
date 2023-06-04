@@ -1,6 +1,6 @@
 import _ from "lodash";
 import NpcLoader from "../../core/NpcLoader";
-import PalaceTaskManager from "../../core/PalaceTaskManager";
+import PalaceTaskManager2 from "../../core/PalaceTaskManager2";
 import TownLoader from "../../core/TownLoader";
 import PersonalStatus from "../../pocketrose/PersonalStatus";
 import TownBank from "../../pocketrose/TownBank";
@@ -215,7 +215,7 @@ function renderTask(credential: Credential, context: PageProcessorContext) {
 }
 
 function renderPrompt(credential: Credential) {
-    const html = new PalaceTaskManager(credential).monsterTaskHtml;
+    const html = new PalaceTaskManager2(credential).monsterTaskHtml;
     if (html === "") {
         $("#prompt").html("").parent().hide();
     } else {
@@ -251,7 +251,7 @@ function bindTaskButton(credential: Credential, context: PageProcessorContext) {
                             .find("h2:first")
                             .find("> font:first")
                             .text();
-                        new PalaceTaskManager(credential).createMonsterTask(monsterName);
+                        new PalaceTaskManager2(credential).createMonsterTask(monsterName);
                     } else if (html.includes("您当前的任务是杀掉")) {
                         // 当前已经接受了任务
                         const monsterName = $(html)
@@ -261,7 +261,7 @@ function bindTaskButton(credential: Credential, context: PageProcessorContext) {
                             .find("> b:first")
                             .find("> font:first")
                             .text();
-                        new PalaceTaskManager(credential).updateMonsterTask(monsterName);
+                        new PalaceTaskManager2(credential).updateMonsterTask(monsterName);
                     }
                     $(".palaceButton").prop("disabled", false);
                     renderPrompt(credential);
@@ -299,10 +299,10 @@ function bindTaskButton(credential: Credential, context: PageProcessorContext) {
                             .find("> b:first")
                             .find("> font:first")
                             .text();
-                        new PalaceTaskManager(credential).updateMonsterTask(monsterName);
+                        new PalaceTaskManager2(credential).updateMonsterTask(monsterName);
                     } else {
                         // 完成了
-                        new PalaceTaskManager(credential).completeMonsterTask();
+                        new PalaceTaskManager2(credential).completeMonsterTask();
                     }
                     $(".palaceButton").prop("disabled", false);
                     renderPrompt(credential);
@@ -327,7 +327,7 @@ function bindTaskButton(credential: Credential, context: PageProcessorContext) {
                 request.set("mode", "CANCELTASK");
                 NetworkUtils.post("country.cgi", request).then(html => {
                     MessageBoard.processResponseMessage(html);
-                    new PalaceTaskManager(credential).completeMonsterTask();
+                    new PalaceTaskManager2(credential).completeMonsterTask();
                     bank.deposit().then(() => {
                         bank.load().then(account => {
                             $("#roleCash").text(account.cash + " GOLD");
