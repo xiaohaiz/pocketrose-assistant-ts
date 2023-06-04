@@ -2,6 +2,7 @@ import _ from "lodash";
 import Coordinate from "../../util/Coordinate";
 import StringUtils from "../../util/StringUtils";
 import RoleState from "./RoleState";
+import RoleStateMachine from "./RoleStateMachine";
 import StateStorageManager from "./StateStorageManager";
 
 class RoleStateMachineManager {
@@ -133,6 +134,19 @@ class RoleStateMachineManager {
                     .write(document)
                     .then(() => {
                         resolve(document);
+                    });
+            });
+        })();
+    }
+
+    async load(): Promise<RoleStateMachine> {
+        return await (() => {
+            return new Promise<RoleStateMachine>(resolve => {
+                StateStorageManager.getRoleStateStorage()
+                    .load(this.#id)
+                    .then(state => {
+                        const machine = new RoleStateMachine(state);
+                        resolve(machine);
                     });
             });
         })();
