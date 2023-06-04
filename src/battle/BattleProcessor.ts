@@ -51,17 +51,37 @@ class BattleProcessor {
         record.html = this.obtainPage.reportHtml;
         BattleStorageManager.getBattleRecordStorage().write(record).then();
 
-        // 写入战斗结果
+        // 分析入手的结果
+        let catchCount: number | undefined = undefined;
+        let photoCount: number | undefined = undefined;
         const monster = PageUtils.convertHtmlToText(this.page.monsterNameHtml!);
+        if (this.page.harvestList !== undefined && this.page.harvestList.length > 0) {
+            for (const harvest of this.page.harvestList) {
+                const it = PageUtils.convertHtmlToText(harvest);
+                if (harvest.includes(monster + "入手")) {
+                    if (catchCount === undefined) {
+                        catchCount = 0;
+                    }
+                    catchCount++;
+                }
+                if (it.includes("图鉴入手")) {
+                    if (photoCount === undefined) {
+                        photoCount = 0;
+                    }
+                    photoCount++;
+                }
+            }
+        }
+        // 写入战斗结果
         switch (this.page.battleResult!) {
             case "战胜":
-                BattleStorageManager.getBattleResultStorage().win(this.#credential.id, monster).then();
+                BattleStorageManager.getBattleResultStorage().win(this.#credential.id, monster, catchCount, photoCount).then();
                 break;
             case "战败":
                 BattleStorageManager.getBattleResultStorage().lose(this.#credential.id, monster).then();
                 break;
             case "平手":
-                BattleStorageManager.getBattleResultStorage().draw(this.#credential.id, monster).then();
+                BattleStorageManager.getBattleResultStorage().draw(this.#credential.id, monster, catchCount, photoCount).then();
                 break;
             default:
                 break;
