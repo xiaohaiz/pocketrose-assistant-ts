@@ -1,11 +1,12 @@
 import SetupLoader from "../../config/SetupLoader";
-import LocationStateMachine from "../../core/state/LocationStateMachine";
+import RoleStateMachineManager from "../../core/state/RoleStateMachineManager";
 import TownItemHousePageProcessor from "../../processor/internal/TownItemHousePageProcessor";
+import PageProcessor from "../../processor/PageProcessor";
 import PageInterceptor from "../PageInterceptor";
 
 class TownItemHousePageInterceptor implements PageInterceptor {
 
-    readonly #processor = new TownItemHousePageProcessor();
+    readonly #processor: PageProcessor = new TownItemHousePageProcessor();
 
     accept(cgi: string, pageText: string): boolean {
         if (cgi === "town.cgi") {
@@ -18,12 +19,15 @@ class TownItemHousePageInterceptor implements PageInterceptor {
         if (!SetupLoader.isPocketSuperMarketEnabled()) {
             return;
         }
-        LocationStateMachine.create()
+        RoleStateMachineManager.create()
             .load()
-            .whenInTown(() => {
-                this.#processor.process();
-            })
-            .fork();
+            .then(machine => {
+                machine.start()
+                    .whenInTown(() => {
+                        this.#processor.process();
+                    })
+                    .process();
+            });
     }
 
 }
