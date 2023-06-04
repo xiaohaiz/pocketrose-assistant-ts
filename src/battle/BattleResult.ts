@@ -4,16 +4,23 @@ import PetLocationLoader from "../core/PetLocationLoader";
 class BattleResult {
 
     id?: string;            // roleId/monster
+    updateTime?: number;
     roleId?: string;
     monster?: string;
     winCount?: number;
     loseCount?: number;
     drawCount?: number;
+    catchCount?: number;
+    photoCount?: number;
 
     asObject() {
         const obj = {};
         // @ts-ignore
         obj.id = this.id!;
+        if (this.updateTime !== undefined) {
+            // @ts-ignore
+            obj.updateTime = this.updateTime;
+        }
         // @ts-ignore
         obj.roleId = this.roleId!;
         // @ts-ignore
@@ -29,6 +36,14 @@ class BattleResult {
         if (this.drawCount !== undefined) {
             // @ts-ignore
             obj.drawCount = this.drawCount!;
+        }
+        if (this.catchCount !== undefined) {
+            // @ts-ignore
+            obj.catchCount = this.catchCount!;
+        }
+        if (this.photoCount !== undefined) {
+            // @ts-ignore
+            obj.photoCount = this.photoCount!;
         }
         return obj;
     }
