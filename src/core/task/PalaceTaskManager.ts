@@ -1,7 +1,7 @@
 import _ from "lodash";
-import PetLocationLoader from "../../core/PetLocationLoader";
-import Pokemon from "../../core/Pokemon";
 import Credential from "../../util/Credential";
+import PetLocationLoader from "../PetLocationLoader";
+import Pokemon from "../Pokemon";
 import TaskStorageManager from "./TaskStorageManager";
 
 class PalaceTaskManager {

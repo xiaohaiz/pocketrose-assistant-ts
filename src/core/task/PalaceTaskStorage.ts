@@ -1,5 +1,5 @@
-import PocketDatabase from "../../core/PocketDatabase";
 import StringUtils from "../../util/StringUtils";
+import PocketDatabase from "../PocketDatabase";
 import PalaceTask from "./PalaceTask";
 
 class PalaceTaskStorage {

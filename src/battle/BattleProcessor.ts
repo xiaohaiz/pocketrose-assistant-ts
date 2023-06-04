@@ -1,5 +1,5 @@
 import SetupLoader from "../config/SetupLoader";
-import PalaceTaskManager from "../pocketrose/task/PalaceTaskManager";
+import PalaceTaskManager from "../core/task/PalaceTaskManager";
 import Credential from "../util/Credential";
 import PageUtils from "../util/PageUtils";
 import BattlePage from "./BattlePage";
