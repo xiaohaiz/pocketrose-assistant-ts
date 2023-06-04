@@ -89,6 +89,30 @@ class RoleStateMachine {
             });
         })();
     }
+
+    async inMetro(): Promise<RoleState> {
+        return await (() => {
+            return new Promise<RoleState>(resolve => {
+                let s = $("td:contains('现在位置')")
+                    .filter(function () {
+                        return $(this).text().startsWith("\n      现在位置");
+                    })
+                    .text();
+                s = StringUtils.substringBetween(s, "现在位置(", ")");
+
+                const document = new RoleState();
+                document.id = this.#id;
+                document.location = "METRO";
+                document.coordinate = Coordinate.parse(s).asText();
+
+                StateStorageManager.getRoleStateStorage()
+                    .write(document)
+                    .then(() => {
+                        resolve(document);
+                    });
+            });
+        })();
+    }
 }
 
 export = RoleStateMachine;
