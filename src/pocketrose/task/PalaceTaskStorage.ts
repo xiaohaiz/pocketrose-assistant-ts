@@ -3,10 +3,10 @@ import PalaceTask from "./PalaceTask";
 
 class PalaceTaskStorage {
 
-    async load(id: string): Promise<PalaceTask> {
+    async load(id: string): Promise<PalaceTask | null> {
         const db = await PocketDatabase.connectDatabase();
         return await (() => {
-            return new Promise<PalaceTask>((resolve, reject) => {
+            return new Promise<PalaceTask | null>((resolve, reject) => {
                 const request = db
                     .transaction(["PalaceTask"], "readonly")
                     .objectStore("PalaceTask")
@@ -23,9 +23,41 @@ class PalaceTaskStorage {
                         data.monster = request.result.monster;
                         resolve(data);
                     } else {
-                        reject();
+                        resolve(null);
                     }
                 };
+            });
+        })();
+    }
+
+    async updateMonsterTask(roleId: string, monsterName: string, complete?: boolean): Promise<void> {
+        const db = await PocketDatabase.connectDatabase();
+        return await (() => {
+            return new Promise<void>((resolve, reject) => {
+                const flag: string = (complete !== undefined && complete) ? "1" : "0";
+                this.load(roleId)
+                    .then(task => {
+                        let data = {};
+                        if (task !== null) {
+                            data = task.asObject();
+                            // @ts-ignore
+                            data.updateTime = new Date().getTime();
+                            // @ts-ignore
+                            data.monster = monsterName + "/" + flag;
+                        } else {
+                            data = {
+                                id: roleId,
+                                updateTime: new Date().getTime(),
+                                monster: monsterName + "/" + flag
+                            };
+                        }
+                        const request = db
+                            .transaction(["PalaceTask"], "readwrite")
+                            .objectStore("PalaceTask")
+                            .put(data);
+                        request.onerror = reject;
+                        request.onsuccess = () => resolve();
+                    });
             });
         })();
     }
