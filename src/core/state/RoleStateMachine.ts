@@ -39,6 +39,30 @@ class RoleStateMachine {
         this.#inTangHandler = value;
         return this;
     }
+
+    process() {
+        if (this.#state === null) {
+            // No RoleState loaded, do nothing and ignore
+            return;
+        }
+        switch (this.#state.location) {
+            case "TOWN":
+                this.#inTownHandler?.(this.#state);
+                break;
+            case "CASTLE":
+                this.#inCastleHandler?.(this.#state);
+                break;
+            case "WILD":
+                this.#inMapHandler?.(this.#state);
+                break;
+            case "METRO":
+                this.#inMetroHandler?.(this.#state);
+                break;
+            case "TANG":
+                this.#inTangHandler?.(this.#state);
+                break;
+        }
+    }
 }
 
 export = RoleStateMachine;
