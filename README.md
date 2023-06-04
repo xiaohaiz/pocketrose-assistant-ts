@@ -1,6 +1,6 @@
 # pocketrose-assistant-ts
 
-### 版本 3.6.8-SNAPSHOT
+### 版本 3.7.0-SNAPSHOT
 
 1. 战斗模式宠物升级时背景色显示为麦色。
 2. 战斗结果存储增加捕获数和图鉴数。
@@ -10,6 +10,8 @@
 6. 原有的位置狀態機刪除，改爲角色狀態機。
 7. 狀態機的存儲機制從LocalStorage遷移到IndexedDB。
 8. 因爲大尺寸數據已經遷移到IndexedDB，因此不再繼續使用pako壓縮解壓機制。
+9. 記錄團隊中最後一個登陸隊員的存儲從LocalStorage遷移到IndexedDB。
+10. 至此數據分離已經完成，配置數據使用LocalStorage，動態數據使用IndexedDB。
 
 ### 版本 3.6.7
 
