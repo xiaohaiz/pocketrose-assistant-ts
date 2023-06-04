@@ -1,12 +1,13 @@
 import SetupLoader from "../../config/SetupLoader";
-import LocationStateMachine from "../../core/state/LocationStateMachine";
+import RoleStateMachineManager from "../../core/state/RoleStateMachineManager";
 import TownBankPageProcessor from "../../processor/internal/TownBankPageProcessor";
+import PageProcessor from "../../processor/PageProcessor";
 import PageProcessorContext from "../../processor/PageProcessorContext";
 import PageInterceptor from "../PageInterceptor";
 
 class TownBankPageInterceptor implements PageInterceptor {
 
-    readonly #processor = new TownBankPageProcessor();
+    readonly #processor: PageProcessor = new TownBankPageProcessor();
 
     accept(cgi: string, pageText: string): boolean {
         if (cgi === "town.cgi") {
@@ -19,14 +20,17 @@ class TownBankPageInterceptor implements PageInterceptor {
         if (!SetupLoader.isPocketBankEnabled()) {
             return;
         }
-        LocationStateMachine.create()
+        RoleStateMachineManager.create()
             .load()
-            .whenInTown(townId => {
-                const context = new PageProcessorContext();
-                context.set("townId", townId!);
-                this.#processor.process(context);
-            })
-            .fork();
+            .then(machine => {
+                machine.start()
+                    .whenInTown(state => {
+                        const context = new PageProcessorContext();
+                        context.withTownId(state?.townId);
+                        this.#processor.process(context);
+                    })
+                    .process();
+            });
     }
 
 }
