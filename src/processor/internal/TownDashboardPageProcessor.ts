@@ -3,9 +3,9 @@ import BattleFieldConfigLoader from "../../config/BattleFieldConfigLoader";
 import SetupLoader from "../../config/SetupLoader";
 import EventHandler from "../../core/EventHandler";
 import ExtensionShortcutLoader from "../../core/ExtensionShortcutLoader";
-import PalaceTaskManager2 from "../../core/PalaceTaskManager2";
 import RankTitleLoader from "../../core/RankTitleLoader";
 import TownDashboardLayoutManager from "../../dashboard/TownDashboardLayoutManager";
+import PalaceTaskManager from "../../pocketrose/task/PalaceTaskManager";
 import TownDashboardPage from "../../pocketrose/TownDashboardPage";
 import Credential from "../../util/Credential";
 import PageUtils from "../../util/PageUtils";
@@ -420,10 +420,13 @@ function doRenderMenu(credential: Credential, page: TownDashboardPage) {
             "</tr>" +
             "");
     if (SetupLoader.isNewPalaceTaskEnabled()) {
-        const monsterTask = new PalaceTaskManager2(credential).monsterTaskHtml;
-        if (monsterTask !== "") {
-            $("#palaceTask").html(monsterTask).parent().show();
-        }
+        new PalaceTaskManager(credential)
+            .monsterTaskHtml()
+            .then(monsterTask => {
+                if (monsterTask !== "") {
+                    $("#palaceTask").html(monsterTask).parent().show();
+                }
+            })
     }
 
     // ------------------------------------------------------------------------

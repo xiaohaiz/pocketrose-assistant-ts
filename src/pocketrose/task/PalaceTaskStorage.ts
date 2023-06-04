@@ -1,4 +1,5 @@
 import PocketDatabase from "../../core/PocketDatabase";
+import StringUtils from "../../util/StringUtils";
 import PalaceTask from "./PalaceTask";
 
 class PalaceTaskStorage {
@@ -30,25 +31,24 @@ class PalaceTaskStorage {
         })();
     }
 
-    async updateMonsterTask(roleId: string, monsterName: string, complete?: boolean): Promise<void> {
+    async updateMonsterTask(roleId: string, monsterName: string): Promise<void> {
         const db = await PocketDatabase.connectDatabase();
         return await (() => {
             return new Promise<void>((resolve, reject) => {
-                const flag: string = (complete !== undefined && complete) ? "1" : "0";
                 this.load(roleId)
                     .then(task => {
-                        let data = {};
+                        let data: {};
                         if (task !== null) {
                             data = task.asObject();
                             // @ts-ignore
                             data.updateTime = new Date().getTime();
                             // @ts-ignore
-                            data.monster = monsterName + "/" + flag;
+                            data.monster = monsterName + "/0";
                         } else {
                             data = {
                                 id: roleId,
                                 updateTime: new Date().getTime(),
-                                monster: monsterName + "/" + flag
+                                monster: monsterName + "/0"
                             };
                         }
                         const request = db
@@ -57,6 +57,34 @@ class PalaceTaskStorage {
                             .put(data);
                         request.onerror = reject;
                         request.onsuccess = () => resolve();
+                    });
+            });
+        })();
+    }
+
+    async completeMonsterTask(roleId: string,): Promise<void> {
+        const db = await PocketDatabase.connectDatabase();
+        return await (() => {
+            return new Promise<void>((resolve, reject) => {
+                this.load(roleId)
+                    .then(task => {
+                        if (task !== null) {
+                            const data = task.asObject();
+                            // @ts-ignore
+                            data.updateTime = new Date().getTime();
+                            // @ts-ignore
+                            const monster = data.monster;
+                            const monsterName = StringUtils.substringBefore(monster, "/");
+                            // @ts-ignore
+                            data.monster = monsterName + "/1";
+
+                            const request = db
+                                .transaction(["PalaceTask"], "readwrite")
+                                .objectStore("PalaceTask")
+                                .put(data);
+                            request.onerror = reject;
+                            request.onsuccess = () => resolve();
+                        }
                     });
             });
         })();

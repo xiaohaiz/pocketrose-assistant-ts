@@ -12,7 +12,7 @@ class PalaceTaskManager {
         this.#credential = credential;
     }
 
-    async createMonsterTask(monsterName: string): Promise<void> {
+    async updateMonsterTask(monsterName: string): Promise<void> {
         return await (() => {
             return new Promise<void>(resolve => {
                 TaskStorageManager.getPalaceTaskStorage()
@@ -22,21 +22,11 @@ class PalaceTaskManager {
         })();
     }
 
-    async updateMonsterTask(monsterName: string): Promise<void> {
+    async completeMonsterTask(): Promise<void> {
         return await (() => {
             return new Promise<void>(resolve => {
                 TaskStorageManager.getPalaceTaskStorage()
-                    .updateMonsterTask(this.#credential.id, monsterName, false)
-                    .then(() => resolve());
-            });
-        })();
-    }
-
-    async completeMonsterTask(monsterName: string): Promise<void> {
-        return await (() => {
-            return new Promise<void>(resolve => {
-                TaskStorageManager.getPalaceTaskStorage()
-                    .updateMonsterTask(this.#credential.id, monsterName, true)
+                    .completeMonsterTask(this.#credential.id)
                     .then(() => resolve());
             });
         })();
@@ -83,3 +73,5 @@ class PalaceTaskManager {
         })();
     }
 }
+
+export = PalaceTaskManager;

@@ -1,5 +1,5 @@
 import SetupLoader from "../config/SetupLoader";
-import PalaceTaskManager2 from "../core/PalaceTaskManager2";
+import PalaceTaskManager from "../pocketrose/task/PalaceTaskManager";
 import Credential from "../util/Credential";
 import PageUtils from "../util/PageUtils";
 import BattlePage from "./BattlePage";
@@ -42,9 +42,17 @@ class BattleProcessor {
 
         // 检查是否完成了皇宫任务
         if (SetupLoader.isNewPalaceTaskEnabled() && this.page.monsterTask!) {
-            new PalaceTaskManager2(this.#credential).finishMonsterTask();
+            new PalaceTaskManager(this.#credential)
+                .completeMonsterTask()
+                .then(() => {
+                    this.#internalProcess();
+                });
+        } else {
+            this.#internalProcess();
         }
+    }
 
+    #internalProcess() {
         // 写入战斗记录到DB
         const record = new BattleRecord();
         record.id = this.#credential.id;
@@ -54,9 +62,9 @@ class BattleProcessor {
         // 分析入手的结果
         let catchCount: number | undefined = undefined;
         let photoCount: number | undefined = undefined;
-        const monster = PageUtils.convertHtmlToText(this.page.monsterNameHtml!);
-        if (this.page.harvestList !== undefined && this.page.harvestList.length > 0) {
-            for (const harvest of this.page.harvestList) {
+        const monster = PageUtils.convertHtmlToText(this.page!.monsterNameHtml!);
+        if (this.page!.harvestList !== undefined && this.page!.harvestList.length > 0) {
+            for (const harvest of this.page!.harvestList) {
                 const it = PageUtils.convertHtmlToText(harvest);
                 if (harvest.includes(monster + "入手")) {
                     if (catchCount === undefined) {
@@ -73,7 +81,7 @@ class BattleProcessor {
             }
         }
         // 写入战斗结果
-        switch (this.page.battleResult!) {
+        switch (this.page!.battleResult!) {
             case "战胜":
                 BattleStorageManager.getBattleResultStorage().win(this.#credential.id, monster, catchCount, photoCount).then();
                 break;
