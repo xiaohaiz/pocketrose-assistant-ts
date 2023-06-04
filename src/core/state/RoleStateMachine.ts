@@ -1,4 +1,6 @@
 import _ from "lodash";
+import Coordinate from "../../util/Coordinate";
+import StringUtils from "../../util/StringUtils";
 import RoleState from "./RoleState";
 import StateStorageManager from "./StateStorageManager";
 
@@ -15,9 +17,9 @@ class RoleStateMachine {
         return new RoleStateMachine(id);
     }
 
-    async inTown(): Promise<void> {
+    async inTown(): Promise<RoleState> {
         return await (() => {
-            return new Promise<void>(resolve => {
+            return new Promise<RoleState>(resolve => {
                 const townId = $("input:hidden[name='townid']:last").val() as string;
                 const battleCount = _.parseInt($("input:hidden[name='ktotal']").val() as string);
 
@@ -30,15 +32,15 @@ class RoleStateMachine {
                 StateStorageManager.getRoleStateStorage()
                     .write(document)
                     .then(() => {
-                        resolve();
+                        resolve(document);
                     });
             });
         })();
     }
 
-    async inCastle(): Promise<void> {
+    async inCastle(): Promise<RoleState> {
         return await (() => {
-            return new Promise<void>(resolve => {
+            return new Promise<RoleState>(resolve => {
                 const castleName = $("table:first")
                     .find("tr:first")
                     .next()
@@ -58,7 +60,31 @@ class RoleStateMachine {
                 StateStorageManager.getRoleStateStorage()
                     .write(document)
                     .then(() => {
-                        resolve();
+                        resolve(document);
+                    });
+            });
+        })();
+    }
+
+    async inMap(): Promise<RoleState> {
+        return await (() => {
+            return new Promise<RoleState>(resolve => {
+                let s = $("td:contains('现在位置')")
+                    .filter(function () {
+                        return $(this).text().startsWith("\n      现在位置");
+                    })
+                    .text();
+                s = StringUtils.substringBetween(s, "现在位置(", ")");
+
+                const document = new RoleState();
+                document.id = this.#id;
+                document.location = "WILD";
+                document.coordinate = Coordinate.parse(s).asText();
+
+                StateStorageManager.getRoleStateStorage()
+                    .write(document)
+                    .then(() => {
+                        resolve(document);
                     });
             });
         })();

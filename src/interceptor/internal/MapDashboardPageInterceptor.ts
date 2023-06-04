@@ -1,4 +1,5 @@
 import LocationStateMachine from "../../core/state/LocationStateMachine";
+import RoleStateMachine from "../../core/state/RoleStateMachine";
 import MapDashboardPageProcessor from "../../processor/internal/MapDashboardPageProcessor";
 import PageProcessorContext from "../../processor/PageProcessorContext";
 import PageInterceptor from "../PageInterceptor";
@@ -15,16 +16,19 @@ class MapDashboardPageInterceptor implements PageInterceptor {
     }
 
     intercept(): void {
-        // Set current location state to MAP.
-        LocationStateMachine.create().inMap();
-        LocationStateMachine.create()
-            .load()
-            .whenInMap(coordinate => {
-                const context = new PageProcessorContext();
-                context.set("coordinate", coordinate!.asText());
-                this.#processor.process(context);
-            })
-            .fork();
+        RoleStateMachine.create()
+            .inMap()
+            .then(() => {
+                LocationStateMachine.create().inMap();
+                LocationStateMachine.create()
+                    .load()
+                    .whenInMap(coordinate => {
+                        const context = new PageProcessorContext();
+                        context.set("coordinate", coordinate!.asText());
+                        this.#processor.process(context);
+                    })
+                    .fork();
+            });
     }
 
 
