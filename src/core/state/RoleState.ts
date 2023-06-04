@@ -1,3 +1,5 @@
+import Coordinate from "../../util/Coordinate";
+
 class RoleState {
 
     id?: string;
@@ -38,6 +40,13 @@ class RoleState {
         }
 
         return data;
+    }
+
+    asCoordinate(): Coordinate | undefined {
+        if (this.coordinate === undefined) {
+            return undefined;
+        }
+        return Coordinate.parse(this.coordinate);
     }
 
 }

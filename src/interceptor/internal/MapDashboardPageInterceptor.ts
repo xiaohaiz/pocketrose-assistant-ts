@@ -19,7 +19,7 @@ class MapDashboardPageInterceptor implements PageInterceptor {
             .inMap()
             .then(state => {
                 const context = new PageProcessorContext();
-                context.set("coordinate", state.coordinate!.asText());
+                context.set("coordinate", state.asCoordinate()?.asText());
                 this.#processor.process(context);
             });
     }
