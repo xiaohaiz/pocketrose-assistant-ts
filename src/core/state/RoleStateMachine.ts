@@ -14,6 +14,10 @@ class RoleStateMachine {
         this.#state = state;
     }
 
+    start(): RoleStateMachine {
+        return this;
+    }
+
     whenInTown(value: (state?: RoleState) => void): RoleStateMachine {
         this.#inTownHandler = value;
         return this;
