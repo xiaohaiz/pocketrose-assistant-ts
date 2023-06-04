@@ -1,4 +1,3 @@
-import LocationStateMachine from "../../core/state/LocationStateMachine";
 import RoleStateMachineManager from "../../core/state/RoleStateMachineManager";
 import MapDashboardPageProcessor from "../../processor/internal/MapDashboardPageProcessor";
 import PageProcessorContext from "../../processor/PageProcessorContext";
@@ -18,16 +17,10 @@ class MapDashboardPageInterceptor implements PageInterceptor {
     intercept(): void {
         RoleStateMachineManager.create()
             .inMap()
-            .then(() => {
-                LocationStateMachine.create().inMap();
-                LocationStateMachine.create()
-                    .load()
-                    .whenInMap(coordinate => {
-                        const context = new PageProcessorContext();
-                        context.set("coordinate", coordinate!.asText());
-                        this.#processor.process(context);
-                    })
-                    .fork();
+            .then(state => {
+                const context = new PageProcessorContext();
+                context.set("coordinate", state.coordinate!.asText());
+                this.#processor.process(context);
             });
     }
 
