@@ -33,6 +33,24 @@ class RoleStateStorage {
             });
         })();
     }
+
+    async write(document: RoleState): Promise<void> {
+        const db = await PocketDatabase.connectDatabase();
+        return await (() => {
+            return new Promise<void>((resolve, reject) => {
+                const data = document.asObject();
+                // @ts-ignore
+                data.updateTime = new Date().getTime();
+
+                const request = db
+                    .transaction(["RoleState"], "readwrite")
+                    .objectStore("RoleState")
+                    .put(data);
+                request.onerror = reject;
+                request.onsuccess = resolve;
+            });
+        })();
+    }
 }
 
 export = RoleStateStorage;
