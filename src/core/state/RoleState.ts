@@ -4,7 +4,7 @@ class RoleState {
     updateTime?: number;
     location?: string;
     townId?: string;
-    battleCount?: string;
+    battleCount?: number;
     castleName?: string;
     coordinate?: string;
 
