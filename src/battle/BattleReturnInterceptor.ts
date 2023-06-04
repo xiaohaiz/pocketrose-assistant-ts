@@ -1,0 +1,4 @@
+class BattleReturnInterceptor {
+}
+
+export = BattleReturnInterceptor;
