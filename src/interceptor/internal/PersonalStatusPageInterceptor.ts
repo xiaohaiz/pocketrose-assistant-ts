@@ -1,13 +1,14 @@
-import LocationStateMachine from "../../core/state/LocationStateMachine";
+import RoleStateMachineManager from "../../core/state/RoleStateMachineManager";
 import PersonalStatusPageProcessor_Castle from "../../processor/internal/PersonalStatusPageProcessor_Castle";
 import PersonalStatusPageProcessor_Town from "../../processor/internal/PersonalStatusPageProcessor_Town";
+import PageProcessor from "../../processor/PageProcessor";
 import PageProcessorContext from "../../processor/PageProcessorContext";
 import PageInterceptor from "../PageInterceptor";
 
 class PersonalStatusPageInterceptor implements PageInterceptor {
 
-    readonly #inTownProcessor = new PersonalStatusPageProcessor_Town();
-    readonly #inCastleProcessor = new PersonalStatusPageProcessor_Castle();
+    readonly #inTownProcessor: PageProcessor = new PersonalStatusPageProcessor_Town();
+    readonly #inCastleProcessor: PageProcessor = new PersonalStatusPageProcessor_Castle();
 
     accept(cgi: string, pageText: string): boolean {
         if (cgi === "mydata.cgi") {
@@ -17,17 +18,20 @@ class PersonalStatusPageInterceptor implements PageInterceptor {
     }
 
     intercept(): void {
-        LocationStateMachine.create()
+        RoleStateMachineManager.create()
             .load()
-            .whenInTown(townId => {
-                const context = new PageProcessorContext();
-                context.set("townId", townId!);
-                this.#inTownProcessor.process(context);
-            })
-            .whenInCastle(() => {
-                this.#inCastleProcessor.process();
-            })
-            .fork();
+            .then(machine => {
+                machine.start()
+                    .whenInTown(state => {
+                        const context = new PageProcessorContext();
+                        context.withTownId(state?.townId);
+                        this.#inTownProcessor.process(context);
+                    })
+                    .whenInCastle(() => {
+                        this.#inCastleProcessor.process();
+                    })
+                    .process();
+            });
     }
 
 }
