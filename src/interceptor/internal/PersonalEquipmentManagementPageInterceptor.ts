@@ -36,17 +36,17 @@ class PersonalEquipmentManagementPageInterceptor implements PageInterceptor {
                 machine.start()
                     .whenInTown(state => {
                         const context = new PageProcessorContext();
-                        context.set("townId", townId!);
+                        context.withTownId(state?.townId);
                         this.#inTownProcessor.process(context);
                     })
                     .whenInCastle(state => {
                         const context = new PageProcessorContext();
-                        context.set("castleName", castleName!);
+                        context.withCastleName(state?.castleName)
                         this.#inCastleProcessor.process(context);
                     })
                     .whenInMap(state => {
                         const context = new PageProcessorContext();
-                        context.set("coordinate", coordinate!.asText());
+                        context.withCoordinate(state?.asCoordinate()?.asText());
                         this.#inMapProcessor.process(context);
                     })
                     .whenInMetro(() => {
