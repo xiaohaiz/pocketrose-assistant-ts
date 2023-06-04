@@ -1,5 +1,5 @@
-import NpcLoader from "../core/NpcLoader";
-import PetLocationLoader from "../core/PetLocationLoader";
+import NpcLoader from "../NpcLoader";
+import PetLocationLoader from "../PetLocationLoader";
 
 class BattleResult {
 
