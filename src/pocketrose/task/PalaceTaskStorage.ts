@@ -62,6 +62,30 @@ class PalaceTaskStorage {
         })();
     }
 
+    async finishMonsterTask(roleId: string): Promise<void> {
+        const db = await PocketDatabase.connectDatabase();
+        return await (() => {
+            return new Promise<void>((resolve, reject) => {
+                this.load(roleId)
+                    .then(task => {
+                        if (task !== null) {
+                            const data = task.asObject();
+                            // @ts-ignore
+                            data.updateTime = new Date().getTime();
+                            // @ts-ignore
+                            delete data.monster;
+                            const request = db
+                                .transaction(["PalaceTask"], "readwrite")
+                                .objectStore("PalaceTask")
+                                .put(data);
+                            request.onerror = reject;
+                            request.onsuccess = () => resolve();
+                        }
+                    });
+            });
+        })();
+    }
+
 }
 
 export = PalaceTaskStorage;
