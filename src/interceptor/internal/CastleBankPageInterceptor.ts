@@ -1,5 +1,5 @@
 import SetupLoader from "../../config/SetupLoader";
-import LocationStateMachine from "../../core/LocationStateMachine";
+import LocationStateMachine from "../../core/state/LocationStateMachine";
 import CastleBankPageProcessor from "../../processor/internal/CastleBankPageProcessor";
 import PageProcessorContext from "../../processor/PageProcessorContext";
 import PageInterceptor from "../PageInterceptor";

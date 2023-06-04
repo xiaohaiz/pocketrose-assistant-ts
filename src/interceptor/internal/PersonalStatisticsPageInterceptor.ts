@@ -1,4 +1,4 @@
-import LocationStateMachine from "../../core/LocationStateMachine";
+import LocationStateMachine from "../../core/state/LocationStateMachine";
 import PersonalStatisticsPageProcessor from "../../processor/internal/PersonalStatisticsPageProcessor";
 import PageProcessor from "../../processor/PageProcessor";
 import PageInterceptor from "../PageInterceptor";

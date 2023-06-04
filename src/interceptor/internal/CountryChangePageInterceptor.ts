@@ -1,4 +1,4 @@
-import LocationStateMachine from "../../core/LocationStateMachine";
+import LocationStateMachine from "../../core/state/LocationStateMachine";
 import CountryChangePageProcessor from "../../processor/internal/CountryChangePageProcessor";
 import PageProcessor from "../../processor/PageProcessor";
 import PageProcessorContext from "../../processor/PageProcessorContext";

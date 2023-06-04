@@ -1,7 +1,7 @@
-import PageInterceptor from "../PageInterceptor";
-import LocationStateMachine from "../../core/LocationStateMachine";
+import LocationStateMachine from "../../core/state/LocationStateMachine";
 import PersonalSetupPageProcessor_Castle from "../../processor/internal/PersonalSetupPageProcessor_Castle";
 import PersonalSetupPageProcessor_Town from "../../processor/internal/PersonalSetupPageProcessor_Town";
+import PageInterceptor from "../PageInterceptor";
 
 class PersonalSetupPageInterceptor implements PageInterceptor {
 

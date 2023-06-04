@@ -1,5 +1,5 @@
 import SetupLoader from "../../config/SetupLoader";
-import LocationStateMachine from "../../core/LocationStateMachine";
+import LocationStateMachine from "../../core/state/LocationStateMachine";
 import PersonalPetManagementPageProcessor_Castle
     from "../../processor/internal/PersonalPetManagementPageProcessor_Castle";
 import PersonalPetManagementPageProcessor_Town from "../../processor/internal/PersonalPetManagementPageProcessor_Town";

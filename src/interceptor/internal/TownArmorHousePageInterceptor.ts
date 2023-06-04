@@ -1,5 +1,5 @@
 import SetupLoader from "../../config/SetupLoader";
-import LocationStateMachine from "../../core/LocationStateMachine";
+import LocationStateMachine from "../../core/state/LocationStateMachine";
 import TownArmorHousePageProcessor from "../../processor/internal/TownArmorHousePageProcessor";
 import PageInterceptor from "../PageInterceptor";
 

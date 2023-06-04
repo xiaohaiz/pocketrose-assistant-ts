@@ -1,5 +1,5 @@
-import StorageUtils from "../util/StorageUtils";
-import StringUtils from "../util/StringUtils";
+import StorageUtils from "../../util/StorageUtils";
+import StringUtils from "../../util/StringUtils";
 import LocationState from "./LocationState";
 
 /**

@@ -1,5 +1,5 @@
 import SetupLoader from "../../config/SetupLoader";
-import LocationStateMachine from "../../core/LocationStateMachine";
+import LocationStateMachine from "../../core/state/LocationStateMachine";
 import TownItemHousePageProcessor from "../../processor/internal/TownItemHousePageProcessor";
 import PageInterceptor from "../PageInterceptor";
 

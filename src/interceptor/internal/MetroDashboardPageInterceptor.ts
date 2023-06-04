@@ -1,4 +1,4 @@
-import LocationStateMachine from "../../core/LocationStateMachine";
+import LocationStateMachine from "../../core/state/LocationStateMachine";
 import MetroDashboardPageProcessor from "../../processor/internal/MetroDashboardPageProcessor";
 import PageInterceptor from "../PageInterceptor";
 

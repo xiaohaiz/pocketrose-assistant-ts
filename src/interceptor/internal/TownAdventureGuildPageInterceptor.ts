@@ -1,6 +1,6 @@
-import PageInterceptor from "../PageInterceptor";
-import LocationStateMachine from "../../core/LocationStateMachine";
+import LocationStateMachine from "../../core/state/LocationStateMachine";
 import TownAdventureGuildPageProcessor from "../../processor/internal/TownAdventureGuildPageProcessor";
+import PageInterceptor from "../PageInterceptor";
 
 class TownAdventureGuildPageInterceptor implements PageInterceptor {
 

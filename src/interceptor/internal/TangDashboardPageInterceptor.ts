@@ -1,4 +1,4 @@
-import LocationStateMachine from "../../core/LocationStateMachine";
+import LocationStateMachine from "../../core/state/LocationStateMachine";
 import PageInterceptor from "../PageInterceptor";
 
 class TangDashboardPageInterceptor implements PageInterceptor {

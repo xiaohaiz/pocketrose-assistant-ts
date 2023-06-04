@@ -1,5 +1,5 @@
 import SetupLoader from "../../config/SetupLoader";
-import LocationStateMachine from "../../core/LocationStateMachine";
+import LocationStateMachine from "../../core/state/LocationStateMachine";
 import PersonalEquipmentManagementPageProcessor_Castle
     from "../../processor/internal/PersonalEquipmentManagementPageProcessor_Castle";
 import PersonalEquipmentManagementPageProcessor_Map

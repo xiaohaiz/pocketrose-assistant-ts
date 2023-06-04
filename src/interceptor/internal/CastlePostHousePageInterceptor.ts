@@ -1,6 +1,6 @@
-import PageInterceptor from "../PageInterceptor";
-import LocationStateMachine from "../../core/LocationStateMachine";
+import LocationStateMachine from "../../core/state/LocationStateMachine";
 import CastlePostHousePageProcessor from "../../processor/internal/CastlePostHousePageProcessor";
+import PageInterceptor from "../PageInterceptor";
 
 class CastlePostHousePageInterceptor implements PageInterceptor {
 
