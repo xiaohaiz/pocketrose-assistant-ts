@@ -4,7 +4,7 @@ class Constants {
 
     static DATABASE_NAME: string = "pocketrose";
 
-    static DATABASE_VERSION: number = 7;
+    static DATABASE_VERSION: number = 8;
 
 }
 

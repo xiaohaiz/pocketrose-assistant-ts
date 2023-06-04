@@ -100,6 +100,15 @@ class PocketDatabase {
                         keyPath: "id", autoIncrement: false
                     });
                 }
+
+                // ------------------------------------------------------------
+                // LastLogin
+                // ------------------------------------------------------------
+                if (!db.objectStoreNames.contains("LastLogin")) {
+                    db.createObjectStore("LastLogin", {
+                        keyPath: "id", autoIncrement: false
+                    });
+                }
             };
         });
     };
