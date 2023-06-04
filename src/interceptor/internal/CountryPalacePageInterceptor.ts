@@ -1,5 +1,5 @@
 import SetupLoader from "../../config/SetupLoader";
-import LocationStateMachine from "../../core/state/LocationStateMachine";
+import RoleStateMachineManager from "../../core/state/RoleStateMachineManager";
 import CountryPalacePageProcessor from "../../processor/internal/CountryPalacePageProcessor";
 import PageProcessor from "../../processor/PageProcessor";
 import PageProcessorContext from "../../processor/PageProcessorContext";
@@ -20,13 +20,17 @@ class CountryPalacePageInterceptor implements PageInterceptor {
         if (!SetupLoader.isNewPalaceTaskEnabled()) {
             return;
         }
-        LocationStateMachine.create()
+        RoleStateMachineManager.create()
             .load()
-            .whenInTown(townId => {
-                const context = new PageProcessorContext().withTownId(townId);
-                this.#processor.process(context);
-            })
-            .fork();
+            .then(machine => {
+                machine.start()
+                    .whenInTown(state => {
+                        const context = new PageProcessorContext();
+                        context.withTownId(state?.townId);
+                        this.#processor.process(context);
+                    })
+                    .process();
+            });
     }
 
 }
