@@ -1,10 +1,9 @@
 import _ from "lodash";
 import BattleProcessor from "../battle/BattleProcessor";
 import BattleRecord from "../battle/BattleRecord";
+import BattleReturnInterceptor from "../battle/BattleReturnInterceptor";
 import BattleStorageManager from "../battle/BattleStorageManager";
 import SetupLoader from "../config/SetupLoader";
-import EquipmentLocalStorage from "../core/EquipmentLocalStorage";
-import PetLocalStorage from "../core/PetLocalStorage";
 import TownDashboardTaxManager from "../core/TownDashboardTaxManager";
 import PersonalEquipmentManagement from "../pocketrose/PersonalEquipmentManagement";
 import PersonalPetManagement from "../pocketrose/PersonalPetManagement";
@@ -303,27 +302,35 @@ class TownDashboardLayout005 extends TownDashboardLayout {
 
                     $("#battleReturn").on("click", () => {
                         $("#battleReturn").prop("disabled", true);
-                        doBeforeReturn(credential, currentBattleCount).then(() => {
-                            $("#refreshButton").trigger("click");
-                        });
+                        new BattleReturnInterceptor(credential, currentBattleCount)
+                            .doBeforeReturn()
+                            .then(() => {
+                                $("#refreshButton").trigger("click");
+                            });
                     });
                     $("#battleDeposit").on("click", () => {
                         $("#battleDeposit").prop("disabled", true);
-                        doBeforeReturn(credential, currentBattleCount).then(() => {
-                            $("#deposit").trigger("click");
-                        });
+                        new BattleReturnInterceptor(credential, currentBattleCount)
+                            .doBeforeReturn()
+                            .then(() => {
+                                $("#deposit").trigger("click");
+                            });
                     });
                     $("#battleRepair").on("click", () => {
                         $("#battleRepair").prop("disabled", true);
-                        doBeforeReturn(credential, currentBattleCount).then(() => {
-                            $("#repair").trigger("click");
-                        });
+                        new BattleReturnInterceptor(credential, currentBattleCount)
+                            .doBeforeReturn()
+                            .then(() => {
+                                $("#repair").trigger("click");
+                            });
                     });
                     $("#battleLodge").on("click", () => {
                         $("#battleLodge").prop("disabled", true);
-                        doBeforeReturn(credential, currentBattleCount).then(() => {
-                            $("#lodge").trigger("click");
-                        });
+                        new BattleReturnInterceptor(credential, currentBattleCount)
+                            .doBeforeReturn()
+                            .then(() => {
+                                $("#lodge").trigger("click");
+                            });
                     });
 
                     // 战斗布局模式默认开启极速战斗
@@ -370,27 +377,6 @@ function generateLodgeForm(credential: Credential) {
     form += "<input type='submit' id='lodge'>";
     form += "</form>";
     $("#hidden-4").html(form);
-}
-
-async function doBeforeReturn(credential: Credential, battleCount: number): Promise<void> {
-    return await (() => {
-        return new Promise<void>(resolve => {
-            const petLocalStorage = new PetLocalStorage(credential);
-            petLocalStorage
-                .triggerUpdatePetMap(battleCount)
-                .then(() => {
-                    petLocalStorage
-                        .triggerUpdatePetStatus(battleCount)
-                        .then(() => {
-                            new EquipmentLocalStorage(credential)
-                                .triggerUpdateEquipmentStatus(battleCount)
-                                .then(() => {
-                                    resolve();
-                                });
-                        });
-                });
-        });
-    })();
 }
 
 function _showReportElement(children: JQuery[], index: number) {
