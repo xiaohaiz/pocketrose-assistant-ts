@@ -1,12 +1,13 @@
 import SetupLoader from "../../config/SetupLoader";
-import LocationStateMachine from "../../core/state/LocationStateMachine";
+import RoleStateMachineManager from "../../core/state/RoleStateMachineManager";
 import TownGemHousePageProcessor from "../../processor/internal/TownGemHousePageProcessor";
+import PageProcessor from "../../processor/PageProcessor";
 import PageProcessorContext from "../../processor/PageProcessorContext";
 import PageInterceptor from "../PageInterceptor";
 
 class TownGemHousePageInterceptor implements PageInterceptor {
 
-    readonly #processor = new TownGemHousePageProcessor();
+    readonly #processor: PageProcessor = new TownGemHousePageProcessor();
 
     accept(cgi: string, pageText: string): boolean {
         if (cgi === "town.cgi") {
@@ -19,14 +20,17 @@ class TownGemHousePageInterceptor implements PageInterceptor {
         if (!SetupLoader.isGemHouseUIEnabled()) {
             return;
         }
-        LocationStateMachine.create()
+        RoleStateMachineManager.create()
             .load()
-            .whenInTown(townId => {
-                const context = new PageProcessorContext();
-                context.set("townId", townId!);
-                this.#processor.process(context);
-            })
-            .fork();
+            .then(machine => {
+                machine.start()
+                    .whenInTown(state => {
+                        const context = new PageProcessorContext();
+                        context.withTownId(state?.townId);
+                        this.#processor.process(context);
+                    })
+                    .process();
+            });
     }
 
 }
