@@ -1,10 +1,11 @@
-import LocationStateMachine from "../../core/state/LocationStateMachine";
+import RoleStateMachineManager from "../../core/state/RoleStateMachineManager";
 import TownAdventureGuildPageProcessor from "../../processor/internal/TownAdventureGuildPageProcessor";
+import PageProcessor from "../../processor/PageProcessor";
 import PageInterceptor from "../PageInterceptor";
 
 class TownAdventureGuildPageInterceptor implements PageInterceptor {
 
-    readonly #processor = new TownAdventureGuildPageProcessor();
+    readonly #processor: PageProcessor = new TownAdventureGuildPageProcessor();
 
     accept(cgi: string, pageText: string): boolean {
         if (cgi === "town.cgi") {
@@ -14,12 +15,15 @@ class TownAdventureGuildPageInterceptor implements PageInterceptor {
     }
 
     intercept(): void {
-        LocationStateMachine.create()
+        RoleStateMachineManager.create()
             .load()
-            .whenInTown(() => {
-                this.#processor.process();
-            })
-            .fork();
+            .then(machine => {
+                machine.start()
+                    .whenInTown(() => {
+                        this.#processor.process();
+                    })
+                    .process();
+            });
     }
 
 }
