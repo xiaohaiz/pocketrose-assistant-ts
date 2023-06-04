@@ -158,6 +158,9 @@ class TownDashboardLayout005 extends TownDashboardLayout {
 
         BattleStorageManager.getBattleRecordStorage().load(credential.id).then(record => {
             const lastBattle = record.html!;
+            if (lastBattle.includes("吐故纳新，扶摇直上")) {
+                $("#battlePanel").css("background-color", "wheat");
+            }
             if (StorageUtils.getBoolean("_pa_055")) {
                 const children: JQuery[] = [];
                 $("#battlePanel")
@@ -172,9 +175,6 @@ class TownDashboardLayout005 extends TownDashboardLayout {
                     });
                 _showReportElement(children, 0);
             } else {
-                if (lastBattle.includes("吐故纳新，扶摇直上")) {
-                    $("#battlePanel").css("background-color", "wheat");
-                }
                 $("#battlePanel").html(lastBattle);
             }
         });
