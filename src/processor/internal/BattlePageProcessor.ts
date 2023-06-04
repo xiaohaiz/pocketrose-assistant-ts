@@ -1,10 +1,9 @@
 import _ from "lodash";
 import BattlePage from "../../battle/BattlePage";
 import BattleProcessor from "../../battle/BattleProcessor";
+import BattleReturnInterceptor from "../../battle/BattleReturnInterceptor";
 import SetupLoader from "../../config/SetupLoader";
-import EquipmentLocalStorage from "../../core/EquipmentLocalStorage";
 import NpcLoader from "../../core/NpcLoader";
-import PetLocalStorage from "../../core/PetLocalStorage";
 import TownDashboardLayoutManager from "../../dashboard/TownDashboardLayoutManager";
 import CommentBoard from "../../util/CommentBoard";
 import Credential from "../../util/Credential";
@@ -106,27 +105,35 @@ function processBattle(credential: Credential,
     // 重新定义按钮的行为
     $("#returnButton").on("click", () => {
         $("#returnButton").prop("disabled", true);
-        doBeforeReturn(credential, processor.obtainBattleCount).then(() => {
-            $("#returnTown").trigger("click");
-        });
+        new BattleReturnInterceptor(credential, processor.obtainBattleCount)
+            .doBeforeReturn()
+            .then(() => {
+                $("#returnTown").trigger("click");
+            });
     });
     $("#depositButton").on("click", () => {
         $("#depositButton").prop("disabled", true);
-        doBeforeReturn(credential, processor.obtainBattleCount).then(() => {
-            $("#deposit").trigger("click");
-        });
+        new BattleReturnInterceptor(credential, processor.obtainBattleCount)
+            .doBeforeReturn()
+            .then(() => {
+                $("#deposit").trigger("click");
+            });
     });
     $("#repairButton").on("click", () => {
         $("#repairButton").prop("disabled", true);
-        doBeforeReturn(credential, processor.obtainBattleCount).then(() => {
-            $("#repair").trigger("click");
-        });
+        new BattleReturnInterceptor(credential, processor.obtainBattleCount)
+            .doBeforeReturn()
+            .then(() => {
+                $("#repair").trigger("click");
+            });
     });
     $("#lodgeButton").on("click", () => {
         $("#lodgeButton").prop("disabled", true);
-        doBeforeReturn(credential, processor.obtainBattleCount).then(() => {
-            $("#lodge").trigger("click");
-        });
+        new BattleReturnInterceptor(credential, processor.obtainBattleCount)
+            .doBeforeReturn()
+            .then(() => {
+                $("#lodge").trigger("click");
+            });
     });
 
     // 根据返回方式推荐，设置相关按钮的tab优先级
@@ -358,27 +365,6 @@ function renderMinimalBattle(credential: Credential) {
                 }
             });
     }
-}
-
-async function doBeforeReturn(credential: Credential, battleCount: number): Promise<void> {
-    return await (() => {
-        return new Promise<void>(resolve => {
-            const petLocalStorage = new PetLocalStorage(credential);
-            petLocalStorage
-                .triggerUpdatePetMap(battleCount)
-                .then(() => {
-                    petLocalStorage
-                        .triggerUpdatePetStatus(battleCount)
-                        .then(() => {
-                            new EquipmentLocalStorage(credential)
-                                .triggerUpdateEquipmentStatus(battleCount)
-                                .then(() => {
-                                    resolve();
-                                });
-                        });
-                });
-        });
-    })();
 }
 
 export = BattlePageProcessor;
