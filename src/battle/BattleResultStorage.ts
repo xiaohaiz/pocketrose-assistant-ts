@@ -83,7 +83,7 @@ class BattleResultStorage {
                         // @ts-ignore
                         data.winCount = c;
                         // @ts-ignore
-                        data.updateTime = new Date().getMilliseconds();
+                        data.updateTime = new Date().getTime();
                         const request = db.transaction(["BattleResult"], "readwrite")
                             .objectStore("BattleResult")
                             .put(data);
@@ -93,7 +93,7 @@ class BattleResultStorage {
                     .catch(() => {
                         const data = {
                             id: id + "/" + monster,
-                            updateTime: new Date().getMilliseconds(),
+                            updateTime: new Date().getTime(),
                             roleId: id,
                             monster: monster,
                             winCount: 1
@@ -122,7 +122,7 @@ class BattleResultStorage {
                         // @ts-ignore
                         data.loseCount = c;
                         // @ts-ignore
-                        data.updateTime = new Date().getMilliseconds();
+                        data.updateTime = new Date().getTime();
                         const request = db.transaction(["BattleResult"], "readwrite")
                             .objectStore("BattleResult")
                             .put(data);
@@ -132,7 +132,7 @@ class BattleResultStorage {
                     .catch(() => {
                         const data = {
                             id: id + "/" + monster,
-                            updateTime: new Date().getMilliseconds(),
+                            updateTime: new Date().getTime(),
                             roleId: id,
                             monster: monster,
                             loseCount: 1
@@ -161,7 +161,7 @@ class BattleResultStorage {
                         // @ts-ignore
                         data.drawCount = c;
                         // @ts-ignore
-                        data.updateTime = new Date().getMilliseconds();
+                        data.updateTime = new Date().getTime();
                         const request = db.transaction(["BattleResult"], "readwrite")
                             .objectStore("BattleResult")
                             .put(data);
@@ -171,7 +171,7 @@ class BattleResultStorage {
                     .catch(() => {
                         const data = {
                             id: id + "/" + monster,
-                            updateTime: new Date().getMilliseconds(),
+                            updateTime: new Date().getTime(),
                             roleId: id,
                             monster: monster,
                             drawCount: 1
