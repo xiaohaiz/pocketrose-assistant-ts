@@ -35,6 +35,34 @@ class RoleStateMachine {
             });
         })();
     }
+
+    async inCastle(): Promise<void> {
+        return await (() => {
+            return new Promise<void>(resolve => {
+                const castleName = $("table:first")
+                    .find("tr:first")
+                    .next()
+                    .find("td:first")
+                    .find("table:first")
+                    .find("tr:eq(2)")
+                    .find("td:first")
+                    .find("table:first")
+                    .find("th:first")
+                    .text().trim();
+
+                const document = new RoleState();
+                document.id = this.#id;
+                document.location = "CASTLE";
+                document.castleName = castleName;
+
+                StateStorageManager.getRoleStateStorage()
+                    .write(document)
+                    .then(() => {
+                        resolve();
+                    });
+            });
+        })();
+    }
 }
 
 export = RoleStateMachine;

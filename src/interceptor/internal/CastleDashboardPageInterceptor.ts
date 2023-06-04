@@ -1,4 +1,5 @@
 import LocationStateMachine from "../../core/state/LocationStateMachine";
+import RoleStateMachine from "../../core/state/RoleStateMachine";
 import CastleDashboardPageProcessor from "../../processor/internal/CastleDashboardPageProcessor";
 import PageInterceptor from "../PageInterceptor";
 
@@ -14,9 +15,12 @@ class CastleDashboardPageInterceptor implements PageInterceptor {
     }
 
     intercept(): void {
-        // Set current location state to CASTLE.
-        LocationStateMachine.create().inCastle();
-        this.#processor.process();
+        RoleStateMachine.create()
+            .inCastle()
+            .then(() => {
+                LocationStateMachine.create().inCastle();
+                this.#processor.process();
+            });
     }
 
 }
