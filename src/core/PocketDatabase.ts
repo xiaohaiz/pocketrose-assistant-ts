@@ -82,6 +82,15 @@ class PocketDatabase {
                         unique: false
                     });
                 }
+
+                // ------------------------------------------------------------
+                // PalaceTask
+                // ------------------------------------------------------------
+                if (!db.objectStoreNames.contains("PalaceTask")) {
+                    db.createObjectStore("PalaceTask", {
+                        keyPath: "id", autoIncrement: false
+                    });
+                }
             };
         });
     };
