@@ -7,7 +7,7 @@ import NpcLoader from "../../core/NpcLoader";
 import PetLocalStorage from "../../core/PetLocalStorage";
 import PetProfileLoader from "../../core/PetProfileLoader";
 import Pokemon from "../../core/Pokemon";
-import RoleStorageManager from "../../role/RoleStorageManager";
+import RoleStorageManager from "../../core/role/RoleStorageManager";
 import Credential from "../../util/Credential";
 import MessageBoard from "../../util/MessageBoard";
 import PageUtils from "../../util/PageUtils";

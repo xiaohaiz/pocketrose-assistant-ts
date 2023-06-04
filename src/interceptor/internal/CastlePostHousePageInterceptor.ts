@@ -1,10 +1,11 @@
-import PageInterceptor from "../PageInterceptor";
-import LocationStateMachine from "../../core/LocationStateMachine";
+import RoleStateMachineManager from "../../core/state/RoleStateMachineManager";
 import CastlePostHousePageProcessor from "../../processor/internal/CastlePostHousePageProcessor";
+import PageProcessor from "../../processor/PageProcessor";
+import PageInterceptor from "../PageInterceptor";
 
 class CastlePostHousePageInterceptor implements PageInterceptor {
 
-    readonly #processor = new CastlePostHousePageProcessor();
+    readonly #processor: PageProcessor = new CastlePostHousePageProcessor();
 
     accept(cgi: string, pageText: string): boolean {
         if (cgi === "castle.cgi") {
@@ -14,12 +15,15 @@ class CastlePostHousePageInterceptor implements PageInterceptor {
     }
 
     intercept(): void {
-        LocationStateMachine.create()
+        RoleStateMachineManager.create()
             .load()
-            .whenInCastle(() => {
-                this.#processor.process();
-            })
-            .fork();
+            .then(machine => {
+                machine.start()
+                    .whenInCastle(state => {
+                        this.#processor.process();
+                    })
+                    .process();
+            });
     }
 
 }

@@ -1,4 +1,4 @@
-import PocketDatabase from "../core/PocketDatabase";
+import PocketDatabase from "../PocketDatabase";
 import RoleEquipmentStatus from "./RoleEquipmentStatus";
 
 class RoleEquipmentStatusStorage {

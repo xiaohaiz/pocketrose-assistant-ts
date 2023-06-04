@@ -43,6 +43,14 @@ class TownDashboardPage {
         role.town = TownLoader.getTownById(page.townId!)!;
         role.location = "TOWN";
 
+        $(html).find("td:contains('经验值')")
+            .filter((idx, td) => $(td).text() === "经验值")
+            .next()
+            .each((idx, th) => {
+                const ex = $(th).text();
+                role.experience = _.parseInt(StringUtils.substringBefore(ex, " EX"));
+            });
+
         // 读取角色当前的能力值
         // 奇怪了，读不到指定id的div元素？但是可以读到里面的td子元素
         $(html).find("td:last")

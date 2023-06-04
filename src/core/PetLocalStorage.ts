@@ -9,9 +9,9 @@ import GoldenCage from "../pocketrose/GoldenCage";
 import PersonalEquipmentManagement from "../pocketrose/PersonalEquipmentManagement";
 import PersonalPetManagement from "../pocketrose/PersonalPetManagement";
 import TownPetMapHouse from "../pocketrose/TownPetMapHouse";
-import RoleStorageManager from "../role/RoleStorageManager";
 import CommentBoard from "../util/CommentBoard";
 import Credential from "../util/Credential";
+import RoleStorageManager from "./role/RoleStorageManager";
 
 class PetLocalStorage {
 

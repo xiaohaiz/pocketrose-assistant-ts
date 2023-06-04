@@ -1,12 +1,13 @@
 import SetupLoader from "../../config/SetupLoader";
-import LocationStateMachine from "../../core/LocationStateMachine";
+import RoleStateMachineManager from "../../core/state/RoleStateMachineManager";
 import CastleBankPageProcessor from "../../processor/internal/CastleBankPageProcessor";
+import PageProcessor from "../../processor/PageProcessor";
 import PageProcessorContext from "../../processor/PageProcessorContext";
 import PageInterceptor from "../PageInterceptor";
 
 class CastleBankPageInterceptor implements PageInterceptor {
 
-    readonly #processor = new CastleBankPageProcessor();
+    readonly #processor: PageProcessor = new CastleBankPageProcessor();
 
     accept(cgi: string, pageText: string): boolean {
         if (cgi === "castle.cgi") {
@@ -19,14 +20,17 @@ class CastleBankPageInterceptor implements PageInterceptor {
         if (!SetupLoader.isPocketBankEnabled()) {
             return;
         }
-        LocationStateMachine.create()
+        RoleStateMachineManager.create()
             .load()
-            .whenInCastle(castleName => {
-                const context = new PageProcessorContext();
-                context.set("castleName", castleName!);
-                this.#processor.process(context);
-            })
-            .fork();
+            .then(machine => {
+                machine.start()
+                    .whenInCastle(state => {
+                        const context = new PageProcessorContext();
+                        context.withCastleName(state?.castleName);
+                        this.#processor.process(context);
+                    })
+                    .process();
+            });
     }
 
 }

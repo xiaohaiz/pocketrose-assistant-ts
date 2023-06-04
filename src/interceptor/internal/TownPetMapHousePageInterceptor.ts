@@ -1,11 +1,12 @@
-import LocationStateMachine from "../../core/LocationStateMachine";
+import RoleStateMachineManager from "../../core/state/RoleStateMachineManager";
 import TownPetMapHousePageProcessor from "../../processor/internal/TownPetMapHousePageProcessor";
+import PageProcessor from "../../processor/PageProcessor";
 import PageProcessorContext from "../../processor/PageProcessorContext";
 import PageInterceptor from "../PageInterceptor";
 
 class TownPetMapHousePageInterceptor implements PageInterceptor {
 
-    readonly #processor = new TownPetMapHousePageProcessor();
+    readonly #processor: PageProcessor = new TownPetMapHousePageProcessor();
 
     accept(cgi: string, pageText: string): boolean {
         if (cgi === "town.cgi") {
@@ -15,14 +16,17 @@ class TownPetMapHousePageInterceptor implements PageInterceptor {
     }
 
     intercept(): void {
-        LocationStateMachine.create()
+        RoleStateMachineManager.create()
             .load()
-            .whenInTown(townId => {
-                const context = new PageProcessorContext();
-                context.set("townId", townId!);
-                this.#processor.process(context);
-            })
-            .fork();
+            .then(machine => {
+                machine.start()
+                    .whenInTown(state => {
+                        const context = new PageProcessorContext();
+                        context.withTownId(state?.townId);
+                        this.#processor.process(context);
+                    })
+                    .process();
+            });
     }
 
 }

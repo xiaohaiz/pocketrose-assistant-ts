@@ -51,6 +51,14 @@ class Role {
         return "<img src='" + src + "' alt='" + this.name + "' width='64' height='64' id='roleImage'>";
     }
 
+    get experienceHtml(): string {
+        if (this.experience! >= 14900) {
+            return "MAX";
+        } else {
+            return this.experience!.toString();
+        }
+    }
+
     parseHealth(s: string) {
         if (s.includes("/")) {
             this.health = parseInt(StringUtils.substringBeforeSlash(s));

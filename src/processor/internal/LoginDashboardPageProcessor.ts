@@ -1,8 +1,9 @@
 import SetupLoader from "../../config/SetupLoader";
 import FastLoginLoader from "../../core/FastLoginLoader";
+import LastLogin from "../../core/team/LastLogin";
+import TeamStorages from "../../core/team/TeamStorages";
 import ButtonUtils from "../../util/ButtonUtils";
 import PageUtils from "../../util/PageUtils";
-import StorageUtils from "../../util/StorageUtils";
 import PageProcessor from "../PageProcessor";
 
 class LoginDashboardPageProcessor implements PageProcessor {
@@ -109,7 +110,11 @@ function doProcess() {
         .closest("tr")
         .after($(html));
 
-    doRender(configs);
+    TeamStorages.lastLoginStorage
+        .load()
+        .then(lastLogin => {
+            doRender(configs, lastLogin);
+        });
 }
 
 function doCheckConfigAvailability(config: {}): boolean {
@@ -117,7 +122,7 @@ function doCheckConfigAvailability(config: {}): boolean {
     return config.name !== undefined && config.id !== undefined && config.pass !== undefined;
 }
 
-function doRender(configs: Map<number, {}>) {
+function doRender(configs: Map<number, {}>, lastLogin: LastLogin | null) {
     const fastLoginCounts: number[] = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
 
     let html = "";
@@ -129,14 +134,14 @@ function doRender(configs: Map<number, {}>) {
     html += "</tr>";
     html += "<tr id='tr1'>";
     for (let i = 0; i < 5; i++) {
-        html += doGenerateCell(configs, i, () => {
+        html += doGenerateCell(lastLogin, configs, i, () => {
             fastLoginCounts[0]++;
         });
     }
     html += "</tr>";
     html += "<tr id='tr2'>";
     for (let i = 5; i < 10; i++) {
-        html += doGenerateCell(configs, i, () => {
+        html += doGenerateCell(lastLogin, configs, i, () => {
             fastLoginCounts[1]++;
         });
     }
@@ -144,14 +149,14 @@ function doRender(configs: Map<number, {}>) {
 
     html += "<tr id='tr3'>";
     for (let i = 10; i < 15; i++) {
-        html += doGenerateCell(configs, i, () => {
+        html += doGenerateCell(lastLogin, configs, i, () => {
             fastLoginCounts[2]++;
         });
     }
     html += "</tr>";
     html += "<tr id='tr4'>";
     for (let i = 15; i < 20; i++) {
-        html += doGenerateCell(configs, i, () => {
+        html += doGenerateCell(lastLogin, configs, i, () => {
             fastLoginCounts[3]++;
         });
     }
@@ -159,14 +164,14 @@ function doRender(configs: Map<number, {}>) {
 
     html += "<tr id='tr5'>";
     for (let i = 20; i < 25; i++) {
-        html += doGenerateCell(configs, i, () => {
+        html += doGenerateCell(lastLogin, configs, i, () => {
             fastLoginCounts[4]++;
         });
     }
     html += "</tr>";
     html += "<tr id='tr6'>";
     for (let i = 25; i < 30; i++) {
-        html += doGenerateCell(configs, i, () => {
+        html += doGenerateCell(lastLogin, configs, i, () => {
             fastLoginCounts[5]++;
         });
     }
@@ -174,14 +179,14 @@ function doRender(configs: Map<number, {}>) {
 
     html += "<tr id='tr7'>";
     for (let i = 30; i < 35; i++) {
-        html += doGenerateCell(configs, i, () => {
+        html += doGenerateCell(lastLogin, configs, i, () => {
             fastLoginCounts[6]++;
         });
     }
     html += "</tr>";
     html += "<tr id='tr8'>";
     for (let i = 35; i < 40; i++) {
-        html += doGenerateCell(configs, i, () => {
+        html += doGenerateCell(lastLogin, configs, i, () => {
             fastLoginCounts[7]++;
         });
     }
@@ -189,14 +194,14 @@ function doRender(configs: Map<number, {}>) {
 
     html += "<tr id='tr9'>";
     for (let i = 40; i < 45; i++) {
-        html += doGenerateCell(configs, i, () => {
+        html += doGenerateCell(lastLogin, configs, i, () => {
             fastLoginCounts[8]++;
         });
     }
     html += "</tr>";
     html += "<tr id='tr10'>";
     for (let i = 45; i < 50; i++) {
-        html += doGenerateCell(configs, i, () => {
+        html += doGenerateCell(lastLogin, configs, i, () => {
             fastLoginCounts[9]++;
         });
     }
@@ -217,10 +222,14 @@ function doRender(configs: Map<number, {}>) {
     doBindFastLoginButton();
 }
 
-function doGenerateCell(configs: Map<number, {}>, code: number, handler?: () => void) {
+function doGenerateCell(lastLogin: LastLogin | null, configs: Map<number, {}>, code: number, handler?: () => void) {
     let count = 0;
     let html = "";
-    const lastLogin = StorageUtils.getString("_ll_");
+
+    let lastRoleId = "";
+    if (lastLogin !== null) {
+        lastRoleId = lastLogin.roleId!;
+    }
     html += "<td style='background-color:#E8E8D0;width:20%;height:32px'>";
     let config = configs.get(code);
     if (config !== undefined) {
@@ -228,7 +237,7 @@ function doGenerateCell(configs: Map<number, {}>, code: number, handler?: () => 
         // @ts-ignore
         const name = config.name;
         // @ts-ignore
-        if (lastLogin === config.id) {
+        if (lastRoleId === config.id) {
             html += "<input type='button' class='fastLoginButton button-28' " +
                 "id='fastLogin_" + code + "' value='" + name + "' " +
                 "style='color:red'>";
@@ -259,15 +268,18 @@ function doBindFastLoginButton() {
 
             // 记录最后一次使用快速登陆的id
             // @ts-ignore
-            StorageUtils.set("_ll_", config.id);
+            const lastRoleId = config.id;
+            TeamStorages.lastLoginStorage
+                .write(lastRoleId)
+                .then(() => {
+                    // @ts-ignore
+                    $("#loginId").val(config.id);
+                    // @ts-ignore
+                    $("#loginPass").val(config.pass);
 
-            // @ts-ignore
-            $("#loginId").val(config.id);
-            // @ts-ignore
-            $("#loginPass").val(config.pass);
-
-            $("#loginForm").removeAttr("onsubmit");
-            $("#loginButton").trigger("click");
+                    $("#loginForm").removeAttr("onsubmit");
+                    $("#loginButton").trigger("click");
+                });
         });
     }
 }

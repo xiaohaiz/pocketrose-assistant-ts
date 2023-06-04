@@ -1,11 +1,12 @@
-import LocationStateMachine from "../../core/LocationStateMachine";
+import RoleStateMachineManager from "../../core/state/RoleStateMachineManager";
 import BattlePageProcessor from "../../processor/internal/BattlePageProcessor";
+import PageProcessor from "../../processor/PageProcessor";
 import PageProcessorContext from "../../processor/PageProcessorContext";
 import PageInterceptor from "../PageInterceptor";
 
 class BattlePageInterceptor implements PageInterceptor {
 
-    readonly #processor = new BattlePageProcessor();
+    readonly #processor: PageProcessor = new BattlePageProcessor();
 
     accept(cgi: string, pageText: string): boolean {
         if (cgi === "battle.cgi") {
@@ -19,15 +20,18 @@ class BattlePageInterceptor implements PageInterceptor {
     }
 
     intercept(): void {
-        LocationStateMachine.create()
+        RoleStateMachineManager.create()
             .load()
-            .whenInTown((townId, battleCount) => {
-                const context = new PageProcessorContext()
-                    .withTownId(townId)
-                    .withBattleCount(battleCount);
-                this.#processor.process(context);
-            })
-            .fork();
+            .then(machine => {
+                machine.start()
+                    .whenInTown(state => {
+                        const context = new PageProcessorContext()
+                            .withTownId(state?.townId)
+                            .withBattleCount(state?.battleCount?.toString());
+                        this.#processor.process(context);
+                    })
+                    .process();
+            });
     }
 
 }

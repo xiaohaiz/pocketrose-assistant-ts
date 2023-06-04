@@ -1,12 +1,13 @@
-import PageInterceptor from "../PageInterceptor";
-import LocationStateMachine from "../../core/LocationStateMachine";
+import RoleStateMachineManager from "../../core/state/RoleStateMachineManager";
 import PersonalSetupPageProcessor_Castle from "../../processor/internal/PersonalSetupPageProcessor_Castle";
 import PersonalSetupPageProcessor_Town from "../../processor/internal/PersonalSetupPageProcessor_Town";
+import PageProcessor from "../../processor/PageProcessor";
+import PageInterceptor from "../PageInterceptor";
 
 class PersonalSetupPageInterceptor implements PageInterceptor {
 
-    readonly #inTownProcessor = new PersonalSetupPageProcessor_Town();
-    readonly #inCastleProcessor = new PersonalSetupPageProcessor_Castle();
+    readonly #inTownProcessor: PageProcessor = new PersonalSetupPageProcessor_Town();
+    readonly #inCastleProcessor: PageProcessor = new PersonalSetupPageProcessor_Castle();
 
     accept(cgi: string, pageText: string): boolean {
         if (cgi === "mydata.cgi") {
@@ -16,15 +17,18 @@ class PersonalSetupPageInterceptor implements PageInterceptor {
     }
 
     intercept(): void {
-        LocationStateMachine.create()
+        RoleStateMachineManager.create()
             .load()
-            .whenInTown(() => {
-                this.#inTownProcessor.process();
-            })
-            .whenInCastle(() => {
-                this.#inCastleProcessor.process();
-            })
-            .fork();
+            .then(machine => {
+                machine.start()
+                    .whenInTown(() => {
+                        this.#inTownProcessor.process();
+                    })
+                    .whenInCastle(() => {
+                        this.#inCastleProcessor.process();
+                    })
+                    .process();
+            });
     }
 
 }

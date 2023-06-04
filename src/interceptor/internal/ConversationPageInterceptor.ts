@@ -1,4 +1,4 @@
-import LocationStateMachine from "../../core/LocationStateMachine";
+import RoleStateMachineManager from "../../core/state/RoleStateMachineManager";
 import ConversationPageProcessor from "../../processor/internal/ConversationPageProcessor";
 import PageProcessor from "../../processor/PageProcessor";
 import PageInterceptor from "../PageInterceptor";
@@ -15,12 +15,15 @@ class ConversationPageInterceptor implements PageInterceptor {
     }
 
     intercept(): void {
-        LocationStateMachine.create()
+        RoleStateMachineManager.create()
             .load()
-            .whenInTown(() => {
-                this.#processor.process();
-            })
-            .fork();
+            .then(machine => {
+                machine.start()
+                    .whenInTown(() => {
+                        this.#processor.process();
+                    })
+                    .process();
+            });
     }
 
 

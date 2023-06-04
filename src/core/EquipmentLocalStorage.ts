@@ -7,9 +7,9 @@ import CastleWarehouse from "../pocketrose/CastleWarehouse";
 import PersonalEquipmentManagement from "../pocketrose/PersonalEquipmentManagement";
 import PersonalEquipmentManagementPage from "../pocketrose/PersonalEquipmentManagementPage";
 import TreasureBag from "../pocketrose/TreasureBag";
-import RoleStorageManager from "../role/RoleStorageManager";
 import CommentBoard from "../util/CommentBoard";
 import Credential from "../util/Credential";
+import RoleStorageManager from "./role/RoleStorageManager";
 
 class EquipmentLocalStorage {
 

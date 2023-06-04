@@ -1,15 +1,16 @@
 import SetupLoader from "../../config/SetupLoader";
-import LocationStateMachine from "../../core/LocationStateMachine";
+import RoleStateMachineManager from "../../core/state/RoleStateMachineManager";
 import PersonalPetManagementPageProcessor_Castle
     from "../../processor/internal/PersonalPetManagementPageProcessor_Castle";
 import PersonalPetManagementPageProcessor_Town from "../../processor/internal/PersonalPetManagementPageProcessor_Town";
+import PageProcessor from "../../processor/PageProcessor";
 import PageProcessorContext from "../../processor/PageProcessorContext";
 import PageInterceptor from "../PageInterceptor";
 
 class PersonalPetManagementPageInterceptor implements PageInterceptor {
 
-    readonly #inTownProcessor = new PersonalPetManagementPageProcessor_Town();
-    readonly #inCastleProcessor = new PersonalPetManagementPageProcessor_Castle();
+    readonly #inTownProcessor: PageProcessor = new PersonalPetManagementPageProcessor_Town();
+    readonly #inCastleProcessor: PageProcessor = new PersonalPetManagementPageProcessor_Castle();
 
     accept(cgi: string, pageText: string): boolean {
         if (cgi === "mydata.cgi") {
@@ -22,19 +23,22 @@ class PersonalPetManagementPageInterceptor implements PageInterceptor {
         if (!SetupLoader.isPetManagementUIEnabled()) {
             return;
         }
-        LocationStateMachine.create()
+        RoleStateMachineManager.create()
             .load()
-            .whenInTown(townId => {
-                const context = new PageProcessorContext();
-                context.set("townId", townId!);
-                this.#inTownProcessor.process(context);
-            })
-            .whenInCastle(castleName => {
-                const context = new PageProcessorContext();
-                context.set("castleName", castleName!);
-                this.#inCastleProcessor.process(context);
-            })
-            .fork();
+            .then(machine => {
+                machine.start()
+                    .whenInTown(state => {
+                        const context = new PageProcessorContext();
+                        context.withTownId(state?.townId);
+                        this.#inTownProcessor.process(context);
+                    })
+                    .whenInCastle(state => {
+                        const context = new PageProcessorContext();
+                        context.withCastleName(state?.castleName);
+                        this.#inCastleProcessor.process(context);
+                    })
+                    .process();
+            });
     }
 
 }

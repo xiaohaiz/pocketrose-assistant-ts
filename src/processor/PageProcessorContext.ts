@@ -38,6 +38,13 @@ class PageProcessorContext {
         return this;
     }
 
+    withCoordinate(coordinate: string | undefined): PageProcessorContext {
+        if (coordinate !== undefined) {
+            this.set("coordinate", coordinate);
+        }
+        return this;
+    }
+
 }
 
 export = PageProcessorContext;

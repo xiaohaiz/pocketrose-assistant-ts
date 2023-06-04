@@ -1,5 +1,5 @@
 import SetupLoader from "../../config/SetupLoader";
-import LocationStateMachine from "../../core/LocationStateMachine";
+import RoleStateMachineManager from "../../core/state/RoleStateMachineManager";
 import TownWeaponHousePageProcessor from "../../processor/internal/TownWeaponHousePageProcessor";
 import PageProcessor from "../../processor/PageProcessor";
 import PageProcessorContext from "../../processor/PageProcessorContext";
@@ -20,13 +20,17 @@ class TownWeaponHousePageInterceptor implements PageInterceptor {
         if (!SetupLoader.isPocketSuperMarketEnabled()) {
             return;
         }
-        LocationStateMachine.create()
+        RoleStateMachineManager.create()
             .load()
-            .whenInTown(townId => {
-                const context = new PageProcessorContext().withTownId(townId);
-                this.#processor.process(context);
-            })
-            .fork();
+            .then(machine => {
+                machine.start()
+                    .whenInTown(state => {
+                        const context = new PageProcessorContext();
+                        context.withTownId(state?.townId);
+                        this.#processor.process(context);
+                    })
+                    .process();
+            });
     }
 
 }

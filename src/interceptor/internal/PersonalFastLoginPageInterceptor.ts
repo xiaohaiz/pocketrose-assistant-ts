@@ -1,11 +1,12 @@
 import SetupLoader from "../../config/SetupLoader";
-import LocationStateMachine from "../../core/LocationStateMachine";
+import RoleStateMachineManager from "../../core/state/RoleStateMachineManager";
 import PersonalFastLoginPageProcessor from "../../processor/internal/PersonalFastLoginPageProcessor";
+import PageProcessor from "../../processor/PageProcessor";
 import PageInterceptor from "../PageInterceptor";
 
 class PersonalFastLoginPageInterceptor implements PageInterceptor {
 
-    readonly #processor = new PersonalFastLoginPageProcessor();
+    readonly #processor: PageProcessor = new PersonalFastLoginPageProcessor();
 
     accept(cgi: string, pageText: string): boolean {
         if (cgi === "mydata.cgi") {
@@ -18,12 +19,15 @@ class PersonalFastLoginPageInterceptor implements PageInterceptor {
         if (!SetupLoader.isFastLoginEnabled()) {
             return;
         }
-        LocationStateMachine.create()
+        RoleStateMachineManager.create()
             .load()
-            .whenInTown(() => {
-                this.#processor.process();
-            })
-            .fork();
+            .then(machine => {
+                machine.start()
+                    .whenInTown(() => {
+                        this.#processor.process();
+                    })
+                    .process();
+            });
     }
 
 }

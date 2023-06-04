@@ -18,6 +18,15 @@ class PocketDatabase {
                 const db: IDBDatabase = event.target.result;
 
                 // ------------------------------------------------------------
+                // RoleState
+                // ------------------------------------------------------------
+                if (!db.objectStoreNames.contains("RoleState")) {
+                    db.createObjectStore("RoleState", {
+                        keyPath: "id", autoIncrement: false
+                    });
+                }
+
+                // ------------------------------------------------------------
                 // BattleRecord
                 // ------------------------------------------------------------
                 if (!db.objectStoreNames.contains("BattleRecord")) {
@@ -80,6 +89,24 @@ class PocketDatabase {
                     });
                     store.createIndex("createTime", "createTime", {
                         unique: false
+                    });
+                }
+
+                // ------------------------------------------------------------
+                // PalaceTask
+                // ------------------------------------------------------------
+                if (!db.objectStoreNames.contains("PalaceTask")) {
+                    db.createObjectStore("PalaceTask", {
+                        keyPath: "id", autoIncrement: false
+                    });
+                }
+
+                // ------------------------------------------------------------
+                // LastLogin
+                // ------------------------------------------------------------
+                if (!db.objectStoreNames.contains("LastLogin")) {
+                    db.createObjectStore("LastLogin", {
+                        keyPath: "id", autoIncrement: false
                     });
                 }
             };

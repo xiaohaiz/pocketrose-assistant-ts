@@ -1,4 +1,4 @@
-import PocketDatabase from "../core/PocketDatabase";
+import PocketDatabase from "../PocketDatabase";
 import BattleResult from "./BattleResult";
 
 class BattleResultStorage {
@@ -53,11 +53,14 @@ class BattleResultStorage {
                     if (request.result) {
                         const result = new BattleResult();
                         result.id = request.result.id;
+                        result.updateTime = request.result.updateTime;
                         result.roleId = request.result.roleId;
                         result.monster = request.result.monster;
                         result.winCount = request.result.winCount;
                         result.loseCount = request.result.loseCount;
                         result.drawCount = request.result.drawCount;
+                        result.catchCount = request.result.catchCount;
+                        result.photoCount = request.result.photoCount;
                         resolve(result);
                     } else {
                         reject();
@@ -68,17 +71,34 @@ class BattleResultStorage {
         })();
     }
 
-    async win(id: string, monster: string): Promise<void> {
+    async win(id: string, monster: string, catchCount?: number, photoCount?: number): Promise<void> {
         const db = await PocketDatabase.connectDatabase();
         return await (() => {
             return new Promise<void>((resolve, reject) => {
                 this.load(id, monster)
                     .then(exist => {
+                        const data = exist.asObject();
+
                         let c = exist.winCount === undefined ? 0 : exist.winCount!
                         c++;
-                        const data = exist.asObject();
                         // @ts-ignore
                         data.winCount = c;
+
+                        if (catchCount !== undefined) {
+                            c = exist.catchCount === undefined ? 0 : exist.catchCount!
+                            c += catchCount;
+                            // @ts-ignore
+                            data.catchCount = c;
+                        }
+                        if (photoCount !== undefined) {
+                            c = exist.photoCount === undefined ? 0 : exist.photoCount!
+                            c += photoCount;
+                            // @ts-ignore
+                            data.photoCount = c;
+                        }
+
+                        // @ts-ignore
+                        data.updateTime = new Date().getTime();
                         const request = db.transaction(["BattleResult"], "readwrite")
                             .objectStore("BattleResult")
                             .put(data);
@@ -88,9 +108,12 @@ class BattleResultStorage {
                     .catch(() => {
                         const data = {
                             id: id + "/" + monster,
+                            updateTime: new Date().getTime(),
                             roleId: id,
                             monster: monster,
-                            winCount: 1
+                            winCount: 1,
+                            catchCount: (catchCount === undefined ? 0 : catchCount),
+                            photoCount: (photoCount === undefined ? 0 : photoCount)
                         };
                         const request = db.transaction(["BattleResult"], "readwrite")
                             .objectStore("BattleResult")
@@ -115,6 +138,8 @@ class BattleResultStorage {
                         const data = exist.asObject();
                         // @ts-ignore
                         data.loseCount = c;
+                        // @ts-ignore
+                        data.updateTime = new Date().getTime();
                         const request = db.transaction(["BattleResult"], "readwrite")
                             .objectStore("BattleResult")
                             .put(data);
@@ -124,6 +149,7 @@ class BattleResultStorage {
                     .catch(() => {
                         const data = {
                             id: id + "/" + monster,
+                            updateTime: new Date().getTime(),
                             roleId: id,
                             monster: monster,
                             loseCount: 1
@@ -140,17 +166,34 @@ class BattleResultStorage {
         })();
     }
 
-    async draw(id: string, monster: string): Promise<void> {
+    async draw(id: string, monster: string, catchCount?: number, photoCount?: number): Promise<void> {
         const db = await PocketDatabase.connectDatabase();
         return await (() => {
             return new Promise<void>((resolve, reject) => {
                 this.load(id, monster)
                     .then(exist => {
+                        const data = exist.asObject();
+
                         let c = exist.drawCount === undefined ? 0 : exist.drawCount!
                         c++;
-                        const data = exist.asObject();
                         // @ts-ignore
                         data.drawCount = c;
+
+                        if (catchCount !== undefined) {
+                            c = exist.catchCount === undefined ? 0 : exist.catchCount!
+                            c += catchCount;
+                            // @ts-ignore
+                            data.catchCount = c;
+                        }
+                        if (photoCount !== undefined) {
+                            c = exist.photoCount === undefined ? 0 : exist.photoCount!
+                            c += photoCount;
+                            // @ts-ignore
+                            data.photoCount = c;
+                        }
+
+                        // @ts-ignore
+                        data.updateTime = new Date().getTime();
                         const request = db.transaction(["BattleResult"], "readwrite")
                             .objectStore("BattleResult")
                             .put(data);
@@ -160,9 +203,12 @@ class BattleResultStorage {
                     .catch(() => {
                         const data = {
                             id: id + "/" + monster,
+                            updateTime: new Date().getTime(),
                             roleId: id,
                             monster: monster,
-                            drawCount: 1
+                            drawCount: 1,
+                            catchCount: (catchCount === undefined ? 0 : catchCount),
+                            photoCount: (photoCount === undefined ? 0 : photoCount)
                         };
                         const request = db.transaction(["BattleResult"], "readwrite")
                             .objectStore("BattleResult")

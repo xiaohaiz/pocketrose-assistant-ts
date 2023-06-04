@@ -1,5 +1,5 @@
 import _ from "lodash";
-import StringUtils from "../util/StringUtils";
+import StringUtils from "../../util/StringUtils";
 
 class BattlePage {
 
