@@ -47,7 +47,6 @@ module.exports = {
                 "// @match        *://pocketrose.itsns.net.cn/*\n" +
                 "// @require      https://cdn.bootcdn.net/ajax/libs/jquery/3.6.4/jquery.min.js\n" +
                 "// @require      https://cdn.bootcdn.net/ajax/libs/lodash.js/4.17.21/lodash.min.js\n" +
-                "// @require      https://cdn.bootcdn.net/ajax/libs/pako/2.1.0/pako.min.js\n" +
                 "// @run-at       document-start\n" +
                 "// @unwrap\n" +
                 "// ==/UserScript==\n",
@@ -67,7 +66,6 @@ module.exports = {
         extensions: ['.ts', '.js']
     },
     externals: {
-        lodash: '_',
-        "pako": 'pako'
+        lodash: '_'
     }
 };
