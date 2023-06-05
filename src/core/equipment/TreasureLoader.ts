@@ -13,6 +13,9 @@ class TreasureLoader {
         return _.padStart(s, 3, "0");
     }
 
+    static allTreasureNames() {
+        return Object.keys(TREASURES);
+    }
 }
 
 // ----------------------------------------------------------------------------
