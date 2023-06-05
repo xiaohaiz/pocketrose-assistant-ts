@@ -16,7 +16,7 @@ import StringUtils from "../../util/StringUtils";
 import PageProcessorContext from "../PageProcessorContext";
 import PageProcessorCredentialSupport from "../PageProcessorCredentialSupport";
 
-class PersonalStatisticsPageProcessor extends PageProcessorCredentialSupport {
+abstract class PersonalStatisticsPageProcessor extends PageProcessorCredentialSupport {
 
     doProcess(credential: Credential, context?: PageProcessorContext): void {
         // 点名的页面也是令人无语，全部在一个大form里面。
@@ -143,6 +143,8 @@ class PersonalStatisticsPageProcessor extends PageProcessorCredentialSupport {
         return "<b style='font-size:120%;color:wheat'>想不想对自己的团队有更深层次的了解？</b><br>" +
             "<b style='font-size:120%;color:yellow'>什么，你是想要点名？单击我的头像即可。</b>";
     }
+
+    abstract doBindReturnButton(credential: Credential): void;
 }
 
 function doBindButton() {
