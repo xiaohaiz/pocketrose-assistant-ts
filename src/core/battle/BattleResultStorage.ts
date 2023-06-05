@@ -30,10 +30,11 @@ class BattleResultStorage {
 
                             if (it.treasures) {
                                 data.treasures = new Map<string, number>();
-                                for (const code of it.treasures) {
-                                    const count = it.treasures[code];
-                                    data.treasures.set(code, count);
-                                }
+                                Object.keys(it.treasures)
+                                    .forEach(code => {
+                                        const count = it.treasures[code];
+                                        data.treasures!.set(code, count);
+                                    });
                             }
 
                             dataList.push(data);
@@ -75,10 +76,11 @@ class BattleResultStorage {
 
                         if (request.result.treasures) {
                             data.treasures = new Map<string, number>();
-                            for (const code of request.result.treasures) {
-                                const count = request.result.treasures[code];
-                                data.treasures.set(code, count);
-                            }
+                            Object.keys(request.result.treasures)
+                                .forEach(code => {
+                                    const count = request.result.treasures[code];
+                                    data.treasures!.set(code, count);
+                                });
                         }
 
                         resolve(data);
