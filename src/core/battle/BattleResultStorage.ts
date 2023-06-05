@@ -25,6 +25,8 @@ class BattleResultStorage {
                             result.winCount = it.winCount;
                             result.loseCount = it.loseCount;
                             result.drawCount = it.drawCount;
+                            result.catchCount = it.catchCount;
+                            result.photoCount = it.photoCount;
                             resultList.push(result);
                         }
                         resolve(resultList);

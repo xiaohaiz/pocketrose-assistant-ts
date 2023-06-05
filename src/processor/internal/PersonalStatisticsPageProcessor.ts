@@ -3,6 +3,7 @@ import BattleStorageManager from "../../core/battle/BattleStorageManager";
 import FastLoginManager from "../../core/FastLoginManager";
 import NpcLoader from "../../core/NpcLoader";
 import PetProfileLoader from "../../core/PetProfileLoader";
+import ReportUtils from "../../core/report/ReportUtils";
 import RoleStorageManager from "../../core/role/RoleStorageManager";
 import Credential from "../../util/Credential";
 import MessageBoard from "../../util/MessageBoard";
@@ -146,31 +147,34 @@ function doBindButton() {
                 let totalWinCount = 0;
                 let totalLoseCount = 0;
                 let totalDrawCount = 0;
-                let totalWinRatio;
+                let totalCatchCount = 0;
+                let totalPhotoCount = 0;
 
                 let bc1 = 0;
                 let wc1 = 0;
                 let lc1 = 0;
                 let dc1 = 0;
-                let wr1;
+                let cc1 = 0;
+                let pc1 = 0;
 
                 let bc2 = 0;
                 let wc2 = 0;
                 let lc2 = 0;
                 let dc2 = 0;
-                let wr2;
+                let cc2 = 0;
+                let pc2 = 0;
 
                 let bc3 = 0;
                 let wc3 = 0;
                 let lc3 = 0;
                 let dc3 = 0;
-                let wr3;
+                let cc3 = 0;
+                let pc3 = 0;
 
                 let bc4 = 0;
                 let wc4 = 0;
                 let lc4 = 0;
                 let dc4 = 0;
-                let wr4;
 
                 let h1 = 0;
                 let h2 = 0;
@@ -182,6 +186,8 @@ function doBindButton() {
                     totalWinCount += it.obtainWinCount;
                     totalLoseCount += it.obtainLoseCount;
                     totalDrawCount += it.obtainDrawCount;
+                    totalCatchCount += it.obtainCatchCount;
+                    totalPhotoCount += it.obtainPhotoCount;
 
                     switch (it.monster!) {
                         case "巴大蝴(012)":
@@ -204,18 +210,24 @@ function doBindButton() {
                             wc1 += it.obtainWinCount;
                             lc1 += it.obtainLoseCount;
                             dc1 += it.obtainDrawCount;
+                            cc1 += it.obtainCatchCount;
+                            pc1 += it.obtainPhotoCount;
                             break;
                         case "中塔":
                             bc2 += it.obtainTotalCount;
                             wc2 += it.obtainWinCount;
                             lc2 += it.obtainLoseCount;
                             dc2 += it.obtainDrawCount;
+                            cc2 += it.obtainCatchCount;
+                            pc2 += it.obtainPhotoCount;
                             break;
                         case "上洞":
                             bc3 += it.obtainTotalCount;
                             wc3 += it.obtainWinCount;
                             lc3 += it.obtainLoseCount;
                             dc3 += it.obtainDrawCount;
+                            cc3 += it.obtainCatchCount;
+                            pc3 += it.obtainPhotoCount;
                             break;
                         case "十二宫":
                             bc4 += it.obtainTotalCount;
@@ -226,12 +238,6 @@ function doBindButton() {
                     }
                 });
 
-                totalWinRatio = totalBattleCount === 0 ? 0 : totalWinCount / totalBattleCount;
-                wr1 = bc1 === 0 ? 0 : wc1 / bc1;
-                wr2 = bc2 === 0 ? 0 : wc2 / bc2;
-                wr3 = bc3 === 0 ? 0 : wc3 / bc3;
-                wr4 = bc4 === 0 ? 0 : wc4 / bc4;
-
                 let html = "";
                 html += "<table style='background-color:transparent;border-width:0;border-spacing:0;text-align:center;width:100%;margin:auto'>";
                 html += "<tbody>";
@@ -240,7 +246,7 @@ function doBindButton() {
                 html += "<table style='background-color:#888888;border-width:1px;border-spacing:1px;text-align:center;width:100%;margin:auto'>";
                 html += "<tbody>";
                 html += "<tr>";
-                html += "<td colspan='7' style='background-color:navy;color:yellow;font-weight:bold;text-align:center'>战 斗 统 计</td>";
+                html += "<td colspan='11' style='background-color:navy;color:yellow;font-weight:bold;text-align:center'>战 斗 统 计</td>";
                 html += "</tr>";
                 html += "<tr>";
                 html += "<th style='background-color:green;color:white'>战场</th>"
@@ -250,6 +256,10 @@ function doBindButton() {
                 html += "<th style='background-color:green;color:white'>总战数</th>"
                 html += "<th style='background-color:green;color:white'>胜率</th>"
                 html += "<th style='background-color:green;color:white'>占比</th>"
+                html += "<th style='background-color:green;color:white'>图鉴数</th>"
+                html += "<th style='background-color:green;color:white'>图鉴出率</th>"
+                html += "<th style='background-color:green;color:white'>宠物数</th>"
+                html += "<th style='background-color:green;color:white'>宠物出率</th>"
                 html += "</tr>";
                 html += "<tr>";
                 html += "<th style='background-color:#F8F0E0'>-</th>"
@@ -257,8 +267,12 @@ function doBindButton() {
                 html += "<td style='background-color:#F8F0E0'>" + totalLoseCount + "</td>"
                 html += "<td style='background-color:#F8F0E0'>" + totalDrawCount + "</td>"
                 html += "<td style='background-color:#F8F0E0'>" + totalBattleCount + "</td>"
-                html += "<td style='background-color:#F8F0E0;text-align:left'>" + PageUtils.generateProgressBarWithPercentage(totalWinRatio) + "</td>"
+                html += "<td style='background-color:#F8F0E0;text-align:left'>" + ReportUtils.generatePercentageHtml(totalWinCount, totalBattleCount) + "</td>"
                 html += "<td style='background-color:#F8F0E0;text-align:left'>-</td>"
+                html += "<td style='background-color:#F8F0E0'>" + totalPhotoCount + "</td>"
+                html += "<td style='background-color:#F8F0E0;text-align:left'>" + ReportUtils.generatePermyriadHtml(totalPhotoCount, totalBattleCount) + "</td>"
+                html += "<td style='background-color:#F8F0E0'>" + totalCatchCount + "</td>"
+                html += "<td style='background-color:#F8F0E0;text-align:left'>" + ReportUtils.generatePermyriadHtml(totalCatchCount, totalBattleCount) + "</td>"
                 html += "</tr>";
                 html += "<tr>";
                 html += "<th style='background-color:#F8F0E0'>初森</th>"
@@ -266,8 +280,12 @@ function doBindButton() {
                 html += "<td style='background-color:#F8F0E0'>" + lc1 + "</td>"
                 html += "<td style='background-color:#F8F0E0'>" + dc1 + "</td>"
                 html += "<td style='background-color:#F8F0E0'>" + bc1 + "</td>"
-                html += "<td style='background-color:#F8F0E0;text-align:left'>" + PageUtils.generateProgressBarWithPercentage(wr1) + "</td>"
-                html += "<td style='background-color:#F8F0E0;text-align:left'>" + PageUtils.generateProgressBarWithPercentage(bc1 / totalBattleCount) + "</td>"
+                html += "<td style='background-color:#F8F0E0;text-align:left'>" + ReportUtils.generatePercentageHtml(wc1, bc1) + "</td>"
+                html += "<td style='background-color:#F8F0E0;text-align:left'>" + ReportUtils.generatePermillageHtml(bc1, totalBattleCount) + "</td>"
+                html += "<td style='background-color:#F8F0E0'>" + pc1 + "</td>"
+                html += "<td style='background-color:#F8F0E0;text-align:left'>" + ReportUtils.generatePermyriadHtml(pc1, bc1) + "</td>"
+                html += "<td style='background-color:#F8F0E0'>" + cc1 + "</td>"
+                html += "<td style='background-color:#F8F0E0;text-align:left'>" + ReportUtils.generatePermyriadHtml(cc1, bc1) + "</td>"
                 html += "</tr>";
                 html += "<tr>";
                 html += "<th style='background-color:#F8F0E0'>中塔</th>"
@@ -275,8 +293,12 @@ function doBindButton() {
                 html += "<td style='background-color:#F8F0E0'>" + lc2 + "</td>"
                 html += "<td style='background-color:#F8F0E0'>" + dc2 + "</td>"
                 html += "<td style='background-color:#F8F0E0'>" + bc2 + "</td>"
-                html += "<td style='background-color:#F8F0E0;text-align:left'>" + PageUtils.generateProgressBarWithPercentage(wr2) + "</td>"
-                html += "<td style='background-color:#F8F0E0;text-align:left'>" + PageUtils.generateProgressBarWithPercentage(bc2 / totalBattleCount) + "</td>"
+                html += "<td style='background-color:#F8F0E0;text-align:left'>" + ReportUtils.generatePercentageHtml(wc2, bc2) + "</td>"
+                html += "<td style='background-color:#F8F0E0;text-align:left'>" + ReportUtils.generatePermillageHtml(bc2, totalBattleCount) + "</td>"
+                html += "<td style='background-color:#F8F0E0'>" + pc2 + "</td>"
+                html += "<td style='background-color:#F8F0E0;text-align:left'>" + ReportUtils.generatePermyriadHtml(pc2, bc2) + "</td>"
+                html += "<td style='background-color:#F8F0E0'>" + cc2 + "</td>"
+                html += "<td style='background-color:#F8F0E0;text-align:left'>" + ReportUtils.generatePermyriadHtml(cc2, bc2) + "</td>"
                 html += "</tr>";
                 html += "<tr>";
                 html += "<th style='background-color:#F8F0E0'>上洞</th>"
@@ -284,8 +306,12 @@ function doBindButton() {
                 html += "<td style='background-color:#F8F0E0'>" + lc3 + "</td>"
                 html += "<td style='background-color:#F8F0E0'>" + dc3 + "</td>"
                 html += "<td style='background-color:#F8F0E0'>" + bc3 + "</td>"
-                html += "<td style='background-color:#F8F0E0;text-align:left'>" + PageUtils.generateProgressBarWithPercentage(wr3) + "</td>"
-                html += "<td style='background-color:#F8F0E0;text-align:left'>" + PageUtils.generateProgressBarWithPercentage(bc3 / totalBattleCount) + "</td>"
+                html += "<td style='background-color:#F8F0E0;text-align:left'>" + ReportUtils.generatePercentageHtml(wc3, bc3) + "</td>"
+                html += "<td style='background-color:#F8F0E0;text-align:left'>" + ReportUtils.generatePermillageHtml(bc3, totalBattleCount) + "</td>"
+                html += "<td style='background-color:#F8F0E0'>" + pc3 + "</td>"
+                html += "<td style='background-color:#F8F0E0;text-align:left'>" + ReportUtils.generatePermyriadHtml(pc3, bc3) + "</td>"
+                html += "<td style='background-color:#F8F0E0'>" + cc3 + "</td>"
+                html += "<td style='background-color:#F8F0E0;text-align:left'>" + ReportUtils.generatePermyriadHtml(cc3, bc3) + "</td>"
                 html += "</tr>";
                 html += "<tr>";
                 html += "<th style='background-color:#F8F0E0'>十二宫</th>"
@@ -293,8 +319,12 @@ function doBindButton() {
                 html += "<td style='background-color:#F8F0E0'>" + lc4 + "</td>"
                 html += "<td style='background-color:#F8F0E0'>" + dc4 + "</td>"
                 html += "<td style='background-color:#F8F0E0'>" + bc4 + "</td>"
-                html += "<td style='background-color:#F8F0E0;text-align:left'>" + PageUtils.generateProgressBarWithPercentage(wr4) + "</td>"
-                html += "<td style='background-color:#F8F0E0;text-align:left'>" + PageUtils.generateProgressBarWithPercentage(bc4 / totalBattleCount) + "</td>"
+                html += "<td style='background-color:#F8F0E0;text-align:left'>" + ReportUtils.generatePercentageHtml(wc4, bc4) + "</td>"
+                html += "<td style='background-color:#F8F0E0;text-align:left'>" + ReportUtils.generatePermillageHtml(bc4, totalBattleCount) + "</td>"
+                html += "<td style='background-color:#F8F0E0'>-</td>"
+                html += "<td style='background-color:#F8F0E0;text-align:left'>-</td>"
+                html += "<td style='background-color:#F8F0E0'>-</td>"
+                html += "<td style='background-color:#F8F0E0;text-align:left'>-</td>"
                 html += "</tr>";
                 html += "</tbody>";
                 html += "</table>";

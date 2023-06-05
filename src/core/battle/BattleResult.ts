@@ -60,6 +60,14 @@ class BattleResult {
         return this.drawCount === undefined ? 0 : this.drawCount;
     }
 
+    get obtainCatchCount() {
+        return this.catchCount === undefined ? 0 : this.catchCount;
+    }
+
+    get obtainPhotoCount() {
+        return this.photoCount === undefined ? 0 : this.photoCount;
+    }
+
     get obtainTotalCount(): number {
         return this.obtainWinCount + this.obtainLoseCount + this.obtainDrawCount;
     }
