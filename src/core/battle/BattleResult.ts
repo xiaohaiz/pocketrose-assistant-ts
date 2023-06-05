@@ -12,6 +12,7 @@ class BattleResult {
     drawCount?: number;
     catchCount?: number;
     photoCount?: number;
+    treasures?: Map<string, number>;
 
     asObject() {
         const obj = {};
@@ -45,6 +46,17 @@ class BattleResult {
             // @ts-ignore
             obj.photoCount = this.photoCount!;
         }
+
+        if (this.treasures !== undefined) {
+            // @ts-ignore
+            obj.treasures = {};
+
+            this.treasures!.forEach((v, k) => {
+                // @ts-ignore
+                obj.treasures[k] = v;
+            });
+        }
+
         return obj;
     }
 

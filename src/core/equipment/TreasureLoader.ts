@@ -1,9 +1,16 @@
+import _ from "lodash";
+
 class TreasureLoader {
 
-    static getCode(treasureName: string) {
+    static getCode(treasureName: string): number {
         // @ts-ignore
         const code = TREASURES[treasureName];
         return code === undefined ? 0 : code;
+    }
+
+    static getCodeAsString(treasureName: string) {
+        let s = TreasureLoader.getCode(treasureName).toString();
+        return _.padStart(s, 3, "0");
     }
 
 }
@@ -67,6 +74,10 @@ const TREASURES = {
     "蟠龙花瓶": 48,
     "达尔文奖荣誉勋章": 49,
 
+    "藏宝图": 50,
+    "威力宝石": 51,
+    "重量宝石": 52,
+    "幸运宝石": 53,
 }
 
 export = TreasureLoader;

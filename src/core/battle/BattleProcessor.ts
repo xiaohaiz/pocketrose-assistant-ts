@@ -1,6 +1,8 @@
 import SetupLoader from "../../config/SetupLoader";
 import Credential from "../../util/Credential";
 import PageUtils from "../../util/PageUtils";
+import StringUtils from "../../util/StringUtils";
+import TreasureLoader from "../equipment/TreasureLoader";
 import PalaceTaskManager from "../task/PalaceTaskManager";
 import BattlePage from "./BattlePage";
 import BattleRecord from "./BattleRecord";
@@ -62,34 +64,46 @@ class BattleProcessor {
         // 分析入手的结果
         let catchCount: number | undefined = undefined;
         let photoCount: number | undefined = undefined;
+        let treasures: Map<string, number> | undefined = undefined;
         const monster = PageUtils.convertHtmlToText(this.page!.monsterNameHtml!);
         if (this.page!.harvestList !== undefined && this.page!.harvestList.length > 0) {
             for (const harvest of this.page!.harvestList) {
                 const it = PageUtils.convertHtmlToText(harvest);
-                if (harvest.includes(monster + "入手")) {
+                if (it.includes(monster + "入手")) {
                     if (catchCount === undefined) {
                         catchCount = 0;
                     }
                     catchCount++;
-                }
-                if (it.includes("图鉴入手")) {
+                } else if (it.includes("图鉴入手")) {
                     if (photoCount === undefined) {
                         photoCount = 0;
                     }
                     photoCount++;
+                } else {
+                    const treasureName = StringUtils.substringBefore(it, "入手");
+                    const code = TreasureLoader.getCodeAsString(treasureName);
+                    if (treasures === undefined) {
+                        treasures = new Map<string, number>();
+                    }
+                    const tc = treasures.get(code);
+                    if (tc === undefined) {
+                        treasures.set(code, 1);
+                    } else {
+                        treasures.set(code, tc + 1);
+                    }
                 }
             }
         }
         // 写入战斗结果
         switch (this.page!.battleResult!) {
             case "战胜":
-                BattleStorageManager.getBattleResultStorage().win(this.#credential.id, monster, catchCount, photoCount).then();
+                BattleStorageManager.getBattleResultStorage().win(this.#credential.id, monster, catchCount, photoCount, treasures).then();
                 break;
             case "战败":
                 BattleStorageManager.getBattleResultStorage().lose(this.#credential.id, monster).then();
                 break;
             case "平手":
-                BattleStorageManager.getBattleResultStorage().draw(this.#credential.id, monster, catchCount, photoCount).then();
+                BattleStorageManager.getBattleResultStorage().draw(this.#credential.id, monster, catchCount, photoCount, treasures).then();
                 break;
             default:
                 break;

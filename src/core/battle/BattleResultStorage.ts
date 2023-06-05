@@ -16,20 +16,29 @@ class BattleResultStorage {
 
                 request.onsuccess = () => {
                     if (request.result) {
-                        const resultList: BattleResult[] = [];
+                        const dataList: BattleResult[] = [];
                         for (const it of request.result) {
-                            const result = new BattleResult();
-                            result.id = it.id;
-                            result.roleId = it.roleId;
-                            result.monster = it.monster;
-                            result.winCount = it.winCount;
-                            result.loseCount = it.loseCount;
-                            result.drawCount = it.drawCount;
-                            result.catchCount = it.catchCount;
-                            result.photoCount = it.photoCount;
-                            resultList.push(result);
+                            const data = new BattleResult();
+                            data.id = it.id;
+                            data.roleId = it.roleId;
+                            data.monster = it.monster;
+                            data.winCount = it.winCount;
+                            data.loseCount = it.loseCount;
+                            data.drawCount = it.drawCount;
+                            data.catchCount = it.catchCount;
+                            data.photoCount = it.photoCount;
+
+                            if (it.treasures) {
+                                data.treasures = new Map<string, number>();
+                                for (const code of it.treasures) {
+                                    const count = it.treasures[code];
+                                    data.treasures.set(code, count);
+                                }
+                            }
+
+                            dataList.push(data);
                         }
-                        resolve(resultList);
+                        resolve(dataList);
                     } else {
                         reject();
                     }
@@ -53,17 +62,26 @@ class BattleResultStorage {
 
                 request.onsuccess = () => {
                     if (request.result) {
-                        const result = new BattleResult();
-                        result.id = request.result.id;
-                        result.updateTime = request.result.updateTime;
-                        result.roleId = request.result.roleId;
-                        result.monster = request.result.monster;
-                        result.winCount = request.result.winCount;
-                        result.loseCount = request.result.loseCount;
-                        result.drawCount = request.result.drawCount;
-                        result.catchCount = request.result.catchCount;
-                        result.photoCount = request.result.photoCount;
-                        resolve(result);
+                        const data = new BattleResult();
+                        data.id = request.result.id;
+                        data.updateTime = request.result.updateTime;
+                        data.roleId = request.result.roleId;
+                        data.monster = request.result.monster;
+                        data.winCount = request.result.winCount;
+                        data.loseCount = request.result.loseCount;
+                        data.drawCount = request.result.drawCount;
+                        data.catchCount = request.result.catchCount;
+                        data.photoCount = request.result.photoCount;
+
+                        if (request.result.treasures) {
+                            data.treasures = new Map<string, number>();
+                            for (const code of request.result.treasures) {
+                                const count = request.result.treasures[code];
+                                data.treasures.set(code, count);
+                            }
+                        }
+
+                        resolve(data);
                     } else {
                         reject();
                     }
@@ -73,7 +91,10 @@ class BattleResultStorage {
         })();
     }
 
-    async win(id: string, monster: string, catchCount?: number, photoCount?: number): Promise<void> {
+    async win(id: string, monster: string,
+              catchCount?: number,
+              photoCount?: number,
+              treasures?: Map<string, number>): Promise<void> {
         const db = await PocketDatabase.connectDatabase();
         return await (() => {
             return new Promise<void>((resolve, reject) => {
@@ -99,6 +120,19 @@ class BattleResultStorage {
                             data.photoCount = c;
                         }
 
+                        if (treasures !== undefined) {
+                            // @ts-ignore
+                            if (data.treasures === undefined) {
+                                // @ts-ignore
+                                data.treasures = {};
+                            }
+                            treasures.forEach((v, k) => {
+                                let tc = exist.treasures?.get(k);
+                                // @ts-ignore
+                                data.treasures[k] = (tc === undefined ? 0 : tc) + v;
+                            });
+                        }
+
                         // @ts-ignore
                         data.updateTime = new Date().getTime();
                         const request = db.transaction(["BattleResult"], "readwrite")
@@ -117,6 +151,14 @@ class BattleResultStorage {
                             catchCount: (catchCount === undefined ? 0 : catchCount),
                             photoCount: (photoCount === undefined ? 0 : photoCount)
                         };
+                        if (treasures !== undefined) {
+                            // @ts-ignore
+                            data.treasures = {};
+                            treasures.forEach((v, k) => {
+                                // @ts-ignore
+                                data.treasures[k] = v;
+                            });
+                        }
                         const request = db.transaction(["BattleResult"], "readwrite")
                             .objectStore("BattleResult")
                             .put(data);
@@ -168,7 +210,10 @@ class BattleResultStorage {
         })();
     }
 
-    async draw(id: string, monster: string, catchCount?: number, photoCount?: number): Promise<void> {
+    async draw(id: string, monster: string,
+               catchCount?: number,
+               photoCount?: number,
+               treasures?: Map<string, number>): Promise<void> {
         const db = await PocketDatabase.connectDatabase();
         return await (() => {
             return new Promise<void>((resolve, reject) => {
@@ -194,6 +239,19 @@ class BattleResultStorage {
                             data.photoCount = c;
                         }
 
+                        if (treasures !== undefined) {
+                            // @ts-ignore
+                            if (data.treasures === undefined) {
+                                // @ts-ignore
+                                data.treasures = {};
+                            }
+                            treasures.forEach((v, k) => {
+                                let tc = exist.treasures?.get(k);
+                                // @ts-ignore
+                                data.treasures[k] = (tc === undefined ? 0 : tc) + v;
+                            });
+                        }
+
                         // @ts-ignore
                         data.updateTime = new Date().getTime();
                         const request = db.transaction(["BattleResult"], "readwrite")
@@ -212,6 +270,14 @@ class BattleResultStorage {
                             catchCount: (catchCount === undefined ? 0 : catchCount),
                             photoCount: (photoCount === undefined ? 0 : photoCount)
                         };
+                        if (treasures !== undefined) {
+                            // @ts-ignore
+                            data.treasures = {};
+                            treasures.forEach((v, k) => {
+                                // @ts-ignore
+                                data.treasures[k] = v;
+                            });
+                        }
                         const request = db.transaction(["BattleResult"], "readwrite")
                             .objectStore("BattleResult")
                             .put(data);
