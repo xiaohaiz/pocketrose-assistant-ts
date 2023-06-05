@@ -43,7 +43,7 @@ class TreasureReportGenerator {
             });
 
         let html = "";
-        html += "<table style='background-color:#888888;border-width:1px;border-spacing:1px;text-align:center;width:100%;margin:auto'>";
+        html += "<table style='background-color:#888888;border-width:1px;border-spacing:1px;text-align:center;margin:auto'>";
         html += "<tbody>";
         html += "<tr>";
         html += "<th style='background-color:navy;color:yellow' colspan='4'>上洞战数：" + battleCount + "</th>"
@@ -51,27 +51,27 @@ class TreasureReportGenerator {
         html += "<tr>";
         html += "<th style='background-color:green;color:white'>入手</th>"
         html += "<th style='background-color:green;color:white'>数量</th>"
-        html += "<th style='background-color:green;color:white'>入手率</th>"
-        html += "<th style='background-color:green;color:white'>占比</th>"
+        html += "<th style='background-color:green;color:white'>入手率（‱）</th>"
+        html += "<th style='background-color:green;color:white'>占比（%）</th>"
         html += "</tr>";
 
         html += "<tr>";
         html += "<td style='background-color:wheat'>全部入手</td>"
         html += "<td style='background-color:wheat'>" + treasureCount + "</td>"
-        html += "<td style='background-color:wheat;text-align:left'>" + ReportUtils.generatePermyriadHtml(treasureCount, battleCount) + "</td>"
-        html += "<td style='background-color:wheat;text-align:left'>-</td>"
+        html += "<td style='background-color:wheat'>" + ReportUtils.permyriad(treasureCount, battleCount) + "</td>"
+        html += "<td style='background-color:wheat'>-</td>"
         html += "</tr>";
         html += "<tr>";
         html += "<td style='background-color:wheat'>非玩具</td>"
         html += "<td style='background-color:wheat'>" + usefulCount + "</td>"
-        html += "<td style='background-color:wheat;text-align:left'>" + ReportUtils.generatePermyriadHtml(usefulCount, battleCount) + "</td>"
-        html += "<td style='background-color:wheat;text-align:left'>" + ReportUtils.generatePercentageHtml(usefulCount, treasureCount) + "</td>"
+        html += "<td style='background-color:wheat'>" + ReportUtils.permyriad(usefulCount, battleCount) + "</td>"
+        html += "<td style='background-color:wheat'>" + ReportUtils.percentage(usefulCount, treasureCount) + "</td>"
         html += "</tr>";
         html += "<tr>";
         html += "<td style='background-color:wheat'>玩具</td>"
         html += "<td style='background-color:wheat'>" + uselessCount + "</td>"
-        html += "<td style='background-color:wheat;text-align:left'>" + ReportUtils.generatePermyriadHtml(uselessCount, battleCount) + "</td>"
-        html += "<td style='background-color:wheat;text-align:left'>" + ReportUtils.generatePercentageHtml(uselessCount, treasureCount) + "</td>"
+        html += "<td style='background-color:wheat'>" + ReportUtils.permyriad(uselessCount, battleCount) + "</td>"
+        html += "<td style='background-color:wheat'>" + ReportUtils.percentage(uselessCount, treasureCount) + "</td>"
         html += "</tr>";
 
         for (const treasureName of TreasureLoader.allTreasureNames()) {
@@ -87,8 +87,8 @@ class TreasureReportGenerator {
                 html += "<td style='background-color:#F8F0E0'>" + treasureName + "</td>"
             }
             html += "<td style='background-color:#F8F0E0'>" + count + "</td>"
-            html += "<td style='background-color:#F8F0E0;text-align:left'>" + ReportUtils.generatePermyriadHtml(count, battleCount) + "</td>"
-            html += "<td style='background-color:#F8F0E0;text-align:left'>" + ReportUtils.generatePercentageHtml(count, treasureCount) + "</td>"
+            html += "<td style='background-color:#F8F0E0'>" + ReportUtils.permyriad(count, battleCount) + "</td>"
+            html += "<td style='background-color:#F8F0E0'>" + ReportUtils.percentage(count, treasureCount) + "</td>"
             html += "</tr>";
         }
 
