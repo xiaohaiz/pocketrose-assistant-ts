@@ -8,7 +8,7 @@ class ReportUtils {
     // permyriad
 
     static percentage(a: number, b: number) {
-        if (b === 0) {
+        if (a === 0 || b === 0) {
             return "-";
         }
         let ratio = a / b;
@@ -29,7 +29,7 @@ class ReportUtils {
     }
 
     static permyriad(a: number, b: number) {
-        if (b === 0) {
+        if (a === 0 || b === 0) {
             return "-";
         }
         let ratio = a / b;
