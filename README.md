@@ -1,5 +1,7 @@
 # pocketrose-assistant-ts
 
+### 版本 3.7.1-SNAPSHOT
+
 ### 版本 3.7.0
 
 1. 战斗模式宠物升级时背景色显示为麦色。
