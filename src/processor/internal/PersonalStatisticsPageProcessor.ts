@@ -111,9 +111,7 @@ abstract class PersonalStatisticsPageProcessor extends PageProcessorCredentialSu
             $("#rollCallForm").toggle();
         });
 
-        $("#returnButton").on("click", () => {
-            $("input:submit[value='返回城市']").trigger("click");
-        });
+        this.doBindReturnButton(credential);
 
         html = "";
         html += "<select id='teamMemberSelect'>";

@@ -21,27 +21,22 @@ class CastleDashboardPageProcessor implements PageProcessor {
     #renderMenu() {
         if (SetupLoader.isPocketBankEnabled()) {
             $("option[value='CASTLE_BANK']")
-                .css("background-color", "yellow")
                 .text("口袋银行城堡支行");
             $("option[value='CASTLE_SENDMONEY']").remove();
             $("option[value='SALARY']").remove();
         }
         $("option[value='CASTLE_BUILDMACHINE']")
-            .css("background-color", "yellow")
             .text("城堡驿站");
         $("option[value='LETTER']")
-            .css("background-color", "yellow")
             .text("口袋助手设置");
         if (SetupLoader.isEquipmentManagementUIEnabled()) {
             $("option[value='USE_ITEM']")
-                .css("background-color", "yellow")
                 .text("装备管理");
             $("option[value='CASTLE_ITEM']").remove();
             $("option[value='CASTLE_SENDITEM']").remove();
         }
         if (SetupLoader.isPetManagementUIEnabled()) {
             $("option[value='PETSTATUS']")
-                .css("background-color", "yellow")
                 .text("宠物管理");
             $("option[value='CASTLE_PET']").remove();
             $("option[value='CASTLE_SENDPET']").remove();
@@ -49,10 +44,11 @@ class CastleDashboardPageProcessor implements PageProcessor {
         }
         if (SetupLoader.isCareerManagementUIEnabled()) {
             $("option[value='CHANGE_OCCUPATION']")
-                .css("background-color", "yellow")
                 .text("职业管理");
             $("option[value='MAGIC']").remove();
         }
+
+        $("option[value='DIANMING']").text("统计报告");
     }
 
     #renderRankTitle() {
