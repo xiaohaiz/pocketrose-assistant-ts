@@ -17,7 +17,7 @@ class BattleReportGenerator {
             .filter(it =>
                 this.#target === undefined ||
                 this.#target === "" ||
-                it.id === this.#target);
+                it.roleId === this.#target);
 
         let totalWinCount = 0;
         let totalCount = 0;
