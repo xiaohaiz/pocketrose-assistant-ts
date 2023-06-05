@@ -3,6 +3,7 @@ import BattleStorageManager from "../../core/battle/BattleStorageManager";
 import FastLoginManager from "../../core/FastLoginManager";
 import NpcLoader from "../../core/NpcLoader";
 import PetProfileLoader from "../../core/PetProfileLoader";
+import GemReportGenerator from "../../core/report/GemReportGenerator";
 import ReportUtils from "../../core/report/ReportUtils";
 import TreasureReportGenerator from "../../core/report/TreasureReportGenerator";
 import RoleStorageManager from "../../core/role/RoleStorageManager";
@@ -72,6 +73,7 @@ class PersonalStatisticsPageProcessor extends PageProcessorCredentialSupport {
         html += "<td style='text-align:center;background-color:#F8F0E0'>";
         html += "<button role='button' id='s-1'>转职数据统计</button>";
         html += "<button role='button' id='s-2'>上洞数据统计</button>";
+        html += "<button role='button' id='s-3'>宝石数据统计</button>";
         html += "</td>";
         html += "<tr>";
         html += "<tr style='display:none'>";
@@ -127,6 +129,7 @@ class PersonalStatisticsPageProcessor extends PageProcessorCredentialSupport {
         doBindButton();
         doRoleCareerTransferStatistics();
         doTreasureStatistics();
+        doGemStatistics();
     }
 
     #welcomeMessageHtml() {
@@ -643,5 +646,20 @@ function doTreasureStatistics() {
             });
     });
 }
+
+function doGemStatistics() {
+    $("#s-3").on("click", () => {
+        const target = $("#teamMemberSelect").val()! as string;
+        BattleStorageManager.getBattleResultStorage()
+            .loads()
+            .then(dataList => {
+                const candidates = dataList
+                    .filter(it => target === "" || it.roleId === target);
+                const html = new GemReportGenerator(dataList).generate();
+                $("#statistics").html(html).parent().show();
+            });
+    });
+}
+
 
 export = PersonalStatisticsPageProcessor;
