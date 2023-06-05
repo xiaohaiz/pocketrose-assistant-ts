@@ -185,27 +185,44 @@ class BattleReportGenerator {
         html += "<table style='background-color:#888888;text-align:center;margin:auto;width:100%'>";
         html += "<tbody>";
         html += "<tr>";
-        html += "<th style='background-color:green;color:white'>名字</th>"
-        html += "<th style='background-color:green;color:white'>图鉴数</th>"
-        html += "<th style='background-color:green;color:white'>图鉴入手率（‱）</th>"
-        html += "<th style='background-color:green;color:white'>初森</th>"
-        html += "<th style='background-color:green;color:white'>初森图鉴（‱）</th>"
-        html += "<th style='background-color:green;color:white'>中塔</th>"
-        html += "<th style='background-color:green;color:white'>中塔图鉴（‱）</th>"
-        html += "<th style='background-color:green;color:white'>上洞</th>"
-        html += "<th style='background-color:green;color:white'>上洞图鉴（‱）</th>"
+        html += "<th style='background-color:navy;color:greenyellow' colspan='13'>图 鉴 统 计</th>"
+        html += "</tr>";
+        html += "<tr>";
+        html += "<th style='background-color:green;color:white' rowspan='2'>名字</th>"
+        html += "<th style='background-color:green;color:white' colspan='3'>总计</th>"
+        html += "<th style='background-color:green;color:white' colspan='3'>初森</th>"
+        html += "<th style='background-color:green;color:white' colspan='3'>中塔</th>"
+        html += "<th style='background-color:green;color:white' colspan='3'>上洞</th>"
+        html += "</tr>";
+        html += "<tr>";
+        html += "<th style='background-color:green;color:white'>图鉴</th>"
+        html += "<th style='background-color:green;color:white'>战数</th>"
+        html += "<th style='background-color:green;color:white'>入手率(‱)</th>"
+        html += "<th style='background-color:green;color:white'>图鉴</th>"
+        html += "<th style='background-color:green;color:white'>战数</th>"
+        html += "<th style='background-color:green;color:white'>入手率(‱)</th>"
+        html += "<th style='background-color:green;color:white'>图鉴</th>"
+        html += "<th style='background-color:green;color:white'>战数</th>"
+        html += "<th style='background-color:green;color:white'>入手率(‱)</th>"
+        html += "<th style='background-color:green;color:white'>图鉴</th>"
+        html += "<th style='background-color:green;color:white'>战数</th>"
+        html += "<th style='background-color:green;color:white'>入手率(‱)</th>"
         html += "</tr>";
 
         if (this.#target === undefined || this.#target === "") {
             html += "<tr>";
             html += "<th style='background-color:black;color:white'>全团队</th>"
             html += "<td style='background-color:wheat'>" + totalPhotoCount + "</td>"
+            html += "<td style='background-color:wheat'>" + totalCount + "</td>"
             html += "<td style='background-color:wheat'>" + ReportUtils.permyriad(totalPhotoCount, totalCount) + "</td>"
             html += "<td style='background-color:wheat'>" + totalPrimaryPhotoCount + "</td>"
+            html += "<td style='background-color:wheat'>" + totalPrimaryCount + "</td>"
             html += "<td style='background-color:wheat'>" + ReportUtils.permyriad(totalPrimaryPhotoCount, totalPrimaryCount) + "</td>"
             html += "<td style='background-color:wheat'>" + totalJuniorPhotoCount + "</td>"
+            html += "<td style='background-color:wheat'>" + totalJuniorCount + "</td>"
             html += "<td style='background-color:wheat'>" + ReportUtils.permyriad(totalJuniorPhotoCount, totalJuniorCount) + "</td>"
             html += "<td style='background-color:wheat'>" + totalSeniorPhotoCount + "</td>"
+            html += "<td style='background-color:wheat'>" + totalSeniorCount + "</td>"
             html += "<td style='background-color:wheat'>" + ReportUtils.permyriad(totalSeniorPhotoCount, totalSeniorCount) + "</td>"
             html += "</tr>";
         }
@@ -215,12 +232,16 @@ class BattleReportGenerator {
                 html += "<tr>";
                 html += "<th style='background-color:black;color:white'>" + it.roleName + "</th>"
                 html += "<td style='background-color:#F8F0E0'>" + it.photoCount + "</td>"
+                html += "<td style='background-color:#F8F0E0'>" + it.count + "</td>"
                 html += "<td style='background-color:#F8F0E0'>" + ReportUtils.permyriad(it.photoCount, it.count) + "</td>"
                 html += "<td style='background-color:#F8F0E0'>" + it.primaryPhotoCount + "</td>"
+                html += "<td style='background-color:#F8F0E0'>" + it.primaryCount + "</td>"
                 html += "<td style='background-color:#F8F0E0'>" + ReportUtils.permyriad(it.primaryPhotoCount, it.primaryCount) + "</td>"
                 html += "<td style='background-color:#F8F0E0'>" + it.juniorPhotoCount + "</td>"
+                html += "<td style='background-color:#F8F0E0'>" + it.juniorCount + "</td>"
                 html += "<td style='background-color:#F8F0E0'>" + ReportUtils.permyriad(it.juniorPhotoCount, it.juniorCount) + "</td>"
                 html += "<td style='background-color:#F8F0E0'>" + it.seniorPhotoCount + "</td>"
+                html += "<td style='background-color:#F8F0E0'>" + it.seniorCount + "</td>"
                 html += "<td style='background-color:#F8F0E0'>" + ReportUtils.permyriad(it.seniorPhotoCount, it.seniorCount) + "</td>"
                 html += "</tr>";
             }
