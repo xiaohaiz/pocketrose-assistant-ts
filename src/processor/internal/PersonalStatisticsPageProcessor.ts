@@ -150,6 +150,10 @@ function doBindButton() {
                 let totalCatchCount = 0;
                 let totalPhotoCount = 0;
 
+                let totalTreasureCount = 0;
+                let totalTreasureHintCount = 0;
+                let totalGemCount = 0;
+
                 let bc1 = 0;
                 let wc1 = 0;
                 let lc1 = 0;
@@ -188,6 +192,9 @@ function doBindButton() {
                     totalDrawCount += it.obtainDrawCount;
                     totalCatchCount += it.obtainCatchCount;
                     totalPhotoCount += it.obtainPhotoCount;
+                    totalTreasureCount += it.obtainTreasureCount;
+                    totalTreasureHintCount += it.obtainTreasureHintCount;
+                    totalGemCount += it.obtainGemCount;
 
                     switch (it.monster!) {
                         case "巴大蝴(012)":
@@ -246,7 +253,7 @@ function doBindButton() {
                 html += "<table style='background-color:#888888;border-width:1px;border-spacing:1px;text-align:center;width:100%;margin:auto'>";
                 html += "<tbody>";
                 html += "<tr>";
-                html += "<td colspan='11' style='background-color:navy;color:yellow;font-weight:bold;text-align:center'>战 斗 统 计</td>";
+                html += "<td colspan='14' style='background-color:navy;color:yellow;font-weight:bold;text-align:center'>战 斗 统 计</td>";
                 html += "</tr>";
                 html += "<tr>";
                 html += "<th style='background-color:green;color:white'>战场</th>"
@@ -260,6 +267,9 @@ function doBindButton() {
                 html += "<th style='background-color:green;color:white'>图鉴出率</th>"
                 html += "<th style='background-color:green;color:white'>宠物数</th>"
                 html += "<th style='background-color:green;color:white'>宠物出率</th>"
+                html += "<th style='background-color:green;color:white'>入手数</th>"
+                html += "<th style='background-color:green;color:white'>宝图数</th>"
+                html += "<th style='background-color:green;color:white'>宝石数</th>"
                 html += "</tr>";
                 html += "<tr>";
                 html += "<th style='background-color:#F8F0E0'>-</th>"
@@ -273,6 +283,9 @@ function doBindButton() {
                 html += "<td style='background-color:#F8F0E0;text-align:left'>" + ReportUtils.generatePermyriadHtml(totalPhotoCount, totalBattleCount) + "</td>"
                 html += "<td style='background-color:#F8F0E0'>" + totalCatchCount + "</td>"
                 html += "<td style='background-color:#F8F0E0;text-align:left'>" + ReportUtils.generatePermyriadHtml(totalCatchCount, totalBattleCount) + "</td>"
+                html += "<td style='background-color:#F8F0E0'>" + totalTreasureCount + "</td>"
+                html += "<td style='background-color:#F8F0E0'>" + totalTreasureHintCount + "</td>"
+                html += "<td style='background-color:#F8F0E0'>" + totalGemCount + "</td>"
                 html += "</tr>";
                 html += "<tr>";
                 html += "<th style='background-color:#F8F0E0'>初森</th>"
@@ -286,6 +299,9 @@ function doBindButton() {
                 html += "<td style='background-color:#F8F0E0;text-align:left'>" + ReportUtils.generatePermyriadHtml(pc1, bc1) + "</td>"
                 html += "<td style='background-color:#F8F0E0'>" + cc1 + "</td>"
                 html += "<td style='background-color:#F8F0E0;text-align:left'>" + ReportUtils.generatePermyriadHtml(cc1, bc1) + "</td>"
+                html += "<td style='background-color:#F8F0E0'>-</td>"
+                html += "<td style='background-color:#F8F0E0'>-</td>"
+                html += "<td style='background-color:#F8F0E0'>-</td>"
                 html += "</tr>";
                 html += "<tr>";
                 html += "<th style='background-color:#F8F0E0'>中塔</th>"
@@ -299,6 +315,9 @@ function doBindButton() {
                 html += "<td style='background-color:#F8F0E0;text-align:left'>" + ReportUtils.generatePermyriadHtml(pc2, bc2) + "</td>"
                 html += "<td style='background-color:#F8F0E0'>" + cc2 + "</td>"
                 html += "<td style='background-color:#F8F0E0;text-align:left'>" + ReportUtils.generatePermyriadHtml(cc2, bc2) + "</td>"
+                html += "<td style='background-color:#F8F0E0'>-</td>"
+                html += "<td style='background-color:#F8F0E0'>-</td>"
+                html += "<td style='background-color:#F8F0E0'>-</td>"
                 html += "</tr>";
                 html += "<tr>";
                 html += "<th style='background-color:#F8F0E0'>上洞</th>"
@@ -312,6 +331,9 @@ function doBindButton() {
                 html += "<td style='background-color:#F8F0E0;text-align:left'>" + ReportUtils.generatePermyriadHtml(pc3, bc3) + "</td>"
                 html += "<td style='background-color:#F8F0E0'>" + cc3 + "</td>"
                 html += "<td style='background-color:#F8F0E0;text-align:left'>" + ReportUtils.generatePermyriadHtml(cc3, bc3) + "</td>"
+                html += "<td style='background-color:#F8F0E0'>-</td>"
+                html += "<td style='background-color:#F8F0E0'>-</td>"
+                html += "<td style='background-color:#F8F0E0'>-</td>"
                 html += "</tr>";
                 html += "<tr>";
                 html += "<th style='background-color:#F8F0E0'>十二宫</th>"
@@ -325,6 +347,9 @@ function doBindButton() {
                 html += "<td style='background-color:#F8F0E0;text-align:left'>-</td>"
                 html += "<td style='background-color:#F8F0E0'>-</td>"
                 html += "<td style='background-color:#F8F0E0;text-align:left'>-</td>"
+                html += "<td style='background-color:#F8F0E0'>-</td>"
+                html += "<td style='background-color:#F8F0E0'>-</td>"
+                html += "<td style='background-color:#F8F0E0'>-</td>"
                 html += "</tr>";
                 html += "</tbody>";
                 html += "</table>";

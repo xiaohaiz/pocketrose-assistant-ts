@@ -1,3 +1,4 @@
+import _ from "lodash";
 import NpcLoader from "../NpcLoader";
 import PetLocationLoader from "../PetLocationLoader";
 
@@ -84,8 +85,46 @@ class BattleResult {
         return this.obtainWinCount + this.obtainLoseCount + this.obtainDrawCount;
     }
 
-    get obtainWinRatio(): number {
-        return this.obtainWinCount / this.obtainTotalCount;
+    get obtainTreasureCount(): number {
+        if (this.treasures === undefined) {
+            return 0;
+        }
+        let treasureCount = 0;
+        this.treasures.forEach((v, k) => {
+            const code = _.parseInt(k);
+            if (code >= 1 && code <= 49) {
+                treasureCount += v;
+            }
+        });
+        return treasureCount;
+    }
+
+    get obtainTreasureHintCount(): number {
+        if (this.treasures === undefined) {
+            return 0;
+        }
+        let treasureHintCount = 0;
+        this.treasures.forEach((v, k) => {
+            const code = _.parseInt(k);
+            if (code === 50) {
+                treasureHintCount += v;
+            }
+        });
+        return treasureHintCount;
+    }
+
+    get obtainGemCount(): number {
+        if (this.treasures === undefined) {
+            return 0;
+        }
+        let gemCount = 0;
+        this.treasures.forEach((v, k) => {
+            const code = _.parseInt(k);
+            if (code >= 51 && code <= 53) {
+                gemCount += v;
+            }
+        });
+        return gemCount;
     }
 
     get obtainBattleField(): string {
