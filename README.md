@@ -12,6 +12,7 @@
 8. 因爲大尺寸數據已經遷移到IndexedDB，因此不再繼續使用pako壓縮解壓機制。
 9. 記錄團隊中最後一個登陸隊員的存儲從LocalStorage遷移到IndexedDB。
 10. 至此數據分離已經完成，配置數據使用LocalStorage，動態數據使用IndexedDB。
+11. 团队统计包括图鉴的出率和宠物的出率。
 
 ### 版本 3.6.7
 

@@ -24,6 +24,7 @@ class PageUtils {
         $("script:last").remove();
         $("script")
             .filter(function () {
+                // @ts-ignore
                 const src = $(this).attr("src");
                 return src !== undefined && (src as string).includes("google-analytics");
             })
