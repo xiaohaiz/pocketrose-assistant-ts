@@ -257,27 +257,44 @@ class BattleReportGenerator {
         html += "<table style='background-color:#888888;text-align:center;margin:auto;width:100%'>";
         html += "<tbody>";
         html += "<tr>";
-        html += "<th style='background-color:green;color:white'>名字</th>"
-        html += "<th style='background-color:green;color:white'>宠物数</th>"
-        html += "<th style='background-color:green;color:white'>宠物入手率（‱）</th>"
-        html += "<th style='background-color:green;color:white'>初森</th>"
-        html += "<th style='background-color:green;color:white'>初森宠物（‱）</th>"
-        html += "<th style='background-color:green;color:white'>中塔</th>"
-        html += "<th style='background-color:green;color:white'>中塔宠物（‱）</th>"
-        html += "<th style='background-color:green;color:white'>上洞</th>"
-        html += "<th style='background-color:green;color:white'>上洞宠物（‱）</th>"
+        html += "<th style='background-color:navy;color:greenyellow' colspan='13'>宠 物 统 计</th>"
+        html += "</tr>";
+        html += "<tr>";
+        html += "<th style='background-color:green;color:white' rowspan='2'>名字</th>"
+        html += "<th style='background-color:green;color:white' colspan='3'>总计</th>"
+        html += "<th style='background-color:green;color:white' colspan='3'>初森</th>"
+        html += "<th style='background-color:green;color:white' colspan='3'>中塔</th>"
+        html += "<th style='background-color:green;color:white' colspan='3'>上洞</th>"
+        html += "</tr>";
+        html += "<tr>";
+        html += "<th style='background-color:green;color:white'>宠物</th>"
+        html += "<th style='background-color:green;color:white'>战数</th>"
+        html += "<th style='background-color:green;color:white'>入手率(‱)</th>"
+        html += "<th style='background-color:green;color:white'>宠物</th>"
+        html += "<th style='background-color:green;color:white'>战数</th>"
+        html += "<th style='background-color:green;color:white'>入手率(‱)</th>"
+        html += "<th style='background-color:green;color:white'>宠物</th>"
+        html += "<th style='background-color:green;color:white'>战数</th>"
+        html += "<th style='background-color:green;color:white'>入手率(‱)</th>"
+        html += "<th style='background-color:green;color:white'>宠物</th>"
+        html += "<th style='background-color:green;color:white'>战数</th>"
+        html += "<th style='background-color:green;color:white'>入手率(‱)</th>"
         html += "</tr>";
 
         if (this.#target === undefined || this.#target === "") {
             html += "<tr>";
             html += "<th style='background-color:black;color:white'>全团队</th>"
             html += "<td style='background-color:wheat'>" + totalCatchCount + "</td>"
+            html += "<td style='background-color:wheat'>" + totalCount + "</td>"
             html += "<td style='background-color:wheat'>" + ReportUtils.permyriad(totalCatchCount, totalCount) + "</td>"
             html += "<td style='background-color:wheat'>" + totalPrimaryCatchCount + "</td>"
+            html += "<td style='background-color:wheat'>" + totalPrimaryCount + "</td>"
             html += "<td style='background-color:wheat'>" + ReportUtils.permyriad(totalPrimaryCatchCount, totalPrimaryCount) + "</td>"
             html += "<td style='background-color:wheat'>" + totalJuniorCatchCount + "</td>"
+            html += "<td style='background-color:wheat'>" + totalJuniorCount + "</td>"
             html += "<td style='background-color:wheat'>" + ReportUtils.permyriad(totalJuniorCatchCount, totalJuniorCount) + "</td>"
             html += "<td style='background-color:wheat'>" + totalSeniorCatchCount + "</td>"
+            html += "<td style='background-color:wheat'>" + totalSeniorCount + "</td>"
             html += "<td style='background-color:wheat'>" + ReportUtils.permyriad(totalSeniorCatchCount, totalSeniorCount) + "</td>"
             html += "</tr>";
         }
@@ -287,12 +304,16 @@ class BattleReportGenerator {
                 html += "<tr>";
                 html += "<th style='background-color:black;color:white'>" + it.roleName + "</th>"
                 html += "<td style='background-color:#F8F0E0'>" + it.catchCount + "</td>"
+                html += "<td style='background-color:#F8F0E0'>" + it.count + "</td>"
                 html += "<td style='background-color:#F8F0E0'>" + ReportUtils.permyriad(it.catchCount, it.count) + "</td>"
                 html += "<td style='background-color:#F8F0E0'>" + it.primaryCatchCount + "</td>"
+                html += "<td style='background-color:#F8F0E0'>" + it.primaryCount + "</td>"
                 html += "<td style='background-color:#F8F0E0'>" + ReportUtils.permyriad(it.primaryCatchCount, it.primaryCount) + "</td>"
                 html += "<td style='background-color:#F8F0E0'>" + it.juniorCatchCount + "</td>"
+                html += "<td style='background-color:#F8F0E0'>" + it.juniorCount + "</td>"
                 html += "<td style='background-color:#F8F0E0'>" + ReportUtils.permyriad(it.juniorCatchCount, it.juniorCount) + "</td>"
                 html += "<td style='background-color:#F8F0E0'>" + it.seniorCatchCount + "</td>"
+                html += "<td style='background-color:#F8F0E0'>" + it.seniorCount + "</td>"
                 html += "<td style='background-color:#F8F0E0'>" + ReportUtils.permyriad(it.seniorCatchCount, it.seniorCount) + "</td>"
                 html += "</tr>";
             }
