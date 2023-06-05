@@ -103,15 +103,32 @@ class BattleReportGenerator {
         html += "<table style='background-color:#888888;text-align:center;margin:auto;width:100%'>";
         html += "<tbody>";
         html += "<tr>";
-        html += "<th style='background-color:green;color:white'>名字</th>"
-        html += "<th style='background-color:green;color:white' colspan='2'>战数</th>"
-        html += "<th style='background-color:green;color:white'>胜率（%）</th>"
-        html += "<th style='background-color:green;color:white'>初森</th>"
-        html += "<th style='background-color:green;color:white'>中塔</th>"
-        html += "<th style='background-color:green;color:white' colspan='2'>上洞</th>"
-        html += "<th style='background-color:green;color:white'>上洞胜率（%）</th>"
-        html += "<th style='background-color:green;color:white' colspan='2'>十二宫</th>"
-        html += "<th style='background-color:green;color:white'>十二宫胜率（%）</th>"
+        html += "<th style='background-color:navy;color:greenyellow' colspan='16'>战 数 统 计</th>"
+        html += "</tr>";
+        html += "<tr>";
+        html += "<th style='background-color:green;color:white' rowspan='2'>名字</th>"
+        html += "<th style='background-color:green;color:white' colspan='3'>总计</th>"
+        html += "<th style='background-color:green;color:white' colspan='2'>初森</th>"
+        html += "<th style='background-color:green;color:white' colspan='2'>中塔</th>"
+        html += "<th style='background-color:green;color:white' colspan='4'>上洞</th>"
+        html += "<th style='background-color:green;color:white' colspan='4'>十二宫</th>"
+        html += "</tr>";
+        html += "<tr>";
+        html += "<th style='background-color:green;color:white'>胜利</th>"
+        html += "<th style='background-color:green;color:white'>战数</th>"
+        html += "<th style='background-color:green;color:white'>胜率(%)</th>"
+        html += "<th style='background-color:green;color:white'>战数</th>"
+        html += "<th style='background-color:green;color:white'>占比(%)</th>"
+        html += "<th style='background-color:green;color:white'>战数</th>"
+        html += "<th style='background-color:green;color:white'>占比(%)</th>"
+        html += "<th style='background-color:green;color:white'>胜利</th>"
+        html += "<th style='background-color:green;color:white'>战数</th>"
+        html += "<th style='background-color:green;color:white'>胜率(%)</th>"
+        html += "<th style='background-color:green;color:white'>占比(%)</th>"
+        html += "<th style='background-color:green;color:white'>胜利</th>"
+        html += "<th style='background-color:green;color:white'>战数</th>"
+        html += "<th style='background-color:green;color:white'>胜率(%)</th>"
+        html += "<th style='background-color:green;color:white'>占比(%)</th>"
         html += "</tr>";
 
         if (this.#target === undefined || this.#target === "") {
@@ -121,13 +138,17 @@ class BattleReportGenerator {
             html += "<td style='background-color:wheat'>" + totalCount + "</td>"
             html += "<td style='background-color:wheat'>" + ReportUtils.percentage(totalWinCount, totalCount) + "</td>"
             html += "<td style='background-color:wheat'>" + totalPrimaryCount + "</td>"
+            html += "<td style='background-color:wheat'>" + ReportUtils.percentage(totalPrimaryCount, totalCount) + "</td>"
             html += "<td style='background-color:wheat'>" + totalJuniorCount + "</td>"
+            html += "<td style='background-color:wheat'>" + ReportUtils.percentage(totalJuniorCount, totalCount) + "</td>"
             html += "<td style='background-color:wheat;color:blue'>" + totalSeniorWinCount + "</td>"
             html += "<td style='background-color:wheat'>" + totalSeniorCount + "</td>"
             html += "<td style='background-color:wheat'>" + ReportUtils.percentage(totalSeniorWinCount, totalSeniorCount) + "</td>"
+            html += "<td style='background-color:wheat'>" + ReportUtils.percentage(totalSeniorCount, totalCount) + "</td>"
             html += "<td style='background-color:wheat;color:blue'>" + totalZodiacWinCount + "</td>"
             html += "<td style='background-color:wheat'>" + totalZodiacCount + "</td>"
             html += "<td style='background-color:wheat'>" + ReportUtils.percentage(totalZodiacWinCount, totalZodiacCount) + "</td>"
+            html += "<td style='background-color:wheat'>" + ReportUtils.percentage(totalZodiacCount, totalCount) + "</td>"
             html += "</tr>";
         }
 
@@ -139,13 +160,17 @@ class BattleReportGenerator {
                 html += "<td style='background-color:#F8F0E0'>" + it.count + "</td>"
                 html += "<td style='background-color:#F8F0E0'>" + ReportUtils.percentage(it.winCount, it.count) + "</td>"
                 html += "<td style='background-color:#F8F0E0'>" + it.primaryCount + "</td>"
+                html += "<td style='background-color:#F8F0E0'>" + ReportUtils.percentage(it.primaryCount, it.count) + "</td>"
                 html += "<td style='background-color:#F8F0E0'>" + it.juniorCount + "</td>"
+                html += "<td style='background-color:#F8F0E0'>" + ReportUtils.percentage(it.juniorCount, it.count) + "</td>"
                 html += "<td style='background-color:#F8F0E0;color:blue'>" + it.seniorWinCount + "</td>"
                 html += "<td style='background-color:#F8F0E0'>" + it.seniorCount + "</td>"
                 html += "<td style='background-color:#F8F0E0'>" + ReportUtils.percentage(it.seniorWinCount, it.seniorCount) + "</td>"
+                html += "<td style='background-color:#F8F0E0'>" + ReportUtils.percentage(it.seniorCount, it.count) + "</td>"
                 html += "<td style='background-color:#F8F0E0;color:blue'>" + it.zodiacWinCount + "</td>"
                 html += "<td style='background-color:#F8F0E0'>" + it.zodiacCount + "</td>"
                 html += "<td style='background-color:#F8F0E0'>" + ReportUtils.percentage(it.zodiacWinCount, it.zodiacCount) + "</td>"
+                html += "<td style='background-color:#F8F0E0'>" + ReportUtils.percentage(it.zodiacCount, it.count) + "</td>"
                 html += "</tr>";
             }
         });
