@@ -6,6 +6,7 @@ import PetProfileLoader from "../../core/PetProfileLoader";
 import GemReportGenerator from "../../core/report/GemReportGenerator";
 import ReportUtils from "../../core/report/ReportUtils";
 import TreasureReportGenerator from "../../core/report/TreasureReportGenerator";
+import ZodiacBattleReportGenerator from "../../core/report/ZodiacBattleReportGenerator";
 import RoleStorageManager from "../../core/role/RoleStorageManager";
 import Credential from "../../util/Credential";
 import MessageBoard from "../../util/MessageBoard";
@@ -74,6 +75,7 @@ class PersonalStatisticsPageProcessor extends PageProcessorCredentialSupport {
         html += "<button role='button' id='s-1'>转职数据统计</button>";
         html += "<button role='button' id='s-2'>上洞数据统计</button>";
         html += "<button role='button' id='s-3'>宝石数据统计</button>";
+        html += "<button role='button' id='s-4'>十二宫战斗统计</button>";
         html += "</td>";
         html += "<tr>";
         html += "<tr style='display:none'>";
@@ -130,6 +132,7 @@ class PersonalStatisticsPageProcessor extends PageProcessorCredentialSupport {
         doRoleCareerTransferStatistics();
         doTreasureStatistics();
         doGemStatistics();
+        doZodiacBattleStatistics();
     }
 
     #welcomeMessageHtml() {
@@ -641,7 +644,7 @@ function doTreasureStatistics() {
             .then(dataList => {
                 const candidates = dataList
                     .filter(it => target === "" || it.roleId === target);
-                const html = new TreasureReportGenerator(dataList).generate();
+                const html = new TreasureReportGenerator(candidates).generate();
                 $("#statistics").html(html).parent().show();
             });
     });
@@ -655,7 +658,21 @@ function doGemStatistics() {
             .then(dataList => {
                 const candidates = dataList
                     .filter(it => target === "" || it.roleId === target);
-                const html = new GemReportGenerator(dataList).generate();
+                const html = new GemReportGenerator(candidates).generate();
+                $("#statistics").html(html).parent().show();
+            });
+    });
+}
+
+function doZodiacBattleStatistics() {
+    $("#s-4").on("click", () => {
+        const target = $("#teamMemberSelect").val()! as string;
+        BattleStorageManager.getBattleResultStorage()
+            .loads()
+            .then(dataList => {
+                const candidates = dataList
+                    .filter(it => target === "" || it.roleId === target);
+                const html = new ZodiacBattleReportGenerator(dataList).generate();
                 $("#statistics").html(html).parent().show();
             });
     });
