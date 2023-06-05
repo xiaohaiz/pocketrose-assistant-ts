@@ -75,4 +75,21 @@ function bar2(width: number) {
     return "<img src='" + Constants.POCKET_DOMAIN + "/image/bg/bar2.gif'  height='10' width='" + width + "' alt=''>";
 }
 
+function generateTableHtml(left: string, right: string) {
+    let html = "";
+    html += "<table style='background-color:transparent;border-width:0;border-spacing:0;width:100%;margin:auto'>";
+    html += "<tbody>";
+    html += "<tr>";
+    html += "<td style='text-align:center'>";
+    html += left;
+    html += "</td>";
+    html += "<td style='width:100%;text-align:right'>";
+    html += right;
+    html += "</td>";
+    html += "</tr>";
+    html += "</tbody>";
+    html += "</table>";
+    return html;
+}
+
 export = ReportUtils;
