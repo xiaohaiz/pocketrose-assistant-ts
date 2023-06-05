@@ -1,5 +1,6 @@
 import _ from "lodash";
 import StringUtils from "../../util/StringUtils";
+import BattleDeclarationManager from "./BattleDeclarationManager";
 
 class BattlePage {
 
@@ -365,7 +366,7 @@ function generateBattleReport(battleTable: JQuery, page: BattlePage) {
 
     let brs = "";
     if (page.battleResult === "战胜") {
-        brs = "<span style='color:indigo'>暴虎冯河，战胜了<span style='color:green'>" + page.monsterNameHtml + "</span>！</span>";
+        brs = "<span style='color:indigo'>" + BattleDeclarationManager.randomWinDeclaration() + "，战胜了<span style='color:green'>" + page.monsterNameHtml + "</span>！</span>";
     } else if (page.battleResult === "战败") {
         brs = "<span style='color:indigo'>涕泗横流，被<span style='color:green'>" + page.monsterNameHtml + "</span>暴揍一顿！</span>"
     } else {
