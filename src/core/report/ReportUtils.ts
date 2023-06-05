@@ -7,6 +7,27 @@ class ReportUtils {
     // permillage
     // permyriad
 
+    static percentage(a: number, b: number) {
+        if (b === 0) {
+            return "-";
+        }
+        let ratio = a / b;
+        ratio = _.min([ratio, 1])!;
+        ratio = _.max([ratio, 0])!;
+        let left: string;
+        if (ratio === 0) {
+            left = bar2(50);
+        } else if (ratio === 1) {
+            left = bar1(50);
+        } else {
+            const w1 = Math.min(49, Math.ceil(50 * ratio));
+            const w2 = 50 - w1;
+            left = bar1(w1) + bar2(w2);
+        }
+        const right = (ratio * 100).toFixed(2);
+        return generateTableHtml(left, right);
+    }
+
     static generatePercentageHtml(a: number, b: number) {
         if (b === 0) {
             return "-";
