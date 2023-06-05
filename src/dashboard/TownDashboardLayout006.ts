@@ -42,24 +42,24 @@ class TownDashboardLayout006 extends TownDashboardLayout {
 
         BattleStorageManager.getBattleRecordStorage().load(credential.id).then(record => {
             const lastBattle = record.html!;
-            if (lastBattle !== "") {
-                if (StorageUtils.getBoolean("_pa_055")) {
-                    const children: JQuery[] = [];
-                    $("#battlePanel")
-                        .html(lastBattle)
-                        .find("> *")
-                        .each((idx, child) => {
-                            const element = $(child);
-                            if (element.is("p") || element.is("b")) {
-                                element.hide();
-                                children.push(element);
-                            }
-                        });
-                    _showReportElement(children, 0);
-                } else {
-                    $("#battlePanel")
-                        .html(lastBattle);
-                }
+            if (lastBattle.includes("吐故纳新，扶摇直上")) {
+                $("#battlePanel").css("background-color", "wheat");
+            }
+            if (StorageUtils.getBoolean("_pa_055")) {
+                const children: JQuery[] = [];
+                $("#battlePanel")
+                    .html(lastBattle)
+                    .find("> *")
+                    .each((idx, child) => {
+                        const element = $(child);
+                        if (element.is("p") || element.is("b")) {
+                            element.hide();
+                            children.push(element);
+                        }
+                    });
+                _showReportElement(children, 0);
+            } else {
+                $("#battlePanel").html(lastBattle);
             }
         });
 
