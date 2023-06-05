@@ -164,11 +164,11 @@ class BattleReportGenerator {
         html += "<th style='background-color:green;color:white'>图鉴数</th>"
         html += "<th style='background-color:green;color:white'>图鉴入手率（‱）</th>"
         html += "<th style='background-color:green;color:white'>初森</th>"
-        html += "<th style='background-color:green;color:white'>初森入手率（‱）</th>"
+        html += "<th style='background-color:green;color:white'>初森图鉴（‱）</th>"
         html += "<th style='background-color:green;color:white'>中塔</th>"
-        html += "<th style='background-color:green;color:white'>中塔入手率（‱）</th>"
+        html += "<th style='background-color:green;color:white'>中塔图鉴（‱）</th>"
         html += "<th style='background-color:green;color:white'>上洞</th>"
-        html += "<th style='background-color:green;color:white'>上洞入手率（‱）</th>"
+        html += "<th style='background-color:green;color:white'>上洞图鉴（‱）</th>"
         html += "</tr>";
 
         if (this.#target === undefined || this.#target === "") {
@@ -197,6 +197,57 @@ class BattleReportGenerator {
                 html += "<th style='background-color:#F8F0E0'>" + ReportUtils.permyriad(it.juniorPhotoCount, it.juniorCount) + "</th>"
                 html += "<th style='background-color:#F8F0E0'>" + it.seniorPhotoCount + "</th>"
                 html += "<th style='background-color:#F8F0E0'>" + ReportUtils.permyriad(it.seniorPhotoCount, it.seniorCount) + "</th>"
+                html += "</tr>";
+            }
+        });
+
+        html += "</tbody>";
+        html += "</table>";
+        html += "</td>";
+        html += "</tr>";
+
+        html += "<tr>";
+        html += "<td>";
+        html += "<table style='background-color:#888888;text-align:center;margin:auto;width:100%'>";
+        html += "<tbody>";
+        html += "<tr>";
+        html += "<th style='background-color:green;color:white'>名字</th>"
+        html += "<th style='background-color:green;color:white'>宠物数</th>"
+        html += "<th style='background-color:green;color:white'>宠物入手率（‱）</th>"
+        html += "<th style='background-color:green;color:white'>初森</th>"
+        html += "<th style='background-color:green;color:white'>初森宠物（‱）</th>"
+        html += "<th style='background-color:green;color:white'>中塔</th>"
+        html += "<th style='background-color:green;color:white'>中塔宠物（‱）</th>"
+        html += "<th style='background-color:green;color:white'>上洞</th>"
+        html += "<th style='background-color:green;color:white'>上洞宠物（‱）</th>"
+        html += "</tr>";
+
+        if (this.#target === undefined || this.#target === "") {
+            html += "<tr>";
+            html += "<th style='background-color:black;color:white'>全团队</th>"
+            html += "<th style='background-color:wheat'>" + totalCatchCount + "</th>"
+            html += "<th style='background-color:wheat'>" + ReportUtils.permyriad(totalCatchCount, totalCount) + "</th>"
+            html += "<th style='background-color:wheat'>" + totalPrimaryCatchCount + "</th>"
+            html += "<th style='background-color:wheat'>" + ReportUtils.permyriad(totalPrimaryCatchCount, totalPrimaryCount) + "</th>"
+            html += "<th style='background-color:wheat'>" + totalJuniorCatchCount + "</th>"
+            html += "<th style='background-color:wheat'>" + ReportUtils.permyriad(totalJuniorCatchCount, totalJuniorCount) + "</th>"
+            html += "<th style='background-color:wheat'>" + totalSeniorCatchCount + "</th>"
+            html += "<th style='background-color:wheat'>" + ReportUtils.permyriad(totalSeniorCatchCount, totalSeniorCount) + "</th>"
+            html += "</tr>";
+        }
+
+        roles.forEach(it => {
+            if (it.count > 0) {
+                html += "<tr>";
+                html += "<th style='background-color:black;color:white'>" + it.roleName + "</th>"
+                html += "<th style='background-color:#F8F0E0'>" + it.catchCount + "</th>"
+                html += "<th style='background-color:#F8F0E0'>" + ReportUtils.permyriad(it.catchCount, it.count) + "</th>"
+                html += "<th style='background-color:#F8F0E0'>" + it.primaryCatchCount + "</th>"
+                html += "<th style='background-color:#F8F0E0'>" + ReportUtils.permyriad(it.primaryCatchCount, it.primaryCount) + "</th>"
+                html += "<th style='background-color:#F8F0E0'>" + it.juniorCatchCount + "</th>"
+                html += "<th style='background-color:#F8F0E0'>" + ReportUtils.permyriad(it.juniorCatchCount, it.juniorCount) + "</th>"
+                html += "<th style='background-color:#F8F0E0'>" + it.seniorCatchCount + "</th>"
+                html += "<th style='background-color:#F8F0E0'>" + ReportUtils.permyriad(it.seniorCatchCount, it.seniorCount) + "</th>"
                 html += "</tr>";
             }
         });
