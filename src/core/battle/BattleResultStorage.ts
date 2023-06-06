@@ -292,6 +292,22 @@ class BattleResultStorage {
         })();
     }
 
+
+    async clear(): Promise<void> {
+        const db = await PocketDatabase.connectDatabase();
+        return await (() => {
+            return new Promise<void>((resolve, reject) => {
+                const request = db
+                    .transaction(["BattleResult"], "readwrite")
+                    .objectStore("BattleResult")
+                    .clear();
+                request.onerror = reject;
+                request.onsuccess = () => {
+                    resolve();
+                };
+            });
+        })();
+    }
 }
 
 export = BattleResultStorage;
