@@ -6,7 +6,7 @@ import StringUtils from "../../util/StringUtils";
 import PageProcessorContext from "../PageProcessorContext";
 import PageProcessorCredentialSupport from "../PageProcessorCredentialSupport";
 
-class PersonalFastLoginPageProcessor extends PageProcessorCredentialSupport {
+class PersonalTeamManagementPageProcessor extends PageProcessorCredentialSupport {
 
     doProcess(credential: Credential, context?: PageProcessorContext): void {
         doProcess(credential);
@@ -218,4 +218,4 @@ function doRefresh() {
     doRender();
 }
 
-export = PersonalFastLoginPageProcessor;
+export = PersonalTeamManagementPageProcessor;
