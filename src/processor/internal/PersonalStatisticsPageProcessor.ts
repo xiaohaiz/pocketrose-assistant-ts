@@ -6,6 +6,7 @@ import MonsterReportGenerator from "../../core/report/MonsterReportGenerator";
 import TreasureReportGenerator from "../../core/report/TreasureReportGenerator";
 import ZodiacReportGenerator from "../../core/report/ZodiacReportGenerator";
 import RoleStorageManager from "../../core/role/RoleStorageManager";
+import CommentBoard from "../../util/CommentBoard";
 import Credential from "../../util/Credential";
 import MessageBoard from "../../util/MessageBoard";
 import PageUtils from "../../util/PageUtils";
@@ -142,6 +143,12 @@ abstract class PersonalStatisticsPageProcessor extends PageProcessorCredentialSu
         doBindReport1();
         doBindReport2();
         doBindReport3();
+
+        CommentBoard.createCommentBoard(NpcLoader.getNpcImageHtml("夜九")!);
+        html = "<button role='button' class='databaseButton' id='clearBattleResult'>清除所有战斗结果数据</button>";
+        CommentBoard.writeMessage(html);
+
+        doDatabaseClearBattleResult();
     }
 
     #welcomeMessageHtml() {
@@ -313,6 +320,22 @@ function doBindReport3() {
             .then(dataList => {
                 const html = new ZodiacReportGenerator(dataList, target).generate();
                 $("#statistics").html(html).parent().show();
+            });
+    });
+}
+
+function doDatabaseClearBattleResult() {
+    $("#clearBattleResult").on("click", () => {
+        if (!confirm("注意！！数据清除后无法恢复！！请确认！！")) {
+            return;
+        }
+        $(".databaseButton").prop("disabled", true);
+        BattleStorageManager.getBattleResultStorage()
+            .clear()
+            .then(() => {
+                const message: string = "<b style='font-weight:bold;font-size:300%;color:red'>战斗结果数据已经全部清除！</b>";
+                $("#statistics").html(message).parent().show();
+                $(".databaseButton").prop("disabled", false);
             });
     });
 }
