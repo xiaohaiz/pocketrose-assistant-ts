@@ -145,10 +145,13 @@ abstract class PersonalStatisticsPageProcessor extends PageProcessorCredentialSu
         doBindReport3();
 
         CommentBoard.createCommentBoard(NpcLoader.getNpcImageHtml("夜九")!);
-        html = "<button role='button' class='databaseButton' id='clearBattleResult'>清除所有战斗结果数据</button>";
+        html = "" +
+            "<button role='button' class='databaseButton' id='clearBattleResult'>清除所有战斗结果数据</button>" +
+            "<button role='button' class='databaseButton' id='exportBattleResult'>导出所有战斗结果数据</button>";
         CommentBoard.writeMessage(html);
 
         doDatabaseClearBattleResult();
+        doDatabaseExportBattleResult();
     }
 
     #welcomeMessageHtml() {
@@ -335,6 +338,27 @@ function doDatabaseClearBattleResult() {
             .then(() => {
                 const message: string = "<b style='font-weight:bold;font-size:300%;color:red'>战斗结果数据已经全部清除！</b>";
                 $("#statistics").html(message).parent().show();
+                $(".databaseButton").prop("disabled", false);
+            });
+    });
+}
+
+function doDatabaseExportBattleResult() {
+    $("#exportBattleResult").on("click", () => {
+        $(".databaseButton").prop("disabled", true);
+        BattleStorageManager.getBattleResultStorage()
+            .loads()
+            .then(dataList => {
+                const json = JSON.stringify(dataList.map(it => it.asObject()));
+
+                const html = "<textarea id='battleResultData' " +
+                    "rows='15' " +
+                    "style=\"height:expression((this.scrollHeight>150)?'150px':(this.scrollHeight+5)+'px');overflow:auto;width:100%;word-break;break-all;\">" +
+                    "</textarea>";
+                $("#statistics").html(html).parent().show();
+
+                $("#battleResultData").val(json);
+
                 $(".databaseButton").prop("disabled", false);
             });
     });
