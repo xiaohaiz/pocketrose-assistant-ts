@@ -29,7 +29,7 @@ class MonsterReportGenerator {
         let totalBattleCount_257 = 0;       // 火鸡战士(257)
 
         // 记录每个怪物战斗了多少次
-        const monsterCount = new Map<string, number>();
+        const monsterCount = new Map<string, number[]>();
 
         const roles = new Map<string, RoleMonster>();
         FastLoginManager.getAllFastLogins().forEach(config => {
@@ -61,13 +61,19 @@ class MonsterReportGenerator {
             }
             const code = StringUtils.substringBetween(monsterName, "(", ")");
             if (!monsterCount.has(code)) {
-                monsterCount.set(code, 0);
+                monsterCount.set(code, [0, 0]);
             }
-            monsterCount.set(code, (monsterCount.get(code)! + data.obtainTotalCount));
+            monsterCount.set(code, [
+                (monsterCount.get(code)![0] + data.obtainTotalCount),
+                (monsterCount.get(code)![1] + data.obtainWinCount)
+            ]);
             if (!role.monsterCount.has(code)) {
-                role.monsterCount.set(code, 0);
+                role.monsterCount.set(code, [0, 0]);
             }
-            role.monsterCount.set(code, (role.monsterCount.get(code)! + data.obtainTotalCount));
+            role.monsterCount.set(code, [
+                (role.monsterCount.get(code)![0] + data.obtainTotalCount),
+                (role.monsterCount.get(code)![1] + data.obtainWinCount)
+            ]);
 
             switch (code) {
                 case "012":
@@ -94,14 +100,14 @@ class MonsterReportGenerator {
         html += "<tbody>";
 
         // --------------------------------------------------------------------
-        // 怪 物 统 计
+        // 怪 物 统 计 （ 战 数 排 序 ）
         // --------------------------------------------------------------------
         html += "<tr>";
         html += "<td>";
         html += "<table style='background-color:#888888;text-align:center;margin:auto;width:100%'>";
         html += "<tbody>";
         html += "<tr>";
-        html += "<th style='background-color:navy;color:greenyellow' colspan='16'>怪 物 统 计</th>"
+        html += "<th style='background-color:navy;color:greenyellow' colspan='16'>怪 物 统 计 （ 战 数 排 序 ）</th>"
         html += "</tr>";
         html += "<tr>";
         html += "<th style='background-color:green;color:white' colspan='1'>名字</th>"
@@ -109,7 +115,7 @@ class MonsterReportGenerator {
         html += "</tr>";
 
         if (this.#target === undefined || this.#target === "") {
-            const list = asList(monsterCount);
+            const list = sortByBattleCount(monsterCount);
             html += "<tr>";
             html += "<th style='background-color:black;color:white' rowspan='2'>全团队</th>"
             for (let i = 0; i < 10; i++) {
@@ -137,7 +143,7 @@ class MonsterReportGenerator {
         }
 
         roles.forEach(it => {
-            const list = asList(it.monsterCount);
+            const list = sortByBattleCount(it.monsterCount);
             html += "<tr>";
             html += "<th style='background-color:black;color:white' rowspan='2'>" + it.roleName + "</th>"
             for (let i = 0; i < 10; i++) {
@@ -256,7 +262,7 @@ class MonsterReportGenerator {
 class RoleMonster {
 
     readonly roleName: string;
-    readonly monsterCount: Map<string, number>;
+    readonly monsterCount: Map<string, number[]>;
 
     seniorBattleCount = 0;
     battleCount_012 = 0;       // 巴大蝴(012)
@@ -266,16 +272,16 @@ class RoleMonster {
 
     constructor(roleName: string) {
         this.roleName = roleName;
-        this.monsterCount = new Map<string, number>();
+        this.monsterCount = new Map<string, number[]>();
     }
 }
 
-function asList(monsterCount: Map<string, number>) {
+function sortByBattleCount(monsterCount: Map<string, number[]>) {
     let list: [][] = [];
-    monsterCount.forEach((count, code) => {
+    monsterCount.forEach((counts, code) => {
         const profile = PetProfileLoader.load(code)!;
         // @ts-ignore
-        list.push([profile, count]);
+        list.push([profile, counts[0]]);
     });
     list = list.sort((a, b) => {
         // @ts-ignore
