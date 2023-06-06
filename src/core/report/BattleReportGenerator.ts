@@ -1,4 +1,5 @@
 import BattleResult from "../battle/BattleResult";
+import TreasureLoader from "../equipment/TreasureLoader";
 import FastLoginManager from "../FastLoginManager";
 import ReportUtils from "./ReportUtils";
 
@@ -37,6 +38,10 @@ class BattleReportGenerator {
         let totalPrimaryCatchCount = 0;
         let totalJuniorCatchCount = 0;
         let totalSeniorCatchCount = 0;
+
+        let totalTreasureCount = 0;
+        let totalUsefulTreasureCount = 0;
+        let totalUselessTreasureCount = 0;
 
         const roles = new Map<string, RoleBattle>();
         FastLoginManager.getAllFastLogins().forEach(config => {
@@ -90,6 +95,22 @@ class BattleReportGenerator {
                     role.zodiacWinCount += data.obtainWinCount;
                     role.zodiacCount += data.obtainTotalCount;
                     break;
+            }
+            if (data.treasures !== undefined) {
+                data.treasures.forEach((count, code) => {
+                    if (TreasureLoader.isTreasure(code)) {
+                        totalTreasureCount += count;
+                        role.treasureCount += count;
+
+                        if (TreasureLoader.isUselessTreasure(code)) {
+                            totalUselessTreasureCount += count;
+                            role.uselessTreasureCount += count;
+                        } else {
+                            totalUsefulTreasureCount += count;
+                            role.usefulTreasureCount += count;
+                        }
+                    }
+                });
             }
         }
 
@@ -334,6 +355,7 @@ class BattleReportGenerator {
 class RoleBattle {
 
     readonly roleName: string;
+
     winCount = 0;
     count = 0;
     primaryCount = 0;
@@ -352,6 +374,10 @@ class RoleBattle {
     primaryCatchCount = 0;
     juniorCatchCount = 0;
     seniorCatchCount = 0;
+
+    treasureCount = 0;
+    usefulTreasureCount = 0;
+    uselessTreasureCount = 0;
 
     constructor(roleName: string) {
         this.roleName = roleName;

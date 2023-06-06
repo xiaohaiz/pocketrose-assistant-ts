@@ -16,6 +16,16 @@ class TreasureLoader {
     static allTreasureNames() {
         return Object.keys(TREASURES);
     }
+
+    static isTreasure(code: string) {
+        const cn = _.parseInt(code);
+        return cn >= 1 && cn <= 49;
+    }
+
+    static isUselessTreasure(code: string) {
+        const cn = _.parseInt(code);
+        return cn >= 32 && cn <= 49;
+    }
 }
 
 // ----------------------------------------------------------------------------
