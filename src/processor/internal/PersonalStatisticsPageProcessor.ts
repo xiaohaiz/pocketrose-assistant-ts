@@ -3,7 +3,11 @@ import BattleStorageManager from "../../core/battle/BattleStorageManager";
 import FastLoginManager from "../../core/FastLoginManager";
 import NpcLoader from "../../core/NpcLoader";
 import PetProfileLoader from "../../core/PetProfileLoader";
+import BattleReportGenerator from "../../core/report/BattleReportGenerator";
+import GemReportGenerator from "../../core/report/GemReportGenerator";
 import ReportUtils from "../../core/report/ReportUtils";
+import TreasureReportGenerator from "../../core/report/TreasureReportGenerator";
+import ZodiacBattleReportGenerator from "../../core/report/ZodiacBattleReportGenerator";
 import RoleStorageManager from "../../core/role/RoleStorageManager";
 import Credential from "../../util/Credential";
 import MessageBoard from "../../util/MessageBoard";
@@ -12,7 +16,7 @@ import StringUtils from "../../util/StringUtils";
 import PageProcessorContext from "../PageProcessorContext";
 import PageProcessorCredentialSupport from "../PageProcessorCredentialSupport";
 
-class PersonalStatisticsPageProcessor extends PageProcessorCredentialSupport {
+abstract class PersonalStatisticsPageProcessor extends PageProcessorCredentialSupport {
 
     doProcess(credential: Credential, context?: PageProcessorContext): void {
         // 点名的页面也是令人无语，全部在一个大form里面。
@@ -69,7 +73,11 @@ class PersonalStatisticsPageProcessor extends PageProcessorCredentialSupport {
         html += "<tr>";
         html += "<tr>";
         html += "<td style='text-align:center;background-color:#F8F0E0'>";
+        html += "<button role='button' id='report-1'>战斗统计报告</button>";
         html += "<button role='button' id='s-1'>转职数据统计</button>";
+        html += "<button role='button' id='s-2'>上洞数据统计</button>";
+        html += "<button role='button' id='s-3'>宝石数据统计</button>";
+        html += "<button role='button' id='s-4'>十二宫战斗统计</button>";
         html += "</td>";
         html += "<tr>";
         html += "<tr style='display:none'>";
@@ -103,9 +111,7 @@ class PersonalStatisticsPageProcessor extends PageProcessorCredentialSupport {
             $("#rollCallForm").toggle();
         });
 
-        $("#returnButton").on("click", () => {
-            $("input:submit[value='返回城市']").trigger("click");
-        });
+        this.doBindReturnButton(credential);
 
         html = "";
         html += "<select id='teamMemberSelect'>";
@@ -124,12 +130,19 @@ class PersonalStatisticsPageProcessor extends PageProcessorCredentialSupport {
 
         doBindButton();
         doRoleCareerTransferStatistics();
+        doTreasureStatistics();
+        doGemStatistics();
+        doZodiacBattleStatistics();
+
+        doBindReport1();
     }
 
     #welcomeMessageHtml() {
         return "<b style='font-size:120%;color:wheat'>想不想对自己的团队有更深层次的了解？</b><br>" +
             "<b style='font-size:120%;color:yellow'>什么，你是想要点名？单击我的头像即可。</b>";
     }
+
+    abstract doBindReturnButton(credential: Credential): void;
 }
 
 function doBindButton() {
@@ -149,6 +162,10 @@ function doBindButton() {
                 let totalDrawCount = 0;
                 let totalCatchCount = 0;
                 let totalPhotoCount = 0;
+
+                let totalTreasureCount = 0;
+                let totalTreasureHintCount = 0;
+                let totalGemCount = 0;
 
                 let bc1 = 0;
                 let wc1 = 0;
@@ -188,6 +205,9 @@ function doBindButton() {
                     totalDrawCount += it.obtainDrawCount;
                     totalCatchCount += it.obtainCatchCount;
                     totalPhotoCount += it.obtainPhotoCount;
+                    totalTreasureCount += it.obtainTreasureCount;
+                    totalTreasureHintCount += it.obtainTreasureHintCount;
+                    totalGemCount += it.obtainGemCount;
 
                     switch (it.monster!) {
                         case "巴大蝴(012)":
@@ -246,7 +266,7 @@ function doBindButton() {
                 html += "<table style='background-color:#888888;border-width:1px;border-spacing:1px;text-align:center;width:100%;margin:auto'>";
                 html += "<tbody>";
                 html += "<tr>";
-                html += "<td colspan='11' style='background-color:navy;color:yellow;font-weight:bold;text-align:center'>战 斗 统 计</td>";
+                html += "<td colspan='14' style='background-color:navy;color:yellow;font-weight:bold;text-align:center'>战 斗 统 计</td>";
                 html += "</tr>";
                 html += "<tr>";
                 html += "<th style='background-color:green;color:white'>战场</th>"
@@ -260,6 +280,9 @@ function doBindButton() {
                 html += "<th style='background-color:green;color:white'>图鉴出率</th>"
                 html += "<th style='background-color:green;color:white'>宠物数</th>"
                 html += "<th style='background-color:green;color:white'>宠物出率</th>"
+                html += "<th style='background-color:green;color:white'>入手数</th>"
+                html += "<th style='background-color:green;color:white'>宝图数</th>"
+                html += "<th style='background-color:green;color:white'>宝石数</th>"
                 html += "</tr>";
                 html += "<tr>";
                 html += "<th style='background-color:#F8F0E0'>-</th>"
@@ -273,6 +296,9 @@ function doBindButton() {
                 html += "<td style='background-color:#F8F0E0;text-align:left'>" + ReportUtils.generatePermyriadHtml(totalPhotoCount, totalBattleCount) + "</td>"
                 html += "<td style='background-color:#F8F0E0'>" + totalCatchCount + "</td>"
                 html += "<td style='background-color:#F8F0E0;text-align:left'>" + ReportUtils.generatePermyriadHtml(totalCatchCount, totalBattleCount) + "</td>"
+                html += "<td style='background-color:#F8F0E0'>" + totalTreasureCount + "</td>"
+                html += "<td style='background-color:#F8F0E0'>" + totalTreasureHintCount + "</td>"
+                html += "<td style='background-color:#F8F0E0'>" + totalGemCount + "</td>"
                 html += "</tr>";
                 html += "<tr>";
                 html += "<th style='background-color:#F8F0E0'>初森</th>"
@@ -286,6 +312,9 @@ function doBindButton() {
                 html += "<td style='background-color:#F8F0E0;text-align:left'>" + ReportUtils.generatePermyriadHtml(pc1, bc1) + "</td>"
                 html += "<td style='background-color:#F8F0E0'>" + cc1 + "</td>"
                 html += "<td style='background-color:#F8F0E0;text-align:left'>" + ReportUtils.generatePermyriadHtml(cc1, bc1) + "</td>"
+                html += "<td style='background-color:#F8F0E0'>-</td>"
+                html += "<td style='background-color:#F8F0E0'>-</td>"
+                html += "<td style='background-color:#F8F0E0'>-</td>"
                 html += "</tr>";
                 html += "<tr>";
                 html += "<th style='background-color:#F8F0E0'>中塔</th>"
@@ -299,6 +328,9 @@ function doBindButton() {
                 html += "<td style='background-color:#F8F0E0;text-align:left'>" + ReportUtils.generatePermyriadHtml(pc2, bc2) + "</td>"
                 html += "<td style='background-color:#F8F0E0'>" + cc2 + "</td>"
                 html += "<td style='background-color:#F8F0E0;text-align:left'>" + ReportUtils.generatePermyriadHtml(cc2, bc2) + "</td>"
+                html += "<td style='background-color:#F8F0E0'>-</td>"
+                html += "<td style='background-color:#F8F0E0'>-</td>"
+                html += "<td style='background-color:#F8F0E0'>-</td>"
                 html += "</tr>";
                 html += "<tr>";
                 html += "<th style='background-color:#F8F0E0'>上洞</th>"
@@ -312,6 +344,9 @@ function doBindButton() {
                 html += "<td style='background-color:#F8F0E0;text-align:left'>" + ReportUtils.generatePermyriadHtml(pc3, bc3) + "</td>"
                 html += "<td style='background-color:#F8F0E0'>" + cc3 + "</td>"
                 html += "<td style='background-color:#F8F0E0;text-align:left'>" + ReportUtils.generatePermyriadHtml(cc3, bc3) + "</td>"
+                html += "<td style='background-color:#F8F0E0'>-</td>"
+                html += "<td style='background-color:#F8F0E0'>-</td>"
+                html += "<td style='background-color:#F8F0E0'>-</td>"
                 html += "</tr>";
                 html += "<tr>";
                 html += "<th style='background-color:#F8F0E0'>十二宫</th>"
@@ -325,6 +360,9 @@ function doBindButton() {
                 html += "<td style='background-color:#F8F0E0;text-align:left'>-</td>"
                 html += "<td style='background-color:#F8F0E0'>-</td>"
                 html += "<td style='background-color:#F8F0E0;text-align:left'>-</td>"
+                html += "<td style='background-color:#F8F0E0'>-</td>"
+                html += "<td style='background-color:#F8F0E0'>-</td>"
+                html += "<td style='background-color:#F8F0E0'>-</td>"
                 html += "</tr>";
                 html += "</tbody>";
                 html += "</table>";
@@ -601,5 +639,60 @@ function doRoleCareerTransferStatistics() {
             });
     });
 }
+
+function doTreasureStatistics() {
+    $("#s-2").on("click", () => {
+        const target = $("#teamMemberSelect").val()! as string;
+        BattleStorageManager.getBattleResultStorage()
+            .loads()
+            .then(dataList => {
+                const candidates = dataList
+                    .filter(it => target === "" || it.roleId === target);
+                const html = new TreasureReportGenerator(candidates).generate();
+                $("#statistics").html(html).parent().show();
+            });
+    });
+}
+
+function doGemStatistics() {
+    $("#s-3").on("click", () => {
+        const target = $("#teamMemberSelect").val()! as string;
+        BattleStorageManager.getBattleResultStorage()
+            .loads()
+            .then(dataList => {
+                const candidates = dataList
+                    .filter(it => target === "" || it.roleId === target);
+                const html = new GemReportGenerator(candidates).generate();
+                $("#statistics").html(html).parent().show();
+            });
+    });
+}
+
+function doZodiacBattleStatistics() {
+    $("#s-4").on("click", () => {
+        const target = $("#teamMemberSelect").val()! as string;
+        BattleStorageManager.getBattleResultStorage()
+            .loads()
+            .then(dataList => {
+                const candidates = dataList
+                    .filter(it => target === "" || it.roleId === target);
+                const html = new ZodiacBattleReportGenerator(candidates).generate();
+                $("#statistics").html(html).parent().show();
+            });
+    });
+}
+
+function doBindReport1() {
+    $("#report-1").on("click", () => {
+        const target = $("#teamMemberSelect").val()! as string;
+        BattleStorageManager.getBattleResultStorage()
+            .loads()
+            .then(dataList => {
+                const html = new BattleReportGenerator(dataList, target).generate();
+                $("#statistics").html(html).parent().show();
+            });
+    });
+}
+
 
 export = PersonalStatisticsPageProcessor;

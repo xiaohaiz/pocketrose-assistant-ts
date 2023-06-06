@@ -94,7 +94,7 @@ const ZODIAC_NPC_LIST: string[] = [
     "艾欧罗斯",
     "修罗",
     "卡妙",
-    "阿布罗狄",
+    "阿布罗迪",
 ];
 
 const POCKET_TASK_NPC_IMAGES = {
