@@ -20,7 +20,7 @@ const EXT_SHORTCUTS = {
     6: ["物品商店", "ITEM_SHOP"],
     7: ["宝石镶嵌", "BAOSHI_SHOP"],
     8: ["冒险公会", "CHANGEMAP"],
-    9: ["快速登陆", "CHUJIA"],
+    9: ["团队管理", "CHUJIA"],
     10: ["宠物联赛", "PET_TZ"],
     11: ["宠物排行", "PETPROFILE"],
     12: ["城市收益", "MAKE_TOWN"],
