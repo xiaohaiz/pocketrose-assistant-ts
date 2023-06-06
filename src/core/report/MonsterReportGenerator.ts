@@ -56,7 +56,12 @@ class MonsterReportGenerator {
         }
 
         let html = "";
-        html += "<table style='background-color:#888888;text-align:center;margin:auto'>";
+        html += "<table style='background-color:transparent;border-spacing:0;border-width:0;margin:auto'>";
+        html += "<tbody>";
+
+        html += "<tr>";
+        html += "<td>";
+        html += "<table style='background-color:#888888;text-align:center;margin:auto;width:100%'>";
         html += "<tbody>";
         html += "<tr>";
         html += "<th style='background-color:navy;color:greenyellow' colspan='16'>怪 物 统 计</th>"
@@ -121,6 +126,11 @@ class MonsterReportGenerator {
             }
             html += "</tr>";
         });
+
+        html += "</tbody>";
+        html += "</table>";
+        html += "</td>";
+        html += "</tr>";
 
         html += "</tbody>";
         html += "</table>";
