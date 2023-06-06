@@ -39,6 +39,11 @@ class BattleReportGenerator {
         let totalJuniorCatchCount = 0;
         let totalSeniorCatchCount = 0;
 
+        let totalHintCount = 0;
+        let totalPrimaryHintCount = 0;
+        let totalJuniorHintCount = 0;
+        let totalSeniorHintCount = 0;
+
         let totalTreasureCount = 0;
         let totalUsefulTreasureCount = 0;
         let totalUselessTreasureCount = 0;
@@ -63,7 +68,8 @@ class BattleReportGenerator {
             role.count += data.obtainTotalCount;
             role.photoCount += data.obtainPhotoCount;
             role.catchCount += data.obtainCatchCount;
-            switch (data.obtainBattleField) {
+            const battleField = data.obtainBattleField;
+            switch (battleField) {
                 case "初森":
                     totalPrimaryCount += data.obtainTotalCount;
                     totalPrimaryPhotoCount += data.obtainPhotoCount;
@@ -113,6 +119,26 @@ class BattleReportGenerator {
                         } else {
                             totalUsefulTreasureCount += count;
                             role.usefulTreasureCount += count;
+                        }
+                    }
+
+                    if (TreasureLoader.isHint(code)) {
+                        totalHintCount += count;
+                        role.hintCount += count;
+
+                        switch (battleField) {
+                            case "初森":
+                                totalPrimaryHintCount += count;
+                                role.primaryHintCount += count;
+                                break;
+                            case "中塔":
+                                totalJuniorHintCount += count;
+                                role.juniorHintCount += count;
+                                break;
+                            case "上洞":
+                                totalSeniorHintCount += count;
+                                role.seniorHintCount += count;
+                                break;
                         }
                     }
                 });
@@ -355,6 +381,78 @@ class BattleReportGenerator {
         html += "<table style='background-color:#888888;text-align:center;margin:auto;width:100%'>";
         html += "<tbody>";
         html += "<tr>";
+        html += "<th style='background-color:navy;color:greenyellow' colspan='13'>藏 宝 图 统 计</th>"
+        html += "</tr>";
+        html += "<tr>";
+        html += "<th style='background-color:green;color:white' rowspan='2'>名字</th>"
+        html += "<th style='background-color:green;color:white' colspan='3'>总计</th>"
+        html += "<th style='background-color:green;color:white' colspan='3'>初森</th>"
+        html += "<th style='background-color:green;color:white' colspan='3'>中塔</th>"
+        html += "<th style='background-color:green;color:white' colspan='3'>上洞</th>"
+        html += "</tr>";
+        html += "<tr>";
+        html += "<th style='background-color:green;color:white'>藏宝图</th>"
+        html += "<th style='background-color:green;color:white'>战数</th>"
+        html += "<th style='background-color:green;color:white'>入手率(‱)</th>"
+        html += "<th style='background-color:green;color:white'>藏宝图</th>"
+        html += "<th style='background-color:green;color:white'>战数</th>"
+        html += "<th style='background-color:green;color:white'>入手率(‱)</th>"
+        html += "<th style='background-color:green;color:white'>藏宝图</th>"
+        html += "<th style='background-color:green;color:white'>战数</th>"
+        html += "<th style='background-color:green;color:white'>入手率(‱)</th>"
+        html += "<th style='background-color:green;color:white'>藏宝图</th>"
+        html += "<th style='background-color:green;color:white'>战数</th>"
+        html += "<th style='background-color:green;color:white'>入手率(‱)</th>"
+        html += "</tr>";
+
+        if (this.#target === undefined || this.#target === "") {
+            html += "<tr>";
+            html += "<th style='background-color:black;color:white'>全团队</th>"
+            html += "<td style='background-color:wheat'>" + totalHintCount + "</td>"
+            html += "<td style='background-color:wheat'>" + totalCount + "</td>"
+            html += "<td style='background-color:wheat'>" + ReportUtils.permyriad(totalHintCount, totalCount) + "</td>"
+            html += "<td style='background-color:wheat'>" + totalPrimaryHintCount + "</td>"
+            html += "<td style='background-color:wheat'>" + totalPrimaryCount + "</td>"
+            html += "<td style='background-color:wheat'>" + ReportUtils.permyriad(totalPrimaryHintCount, totalPrimaryCount) + "</td>"
+            html += "<td style='background-color:wheat'>" + totalJuniorHintCount + "</td>"
+            html += "<td style='background-color:wheat'>" + totalJuniorCount + "</td>"
+            html += "<td style='background-color:wheat'>" + ReportUtils.permyriad(totalJuniorHintCount, totalJuniorCount) + "</td>"
+            html += "<td style='background-color:wheat'>" + totalSeniorHintCount + "</td>"
+            html += "<td style='background-color:wheat'>" + totalSeniorCount + "</td>"
+            html += "<td style='background-color:wheat'>" + ReportUtils.permyriad(totalSeniorHintCount, totalSeniorCount) + "</td>"
+            html += "</tr>";
+        }
+
+        roles.forEach(it => {
+            if (it.count > 0) {
+                html += "<tr>";
+                html += "<th style='background-color:black;color:white'>" + it.roleName + "</th>"
+                html += "<td style='background-color:#F8F0E0'>" + it.hintCount + "</td>"
+                html += "<td style='background-color:#F8F0E0'>" + it.count + "</td>"
+                html += "<td style='background-color:#F8F0E0'>" + ReportUtils.permyriad(it.hintCount, it.count) + "</td>"
+                html += "<td style='background-color:#F8F0E0'>" + it.primaryHintCount + "</td>"
+                html += "<td style='background-color:#F8F0E0'>" + it.primaryCount + "</td>"
+                html += "<td style='background-color:#F8F0E0'>" + ReportUtils.permyriad(it.primaryHintCount, it.primaryCount) + "</td>"
+                html += "<td style='background-color:#F8F0E0'>" + it.juniorHintCount + "</td>"
+                html += "<td style='background-color:#F8F0E0'>" + it.juniorCount + "</td>"
+                html += "<td style='background-color:#F8F0E0'>" + ReportUtils.permyriad(it.juniorHintCount, it.juniorCount) + "</td>"
+                html += "<td style='background-color:#F8F0E0'>" + it.seniorHintCount + "</td>"
+                html += "<td style='background-color:#F8F0E0'>" + it.seniorCount + "</td>"
+                html += "<td style='background-color:#F8F0E0'>" + ReportUtils.permyriad(it.seniorHintCount, it.seniorCount) + "</td>"
+                html += "</tr>";
+            }
+        });
+
+        html += "</tbody>";
+        html += "</table>";
+        html += "</td>";
+        html += "</tr>";
+
+        html += "<tr>";
+        html += "<td>";
+        html += "<table style='background-color:#888888;text-align:center;margin:auto;width:100%'>";
+        html += "<tbody>";
+        html += "<tr>";
         html += "<th style='background-color:navy;color:greenyellow' colspan='9'>上 洞 入 手 统 计</th>"
         html += "</tr>";
         html += "<tr>";
@@ -438,6 +536,11 @@ class RoleBattle {
     primaryCatchCount = 0;
     juniorCatchCount = 0;
     seniorCatchCount = 0;
+
+    hintCount = 0;
+    primaryHintCount = 0;
+    juniorHintCount = 0;
+    seniorHintCount = 0;
 
     treasureCount = 0;
     usefulTreasureCount = 0;

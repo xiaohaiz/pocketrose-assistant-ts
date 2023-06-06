@@ -17,6 +17,11 @@ class TreasureLoader {
         return Object.keys(TREASURES);
     }
 
+    static isHint(code: string) {
+        const cn = _.parseInt(code);
+        return cn === 50;
+    }
+
     static isTreasure(code: string) {
         const cn = _.parseInt(code);
         return cn >= 1 && cn <= 49;
