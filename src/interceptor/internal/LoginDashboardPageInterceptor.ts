@@ -1,10 +1,11 @@
-import SetupLoader from "../../config/SetupLoader";
+import FastLoginManager from "../../core/FastLoginManager";
 import LoginDashboardPageProcessor from "../../processor/internal/LoginDashboardPageProcessor";
+import PageProcessor from "../../processor/PageProcessor";
 import PageInterceptor from "../PageInterceptor";
 
 class LoginDashboardPageInterceptor implements PageInterceptor {
 
-    readonly #processor = new LoginDashboardPageProcessor();
+    readonly #processor: PageProcessor = new LoginDashboardPageProcessor();
 
     accept(cgi: string, pageText: string): boolean {
         if (cgi === "contnue.cgi") {
@@ -14,10 +15,9 @@ class LoginDashboardPageInterceptor implements PageInterceptor {
     }
 
     intercept(): void {
-        if (!SetupLoader.isFastLoginEnabled()) {
-            return;
+        if (FastLoginManager.getAllFastLogins().length > 0) {
+            this.#processor.process();
         }
-        this.#processor.process();
     }
 }
 

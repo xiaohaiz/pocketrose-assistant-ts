@@ -1,4 +1,3 @@
-import SetupLoader from "../../config/SetupLoader";
 import RoleStateMachineManager from "../../core/state/RoleStateMachineManager";
 import PersonalFastLoginPageProcessor from "../../processor/internal/PersonalFastLoginPageProcessor";
 import PageProcessor from "../../processor/PageProcessor";
@@ -16,9 +15,6 @@ class PersonalFastLoginPageInterceptor implements PageInterceptor {
     }
 
     intercept(): void {
-        if (!SetupLoader.isFastLoginEnabled()) {
-            return;
-        }
         RoleStateMachineManager.create()
             .load()
             .then(machine => {

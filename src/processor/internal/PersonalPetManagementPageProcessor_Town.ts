@@ -173,18 +173,16 @@ function doRender(credential: Credential, petList: Pet[], studyStatus: number[],
         html += "</tr>";
     }
     html += "<tr><td style='background-color:#EFE0C0;text-align:right' colspan='20'>";
-    if (SetupLoader.isFastLoginEnabled()) {
-        const fastNames = FastLoginLoader.loadAllFastLoginNames();
-        if (fastNames.length > 0) {
-            html += "<select id='fastNameSelect' class='PetUIButton'>";
-            html += "<option value=''>快速选人</option>"
-            for (const fastName of fastNames) {
-                // noinspection JSDeprecatedSymbols
-                const v = "fastName_" + escape(fastName);
-                html += "<option value='" + v + "'>" + fastName + "</option>";
-            }
-            html += "</select>";
+    const fastNames = FastLoginLoader.loadAllFastLoginNames();
+    if (fastNames.length > 0) {
+        html += "<select id='fastNameSelect' class='PetUIButton'>";
+        html += "<option value=''>快速选人</option>"
+        for (const fastName of fastNames) {
+            // noinspection JSDeprecatedSymbols
+            const v = "fastName_" + escape(fastName);
+            html += "<option value='" + v + "'>" + fastName + "</option>";
         }
+        html += "</select>";
     }
     html += "<input type='text' id='receiverName' size='15' maxlength='20'>";
     html += "<input type='button' class='PetUIButton' id='searchReceiverButton' value='找人'>";

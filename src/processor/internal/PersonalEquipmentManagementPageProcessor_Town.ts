@@ -273,18 +273,16 @@ class PersonalEquipmentManagementPageProcessor_Town extends PersonalEquipmentMan
         html += "</tr>";
         html += "<tr>";
         html += "<td style='text-align:right' colspan='2'>";
-        if (SetupLoader.isFastLoginEnabled()) {
-            const fastNames = FastLoginLoader.loadAllFastLoginNames();
-            if (fastNames.length > 0) {
-                html += "<select id='fastNameSelect' class='mutableButton-1'>";
-                html += "<option value=''>快速选人</option>"
-                for (const fastName of fastNames) {
-                    // noinspection JSDeprecatedSymbols
-                    const v = "fastName_" + escape(fastName);
-                    html += "<option value='" + v + "'>" + fastName + "</option>";
-                }
-                html += "</select>";
+        const fastNames = FastLoginLoader.loadAllFastLoginNames();
+        if (fastNames.length > 0) {
+            html += "<select id='fastNameSelect' class='mutableButton-1'>";
+            html += "<option value=''>快速选人</option>"
+            for (const fastName of fastNames) {
+                // noinspection JSDeprecatedSymbols
+                const v = "fastName_" + escape(fastName);
+                html += "<option value='" + v + "'>" + fastName + "</option>";
             }
+            html += "</select>";
         }
         html += "<input type='text' id='searchName' size='15' maxlength='20'>";
         html += "<input type='button' id='searchButton' class='mutableButton-1' value='找人'>";
