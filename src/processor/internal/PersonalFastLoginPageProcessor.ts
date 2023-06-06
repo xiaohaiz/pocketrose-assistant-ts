@@ -25,7 +25,7 @@ function doProcess(credential: Credential) {
         .css("background-color", "navy")
         .css("color", "greenyellow")
         .attr("id", "title")
-        .text("＜＜　 快 速 登 陆 设 置 　＞＞");
+        .text("＜＜　 团 队 管 理 　＞＞");
 
     $("table:eq(4)")
         .find("td:first")
@@ -35,7 +35,7 @@ function doProcess(credential: Credential) {
         .css("width", "100%")
         .css("background-color", "black")
         .css("color", "white")
-        .html("可以在这里设置快速登陆，所有的登陆信息都只存储在你的浏览器本地，可以放心使用！");
+        .html("可以在这里管理团队，所有的登陆信息都只存储在你的浏览器本地，可以放心使用！");
 
     // 删除原有页面的所有表单
     $("form").remove();
@@ -56,7 +56,7 @@ function doProcess(credential: Credential) {
     html += "</tr>";
     html += "<tr>";
     html += "<td style='background-color:#F8F0E0;text-align:center'>";
-    html += "<input type='button' id='returnButton' value='离开快速登陆设置'>";
+    html += "<input type='button' id='returnButton' value='离开团队管理'>";
     html += "</td>";
     html += "</tr>";
     html += "</tbody>";
