@@ -6,7 +6,6 @@ import MonsterReportGenerator from "../../core/report/MonsterReportGenerator";
 import TreasureReportGenerator from "../../core/report/TreasureReportGenerator";
 import ZodiacReportGenerator from "../../core/report/ZodiacReportGenerator";
 import RoleStorageManager from "../../core/role/RoleStorageManager";
-import CommentBoard from "../../util/CommentBoard";
 import Credential from "../../util/Credential";
 import MessageBoard from "../../util/MessageBoard";
 import PageUtils from "../../util/PageUtils";
@@ -144,14 +143,14 @@ abstract class PersonalStatisticsPageProcessor extends PageProcessorCredentialSu
         doBindReport2();
         doBindReport3();
 
-        CommentBoard.createCommentBoard(NpcLoader.getNpcImageHtml("夜九")!);
-        html = "" +
-            "<button role='button' class='databaseButton' id='clearBattleResult'>清除所有战斗结果数据</button>" +
-            "<button role='button' class='databaseButton' id='exportBattleResult'>导出所有战斗结果数据</button>";
-        CommentBoard.writeMessage(html);
-
-        doDatabaseClearBattleResult();
-        doDatabaseExportBattleResult();
+        // CommentBoard.createCommentBoard(NpcLoader.getNpcImageHtml("夜九")!);
+        // html = "" +
+        //     "<button role='button' class='databaseButton' id='clearBattleResult'>清除所有战斗结果数据</button>" +
+        //     "<button role='button' class='databaseButton' id='exportBattleResult'>导出所有战斗结果数据</button>";
+        // CommentBoard.writeMessage(html);
+        //
+        // doDatabaseClearBattleResult();
+        // doDatabaseExportBattleResult();
     }
 
     #welcomeMessageHtml() {
