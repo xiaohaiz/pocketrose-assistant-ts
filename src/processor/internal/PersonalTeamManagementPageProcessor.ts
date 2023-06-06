@@ -1,3 +1,4 @@
+import _ from "lodash";
 import FastLoginLoader from "../../core/FastLoginLoader";
 import Credential from "../../util/Credential";
 import MessageBoard from "../../util/MessageBoard";
@@ -154,6 +155,22 @@ function doRender() {
         }
     }
 
+    const masterId = StorageUtils.getInt("_tm_", -1);
+    if (masterId >= 0) {
+        $("#master_" + masterId).css("color", "blue");
+
+        $("#master_" + masterId)
+            .parent()
+            .parent()
+            .find("> td")
+            .css("background-color", "yellow");
+        $("#master_" + masterId)
+            .parent()
+            .parent()
+            .find("> th")
+            .css("background-color", "yellow");
+    }
+
     doBindFastLoginButton();
     doBindClearButton();
     doBindMasterButton();
@@ -198,8 +215,9 @@ function doBindFastLoginButton() {
         const value = {
             "name": name,
             "id": id,
-            "pass": pass1
+            "pass": pass1,
         };
+
         StorageUtils.set("_fl_" + code, JSON.stringify(value));
         MessageBoard.publishMessage("设置已经保存。");
 
@@ -220,12 +238,16 @@ function doBindClearButton() {
 function doBindMasterButton() {
     $(".master-button").on("click", event => {
         const buttonId = $(event.target).attr("id")!;
+        const code = _.parseInt(_.split(buttonId, "_")[1]);
         if (PageUtils.isColorBlue(buttonId)) {
-            $("#" + buttonId).css("color", "grey");
+            StorageUtils.remove("_tm_");
+            MessageBoard.publishMessage("队长已经取消。");
         } else if (PageUtils.isColorGrey(buttonId)) {
-            $(".master-button").css("color", "grey");
-            $("#" + buttonId).css("color", "blue");
+            StorageUtils.set("_tm_", code.toString());
+            MessageBoard.publishMessage((code + 1) + "号位设置为队长。");
         }
+
+        doRefresh();
     });
 }
 
