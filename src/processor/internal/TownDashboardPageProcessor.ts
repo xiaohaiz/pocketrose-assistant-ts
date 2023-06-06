@@ -473,9 +473,7 @@ function doRenderMenu(credential: Credential, page: TownDashboardPage) {
     }
     $("option[value='PETPROFILE']").text("宠物排行榜");
     $("option[value='CHANGEMAP']").text("冒险家公会");
-    if (SetupLoader.isFastLoginEnabled()) {
-        $("option[value='CHUJIA']").text("快速登陆设置");
-    }
+    $("option[value='CHUJIA']").text("团队管理");
     if (SetupLoader.isPocketBankEnabled()) {
         $("option[value='BANK']").text("口袋银行");
         $("option[value='MONEY_SEND']").remove();

@@ -51,6 +51,21 @@ class PocketDatabase {
                 }
 
                 // ------------------------------------------------------------
+                // BattleLog
+                // ------------------------------------------------------------
+                if (!db.objectStoreNames.contains("BattleLog")) {
+                    const store = db.createObjectStore("BattleLog", {
+                        keyPath: "id", autoIncrement: false
+                    });
+                    store.createIndex("createTime", "createTime", {
+                        unique: false
+                    });
+                    store.createIndex("roleId", "roleId", {
+                        unique: false
+                    });
+                }
+
+                // ------------------------------------------------------------
                 // RolePetMap
                 // ------------------------------------------------------------
                 if (!db.objectStoreNames.contains("RolePetMap")) {

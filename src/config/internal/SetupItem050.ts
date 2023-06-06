@@ -45,7 +45,7 @@ function doGenerateSetupItem() {
     html += "<option class='option_class_" + code + "' value='6'>物品商店</option>";
     html += "<option class='option_class_" + code + "' value='7'>宝石镶嵌</option>";
     html += "<option class='option_class_" + code + "' value='8'>冒险公会</option>";
-    html += "<option class='option_class_" + code + "' value='9'>快速登陆</option>";
+    html += "<option class='option_class_" + code + "' value='9'>团队管理</option>";
     html += "<option class='option_class_" + code + "' value='10'>宠物联赛</option>";
     html += "<option class='option_class_" + code + "' value='11'>宠物排行</option>";
     html += "<option class='option_class_" + code + "' value='12'>城市收益</option>";

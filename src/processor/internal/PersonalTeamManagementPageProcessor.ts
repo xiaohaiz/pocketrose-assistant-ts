@@ -1,12 +1,14 @@
+import _ from "lodash";
 import FastLoginLoader from "../../core/FastLoginLoader";
 import Credential from "../../util/Credential";
 import MessageBoard from "../../util/MessageBoard";
+import PageUtils from "../../util/PageUtils";
 import StorageUtils from "../../util/StorageUtils";
 import StringUtils from "../../util/StringUtils";
 import PageProcessorContext from "../PageProcessorContext";
 import PageProcessorCredentialSupport from "../PageProcessorCredentialSupport";
 
-class PersonalFastLoginPageProcessor extends PageProcessorCredentialSupport {
+class PersonalTeamManagementPageProcessor extends PageProcessorCredentialSupport {
 
     doProcess(credential: Credential, context?: PageProcessorContext): void {
         doProcess(credential);
@@ -25,7 +27,7 @@ function doProcess(credential: Credential) {
         .css("background-color", "navy")
         .css("color", "greenyellow")
         .attr("id", "title")
-        .text("＜＜　 快 速 登 陆 设 置 　＞＞");
+        .text("＜＜　 团 队 管 理 　＞＞");
 
     $("table:eq(4)")
         .find("td:first")
@@ -35,7 +37,7 @@ function doProcess(credential: Credential) {
         .css("width", "100%")
         .css("background-color", "black")
         .css("color", "white")
-        .html("可以在这里设置快速登陆，所有的登陆信息都只存储在你的浏览器本地，可以放心使用！");
+        .html("可以在这里管理团队，所有的登陆信息都只存储在你的浏览器本地，可以放心使用！");
 
     // 删除原有页面的所有表单
     $("form").remove();
@@ -56,7 +58,7 @@ function doProcess(credential: Credential) {
     html += "</tr>";
     html += "<tr>";
     html += "<td style='background-color:#F8F0E0;text-align:center'>";
-    html += "<input type='button' id='returnButton' value='离开快速登陆设置'>";
+    html += "<input type='button' id='returnButton' value='离开团队管理'>";
     html += "</td>";
     html += "</tr>";
     html += "</tbody>";
@@ -92,30 +94,34 @@ function doRender() {
     html += "<table style='border-width:0;width:100%;background-color:#888888'>";
     html += "<tbody style='background-color:#F8F0E0;text-align:center'>";
     html += "<tr>";
-    html += "<th style='background-color:#E8E8D0'>快速登陆</th>";
-    html += "<th style='background-color:#EFE0C0'>角色名字</th>";
-    html += "<th style='background-color:#E0D0B0'>登陆名</th>";
-    html += "<th style='background-color:#EFE0C0'>密码</th>";
-    html += "<th style='background-color:#E0D0B0'>重复密码</th>";
-    html += "<th style='background-color:#EFE0C0'>设置</th>";
+    html += "<th style='background-color:skyblue'>序号</th>";
+    html += "<th style='background-color:skyblue'>队长</th>";
+    html += "<th style='background-color:skyblue'>角色名字</th>";
+    html += "<th style='background-color:skyblue'>登陆名</th>";
+    html += "<th style='background-color:skyblue'>密码</th>";
+    html += "<th style='background-color:skyblue'>重复密码</th>";
+    html += "<th style='background-color:skyblue'>设置</th>";
     html += "</tr>";
 
     for (let i = 0; i < 50; i++) {
         html += "<tr>";
         html += "<th style='background-color:#E8E8D0'>";
-        html += "快速登陆 (" + (i + 1) + ")";
+        html += "#" + (i + 1);
         html += "</th>";
-        html += "<td style='background-color:#EFE0C0;text-align:left'>";
-        html += "<input type='text' id='name_" + i + "' size='10' maxlength='10'>";
-        html += "</td>";
-        html += "<td style='background-color:#E0D0B0;text-align:left'>";
-        html += "<input type='text' id='id_" + i + "' size='10' maxlength='10'>";
+        html += "<td style='background-color:#E8E8D0'>";
+        html += "<button role='button' id='master_" + i + "' class='master-button' style='color:grey'>队长</button>";
         html += "</td>";
         html += "<td style='background-color:#EFE0C0;text-align:left'>";
-        html += "<input type='password' id='pass1_" + i + "' size='10' maxlength='10'>";
+        html += "<input type='text' id='name_" + i + "' size='10' maxlength='10' spellcheck='false'>";
         html += "</td>";
         html += "<td style='background-color:#E0D0B0;text-align:left'>";
-        html += "<input type='password' id='pass2_" + i + "' size='10' maxlength='10'>";
+        html += "<input type='text' id='id_" + i + "' size='10' maxlength='10' spellcheck='false'>";
+        html += "</td>";
+        html += "<td style='background-color:#EFE0C0;text-align:left'>";
+        html += "<input type='password' id='pass1_" + i + "' size='10' maxlength='10' spellcheck='false'>";
+        html += "</td>";
+        html += "<td style='background-color:#E0D0B0;text-align:left'>";
+        html += "<input type='password' id='pass2_" + i + "' size='10' maxlength='10' spellcheck='false'>";
         html += "</td>";
         html += "<td style='background-color:#EFE0C0'>";
         html += "<input type='button' id='button_" + i + "' class='button_class' value='设置'>";
@@ -149,8 +155,25 @@ function doRender() {
         }
     }
 
+    const masterId = StorageUtils.getInt("_tm_", -1);
+    if (masterId >= 0) {
+        $("#master_" + masterId).css("color", "blue");
+
+        $("#master_" + masterId)
+            .parent()
+            .parent()
+            .find("> td")
+            .css("background-color", "yellow");
+        $("#master_" + masterId)
+            .parent()
+            .parent()
+            .find("> th")
+            .css("background-color", "yellow");
+    }
+
     doBindFastLoginButton();
     doBindClearButton();
+    doBindMasterButton();
 }
 
 function doBindFastLoginButton() {
@@ -192,8 +215,9 @@ function doBindFastLoginButton() {
         const value = {
             "name": name,
             "id": id,
-            "pass": pass1
+            "pass": pass1,
         };
+
         StorageUtils.set("_fl_" + code, JSON.stringify(value));
         MessageBoard.publishMessage("设置已经保存。");
 
@@ -211,11 +235,28 @@ function doBindClearButton() {
     });
 }
 
+function doBindMasterButton() {
+    $(".master-button").on("click", event => {
+        const buttonId = $(event.target).attr("id")!;
+        const code = _.parseInt(_.split(buttonId, "_")[1]);
+        if (PageUtils.isColorBlue(buttonId)) {
+            StorageUtils.remove("_tm_");
+            MessageBoard.publishMessage("队长已经取消。");
+        } else if (PageUtils.isColorGrey(buttonId)) {
+            StorageUtils.set("_tm_", code.toString());
+            MessageBoard.publishMessage((code + 1) + "号位设置为队长。");
+        }
+
+        doRefresh();
+    });
+}
+
 function doRefresh() {
     $("#fastLoginSetup").html("");
     $(".button_class").off("click");
     $(".clear_class").off("click");
+    $(".master-button").off("click");
     doRender();
 }
 
-export = PersonalFastLoginPageProcessor;
+export = PersonalTeamManagementPageProcessor;

@@ -12,13 +12,13 @@ import MetroDashboardPageInterceptor from "./internal/MetroDashboardPageIntercep
 import NationInformationPageInterceptor from "./internal/NationInformationPageInterceptor";
 import PersonalCareerManagementPageInterceptor from "./internal/PersonalCareerManagementPageInterceptor";
 import PersonalEquipmentManagementPageInterceptor from "./internal/PersonalEquipmentManagementPageInterceptor";
-import PersonalFastLoginPageInterceptor from "./internal/PersonalFastLoginPageInterceptor";
 import PersonalManualPageInterceptor from "./internal/PersonalManualPageInterceptor";
 import PersonalPetManagementPageInterceptor from "./internal/PersonalPetManagementPageInterceptor";
 import PersonalProfilePageInterceptor from "./internal/PersonalProfilePageInterceptor";
 import PersonalSetupPageInterceptor from "./internal/PersonalSetupPageInterceptor";
 import PersonalStatisticsPageInterceptor from "./internal/PersonalStatisticsPageInterceptor";
 import PersonalStatusPageInterceptor from "./internal/PersonalStatusPageInterceptor";
+import PersonalTeamManagementPageInterceptor from "./internal/PersonalTeamManagementPageInterceptor";
 import PersonalTeamPageInterceptor from "./internal/PersonalTeamPageInterceptor";
 import RoleInformationPageInterceptor from "./internal/RoleInformationPageInterceptor";
 import TangDashboardPageInterceptor from "./internal/TangDashboardPageInterceptor";
@@ -57,7 +57,7 @@ class PageInterceptorManager {
             new NationInformationPageInterceptor(),
             new PersonalCareerManagementPageInterceptor(),
             new PersonalEquipmentManagementPageInterceptor(),
-            new PersonalFastLoginPageInterceptor(),
+            new PersonalTeamManagementPageInterceptor(),
             new PersonalManualPageInterceptor(),
             new PersonalPetManagementPageInterceptor(),
             new PersonalProfilePageInterceptor(),

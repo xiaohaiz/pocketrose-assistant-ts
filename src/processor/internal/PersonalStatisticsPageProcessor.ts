@@ -1,18 +1,14 @@
-import _ from "lodash";
 import BattleStorageManager from "../../core/battle/BattleStorageManager";
 import FastLoginManager from "../../core/FastLoginManager";
 import NpcLoader from "../../core/NpcLoader";
-import PetProfileLoader from "../../core/PetProfileLoader";
 import BattleReportGenerator from "../../core/report/BattleReportGenerator";
-import GemReportGenerator from "../../core/report/GemReportGenerator";
-import ReportUtils from "../../core/report/ReportUtils";
+import MonsterReportGenerator from "../../core/report/MonsterReportGenerator";
 import TreasureReportGenerator from "../../core/report/TreasureReportGenerator";
-import ZodiacBattleReportGenerator from "../../core/report/ZodiacBattleReportGenerator";
+import ZodiacReportGenerator from "../../core/report/ZodiacReportGenerator";
 import RoleStorageManager from "../../core/role/RoleStorageManager";
 import Credential from "../../util/Credential";
 import MessageBoard from "../../util/MessageBoard";
 import PageUtils from "../../util/PageUtils";
-import StringUtils from "../../util/StringUtils";
 import PageProcessorContext from "../PageProcessorContext";
 import PageProcessorCredentialSupport from "../PageProcessorCredentialSupport";
 
@@ -73,11 +69,26 @@ abstract class PersonalStatisticsPageProcessor extends PageProcessorCredentialSu
         html += "<tr>";
         html += "<tr>";
         html += "<td style='text-align:center;background-color:#F8F0E0'>";
-        html += "<button role='button' id='report-1'>战斗统计报告</button>";
         html += "<button role='button' id='s-1'>转职数据统计</button>";
         html += "<button role='button' id='s-2'>上洞数据统计</button>";
-        html += "<button role='button' id='s-3'>宝石数据统计</button>";
-        html += "<button role='button' id='s-4'>十二宫战斗统计</button>";
+        html += "</td>";
+        html += "<tr>";
+        html += "<td style='text-align:center;background-color:#F8F0E0'>";
+        html += "<table style='background-color:transparent;border-spacing:0;border-width:0;margin:auto'>";
+        html += "<tbody>";
+        html += "<tr>";
+        html += "<td>";
+        html += "<button role='button' id='report-1'>战斗统计报告</button>";
+        html += "</td>";
+        html += "<td>";
+        html += "<button role='button' id='report-2'>怪物统计报告</button>";
+        html += "</td>";
+        html += "<td>";
+        html += "<button role='button' id='report-3'>十二宫统计报告</button>";
+        html += "</td>";
+        html += "</tr>";
+        html += "</tbody>";
+        html += "</table>";
         html += "</td>";
         html += "<tr>";
         html += "<tr style='display:none'>";
@@ -125,16 +136,21 @@ abstract class PersonalStatisticsPageProcessor extends PageProcessorCredentialSu
 
         $("#operation").append($("<input type='text' id='monster' size='5'>"));
 
-        $("#operation").append($("<button role='button' id='b-1'>战斗统计总览</button>"));
-        $("#operation").append($("<button role='button' id='b-2'>怪物胜率排行</button>"));
-
-        doBindButton();
         doRoleCareerTransferStatistics();
         doTreasureStatistics();
-        doGemStatistics();
-        doZodiacBattleStatistics();
 
         doBindReport1();
+        doBindReport2();
+        doBindReport3();
+
+        // CommentBoard.createCommentBoard(NpcLoader.getNpcImageHtml("夜九")!);
+        // html = "" +
+        //     "<button role='button' class='databaseButton' id='clearBattleResult'>清除所有战斗结果数据</button>" +
+        //     "<button role='button' class='databaseButton' id='exportBattleResult'>导出所有战斗结果数据</button>";
+        // CommentBoard.writeMessage(html);
+        //
+        // doDatabaseClearBattleResult();
+        // doDatabaseExportBattleResult();
     }
 
     #welcomeMessageHtml() {
@@ -143,386 +159,6 @@ abstract class PersonalStatisticsPageProcessor extends PageProcessorCredentialSu
     }
 
     abstract doBindReturnButton(credential: Credential): void;
-}
-
-function doBindButton() {
-    $("#b-1").on("click", () => {
-        const target = $("#teamMemberSelect").val()! as string;
-        const monster = _.trim($("#monster").val()! as string);
-        BattleStorageManager.getBattleResultStorage()
-            .loads()
-            .then(resultList => {
-                const candidate = resultList
-                    .filter(it => target === "" || it.roleId === target)
-                    .filter(it => monster === "" || it.monster!.includes(monster));
-
-                let totalBattleCount = 0;
-                let totalWinCount = 0;
-                let totalLoseCount = 0;
-                let totalDrawCount = 0;
-                let totalCatchCount = 0;
-                let totalPhotoCount = 0;
-
-                let totalTreasureCount = 0;
-                let totalTreasureHintCount = 0;
-                let totalGemCount = 0;
-
-                let bc1 = 0;
-                let wc1 = 0;
-                let lc1 = 0;
-                let dc1 = 0;
-                let cc1 = 0;
-                let pc1 = 0;
-
-                let bc2 = 0;
-                let wc2 = 0;
-                let lc2 = 0;
-                let dc2 = 0;
-                let cc2 = 0;
-                let pc2 = 0;
-
-                let bc3 = 0;
-                let wc3 = 0;
-                let lc3 = 0;
-                let dc3 = 0;
-                let cc3 = 0;
-                let pc3 = 0;
-
-                let bc4 = 0;
-                let wc4 = 0;
-                let lc4 = 0;
-                let dc4 = 0;
-
-                let h1 = 0;
-                let h2 = 0;
-                let h3 = 0;
-                let h4 = 0;
-
-                candidate.forEach(it => {
-                    totalBattleCount += it.obtainTotalCount;
-                    totalWinCount += it.obtainWinCount;
-                    totalLoseCount += it.obtainLoseCount;
-                    totalDrawCount += it.obtainDrawCount;
-                    totalCatchCount += it.obtainCatchCount;
-                    totalPhotoCount += it.obtainPhotoCount;
-                    totalTreasureCount += it.obtainTreasureCount;
-                    totalTreasureHintCount += it.obtainTreasureHintCount;
-                    totalGemCount += it.obtainGemCount;
-
-                    switch (it.monster!) {
-                        case "巴大蝴(012)":
-                            h1 += it.obtainTotalCount;
-                            break;
-                        case "火精灵(136)":
-                            h2 += it.obtainTotalCount;
-                            break;
-                        case "石章鱼(224)":
-                            h3 += it.obtainTotalCount;
-                            break;
-                        case "火鸡战士(257)":
-                            h4 += it.obtainTotalCount;
-                            break;
-                    }
-
-                    switch (it.obtainBattleField) {
-                        case "初森":
-                            bc1 += it.obtainTotalCount;
-                            wc1 += it.obtainWinCount;
-                            lc1 += it.obtainLoseCount;
-                            dc1 += it.obtainDrawCount;
-                            cc1 += it.obtainCatchCount;
-                            pc1 += it.obtainPhotoCount;
-                            break;
-                        case "中塔":
-                            bc2 += it.obtainTotalCount;
-                            wc2 += it.obtainWinCount;
-                            lc2 += it.obtainLoseCount;
-                            dc2 += it.obtainDrawCount;
-                            cc2 += it.obtainCatchCount;
-                            pc2 += it.obtainPhotoCount;
-                            break;
-                        case "上洞":
-                            bc3 += it.obtainTotalCount;
-                            wc3 += it.obtainWinCount;
-                            lc3 += it.obtainLoseCount;
-                            dc3 += it.obtainDrawCount;
-                            cc3 += it.obtainCatchCount;
-                            pc3 += it.obtainPhotoCount;
-                            break;
-                        case "十二宫":
-                            bc4 += it.obtainTotalCount;
-                            wc4 += it.obtainWinCount;
-                            lc4 += it.obtainLoseCount;
-                            dc4 += it.obtainDrawCount;
-                            break;
-                    }
-                });
-
-                let html = "";
-                html += "<table style='background-color:transparent;border-width:0;border-spacing:0;text-align:center;width:100%;margin:auto'>";
-                html += "<tbody>";
-                html += "<tr>";
-                html += "<td>";
-                html += "<table style='background-color:#888888;border-width:1px;border-spacing:1px;text-align:center;width:100%;margin:auto'>";
-                html += "<tbody>";
-                html += "<tr>";
-                html += "<td colspan='14' style='background-color:navy;color:yellow;font-weight:bold;text-align:center'>战 斗 统 计</td>";
-                html += "</tr>";
-                html += "<tr>";
-                html += "<th style='background-color:green;color:white'>战场</th>"
-                html += "<th style='background-color:green;color:white'>战胜数</th>"
-                html += "<th style='background-color:green;color:white'>战败数</th>"
-                html += "<th style='background-color:green;color:white'>平手数</th>"
-                html += "<th style='background-color:green;color:white'>总战数</th>"
-                html += "<th style='background-color:green;color:white'>胜率</th>"
-                html += "<th style='background-color:green;color:white'>占比</th>"
-                html += "<th style='background-color:green;color:white'>图鉴数</th>"
-                html += "<th style='background-color:green;color:white'>图鉴出率</th>"
-                html += "<th style='background-color:green;color:white'>宠物数</th>"
-                html += "<th style='background-color:green;color:white'>宠物出率</th>"
-                html += "<th style='background-color:green;color:white'>入手数</th>"
-                html += "<th style='background-color:green;color:white'>宝图数</th>"
-                html += "<th style='background-color:green;color:white'>宝石数</th>"
-                html += "</tr>";
-                html += "<tr>";
-                html += "<th style='background-color:#F8F0E0'>-</th>"
-                html += "<td style='background-color:#F8F0E0'>" + totalWinCount + "</td>"
-                html += "<td style='background-color:#F8F0E0'>" + totalLoseCount + "</td>"
-                html += "<td style='background-color:#F8F0E0'>" + totalDrawCount + "</td>"
-                html += "<td style='background-color:#F8F0E0'>" + totalBattleCount + "</td>"
-                html += "<td style='background-color:#F8F0E0;text-align:left'>" + ReportUtils.generatePercentageHtml(totalWinCount, totalBattleCount) + "</td>"
-                html += "<td style='background-color:#F8F0E0;text-align:left'>-</td>"
-                html += "<td style='background-color:#F8F0E0'>" + totalPhotoCount + "</td>"
-                html += "<td style='background-color:#F8F0E0;text-align:left'>" + ReportUtils.generatePermyriadHtml(totalPhotoCount, totalBattleCount) + "</td>"
-                html += "<td style='background-color:#F8F0E0'>" + totalCatchCount + "</td>"
-                html += "<td style='background-color:#F8F0E0;text-align:left'>" + ReportUtils.generatePermyriadHtml(totalCatchCount, totalBattleCount) + "</td>"
-                html += "<td style='background-color:#F8F0E0'>" + totalTreasureCount + "</td>"
-                html += "<td style='background-color:#F8F0E0'>" + totalTreasureHintCount + "</td>"
-                html += "<td style='background-color:#F8F0E0'>" + totalGemCount + "</td>"
-                html += "</tr>";
-                html += "<tr>";
-                html += "<th style='background-color:#F8F0E0'>初森</th>"
-                html += "<td style='background-color:#F8F0E0'>" + wc1 + "</td>"
-                html += "<td style='background-color:#F8F0E0'>" + lc1 + "</td>"
-                html += "<td style='background-color:#F8F0E0'>" + dc1 + "</td>"
-                html += "<td style='background-color:#F8F0E0'>" + bc1 + "</td>"
-                html += "<td style='background-color:#F8F0E0;text-align:left'>" + ReportUtils.generatePercentageHtml(wc1, bc1) + "</td>"
-                html += "<td style='background-color:#F8F0E0;text-align:left'>" + ReportUtils.generatePermillageHtml(bc1, totalBattleCount) + "</td>"
-                html += "<td style='background-color:#F8F0E0'>" + pc1 + "</td>"
-                html += "<td style='background-color:#F8F0E0;text-align:left'>" + ReportUtils.generatePermyriadHtml(pc1, bc1) + "</td>"
-                html += "<td style='background-color:#F8F0E0'>" + cc1 + "</td>"
-                html += "<td style='background-color:#F8F0E0;text-align:left'>" + ReportUtils.generatePermyriadHtml(cc1, bc1) + "</td>"
-                html += "<td style='background-color:#F8F0E0'>-</td>"
-                html += "<td style='background-color:#F8F0E0'>-</td>"
-                html += "<td style='background-color:#F8F0E0'>-</td>"
-                html += "</tr>";
-                html += "<tr>";
-                html += "<th style='background-color:#F8F0E0'>中塔</th>"
-                html += "<td style='background-color:#F8F0E0'>" + wc2 + "</td>"
-                html += "<td style='background-color:#F8F0E0'>" + lc2 + "</td>"
-                html += "<td style='background-color:#F8F0E0'>" + dc2 + "</td>"
-                html += "<td style='background-color:#F8F0E0'>" + bc2 + "</td>"
-                html += "<td style='background-color:#F8F0E0;text-align:left'>" + ReportUtils.generatePercentageHtml(wc2, bc2) + "</td>"
-                html += "<td style='background-color:#F8F0E0;text-align:left'>" + ReportUtils.generatePermillageHtml(bc2, totalBattleCount) + "</td>"
-                html += "<td style='background-color:#F8F0E0'>" + pc2 + "</td>"
-                html += "<td style='background-color:#F8F0E0;text-align:left'>" + ReportUtils.generatePermyriadHtml(pc2, bc2) + "</td>"
-                html += "<td style='background-color:#F8F0E0'>" + cc2 + "</td>"
-                html += "<td style='background-color:#F8F0E0;text-align:left'>" + ReportUtils.generatePermyriadHtml(cc2, bc2) + "</td>"
-                html += "<td style='background-color:#F8F0E0'>-</td>"
-                html += "<td style='background-color:#F8F0E0'>-</td>"
-                html += "<td style='background-color:#F8F0E0'>-</td>"
-                html += "</tr>";
-                html += "<tr>";
-                html += "<th style='background-color:#F8F0E0'>上洞</th>"
-                html += "<td style='background-color:#F8F0E0'>" + wc3 + "</td>"
-                html += "<td style='background-color:#F8F0E0'>" + lc3 + "</td>"
-                html += "<td style='background-color:#F8F0E0'>" + dc3 + "</td>"
-                html += "<td style='background-color:#F8F0E0'>" + bc3 + "</td>"
-                html += "<td style='background-color:#F8F0E0;text-align:left'>" + ReportUtils.generatePercentageHtml(wc3, bc3) + "</td>"
-                html += "<td style='background-color:#F8F0E0;text-align:left'>" + ReportUtils.generatePermillageHtml(bc3, totalBattleCount) + "</td>"
-                html += "<td style='background-color:#F8F0E0'>" + pc3 + "</td>"
-                html += "<td style='background-color:#F8F0E0;text-align:left'>" + ReportUtils.generatePermyriadHtml(pc3, bc3) + "</td>"
-                html += "<td style='background-color:#F8F0E0'>" + cc3 + "</td>"
-                html += "<td style='background-color:#F8F0E0;text-align:left'>" + ReportUtils.generatePermyriadHtml(cc3, bc3) + "</td>"
-                html += "<td style='background-color:#F8F0E0'>-</td>"
-                html += "<td style='background-color:#F8F0E0'>-</td>"
-                html += "<td style='background-color:#F8F0E0'>-</td>"
-                html += "</tr>";
-                html += "<tr>";
-                html += "<th style='background-color:#F8F0E0'>十二宫</th>"
-                html += "<td style='background-color:#F8F0E0'>" + wc4 + "</td>"
-                html += "<td style='background-color:#F8F0E0'>" + lc4 + "</td>"
-                html += "<td style='background-color:#F8F0E0'>" + dc4 + "</td>"
-                html += "<td style='background-color:#F8F0E0'>" + bc4 + "</td>"
-                html += "<td style='background-color:#F8F0E0;text-align:left'>" + ReportUtils.generatePercentageHtml(wc4, bc4) + "</td>"
-                html += "<td style='background-color:#F8F0E0;text-align:left'>" + ReportUtils.generatePermillageHtml(bc4, totalBattleCount) + "</td>"
-                html += "<td style='background-color:#F8F0E0'>-</td>"
-                html += "<td style='background-color:#F8F0E0;text-align:left'>-</td>"
-                html += "<td style='background-color:#F8F0E0'>-</td>"
-                html += "<td style='background-color:#F8F0E0;text-align:left'>-</td>"
-                html += "<td style='background-color:#F8F0E0'>-</td>"
-                html += "<td style='background-color:#F8F0E0'>-</td>"
-                html += "<td style='background-color:#F8F0E0'>-</td>"
-                html += "</tr>";
-                html += "</tbody>";
-                html += "</table>";
-                html += "</td>";
-                html += "</tr>";
-                html += "<tr>";
-                html += "<td>";
-                html += "<table style='background-color:#888888;border-width:1px;border-spacing:1px;text-align:center;width:100%;margin:auto'>";
-                html += "<tbody>";
-                html += "<tr>";
-                html += "<td colspan='5' style='background-color:navy;color:yellow;font-weight:bold;text-align:center'>四 天 王 占 比</td>";
-                html += "</tr>";
-                html += "<tr>";
-                html += "<th style='background-color:green;color:white'>天王</th>"
-                html += "<th style='background-color:green;color:white'>天王</th>"
-                html += "<th style='background-color:green;color:white'>战数</th>"
-                html += "<th style='background-color:green;color:white'>上洞战数</th>"
-                html += "<th style='background-color:green;color:white'>占比</th>"
-                html += "</tr>";
-                html += "<tr>";
-                html += "<td style='background-color:#F8F0E0'>" + PetProfileLoader.load("012")?.imageHtml + "</td>"
-                html += "<td style='background-color:#F8F0E0'>巴大蝴(012)</td>"
-                html += "<td style='background-color:#F8F0E0'>" + h1 + "</td>"
-                html += "<td style='background-color:#F8F0E0'>" + bc3 + "</td>"
-                html += "<td style='background-color:#F8F0E0;text-align:left'>" + PageUtils.generateProgressBarWithPercentage(h1 / bc3) + "</td>"
-                html += "</tr>";
-                html += "<tr>";
-                html += "<td style='background-color:#F8F0E0'>" + PetProfileLoader.load("136")?.imageHtml + "</td>"
-                html += "<td style='background-color:#F8F0E0'>火精灵(136)</td>"
-                html += "<td style='background-color:#F8F0E0'>" + h2 + "</td>"
-                html += "<td style='background-color:#F8F0E0'>" + bc3 + "</td>"
-                html += "<td style='background-color:#F8F0E0;text-align:left'>" + PageUtils.generateProgressBarWithPercentage(h2 / bc3) + "</td>"
-                html += "</tr>";
-                html += "<tr>";
-                html += "<td style='background-color:#F8F0E0'>" + PetProfileLoader.load("224")?.imageHtml + "</td>"
-                html += "<td style='background-color:#F8F0E0'>石章鱼(224)</td>"
-                html += "<td style='background-color:#F8F0E0'>" + h3 + "</td>"
-                html += "<td style='background-color:#F8F0E0'>" + bc3 + "</td>"
-                html += "<td style='background-color:#F8F0E0;text-align:left'>" + PageUtils.generateProgressBarWithPercentage(h3 / bc3) + "</td>"
-                html += "</tr>";
-                html += "<tr>";
-                html += "<td style='background-color:#F8F0E0'>" + PetProfileLoader.load("257")?.imageHtml + "</td>"
-                html += "<td style='background-color:#F8F0E0'>火鸡战士(257)</td>"
-                html += "<td style='background-color:#F8F0E0'>" + h4 + "</td>"
-                html += "<td style='background-color:#F8F0E0'>" + bc3 + "</td>"
-                html += "<td style='background-color:#F8F0E0;text-align:left'>" + PageUtils.generateProgressBarWithPercentage(h4 / bc3) + "</td>"
-                html += "</tr>";
-                html += "<tr>";
-                html += "<td style='background-color:#F8F0E0;font-weight:bold' colspan='2'>四 天 王</td>"
-                html += "<td style='background-color:#F8F0E0'>" + (h1 + h2 + h3 + h4) + "</td>"
-                html += "<td style='background-color:#F8F0E0'>" + bc3 + "</td>"
-                html += "<td style='background-color:#F8F0E0;text-align:left'>" + PageUtils.generateProgressBarWithPercentage((h1 + h2 + h3 + h4) / bc3) + "</td>"
-                html += "</tr>";
-                html += "</tbody>";
-                html += "</table>";
-                html += "</td>";
-                html += "</tr>";
-                html += "</tbody>";
-                html += "</table>";
-
-                $("#statistics").html(html).parent().show();
-            });
-    });
-
-    $("#b-2").on("click", () => {
-        const target = $("#teamMemberSelect").val()! as string;
-
-        BattleStorageManager.getBattleResultStorage()
-            .loads()
-            .then(resultList => {
-                const map = {};
-
-                resultList
-                    .filter(it => target === "" || it.roleId === target)
-                    .filter(it => it.obtainBattleField !== "十二宫")
-                    .forEach(it => {
-                        const monsterName = it.monster!;
-                        // @ts-ignore
-                        if (map[monsterName] === undefined) {
-                            const m = {};
-                            // @ts-ignore
-                            m.name = monsterName;
-                            // @ts-ignore
-                            m.winCount = it.obtainWinCount;
-                            // @ts-ignore
-                            m.totalCount = it.obtainTotalCount;
-                            // @ts-ignore
-                            map[monsterName] = m;
-                        } else {
-                            // @ts-ignore
-                            const m: {} = map[monsterName];
-                            // @ts-ignore
-                            m.winCount = it.obtainWinCount + m.winCount;
-                            // @ts-ignore
-                            m.totalCount = it.obtainTotalCount + m.totalCount;
-                        }
-                    });
-
-                // @ts-ignore
-                const candidate: {}[] = Object.values(map)
-                    .sort((a, b) => {
-                        // @ts-ignore
-                        const r1 = a.winCount / a.totalCount;
-                        // @ts-ignore
-                        const r2 = b.winCount / b.totalCount;
-                        const ret = r1 - r2;
-                        if (ret !== 0) {
-                            return ret;
-                        }
-                        // @ts-ignore
-                        return a.name!.localeCompare(b.name!);
-                    });
-
-                const max = Math.min(30, candidate.length);
-
-                let html = "";
-                html += "<table style='background-color:#888888;border-width:1px;border-spacing:1px;text-align:center;width:100%;margin:auto'>";
-                html += "<tbody>";
-                html += "<tr>";
-                html += "<th style='background-color:green;color:white'>序号</th>"
-                html += "<th style='background-color:green;color:white'>怪物</th>"
-                html += "<th style='background-color:green;color:white'>怪物</th>"
-                html += "<th style='background-color:green;color:white'>战胜数</th>"
-                html += "<th style='background-color:green;color:white'>总战数</th>"
-                html += "<th style='background-color:green;color:white'>胜率</th>"
-                html += "</tr>";
-                for (let i = 0; i < max; i++) {
-                    const it = candidate[i];
-                    // @ts-ignore
-                    const monsterName = it.name!;
-                    let monsterImageHtml: string | null = null;
-                    if (monsterName.includes("(") && monsterName.includes(")")) {
-                        const code = StringUtils.substringBetween(monsterName, "(", ")");
-                        const profile = PetProfileLoader.load(code);
-                        if (profile !== null) {
-                            monsterImageHtml = profile.imageHtml;
-                        }
-                    }
-
-                    // @ts-ignore
-                    const winRatio = it.winCount / it.totalCount;
-
-                    html += "<tr>";
-                    html += "<td style='background-color:#F8F0E0;font-weight:bold'>" + (i + 1) + "</>";
-                    html += "<td style='background-color:#F8F0E0'>" + ((monsterImageHtml === null) ? "" : monsterImageHtml) + "</td>";
-                    html += "<td style='background-color:#F8F0E0;font-weight:bold'>" + monsterName + "</td>";
-                    // @ts-ignore
-                    html += "<td style='background-color:#F8F0E0;font-weight:bold'>" + it.winCount + "</td>";
-                    // @ts-ignore
-                    html += "<td style='background-color:#F8F0E0;font-weight:bold'>" + it.totalCount + "</td>";
-                    html += "<td style='background-color:#F8F0E0;font-weight:bold;color:red'>" + (winRatio * 100).toFixed(2) + "%</td>";
-                    html += "</tr>";
-                }
-
-                html += "</tbody>";
-                html += "</table>";
-
-                $("#statistics").html(html).parent().show();
-            });
-    });
 }
 
 function doRoleCareerTransferStatistics() {
@@ -654,34 +290,6 @@ function doTreasureStatistics() {
     });
 }
 
-function doGemStatistics() {
-    $("#s-3").on("click", () => {
-        const target = $("#teamMemberSelect").val()! as string;
-        BattleStorageManager.getBattleResultStorage()
-            .loads()
-            .then(dataList => {
-                const candidates = dataList
-                    .filter(it => target === "" || it.roleId === target);
-                const html = new GemReportGenerator(candidates).generate();
-                $("#statistics").html(html).parent().show();
-            });
-    });
-}
-
-function doZodiacBattleStatistics() {
-    $("#s-4").on("click", () => {
-        const target = $("#teamMemberSelect").val()! as string;
-        BattleStorageManager.getBattleResultStorage()
-            .loads()
-            .then(dataList => {
-                const candidates = dataList
-                    .filter(it => target === "" || it.roleId === target);
-                const html = new ZodiacBattleReportGenerator(candidates).generate();
-                $("#statistics").html(html).parent().show();
-            });
-    });
-}
-
 function doBindReport1() {
     $("#report-1").on("click", () => {
         const target = $("#teamMemberSelect").val()! as string;
@@ -690,6 +298,67 @@ function doBindReport1() {
             .then(dataList => {
                 const html = new BattleReportGenerator(dataList, target).generate();
                 $("#statistics").html(html).parent().show();
+            });
+    });
+}
+
+function doBindReport2() {
+    $("#report-2").on("click", () => {
+        const target = $("#teamMemberSelect").val()! as string;
+        BattleStorageManager.getBattleResultStorage()
+            .loads()
+            .then(dataList => {
+                const html = new MonsterReportGenerator(dataList, target).generate();
+                $("#statistics").html(html).parent().show();
+            });
+    });
+}
+
+function doBindReport3() {
+    $("#report-3").on("click", () => {
+        const target = $("#teamMemberSelect").val()! as string;
+        BattleStorageManager.getBattleResultStorage()
+            .loads()
+            .then(dataList => {
+                const html = new ZodiacReportGenerator(dataList, target).generate();
+                $("#statistics").html(html).parent().show();
+            });
+    });
+}
+
+function doDatabaseClearBattleResult() {
+    $("#clearBattleResult").on("click", () => {
+        if (!confirm("注意！！数据清除后无法恢复！！请确认！！")) {
+            return;
+        }
+        $(".databaseButton").prop("disabled", true);
+        BattleStorageManager.getBattleResultStorage()
+            .clear()
+            .then(() => {
+                const message: string = "<b style='font-weight:bold;font-size:300%;color:red'>战斗结果数据已经全部清除！</b>";
+                $("#statistics").html(message).parent().show();
+                $(".databaseButton").prop("disabled", false);
+            });
+    });
+}
+
+function doDatabaseExportBattleResult() {
+    $("#exportBattleResult").on("click", () => {
+        $(".databaseButton").prop("disabled", true);
+        BattleStorageManager.getBattleResultStorage()
+            .loads()
+            .then(dataList => {
+                const json = JSON.stringify(dataList.map(it => it.asObject()));
+
+                const html = "<textarea id='battleResultData' " +
+                    "rows='15' " +
+                    "style=\"height:expression((this.scrollHeight>150)?'150px':(this.scrollHeight+5)+'px');overflow:auto;width:100%;word-break;break-all;\">" +
+                    "</textarea>";
+                $("#statistics").html(html).parent().show();
+
+                $("#battleResultData").val(json);
+
+                $(".databaseButton").prop("disabled", false);
             });
     });
 }
