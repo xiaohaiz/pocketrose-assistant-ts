@@ -173,33 +173,39 @@ class MonsterReportGenerator {
         html += "<table style='background-color:#888888;text-align:center;margin:auto;width:100%'>";
         html += "<tbody>";
         html += "<tr>";
-        html += "<th style='background-color:navy;color:greenyellow' colspan='13'>怪 物 统 计</th>"
+        html += "<th style='background-color:navy;color:greenyellow' colspan='11'>四 天 王 统 计</th>"
         html += "</tr>";
         html += "<tr>";
-        html += "<th style='background-color:green;color:white'>名字</th>"
-        html += "<th style='background-color:green;color:white' colspan='3'>巴大蝴(012)</th>"
-        html += "<th style='background-color:green;color:white' colspan='3'>火精灵(136)</th>"
-        html += "<th style='background-color:green;color:white' colspan='3'>石章鱼(224)</th>"
-        html += "<th style='background-color:green;color:white' colspan='3'>火鸡战士(257)</th>"
+        html += "<th style='background-color:skyblue' rowspan='3'>名字</th>"
+        html += "<th style='background-color:skyblue' colspan='2'>巴大蝴(012)</th>"
+        html += "<th style='background-color:skyblue' colspan='2'>火精灵(136)</th>"
+        html += "<th style='background-color:skyblue' colspan='2'>石章鱼(224)</th>"
+        html += "<th style='background-color:skyblue' colspan='2'>火鸡战士(257)</th>"
+        html += "<th style='background-color:skyblue' colspan='2' rowspan='2'>总计</th>"
+        html += "</tr>";
+        html += "<tr>";
+        html += "<th style='background-color:skyblue' colspan='2'>" + PetProfileLoader.load("012")?.imageHtml + "</th>"
+        html += "<th style='background-color:skyblue' colspan='2'>" + PetProfileLoader.load("136")?.imageHtml + "</th>"
+        html += "<th style='background-color:skyblue' colspan='2'>" + PetProfileLoader.load("224")?.imageHtml + "</th>"
+        html += "<th style='background-color:skyblue' colspan='2'>" + PetProfileLoader.load("257")?.imageHtml + "</th>"
+        html += "</tr>";
+        html += "<tr>";
+        html += "<th style='background-color:skyblue'>战数</th>"
+        html += "<th style='background-color:skyblue'>占比(%)</th>"
+        html += "<th style='background-color:skyblue'>战数</th>"
+        html += "<th style='background-color:skyblue'>占比(%)</th>"
+        html += "<th style='background-color:skyblue'>战数</th>"
+        html += "<th style='background-color:skyblue'>占比(%)</th>"
+        html += "<th style='background-color:skyblue'>战数</th>"
+        html += "<th style='background-color:skyblue'>占比(%)</th>"
+        html += "<th style='background-color:skyblue'>战数</th>"
+        html += "<th style='background-color:skyblue'>占比(%)</th>"
         html += "</tr>";
 
         if (this.#target === undefined || this.#target === "") {
+            const t = totalBattleCount_012 + totalBattleCount_136 + totalBattleCount_224 + totalBattleCount_257;
             html += "<tr>";
-            html += "<th style='background-color:black;color:white' rowspan='2'>全团队</th>"
-            html += "<td style='background-color:wheat' rowspan='2'>" + PetProfileLoader.load("012")?.imageHtml + "</td>"
-            html += "<td style='background-color:wheat'>战数</td>"
-            html += "<td style='background-color:wheat'>占比(%)</td>"
-            html += "<td style='background-color:wheat' rowspan='2'>" + PetProfileLoader.load("136")?.imageHtml + "</td>"
-            html += "<td style='background-color:wheat'>战数</td>"
-            html += "<td style='background-color:wheat'>占比(%)</td>"
-            html += "<td style='background-color:wheat' rowspan='2'>" + PetProfileLoader.load("224")?.imageHtml + "</td>"
-            html += "<td style='background-color:wheat'>战数</td>"
-            html += "<td style='background-color:wheat'>占比(%)</td>"
-            html += "<td style='background-color:wheat' rowspan='2'>" + PetProfileLoader.load("257")?.imageHtml + "</td>"
-            html += "<td style='background-color:wheat'>战数</td>"
-            html += "<td style='background-color:wheat'>占比(%)</td>"
-            html += "</tr>";
-            html += "<tr>";
+            html += "<th style='background-color:black;color:white'>全团队</th>"
             html += "<td style='background-color:wheat'>" + totalBattleCount_012 + "</td>"
             html += "<td style='background-color:wheat'>" + ReportUtils.percentage(totalBattleCount_012, totalSeniorBattleCount) + "</td>"
             html += "<td style='background-color:wheat'>" + totalBattleCount_136 + "</td>"
@@ -208,26 +214,15 @@ class MonsterReportGenerator {
             html += "<td style='background-color:wheat'>" + ReportUtils.percentage(totalBattleCount_224, totalSeniorBattleCount) + "</td>"
             html += "<td style='background-color:wheat'>" + totalBattleCount_257 + "</td>"
             html += "<td style='background-color:wheat'>" + ReportUtils.percentage(totalBattleCount_257, totalSeniorBattleCount) + "</td>"
+            html += "<td style='background-color:wheat'>" + t + "</td>"
+            html += "<td style='background-color:wheat'>" + ReportUtils.percentage(t, totalSeniorBattleCount) + "</td>"
             html += "</tr>";
         }
 
         roles.forEach(it => {
+            const t = it.battleCount_012 + it.battleCount_136 + it.battleCount_224 + it.battleCount_257;
             html += "<tr>";
-            html += "<th style='background-color:black;color:white' rowspan='2'>" + it.roleName + "</th>"
-            html += "<td style='background-color:#F8F0E0' rowspan='2'>" + PetProfileLoader.load("012")?.imageHtml + "</td>"
-            html += "<td style='background-color:#F8F0E0'>战数</td>"
-            html += "<td style='background-color:#F8F0E0'>占比(%)</td>"
-            html += "<td style='background-color:#F8F0E0' rowspan='2'>" + PetProfileLoader.load("136")?.imageHtml + "</td>"
-            html += "<td style='background-color:#F8F0E0'>战数</td>"
-            html += "<td style='background-color:#F8F0E0'>占比(%)</td>"
-            html += "<td style='background-color:#F8F0E0' rowspan='2'>" + PetProfileLoader.load("224")?.imageHtml + "</td>"
-            html += "<td style='background-color:#F8F0E0'>战数</td>"
-            html += "<td style='background-color:#F8F0E0'>占比(%)</td>"
-            html += "<td style='background-color:#F8F0E0' rowspan='2'>" + PetProfileLoader.load("257")?.imageHtml + "</td>"
-            html += "<td style='background-color:#F8F0E0'>战数</td>"
-            html += "<td style='background-color:#F8F0E0'>占比(%)</td>"
-            html += "</tr>";
-            html += "<tr>";
+            html += "<th style='background-color:black;color:white'>" + it.roleName + "</th>"
             html += "<td style='background-color:#F8F0E0'>" + it.battleCount_012 + "</td>"
             html += "<td style='background-color:#F8F0E0'>" + ReportUtils.percentage(it.battleCount_012, it.seniorBattleCount) + "</td>"
             html += "<td style='background-color:#F8F0E0'>" + it.battleCount_136 + "</td>"
@@ -236,6 +231,8 @@ class MonsterReportGenerator {
             html += "<td style='background-color:#F8F0E0'>" + ReportUtils.percentage(it.battleCount_224, it.seniorBattleCount) + "</td>"
             html += "<td style='background-color:#F8F0E0'>" + it.battleCount_257 + "</td>"
             html += "<td style='background-color:#F8F0E0'>" + ReportUtils.percentage(it.battleCount_257, it.seniorBattleCount) + "</td>"
+            html += "<td style='background-color:#F8F0E0'>" + t + "</td>"
+            html += "<td style='background-color:#F8F0E0'>" + ReportUtils.percentage(t, it.seniorBattleCount) + "</td>"
             html += "</tr>";
 
         });
