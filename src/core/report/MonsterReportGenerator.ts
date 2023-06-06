@@ -21,6 +21,12 @@ class MonsterReportGenerator {
                 this.#target === "" ||
                 it.roleId === this.#target);
 
+        let totalSeniorBattleCount = 0;
+        let totalBattleCount_012 = 0;       // 巴大蝴(012)
+        let totalBattleCount_136 = 0;       // 火精灵(136)
+        let totalBattleCount_224 = 0;       // 石章鱼(224)
+        let totalBattleCount_257 = 0;       // 火鸡战士(257)
+
         // 记录每个怪物战斗了多少次
         const monsterCount = new Map<string, number>();
 
@@ -39,6 +45,10 @@ class MonsterReportGenerator {
             if (battleField === "十二宫") {
                 continue;
             }
+            if (battleField === "上洞") {
+                totalSeniorBattleCount += data.obtainTotalCount;
+                role.seniorBattleCount += data.obtainTotalCount;
+            }
 
             const monsterName = data.monster!;
             if (!monsterName.includes("(") && !monsterName.includes(")")) {
@@ -53,6 +63,25 @@ class MonsterReportGenerator {
                 role.monsterCount.set(code, 0);
             }
             role.monsterCount.set(code, (role.monsterCount.get(code)! + data.obtainTotalCount));
+
+            switch (code) {
+                case "012":
+                    totalBattleCount_012 += data.obtainTotalCount;
+                    role.battleCount_012 += data.obtainTotalCount;
+                    break;
+                case "136":
+                    totalBattleCount_136 += data.obtainTotalCount;
+                    role.battleCount_136 += data.obtainTotalCount;
+                    break;
+                case "224":
+                    totalBattleCount_224 += data.obtainTotalCount;
+                    role.battleCount_224 += data.obtainTotalCount;
+                    break;
+                case "257":
+                    totalBattleCount_257 += data.obtainTotalCount;
+                    role.battleCount_257 += data.obtainTotalCount;
+                    break;
+            }
         }
 
         let html = "";
@@ -143,6 +172,12 @@ class RoleMonster {
 
     readonly roleName: string;
     readonly monsterCount: Map<string, number>;
+
+    seniorBattleCount = 0;
+    battleCount_012 = 0;       // 巴大蝴(012)
+    battleCount_136 = 0;       // 火精灵(136)
+    battleCount_224 = 0;       // 石章鱼(224)
+    battleCount_257 = 0;       // 火鸡战士(257)
 
     constructor(roleName: string) {
         this.roleName = roleName;
