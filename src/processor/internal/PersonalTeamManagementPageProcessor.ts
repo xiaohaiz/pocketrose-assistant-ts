@@ -1,6 +1,7 @@
 import FastLoginLoader from "../../core/FastLoginLoader";
 import Credential from "../../util/Credential";
 import MessageBoard from "../../util/MessageBoard";
+import PageUtils from "../../util/PageUtils";
 import StorageUtils from "../../util/StorageUtils";
 import StringUtils from "../../util/StringUtils";
 import PageProcessorContext from "../PageProcessorContext";
@@ -92,30 +93,34 @@ function doRender() {
     html += "<table style='border-width:0;width:100%;background-color:#888888'>";
     html += "<tbody style='background-color:#F8F0E0;text-align:center'>";
     html += "<tr>";
-    html += "<th style='background-color:#E8E8D0'>快速登陆</th>";
-    html += "<th style='background-color:#EFE0C0'>角色名字</th>";
-    html += "<th style='background-color:#E0D0B0'>登陆名</th>";
-    html += "<th style='background-color:#EFE0C0'>密码</th>";
-    html += "<th style='background-color:#E0D0B0'>重复密码</th>";
-    html += "<th style='background-color:#EFE0C0'>设置</th>";
+    html += "<th style='background-color:skyblue'>序号</th>";
+    html += "<th style='background-color:skyblue'>队长</th>";
+    html += "<th style='background-color:skyblue'>角色名字</th>";
+    html += "<th style='background-color:skyblue'>登陆名</th>";
+    html += "<th style='background-color:skyblue'>密码</th>";
+    html += "<th style='background-color:skyblue'>重复密码</th>";
+    html += "<th style='background-color:skyblue'>设置</th>";
     html += "</tr>";
 
     for (let i = 0; i < 50; i++) {
         html += "<tr>";
         html += "<th style='background-color:#E8E8D0'>";
-        html += "快速登陆 (" + (i + 1) + ")";
+        html += "#" + (i + 1);
         html += "</th>";
-        html += "<td style='background-color:#EFE0C0;text-align:left'>";
-        html += "<input type='text' id='name_" + i + "' size='10' maxlength='10'>";
-        html += "</td>";
-        html += "<td style='background-color:#E0D0B0;text-align:left'>";
-        html += "<input type='text' id='id_" + i + "' size='10' maxlength='10'>";
+        html += "<td style='background-color:#E8E8D0'>";
+        html += "<button role='button' id='master_" + i + "' class='master-button' style='color:grey'>队长</button>";
         html += "</td>";
         html += "<td style='background-color:#EFE0C0;text-align:left'>";
-        html += "<input type='password' id='pass1_" + i + "' size='10' maxlength='10'>";
+        html += "<input type='text' id='name_" + i + "' size='10' maxlength='10' spellcheck='false'>";
         html += "</td>";
         html += "<td style='background-color:#E0D0B0;text-align:left'>";
-        html += "<input type='password' id='pass2_" + i + "' size='10' maxlength='10'>";
+        html += "<input type='text' id='id_" + i + "' size='10' maxlength='10' spellcheck='false'>";
+        html += "</td>";
+        html += "<td style='background-color:#EFE0C0;text-align:left'>";
+        html += "<input type='password' id='pass1_" + i + "' size='10' maxlength='10' spellcheck='false'>";
+        html += "</td>";
+        html += "<td style='background-color:#E0D0B0;text-align:left'>";
+        html += "<input type='password' id='pass2_" + i + "' size='10' maxlength='10' spellcheck='false'>";
         html += "</td>";
         html += "<td style='background-color:#EFE0C0'>";
         html += "<input type='button' id='button_" + i + "' class='button_class' value='设置'>";
@@ -151,6 +156,7 @@ function doRender() {
 
     doBindFastLoginButton();
     doBindClearButton();
+    doBindMasterButton();
 }
 
 function doBindFastLoginButton() {
@@ -211,10 +217,23 @@ function doBindClearButton() {
     });
 }
 
+function doBindMasterButton() {
+    $(".master-button").on("click", event => {
+        const buttonId = $(event.target).attr("id")!;
+        if (PageUtils.isColorBlue(buttonId)) {
+            $("#" + buttonId).css("color", "grey");
+        } else if (PageUtils.isColorGrey(buttonId)) {
+            $(".master-button").css("color", "grey");
+            $("#" + buttonId).css("color", "blue");
+        }
+    });
+}
+
 function doRefresh() {
     $("#fastLoginSetup").html("");
     $(".button_class").off("click");
     $(".clear_class").off("click");
+    $(".master-button").off("click");
     doRender();
 }
 
