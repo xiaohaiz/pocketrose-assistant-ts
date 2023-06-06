@@ -4,6 +4,7 @@ import PageUtils from "../../util/PageUtils";
 import StringUtils from "../../util/StringUtils";
 import TreasureLoader from "../equipment/TreasureLoader";
 import PalaceTaskManager from "../task/PalaceTaskManager";
+import BattleLog from "./BattleLog";
 import BattlePage from "./BattlePage";
 import BattleRecord from "./BattleRecord";
 import BattleStorageManager from "./BattleStorageManager";
@@ -94,20 +95,34 @@ class BattleProcessor {
                 }
             }
         }
-        // 写入战斗结果
-        switch (this.page!.battleResult!) {
-            case "战胜":
-                BattleStorageManager.getBattleResultStorage().win(this.#credential.id, monster, catchCount, photoCount, treasures).then();
-                break;
-            case "战败":
-                BattleStorageManager.getBattleResultStorage().lose(this.#credential.id, monster).then();
-                break;
-            case "平手":
-                BattleStorageManager.getBattleResultStorage().draw(this.#credential.id, monster, catchCount, photoCount, treasures).then();
-                break;
-            default:
-                break;
-        }
+
+        // 战斗日志
+        const log = new BattleLog();
+        log.initialize();
+        log.roleId = this.#credential.id;
+        log.monster = monster;
+        log.result = this.page!.battleResult!;
+        log.catch = catchCount;
+        log.photo = photoCount;
+        log.treasures = treasures;
+        BattleStorageManager.battleLogStore
+            .write(log)
+            .then(() => {
+                // 写入战斗结果
+                switch (this.page!.battleResult!) {
+                    case "战胜":
+                        BattleStorageManager.getBattleResultStorage().win(this.#credential.id, monster, catchCount, photoCount, treasures).then();
+                        break;
+                    case "战败":
+                        BattleStorageManager.getBattleResultStorage().lose(this.#credential.id, monster).then();
+                        break;
+                    case "平手":
+                        BattleStorageManager.getBattleResultStorage().draw(this.#credential.id, monster, catchCount, photoCount, treasures).then();
+                        break;
+                    default:
+                        break;
+                }
+            });
     }
 
     #doRecommendation(): string {
