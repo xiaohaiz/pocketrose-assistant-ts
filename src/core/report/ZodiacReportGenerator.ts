@@ -91,7 +91,7 @@ class ZodiacReportGenerator {
         html += "<td style='background-color:wheat'>" + totalPowerGemCount + "</td>"
         html += "<td style='background-color:wheat'>" + totalWeightGemCount + "</td>"
         html += "<td style='background-color:wheat'>" + totalLuckGemCount + "</td>"
-        html += "<td style='background-color:wheat'>" + ReportUtils.percentage(totalPowerGemCount + totalWeightGemCount + totalLuckGemCount, totalBattleCount) + "</td>"
+        html += "<td style='background-color:wheat'>" + ReportUtils.percentage(totalPowerGemCount + totalWeightGemCount + totalLuckGemCount, totalWinCount) + "</td>"
         html += "<td style='background-color:wheat'>-</td>"
         html += "</tr>";
 
@@ -146,7 +146,7 @@ class ZodiacWarrior {
     }
 
     get gemRatioHtml() {
-        return ReportUtils.percentage(this.gemCount, this.battleCount);
+        return ReportUtils.percentage(this.gemCount, this.winCount);
     }
 
 }
