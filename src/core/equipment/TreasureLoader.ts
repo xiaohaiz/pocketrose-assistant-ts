@@ -26,6 +26,11 @@ class TreasureLoader {
         const cn = _.parseInt(code);
         return cn >= 32 && cn <= 49;
     }
+
+    static isGoodPersonCard(code: string) {
+        const cn = _.parseInt(code);
+        return cn === 42;
+    }
 }
 
 // ----------------------------------------------------------------------------

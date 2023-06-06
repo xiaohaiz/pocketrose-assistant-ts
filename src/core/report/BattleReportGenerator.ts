@@ -42,6 +42,7 @@ class BattleReportGenerator {
         let totalTreasureCount = 0;
         let totalUsefulTreasureCount = 0;
         let totalUselessTreasureCount = 0;
+        let totalGoodPersonCardCount = 0;
 
         const roles = new Map<string, RoleBattle>();
         FastLoginManager.getAllFastLogins().forEach(config => {
@@ -105,6 +106,10 @@ class BattleReportGenerator {
                         if (TreasureLoader.isUselessTreasure(code)) {
                             totalUselessTreasureCount += count;
                             role.uselessTreasureCount += count;
+                            if (TreasureLoader.isGoodPersonCard(code)) {
+                                totalGoodPersonCardCount += count;
+                                role.goodPersonCardCount += count;
+                            }
                         } else {
                             totalUsefulTreasureCount += count;
                             role.usefulTreasureCount += count;
@@ -345,6 +350,65 @@ class BattleReportGenerator {
         html += "</td>";
         html += "</tr>";
 
+        html += "<tr>";
+        html += "<td>";
+        html += "<table style='background-color:#888888;text-align:center;margin:auto;width:100%'>";
+        html += "<tbody>";
+        html += "<tr>";
+        html += "<th style='background-color:navy;color:greenyellow' colspan='9'>上 洞 入 手 统 计</th>"
+        html += "</tr>";
+        html += "<tr>";
+        html += "<th style='background-color:green;color:white' rowspan='2'>名字</th>"
+        html += "<th style='background-color:green;color:white' colspan='2'>总计</th>"
+        html += "<th style='background-color:green;color:white' colspan='2'>非玩具</th>"
+        html += "<th style='background-color:green;color:white' colspan='4'>玩具</th>"
+        html += "</tr>";
+        html += "<tr>";
+        html += "<th style='background-color:green;color:white'>入手数</th>"
+        html += "<th style='background-color:green;color:white'>入手率(‱)</th>"
+        html += "<th style='background-color:green;color:white'>数量</th>"
+        html += "<th style='background-color:green;color:white'>占比(%)</th>"
+        html += "<th style='background-color:green;color:white'>数量</th>"
+        html += "<th style='background-color:green;color:white'>占比(%)</th>"
+        html += "<th style='background-color:green;color:white'>好人卡</th>"
+        html += "<th style='background-color:green;color:white'>好人卡占比(%)</th>"
+        html += "</tr>";
+
+        if (this.#target === undefined || this.#target === "") {
+            html += "<tr>";
+            html += "<th style='background-color:black;color:white'>全团队</th>"
+            html += "<td style='background-color:wheat'>" + totalTreasureCount + "</td>"
+            html += "<td style='background-color:wheat'>" + ReportUtils.permyriad(totalTreasureCount, totalCount) + "</td>"
+            html += "<td style='background-color:wheat'>" + totalUsefulTreasureCount + "</td>"
+            html += "<td style='background-color:wheat'>" + ReportUtils.percentage(totalUsefulTreasureCount, totalTreasureCount) + "</td>"
+            html += "<td style='background-color:wheat'>" + totalUselessTreasureCount + "</td>"
+            html += "<td style='background-color:wheat'>" + ReportUtils.percentage(totalUselessTreasureCount, totalTreasureCount) + "</td>"
+            html += "<td style='background-color:wheat'>" + totalGoodPersonCardCount + "</td>"
+            html += "<td style='background-color:wheat'>" + ReportUtils.percentage(totalGoodPersonCardCount, totalTreasureCount) + "</td>"
+            html += "</tr>";
+        }
+
+        roles.forEach(it => {
+            if (it.count > 0) {
+                html += "<tr>";
+                html += "<th style='background-color:black;color:white'>" + it.roleName + "</th>"
+                html += "<td style='background-color:#F8F0E0'>" + it.treasureCount + "</td>"
+                html += "<td style='background-color:#F8F0E0'>" + ReportUtils.permyriad(it.treasureCount, it.count) + "</td>"
+                html += "<td style='background-color:#F8F0E0'>" + it.usefulTreasureCount + "</td>"
+                html += "<td style='background-color:#F8F0E0'>" + ReportUtils.percentage(it.usefulTreasureCount, it.treasureCount) + "</td>"
+                html += "<td style='background-color:#F8F0E0'>" + it.uselessTreasureCount + "</td>"
+                html += "<td style='background-color:#F8F0E0'>" + ReportUtils.percentage(it.uselessTreasureCount, it.treasureCount) + "</td>"
+                html += "<td style='background-color:#F8F0E0'>" + it.goodPersonCardCount + "</td>"
+                html += "<td style='background-color:#F8F0E0'>" + ReportUtils.percentage(it.goodPersonCardCount, it.treasureCount) + "</td>"
+                html += "</tr>";
+            }
+        });
+
+        html += "</tbody>";
+        html += "</table>";
+        html += "</td>";
+        html += "</tr>";
+
         html += "</tbody>";
         html += "</table>";
 
@@ -378,6 +442,7 @@ class RoleBattle {
     treasureCount = 0;
     usefulTreasureCount = 0;
     uselessTreasureCount = 0;
+    goodPersonCardCount = 0;
 
     constructor(roleName: string) {
         this.roleName = roleName;
