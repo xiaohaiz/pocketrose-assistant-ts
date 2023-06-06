@@ -5,6 +5,7 @@ import NpcLoader from "../../core/NpcLoader";
 import PetProfileLoader from "../../core/PetProfileLoader";
 import BattleReportGenerator from "../../core/report/BattleReportGenerator";
 import GemReportGenerator from "../../core/report/GemReportGenerator";
+import MonsterReportGenerator from "../../core/report/MonsterReportGenerator";
 import ReportUtils from "../../core/report/ReportUtils";
 import TreasureReportGenerator from "../../core/report/TreasureReportGenerator";
 import ZodiacBattleReportGenerator from "../../core/report/ZodiacBattleReportGenerator";
@@ -74,6 +75,7 @@ abstract class PersonalStatisticsPageProcessor extends PageProcessorCredentialSu
         html += "<tr>";
         html += "<td style='text-align:center;background-color:#F8F0E0'>";
         html += "<button role='button' id='report-1'>战斗统计报告</button>";
+        html += "<button role='button' id='report-2'>怪物统计报告</button>";
         html += "<button role='button' id='s-1'>转职数据统计</button>";
         html += "<button role='button' id='s-2'>上洞数据统计</button>";
         html += "<button role='button' id='s-3'>宝石数据统计</button>";
@@ -135,6 +137,7 @@ abstract class PersonalStatisticsPageProcessor extends PageProcessorCredentialSu
         doZodiacBattleStatistics();
 
         doBindReport1();
+        doBindReport2();
     }
 
     #welcomeMessageHtml() {
@@ -689,6 +692,18 @@ function doBindReport1() {
             .loads()
             .then(dataList => {
                 const html = new BattleReportGenerator(dataList, target).generate();
+                $("#statistics").html(html).parent().show();
+            });
+    });
+}
+
+function doBindReport2() {
+    $("#report-2").on("click", () => {
+        const target = $("#teamMemberSelect").val()! as string;
+        BattleStorageManager.getBattleResultStorage()
+            .loads()
+            .then(dataList => {
+                const html = new MonsterReportGenerator(dataList, target).generate();
                 $("#statistics").html(html).parent().show();
             });
     });
