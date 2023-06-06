@@ -33,7 +33,11 @@ class MonsterReportGenerator {
 
         const roles = new Map<string, RoleMonster>();
         FastLoginManager.getAllFastLogins().forEach(config => {
-            roles.set(config.id!, new RoleMonster(config.name!));
+            if (this.#target === undefined || this.#target === "") {
+                roles.set(config.id!, new RoleMonster(config.name!));
+            } else if (this.#target === config.id) {
+                roles.set(config.id!, new RoleMonster(config.name!));
+            }
         });
 
         for (const data of candidates) {

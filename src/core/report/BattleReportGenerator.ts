@@ -51,7 +51,11 @@ class BattleReportGenerator {
 
         const roles = new Map<string, RoleBattle>();
         FastLoginManager.getAllFastLogins().forEach(config => {
-            roles.set(config.id!, new RoleBattle(config.name!));
+            if (this.#target === undefined || this.#target === "") {
+                roles.set(config.id!, new RoleBattle(config.name!));
+            } else if (this.#target === config.id) {
+                roles.set(config.id!, new RoleBattle(config.name!));
+            }
         });
 
         for (const data of candidates) {
@@ -205,26 +209,24 @@ class BattleReportGenerator {
         }
 
         roles.forEach(it => {
-            if (it.count > 0) {
-                html += "<tr>";
-                html += "<th style='background-color:black;color:white'>" + it.roleName + "</th>"
-                html += "<td style='background-color:#F8F0E0;color:blue'>" + it.winCount + "</td>"
-                html += "<td style='background-color:#F8F0E0'>" + it.count + "</td>"
-                html += "<td style='background-color:#F8F0E0'>" + ReportUtils.percentage(it.winCount, it.count) + "</td>"
-                html += "<td style='background-color:#F8F0E0'>" + it.primaryCount + "</td>"
-                html += "<td style='background-color:#F8F0E0'>" + ReportUtils.percentage(it.primaryCount, it.count) + "</td>"
-                html += "<td style='background-color:#F8F0E0'>" + it.juniorCount + "</td>"
-                html += "<td style='background-color:#F8F0E0'>" + ReportUtils.percentage(it.juniorCount, it.count) + "</td>"
-                html += "<td style='background-color:#F8F0E0;color:blue'>" + it.seniorWinCount + "</td>"
-                html += "<td style='background-color:#F8F0E0'>" + it.seniorCount + "</td>"
-                html += "<td style='background-color:#F8F0E0'>" + ReportUtils.percentage(it.seniorWinCount, it.seniorCount) + "</td>"
-                html += "<td style='background-color:#F8F0E0'>" + ReportUtils.percentage(it.seniorCount, it.count) + "</td>"
-                html += "<td style='background-color:#F8F0E0;color:blue'>" + it.zodiacWinCount + "</td>"
-                html += "<td style='background-color:#F8F0E0'>" + it.zodiacCount + "</td>"
-                html += "<td style='background-color:#F8F0E0'>" + ReportUtils.percentage(it.zodiacWinCount, it.zodiacCount) + "</td>"
-                html += "<td style='background-color:#F8F0E0'>" + ReportUtils.percentage(it.zodiacCount, it.count) + "</td>"
-                html += "</tr>";
-            }
+            html += "<tr>";
+            html += "<th style='background-color:black;color:white'>" + it.roleName + "</th>"
+            html += "<td style='background-color:#F8F0E0;color:blue'>" + it.winCount + "</td>"
+            html += "<td style='background-color:#F8F0E0'>" + it.count + "</td>"
+            html += "<td style='background-color:#F8F0E0'>" + ReportUtils.percentage(it.winCount, it.count) + "</td>"
+            html += "<td style='background-color:#F8F0E0'>" + it.primaryCount + "</td>"
+            html += "<td style='background-color:#F8F0E0'>" + ReportUtils.percentage(it.primaryCount, it.count) + "</td>"
+            html += "<td style='background-color:#F8F0E0'>" + it.juniorCount + "</td>"
+            html += "<td style='background-color:#F8F0E0'>" + ReportUtils.percentage(it.juniorCount, it.count) + "</td>"
+            html += "<td style='background-color:#F8F0E0;color:blue'>" + it.seniorWinCount + "</td>"
+            html += "<td style='background-color:#F8F0E0'>" + it.seniorCount + "</td>"
+            html += "<td style='background-color:#F8F0E0'>" + ReportUtils.percentage(it.seniorWinCount, it.seniorCount) + "</td>"
+            html += "<td style='background-color:#F8F0E0'>" + ReportUtils.percentage(it.seniorCount, it.count) + "</td>"
+            html += "<td style='background-color:#F8F0E0;color:blue'>" + it.zodiacWinCount + "</td>"
+            html += "<td style='background-color:#F8F0E0'>" + it.zodiacCount + "</td>"
+            html += "<td style='background-color:#F8F0E0'>" + ReportUtils.percentage(it.zodiacWinCount, it.zodiacCount) + "</td>"
+            html += "<td style='background-color:#F8F0E0'>" + ReportUtils.percentage(it.zodiacCount, it.count) + "</td>"
+            html += "</tr>";
         });
 
         html += "</tbody>";
@@ -280,23 +282,21 @@ class BattleReportGenerator {
         }
 
         roles.forEach(it => {
-            if (it.count > 0) {
-                html += "<tr>";
-                html += "<th style='background-color:black;color:white'>" + it.roleName + "</th>"
-                html += "<td style='background-color:#F8F0E0'>" + it.photoCount + "</td>"
-                html += "<td style='background-color:#F8F0E0'>" + it.count + "</td>"
-                html += "<td style='background-color:#F8F0E0'>" + ReportUtils.permyriad(it.photoCount, it.count) + "</td>"
-                html += "<td style='background-color:#F8F0E0'>" + it.primaryPhotoCount + "</td>"
-                html += "<td style='background-color:#F8F0E0'>" + it.primaryCount + "</td>"
-                html += "<td style='background-color:#F8F0E0'>" + ReportUtils.permyriad(it.primaryPhotoCount, it.primaryCount) + "</td>"
-                html += "<td style='background-color:#F8F0E0'>" + it.juniorPhotoCount + "</td>"
-                html += "<td style='background-color:#F8F0E0'>" + it.juniorCount + "</td>"
-                html += "<td style='background-color:#F8F0E0'>" + ReportUtils.permyriad(it.juniorPhotoCount, it.juniorCount) + "</td>"
-                html += "<td style='background-color:#F8F0E0'>" + it.seniorPhotoCount + "</td>"
-                html += "<td style='background-color:#F8F0E0'>" + it.seniorCount + "</td>"
-                html += "<td style='background-color:#F8F0E0'>" + ReportUtils.permyriad(it.seniorPhotoCount, it.seniorCount) + "</td>"
-                html += "</tr>";
-            }
+            html += "<tr>";
+            html += "<th style='background-color:black;color:white'>" + it.roleName + "</th>"
+            html += "<td style='background-color:#F8F0E0'>" + it.photoCount + "</td>"
+            html += "<td style='background-color:#F8F0E0'>" + it.count + "</td>"
+            html += "<td style='background-color:#F8F0E0'>" + ReportUtils.permyriad(it.photoCount, it.count) + "</td>"
+            html += "<td style='background-color:#F8F0E0'>" + it.primaryPhotoCount + "</td>"
+            html += "<td style='background-color:#F8F0E0'>" + it.primaryCount + "</td>"
+            html += "<td style='background-color:#F8F0E0'>" + ReportUtils.permyriad(it.primaryPhotoCount, it.primaryCount) + "</td>"
+            html += "<td style='background-color:#F8F0E0'>" + it.juniorPhotoCount + "</td>"
+            html += "<td style='background-color:#F8F0E0'>" + it.juniorCount + "</td>"
+            html += "<td style='background-color:#F8F0E0'>" + ReportUtils.permyriad(it.juniorPhotoCount, it.juniorCount) + "</td>"
+            html += "<td style='background-color:#F8F0E0'>" + it.seniorPhotoCount + "</td>"
+            html += "<td style='background-color:#F8F0E0'>" + it.seniorCount + "</td>"
+            html += "<td style='background-color:#F8F0E0'>" + ReportUtils.permyriad(it.seniorPhotoCount, it.seniorCount) + "</td>"
+            html += "</tr>";
         });
 
         html += "</tbody>";
@@ -352,23 +352,21 @@ class BattleReportGenerator {
         }
 
         roles.forEach(it => {
-            if (it.count > 0) {
-                html += "<tr>";
-                html += "<th style='background-color:black;color:white'>" + it.roleName + "</th>"
-                html += "<td style='background-color:#F8F0E0'>" + it.catchCount + "</td>"
-                html += "<td style='background-color:#F8F0E0'>" + it.count + "</td>"
-                html += "<td style='background-color:#F8F0E0'>" + ReportUtils.permyriad(it.catchCount, it.count) + "</td>"
-                html += "<td style='background-color:#F8F0E0'>" + it.primaryCatchCount + "</td>"
-                html += "<td style='background-color:#F8F0E0'>" + it.primaryCount + "</td>"
-                html += "<td style='background-color:#F8F0E0'>" + ReportUtils.permyriad(it.primaryCatchCount, it.primaryCount) + "</td>"
-                html += "<td style='background-color:#F8F0E0'>" + it.juniorCatchCount + "</td>"
-                html += "<td style='background-color:#F8F0E0'>" + it.juniorCount + "</td>"
-                html += "<td style='background-color:#F8F0E0'>" + ReportUtils.permyriad(it.juniorCatchCount, it.juniorCount) + "</td>"
-                html += "<td style='background-color:#F8F0E0'>" + it.seniorCatchCount + "</td>"
-                html += "<td style='background-color:#F8F0E0'>" + it.seniorCount + "</td>"
-                html += "<td style='background-color:#F8F0E0'>" + ReportUtils.permyriad(it.seniorCatchCount, it.seniorCount) + "</td>"
-                html += "</tr>";
-            }
+            html += "<tr>";
+            html += "<th style='background-color:black;color:white'>" + it.roleName + "</th>"
+            html += "<td style='background-color:#F8F0E0'>" + it.catchCount + "</td>"
+            html += "<td style='background-color:#F8F0E0'>" + it.count + "</td>"
+            html += "<td style='background-color:#F8F0E0'>" + ReportUtils.permyriad(it.catchCount, it.count) + "</td>"
+            html += "<td style='background-color:#F8F0E0'>" + it.primaryCatchCount + "</td>"
+            html += "<td style='background-color:#F8F0E0'>" + it.primaryCount + "</td>"
+            html += "<td style='background-color:#F8F0E0'>" + ReportUtils.permyriad(it.primaryCatchCount, it.primaryCount) + "</td>"
+            html += "<td style='background-color:#F8F0E0'>" + it.juniorCatchCount + "</td>"
+            html += "<td style='background-color:#F8F0E0'>" + it.juniorCount + "</td>"
+            html += "<td style='background-color:#F8F0E0'>" + ReportUtils.permyriad(it.juniorCatchCount, it.juniorCount) + "</td>"
+            html += "<td style='background-color:#F8F0E0'>" + it.seniorCatchCount + "</td>"
+            html += "<td style='background-color:#F8F0E0'>" + it.seniorCount + "</td>"
+            html += "<td style='background-color:#F8F0E0'>" + ReportUtils.permyriad(it.seniorCatchCount, it.seniorCount) + "</td>"
+            html += "</tr>";
         });
 
         html += "</tbody>";
@@ -424,23 +422,21 @@ class BattleReportGenerator {
         }
 
         roles.forEach(it => {
-            if (it.count > 0) {
-                html += "<tr>";
-                html += "<th style='background-color:black;color:white'>" + it.roleName + "</th>"
-                html += "<td style='background-color:#F8F0E0'>" + it.hintCount + "</td>"
-                html += "<td style='background-color:#F8F0E0'>" + it.count + "</td>"
-                html += "<td style='background-color:#F8F0E0'>" + ReportUtils.permyriad(it.hintCount, it.count) + "</td>"
-                html += "<td style='background-color:#F8F0E0'>" + it.primaryHintCount + "</td>"
-                html += "<td style='background-color:#F8F0E0'>" + it.primaryCount + "</td>"
-                html += "<td style='background-color:#F8F0E0'>" + ReportUtils.permyriad(it.primaryHintCount, it.primaryCount) + "</td>"
-                html += "<td style='background-color:#F8F0E0'>" + it.juniorHintCount + "</td>"
-                html += "<td style='background-color:#F8F0E0'>" + it.juniorCount + "</td>"
-                html += "<td style='background-color:#F8F0E0'>" + ReportUtils.permyriad(it.juniorHintCount, it.juniorCount) + "</td>"
-                html += "<td style='background-color:#F8F0E0'>" + it.seniorHintCount + "</td>"
-                html += "<td style='background-color:#F8F0E0'>" + it.seniorCount + "</td>"
-                html += "<td style='background-color:#F8F0E0'>" + ReportUtils.permyriad(it.seniorHintCount, it.seniorCount) + "</td>"
-                html += "</tr>";
-            }
+            html += "<tr>";
+            html += "<th style='background-color:black;color:white'>" + it.roleName + "</th>"
+            html += "<td style='background-color:#F8F0E0'>" + it.hintCount + "</td>"
+            html += "<td style='background-color:#F8F0E0'>" + it.count + "</td>"
+            html += "<td style='background-color:#F8F0E0'>" + ReportUtils.permyriad(it.hintCount, it.count) + "</td>"
+            html += "<td style='background-color:#F8F0E0'>" + it.primaryHintCount + "</td>"
+            html += "<td style='background-color:#F8F0E0'>" + it.primaryCount + "</td>"
+            html += "<td style='background-color:#F8F0E0'>" + ReportUtils.permyriad(it.primaryHintCount, it.primaryCount) + "</td>"
+            html += "<td style='background-color:#F8F0E0'>" + it.juniorHintCount + "</td>"
+            html += "<td style='background-color:#F8F0E0'>" + it.juniorCount + "</td>"
+            html += "<td style='background-color:#F8F0E0'>" + ReportUtils.permyriad(it.juniorHintCount, it.juniorCount) + "</td>"
+            html += "<td style='background-color:#F8F0E0'>" + it.seniorHintCount + "</td>"
+            html += "<td style='background-color:#F8F0E0'>" + it.seniorCount + "</td>"
+            html += "<td style='background-color:#F8F0E0'>" + ReportUtils.permyriad(it.seniorHintCount, it.seniorCount) + "</td>"
+            html += "</tr>";
         });
 
         html += "</tbody>";
@@ -487,19 +483,17 @@ class BattleReportGenerator {
         }
 
         roles.forEach(it => {
-            if (it.count > 0) {
-                html += "<tr>";
-                html += "<th style='background-color:black;color:white'>" + it.roleName + "</th>"
-                html += "<td style='background-color:#F8F0E0'>" + it.treasureCount + "</td>"
-                html += "<td style='background-color:#F8F0E0'>" + ReportUtils.permyriad(it.treasureCount, it.count) + "</td>"
-                html += "<td style='background-color:#F8F0E0'>" + it.usefulTreasureCount + "</td>"
-                html += "<td style='background-color:#F8F0E0'>" + ReportUtils.percentage(it.usefulTreasureCount, it.treasureCount) + "</td>"
-                html += "<td style='background-color:#F8F0E0'>" + it.uselessTreasureCount + "</td>"
-                html += "<td style='background-color:#F8F0E0'>" + ReportUtils.percentage(it.uselessTreasureCount, it.treasureCount) + "</td>"
-                html += "<td style='background-color:#F8F0E0'>" + it.goodPersonCardCount + "</td>"
-                html += "<td style='background-color:#F8F0E0'>" + ReportUtils.percentage(it.goodPersonCardCount, it.treasureCount) + "</td>"
-                html += "</tr>";
-            }
+            html += "<tr>";
+            html += "<th style='background-color:black;color:white'>" + it.roleName + "</th>"
+            html += "<td style='background-color:#F8F0E0'>" + it.treasureCount + "</td>"
+            html += "<td style='background-color:#F8F0E0'>" + ReportUtils.permyriad(it.treasureCount, it.count) + "</td>"
+            html += "<td style='background-color:#F8F0E0'>" + it.usefulTreasureCount + "</td>"
+            html += "<td style='background-color:#F8F0E0'>" + ReportUtils.percentage(it.usefulTreasureCount, it.treasureCount) + "</td>"
+            html += "<td style='background-color:#F8F0E0'>" + it.uselessTreasureCount + "</td>"
+            html += "<td style='background-color:#F8F0E0'>" + ReportUtils.percentage(it.uselessTreasureCount, it.treasureCount) + "</td>"
+            html += "<td style='background-color:#F8F0E0'>" + it.goodPersonCardCount + "</td>"
+            html += "<td style='background-color:#F8F0E0'>" + ReportUtils.percentage(it.goodPersonCardCount, it.treasureCount) + "</td>"
+            html += "</tr>";
         });
 
         html += "</tbody>";
