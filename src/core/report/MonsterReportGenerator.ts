@@ -120,7 +120,8 @@ class MonsterReportGenerator {
             html += "<th style='background-color:black;color:white' rowspan='2'>全团队</th>"
             for (let i = 0; i < 10; i++) {
                 const it = list[i]
-                if (it === undefined) {
+                // @ts-ignore
+                if (it === undefined || it[1] === 0) {
                     html += "<td style='background-color:wheat;width:64px'></td>"
                 } else {
                     // @ts-ignore
@@ -132,7 +133,8 @@ class MonsterReportGenerator {
             html += "<tr>";
             for (let i = 0; i < 10; i++) {
                 const it = list[i]
-                if (it === undefined) {
+                // @ts-ignore
+                if (it === undefined || it[1] === 0) {
                     html += "<td style='background-color:wheat;width:64px'></td>"
                 } else {
                     // @ts-ignore
@@ -148,7 +150,8 @@ class MonsterReportGenerator {
             html += "<th style='background-color:black;color:white' rowspan='2'>" + it.roleName + "</th>"
             for (let i = 0; i < 10; i++) {
                 const it = list[i]
-                if (it === undefined) {
+                // @ts-ignore
+                if (it === undefined || it[1] === 0) {
                     html += "<td style='background-color:#F8F0E0;width:64px'></td>"
                 } else {
                     // @ts-ignore
@@ -160,7 +163,8 @@ class MonsterReportGenerator {
             html += "<tr>";
             for (let i = 0; i < 10; i++) {
                 const it = list[i]
-                if (it === undefined) {
+                // @ts-ignore
+                if (it === undefined || it[1] === 0) {
                     html += "<td style='background-color:#F8F0E0;width:64px'></td>"
                 } else {
                     // @ts-ignore
@@ -196,7 +200,8 @@ class MonsterReportGenerator {
             html += "<th style='background-color:black;color:white' rowspan='2'>全团队</th>"
             for (let i = 0; i < 10; i++) {
                 const it = list[i]
-                if (it === undefined) {
+                // @ts-ignore
+                if (it === undefined || it[1] === 1) {
                     html += "<td style='background-color:wheat;width:64px'></td>"
                 } else {
                     // @ts-ignore
@@ -208,7 +213,8 @@ class MonsterReportGenerator {
             html += "<tr>";
             for (let i = 0; i < 10; i++) {
                 const it = list[i]
-                if (it === undefined) {
+                // @ts-ignore
+                if (it === undefined || it[1] === 1) {
                     html += "<td style='background-color:wheat;width:64px'></td>"
                 } else {
                     // @ts-ignore
@@ -224,7 +230,8 @@ class MonsterReportGenerator {
             html += "<th style='background-color:black;color:white' rowspan='2'>" + it.roleName + "</th>"
             for (let i = 0; i < 10; i++) {
                 const it = list[i]
-                if (it === undefined) {
+                // @ts-ignore
+                if (it === undefined || it[1] === 1) {
                     html += "<td style='background-color:#F8F0E0;width:64px'></td>"
                 } else {
                     // @ts-ignore
@@ -236,7 +243,8 @@ class MonsterReportGenerator {
             html += "<tr>";
             for (let i = 0; i < 10; i++) {
                 const it = list[i]
-                if (it === undefined) {
+                // @ts-ignore
+                if (it === undefined || it[1] === 1) {
                     html += "<td style='background-color:#F8F0E0;width:64px'></td>"
                 } else {
                     // @ts-ignore
