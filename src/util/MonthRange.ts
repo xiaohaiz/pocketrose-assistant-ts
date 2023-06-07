@@ -43,6 +43,14 @@ class MonthRange {
     toString() {
         return "[" + new Date(this.start).toLocaleString() + "] - [" + new Date(this.end).toLocaleString() + "]";
     }
+
+    previous() {
+        return new MonthRange(this.start - 1);
+    }
+
+    next() {
+        return new MonthRange(this.end + 1);
+    }
 }
 
 export = MonthRange;
