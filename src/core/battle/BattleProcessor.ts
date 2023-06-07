@@ -111,13 +111,13 @@ class BattleProcessor {
                 // 写入战斗结果
                 switch (this.page!.battleResult!) {
                     case "战胜":
-                        BattleStorageManager.getBattleResultStorage().win(this.#credential.id, monster, catchCount, photoCount, treasures).then();
+                        BattleStorageManager.battleResultStorage.win(this.#credential.id, monster, catchCount, photoCount, treasures).then();
                         break;
                     case "战败":
-                        BattleStorageManager.getBattleResultStorage().lose(this.#credential.id, monster).then();
+                        BattleStorageManager.battleResultStorage.lose(this.#credential.id, monster).then();
                         break;
                     case "平手":
-                        BattleStorageManager.getBattleResultStorage().draw(this.#credential.id, monster, catchCount, photoCount, treasures).then();
+                        BattleStorageManager.battleResultStorage.draw(this.#credential.id, monster, catchCount, photoCount, treasures).then();
                         break;
                     default:
                         break;

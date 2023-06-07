@@ -12,7 +12,7 @@ class BattleStorageManager {
         return battleRecordStorage;
     }
 
-    static getBattleResultStorage() {
+    static get battleResultStorage() {
         return battleResultStorage;
     }
 

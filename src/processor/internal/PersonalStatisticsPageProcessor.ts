@@ -279,7 +279,7 @@ function doRoleCareerTransferStatistics() {
 function doTreasureStatistics() {
     $("#s-2").on("click", () => {
         const target = $("#teamMemberSelect").val()! as string;
-        BattleStorageManager.getBattleResultStorage()
+        BattleStorageManager.battleResultStorage
             .loads()
             .then(dataList => {
                 const candidates = dataList
@@ -293,7 +293,7 @@ function doTreasureStatistics() {
 function doBindReport1() {
     $("#report-1").on("click", () => {
         const target = $("#teamMemberSelect").val()! as string;
-        BattleStorageManager.getBattleResultStorage()
+        BattleStorageManager.battleResultStorage
             .loads()
             .then(dataList => {
                 const html = new BattleReportGenerator(dataList, target).generate();
@@ -305,7 +305,7 @@ function doBindReport1() {
 function doBindReport2() {
     $("#report-2").on("click", () => {
         const target = $("#teamMemberSelect").val()! as string;
-        BattleStorageManager.getBattleResultStorage()
+        BattleStorageManager.battleResultStorage
             .loads()
             .then(dataList => {
                 const html = new MonsterReportGenerator(dataList, target).generate();
@@ -317,7 +317,7 @@ function doBindReport2() {
 function doBindReport3() {
     $("#report-3").on("click", () => {
         const target = $("#teamMemberSelect").val()! as string;
-        BattleStorageManager.getBattleResultStorage()
+        BattleStorageManager.battleResultStorage
             .loads()
             .then(dataList => {
                 const html = new ZodiacReportGenerator(dataList, target).generate();
@@ -332,7 +332,7 @@ function doDatabaseClearBattleResult() {
             return;
         }
         $(".databaseButton").prop("disabled", true);
-        BattleStorageManager.getBattleResultStorage()
+        BattleStorageManager.battleResultStorage
             .clear()
             .then(() => {
                 const message: string = "<b style='font-weight:bold;font-size:300%;color:red'>战斗结果数据已经全部清除！</b>";
@@ -345,7 +345,7 @@ function doDatabaseClearBattleResult() {
 function doDatabaseExportBattleResult() {
     $("#exportBattleResult").on("click", () => {
         $(".databaseButton").prop("disabled", true);
-        BattleStorageManager.getBattleResultStorage()
+        BattleStorageManager.battleResultStorage
             .loads()
             .then(dataList => {
                 const json = JSON.stringify(dataList.map(it => it.asObject()));
