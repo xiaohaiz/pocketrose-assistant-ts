@@ -2,7 +2,7 @@ import PetProfile from "../../common/PetProfile";
 import StringUtils from "../../util/StringUtils";
 import BattleResult from "../battle/BattleResult";
 import PetProfileLoader from "../PetProfileLoader";
-import FastLoginManager from "../team/FastLoginManager";
+import TeamManager from "../team/TeamManager";
 import ReportUtils from "./ReportUtils";
 
 class MonsterReportGenerator {
@@ -32,7 +32,7 @@ class MonsterReportGenerator {
         const monsterCount = new Map<string, number[]>();
 
         const roles = new Map<string, RoleMonster>();
-        FastLoginManager.getAllFastLogins().forEach(config => {
+        TeamManager.loadMembers().forEach(config => {
             if (this.#target === undefined || this.#target === "") {
                 roles.set(config.id!, new RoleMonster(config.name!));
             } else if (this.#target === config.id) {

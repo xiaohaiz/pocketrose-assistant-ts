@@ -7,7 +7,7 @@ import PetLocalStorage from "../../core/PetLocalStorage";
 import PetProfileLoader from "../../core/PetProfileLoader";
 import Pokemon from "../../core/Pokemon";
 import RoleStorageManager from "../../core/role/RoleStorageManager";
-import FastLoginManager from "../../core/team/FastLoginManager";
+import TeamManager from "../../core/team/TeamManager";
 import Credential from "../../util/Credential";
 import MessageBoard from "../../util/MessageBoard";
 import PageUtils from "../../util/PageUtils";
@@ -193,7 +193,7 @@ abstract class PersonalTeamPageProcessor extends PageProcessorCredentialSupport 
             html += "</table>";
             $("#information").html(html).parent().hide();
 
-            const configs = FastLoginManager.getAllFastLogins();
+            const configs = TeamManager.loadMembers();
             const idList = configs.map(it => it.id!);
             RoleStorageManager.getRoleEquipmentStatusStorage()
                 .loads(idList)
@@ -262,7 +262,7 @@ abstract class PersonalTeamPageProcessor extends PageProcessorCredentialSupport 
             html += "</table>";
             $("#information").html(html).parent().hide();
 
-            const configs = FastLoginManager.getAllFastLogins();
+            const configs = TeamManager.loadMembers();
 
             const idList = configs.map(it => it.id!);
             RoleStorageManager.getRolePetStatusStorage()

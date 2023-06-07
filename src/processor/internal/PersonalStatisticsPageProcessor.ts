@@ -5,7 +5,7 @@ import MonsterReportGenerator from "../../core/report/MonsterReportGenerator";
 import TreasureReportGenerator from "../../core/report/TreasureReportGenerator";
 import ZodiacReportGenerator from "../../core/report/ZodiacReportGenerator";
 import RoleStorageManager from "../../core/role/RoleStorageManager";
-import FastLoginManager from "../../core/team/FastLoginManager";
+import TeamManager from "../../core/team/TeamManager";
 import Credential from "../../util/Credential";
 import MessageBoard from "../../util/MessageBoard";
 import PageUtils from "../../util/PageUtils";
@@ -127,7 +127,7 @@ abstract class PersonalStatisticsPageProcessor extends PageProcessorCredentialSu
         html = "";
         html += "<select id='teamMemberSelect'>";
         html += "<option value=''>全团队</option>";
-        const configList = FastLoginManager.getAllFastLogins();
+        const configList = TeamManager.loadMembers();
         configList.forEach(config => {
             html += "<option value='" + config.id + "'>" + config.name + "</option>";
         });
