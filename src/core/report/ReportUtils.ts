@@ -106,6 +106,16 @@ class ReportUtils {
         return bar1(w1) + bar2(w2) + "&nbsp;" + (ratio * 10000).toFixed(4) + "<b>‱</b>";
     }
 
+    static generateVerticalBar(ratio: number) {
+        if (ratio === 0) {
+            return "<img src='" + Constants.POCKET_DOMAIN + "/image/bg/bar1.gif'  height='1' width='32' alt=''>";
+        }
+        if (ratio === 1) {
+            return "<img src='" + Constants.POCKET_DOMAIN + "/image/bg/bar1.gif'  height='128' width='32' alt=''>";
+        }
+        const height = _.ceil(128 * ratio);
+        return "<img src='" + Constants.POCKET_DOMAIN + "/image/bg/bar1.gif'  height='" + height + "' width='32' alt=''>";
+    }
 
 }
 

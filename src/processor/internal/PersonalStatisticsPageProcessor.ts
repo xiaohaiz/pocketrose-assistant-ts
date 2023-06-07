@@ -2,12 +2,14 @@ import BattleLogService from "../../core/battle/BattleLogService";
 import BattleStorageManager from "../../core/battle/BattleStorageManager";
 import NpcLoader from "../../core/NpcLoader";
 import BattleReportGenerator from "../../core/report/BattleReportGenerator";
+import DailyReportGenerator from "../../core/report/DailyReportGenerator";
 import MonsterReportGenerator from "../../core/report/MonsterReportGenerator";
 import TreasureReportGenerator from "../../core/report/TreasureReportGenerator";
 import ZodiacReportGenerator from "../../core/report/ZodiacReportGenerator";
 import RoleStorageManager from "../../core/role/RoleStorageManager";
 import TeamManager from "../../core/team/TeamManager";
 import Credential from "../../util/Credential";
+import DayRange from "../../util/DayRange";
 import MessageBoard from "../../util/MessageBoard";
 import MonthRange from "../../util/MonthRange";
 import PageUtils from "../../util/PageUtils";
@@ -89,6 +91,15 @@ abstract class PersonalStatisticsPageProcessor extends PageProcessorCredentialSu
         html += "<button role='button' id='report-3'>十二宫统计报告</button>";
         html += "</td>";
         html += "</tr>";
+        html += "<tr>";
+        html += "<td>";
+        html += "<button role='button' id='log-1'>当日战报</button>";
+        html += "</td>";
+        html += "<td>";
+        html += "</td>";
+        html += "<td>";
+        html += "</td>";
+        html += "</tr>";
         html += "</tbody>";
         html += "</table>";
         html += "</td>";
@@ -168,6 +179,7 @@ abstract class PersonalStatisticsPageProcessor extends PageProcessorCredentialSu
         doBindReport1();
         doBindReport2();
         doBindReport3();
+        doBindLog1();
 
         if (TeamManager.isMaster(credential.id)) {
             doBindClearBattleLog();
@@ -344,6 +356,18 @@ function doBindReport3() {
             .loads()
             .then(dataList => {
                 const html = new ZodiacReportGenerator(dataList, target).generate();
+                $("#statistics").html(html).parent().show();
+            });
+    });
+}
+
+function doBindLog1() {
+    $("#log-1").on("click", () => {
+        const target = $("#teamMemberSelect").val()! as string;
+        BattleStorageManager.battleLogStore
+            .findByCreateTime(DayRange.current().start)
+            .then(logList => {
+                const html = new DailyReportGenerator(logList, target).generate();
                 $("#statistics").html(html).parent().show();
             });
     });
