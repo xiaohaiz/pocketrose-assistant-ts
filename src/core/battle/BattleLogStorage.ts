@@ -3,6 +3,33 @@ import BattleLog from "./BattleLog";
 
 class BattleLogStorage {
 
+    async importDocument(document: {}): Promise<void> {
+        const db = await PocketDatabase.connectDatabase();
+        return await (() => {
+            return new Promise<void>((resolve, reject) => {
+                // @ts-ignore
+                const id = document.id;
+
+                const store = db
+                    .transaction(["BattleLog"], "readwrite")
+                    .objectStore("BattleLog");
+                const readRequest = store.get(id);
+                readRequest.onerror = reject;
+                readRequest.onsuccess = () => {
+                    if (readRequest.result) {
+                        // Battle log already exists, ignore.
+                        reject();
+                    } else {
+                        const writeRequest = store.add(document);
+                        writeRequest.onerror = reject;
+                        writeRequest.onsuccess = () => resolve();
+                    }
+                };
+
+            });
+        })();
+    }
+
     async write(log: BattleLog): Promise<void> {
         const db = await PocketDatabase.connectDatabase();
         return await (() => {

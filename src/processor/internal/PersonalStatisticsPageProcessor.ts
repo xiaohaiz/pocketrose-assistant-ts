@@ -1,3 +1,4 @@
+import BattleLogService from "../../core/battle/BattleLogService";
 import BattleStorageManager from "../../core/battle/BattleStorageManager";
 import NpcLoader from "../../core/NpcLoader";
 import BattleReportGenerator from "../../core/report/BattleReportGenerator";
@@ -107,6 +108,9 @@ abstract class PersonalStatisticsPageProcessor extends PageProcessorCredentialSu
             html += "<td>";
             html += "<button role='button' class='databaseButton' id='exportBattleLog'>导出战斗日志</button>";
             html += "</td>";
+            html += "<td>";
+            html += "<button role='button' class='databaseButton' id='importBattleLog'>导入战斗日志</button>";
+            html += "</td>";
             html += "</tr>";
             html += "</tbody>";
             html += "</table>";
@@ -168,6 +172,7 @@ abstract class PersonalStatisticsPageProcessor extends PageProcessorCredentialSu
         if (TeamManager.isMaster(credential.id)) {
             doBindClearBattleLog();
             doBindExportBattleLog();
+            doBindImportBattleLog();
         }
     }
 
@@ -384,16 +389,67 @@ function doBindExportBattleLog() {
 
                 const json = JSON.stringify(documentList);
 
-                const html = "<textarea id='battleResultData' " +
+                const html = "<textarea id='battleLogData' " +
                     "rows='15' spellcheck='false' " +
                     "style=\"height:expression((this.scrollHeight>150)?'150px':(this.scrollHeight+5)+'px');overflow:auto;width:100%;word-break;break-all;\">" +
                     "</textarea>";
                 $("#statistics").html(html).parent().show();
 
-                $("#battleResultData").val(json);
+                $("#battleLogData").val(json);
 
                 $(".databaseButton").prop("disabled", false);
             });
+    });
+}
+
+function doBindImportBattleLog() {
+    $("#importBattleLog").on("click", () => {
+        if ($("#battleLogData").length === 0) {
+            let html = "";
+            html += "<table style='background-color:transparent;border-width:0;border-spacing:0;width:100%;margin:auto'>";
+            html += "<tbody>";
+            html += "<tr>";
+            html += "<th style='text-align:center;background-color:navy;color:yellow'>将待导入的战斗日志数据粘贴到下方文本框，然后再次点击“导入战斗日志”按钮。</th>";
+            html += "</tr>";
+            html += "<tr>";
+            html += "<td>";
+            html += "<textarea id='battleLogData' " +
+                "rows='15' spellcheck='false' " +
+                "style=\"height:expression((this.scrollHeight>150)?'150px':(this.scrollHeight+5)+'px');overflow:auto;width:100%;word-break;break-all;\">" +
+                "</textarea>";
+            html += "</td>";
+            html += "</tr>";
+            html += "</tbody>";
+            html += "</table>";
+            $("#statistics").html(html).parent().show();
+        } else {
+            const json = $("#battleLogData").val() as string;
+            if (json !== "") {
+                $(".databaseButton").prop("disabled", true);
+
+                let html = "";
+                html += "<table style='background-color:#888888;text-align:center;margin:auto;'>";
+                html += "<tbody>";
+                html += "<tr>";
+                html += "<th style='background-color:#F8F0E0'>战斗日志条目</th>";
+                html += "<td style='background-color:#F8F0E0' id='battleLogCount'>0</td>";
+                html += "</tr>";
+                html += "<tr>";
+                html += "<th style='background-color:#F8F0E0'>重复战斗日志条目</th>";
+                html += "<td style='background-color:#F8F0E0;color:red' id='duplicatedBattleLogCount'>0</td>";
+                html += "</tr>";
+                html += "<tr>";
+                html += "<th style='background-color:#F8F0E0'>导入战斗日志条目</th>";
+                html += "<td style='background-color:#F8F0E0;color:blue' id='importedBattleLogCount'>0</td>";
+                html += "</tr>";
+                html += "</tbody>";
+                html += "</table>";
+                $("#statistics").html(html).parent().show();
+
+                BattleLogService.importBattleLog(json);
+                $(".databaseButton").prop("disabled", false);
+            }
+        }
     });
 }
 
