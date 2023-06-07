@@ -30,6 +30,18 @@ class DailyReportGenerator {
             }
         });
 
+        let bc0 = 0;
+        let bc1 = 0;
+        let bc2 = 0;
+        let bc3 = 0;
+        let bc4 = 0;
+
+        let wc0 = 0;
+        let wc1 = 0;
+        let wc2 = 0;
+        let wc3 = 0;
+        let wc4 = 0;
+
         const hourMap = new Map<number, BattleLog[]>();
         candidates
             .filter(it => roles.has(it.roleId!))
@@ -45,10 +57,59 @@ class DailyReportGenerator {
                     role.hourMap.set(hour, []);
                 }
                 role.hourMap.get(hour)?.push(it);
+
+                const win = it.result === "战胜";
+                bc0++;
+                role.bc0++;
+                if (win) {
+                    wc0++;
+                    role.wc0++;
+                }
+                switch (it.obtainBattleField) {
+                    case "初森":
+                        bc1++;
+                        role.bc1++;
+                        if (win) {
+                            wc1++;
+                            role.wc1++;
+                        }
+                        break;
+                    case "中塔":
+                        bc2++;
+                        role.bc2++;
+                        if (win) {
+                            wc2++;
+                            role.wc2++;
+                        }
+                        break;
+                    case "上洞":
+                        bc3++;
+                        role.bc3++;
+                        if (win) {
+                            wc3++;
+                            role.wc3++;
+                        }
+                        break;
+                    case "十二宫":
+                        bc4++;
+                        role.bc4++;
+                        if (win) {
+                            wc4++;
+                            role.wc4++;
+                        }
+                        break;
+                }
             });
 
         let html = "";
-        html += "<table style='background-color:#888888;text-align:center;margin:auto'>";
+        html += "<table style='background-color:transparent;border-width:0;border-spacing:0;margin:auto'>";
+        html += "<tbody>";
+
+        // --------------------------------------------------------------------
+        // 战 数 分 布
+        // --------------------------------------------------------------------
+        html += "<tr><td>";
+        html += "<table style='background-color:#888888;text-align:center;margin:auto;width:100%'>";
         html += "<thead>";
         html += "<tr>";
         html += "<th style='background-color:skyblue'></th>";
@@ -108,7 +169,9 @@ class DailyReportGenerator {
             }
             html += "</tr>";
         });
-
+        html += "</tbody>";
+        html += "</table>";
+        html += "</td></tr>";
 
         html += "</tbody>";
         html += "</table>";
@@ -121,6 +184,18 @@ class RoleDailyReport {
 
     readonly roleName: string;
     hourMap: Map<number, BattleLog[]>;
+
+    bc0 = 0;
+    bc1 = 0;
+    bc2 = 0;
+    bc3 = 0;
+    bc4 = 0;
+
+    wc0 = 0;
+    wc1 = 0;
+    wc2 = 0;
+    wc3 = 0;
+    wc4 = 0;
 
     constructor(roleName: string) {
         this.roleName = roleName;
