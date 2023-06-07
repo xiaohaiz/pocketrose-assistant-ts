@@ -1,0 +1,5 @@
+class DailyReportGenerator {
+
+}
+
+export = DailyReportGenerator;
