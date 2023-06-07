@@ -62,6 +62,10 @@ class DailyReportGenerator {
         let hc2 = 0;
         let hc3 = 0;
 
+        let pgc = 0;
+        let wgc = 0;
+        let lgc = 0;
+
         const hourMap = new Map<number, BattleLog[]>();
         candidates
             .filter(it => roles.has(it.roleId!))
@@ -82,6 +86,10 @@ class DailyReportGenerator {
                 const battleField = it.obtainBattleField;
                 const hintCount = it.treasures?.get("050") ? it.treasures!.get("050")! : 0;
 
+                const power = it.treasures?.get("051") ? it.treasures!.get("051")! : 0;
+                const weight = it.treasures?.get("052") ? it.treasures!.get("052")! : 0;
+                const luck = it.treasures?.get("053") ? it.treasures!.get("053")! : 0;
+
                 bc0++;
                 role.bc0++;
                 if (win) {
@@ -94,6 +102,12 @@ class DailyReportGenerator {
                 role.pc0 += it.photo ? it.photo : 0;
                 hc0 += hintCount;
                 role.hc0 += hintCount;
+                pgc += power;
+                role.pgc += power;
+                wgc += weight;
+                role.wgc += weight;
+                lgc += luck;
+                role.lgc += luck;
                 switch (battleField) {
                     case "初森":
                         bc1++;
@@ -505,6 +519,68 @@ class DailyReportGenerator {
         html += "</td></tr>";
 
         // --------------------------------------------------------------------
+        // 日 宝 石 入 手 总 览
+        // --------------------------------------------------------------------
+        html += "<tr><td>";
+        html += "<table style='background-color:#888888;text-align:center;margin:auto;width:100%'>";
+        html += "<thead>";
+        html += "<tr>";
+        html += "<th style='background-color:navy;color:yellowgreen' colspan='10'>宝 石</th>";
+        html += "</tr>";
+        html += "<tr>";
+        html += "<th style='background-color:skyblue' rowspan='2'>成员</th>";
+        html += "<th style='background-color:skyblue' colspan='3'>总计</th>";
+        html += "<th style='background-color:skyblue' colspan='2'>威力宝石</th>";
+        html += "<th style='background-color:skyblue' colspan='2'>重量宝石</th>";
+        html += "<th style='background-color:skyblue' colspan='2'>幸运宝石</th>";
+        html += "</tr>";
+        html += "<tr>";
+        html += "<th style='background-color:skyblue'>宝石</th>";
+        html += "<th style='background-color:skyblue'>战数</th>";
+        html += "<th style='background-color:skyblue'>入手率(%)</th>";
+        html += "<th style='background-color:skyblue'>宝石</th>";
+        html += "<th style='background-color:skyblue'>入手率(%)</th>";
+        html += "<th style='background-color:skyblue'>宝石</th>";
+        html += "<th style='background-color:skyblue'>入手率(%)</th>";
+        html += "<th style='background-color:skyblue'>宝石</th>";
+        html += "<th style='background-color:skyblue'>入手率(%)</th>";
+        html += "</tr>";
+        html += "</thead>";
+        html += "<tbody>";
+        html += "<tr>";
+        html += "<th style='background-color:black;color:white'>全团队</th>";
+        html += "<td style='background-color:wheat'>" + (pgc + wgc + lgc) + "</td>";
+        html += "<td style='background-color:wheat'>" + wc4 + "</td>";
+        html += "<td style='background-color:wheat'>" + ReportUtils.percentage(pgc + wgc + lgc, wc4) + "</td>";
+        html += "<td style='background-color:wheat'>" + pgc + "</td>";
+        html += "<td style='background-color:wheat'>" + ReportUtils.percentage(pgc, wc4) + "</td>";
+        html += "<td style='background-color:wheat'>" + wgc + "</td>";
+        html += "<td style='background-color:wheat'>" + ReportUtils.percentage(wgc, wc4) + "</td>";
+        html += "<td style='background-color:wheat'>" + lgc + "</td>";
+        html += "<td style='background-color:wheat'>" + ReportUtils.percentage(lgc, wc4) + "</td>";
+
+        html += "</tr>";
+
+        roles.forEach(role => {
+            html += "<tr>";
+            html += "<th style='background-color:black;color:white'>" + role.roleName + "</th>";
+            html += "<td style='background-color:#F8F0E0'>" + (role.pgc + role.wgc + role.lgc) + "</td>";
+            html += "<td style='background-color:#F8F0E0'>" + role.wc4 + "</td>";
+            html += "<td style='background-color:#F8F0E0'>" + ReportUtils.percentage(role.pgc + role.wgc + role.lgc, role.wc4) + "</td>";
+            html += "<td style='background-color:#F8F0E0'>" + role.pgc + "</td>";
+            html += "<td style='background-color:#F8F0E0'>" + ReportUtils.percentage(role.pgc, role.wc4) + "</td>";
+            html += "<td style='background-color:#F8F0E0'>" + role.wgc + "</td>";
+            html += "<td style='background-color:#F8F0E0'>" + ReportUtils.percentage(role.wgc, role.wc4) + "</td>";
+            html += "<td style='background-color:#F8F0E0'>" + role.lgc + "</td>";
+            html += "<td style='background-color:#F8F0E0'>" + ReportUtils.percentage(role.lgc, role.wc4) + "</td>";
+            html += "</tr>";
+        });
+
+        html += "</tbody>";
+        html += "</table>";
+        html += "</td></tr>";
+
+        // --------------------------------------------------------------------
         // 战 数 分 布
         // --------------------------------------------------------------------
         html += "<tr><td>";
@@ -617,6 +693,10 @@ class RoleDailyReport {
     hc1 = 0;
     hc2 = 0;
     hc3 = 0;
+
+    pgc = 0;
+    wgc = 0;
+    lgc = 0;
 
     constructor(roleName: string) {
         this.roleName = roleName;
