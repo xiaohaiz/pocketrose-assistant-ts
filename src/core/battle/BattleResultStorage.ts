@@ -1,4 +1,5 @@
 import PocketDatabase from "../PocketDatabase";
+import BattleLog from "./BattleLog";
 import BattleResult from "./BattleResult";
 
 class BattleResultStorage {
@@ -89,6 +90,61 @@ class BattleResultStorage {
                     }
                 };
 
+            });
+        })();
+    }
+
+
+    async replay(log: BattleLog): Promise<void> {
+        const db = await PocketDatabase.connectDatabase();
+        return await (() => {
+            return new Promise<void>((resolve, reject) => {
+                const id = log.roleId + "/" + log.monster;
+                const store = db
+                    .transaction(["BattleResult"], "readwrite")
+                    .objectStore("BattleResult");
+
+                const readRequest = store.get(id);
+                readRequest.onerror = reject;
+                readRequest.onsuccess = () => {
+                    if (readRequest.result) {
+                        // Update exists battle result.
+                        const document = readRequest.result;
+                        document.updateTime = new Date().getTime();
+                        switch (log.result) {
+                            case "战胜":
+                                let winCount = document.winCount;
+                                winCount = winCount === undefined ? 0 : winCount;
+                                winCount++;
+                                document.winCount = winCount;
+                                break;
+                            case "战败":
+                                let loseCount = document.loseCount;
+                                loseCount = loseCount === undefined ? 0 : loseCount;
+                                loseCount++;
+                                document.loseCount = loseCount;
+                                break;
+                            case "平手":
+                                let drawCount = document.drawCount;
+                                drawCount = drawCount === undefined ? 0 : drawCount;
+                                drawCount++;
+                                document.drawCount = drawCount;
+                                break;
+                        }
+                        if (log.catch) {
+                            let catchCount = document.catchCount;
+                            catchCount = catchCount === undefined ? 0 : catchCount;
+                            catchCount += log.catch;
+                            document.catchCount = catchCount;
+                        }
+                    } else {
+                        // No battle result exists, create new one.
+                        const document = BattleResult.newInstance(log).asObject();
+                        const writeRequest = store.add(document);
+                        writeRequest.onerror = reject;
+                        writeRequest.onsuccess = () => resolve();
+                    }
+                };
             });
         })();
     }
