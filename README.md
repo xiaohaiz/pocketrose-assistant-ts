@@ -1,6 +1,6 @@
 # pocketrose-assistant-ts
 
-### 版本 4.0.2-SNAPSHOT
+### 版本 4.0.2
 
 1. 当日战报（体验版）。
 2. 昨日战报（体验版）。
