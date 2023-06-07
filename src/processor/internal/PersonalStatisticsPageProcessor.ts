@@ -8,6 +8,7 @@ import RoleStorageManager from "../../core/role/RoleStorageManager";
 import TeamManager from "../../core/team/TeamManager";
 import Credential from "../../util/Credential";
 import MessageBoard from "../../util/MessageBoard";
+import MonthRange from "../../util/MonthRange";
 import PageUtils from "../../util/PageUtils";
 import PageProcessorContext from "../PageProcessorContext";
 import PageProcessorCredentialSupport from "../PageProcessorCredentialSupport";
@@ -91,6 +92,24 @@ abstract class PersonalStatisticsPageProcessor extends PageProcessorCredentialSu
         html += "</table>";
         html += "</td>";
         html += "<tr>";
+        if (TeamManager.isMaster(credential.id)) {
+            html += "<tr>";
+            html += "<th style='background-color:red;color:white'>队 长 专 属 数 据 维 护 任 务</th>";
+            html += "<tr>";
+            html += "<tr>";
+            html += "<td style='text-align:center;background-color:#F8F0E0'>";
+            html += "<table style='background-color:transparent;border-spacing:0;border-width:0;margin:auto'>";
+            html += "<tbody>";
+            html += "<tr>";
+            html += "<td>";
+            html += "<button role='button' class='databaseButton' id='exportBattleLog'>导出战斗日志</button>";
+            html += "</td>";
+            html += "</tr>";
+            html += "</tbody>";
+            html += "</table>";
+            html += "</td>";
+            html += "<tr>";
+        }
         html += "<tr style='display:none'>";
         html += "<td id='statistics' style='text-align:center;background-color:#F8F0E0'></td>";
         html += "<tr>";
@@ -142,6 +161,10 @@ abstract class PersonalStatisticsPageProcessor extends PageProcessorCredentialSu
         doBindReport1();
         doBindReport2();
         doBindReport3();
+
+        if (TeamManager.isMaster(credential.id)) {
+            doBindExportBattleLog();
+        }
 
         // CommentBoard.createCommentBoard(NpcLoader.getNpcImageHtml("夜九")!);
         // html = "" +
@@ -322,6 +345,30 @@ function doBindReport3() {
             .then(dataList => {
                 const html = new ZodiacReportGenerator(dataList, target).generate();
                 $("#statistics").html(html).parent().show();
+            });
+    });
+}
+
+function doBindExportBattleLog() {
+    $("#exportBattleLog").on("click", () => {
+        $(".databaseButton").prop("disabled", true);
+
+        // 上个月的第一天00:00:00.000作为查询起始时间
+        const startTime = MonthRange.current().previous().start;
+        BattleStorageManager.battleLogStore
+            .findByCreateTime(startTime)
+            .then(logList => {
+                const json = JSON.stringify(logList.map(it => it.asObject()));
+
+                const html = "<textarea id='battleResultData' " +
+                    "rows='15' " +
+                    "style=\"height:expression((this.scrollHeight>150)?'150px':(this.scrollHeight+5)+'px');overflow:auto;width:100%;word-break;break-all;\">" +
+                    "</textarea>";
+                $("#statistics").html(html).parent().show();
+
+                $("#battleResultData").val(json);
+
+                $(".databaseButton").prop("disabled", false);
             });
     });
 }

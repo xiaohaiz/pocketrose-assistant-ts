@@ -22,8 +22,6 @@ class BattleLog {
     }
 
     asObject() {
-        this.initialize();
-
         const obj = {};
         // @ts-ignore
         obj.id = this.id;
