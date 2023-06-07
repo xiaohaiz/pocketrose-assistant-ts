@@ -51,13 +51,11 @@ class DailyReportGenerator {
         let cc1 = 0;
         let cc2 = 0;
         let cc3 = 0;
-        let cc4 = 0;
 
         let pc0 = 0;
         let pc1 = 0;
         let pc2 = 0;
         let pc3 = 0;
-        let pc4 = 0;
 
         const hourMap = new Map<number, BattleLog[]>();
         candidates
@@ -132,8 +130,6 @@ class DailyReportGenerator {
                             wc4++;
                             role.wc4++;
                         }
-                        cc4 += it.catch ? it.catch : 0;
-                        role.cc4 += it.catch ? it.catch : 0;
                         break;
                 }
 
@@ -526,13 +522,11 @@ class RoleDailyReport {
     cc1 = 0;
     cc2 = 0;
     cc3 = 0;
-    cc4 = 0;
 
     pc0 = 0;
     pc1 = 0;
     pc2 = 0;
     pc3 = 0;
-    pc4 = 0;
 
     constructor(roleName: string) {
         this.roleName = roleName;
