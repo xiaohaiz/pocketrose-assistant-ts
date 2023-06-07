@@ -106,11 +106,79 @@ class DailyReportGenerator {
         html += "<tbody>";
 
         // --------------------------------------------------------------------
+        // 日 战 数 总 览
+        // --------------------------------------------------------------------
+        html += "<tr><td>";
+        html += "<table style='background-color:#888888;text-align:center;margin:auto;width:100%'>";
+        html += "<thead>";
+        html += "<tr>";
+        html += "<th style='background-color:navy;color:yellowgreen' colspan='11'>日 战 数 总 览</th>";
+        html += "</tr>";
+        html += "<tr>";
+        html += "<th style='background-color:skyblue' rowspan='2'>成员</th>";
+        html += "<th style='background-color:skyblue' colspan='2'>总计</th>";
+        html += "<th style='background-color:skyblue' colspan='2'>初森</th>";
+        html += "<th style='background-color:skyblue' colspan='2'>中塔</th>";
+        html += "<th style='background-color:skyblue' colspan='2'>上洞</th>";
+        html += "<th style='background-color:skyblue' colspan='2'>十二宫</th>";
+        html += "</tr>";
+        html += "<tr>";
+        html += "<th style='background-color:skyblue'>战数</th>";
+        html += "<th style='background-color:skyblue'>胜率(%)</th>";
+        html += "<th style='background-color:skyblue'>战数</th>";
+        html += "<th style='background-color:skyblue'>胜率(%)</th>";
+        html += "<th style='background-color:skyblue'>战数</th>";
+        html += "<th style='background-color:skyblue'>胜率(%)</th>";
+        html += "<th style='background-color:skyblue'>战数</th>";
+        html += "<th style='background-color:skyblue'>胜率(%)</th>";
+        html += "<th style='background-color:skyblue'>战数</th>";
+        html += "<th style='background-color:skyblue'>胜率(%)</th>";
+        html += "</tr>";
+        html += "</thead>";
+        html += "<tbody>";
+        html += "<tr>";
+        html += "<th style='background-color:black;color:white'>全团队</th>";
+        html += "<td style='background-color:wheat'>" + bc0 + "</td>";
+        html += "<td style='background-color:wheat'>" + ReportUtils.percentage(wc0, bc0) + "</td>";
+        html += "<td style='background-color:wheat'>" + bc1 + "</td>";
+        html += "<td style='background-color:wheat'>" + ReportUtils.percentage(wc1, bc1) + "</td>";
+        html += "<td style='background-color:wheat'>" + bc2 + "</td>";
+        html += "<td style='background-color:wheat'>" + ReportUtils.percentage(wc2, bc2) + "</td>";
+        html += "<td style='background-color:wheat'>" + bc3 + "</td>";
+        html += "<td style='background-color:wheat'>" + ReportUtils.percentage(wc3, bc3) + "</td>";
+        html += "<td style='background-color:wheat'>" + bc4 + "</td>";
+        html += "<td style='background-color:wheat'>" + ReportUtils.percentage(wc4, bc4) + "</td>";
+        html += "</tr>";
+
+        roles.forEach(role => {
+            html += "<tr>";
+            html += "<th style='background-color:black;color:white'>" + role.roleName + "</th>";
+            html += "<td style='background-color:#F8F0E0'>" + role.bc0 + "</td>";
+            html += "<td style='background-color:#F8F0E0'>" + ReportUtils.percentage(role.wc0, role.bc0) + "</td>";
+            html += "<td style='background-color:#F8F0E0'>" + role.bc1 + "</td>";
+            html += "<td style='background-color:#F8F0E0'>" + ReportUtils.percentage(role.wc1, role.bc1) + "</td>";
+            html += "<td style='background-color:#F8F0E0'>" + role.bc2 + "</td>";
+            html += "<td style='background-color:#F8F0E0'>" + ReportUtils.percentage(role.wc2, role.bc2) + "</td>";
+            html += "<td style='background-color:#F8F0E0'>" + role.bc3 + "</td>";
+            html += "<td style='background-color:#F8F0E0'>" + ReportUtils.percentage(role.wc3, role.bc3) + "</td>";
+            html += "<td style='background-color:#F8F0E0'>" + role.bc4 + "</td>";
+            html += "<td style='background-color:#F8F0E0'>" + ReportUtils.percentage(role.wc4, role.bc4) + "</td>";
+            html += "</tr>";
+        });
+
+        html += "</tbody>";
+        html += "</table>";
+        html += "</td></tr>";
+
+        // --------------------------------------------------------------------
         // 战 数 分 布
         // --------------------------------------------------------------------
         html += "<tr><td>";
         html += "<table style='background-color:#888888;text-align:center;margin:auto;width:100%'>";
         html += "<thead>";
+        html += "<tr>";
+        html += "<th style='background-color:navy;color:yellowgreen' colspan='13'>日 战 数 分 布</th>";
+        html += "</tr>";
         html += "<tr>";
         html += "<th style='background-color:skyblue'></th>";
         html += "<th style='background-color:skyblue'>子时</th>";
