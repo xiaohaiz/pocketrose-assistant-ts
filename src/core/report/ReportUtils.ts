@@ -106,10 +106,11 @@ class ReportUtils {
         return bar1(w1) + bar2(w2) + "&nbsp;" + (ratio * 10000).toFixed(4) + "<b>‱</b>";
     }
 
-    static generateVerticalBar(ratio: number) {
-        if (ratio === 0) {
+    static generateVerticalBar(a: number, b: number) {
+        if (a === 0 || b === 0) {
             return "<img src='" + Constants.POCKET_DOMAIN + "/image/bg/bar1.gif'  height='1' width='32' alt=''>";
         }
+        const ratio = a / b;
         if (ratio === 1) {
             return "<img src='" + Constants.POCKET_DOMAIN + "/image/bg/bar1.gif'  height='128' width='32' alt=''>";
         }

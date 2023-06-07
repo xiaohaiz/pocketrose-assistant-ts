@@ -81,8 +81,7 @@ class DailyReportGenerator {
             if (dataList) {
                 battleCount = dataList.length;
             }
-            const ratio = battleCount / maxBattleCount;
-            html += "<td style='background-color:#F8F0E0;vertical-align:bottom;height:128px;width:64px'>" + ReportUtils.generateVerticalBar(ratio) + "</td>";
+            html += "<td style='background-color:#F8F0E0;vertical-align:bottom;height:128px;width:64px'>" + ReportUtils.generateVerticalBar(battleCount, maxBattleCount) + "</td>";
         }
         html += "</tr>";
         html += "<tr>";
