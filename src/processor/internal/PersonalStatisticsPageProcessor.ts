@@ -393,13 +393,13 @@ function doBindExportBattleLog() {
 
                 const json = JSON.stringify(documentList);
 
-                const html = "<textarea id='battleLogData' " +
+                const html = "<textarea id='exportBattleLogData' " +
                     "rows='15' spellcheck='false' " +
                     "style=\"height:expression((this.scrollHeight>150)?'150px':(this.scrollHeight+5)+'px');overflow:auto;width:100%;word-break;break-all;\">" +
                     "</textarea>";
                 $("#statistics").html(html).parent().show();
 
-                $("#battleLogData").val(json);
+                $("#exportBattleLogData").val(json);
 
                 $(".databaseButton").prop("disabled", false);
             });
