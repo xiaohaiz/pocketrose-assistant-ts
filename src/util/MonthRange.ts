@@ -51,6 +51,10 @@ class MonthRange {
     next() {
         return new MonthRange(this.end + 1);
     }
+
+    static current() {
+        return new MonthRange();
+    }
 }
 
 export = MonthRange;
