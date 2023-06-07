@@ -103,7 +103,7 @@ abstract class PersonalStatisticsPageProcessor extends PageProcessorCredentialSu
             html += "<tbody>";
             html += "<tr>";
             html += "<td>";
-            html += "<button role='button' class='databaseButton' id='clearBattleLog'>清除战斗日志</button>";
+            html += "<button role='button' class='databaseButton' id='clearBattleLog'>清除战斗记录</button>";
             html += "</td>";
             html += "<td>";
             html += "<button role='button' class='databaseButton' id='exportBattleLog'>导出战斗日志</button>";
@@ -351,10 +351,10 @@ function doBindReport3() {
 
 function doBindClearBattleLog() {
     $("#clearBattleLog").on("click", () => {
-        if (!confirm("战斗日志一旦清除就彻底丢失了，正常玩家不需要执行此操作！")) {
+        if (!confirm("战斗记录一旦清除就彻底丢失了，正常玩家不需要执行此操作！")) {
             return;
         }
-        if (!confirm("二次确认！战斗日志真的清除后就彻底丢失，有造成数据不一致的隐患。不明白数据同步含义的不要执行！")) {
+        if (!confirm("二次确认！战斗记录真的清除后就彻底丢失，有造成数据不一致的隐患。不明白数据同步含义的不要执行！")) {
             return;
         }
         if (!confirm("最终确认！你要确认你在做什么！免责声明：每个人都是自己数据的唯一责任人！")) {
@@ -365,9 +365,13 @@ function doBindClearBattleLog() {
         BattleStorageManager.battleLogStore
             .clear()
             .then(() => {
-                const message: string = "<b style='font-weight:bold;font-size:300%;color:red'>战斗日志数据已经全部清除！</b>";
-                $("#statistics").html(message).parent().show();
-                $(".databaseButton").prop("disabled", false);
+                BattleStorageManager.battleResultStorage
+                    .clear()
+                    .then(() => {
+                        const message: string = "<b style='font-weight:bold;font-size:300%;color:red'>所有战斗记录数据已经全部清除！</b>";
+                        $("#statistics").html(message).parent().show();
+                        $(".databaseButton").prop("disabled", false);
+                    });
             });
     });
 }
