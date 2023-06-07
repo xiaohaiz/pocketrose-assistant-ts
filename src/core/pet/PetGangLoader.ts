@@ -1,5 +1,13 @@
 class PetGangLoader {
 
+    static inGang1(monster: string): boolean {
+        return G_1.includes(monster);
+    }
+
+    static inGang2(monster: string): boolean {
+        return G_2.includes(monster);
+    }
+
 }
 
 // ----------------------------------------------------------------------------
