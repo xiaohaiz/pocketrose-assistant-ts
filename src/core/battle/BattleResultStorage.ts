@@ -110,7 +110,7 @@ class BattleResultStorage {
                     if (readRequest.result) {
                         // Update exists battle result.
                         const document = readRequest.result;
-                        document.updateTime = new Date().getTime();
+                        document.updateTime = log.createTime;
                         switch (log.result) {
                             case "战胜":
                                 let winCount = document.winCount;
@@ -137,6 +137,26 @@ class BattleResultStorage {
                             catchCount += log.catch;
                             document.catchCount = catchCount;
                         }
+                        if (log.photo) {
+                            let photoCount = document.photoCount;
+                            photoCount = photoCount === undefined ? 0 : photoCount;
+                            photoCount += log.photo;
+                            document.photoCount = photoCount;
+                        }
+                        if (log.treasures) {
+                            if (!document.treasures) {
+                                document.treasures = {};
+                            }
+                            log.treasures.forEach((count, code) => {
+                                let tc = document.treasures[code];
+                                tc = tc === undefined ? 0 : tc;
+                                tc += count;
+                                document.treasures[code] = tc;
+                            });
+                        }
+                        const writeRequest = store.put(document);
+                        writeRequest.onerror = reject;
+                        writeRequest.onsuccess = () => resolve();
                     } else {
                         // No battle result exists, create new one.
                         const document = BattleResult.newInstance(log).asObject();
