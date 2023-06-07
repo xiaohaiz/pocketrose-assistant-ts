@@ -187,7 +187,7 @@ class MonsterReportGenerator {
         html += "<table style='background-color:#888888;text-align:center;margin:auto;width:100%'>";
         html += "<tbody>";
         html += "<tr>";
-        html += "<th style='background-color:navy;color:greenyellow' colspan='16'>怪 物 统 计 （ 胜 率 排 序 ）</th>"
+        html += "<th style='background-color:navy;color:greenyellow' colspan='16'>怪 物 统 计 （ 胜 率 降 序 ）</th>"
         html += "</tr>";
         html += "<tr>";
         html += "<th style='background-color:green;color:white' colspan='1'>名字</th>"
