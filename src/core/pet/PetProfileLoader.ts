@@ -1,7 +1,7 @@
-import PetProfile from "../common/PetProfile";
-import PocketUtils from "../util/PocketUtils";
+import PetProfile from "../../common/PetProfile";
+import PocketUtils from "../../util/PocketUtils";
+import PetSpellLoader from "../PetSpellLoader";
 import PetRelationLoader from "./PetRelationLoader";
-import PetSpellLoader from "./PetSpellLoader";
 
 class PetProfileLoader {
 

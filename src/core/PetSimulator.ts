@@ -2,7 +2,7 @@ import _ from "lodash";
 import Pet from "../common/Pet";
 import PetProfile from "../common/PetProfile";
 import PageUtils from "../util/PageUtils";
-import PetProfileLoader from "./PetProfileLoader";
+import PetProfileLoader from "./pet/PetProfileLoader";
 
 class PetSimulator {
 

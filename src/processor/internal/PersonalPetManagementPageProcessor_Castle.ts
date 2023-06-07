@@ -1,6 +1,6 @@
 import Pet from "../../common/Pet";
 import SetupLoader from "../../config/SetupLoader";
-import PetProfileLoader from "../../core/PetProfileLoader";
+import PetProfileLoader from "../../core/pet/PetProfileLoader";
 import PetSimulator from "../../core/PetSimulator";
 import CastleBank from "../../pocketrose/CastleBank";
 import CastlePetExpressHouse from "../../pocketrose/CastlePetExpressHouse";

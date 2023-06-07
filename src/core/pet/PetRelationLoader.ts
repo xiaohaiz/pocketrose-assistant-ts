@@ -1,4 +1,4 @@
-import PetProfile from "../common/PetProfile";
+import PetProfile from "../../common/PetProfile";
 
 class PetRelationLoader {
 

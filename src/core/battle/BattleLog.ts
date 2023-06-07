@@ -1,6 +1,6 @@
 import ObjectID from "bson-objectid";
 import NpcLoader from "../NpcLoader";
-import PetLocationLoader from "../PetLocationLoader";
+import PetLocationLoader from "../pet/PetLocationLoader";
 
 class BattleLog {
 

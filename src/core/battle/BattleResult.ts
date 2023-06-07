@@ -1,6 +1,6 @@
 import _ from "lodash";
 import NpcLoader from "../NpcLoader";
-import PetLocationLoader from "../PetLocationLoader";
+import PetLocationLoader from "../pet/PetLocationLoader";
 import BattleLog from "./BattleLog";
 
 class BattleResult {

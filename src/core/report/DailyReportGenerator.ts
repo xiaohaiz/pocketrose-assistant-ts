@@ -608,7 +608,7 @@ class DailyReportGenerator {
         html += "<tbody>";
 
         let maxBattleCount = 0;
-        hourMap.forEach((v, k) => {
+        hourMap.forEach(v => {
             maxBattleCount = _.max([v.length, maxBattleCount])!;
         });
 
