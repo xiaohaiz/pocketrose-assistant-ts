@@ -1,3 +1,5 @@
+import _ from "lodash";
+
 class PetGangLoader {
 
     static inGang1(monster: string): boolean {
@@ -8,6 +10,13 @@ class PetGangLoader {
         return G_2.includes(monster);
     }
 
+    static getGang1(): string[] {
+        return _.clone(G_1);
+    }
+
+    static getGang2(): string[] {
+        return _.clone(G_2);
+    }
 }
 
 // ----------------------------------------------------------------------------
