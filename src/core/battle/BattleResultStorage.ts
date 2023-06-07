@@ -109,12 +109,20 @@ class BattleResultStorage {
                                 document.treasures[code] = tc;
                             });
                         }
+                        // Increment revision
+                        let revision = document.revision;
+                        revision = revision === undefined ? 1 : revision;
+                        revision++;
+                        document.revision = revision;
+
                         const writeRequest = store.put(document);
                         writeRequest.onerror = reject;
                         writeRequest.onsuccess = () => resolve();
                     } else {
                         // No battle result exists, create new one.
                         const document = BattleResult.newInstance(log).asObject();
+                        // @ts-ignore
+                        document.revision = 1;
                         const writeRequest = store.add(document);
                         writeRequest.onerror = reject;
                         writeRequest.onsuccess = () => resolve();
