@@ -353,12 +353,18 @@ function doBindExportBattleLog() {
     $("#exportBattleLog").on("click", () => {
         $(".databaseButton").prop("disabled", true);
 
+        const target = $("#teamMemberSelect").val()! as string;
+
         // 上个月的第一天00:00:00.000作为查询起始时间
         const startTime = MonthRange.current().previous().start;
         BattleStorageManager.battleLogStore
             .findByCreateTime(startTime)
             .then(logList => {
-                const json = JSON.stringify(logList.map(it => it.asObject()));
+                const documentList = logList
+                    .filter(it => target === "" || target === it.roleId)
+                    .map(it => it.asObject());
+
+                const json = JSON.stringify(documentList);
 
                 const html = "<textarea id='battleResultData' " +
                     "rows='15' spellcheck='false' " +
