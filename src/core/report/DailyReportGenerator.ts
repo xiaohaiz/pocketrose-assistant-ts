@@ -47,6 +47,12 @@ class DailyReportGenerator {
         let uc = 0;
         let gc = 0;
 
+        let cc0 = 0;
+        let cc1 = 0;
+        let cc2 = 0;
+        let cc3 = 0;
+        let cc4 = 0;
+
         const hourMap = new Map<number, BattleLog[]>();
         candidates
             .filter(it => roles.has(it.roleId!))
@@ -72,6 +78,8 @@ class DailyReportGenerator {
                     wc0++;
                     role.wc0++;
                 }
+                cc0 += it.catch ? it.catch : 0;
+                role.cc0 += it.catch ? it.catch : 0;
                 switch (battleField) {
                     case "初森":
                         bc1++;
@@ -80,6 +88,8 @@ class DailyReportGenerator {
                             wc1++;
                             role.wc1++;
                         }
+                        cc1 += it.catch ? it.catch : 0;
+                        role.cc1 += it.catch ? it.catch : 0;
                         break;
                     case "中塔":
                         bc2++;
@@ -88,6 +98,8 @@ class DailyReportGenerator {
                             wc2++;
                             role.wc2++;
                         }
+                        cc2 += it.catch ? it.catch : 0;
+                        role.cc2 += it.catch ? it.catch : 0;
                         break;
                     case "上洞":
                         bc3++;
@@ -96,6 +108,8 @@ class DailyReportGenerator {
                             wc3++;
                             role.wc3++;
                         }
+                        cc3 += it.catch ? it.catch : 0;
+                        role.cc3 += it.catch ? it.catch : 0;
                         break;
                     case "十二宫":
                         bc4++;
@@ -104,6 +118,8 @@ class DailyReportGenerator {
                             wc4++;
                             role.wc4++;
                         }
+                        cc4 += it.catch ? it.catch : 0;
+                        role.cc4 += it.catch ? it.catch : 0;
                         break;
                 }
 
@@ -252,6 +268,77 @@ class DailyReportGenerator {
         html += "</td></tr>";
 
         // --------------------------------------------------------------------
+        // 日 宠 物 总 览
+        // --------------------------------------------------------------------
+        html += "<tr><td>";
+        html += "<table style='background-color:#888888;text-align:center;margin:auto;width:100%'>";
+        html += "<thead>";
+        html += "<tr>";
+        html += "<th style='background-color:navy;color:yellowgreen' colspan='13'>日 宠 物 总 览</th>";
+        html += "</tr>";
+        html += "<tr>";
+        html += "<th style='background-color:skyblue' rowspan='2'>成员</th>";
+        html += "<th style='background-color:skyblue' colspan='3'>总计</th>";
+        html += "<th style='background-color:skyblue' colspan='3'>初森</th>";
+        html += "<th style='background-color:skyblue' colspan='3'>中塔</th>";
+        html += "<th style='background-color:skyblue' colspan='3'>上洞</th>";
+        html += "</tr>";
+        html += "<tr>";
+        html += "<th style='background-color:skyblue'>宠物</th>";
+        html += "<th style='background-color:skyblue'>战数</th>";
+        html += "<th style='background-color:skyblue'>入手率(‱)</th>";
+        html += "<th style='background-color:skyblue'>宠物</th>";
+        html += "<th style='background-color:skyblue'>战数</th>";
+        html += "<th style='background-color:skyblue'>入手率(‱)</th>";
+        html += "<th style='background-color:skyblue'>宠物</th>";
+        html += "<th style='background-color:skyblue'>战数</th>";
+        html += "<th style='background-color:skyblue'>入手率(‱)</th>";
+        html += "<th style='background-color:skyblue'>宠物</th>";
+        html += "<th style='background-color:skyblue'>战数</th>";
+        html += "<th style='background-color:skyblue'>入手率(‱)</th>";
+        html += "</tr>";
+        html += "</thead>";
+        html += "<tbody>";
+        html += "<tr>";
+        html += "<th style='background-color:black;color:white'>全团队</th>";
+        html += "<td style='background-color:wheat'>" + cc0 + "</td>";
+        html += "<td style='background-color:wheat'>" + (bc0 - bc4) + "</td>";
+        html += "<td style='background-color:wheat'>" + ReportUtils.permyriad(cc0, bc0 - bc4) + "</td>";
+        html += "<td style='background-color:wheat'>" + cc1 + "</td>";
+        html += "<td style='background-color:wheat'>" + bc1 + "</td>";
+        html += "<td style='background-color:wheat'>" + ReportUtils.permyriad(cc1, bc1) + "</td>";
+        html += "<td style='background-color:wheat'>" + cc2 + "</td>";
+        html += "<td style='background-color:wheat'>" + bc2 + "</td>";
+        html += "<td style='background-color:wheat'>" + ReportUtils.permyriad(cc2, bc2) + "</td>";
+        html += "<td style='background-color:wheat'>" + cc3 + "</td>";
+        html += "<td style='background-color:wheat'>" + bc3 + "</td>";
+        html += "<td style='background-color:wheat'>" + ReportUtils.permyriad(cc3, bc3) + "</td>";
+
+        html += "</tr>";
+
+        roles.forEach(role => {
+            html += "<tr>";
+            html += "<th style='background-color:black;color:white'>" + role.roleName + "</th>";
+            html += "<td style='background-color:#F8F0E0'>" + role.cc0 + "</td>";
+            html += "<td style='background-color:#F8F0E0'>" + (role.bc0 - role.bc4) + "</td>";
+            html += "<td style='background-color:#F8F0E0'>" + ReportUtils.permyriad(role.cc0, role.bc0 - role.bc4) + "</td>";
+            html += "<td style='background-color:#F8F0E0'>" + role.cc1 + "</td>";
+            html += "<td style='background-color:#F8F0E0'>" + role.bc1 + "</td>";
+            html += "<td style='background-color:#F8F0E0'>" + ReportUtils.permyriad(role.cc1, role.bc1) + "</td>";
+            html += "<td style='background-color:#F8F0E0'>" + role.cc2 + "</td>";
+            html += "<td style='background-color:#F8F0E0'>" + role.bc2 + "</td>";
+            html += "<td style='background-color:#F8F0E0'>" + ReportUtils.permyriad(role.cc2, role.bc2) + "</td>";
+            html += "<td style='background-color:#F8F0E0'>" + role.cc3 + "</td>";
+            html += "<td style='background-color:#F8F0E0'>" + role.bc3 + "</td>";
+            html += "<td style='background-color:#F8F0E0'>" + ReportUtils.permyriad(role.cc3, role.bc3) + "</td>";
+            html += "</tr>";
+        });
+
+        html += "</tbody>";
+        html += "</table>";
+        html += "</td></tr>";
+
+        // --------------------------------------------------------------------
         // 战 数 分 布
         // --------------------------------------------------------------------
         html += "<tr><td>";
@@ -349,6 +436,12 @@ class RoleDailyReport {
     tc = 0;
     uc = 0;
     gc = 0;
+
+    cc0 = 0;
+    cc1 = 0;
+    cc2 = 0;
+    cc3 = 0;
+    cc4 = 0;
 
     constructor(roleName: string) {
         this.roleName = roleName;
