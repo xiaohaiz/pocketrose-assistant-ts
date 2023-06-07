@@ -102,6 +102,9 @@ abstract class PersonalStatisticsPageProcessor extends PageProcessorCredentialSu
             html += "<tbody>";
             html += "<tr>";
             html += "<td>";
+            html += "<button role='button' class='databaseButton' id='clearBattleLog'>清除战斗日志</button>";
+            html += "</td>";
+            html += "<td>";
             html += "<button role='button' class='databaseButton' id='exportBattleLog'>导出战斗日志</button>";
             html += "</td>";
             html += "</tr>";
@@ -163,17 +166,9 @@ abstract class PersonalStatisticsPageProcessor extends PageProcessorCredentialSu
         doBindReport3();
 
         if (TeamManager.isMaster(credential.id)) {
+            doBindClearBattleLog();
             doBindExportBattleLog();
         }
-
-        // CommentBoard.createCommentBoard(NpcLoader.getNpcImageHtml("夜九")!);
-        // html = "" +
-        //     "<button role='button' class='databaseButton' id='clearBattleResult'>清除所有战斗结果数据</button>" +
-        //     "<button role='button' class='databaseButton' id='exportBattleResult'>导出所有战斗结果数据</button>";
-        // CommentBoard.writeMessage(html);
-        //
-        // doDatabaseClearBattleResult();
-        // doDatabaseExportBattleResult();
     }
 
     #welcomeMessageHtml() {
@@ -349,6 +344,29 @@ function doBindReport3() {
     });
 }
 
+function doBindClearBattleLog() {
+    $("#clearBattleLog").on("click", () => {
+        if (!confirm("战斗日志一旦清除就彻底丢失了，正常玩家不需要执行此操作！")) {
+            return;
+        }
+        if (!confirm("二次确认！战斗日志真的清除后就彻底丢失，有造成数据不一致的隐患。不明白数据同步含义的不要执行！")) {
+            return;
+        }
+        if (!confirm("最终确认！你要确认你在做什么！免责声明：每个人都是自己数据的唯一责任人！")) {
+            return;
+        }
+
+        $(".databaseButton").prop("disabled", true);
+        BattleStorageManager.battleLogStore
+            .clear()
+            .then(() => {
+                const message: string = "<b style='font-weight:bold;font-size:300%;color:red'>战斗日志数据已经全部清除！</b>";
+                $("#statistics").html(message).parent().show();
+                $(".databaseButton").prop("disabled", false);
+            });
+    });
+}
+
 function doBindExportBattleLog() {
     $("#exportBattleLog").on("click", () => {
         $(".databaseButton").prop("disabled", true);
@@ -368,43 +386,6 @@ function doBindExportBattleLog() {
 
                 const html = "<textarea id='battleResultData' " +
                     "rows='15' spellcheck='false' " +
-                    "style=\"height:expression((this.scrollHeight>150)?'150px':(this.scrollHeight+5)+'px');overflow:auto;width:100%;word-break;break-all;\">" +
-                    "</textarea>";
-                $("#statistics").html(html).parent().show();
-
-                $("#battleResultData").val(json);
-
-                $(".databaseButton").prop("disabled", false);
-            });
-    });
-}
-
-function doDatabaseClearBattleResult() {
-    $("#clearBattleResult").on("click", () => {
-        if (!confirm("注意！！数据清除后无法恢复！！请确认！！")) {
-            return;
-        }
-        $(".databaseButton").prop("disabled", true);
-        BattleStorageManager.battleResultStorage
-            .clear()
-            .then(() => {
-                const message: string = "<b style='font-weight:bold;font-size:300%;color:red'>战斗结果数据已经全部清除！</b>";
-                $("#statistics").html(message).parent().show();
-                $(".databaseButton").prop("disabled", false);
-            });
-    });
-}
-
-function doDatabaseExportBattleResult() {
-    $("#exportBattleResult").on("click", () => {
-        $(".databaseButton").prop("disabled", true);
-        BattleStorageManager.battleResultStorage
-            .loads()
-            .then(dataList => {
-                const json = JSON.stringify(dataList.map(it => it.asObject()));
-
-                const html = "<textarea id='battleResultData' " +
-                    "rows='15' " +
                     "style=\"height:expression((this.scrollHeight>150)?'150px':(this.scrollHeight+5)+'px');overflow:auto;width:100%;word-break;break-all;\">" +
                     "</textarea>";
                 $("#statistics").html(html).parent().show();
