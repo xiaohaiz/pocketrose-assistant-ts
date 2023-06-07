@@ -1,13 +1,15 @@
+import BattleLogService from "../../core/battle/BattleLogService";
 import BattleStorageManager from "../../core/battle/BattleStorageManager";
-import FastLoginManager from "../../core/FastLoginManager";
 import NpcLoader from "../../core/NpcLoader";
 import BattleReportGenerator from "../../core/report/BattleReportGenerator";
 import MonsterReportGenerator from "../../core/report/MonsterReportGenerator";
 import TreasureReportGenerator from "../../core/report/TreasureReportGenerator";
 import ZodiacReportGenerator from "../../core/report/ZodiacReportGenerator";
 import RoleStorageManager from "../../core/role/RoleStorageManager";
+import TeamManager from "../../core/team/TeamManager";
 import Credential from "../../util/Credential";
 import MessageBoard from "../../util/MessageBoard";
+import MonthRange from "../../util/MonthRange";
 import PageUtils from "../../util/PageUtils";
 import PageProcessorContext from "../PageProcessorContext";
 import PageProcessorCredentialSupport from "../PageProcessorCredentialSupport";
@@ -91,6 +93,30 @@ abstract class PersonalStatisticsPageProcessor extends PageProcessorCredentialSu
         html += "</table>";
         html += "</td>";
         html += "<tr>";
+        if (TeamManager.isMaster(credential.id)) {
+            html += "<tr>";
+            html += "<th style='background-color:red;color:white'>队 长 专 属 数 据 维 护 任 务</th>";
+            html += "<tr>";
+            html += "<tr>";
+            html += "<td style='text-align:center;background-color:#F8F0E0'>";
+            html += "<table style='background-color:transparent;border-spacing:0;border-width:0;margin:auto'>";
+            html += "<tbody>";
+            html += "<tr>";
+            html += "<td>";
+            html += "<button role='button' class='databaseButton' id='clearBattleLog'>清除战斗记录</button>";
+            html += "</td>";
+            html += "<td>";
+            html += "<button role='button' class='databaseButton' id='exportBattleLog'>导出战斗日志</button>";
+            html += "</td>";
+            html += "<td>";
+            html += "<button role='button' class='databaseButton' id='importBattleLog'>导入战斗日志</button>";
+            html += "</td>";
+            html += "</tr>";
+            html += "</tbody>";
+            html += "</table>";
+            html += "</td>";
+            html += "<tr>";
+        }
         html += "<tr style='display:none'>";
         html += "<td id='statistics' style='text-align:center;background-color:#F8F0E0'></td>";
         html += "<tr>";
@@ -127,7 +153,7 @@ abstract class PersonalStatisticsPageProcessor extends PageProcessorCredentialSu
         html = "";
         html += "<select id='teamMemberSelect'>";
         html += "<option value=''>全团队</option>";
-        const configList = FastLoginManager.getAllFastLogins();
+        const configList = TeamManager.loadMembers();
         configList.forEach(config => {
             html += "<option value='" + config.id + "'>" + config.name + "</option>";
         });
@@ -143,14 +169,11 @@ abstract class PersonalStatisticsPageProcessor extends PageProcessorCredentialSu
         doBindReport2();
         doBindReport3();
 
-        // CommentBoard.createCommentBoard(NpcLoader.getNpcImageHtml("夜九")!);
-        // html = "" +
-        //     "<button role='button' class='databaseButton' id='clearBattleResult'>清除所有战斗结果数据</button>" +
-        //     "<button role='button' class='databaseButton' id='exportBattleResult'>导出所有战斗结果数据</button>";
-        // CommentBoard.writeMessage(html);
-        //
-        // doDatabaseClearBattleResult();
-        // doDatabaseExportBattleResult();
+        if (TeamManager.isMaster(credential.id)) {
+            doBindClearBattleLog();
+            doBindExportBattleLog();
+            doBindImportBattleLog();
+        }
     }
 
     #welcomeMessageHtml() {
@@ -279,7 +302,7 @@ function doRoleCareerTransferStatistics() {
 function doTreasureStatistics() {
     $("#s-2").on("click", () => {
         const target = $("#teamMemberSelect").val()! as string;
-        BattleStorageManager.getBattleResultStorage()
+        BattleStorageManager.battleResultStorage
             .loads()
             .then(dataList => {
                 const candidates = dataList
@@ -293,7 +316,7 @@ function doTreasureStatistics() {
 function doBindReport1() {
     $("#report-1").on("click", () => {
         const target = $("#teamMemberSelect").val()! as string;
-        BattleStorageManager.getBattleResultStorage()
+        BattleStorageManager.battleResultStorage
             .loads()
             .then(dataList => {
                 const html = new BattleReportGenerator(dataList, target).generate();
@@ -305,7 +328,7 @@ function doBindReport1() {
 function doBindReport2() {
     $("#report-2").on("click", () => {
         const target = $("#teamMemberSelect").val()! as string;
-        BattleStorageManager.getBattleResultStorage()
+        BattleStorageManager.battleResultStorage
             .loads()
             .then(dataList => {
                 const html = new MonsterReportGenerator(dataList, target).generate();
@@ -317,7 +340,7 @@ function doBindReport2() {
 function doBindReport3() {
     $("#report-3").on("click", () => {
         const target = $("#teamMemberSelect").val()! as string;
-        BattleStorageManager.getBattleResultStorage()
+        BattleStorageManager.battleResultStorage
             .loads()
             .then(dataList => {
                 const html = new ZodiacReportGenerator(dataList, target).generate();
@@ -326,40 +349,111 @@ function doBindReport3() {
     });
 }
 
-function doDatabaseClearBattleResult() {
-    $("#clearBattleResult").on("click", () => {
-        if (!confirm("注意！！数据清除后无法恢复！！请确认！！")) {
+function doBindClearBattleLog() {
+    $("#clearBattleLog").on("click", () => {
+        if (!confirm("战斗记录一旦清除就彻底丢失了，正常玩家不需要执行此操作！")) {
             return;
         }
+        if (!confirm("二次确认！战斗记录真的清除后就彻底丢失，有造成数据不一致的隐患。不明白数据同步含义的不要执行！")) {
+            return;
+        }
+        if (!confirm("最终确认！你要确认你在做什么！免责声明：每个人都是自己数据的唯一责任人！")) {
+            return;
+        }
+
         $(".databaseButton").prop("disabled", true);
-        BattleStorageManager.getBattleResultStorage()
+        BattleStorageManager.battleLogStore
             .clear()
             .then(() => {
-                const message: string = "<b style='font-weight:bold;font-size:300%;color:red'>战斗结果数据已经全部清除！</b>";
-                $("#statistics").html(message).parent().show();
+                BattleStorageManager.battleResultStorage
+                    .clear()
+                    .then(() => {
+                        const message: string = "<b style='font-weight:bold;font-size:300%;color:red'>所有战斗记录数据已经全部清除！</b>";
+                        $("#statistics").html(message).parent().show();
+                        $(".databaseButton").prop("disabled", false);
+                    });
+            });
+    });
+}
+
+function doBindExportBattleLog() {
+    $("#exportBattleLog").on("click", () => {
+        $(".databaseButton").prop("disabled", true);
+
+        const target = $("#teamMemberSelect").val()! as string;
+
+        // 上个月的第一天00:00:00.000作为查询起始时间
+        const startTime = MonthRange.current().previous().start;
+        BattleStorageManager.battleLogStore
+            .findByCreateTime(startTime)
+            .then(logList => {
+                const documentList = logList
+                    .filter(it => target === "" || target === it.roleId)
+                    .map(it => it.asObject());
+
+                const json = JSON.stringify(documentList);
+
+                const html = "<textarea id='exportBattleLogData' " +
+                    "rows='15' spellcheck='false' " +
+                    "style=\"height:expression((this.scrollHeight>150)?'150px':(this.scrollHeight+5)+'px');overflow:auto;width:100%;word-break;break-all;\">" +
+                    "</textarea>";
+                $("#statistics").html(html).parent().show();
+
+                $("#exportBattleLogData").val(json);
+
                 $(".databaseButton").prop("disabled", false);
             });
     });
 }
 
-function doDatabaseExportBattleResult() {
-    $("#exportBattleResult").on("click", () => {
-        $(".databaseButton").prop("disabled", true);
-        BattleStorageManager.getBattleResultStorage()
-            .loads()
-            .then(dataList => {
-                const json = JSON.stringify(dataList.map(it => it.asObject()));
+function doBindImportBattleLog() {
+    $("#importBattleLog").on("click", () => {
+        if ($("#battleLogData").length === 0) {
+            let html = "";
+            html += "<table style='background-color:transparent;border-width:0;border-spacing:0;width:100%;margin:auto'>";
+            html += "<tbody>";
+            html += "<tr>";
+            html += "<th style='text-align:center;background-color:navy;color:yellow'>将待导入的战斗日志数据粘贴到下方文本框，然后再次点击“导入战斗日志”按钮。</th>";
+            html += "</tr>";
+            html += "<tr>";
+            html += "<td>";
+            html += "<textarea id='battleLogData' " +
+                "rows='15' spellcheck='false' " +
+                "style=\"height:expression((this.scrollHeight>150)?'150px':(this.scrollHeight+5)+'px');overflow:auto;width:100%;word-break;break-all;\">" +
+                "</textarea>";
+            html += "</td>";
+            html += "</tr>";
+            html += "</tbody>";
+            html += "</table>";
+            $("#statistics").html(html).parent().show();
+        } else {
+            const json = $("#battleLogData").val() as string;
+            if (json !== "") {
+                $(".databaseButton").prop("disabled", true);
 
-                const html = "<textarea id='battleResultData' " +
-                    "rows='15' " +
-                    "style=\"height:expression((this.scrollHeight>150)?'150px':(this.scrollHeight+5)+'px');overflow:auto;width:100%;word-break;break-all;\">" +
-                    "</textarea>";
+                let html = "";
+                html += "<table style='background-color:#888888;text-align:center;margin:auto;'>";
+                html += "<tbody>";
+                html += "<tr>";
+                html += "<th style='background-color:#F8F0E0'>战斗日志条目</th>";
+                html += "<td style='background-color:#F8F0E0' id='battleLogCount'>0</td>";
+                html += "</tr>";
+                html += "<tr>";
+                html += "<th style='background-color:#F8F0E0'>重复战斗日志条目</th>";
+                html += "<td style='background-color:#F8F0E0;color:red' id='duplicatedBattleLogCount'>0</td>";
+                html += "</tr>";
+                html += "<tr>";
+                html += "<th style='background-color:#F8F0E0'>导入战斗日志条目</th>";
+                html += "<td style='background-color:#F8F0E0;color:blue' id='importedBattleLogCount'>0</td>";
+                html += "</tr>";
+                html += "</tbody>";
+                html += "</table>";
                 $("#statistics").html(html).parent().show();
 
-                $("#battleResultData").val(json);
-
+                BattleLogService.importBattleLog(json);
                 $(".databaseButton").prop("disabled", false);
-            });
+            }
+        }
     });
 }
 

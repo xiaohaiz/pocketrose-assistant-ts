@@ -1,6 +1,7 @@
 import _ from "lodash";
 import NpcLoader from "../NpcLoader";
 import PetLocationLoader from "../PetLocationLoader";
+import BattleLog from "./BattleLog";
 
 class BattleResult {
 
@@ -14,6 +15,29 @@ class BattleResult {
     catchCount?: number;
     photoCount?: number;
     treasures?: Map<string, number>;
+
+    static newInstance(log: BattleLog): BattleResult {
+        const data = new BattleResult();
+        data.id = log.roleId + "/" + log.monster;
+        data.updateTime = log.createTime;
+        data.roleId = log.roleId;
+        data.monster = log.monster;
+        switch (log.result) {
+            case "战胜":
+                data.winCount = 1;
+                break;
+            case "战败":
+                data.loseCount = 1;
+                break;
+            case "平手":
+                data.drawCount = 1;
+                break;
+        }
+        data.catchCount = log.catch;
+        data.photoCount = log.photo;
+        data.treasures = log.treasures;
+        return data;
+    }
 
     asObject() {
         const obj = {};

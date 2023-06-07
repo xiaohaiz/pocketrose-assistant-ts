@@ -1,6 +1,6 @@
 import BattleResult from "../battle/BattleResult";
 import TreasureLoader from "../equipment/TreasureLoader";
-import FastLoginManager from "../FastLoginManager";
+import TeamManager from "../team/TeamManager";
 import ReportUtils from "./ReportUtils";
 
 class BattleReportGenerator {
@@ -50,7 +50,7 @@ class BattleReportGenerator {
         let totalGoodPersonCardCount = 0;
 
         const roles = new Map<string, RoleBattle>();
-        FastLoginManager.getAllFastLogins().forEach(config => {
+        TeamManager.loadMembers().forEach(config => {
             if (this.#target === undefined || this.#target === "") {
                 roles.set(config.id!, new RoleBattle(config.name!));
             } else if (this.#target === config.id) {

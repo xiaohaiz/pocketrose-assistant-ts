@@ -106,22 +106,11 @@ class BattleProcessor {
         log.photo = photoCount;
         log.treasures = treasures;
         BattleStorageManager.battleLogStore
-            .write(log)
+            .write(log)                                     // 写入战斗日志
             .then(() => {
-                // 写入战斗结果
-                switch (this.page!.battleResult!) {
-                    case "战胜":
-                        BattleStorageManager.getBattleResultStorage().win(this.#credential.id, monster, catchCount, photoCount, treasures).then();
-                        break;
-                    case "战败":
-                        BattleStorageManager.getBattleResultStorage().lose(this.#credential.id, monster).then();
-                        break;
-                    case "平手":
-                        BattleStorageManager.getBattleResultStorage().draw(this.#credential.id, monster, catchCount, photoCount, treasures).then();
-                        break;
-                    default:
-                        break;
-                }
+                BattleStorageManager.battleResultStorage
+                    .replay(log)                            // 写入战斗结果
+                    .then();
             });
     }
 

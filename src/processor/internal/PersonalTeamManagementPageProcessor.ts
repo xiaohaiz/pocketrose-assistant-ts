@@ -1,5 +1,5 @@
 import _ from "lodash";
-import FastLoginLoader from "../../core/FastLoginLoader";
+import FastLoginLoader from "../../core/team/FastLoginLoader";
 import Credential from "../../util/Credential";
 import MessageBoard from "../../util/MessageBoard";
 import PageUtils from "../../util/PageUtils";
