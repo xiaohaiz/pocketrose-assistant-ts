@@ -1,5 +1,5 @@
 import StorageUtils from "../../util/StorageUtils";
-import FastLoginLoader from "../FastLoginLoader";
+import FastLoginLoader from "./FastLoginLoader";
 
 class TeamManager {
 

@@ -1,4 +1,4 @@
-import FastLoginManager from "../../core/FastLoginManager";
+import FastLoginManager from "../../core/team/FastLoginManager";
 import LoginDashboardPageProcessor from "../../processor/internal/LoginDashboardPageProcessor";
 import PageProcessor from "../../processor/PageProcessor";
 import PageInterceptor from "../PageInterceptor";

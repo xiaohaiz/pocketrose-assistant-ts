@@ -1,4 +1,4 @@
-import FastLogin from "../common/FastLogin";
+import FastLogin from "../../common/FastLogin";
 import FastLoginLoader from "./FastLoginLoader";
 
 class FastLoginManager {

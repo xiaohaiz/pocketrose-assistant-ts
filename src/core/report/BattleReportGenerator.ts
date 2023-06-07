@@ -1,6 +1,6 @@
 import BattleResult from "../battle/BattleResult";
 import TreasureLoader from "../equipment/TreasureLoader";
-import FastLoginManager from "../FastLoginManager";
+import FastLoginManager from "../team/FastLoginManager";
 import ReportUtils from "./ReportUtils";
 
 class BattleReportGenerator {

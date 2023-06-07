@@ -1,8 +1,8 @@
 import PetProfile from "../../common/PetProfile";
 import StringUtils from "../../util/StringUtils";
 import BattleResult from "../battle/BattleResult";
-import FastLoginManager from "../FastLoginManager";
 import PetProfileLoader from "../PetProfileLoader";
+import FastLoginManager from "../team/FastLoginManager";
 import ReportUtils from "./ReportUtils";
 
 class MonsterReportGenerator {

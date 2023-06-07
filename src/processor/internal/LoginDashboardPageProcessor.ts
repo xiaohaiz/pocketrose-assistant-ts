@@ -1,5 +1,5 @@
 import SetupLoader from "../../config/SetupLoader";
-import FastLoginLoader from "../../core/FastLoginLoader";
+import FastLoginLoader from "../../core/team/FastLoginLoader";
 import LastLogin from "../../core/team/LastLogin";
 import TeamStorages from "../../core/team/TeamStorages";
 import ButtonUtils from "../../util/ButtonUtils";
