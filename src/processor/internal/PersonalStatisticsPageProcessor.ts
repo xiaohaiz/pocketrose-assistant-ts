@@ -361,7 +361,7 @@ function doBindExportBattleLog() {
                 const json = JSON.stringify(logList.map(it => it.asObject()));
 
                 const html = "<textarea id='battleResultData' " +
-                    "rows='15' " +
+                    "rows='15' spellcheck='false' " +
                     "style=\"height:expression((this.scrollHeight>150)?'150px':(this.scrollHeight+5)+'px');overflow:auto;width:100%;word-break;break-all;\">" +
                     "</textarea>";
                 $("#statistics").html(html).parent().show();
