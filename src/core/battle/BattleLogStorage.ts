@@ -25,10 +25,10 @@ class BattleLogStorage {
      * @param start Start time.
      * @param end End time, use current if not specified.
      */
-    async findByCreateTime(start: number, end?: number) {
+    async findByCreateTime(start: number, end?: number): Promise<BattleLog[]> {
         const db = await PocketDatabase.connectDatabase();
         return await (() => {
-            return new Promise((resolve, reject) => {
+            return new Promise<BattleLog[]>((resolve, reject) => {
                 let range: IDBKeyRange;
                 if (end === undefined) {
                     range = IDBKeyRange.lowerBound(start);
