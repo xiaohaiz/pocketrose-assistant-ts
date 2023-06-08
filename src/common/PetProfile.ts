@@ -64,7 +64,9 @@ class PetProfile {
             "/" +
             this.growExperience +
             "/" +
-            this.location;
+            this.location +
+            "/" +
+            this.pokemon;
     }
 
     parseName(name: string) {
