@@ -6,7 +6,7 @@ import PetProfileLoader from "../pet/PetProfileLoader";
 import TeamManager from "../team/TeamManager";
 import ReportUtils from "./ReportUtils";
 
-class DailyReportGenerator {
+class WeeklyReportGenerator {
 
     readonly #logList: BattleLog[];
     readonly #target?: string;
@@ -24,12 +24,12 @@ class DailyReportGenerator {
                 this.#target === "" ||
                 it.roleId === this.#target);
 
-        const roles = new Map<string, RoleDailyReport>();
+        const roles = new Map<string, RoleWeeklyReport>();
         TeamManager.loadMembers().forEach(config => {
             if (this.#target === undefined || this.#target === "") {
-                roles.set(config.id!, new RoleDailyReport(config.name!));
+                roles.set(config.id!, new RoleWeeklyReport(config.name!));
             } else if (this.#target === config.id) {
-                roles.set(config.id!, new RoleDailyReport(config.name!));
+                roles.set(config.id!, new RoleWeeklyReport(config.name!));
             }
         });
 
@@ -72,21 +72,21 @@ class DailyReportGenerator {
         let wgc = 0;
         let lgc = 0;
 
-        const hourMap = new Map<number, BattleLog[]>();
+        const dayMap = new Map<number, BattleLog[]>();
         candidates
             .filter(it => roles.has(it.roleId!))
             .forEach(it => {
-                const hour = _.ceil(new Date(it.createTime!).getHours() / 2);
-                if (!hourMap.has(hour)) {
-                    hourMap.set(hour, []);
+                const day = new Date(it.createTime!).getDay();
+                if (!dayMap.has(day)) {
+                    dayMap.set(day, []);
                 }
-                hourMap.get(hour)?.push(it);
+                dayMap.get(day)?.push(it);
 
                 const role = roles.get(it.roleId!)!;
-                if (!role.hourMap.has(hour)) {
-                    role.hourMap.set(hour, []);
+                if (!role.dayMap.has(day)) {
+                    role.dayMap.set(day, []);
                 }
-                role.hourMap.get(hour)?.push(it);
+                role.dayMap.get(day)?.push(it);
 
                 const win = it.result === "战胜";
                 const battleField = it.obtainBattleField;
@@ -208,13 +208,13 @@ class DailyReportGenerator {
         html += "<tbody>";
 
         // --------------------------------------------------------------------
-        // 日 战 数 总 览
+        // 周 战 数 总 览
         // --------------------------------------------------------------------
         html += "<tr><td>";
         html += "<table style='background-color:#888888;text-align:center;margin:auto;width:100%'>";
         html += "<thead>";
         html += "<tr>";
-        html += "<th style='background-color:navy;color:yellowgreen' colspan='11'>日 战 数 总 览</th>";
+        html += "<th style='background-color:navy;color:yellowgreen' colspan='11'>周 战 数 总 览</th>";
         html += "</tr>";
         html += "<tr>";
         html += "<th style='background-color:skyblue' rowspan='2'>成员</th>";
@@ -273,13 +273,13 @@ class DailyReportGenerator {
         html += "</td></tr>";
 
         // --------------------------------------------------------------------
-        // 日 上 洞 入 手 总 览
+        // 周 上 洞 入 手 总 览
         // --------------------------------------------------------------------
         html += "<tr><td>";
         html += "<table style='background-color:#888888;text-align:center;margin:auto;width:100%'>";
         html += "<thead>";
         html += "<tr>";
-        html += "<th style='background-color:navy;color:yellowgreen' colspan='9'>日 上 洞 入 手 总 览</th>";
+        html += "<th style='background-color:navy;color:yellowgreen' colspan='9'>周 上 洞 入 手 总 览</th>";
         html += "</tr>";
         html += "<tr>";
         html += "<th style='background-color:skyblue' rowspan='2'>成员</th>";
@@ -360,13 +360,13 @@ class DailyReportGenerator {
         html += "</td></tr>";
 
         // --------------------------------------------------------------------
-        // 日 宠 物 入 手 总 览
+        // 周 宠 物 入 手 总 览
         // --------------------------------------------------------------------
         html += "<tr><td>";
         html += "<table style='background-color:#888888;text-align:center;margin:auto;width:100%'>";
         html += "<thead>";
         html += "<tr>";
-        html += "<th style='background-color:navy;color:yellowgreen' colspan='13'>日 宠 物 入 手 总 览</th>";
+        html += "<th style='background-color:navy;color:yellowgreen' colspan='13'>周 物 入 手 总 览</th>";
         html += "</tr>";
         html += "<tr>";
         html += "<th style='background-color:skyblue' rowspan='2'>成员</th>";
@@ -453,13 +453,13 @@ class DailyReportGenerator {
         html += "</td></tr>";
 
         // --------------------------------------------------------------------
-        // 日 图 鉴 入 手 总 览
+        // 周 图 鉴 入 手 总 览
         // --------------------------------------------------------------------
         html += "<tr><td>";
         html += "<table style='background-color:#888888;text-align:center;margin:auto;width:100%'>";
         html += "<thead>";
         html += "<tr>";
-        html += "<th style='background-color:navy;color:yellowgreen' colspan='13'>日 图 鉴 入 手 总 览</th>";
+        html += "<th style='background-color:navy;color:yellowgreen' colspan='13'>周 图 鉴 入 手 总 览</th>";
         html += "</tr>";
         html += "<tr>";
         html += "<th style='background-color:skyblue' rowspan='2'>成员</th>";
@@ -546,13 +546,13 @@ class DailyReportGenerator {
         html += "</td></tr>";
 
         // --------------------------------------------------------------------
-        // 日 藏 宝 图 入 手 总 览
+        // 周 藏 宝 图 入 手 总 览
         // --------------------------------------------------------------------
         html += "<tr><td>";
         html += "<table style='background-color:#888888;text-align:center;margin:auto;width:100%'>";
         html += "<thead>";
         html += "<tr>";
-        html += "<th style='background-color:navy;color:yellowgreen' colspan='13'>日 藏 宝 图 入 手 总 览</th>";
+        html += "<th style='background-color:navy;color:yellowgreen' colspan='13'>周 藏 宝 图 入 手 总 览</th>";
         html += "</tr>";
         html += "<tr>";
         html += "<th style='background-color:skyblue' rowspan='2'>成员</th>";
@@ -617,13 +617,13 @@ class DailyReportGenerator {
         html += "</td></tr>";
 
         // --------------------------------------------------------------------
-        // 日 宝 石 入 手 总 览
+        // 周 宝 石 入 手 总 览
         // --------------------------------------------------------------------
         html += "<tr><td>";
         html += "<table style='background-color:#888888;text-align:center;margin:auto;width:100%'>";
         html += "<thead>";
         html += "<tr>";
-        html += "<th style='background-color:navy;color:yellowgreen' colspan='10'>日 宝 石 入 手 总 览</th>";
+        html += "<th style='background-color:navy;color:yellowgreen' colspan='10'>周 宝 石 入 手 总 览</th>";
         html += "</tr>";
         html += "<tr>";
         html += "<th style='background-color:skyblue' rowspan='2'>成员</th>";
@@ -679,41 +679,36 @@ class DailyReportGenerator {
         html += "</td></tr>";
 
         // --------------------------------------------------------------------
-        // 日 战 数 分 布
+        // 周 战 数 分 布
         // --------------------------------------------------------------------
         html += "<tr><td>";
         html += "<table style='background-color:#888888;text-align:center;margin:auto;width:100%'>";
         html += "<thead>";
         html += "<tr>";
-        html += "<th style='background-color:navy;color:yellowgreen' colspan='13'>日 战 数 分 布</th>";
+        html += "<th style='background-color:navy;color:yellowgreen' colspan='8'>周 战 数 分 布</th>";
         html += "</tr>";
         html += "<tr>";
         html += "<th style='background-color:skyblue'></th>";
-        html += "<th style='background-color:skyblue'>子时</th>";
-        html += "<th style='background-color:skyblue'>丑时</th>";
-        html += "<th style='background-color:skyblue'>寅时</th>";
-        html += "<th style='background-color:skyblue'>卯时</th>";
-        html += "<th style='background-color:skyblue'>辰时</th>";
-        html += "<th style='background-color:skyblue'>巳时</th>";
-        html += "<th style='background-color:skyblue'>午时</th>";
-        html += "<th style='background-color:skyblue'>未时</th>";
-        html += "<th style='background-color:skyblue'>申时</th>";
-        html += "<th style='background-color:skyblue'>酉时</th>";
-        html += "<th style='background-color:skyblue'>戌时</th>";
-        html += "<th style='background-color:skyblue'>亥时</th>";
+        html += "<th style='background-color:skyblue'>周日</th>";
+        html += "<th style='background-color:skyblue'>周一</th>";
+        html += "<th style='background-color:skyblue'>周二</th>";
+        html += "<th style='background-color:skyblue'>周三</th>";
+        html += "<th style='background-color:skyblue'>周四</th>";
+        html += "<th style='background-color:skyblue'>周五</th>";
+        html += "<th style='background-color:skyblue'>周六</th>";
         html += "</tr>";
         html += "</thead>";
         html += "<tbody>";
 
         let maxBattleCount = 0;
-        hourMap.forEach(v => {
+        dayMap.forEach(v => {
             maxBattleCount = _.max([v.length, maxBattleCount])!;
         });
 
         html += "<tr>";
         html += "<th style='background-color:black;color:white' rowspan='2'>全团队</th>";
-        for (let hour = 0; hour <= 11; hour++) {
-            const dataList = hourMap.get(hour);
+        for (let day = 0; day <= 6; day++) {
+            const dataList = dayMap.get(day);
             let battleCount = 0;
             if (dataList) {
                 battleCount = dataList.length;
@@ -722,8 +717,8 @@ class DailyReportGenerator {
         }
         html += "</tr>";
         html += "<tr>";
-        for (let hour = 0; hour <= 11; hour++) {
-            const dataList = hourMap.get(hour);
+        for (let day = 0; day <= 6; day++) {
+            const dataList = dayMap.get(day);
             let battleCount = 0;
             if (dataList) {
                 battleCount = dataList.length;
@@ -735,8 +730,8 @@ class DailyReportGenerator {
         roles.forEach(role => {
             html += "<tr>";
             html += "<th style='background-color:black;color:white'>" + role.roleName + "</th>";
-            for (let hour = 0; hour <= 11; hour++) {
-                const dataList = role.hourMap.get(hour);
+            for (let day = 0; day <= 6; day++) {
+                const dataList = role.dayMap.get(day);
                 let battleCount = 0;
                 if (dataList) {
                     battleCount = dataList.length;
@@ -756,10 +751,10 @@ class DailyReportGenerator {
         html += "<table style='background-color:#888888;text-align:center;margin:auto;width:100%'>";
         html += "<thead>";
         html += "<tr>";
-        html += "<th style='background-color:navy;color:yellowgreen' colspan='13'>遇 见 四 天 王</th>";
+        html += "<th style='background-color:navy;color:yellowgreen' colspan='8'>遇 见 四 天 王</th>";
         html += "</tr>";
         html += "<tr>";
-        html += "<th style='background-color:skyblue' colspan='13'>";
+        html += "<th style='background-color:skyblue' colspan='8'>";
         html += "<table style='background-color:transparent;border-spacing:0;border-width:0;width:100%;text-align:center;margin:auto'>";
         html += "<tbody>";
         html += "<tr>";
@@ -776,24 +771,19 @@ class DailyReportGenerator {
         html += "</tr>";
         html += "<tr>";
         html += "<th style='background-color:skyblue'></th>";
-        html += "<th style='background-color:skyblue'>子时</th>";
-        html += "<th style='background-color:skyblue'>丑时</th>";
-        html += "<th style='background-color:skyblue'>寅时</th>";
-        html += "<th style='background-color:skyblue'>卯时</th>";
-        html += "<th style='background-color:skyblue'>辰时</th>";
-        html += "<th style='background-color:skyblue'>巳时</th>";
-        html += "<th style='background-color:skyblue'>午时</th>";
-        html += "<th style='background-color:skyblue'>未时</th>";
-        html += "<th style='background-color:skyblue'>申时</th>";
-        html += "<th style='background-color:skyblue'>酉时</th>";
-        html += "<th style='background-color:skyblue'>戌时</th>";
-        html += "<th style='background-color:skyblue'>亥时</th>";
+        html += "<th style='background-color:skyblue'>周日</th>";
+        html += "<th style='background-color:skyblue'>周一</th>";
+        html += "<th style='background-color:skyblue'>周二</th>";
+        html += "<th style='background-color:skyblue'>周三</th>";
+        html += "<th style='background-color:skyblue'>周四</th>";
+        html += "<th style='background-color:skyblue'>周五</th>";
+        html += "<th style='background-color:skyblue'>周六</th>";
         html += "</tr>";
         html += "</thead>";
         html += "<tbody>";
 
         let mr1 = 0;
-        hourMap.forEach(logs => {
+        dayMap.forEach(logs => {
             const bc = logs
                 .filter(it => it.obtainBattleField === "上洞").length;
             const gc = logs
@@ -805,8 +795,8 @@ class DailyReportGenerator {
 
         html += "<tr>";
         html += "<th style='background-color:black;color:white' rowspan='2'>全团队</th>";
-        for (let hour = 0; hour <= 11; hour++) {
-            const dataList = hourMap.get(hour);
+        for (let day = 0; day <= 6; day++) {
+            const dataList = dayMap.get(day);
             let bc = 0;
             let gc = 0;
             if (dataList) {
@@ -818,8 +808,8 @@ class DailyReportGenerator {
         }
         html += "</tr>";
         html += "<tr>";
-        for (let hour = 0; hour <= 11; hour++) {
-            const dataList = hourMap.get(hour);
+        for (let day = 0; day <= 6; day++) {
+            const dataList = dayMap.get(day);
             let bc = 0;
             let gc = 0;
             if (dataList) {
@@ -833,8 +823,8 @@ class DailyReportGenerator {
         roles.forEach(role => {
             html += "<tr>";
             html += "<th style='background-color:black;color:white'>" + role.roleName + "</th>";
-            for (let hour = 0; hour <= 11; hour++) {
-                const dataList = role.hourMap.get(hour);
+            for (let day = 0; day <= 6; day++) {
+                const dataList = role.dayMap.get(day);
                 let bc = 0;
                 let gc = 0;
                 if (dataList) {
@@ -857,10 +847,10 @@ class DailyReportGenerator {
         html += "<table style='background-color:#888888;text-align:center;margin:auto;width:100%'>";
         html += "<thead>";
         html += "<tr>";
-        html += "<th style='background-color:navy;color:yellowgreen' colspan='13'>遇 见 杰 德 天 团</th>";
+        html += "<th style='background-color:navy;color:yellowgreen' colspan='8'>遇 见 杰 德 天 团</th>";
         html += "</tr>";
         html += "<tr>";
-        html += "<th style='background-color:skyblue' colspan='13'>";
+        html += "<th style='background-color:skyblue' colspan='8'>";
         html += "<table style='background-color:transparent;border-spacing:0;border-width:0;width:100%;text-align:center;margin:auto'>";
         html += "<tbody>";
         html += "<tr>";
@@ -877,24 +867,19 @@ class DailyReportGenerator {
         html += "</tr>";
         html += "<tr>";
         html += "<th style='background-color:skyblue'></th>";
-        html += "<th style='background-color:skyblue'>子时</th>";
-        html += "<th style='background-color:skyblue'>丑时</th>";
-        html += "<th style='background-color:skyblue'>寅时</th>";
-        html += "<th style='background-color:skyblue'>卯时</th>";
-        html += "<th style='background-color:skyblue'>辰时</th>";
-        html += "<th style='background-color:skyblue'>巳时</th>";
-        html += "<th style='background-color:skyblue'>午时</th>";
-        html += "<th style='background-color:skyblue'>未时</th>";
-        html += "<th style='background-color:skyblue'>申时</th>";
-        html += "<th style='background-color:skyblue'>酉时</th>";
-        html += "<th style='background-color:skyblue'>戌时</th>";
-        html += "<th style='background-color:skyblue'>亥时</th>";
+        html += "<th style='background-color:skyblue'>周日</th>";
+        html += "<th style='background-color:skyblue'>周一</th>";
+        html += "<th style='background-color:skyblue'>周二</th>";
+        html += "<th style='background-color:skyblue'>周三</th>";
+        html += "<th style='background-color:skyblue'>周四</th>";
+        html += "<th style='background-color:skyblue'>周五</th>";
+        html += "<th style='background-color:skyblue'>周六</th>";
         html += "</tr>";
         html += "</thead>";
         html += "<tbody>";
 
         let mr2 = 0;
-        hourMap.forEach(logs => {
+        dayMap.forEach(logs => {
             const bc = logs
                 .filter(it => it.obtainBattleField === "上洞").length;
             const gc = logs
@@ -906,8 +891,8 @@ class DailyReportGenerator {
 
         html += "<tr>";
         html += "<th style='background-color:black;color:white' rowspan='2'>全团队</th>";
-        for (let hour = 0; hour <= 11; hour++) {
-            const dataList = hourMap.get(hour);
+        for (let day = 0; day <= 6; day++) {
+            const dataList = dayMap.get(day);
             let bc = 0;
             let gc = 0;
             if (dataList) {
@@ -919,8 +904,8 @@ class DailyReportGenerator {
         }
         html += "</tr>";
         html += "<tr>";
-        for (let hour = 0; hour <= 11; hour++) {
-            const dataList = hourMap.get(hour);
+        for (let day = 0; day <= 6; day++) {
+            const dataList = dayMap.get(day);
             let bc = 0;
             let gc = 0;
             if (dataList) {
@@ -934,8 +919,8 @@ class DailyReportGenerator {
         roles.forEach(role => {
             html += "<tr>";
             html += "<th style='background-color:black;color:white'>" + role.roleName + "</th>";
-            for (let hour = 0; hour <= 11; hour++) {
-                const dataList = role.hourMap.get(hour);
+            for (let day = 0; day <= 6; day++) {
+                const dataList = role.dayMap.get(day);
                 let bc = 0;
                 let gc = 0;
                 if (dataList) {
@@ -958,10 +943,10 @@ class DailyReportGenerator {
     }
 }
 
-class RoleDailyReport {
+class RoleWeeklyReport {
 
     readonly roleName: string;
-    hourMap: Map<number, BattleLog[]>;
+    dayMap: Map<number, BattleLog[]>;
 
     bc0 = 0;
     bc1 = 0;
@@ -1000,8 +985,8 @@ class RoleDailyReport {
 
     constructor(roleName: string) {
         this.roleName = roleName;
-        this.hourMap = new Map();
+        this.dayMap = new Map();
     }
 }
 
-export = DailyReportGenerator;
+export = WeeklyReportGenerator;

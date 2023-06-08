@@ -1,7 +1,7 @@
 import PetProfile from "../../common/PetProfile";
 import StringUtils from "../../util/StringUtils";
 import BattleResult from "../battle/BattleResult";
-import PetProfileLoader from "../PetProfileLoader";
+import PetProfileLoader from "../pet/PetProfileLoader";
 import TeamManager from "../team/TeamManager";
 import ReportUtils from "./ReportUtils";
 

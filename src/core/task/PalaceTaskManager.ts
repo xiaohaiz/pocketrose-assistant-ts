@@ -1,6 +1,6 @@
 import _ from "lodash";
 import Credential from "../../util/Credential";
-import PetLocationLoader from "../PetLocationLoader";
+import PetLocationLoader from "../pet/PetLocationLoader";
 import Pokemon from "../Pokemon";
 import TaskStorageManager from "./TaskStorageManager";
 
