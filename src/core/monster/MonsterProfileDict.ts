@@ -2,6 +2,13 @@ import _ from "lodash";
 import PetProfile from "../../common/PetProfile";
 
 class MonsterProfileDict {
+
+    static load(code: string): PetProfile | null {
+        const c = _.parseInt(code);
+        // @ts-ignore
+        const s = MONSTERS[c];
+        return s ? parse(c, s) : null;
+    }
 }
 
 const MONSTERS = {
