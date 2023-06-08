@@ -17,10 +17,6 @@ class Pokemon {
         return target;
     }
 
-    static isInitialPetName(petName: string | undefined) {
-        // @ts-ignore
-        return petName !== undefined && pokemonDict[petName] !== undefined;
-    }
 }
 
 const pokemonDict = {
