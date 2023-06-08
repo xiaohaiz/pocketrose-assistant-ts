@@ -23,6 +23,7 @@ class PetProfile {
     speedEffort?: number;
     catchRatio?: number;
     growExperience?: number;
+    location?: number;
 
     spellList?: string[];
     id?: number;
@@ -60,7 +61,9 @@ class PetProfile {
             "/" +
             this.catchRatio +
             "/" +
-            this.growExperience;
+            this.growExperience +
+            "/" +
+            this.location;
     }
 
     parseName(name: string) {
