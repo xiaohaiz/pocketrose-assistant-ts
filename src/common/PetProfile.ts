@@ -1,3 +1,4 @@
+import _ from "lodash";
 import MonsterSpellDict from "../core/monster/MonsterSpellDict";
 import Pokemon from "../core/Pokemon";
 import Constants from "../util/Constants";
@@ -24,10 +25,43 @@ class PetProfile {
     growExperience?: number;
 
     spellList?: string[];
-
     id?: number;
     source?: PetProfile;
     targets?: PetProfile[];
+
+    asText() {
+        return StringUtils.substringBefore(this.name!, "(") +
+            "/" +
+            (_.endsWith(this.picture, ".gif") ? StringUtils.substringBefore(this.picture!, ".gif") : this.picture) +
+            "/" +
+            this.healthBaseStats +
+            "/" +
+            this.attackBaseStats +
+            "/" +
+            this.defenseBaseStats +
+            "/" +
+            this.specialAttackBaseStats +
+            "/" +
+            this.specialDefenseBaseStats +
+            "/" +
+            this.speedBaseStats +
+            "/" +
+            this.healthEffort +
+            "/" +
+            this.attackEffort +
+            "/" +
+            this.defenseEffort +
+            "/" +
+            this.specialAttackEffort +
+            "/" +
+            this.specialDefenseEffort +
+            "/" +
+            this.speedEffort +
+            "/" +
+            this.catchRatio +
+            "/" +
+            this.growExperience;
+    }
 
     parseName(name: string) {
         this.name = name;
