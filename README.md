@@ -1,5 +1,7 @@
 # pocketrose-assistant-ts
 
+### 版本 4.0.4-SNAPSHOT
+
 ### 版本 4.0.3
 
 1. 日战报中增加遇见四天王的概率分布。
