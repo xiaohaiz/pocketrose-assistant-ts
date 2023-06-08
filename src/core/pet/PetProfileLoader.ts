@@ -2,7 +2,6 @@ import PetProfile from "../../common/PetProfile";
 import PocketUtils from "../../util/PocketUtils";
 import MonsterProfileDict from "../monster/MonsterProfileDict";
 import MonsterSpellDict from "../monster/MonsterSpellDict";
-import PetSpellLoader from "../PetSpellLoader";
 import PetRelationLoader from "./PetRelationLoader";
 
 class PetProfileLoader {
@@ -12,7 +11,7 @@ class PetProfileLoader {
     }
 
     static searchBySpellName(spellName: string): PetProfile[] {
-        const codeList: string[] = PetSpellLoader.searchBySpellName(spellName);
+        const codeList: string[] = MonsterSpellDict.findBySpellName(spellName);
         const profileList: PetProfile[] = [];
         for (const code of codeList) {
             profileList.push(MonsterProfileDict.load(code)!);

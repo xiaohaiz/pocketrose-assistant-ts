@@ -1,4 +1,5 @@
 import _ from "lodash";
+import MonsterUtils from "./MonsterUtils";
 
 class MonsterSpellDict {
 
@@ -18,6 +19,30 @@ class MonsterSpellDict {
             }
         });
         return _.join(spells, " ");
+    }
+
+    static findBySpellName(name: string): string[] {
+        let id: number | undefined = undefined;
+        for (const it of Object.keys(SPELLS)) {
+            // @ts-ignore
+            const value = SPELLS[it];
+            if (value === name) {
+                id = _.parseInt(it);
+                break;
+            }
+        }
+        const codes: string[] = [];
+        if (!id) {
+            return codes;
+        }
+        for (const it of Object.keys(MONSTER_SPELLS)) {
+            // @ts-ignore
+            const l: number[] = MONSTER_SPELLS[it];
+            if (l.includes(id)) {
+                codes.push(MonsterUtils.asCode(_.parseInt(it)));
+            }
+        }
+        return codes;
     }
 
 }
