@@ -1,6 +1,6 @@
 import _ from "lodash";
 import SetupLoader from "../config/SetupLoader";
-import Pokemon from "../core/Pokemon";
+import MonsterProfileDict from "../core/monster/MonsterProfileDict";
 import Constants from "../util/Constants";
 import PageUtils from "../util/PageUtils";
 import StringUtils from "../util/StringUtils";
@@ -48,19 +48,23 @@ class Pet {
     location?: string;  // P/C/R
 
     get nameHtml() {
-        return Pokemon.pokemonWikiReplacement(this.name);
+        const profile = MonsterProfileDict.findByName(this.name);
+        return profile ? profile.nameHtml : this.name;
     }
 
     get raceHtml() {
-        return Pokemon.pokemonWikiReplacement(this.race);
+        const profile = MonsterProfileDict.findByName(this.race);
+        return profile ? profile.nameHtml : this.race;
     }
 
     get beforeHtml() {
-        return Pokemon.pokemonWikiReplacement(this.before);
+        const profile = MonsterProfileDict.findByName(this.before);
+        return profile ? profile.nameHtml : this.before;
     }
 
     get afterHtml() {
-        return Pokemon.pokemonWikiReplacement(this.after);
+        const profile = MonsterProfileDict.findByName(this.after);
+        return profile ? profile.nameHtml : this.after;
     }
 
     get imageHtml() {

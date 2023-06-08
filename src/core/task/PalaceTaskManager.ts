@@ -1,7 +1,6 @@
 import _ from "lodash";
 import Credential from "../../util/Credential";
 import MonsterProfileDict from "../monster/MonsterProfileDict";
-import Pokemon from "../Pokemon";
 import TaskStorageManager from "./TaskStorageManager";
 
 class PalaceTaskManager {
@@ -63,7 +62,7 @@ class PalaceTaskManager {
                         const b = ss[1];
 
                         const profile = MonsterProfileDict.findByName(a)!;
-                        const s1: string = Pokemon.pokemonWikiReplacement(a);
+                        const s1: string = profile.nameHtml!;
                         const s2: string = profile.locationText!;
                         const s3: string = b === "1" ? "<span style='color:blue'>已完成</span>" : "进行中";
 

@@ -1,6 +1,6 @@
 import _ from "lodash";
+import SetupLoader from "../config/SetupLoader";
 import MonsterSpellDict from "../core/monster/MonsterSpellDict";
-import Pokemon from "../core/Pokemon";
 import Constants from "../util/Constants";
 import StringUtils from "../util/StringUtils";
 
@@ -76,8 +76,14 @@ class PetProfile {
         }
     }
 
-    get nameHtml() {
-        return Pokemon.pokemonWikiReplacement(this.name);
+    get nameHtml(): string | undefined {
+        if (!this.name) return this.name;
+        if (!this.pokemon) return this.name;
+        if (!SetupLoader.isPokemonWikiEnabled()) return this.name;
+        return "<a href='https://wiki.52poke.com/wiki/" + encodeURI(this.pokemon) + "' " +
+            "target='_blank' rel='noopener noreferrer'>" +
+            this.pokemon + "(" + this.code + ")" +
+            "</a>";
     }
 
     get imageHtml() {
