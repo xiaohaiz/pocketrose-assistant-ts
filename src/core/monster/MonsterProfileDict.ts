@@ -23,9 +23,7 @@ class MonsterProfileDict {
     }
 
     static findByName(name: string | null | undefined): PetProfile | null {
-        if (!name) return null;
-        const code = MonsterUtils.extractCode(name);
-        return code === null ? null : MonsterProfileDict.load(code);
+        return MonsterProfileDict.load(MonsterUtils.extractCode(name));
     }
 
 }

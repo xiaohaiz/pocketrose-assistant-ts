@@ -6,7 +6,6 @@ import MonsterProfileDict from "../../core/monster/MonsterProfileDict";
 import NpcLoader from "../../core/NpcLoader";
 import PetProfileLoader from "../../core/pet/PetProfileLoader";
 import PetLocalStorage from "../../core/PetLocalStorage";
-import Pokemon from "../../core/Pokemon";
 import RoleStorageManager from "../../core/role/RoleStorageManager";
 import TeamManager from "../../core/team/TeamManager";
 import Credential from "../../util/Credential";
@@ -328,7 +327,7 @@ abstract class PersonalTeamPageProcessor extends PageProcessorCredentialSupport 
     #bindSimulationButton(allPetList: Pet[]) {
         allPetList.forEach(it => {
             const buttonId = "simulate-" + it.index;
-            if (!Pokemon.isInitialPetName(it.name)) {
+            if (!MonsterProfileDict.findByName(it.name)) {
                 // 宠物已经改名了，不认识了
                 $("#" + buttonId).prop("disabled", true);
             } else {
