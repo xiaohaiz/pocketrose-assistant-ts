@@ -1,9 +1,9 @@
-import StringUtils from "./util/StringUtils";
 import PageInterceptorManager from "./interceptor/PageInterceptorManager";
+import StringUtils from "./util/StringUtils";
 
 const pageInterceptorManager = new PageInterceptorManager();
 
-$(function () {
+$(() => {
     const href = location.href;
     if (href.includes("pocketrose")) {
         let cgi = href;

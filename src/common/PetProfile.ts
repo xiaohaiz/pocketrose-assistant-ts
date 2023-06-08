@@ -1,4 +1,4 @@
-import PetSpellLoader from "../core/PetSpellLoader";
+import MonsterSpellDict from "../core/monster/MonsterSpellDict";
 import Pokemon from "../core/Pokemon";
 import Constants from "../util/Constants";
 import StringUtils from "../util/StringUtils";
@@ -22,6 +22,7 @@ class PetProfile {
     speedEffort?: number;
     catchRatio?: number;
     growExperience?: number;
+
     spellList?: string[];
 
     id?: number;
@@ -115,7 +116,7 @@ class PetProfile {
 
     spellText(): string {
         const code = StringUtils.substringBetween(this.name!, "(", ")");
-        return PetSpellLoader.loadSpells(code);
+        return MonsterSpellDict.loadSpells(code);
     }
 }
 

@@ -2,6 +2,7 @@ import _ from "lodash";
 import Equipment from "../../common/Equipment";
 import Pet from "../../common/Pet";
 import EquipmentLocalStorage from "../../core/EquipmentLocalStorage";
+import MonsterProfileDict from "../../core/monster/MonsterProfileDict";
 import NpcLoader from "../../core/NpcLoader";
 import PetProfileLoader from "../../core/pet/PetProfileLoader";
 import PetLocalStorage from "../../core/PetLocalStorage";
@@ -342,7 +343,7 @@ abstract class PersonalTeamPageProcessor extends PageProcessorCredentialSupport 
     #doPetSimulation(pet: Pet, buttonId: string) {
         $("#" + buttonId).on("click", () => {
             const code = StringUtils.substringBetween(pet.name!, "(", ")");
-            const profile = PetProfileLoader.load(code)!;
+            const profile = MonsterProfileDict.load(code)!;
 
             let html = "";
             html += "<table style='margin:auto;border-width:0;text-align:center;background-color:#888888;width:100%'>";

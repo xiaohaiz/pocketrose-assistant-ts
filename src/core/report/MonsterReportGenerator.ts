@@ -1,7 +1,7 @@
 import PetProfile from "../../common/PetProfile";
 import StringUtils from "../../util/StringUtils";
 import BattleResult from "../battle/BattleResult";
-import PetProfileLoader from "../pet/PetProfileLoader";
+import MonsterProfileDict from "../monster/MonsterProfileDict";
 import TeamManager from "../team/TeamManager";
 import ReportUtils from "./ReportUtils";
 
@@ -278,10 +278,10 @@ class MonsterReportGenerator {
         html += "<th style='background-color:skyblue' colspan='2' rowspan='2'>总计</th>"
         html += "</tr>";
         html += "<tr>";
-        html += "<th style='background-color:skyblue' colspan='2'>" + PetProfileLoader.load("012")?.imageHtml + "</th>"
-        html += "<th style='background-color:skyblue' colspan='2'>" + PetProfileLoader.load("136")?.imageHtml + "</th>"
-        html += "<th style='background-color:skyblue' colspan='2'>" + PetProfileLoader.load("224")?.imageHtml + "</th>"
-        html += "<th style='background-color:skyblue' colspan='2'>" + PetProfileLoader.load("257")?.imageHtml + "</th>"
+        html += "<th style='background-color:skyblue' colspan='2'>" + MonsterProfileDict.load("012")?.imageHtml + "</th>"
+        html += "<th style='background-color:skyblue' colspan='2'>" + MonsterProfileDict.load("136")?.imageHtml + "</th>"
+        html += "<th style='background-color:skyblue' colspan='2'>" + MonsterProfileDict.load("224")?.imageHtml + "</th>"
+        html += "<th style='background-color:skyblue' colspan='2'>" + MonsterProfileDict.load("257")?.imageHtml + "</th>"
         html += "</tr>";
         html += "<tr>";
         html += "<th style='background-color:skyblue'>战数</th>"
@@ -363,7 +363,7 @@ class RoleMonster {
 function sortByBattleCount(monsterCount: Map<string, number[]>) {
     let list: [][] = [];
     monsterCount.forEach((counts, code) => {
-        const profile = PetProfileLoader.load(code)!;
+        const profile = MonsterProfileDict.load(code)!;
         // @ts-ignore
         list.push([profile, counts[0]]);
     });
@@ -382,7 +382,7 @@ function sortByBattleCount(monsterCount: Map<string, number[]>) {
 function sortByWinRatio(monsterCount: Map<string, number[]>) {
     let list: [][] = [];
     monsterCount.forEach((counts, code) => {
-        const profile = PetProfileLoader.load(code)!;
+        const profile = MonsterProfileDict.load(code)!;
         // @ts-ignore
         list.push([profile, counts[1] / counts[0]]);
     });
