@@ -22,6 +22,7 @@ class PetProfile {
     speedEffort?: number;
     catchRatio?: number;
     growExperience?: number;
+
     spellList?: string[];
 
     id?: number;

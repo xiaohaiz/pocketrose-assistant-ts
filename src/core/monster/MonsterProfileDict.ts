@@ -1,3 +1,6 @@
+import _ from "lodash";
+import PetProfile from "../../common/PetProfile";
+
 class MonsterProfileDict {
 }
 
@@ -496,5 +499,28 @@ const MONSTERS = {
     492: "草刺猬/492/100/100/100/100/100/100/3/0/0/0/0/0/45/64",
     493: "圣灵兽/493/120/120/120/120/120/120/3/0/0/0/0/0/3/255",
 };
+
+function parse(c: number, s: string) {
+    const p = new PetProfile();
+    p.code = _.padStart(c.toString(), 3, "0");
+    const ss = _.split(s, "_");
+    p.name = ss[0] + "(" + p.code + ")";
+    p.picture = ss[1].includes(".") ? ss[1] : ss[1] + ".gif";
+    p.healthBaseStats = _.parseInt(ss[2]);
+    p.attackBaseStats = _.parseInt(ss[3]);
+    p.defenseBaseStats = _.parseInt(ss[4]);
+    p.specialAttackBaseStats = _.parseInt(ss[5]);
+    p.specialDefenseBaseStats = _.parseInt(ss[6]);
+    p.speedBaseStats = _.parseInt(ss[7]);
+    p.healthEffort = _.parseInt(ss[8]);
+    p.attackEffort = _.parseInt(ss[9]);
+    p.defenseEffort = _.parseInt(ss[10]);
+    p.specialAttackEffort = _.parseInt(ss[11]);
+    p.specialDefenseEffort = _.parseInt(ss[12]);
+    p.speedEffort = _.parseInt(ss[13]);
+    p.catchRatio = _.parseInt(ss[14]);
+    p.growExperience = _.parseInt(ss[15]);
+    return p;
+}
 
 export = MonsterProfileDict;
