@@ -1,6 +1,5 @@
 import PetProfile from "../../common/PetProfile";
 import PocketUtils from "../../util/PocketUtils";
-import StringUtils from "../../util/StringUtils";
 import MonsterProfileDict from "../monster/MonsterProfileDict";
 import PetSpellLoader from "../PetSpellLoader";
 import PetRelationLoader from "./PetRelationLoader";
@@ -8,11 +7,7 @@ import PetRelationLoader from "./PetRelationLoader";
 class PetProfileLoader {
 
     static findByName(name: string): PetProfile | null {
-        if (!name.includes("(") || !name.includes(")")) {
-            return null;
-        }
-        const code = StringUtils.substringBetween(name, "(", ")");
-        return PetProfileLoader.load(code);
+        return MonsterProfileDict.findByName(name);
     }
 
     static load(code: string): PetProfile | null {

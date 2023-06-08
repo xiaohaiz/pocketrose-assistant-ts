@@ -1,5 +1,6 @@
 import _ from "lodash";
 import PetProfile from "../../common/PetProfile";
+import MonsterUtils from "./MonsterUtils";
 
 class MonsterProfileDict {
 
@@ -19,6 +20,12 @@ class MonsterProfileDict {
         }
         return ps;
     }
+
+    static findByName(name: string): PetProfile | null {
+        const code = MonsterUtils.extractCode(name);
+        return code === null ? null : MonsterProfileDict.load(code);
+    }
+
 }
 
 const MONSTERS = {
