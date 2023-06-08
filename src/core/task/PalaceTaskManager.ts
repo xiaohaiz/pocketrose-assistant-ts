@@ -1,6 +1,6 @@
 import _ from "lodash";
 import Credential from "../../util/Credential";
-import PetLocationLoader from "../pet/PetLocationLoader";
+import MonsterProfileDict from "../monster/MonsterProfileDict";
 import Pokemon from "../Pokemon";
 import TaskStorageManager from "./TaskStorageManager";
 
@@ -62,8 +62,9 @@ class PalaceTaskManager {
                         const a = ss[0];
                         const b = ss[1];
 
+                        const profile = MonsterProfileDict.findByName(a)!;
                         const s1: string = Pokemon.pokemonWikiReplacement(a);
-                        const s2: string = PetLocationLoader.getPetLocation(a)!;
+                        const s2: string = profile.locationText!;
                         const s3: string = b === "1" ? "<span style='color:blue'>已完成</span>" : "进行中";
 
                         const html = "杀怪任务：" + s1 + " (" + s2 + ") " + s3;

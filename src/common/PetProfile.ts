@@ -1,3 +1,4 @@
+import _ from "lodash";
 import MonsterSpellDict from "../core/monster/MonsterSpellDict";
 import Pokemon from "../core/Pokemon";
 import Constants from "../util/Constants";
@@ -22,12 +23,48 @@ class PetProfile {
     speedEffort?: number;
     catchRatio?: number;
     growExperience?: number;
+    location?: number;
 
     spellList?: string[];
-
     id?: number;
     source?: PetProfile;
     targets?: PetProfile[];
+
+    asText() {
+        return StringUtils.substringBefore(this.name!, "(") +
+            "/" +
+            (_.endsWith(this.picture, ".gif") ? StringUtils.substringBefore(this.picture!, ".gif") : this.picture) +
+            "/" +
+            this.healthBaseStats +
+            "/" +
+            this.attackBaseStats +
+            "/" +
+            this.defenseBaseStats +
+            "/" +
+            this.specialAttackBaseStats +
+            "/" +
+            this.specialDefenseBaseStats +
+            "/" +
+            this.speedBaseStats +
+            "/" +
+            this.healthEffort +
+            "/" +
+            this.attackEffort +
+            "/" +
+            this.defenseEffort +
+            "/" +
+            this.specialAttackEffort +
+            "/" +
+            this.specialDefenseEffort +
+            "/" +
+            this.speedEffort +
+            "/" +
+            this.catchRatio +
+            "/" +
+            this.growExperience +
+            "/" +
+            this.location;
+    }
 
     parseName(name: string) {
         this.name = name;
@@ -43,6 +80,22 @@ class PetProfile {
     get imageHtml() {
         const src = Constants.POCKET_DOMAIN + "/image/pet/" + this.picture;
         return "<img src='" + src + "' width='64' height='64' alt='" + this.code + "' style='border-width:0'>";
+    }
+
+    get locationText() {
+        if (!this.location) {
+            return null;
+        }
+        switch (this.location) {
+            case 1:
+                return "初森";
+            case 2:
+                return "中塔";
+            case 3:
+                return "上洞";
+            default:
+                return null;
+        }
     }
 
     get totalBaseStats(): number {

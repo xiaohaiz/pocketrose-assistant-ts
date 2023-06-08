@@ -76,7 +76,7 @@ class DailyReportGenerator {
         candidates
             .filter(it => roles.has(it.roleId!))
             .forEach(it => {
-                const hour = _.ceil(new Date(it.createTime!).getHours() / 2);
+                const hour = _.floor(new Date(it.createTime!).getHours() / 2);
                 if (!hourMap.has(hour)) {
                     hourMap.set(hour, []);
                 }

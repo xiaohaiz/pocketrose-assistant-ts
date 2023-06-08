@@ -1,6 +1,6 @@
 import _ from "lodash";
+import MonsterProfileDict from "../monster/MonsterProfileDict";
 import NpcLoader from "../NpcLoader";
-import PetLocationLoader from "../pet/PetLocationLoader";
 import BattleLog from "./BattleLog";
 
 class BattleResult {
@@ -158,11 +158,8 @@ class BattleResult {
         if (NpcLoader.getZodiacNpcNames().includes(this.monster!)) {
             return "十二宫";
         }
-        const location = PetLocationLoader.getPetLocation(this.monster!);
-        if (location === null) {
-            return "未知（" + this.monster + "）";
-        }
-        return location;
+        const location = MonsterProfileDict.findByName(this.monster)?.locationText;
+        return location ? location : "未知（" + this.monster + "）";
     }
 }
 
