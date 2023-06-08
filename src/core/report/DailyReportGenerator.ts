@@ -33,6 +33,8 @@ class DailyReportGenerator {
             }
         });
 
+        const allTreasures = new Map<string, number>();
+
         let bc0 = 0;
         let bc1 = 0;
         let bc2 = 0;
@@ -166,6 +168,11 @@ class DailyReportGenerator {
                 if (it.treasures) {
                     it.treasures.forEach((count, code) => {
                         if (TreasureLoader.isTreasure(code)) {
+                            if (!allTreasures.has(code)) {
+                                allTreasures.set(code, 0);
+                            }
+                            allTreasures.set(code, allTreasures.get(code)! + count);
+
                             tc++;
                             role.tc++;
                             if (TreasureLoader.isUselessTreasure(code)) {
@@ -302,6 +309,36 @@ class DailyReportGenerator {
             html += "<td style='background-color:#F8F0E0'>" + ReportUtils.percentage(role.gc, role.tc) + "</td>";
             html += "</tr>";
         });
+
+        if (allTreasures.size > 0) {
+            html += "<tr>";
+            html += "<td style='background-color:#F8F0E0' colspan='9'>";
+            html += "<table style='background-color:#888888;margin:auto;width:100%;text-align:center'>";
+            html += "<thead>";
+            html += "<tr>";
+            html += "<th style='background-color:wheat'>入手上洞</th>";
+            html += "<th style='background-color:wheat'>数量</th>";
+            html += "<th style='background-color:wheat'>占比(%)</th>";
+            html += "</tr>";
+            TreasureLoader.allTreasureNames()
+                .forEach(tn => {
+                    const code = TreasureLoader.getCodeAsString(tn);
+                    const count = allTreasures.get(code);
+                    if (count) {
+                        html += "<tr>";
+                        html += "<th style='background-color:#F8F0E0'>" + tn + "</th>";
+                        html += "<td style='background-color:#F8F0E0'>" + count + "</td>";
+                        html += "<td style='background-color:#F8F0E0'>" + ReportUtils.percentage(count, tc) + "</td>";
+                        html += "</tr>";
+                    }
+                });
+            html += "</thead>";
+            html += "<tbody>";
+            html += "</tbody>";
+            html += "</table>";
+            html += "</td>";
+            html += "</tr>";
+        }
 
         html += "</tbody>";
         html += "</table>";
