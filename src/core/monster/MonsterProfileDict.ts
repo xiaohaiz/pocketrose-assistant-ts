@@ -9,6 +9,16 @@ class MonsterProfileDict {
         const s = MONSTERS[c];
         return s ? parse(c, s) : null;
     }
+
+    static loadAll(): PetProfile[] {
+        const ps: PetProfile[] = [];
+        for (let c = 1; c <= 493; c++) {
+            // @ts-ignore
+            const s = MONSTERS[c];
+            ps.push(parse(c, s));
+        }
+        return ps;
+    }
 }
 
 const MONSTERS = {
@@ -510,7 +520,7 @@ const MONSTERS = {
 function parse(c: number, s: string) {
     const p = new PetProfile();
     p.code = _.padStart(c.toString(), 3, "0");
-    const ss = _.split(s, "_");
+    const ss = _.split(s, "/");
     p.name = ss[0] + "(" + p.code + ")";
     p.picture = ss[1].includes(".") ? ss[1] : ss[1] + ".gif";
     p.healthBaseStats = _.parseInt(ss[2]);
