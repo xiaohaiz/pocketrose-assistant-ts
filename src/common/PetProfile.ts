@@ -25,6 +25,7 @@ class PetProfile {
     growExperience?: number;
     location?: number;                  // 位置 1-初森 2-中塔 3-上洞
     pokemon?: string;                   // 对应的宝可梦的名字
+    spellIds?: string;                  // 所有的技能id
 
     spellList?: string[];
     id?: number;
@@ -66,7 +67,9 @@ class PetProfile {
             "/" +
             this.location +
             "/" +
-            this.pokemon;
+            this.pokemon +
+            "/" +
+            this.spellIds;
     }
 
     parseName(name: string) {
