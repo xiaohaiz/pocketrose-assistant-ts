@@ -1,0 +1,5 @@
+class MonsterWikiDict {
+
+}
+
+export = MonsterWikiDict;
