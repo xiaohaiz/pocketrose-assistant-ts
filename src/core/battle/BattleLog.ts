@@ -1,6 +1,6 @@
 import ObjectID from "bson-objectid";
+import MonsterProfileDict from "../monster/MonsterProfileDict";
 import NpcLoader from "../NpcLoader";
-import PetLocationLoader from "../pet/PetLocationLoader";
 
 class BattleLog {
 
@@ -68,11 +68,8 @@ class BattleLog {
         if (NpcLoader.getZodiacNpcNames().includes(this.monster!)) {
             return "十二宫";
         }
-        const location = PetLocationLoader.getPetLocation(this.monster!);
-        if (location === null) {
-            return "未知（" + this.monster + "）";
-        }
-        return location;
+        let location = MonsterProfileDict.findByName(this.monster)?.locationText;
+        return location ? location : "未知（" + this.monster + "）";
     }
 }
 

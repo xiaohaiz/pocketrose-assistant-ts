@@ -4,7 +4,8 @@ import MonsterUtils from "./MonsterUtils";
 
 class MonsterProfileDict {
 
-    static load(code: string): PetProfile | null {
+    static load(code: string | null | undefined): PetProfile | null {
+        if (!code) return null;
         const c = _.parseInt(code);
         // @ts-ignore
         const s = MONSTERS[c];
@@ -21,7 +22,8 @@ class MonsterProfileDict {
         return ps;
     }
 
-    static findByName(name: string): PetProfile | null {
+    static findByName(name: string | null | undefined): PetProfile | null {
+        if (!name) return null;
         const code = MonsterUtils.extractCode(name);
         return code === null ? null : MonsterProfileDict.load(code);
     }

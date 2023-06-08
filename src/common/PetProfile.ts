@@ -84,7 +84,7 @@ class PetProfile {
 
     get locationText() {
         if (!this.location) {
-            return "";
+            return null;
         }
         switch (this.location) {
             case 1:
@@ -94,7 +94,7 @@ class PetProfile {
             case 3:
                 return "上洞";
             default:
-                return "";
+                return null;
         }
     }
 
