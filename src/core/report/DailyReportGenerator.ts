@@ -1,6 +1,8 @@
 import _ from "lodash";
 import BattleLog from "../battle/BattleLog";
 import TreasureLoader from "../equipment/TreasureLoader";
+import PetGangLoader from "../pet/PetGangLoader";
+import PetProfileLoader from "../pet/PetProfileLoader";
 import TeamManager from "../team/TeamManager";
 import ReportUtils from "./ReportUtils";
 
@@ -647,6 +649,107 @@ class DailyReportGenerator {
             }
             html += "</tr>";
         });
+        html += "</tbody>";
+        html += "</table>";
+        html += "</td></tr>";
+
+        // --------------------------------------------------------------------
+        // 遇 见 四 天 王
+        // --------------------------------------------------------------------
+        html += "<tr><td>";
+        html += "<table style='background-color:#888888;text-align:center;margin:auto;width:100%'>";
+        html += "<thead>";
+        html += "<tr>";
+        html += "<th style='background-color:navy;color:yellowgreen' colspan='13'>遇 见 四 天 王</th>";
+        html += "</tr>";
+        html += "<tr>";
+        html += "<th style='background-color:skyblue' colspan='13'>";
+        html += "<table style='background-color:transparent;border-spacing:0;border-width:0;width:100%;text-align:center;margin:auto'>";
+        html += "<tbody>";
+        html += "<tr>";
+        PetGangLoader.getGang1().forEach(it => {
+            const profile = PetProfileLoader.findByName(it)!;
+            html += "<td>";
+            html += profile.imageHtml;
+            html += "</td>";
+        });
+        html += "</tr>";
+        html += "</tbody>";
+        html += "</table>";
+        html += "</th>";
+        html += "</tr>";
+        html += "<tr>";
+        html += "<th style='background-color:skyblue'></th>";
+        html += "<th style='background-color:skyblue'>子时</th>";
+        html += "<th style='background-color:skyblue'>丑时</th>";
+        html += "<th style='background-color:skyblue'>寅时</th>";
+        html += "<th style='background-color:skyblue'>卯时</th>";
+        html += "<th style='background-color:skyblue'>辰时</th>";
+        html += "<th style='background-color:skyblue'>巳时</th>";
+        html += "<th style='background-color:skyblue'>午时</th>";
+        html += "<th style='background-color:skyblue'>未时</th>";
+        html += "<th style='background-color:skyblue'>申时</th>";
+        html += "<th style='background-color:skyblue'>酉时</th>";
+        html += "<th style='background-color:skyblue'>戌时</th>";
+        html += "<th style='background-color:skyblue'>亥时</th>";
+        html += "</tr>";
+        html += "</thead>";
+        html += "<tbody>";
+
+        let mr1 = 0;
+        hourMap.forEach(logs => {
+            const bc = logs
+                .filter(it => it.obtainBattleField === "上洞").length;
+            const gc = logs
+                .filter(it => PetGangLoader.inGang1(it.monster!)).length;
+            if (bc !== 0) {
+                mr1 = _.max([mr1, gc / bc])!;
+            }
+        });
+
+        html += "<tr>";
+        html += "<th style='background-color:black;color:white' rowspan='2'>全团队</th>";
+        for (let hour = 0; hour <= 11; hour++) {
+            const dataList = hourMap.get(hour);
+            let bc = 0;
+            let gc = 0;
+            if (dataList) {
+                bc = dataList.filter(it => it.obtainBattleField === "上洞").length;
+                gc = dataList.filter(it => PetGangLoader.inGang1(it.monster!)).length;
+            }
+            const r = bc === 0 ? 0 : gc / bc;
+            html += "<td style='background-color:#F8F0E0;vertical-align:bottom;height:128px;width:64px'>" + ReportUtils.generateVerticalBar(r, mr1) + "</td>";
+        }
+        html += "</tr>";
+        html += "<tr>";
+        for (let hour = 0; hour <= 11; hour++) {
+            const dataList = hourMap.get(hour);
+            let bc = 0;
+            let gc = 0;
+            if (dataList) {
+                bc = dataList.filter(it => it.obtainBattleField === "上洞").length;
+                gc = dataList.filter(it => PetGangLoader.inGang1(it.monster!)).length;
+            }
+            html += "<td style='background-color:#F8F0E0'>" + ReportUtils.percentage2(gc, bc) + "</td>";
+        }
+        html += "</tr>";
+
+        roles.forEach(role => {
+            html += "<tr>";
+            html += "<th style='background-color:black;color:white'>" + role.roleName + "</th>";
+            for (let hour = 0; hour <= 11; hour++) {
+                const dataList = role.hourMap.get(hour);
+                let bc = 0;
+                let gc = 0;
+                if (dataList) {
+                    bc = dataList.filter(it => it.obtainBattleField === "上洞").length;
+                    gc = dataList.filter(it => PetGangLoader.inGang1(it.monster!)).length;
+                }
+                html += "<td style='background-color:#F8F0E0'>" + ReportUtils.percentage2(gc, bc) + "%</td>";
+            }
+            html += "</tr>";
+        });
+
         html += "</tbody>";
         html += "</table>";
         html += "</td></tr>";

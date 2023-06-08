@@ -118,6 +118,14 @@ class ReportUtils {
         return "<img src='" + Constants.POCKET_DOMAIN + "/image/bg/bar1.gif'  height='" + height + "' width='32' alt=''>";
     }
 
+    static percentage2(a: number, b: number) {
+        if (a === 0 || b === 0) {
+            return "-";
+        }
+        let ratio = a / b;
+        return (ratio * 100).toFixed(2) + "%";
+    }
+
 }
 
 function bar1(width: number) {
