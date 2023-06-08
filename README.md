@@ -1,5 +1,7 @@
 # pocketrose-assistant-ts
 
+### 版本 4.0.5-SNAPSHOT
+
 ### 版本 4.0.4
 
 1. 怪物资料字典数据紧凑压缩。
