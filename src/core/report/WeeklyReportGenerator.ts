@@ -1,8 +1,8 @@
 import _ from "lodash";
 import BattleLog from "../battle/BattleLog";
 import TreasureLoader from "../equipment/TreasureLoader";
+import MonsterProfileDict from "../monster/MonsterProfileDict";
 import PetGangLoader from "../pet/PetGangLoader";
-import PetProfileLoader from "../pet/PetProfileLoader";
 import TeamManager from "../team/TeamManager";
 import ReportUtils from "./ReportUtils";
 
@@ -434,7 +434,7 @@ class WeeklyReportGenerator {
             html += "<tr>";
             html += "<td style='background-color:wheat;text-align:left'>";
             for (const mn of allCatches.keys()) {
-                const profile = PetProfileLoader.findByName(mn);
+                const profile = MonsterProfileDict.findByName(mn);
                 if (profile === null) {
                     continue;
                 }
@@ -527,7 +527,7 @@ class WeeklyReportGenerator {
             html += "<tr>";
             html += "<td style='background-color:wheat;text-align:left'>";
             for (const mn of allPhotos.keys()) {
-                const profile = PetProfileLoader.findByName(mn);
+                const profile = MonsterProfileDict.findByName(mn);
                 if (profile === null) {
                     continue;
                 }
@@ -759,7 +759,7 @@ class WeeklyReportGenerator {
         html += "<tbody>";
         html += "<tr>";
         PetGangLoader.getGang1().forEach(it => {
-            const profile = PetProfileLoader.findByName(it)!;
+            const profile = MonsterProfileDict.findByName(it)!;
             html += "<td>";
             html += profile.imageHtml;
             html += "</td>";
@@ -855,7 +855,7 @@ class WeeklyReportGenerator {
         html += "<tbody>";
         html += "<tr>";
         PetGangLoader.getGang2().forEach(it => {
-            const profile = PetProfileLoader.findByName(it)!;
+            const profile = MonsterProfileDict.findByName(it)!;
             html += "<td>";
             html += profile.imageHtml;
             html += "</td>";

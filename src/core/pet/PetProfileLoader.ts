@@ -6,10 +6,6 @@ import PetRelationLoader from "./PetRelationLoader";
 
 class PetProfileLoader {
 
-    static findByName(name: string): PetProfile | null {
-        return MonsterProfileDict.findByName(name);
-    }
-
     static load(code: string): PetProfile | null {
         return MonsterProfileDict.load(code);
     }
