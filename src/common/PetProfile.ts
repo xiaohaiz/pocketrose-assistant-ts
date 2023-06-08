@@ -82,6 +82,22 @@ class PetProfile {
         return "<img src='" + src + "' width='64' height='64' alt='" + this.code + "' style='border-width:0'>";
     }
 
+    get locationText() {
+        if (!this.location) {
+            return "";
+        }
+        switch (this.location) {
+            case 1:
+                return "初森";
+            case 2:
+                return "中塔";
+            case 3:
+                return "上洞";
+            default:
+                return "";
+        }
+    }
+
     get totalBaseStats(): number {
         return this.healthBaseStats! +
             this.attackBaseStats! +
