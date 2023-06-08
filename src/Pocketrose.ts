@@ -1,11 +1,9 @@
-import MonsterSpellDict from "./core/monster/MonsterSpellDict";
 import PageInterceptorManager from "./interceptor/PageInterceptorManager";
 import StringUtils from "./util/StringUtils";
 
 const pageInterceptorManager = new PageInterceptorManager();
 
-$(function () {
-    MonsterSpellDict.a()
+$(() => {
     const href = location.href;
     if (href.includes("pocketrose")) {
         let cgi = href;

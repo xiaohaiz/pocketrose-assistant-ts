@@ -1,6 +1,7 @@
 import PetProfile from "../../common/PetProfile";
 import PocketUtils from "../../util/PocketUtils";
 import MonsterProfileDict from "../monster/MonsterProfileDict";
+import MonsterSpellDict from "../monster/MonsterSpellDict";
 import PetSpellLoader from "../PetSpellLoader";
 import PetRelationLoader from "./PetRelationLoader";
 
@@ -71,7 +72,7 @@ class PetProfileLoader {
         html += "</tr>";
         html += "<tr style='font-weight:bold;text-align:left'>";
         html += "<td colspan='16'>";
-        html += PetSpellLoader.loadSpells(profile.code!);
+        html += MonsterSpellDict.loadSpells(profile.code!);
         html += "</td>";
         html += "</tr>";
         html += "<tr style='font-weight:bold;text-align:left'>";

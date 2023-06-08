@@ -1,14 +1,5 @@
 class PetSpellLoader {
 
-    static loadSpells(code: string) {
-        // @ts-ignore
-        const spells: string[] = PET_SPELLS[code];
-        if (spells === undefined) {
-            return "";
-        }
-        return spells.join(" ");
-    }
-
     static searchBySpellName(spellName: string): string[] {
         const codeList: string[] = [];
         const codes = Object.keys(PET_SPELLS);
