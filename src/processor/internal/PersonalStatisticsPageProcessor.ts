@@ -5,6 +5,7 @@ import BattleReportGenerator from "../../core/report/BattleReportGenerator";
 import DailyReportGenerator from "../../core/report/DailyReportGenerator";
 import MonsterReportGenerator from "../../core/report/MonsterReportGenerator";
 import TreasureReportGenerator from "../../core/report/TreasureReportGenerator";
+import WeeklyReportGenerator from "../../core/report/WeeklyReportGenerator";
 import ZodiacReportGenerator from "../../core/report/ZodiacReportGenerator";
 import RoleStorageManager from "../../core/role/RoleStorageManager";
 import TeamManager from "../../core/team/TeamManager";
@@ -13,6 +14,7 @@ import DayRange from "../../util/DayRange";
 import MessageBoard from "../../util/MessageBoard";
 import MonthRange from "../../util/MonthRange";
 import PageUtils from "../../util/PageUtils";
+import WeekRange from "../../util/WeekRange";
 import PageProcessorContext from "../PageProcessorContext";
 import PageProcessorCredentialSupport from "../PageProcessorCredentialSupport";
 
@@ -90,6 +92,8 @@ abstract class PersonalStatisticsPageProcessor extends PageProcessorCredentialSu
         html += "<td>";
         html += "<button role='button' id='report-3' style='width:100%'>十二宫统计报告</button>";
         html += "</td>";
+        html += "<td>";
+        html += "</td>";
         html += "</tr>";
         html += "<tr>";
         html += "<td>";
@@ -99,6 +103,10 @@ abstract class PersonalStatisticsPageProcessor extends PageProcessorCredentialSu
         html += "<button role='button' id='log-2' style='width:100%'>昨日战报</button>";
         html += "</td>";
         html += "<td>";
+        html += "<button role='button' id='log-3' style='width:100%'>本周战报</button>";
+        html += "</td>";
+        html += "<td>";
+        html += "<button role='button' id='log-4' style='width:100%'>上周战报</button>";
         html += "</td>";
         html += "</tr>";
         html += "</tbody>";
@@ -182,6 +190,8 @@ abstract class PersonalStatisticsPageProcessor extends PageProcessorCredentialSu
         doBindReport3();
         doBindLog1();
         doBindLog2();
+        doBindLog3();
+        doBindLog4();
 
         if (TeamManager.isMaster(credential.id)) {
             doBindClearBattleLog();
@@ -383,6 +393,31 @@ function doBindLog2() {
             .findByCreateTime(yesterday.start, yesterday.end)
             .then(logList => {
                 const html = new DailyReportGenerator(logList, target).generate();
+                $("#statistics").html(html).parent().show();
+            });
+    });
+}
+
+function doBindLog3() {
+    $("#log-3").on("click", () => {
+        const target = $("#teamMemberSelect").val()! as string;
+        BattleStorageManager.battleLogStore
+            .findByCreateTime(WeekRange.current().start)
+            .then(logList => {
+                const html = new WeeklyReportGenerator(logList, target).generate();
+                $("#statistics").html(html).parent().show();
+            });
+    });
+}
+
+function doBindLog4() {
+    $("#log-4").on("click", () => {
+        const target = $("#teamMemberSelect").val()! as string;
+        const lastWeek = WeekRange.current().previous();
+        BattleStorageManager.battleLogStore
+            .findByCreateTime(lastWeek.start, lastWeek.end)
+            .then(logList => {
+                const html = new WeeklyReportGenerator(logList, target).generate();
                 $("#statistics").html(html).parent().show();
             });
     });
