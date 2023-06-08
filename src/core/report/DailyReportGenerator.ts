@@ -34,6 +34,8 @@ class DailyReportGenerator {
         });
 
         const allTreasures = new Map<string, number>();
+        const allCatches = new Map<string, number>();
+        const allPhotos = new Map<string, number>();
 
         let bc0 = 0;
         let bc1 = 0;
@@ -186,6 +188,19 @@ class DailyReportGenerator {
                         }
                     });
                 }
+
+                if (it.catch) {
+                    if (!allCatches.has(it.monster!)) {
+                        allCatches.set(it.monster!, 0);
+                    }
+                    allCatches.set(it.monster!, allCatches.get(it.monster!)! + it.catch);
+                }
+                if (it.photo) {
+                    if (!allPhotos.has(it.monster!)) {
+                        allPhotos.set(it.monster!, 0);
+                    }
+                    allPhotos.set(it.monster!, allPhotos.get(it.monster!)! + it.photo);
+                }
             });
 
         let html = "";
@@ -320,6 +335,8 @@ class DailyReportGenerator {
             html += "<th style='background-color:wheat'>数量</th>";
             html += "<th style='background-color:wheat'>占比(%)</th>";
             html += "</tr>";
+            html += "</thead>";
+            html += "<tbody>";
             TreasureLoader.allTreasureNames()
                 .forEach(tn => {
                     const code = TreasureLoader.getCodeAsString(tn);
@@ -332,8 +349,6 @@ class DailyReportGenerator {
                         html += "</tr>";
                     }
                 });
-            html += "</thead>";
-            html += "<tbody>";
             html += "</tbody>";
             html += "</table>";
             html += "</td>";
@@ -411,6 +426,28 @@ class DailyReportGenerator {
             html += "</tr>";
         });
 
+        if (allCatches.size > 0) {
+            html += "<tr>";
+            html += "<td style='background-color:#F8F0E0' colspan='13'>";
+            html += "<table style='background-color:#888888;margin:auto;width:100%;text-align:center'>";
+            html += "<tbody>";
+            html += "<tr>";
+            html += "<td style='background-color:wheat;text-align:left'>";
+            for (const mn of allCatches.keys()) {
+                const profile = PetProfileLoader.findByName(mn);
+                if (profile === null) {
+                    continue;
+                }
+                html += profile.imageHtml;
+            }
+            html += "</td>";
+            html += "</tr>";
+            html += "</tbody>";
+            html += "</table>";
+            html += "</td>";
+            html += "</tr>";
+        }
+
         html += "</tbody>";
         html += "</table>";
         html += "</td></tr>";
@@ -481,6 +518,28 @@ class DailyReportGenerator {
             html += "<td style='background-color:#F8F0E0'>" + ReportUtils.permyriad(role.pc3, role.bc3) + "</td>";
             html += "</tr>";
         });
+
+        if (allPhotos.size > 0) {
+            html += "<tr>";
+            html += "<td style='background-color:#F8F0E0' colspan='13'>";
+            html += "<table style='background-color:#888888;margin:auto;width:100%;text-align:center'>";
+            html += "<tbody>";
+            html += "<tr>";
+            html += "<td style='background-color:wheat;text-align:left'>";
+            for (const mn of allPhotos.keys()) {
+                const profile = PetProfileLoader.findByName(mn);
+                if (profile === null) {
+                    continue;
+                }
+                html += profile.imageHtml;
+            }
+            html += "</td>";
+            html += "</tr>";
+            html += "</tbody>";
+            html += "</table>";
+            html += "</td>";
+            html += "</tr>";
+        }
 
         html += "</tbody>";
         html += "</table>";
