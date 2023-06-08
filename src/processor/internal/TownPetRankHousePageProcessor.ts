@@ -276,7 +276,7 @@ function doBindPetDetailButton() {
         if (petCode === "") {
             return;
         }
-        const profile = PetProfileLoader.load(petCode);
+        const profile = MonsterProfileDict.load(petCode);
         if (profile === null) {
             return;
         }

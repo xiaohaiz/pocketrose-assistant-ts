@@ -14,13 +14,13 @@ class PetProfileLoader {
         const codeList: string[] = PetSpellLoader.searchBySpellName(spellName);
         const profileList: PetProfile[] = [];
         for (const code of codeList) {
-            profileList.push(PetProfileLoader.load(code)!);
+            profileList.push(MonsterProfileDict.load(code)!);
         }
         return profileList;
     }
 
     static generatePetProfileHtml(code: string) {
-        const profile = PetProfileLoader.load(code)!;
+        const profile = MonsterProfileDict.load(code)!;
         let html = "";
         html += "<table style='width:100%;border-width:1px;background-color:transparent;margin:auto' id='petProfile-" + profile.code + "'>";
         html += "<tbody>";
@@ -78,7 +78,7 @@ class PetProfileLoader {
         html += "<td colspan='16' style='height:64px'>";
         for (const it of PetRelationLoader.getPetRelations(parseInt(profile.code!))) {
             const petCode = PocketUtils.asPetCode(it);
-            html += PetProfileLoader.load(petCode)!.imageHtml;
+            html += MonsterProfileDict.load(petCode)!.imageHtml;
         }
         html += "</td>";
         html += "</tr>";
