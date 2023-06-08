@@ -9,12 +9,12 @@ class PetProfile {
     code?: string;
     name?: string;
     picture?: string;
-    healthBaseStats?: number;
-    attackBaseStats?: number;
-    defenseBaseStats?: number;
-    specialAttackBaseStats?: number;
-    specialDefenseBaseStats?: number;
-    speedBaseStats?: number;
+    healthBaseStats?: number;           // 生命族值
+    attackBaseStats?: number;           // 攻击族值
+    defenseBaseStats?: number;          // 防御族值
+    specialAttackBaseStats?: number;    // 特攻族值
+    specialDefenseBaseStats?: number;   // 特防族值
+    speedBaseStats?: number;            // 速度族值
     healthEffort?: number;
     attackEffort?: number;
     defenseEffort?: number;
@@ -23,7 +23,8 @@ class PetProfile {
     speedEffort?: number;
     catchRatio?: number;
     growExperience?: number;
-    location?: number;
+    location?: number;                  // 位置 1-初森 2-中塔 3-上洞
+    pokemon?: string;                   // 对应的宝可梦的名字
 
     spellList?: string[];
     id?: number;
