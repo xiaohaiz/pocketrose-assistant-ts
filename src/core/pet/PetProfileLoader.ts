@@ -10,10 +10,6 @@ class PetProfileLoader {
         return MonsterProfileDict.load(code);
     }
 
-    static loadAll(): PetProfile[] {
-        return MonsterProfileDict.loadAll();
-    }
-
     static searchBySpellName(spellName: string): PetProfile[] {
         const codeList: string[] = PetSpellLoader.searchBySpellName(spellName);
         const profileList: PetProfile[] = [];
