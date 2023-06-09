@@ -1,6 +1,6 @@
-import PocketUtils from "../../util/PocketUtils";
 import MonsterProfileDict from "./MonsterProfileDict";
 import MonsterRelationLoader from "./MonsterRelationLoader";
+import MonsterUtils from "./MonsterUtils";
 
 class MonsterPageUtils {
 
@@ -63,7 +63,7 @@ class MonsterPageUtils {
         html += "<tr style='font-weight:bold;text-align:left'>";
         html += "<td colspan='16' style='height:64px'>";
         for (const it of MonsterRelationLoader.getPetRelations(parseInt(profile.code!))) {
-            const petCode = PocketUtils.asPetCode(it);
+            const petCode = MonsterUtils.asCode(it)
             html += MonsterProfileDict.load(petCode)!.imageHtml;
         }
         html += "</td>";
