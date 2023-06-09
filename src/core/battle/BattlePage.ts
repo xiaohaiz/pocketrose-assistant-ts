@@ -366,7 +366,7 @@ function generateBattleReport(battleTable: JQuery, page: BattlePage) {
 
     let brs = "";
     if (page.battleResult === "战胜") {
-        brs = "<span style='color:indigo'>" + BattleDeclarationManager.randomWinDeclaration() + "，战胜了<span style='color:green'>" + page.monsterNameHtml + "</span>！</span>";
+        brs = BattleDeclarationManager.randomWinDeclaration(page.monsterNameHtml);
     } else if (page.battleResult === "战败") {
         brs = BattleDeclarationManager.randomLoseDeclaration(page.monsterNameHtml);
     } else {
