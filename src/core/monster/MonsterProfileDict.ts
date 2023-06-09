@@ -1,20 +1,26 @@
 import _ from "lodash";
-import PetProfile from "../../common/PetProfile";
+import MonsterProfile from "../../common/MonsterProfile";
+import StringUtils from "../../util/StringUtils";
 import MonsterSpellDict from "./MonsterSpellDict";
-import MonsterUtils from "./MonsterUtils";
 
 class MonsterProfileDict {
 
-    static load(code: string | null | undefined): PetProfile | null {
+    static load(code: string | number | null | undefined): MonsterProfile | null {
         if (!code) return null;
-        const c = _.parseInt(code);
+        let c: number;
+        if (_.isString(code)) {
+            let extracted = extractCode(code);
+            c = extracted ? _.parseInt(extracted) : _.parseInt(code);
+        } else {
+            c = code;
+        }
         // @ts-ignore
         const s = MONSTERS[c];
         return s ? parse(c, s) : null;
     }
 
-    static loadAll(): PetProfile[] {
-        const ps: PetProfile[] = [];
+    static loadAll(): MonsterProfile[] {
+        const ps: MonsterProfile[] = [];
         for (let c = 1; c <= 493; c++) {
             // @ts-ignore
             const s = MONSTERS[c];
@@ -23,12 +29,8 @@ class MonsterProfileDict {
         return ps;
     }
 
-    static findByName(name: string | null | undefined): PetProfile | null {
-        return MonsterProfileDict.load(MonsterUtils.extractCode(name));
-    }
-
-    static findBySpellName(name: string | null | undefined): PetProfile[] {
-        const profiles: PetProfile[] = [];
+    static findBySpellName(name: string | null | undefined): MonsterProfile[] {
+        const profiles: MonsterProfile[] = [];
         const id = MonsterSpellDict.findBySpellName(name);
         if (!id) return profiles;
         MonsterProfileDict.loadAll()
@@ -541,7 +543,7 @@ const MONSTERS = {
 };
 
 function parse(c: number, s: string) {
-    const p = new PetProfile();
+    const p = new MonsterProfile();
     p.code = _.padStart(c.toString(), 3, "0");
     const ss = _.split(s, "/");
     p.name = ss[0] + "(" + p.code + ")";
@@ -564,6 +566,12 @@ function parse(c: number, s: string) {
     p.pokemon = ss[17];
     p.spellIds = ss[18];
     return p;
+}
+
+function extractCode(name: string | null | undefined): string | null {
+    if (!name) return null;
+    if (!name.includes("(") || !name.includes(")")) return null;
+    return StringUtils.substringBetween(name, "(", ")");
 }
 
 export = MonsterProfileDict;

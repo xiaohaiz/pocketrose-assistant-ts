@@ -1,11 +1,11 @@
-import PocketUtils from "../../util/PocketUtils";
 import MonsterProfileDict from "./MonsterProfileDict";
-import PetRelationLoader from "./PetRelationLoader";
+import MonsterRelationLoader from "./MonsterRelationLoader";
 
-class PetProfileLoader {
+class MonsterPageUtils {
 
-    static generatePetProfileHtml(code: string) {
-        const profile = MonsterProfileDict.load(code)!;
+    static generateMonsterProfileHtml(code: string | null | undefined) {
+        const profile = MonsterProfileDict.load(code);
+        if (!profile) return "";
         let html = "";
         html += "<table style='width:100%;border-width:1px;background-color:transparent;margin:auto' id='petProfile-" + profile.code + "'>";
         html += "<tbody>";
@@ -61,9 +61,8 @@ class PetProfileLoader {
         html += "</tr>";
         html += "<tr style='font-weight:bold;text-align:left'>";
         html += "<td colspan='16' style='height:64px'>";
-        for (const it of PetRelationLoader.getPetRelations(parseInt(profile.code!))) {
-            const petCode = PocketUtils.asPetCode(it);
-            html += MonsterProfileDict.load(petCode)!.imageHtml;
+        for (const it of MonsterRelationLoader.getPetRelations(parseInt(profile.code!))) {
+            html += MonsterProfileDict.load(it)?.imageHtml;
         }
         html += "</td>";
         html += "</tr>";
@@ -74,4 +73,4 @@ class PetProfileLoader {
 }
 
 
-export = PetProfileLoader;
+export = MonsterPageUtils;

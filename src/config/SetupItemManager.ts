@@ -28,9 +28,6 @@ import SetupItem028 from "./internal/SetupItem028";
 import SetupItem029 from "./internal/SetupItem029";
 import SetupItem030 from "./internal/SetupItem030";
 import SetupItem031 from "./internal/SetupItem031";
-import SetupItem032 from "./internal/SetupItem032";
-import SetupItem033 from "./internal/SetupItem033";
-import SetupItem034 from "./internal/SetupItem034";
 import SetupItem035 from "./internal/SetupItem035";
 import SetupItem036 from "./internal/SetupItem036";
 import SetupItem037 from "./internal/SetupItem037";
@@ -47,11 +44,9 @@ import SetupItem047 from "./internal/SetupItem047";
 import SetupItem048 from "./internal/SetupItem048";
 import SetupItem049 from "./internal/SetupItem049";
 import SetupItem050 from "./internal/SetupItem050";
-import SetupItem051 from "./internal/SetupItem051";
 import SetupItem052 from "./internal/SetupItem052";
 import SetupItem053 from "./internal/SetupItem053";
 import SetupItem054 from "./internal/SetupItem054";
-import SetupItem055 from "./internal/SetupItem055";
 import SetupItem056 from "./internal/SetupItem056";
 import SetupItem from "./SetupItem";
 
@@ -77,7 +72,6 @@ class SetupItemManager {
             new SetupItem011(),
             new SetupItem013(),
             new SetupItem031(),
-            new SetupItem033(),
             new SetupItem014(),
             new SetupItem015(),
             new SetupItem016(),
@@ -93,8 +87,6 @@ class SetupItemManager {
             new SetupItem026(),
             new SetupItem028(),
             new SetupItem030(),
-            new SetupItem032(),
-            new SetupItem034(),
             new SetupItem035(),
             new SetupItem036(),
             new SetupItem037(),
@@ -110,12 +102,10 @@ class SetupItemManager {
             new SetupItem044(),
             new SetupItem048(),
             new SetupItem049(),
-            new SetupItem051(),
             new SetupItem052(),
             new SetupItem053(),
             new SetupItem040(),
             new SetupItem045(),
-            new SetupItem055(),
         ];
     }
 

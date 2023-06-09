@@ -76,14 +76,6 @@ function processBattle(credential: Credential,
             "<div style='padding-top:10px;padding-bottom:10px'><button role='button' id='lodgeButton'>返回住宿</button></div>" +
             ""));
 
-    // 根据设置是否变成大按钮
-    if (SetupLoader.isBattleLargeButtonEnabled()) {
-        $("#returnButton").css("font-size", "200%");
-        $("#depositButton").css("font-size", "200%");
-        $("#repairButton").css("font-size", "200%");
-        $("#lodgeButton").css("font-size", "200%");
-    }
-
     // 根据设置的内容修改按钮的台词
     let buttonText = SetupLoader.getBattleReturnButtonText();
     if (buttonText !== "") {
@@ -167,20 +159,6 @@ function processBattle(credential: Credential,
                 $(font).attr("color", "blue");
             }
         });
-
-    // 紧凑格式显示
-    if (SetupLoader.isCompactBattleReportEnabled()) {
-        $("#delim")
-            .prev()
-            .find("> b:first")
-            .find("> font:first")
-            .find("> br")
-            .each((idx, br) => {
-                if ($(br).prev().is("br")) {
-                    $(br).hide();
-                }
-            });
-    }
 
     // 入手情况的渲染
     renderHarvestMessage(processor.obtainPage);

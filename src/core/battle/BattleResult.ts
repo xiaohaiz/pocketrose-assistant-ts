@@ -158,7 +158,7 @@ class BattleResult {
         if (NpcLoader.getZodiacNpcNames().includes(this.monster!)) {
             return "十二宫";
         }
-        const location = MonsterProfileDict.findByName(this.monster)?.locationText;
+        const location = MonsterProfileDict.load(this.monster)?.locationText;
         return location ? location : "未知（" + this.monster + "）";
     }
 }

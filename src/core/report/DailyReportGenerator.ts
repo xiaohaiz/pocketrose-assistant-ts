@@ -1,8 +1,8 @@
 import _ from "lodash";
 import BattleLog from "../battle/BattleLog";
 import TreasureLoader from "../equipment/TreasureLoader";
+import MonsterGangLoader from "../monster/MonsterGangLoader";
 import MonsterProfileDict from "../monster/MonsterProfileDict";
-import PetGangLoader from "../monster/PetGangLoader";
 import TeamManager from "../team/TeamManager";
 import ReportUtils from "./ReportUtils";
 
@@ -434,11 +434,7 @@ class DailyReportGenerator {
             html += "<tr>";
             html += "<td style='background-color:wheat;text-align:left'>";
             for (const mn of allCatches.keys()) {
-                const profile = MonsterProfileDict.findByName(mn);
-                if (profile === null) {
-                    continue;
-                }
-                html += profile.imageHtml;
+                html += MonsterProfileDict.load(mn)?.imageHtml;
             }
             html += "</td>";
             html += "</tr>";
@@ -527,11 +523,7 @@ class DailyReportGenerator {
             html += "<tr>";
             html += "<td style='background-color:wheat;text-align:left'>";
             for (const mn of allPhotos.keys()) {
-                const profile = MonsterProfileDict.findByName(mn);
-                if (profile === null) {
-                    continue;
-                }
-                html += profile.imageHtml;
+                html += MonsterProfileDict.load(mn)?.imageHtml;
             }
             html += "</td>";
             html += "</tr>";
@@ -763,10 +755,9 @@ class DailyReportGenerator {
         html += "<table style='background-color:transparent;border-spacing:0;border-width:0;width:100%;text-align:center;margin:auto'>";
         html += "<tbody>";
         html += "<tr>";
-        PetGangLoader.getGang1().forEach(it => {
-            const profile = MonsterProfileDict.findByName(it)!;
+        MonsterGangLoader.getGang1().forEach(it => {
             html += "<td>";
-            html += profile.imageHtml;
+            html += MonsterProfileDict.load(it)?.imageHtml;
             html += "</td>";
         });
         html += "</tr>";
@@ -797,7 +788,7 @@ class DailyReportGenerator {
             const bc = logs
                 .filter(it => it.obtainBattleField === "上洞").length;
             const gc = logs
-                .filter(it => PetGangLoader.inGang1(it.monster!)).length;
+                .filter(it => MonsterGangLoader.inGang1(it.monster!)).length;
             if (bc !== 0) {
                 mr1 = _.max([mr1, gc / bc])!;
             }
@@ -811,7 +802,7 @@ class DailyReportGenerator {
             let gc = 0;
             if (dataList) {
                 bc = dataList.filter(it => it.obtainBattleField === "上洞").length;
-                gc = dataList.filter(it => PetGangLoader.inGang1(it.monster!)).length;
+                gc = dataList.filter(it => MonsterGangLoader.inGang1(it.monster!)).length;
             }
             const r = bc === 0 ? 0 : gc / bc;
             html += "<td style='background-color:#F8F0E0;vertical-align:bottom;height:128px;width:64px'>" + ReportUtils.generateVerticalBar(r, mr1) + "</td>";
@@ -824,7 +815,7 @@ class DailyReportGenerator {
             let gc = 0;
             if (dataList) {
                 bc = dataList.filter(it => it.obtainBattleField === "上洞").length;
-                gc = dataList.filter(it => PetGangLoader.inGang1(it.monster!)).length;
+                gc = dataList.filter(it => MonsterGangLoader.inGang1(it.monster!)).length;
             }
             html += "<td style='background-color:#F8F0E0'>" + ReportUtils.percentage2(gc, bc) + "</td>";
         }
@@ -839,7 +830,7 @@ class DailyReportGenerator {
                 let gc = 0;
                 if (dataList) {
                     bc = dataList.filter(it => it.obtainBattleField === "上洞").length;
-                    gc = dataList.filter(it => PetGangLoader.inGang1(it.monster!)).length;
+                    gc = dataList.filter(it => MonsterGangLoader.inGang1(it.monster!)).length;
                 }
                 html += "<td style='background-color:#F8F0E0'>" + ReportUtils.percentage2(gc, bc) + "</td>";
             }
@@ -864,10 +855,9 @@ class DailyReportGenerator {
         html += "<table style='background-color:transparent;border-spacing:0;border-width:0;width:100%;text-align:center;margin:auto'>";
         html += "<tbody>";
         html += "<tr>";
-        PetGangLoader.getGang2().forEach(it => {
-            const profile = MonsterProfileDict.findByName(it)!;
+        MonsterGangLoader.getGang2().forEach(it => {
             html += "<td>";
-            html += profile.imageHtml;
+            html += MonsterProfileDict.load(it)?.imageHtml;
             html += "</td>";
         });
         html += "</tr>";
@@ -898,7 +888,7 @@ class DailyReportGenerator {
             const bc = logs
                 .filter(it => it.obtainBattleField === "上洞").length;
             const gc = logs
-                .filter(it => PetGangLoader.inGang2(it.monster!)).length;
+                .filter(it => MonsterGangLoader.inGang2(it.monster!)).length;
             if (bc !== 0) {
                 mr2 = _.max([mr2, gc / bc])!;
             }
@@ -912,7 +902,7 @@ class DailyReportGenerator {
             let gc = 0;
             if (dataList) {
                 bc = dataList.filter(it => it.obtainBattleField === "上洞").length;
-                gc = dataList.filter(it => PetGangLoader.inGang2(it.monster!)).length;
+                gc = dataList.filter(it => MonsterGangLoader.inGang2(it.monster!)).length;
             }
             const r = bc === 0 ? 0 : gc / bc;
             html += "<td style='background-color:#F8F0E0;vertical-align:bottom;height:128px;width:64px'>" + ReportUtils.generateVerticalBar(r, mr2) + "</td>";
@@ -925,7 +915,7 @@ class DailyReportGenerator {
             let gc = 0;
             if (dataList) {
                 bc = dataList.filter(it => it.obtainBattleField === "上洞").length;
-                gc = dataList.filter(it => PetGangLoader.inGang2(it.monster!)).length;
+                gc = dataList.filter(it => MonsterGangLoader.inGang2(it.monster!)).length;
             }
             html += "<td style='background-color:#F8F0E0'>" + ReportUtils.percentage2(gc, bc) + "</td>";
         }
@@ -940,7 +930,7 @@ class DailyReportGenerator {
                 let gc = 0;
                 if (dataList) {
                     bc = dataList.filter(it => it.obtainBattleField === "上洞").length;
-                    gc = dataList.filter(it => PetGangLoader.inGang2(it.monster!)).length;
+                    gc = dataList.filter(it => MonsterGangLoader.inGang2(it.monster!)).length;
                 }
                 html += "<td style='background-color:#F8F0E0'>" + ReportUtils.percentage2(gc, bc) + "</td>";
             }

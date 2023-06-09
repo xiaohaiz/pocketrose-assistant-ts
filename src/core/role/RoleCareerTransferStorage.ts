@@ -3,18 +3,15 @@ import RoleCareerTransfer from "./RoleCareerTransfer";
 
 class RoleCareerTransferStorage {
 
-    async findByRoleId(roleId: string): Promise<RoleCareerTransfer[]> {
+    async loads(): Promise<RoleCareerTransfer[]> {
         const db = await PocketDatabase.connectDatabase();
         return await (() => {
             return new Promise<RoleCareerTransfer[]>((resolve, reject) => {
                 const request = db
                     .transaction(["RoleCareerTransfer"], "readonly")
                     .objectStore("RoleCareerTransfer")
-                    .index("roleId")
-                    .getAll(roleId);
-
+                    .getAll();
                 request.onerror = reject;
-
                 request.onsuccess = () => {
                     const dataList: RoleCareerTransfer[] = [];
                     if (request.result) {

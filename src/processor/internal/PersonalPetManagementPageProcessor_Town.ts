@@ -2,8 +2,8 @@ import Pet from "../../common/Pet";
 import Role from "../../common/Role";
 import SetupLoader from "../../config/SetupLoader";
 import MonsterProfileDict from "../../core/monster/MonsterProfileDict";
-import PetRelationLoader from "../../core/monster/PetRelationLoader";
-import PetSimulator from "../../core/PetSimulator";
+import MonsterRelationLoader from "../../core/monster/MonsterRelationLoader";
+import MonsterSimulator from "../../core/monster/MonsterSimulator";
 import FastLoginLoader from "../../core/team/FastLoginLoader";
 import CastleInformation from "../../pocketrose/CastleInformation";
 import CastleRanch from "../../pocketrose/CastleRanch";
@@ -19,7 +19,6 @@ import Credential from "../../util/Credential";
 import MessageBoard from "../../util/MessageBoard";
 import NetworkUtils from "../../util/NetworkUtils";
 import PageUtils from "../../util/PageUtils";
-import PocketUtils from "../../util/PocketUtils";
 import StringUtils from "../../util/StringUtils";
 import PageProcessorContext from "../PageProcessorContext";
 import PersonalPetManagementPageProcessor from "./PersonalPetManagementPageProcessor";
@@ -163,7 +162,7 @@ function doRender(credential: Credential, petList: Pet[], studyStatus: number[],
         html += "<input type='text' id='pet_" + pet.index + "_name_text' size='15' maxlength='20'>";
         html += "</td>";
         html += "<td style='text-align:right'>";
-        html += new PetSimulator(pet).doSimulate().doGenerateHtml();
+        html += new MonsterSimulator(pet).doSimulate().doGenerateHtml();
         html += "</td>";
         html += "</tr>";
         html += "</tbody>";
@@ -342,7 +341,7 @@ function doRender(credential: Credential, petList: Pet[], studyStatus: number[],
     // 绑定按钮点击事件处理
     doBind(credential, petList);
 
-    if (role !== undefined && SetupLoader.isCastleKeeperEnabled()) {
+    if (role) {
         new CastleInformation().load(role.name!).then(() => {
             $("#ranchMenu").show();
             $("#openRanchButton").on("click", () => {
@@ -469,9 +468,8 @@ function doRenderPetProfile(code: string) {
     html += "</tr>";
     html += "<tr style='background-color:black;color:wheat;font-weight:bold;text-align:left'>";
     html += "<td colspan='16' style='height:64px'>";
-    for (const it of PetRelationLoader.getPetRelations(parseInt(profile.code!))) {
-        const petCode = PocketUtils.asPetCode(it);
-        html += MonsterProfileDict.load(petCode)!.imageHtml;
+    for (const it of MonsterRelationLoader.getPetRelations(parseInt(profile.code!))) {
+        html += MonsterProfileDict.load(it)?.imageHtml;
     }
     html += "</td>";
     html += "</tr>";
@@ -1367,9 +1365,8 @@ function doRenderPetBorn(credential: Credential, petList: Pet[]) {
                 html += "</tr>";
                 html += "<tr>";
                 html += "<td style='background-color:#E8E8D0;text-align:left;height:64px' colspan='10'>";
-                for (const it of PetRelationLoader.getPetRelations(parseInt(c.code!))) {
-                    const petCode = PocketUtils.asPetCode(it);
-                    html += MonsterProfileDict.load(petCode)!.imageHtml;
+                for (const it of MonsterRelationLoader.getPetRelations(parseInt(c.code!))) {
+                    html += MonsterProfileDict.load(it)?.imageHtml;
                 }
                 html += "</td>";
                 html += "</tr>";

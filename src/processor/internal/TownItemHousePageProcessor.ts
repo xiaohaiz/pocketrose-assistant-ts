@@ -13,7 +13,7 @@ import PageProcessorCredentialSupport from "../PageProcessorCredentialSupport";
 class TownItemHousePageProcessor extends PageProcessorCredentialSupport {
 
     doLoadButtonStyles(): number[] {
-        return [7, 8, 35];
+        return [10007, 10008];
     }
 
     doProcess(credential: Credential, context?: PageProcessorContext): void {
@@ -90,9 +90,9 @@ class TownItemHousePageProcessor extends PageProcessorCredentialSupport {
         // ------------------------------------------------------------------------
         html += "<tr>";
         html += "<td style='background-color:#F8F0E0;text-align:center'>";
-        html += "<input type='button' id='refreshButton' value='刷新" + page.town.name + "物品屋' class='button-35'>&nbsp;";
-        html += "<input type='button' id='returnButton' value='离开" + page.town.name + "物品屋' class='button-35'>&nbsp;";
-        html += "<input type='button' id='equipmentButton' value='转到装备管理' class='button-35'>";
+        html += "<input type='button' id='refreshButton' value='刷新" + page.town.name + "物品屋'>&nbsp;";
+        html += "<input type='button' id='returnButton' value='离开" + page.town.name + "物品屋'>&nbsp;";
+        html += "<input type='button' id='equipmentButton' value='转到装备管理'>";
         html += "</td>";
         // ------------------------------------------------------------------------
         // 个人物品栏
@@ -158,7 +158,7 @@ class TownItemHousePageProcessor extends PageProcessorCredentialSupport {
                 html += "<td style='background-color:#E8E8D0'>";
                 if (equipment.isSellable) {
                     html += "<input type='button' value='出售' " +
-                        "id='sell_" + equipment.index! + "' class='mutableButton button-7'>";
+                        "id='sell_" + equipment.index! + "' class='mutableButton button-10007'>";
                 } else {
                     html += PageUtils.generateInvisibleButton("#E8E8D0");
                 }
@@ -221,7 +221,7 @@ class TownItemHousePageProcessor extends PageProcessorCredentialSupport {
                 html += "<td style='background-color:#E8E8D0'>";
                 if (spaceCount > 0) {
                     html += "<input type='button' value='购买' " +
-                        "id='buy_" + merchandise.index! + "' class='dynamic_button_class button-8'>";
+                        "id='buy_" + merchandise.index! + "' class='dynamic_button_class button-10008'>";
                 }
                 html += "</td>";
                 html += "<td style='background-color:#E0D0B0'>" + merchandise.nameHtml + "</td>";

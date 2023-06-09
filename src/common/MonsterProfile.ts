@@ -4,7 +4,7 @@ import MonsterSpellDict from "../core/monster/MonsterSpellDict";
 import Constants from "../util/Constants";
 import StringUtils from "../util/StringUtils";
 
-class PetProfile {
+class MonsterProfile {
 
     code?: string;
     name?: string;
@@ -27,8 +27,8 @@ class PetProfile {
     pokemon?: string;                   // 对应的宝可梦的名字
     spellIds?: string;                  // 所有的技能id
 
-    source?: PetProfile;
-    targets?: PetProfile[];
+    source?: MonsterProfile;
+    targets?: MonsterProfile[];
 
     asText() {
         return StringUtils.substringBefore(this.name!, "(") +
@@ -191,4 +191,4 @@ class PetProfile {
 
 }
 
-export = PetProfile;
+export = MonsterProfile;

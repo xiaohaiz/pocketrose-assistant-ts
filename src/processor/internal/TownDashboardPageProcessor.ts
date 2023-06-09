@@ -309,7 +309,7 @@ function doRenderMenu(credential: Credential, page: TownDashboardPage) {
                         const bt = "&nbsp;" + es[0] + "&nbsp;"
                         $(th).css("vertical-align", "bottom")
                             .html("<button role='button' class='" + buttonClass + "' id='shortcut0' " +
-                                "style='margin-bottom:8px;white-space:nowrap'>" + bt + "</button>")
+                                "style='margin-bottom:8px;white-space:nowrap;width:100%'>" + bt + "</button>")
                         if (es[0] === "养精蓄锐") {
                             $("#eden-1").html(PageUtils.generateFullRecoveryForm(credential));
                             $("#shortcut0").on("click", () => {
@@ -330,10 +330,10 @@ function doRenderMenu(credential: Credential, page: TownDashboardPage) {
                 html += "<tbody>";
                 html += "<tr>";
                 html += "<td>";
-                html += "<button role='button' class='" + buttonClass + "' id='shortcut1' style='white-space:nowrap'>&nbsp;图鉴&nbsp;</button>";
+                html += "<button role='button' class='" + buttonClass + "' id='shortcut1' style='white-space:nowrap;width:100%'>&nbsp;图鉴&nbsp;</button>";
                 html += "</td>";
                 html += "<td>";
-                html += "<button role='button' class='" + buttonClass + "' id='shortcut5' style='white-space:nowrap'>&nbsp;个人&nbsp;</button>";
+                html += "<button role='button' class='" + buttonClass + "' id='shortcut5' style='white-space:nowrap;width:100%'>&nbsp;个人&nbsp;</button>";
                 html += "</td>";
                 html += "</tr>";
                 html += "</tbody>";
@@ -351,10 +351,10 @@ function doRenderMenu(credential: Credential, page: TownDashboardPage) {
                 html += "<tbody>";
                 html += "<tr>";
                 html += "<td>";
-                html += "<button role='button' class='" + buttonClass + "' id='shortcut2' style='white-space:nowrap'>&nbsp;装备&nbsp;</button>";
+                html += "<button role='button' class='" + buttonClass + "' id='shortcut2' style='white-space:nowrap;width:100%'>&nbsp;装备&nbsp;</button>";
                 html += "</td>";
                 html += "<td>";
-                html += "<button role='button' class='" + buttonClass + "' id='shortcut6' style='white-space:nowrap'>&nbsp;团队&nbsp;</button>";
+                html += "<button role='button' class='" + buttonClass + "' id='shortcut6' style='white-space:nowrap;width:100%'>&nbsp;团队&nbsp;</button>";
                 html += "</td>";
                 html += "</tr>";
                 html += "</tbody>";
@@ -372,10 +372,10 @@ function doRenderMenu(credential: Credential, page: TownDashboardPage) {
                 html += "<tbody>";
                 html += "<tr>";
                 html += "<td>";
-                html += "<button role='button' class='" + buttonClass + "' id='shortcut3' style='white-space:nowrap'>&nbsp;宠物&nbsp;</button>";
+                html += "<button role='button' class='" + buttonClass + "' id='shortcut3' style='white-space:nowrap;width:100%'>&nbsp;宠物&nbsp;</button>";
                 html += "</td>";
                 html += "<td>";
-                html += "<button role='button' class='" + buttonClass + "' id='shortcut7' style='white-space:nowrap'>&nbsp;银行&nbsp;</button>";
+                html += "<button role='button' class='" + buttonClass + "' id='shortcut7' style='white-space:nowrap;width:100%'>&nbsp;银行&nbsp;</button>";
                 html += "</td>";
                 html += "</tr>";
                 html += "</tbody>";
@@ -393,10 +393,10 @@ function doRenderMenu(credential: Credential, page: TownDashboardPage) {
                 html += "<tbody>";
                 html += "<tr>";
                 html += "<td>";
-                html += "<button role='button' class='" + buttonClass + "' id='shortcut4' style='white-space:nowrap'>&nbsp;职业&nbsp;</button>";
+                html += "<button role='button' class='" + buttonClass + "' id='shortcut4' style='white-space:nowrap;width:100%'>&nbsp;职业&nbsp;</button>";
                 html += "</td>";
                 html += "<td>";
-                html += "<button role='button' class='" + buttonClass + "' id='shortcut8' style='white-space:nowrap'>&nbsp;设置&nbsp;</button>";
+                html += "<button role='button' class='" + buttonClass + "' id='shortcut8' style='white-space:nowrap;width:100%'>&nbsp;设置&nbsp;</button>";
                 html += "</td>";
                 html += "</tr>";
                 html += "</tbody>";
@@ -474,11 +474,11 @@ function doRenderMenu(credential: Credential, page: TownDashboardPage) {
     $("option[value='PETPROFILE']").text("宠物排行榜");
     $("option[value='CHANGEMAP']").text("冒险家公会");
     $("option[value='CHUJIA']").text("团队管理");
-    if (SetupLoader.isPocketBankEnabled()) {
-        $("option[value='BANK']").text("口袋银行");
-        $("option[value='MONEY_SEND']").remove();
-        $("option[value='SALARY']").remove();
-    }
+
+    $("option[value='BANK']").text("口袋银行");
+    $("option[value='MONEY_SEND']").remove();
+    $("option[value='SALARY']").remove();
+
     if (SetupLoader.isCollectTownTaxDisabled()) {
         $("option[value='MAKE_TOWN']").remove();
     }

@@ -8,7 +8,6 @@ import PetLocalStorage from "../core/PetLocalStorage";
 import TownDashboardPage from "../pocketrose/TownDashboardPage";
 import Credential from "../util/Credential";
 import NetworkUtils from "../util/NetworkUtils";
-import StorageUtils from "../util/StorageUtils";
 import TownDashboardLayout from "./TownDashboardLayout";
 import TownDashboardLayout003 from "./TownDashboardLayout003";
 
@@ -45,22 +44,7 @@ class TownDashboardLayout006 extends TownDashboardLayout {
             if (lastBattle.includes("吐故纳新，扶摇直上")) {
                 $("#battlePanel").css("background-color", "wheat");
             }
-            if (StorageUtils.getBoolean("_pa_055")) {
-                const children: JQuery[] = [];
-                $("#battlePanel")
-                    .html(lastBattle)
-                    .find("> *")
-                    .each((idx, child) => {
-                        const element = $(child);
-                        if (element.is("p") || element.is("b")) {
-                            element.hide();
-                            children.push(element);
-                        }
-                    });
-                _showReportElement(children, 0);
-            } else {
-                $("#battlePanel").html(lastBattle);
-            }
+            $("#battlePanel").html(lastBattle);
         });
 
 

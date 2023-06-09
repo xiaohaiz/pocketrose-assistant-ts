@@ -1,8 +1,7 @@
 import _ from "lodash";
-import PetProfile from "../../common/PetProfile";
-import MonsterUtils from "./MonsterUtils";
+import MonsterProfile from "../../common/MonsterProfile";
 
-class PetRelationLoader {
+class MonsterRelationLoader {
 
 
     static getPetRelations(code: number) {
@@ -25,13 +24,13 @@ class PetRelationLoader {
 
 }
 
-function findSources(profile: PetProfile | undefined, sources: number[]) {
+function findSources(profile: MonsterProfile | undefined, sources: number[]) {
     if (!profile) return;
     sources.push(_.parseInt(profile.code!));
     findSources(profile.source, sources);
 }
 
-function findTargets(profile: PetProfile, targets: number[]) {
+function findTargets(profile: MonsterProfile, targets: number[]) {
     if (!profile.targets || profile.targets.length === 0) return;
     for (const target of profile.targets) {
         targets.push(_.parseInt(target.code!));
@@ -275,10 +274,10 @@ const PET_RELATIONSHIPS = {
 };
 
 function allProfiles() {
-    const profiles = new Map<number, PetProfile>();
+    const profiles = new Map<number, MonsterProfile>();
     for (let i = 1; i <= 493; i++) {
-        const profile = new PetProfile();
-        profile.code = MonsterUtils.asCode(i)!;
+        const profile = new MonsterProfile();
+        profile.code = _.padStart(i.toString(), 3, "0");
         profile.targets = [];
         profiles.set(i, profile);
     }
@@ -303,4 +302,4 @@ function allProfiles() {
     return profiles;
 }
 
-export = PetRelationLoader;
+export = MonsterRelationLoader;

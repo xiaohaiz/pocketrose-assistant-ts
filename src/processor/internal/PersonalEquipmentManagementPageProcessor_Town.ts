@@ -326,27 +326,25 @@ class PersonalEquipmentManagementPageProcessor_Town extends PersonalEquipmentMan
             });
         }
 
-        if (SetupLoader.isCastleKeeperEnabled()) {
-            new CastleInformation().load(page.role!.name!).then(() => {
-                $("#openWarehouse").prop("disabled", false).show();
-                $("#closeWarehouse").prop("disabled", false).show();
-                $("#openWarehouse").on("click", () => {
-                    if ($("#warehouseState").text() === "on") {
-                        return;
-                    }
-                    $("#warehouseState").text("on");
-                    this.#renderWarehouseUI(credential, page, context);
-                });
-                $("#closeWarehouse").on("click", () => {
-                    if ($("#warehouseState").text() === "off") {
-                        return;
-                    }
-                    $("#warehouseState").text("off");
-                    PageUtils.unbindEventBySpecifiedClass("mutableButton-3");
-                    $("#warehouseList").html("").parent().hide();
-                });
+        new CastleInformation().load(page.role!.name!).then(() => {
+            $("#openWarehouse").prop("disabled", false).show();
+            $("#closeWarehouse").prop("disabled", false).show();
+            $("#openWarehouse").on("click", () => {
+                if ($("#warehouseState").text() === "on") {
+                    return;
+                }
+                $("#warehouseState").text("on");
+                this.#renderWarehouseUI(credential, page, context);
             });
-        }
+            $("#closeWarehouse").on("click", () => {
+                if ($("#warehouseState").text() === "off") {
+                    return;
+                }
+                $("#warehouseState").text("off");
+                PageUtils.unbindEventBySpecifiedClass("mutableButton-3");
+                $("#warehouseList").html("").parent().hide();
+            });
+        });
 
         // --------------------------------------------------------------------
         // 发送

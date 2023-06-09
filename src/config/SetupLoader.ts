@@ -198,18 +198,6 @@ class SetupLoader {
         return StorageUtils.getBoolean("_pa_031");
     }
 
-    static isCastleKeeperEnabled(): boolean {
-        return StorageUtils.getBoolean("_pa_032");
-    }
-
-    static isPocketBankEnabled(): boolean {
-        return StorageUtils.getBoolean("_pa_033");
-    }
-
-    static isBattleLargeButtonEnabled(): boolean {
-        return StorageUtils.getBoolean("_pa_034");
-    }
-
     static isAsciiTextButtonEnabled(): boolean {
         return StorageUtils.getBoolean("_pa_035");
     }
@@ -268,10 +256,6 @@ class SetupLoader {
 
     static isNewPalaceTaskEnabled(): boolean {
         return StorageUtils.getBoolean("_pa_049");
-    }
-
-    static isCompactBattleReportEnabled(): boolean {
-        return StorageUtils.getBoolean("_pa_051");
     }
 
 }
