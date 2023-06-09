@@ -46,10 +46,6 @@ class SetupLoader {
         return StorageUtils.getBoolean("_pa_010");
     }
 
-    static isCareerManagementUIEnabled(): boolean {
-        return StorageUtils.getBoolean("_pa_011");
-    }
-
     static isPocketSuperMarketEnabled(): boolean {
         return StorageUtils.getBoolean("_pa_013");
     }

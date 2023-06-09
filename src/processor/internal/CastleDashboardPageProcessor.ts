@@ -41,11 +41,9 @@ class CastleDashboardPageProcessor implements PageProcessor {
             $("option[value='CASTLE_SENDPET']").remove();
             $("option[value='PETBORN']").remove();
         }
-        if (SetupLoader.isCareerManagementUIEnabled()) {
-            $("option[value='CHANGE_OCCUPATION']")
-                .text("职业管理");
-            $("option[value='MAGIC']").remove();
-        }
+
+        $("option[value='CHANGE_OCCUPATION']").text("职业管理");
+        $("option[value='MAGIC']").remove();
 
         $("option[value='DIANMING']").text("统计报告");
     }

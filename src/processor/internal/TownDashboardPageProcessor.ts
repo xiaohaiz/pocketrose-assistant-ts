@@ -457,10 +457,10 @@ function doRenderMenu(credential: Credential, page: TownDashboardPage) {
         $("option[value='PET_SEND']").remove();
         $("option[value='PETBORN']").remove();
     }
-    if (SetupLoader.isCareerManagementUIEnabled()) {
-        $("option[value='CHANGE_OCCUPATION']").text("职业管理");
-        $("option[value='MAGIC']").remove();
-    }
+
+    $("option[value='CHANGE_OCCUPATION']").text("职业管理");
+    $("option[value='MAGIC']").remove();
+
     if (SetupLoader.isPocketSuperMarketEnabled()) {
         $("option[value='ARM_SHOP']").text("武器商店");
         $("option[value='PRO_SHOP']").text("防具商店");
