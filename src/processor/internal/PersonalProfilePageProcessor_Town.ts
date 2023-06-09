@@ -11,9 +11,9 @@ class PersonalProfilePageProcessor_Town extends PersonalProfilePageProcessor {
         const html = PageUtils.generateReturnTownForm(credential);
         $("#hiddenCell-1").html(html);
         const townId = context?.get("townId");
-        if (townId !== undefined) {
-            const town = TownLoader.getTownById(townId)!;
-            $("#returnButton").text("返回" + town.name);
+        if (townId) {
+            const town = TownLoader.load(townId);
+            $("#returnButton").text("返回" + town?.name);
         } else {
             $("#returnButton").text("返回城市");
         }

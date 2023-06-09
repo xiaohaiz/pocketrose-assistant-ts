@@ -31,8 +31,8 @@ class PersonalEquipmentManagementPageProcessor_Town extends PersonalEquipmentMan
             return "＜＜  装 备 管 理 （ 城 市 模 式 ）  ＞＞";
         } else {
             const townId = context.get("townId")!;
-            const town = TownLoader.getTownById(townId)!;
-            return "＜＜  装 备 管 理 （ " + town.nameTitle + " ）  ＞＞";
+            const town = TownLoader.load(townId);
+            return "＜＜  装 备 管 理 （ " + town?.nameTitle + " ）  ＞＞";
         }
     }
 
@@ -41,7 +41,7 @@ class PersonalEquipmentManagementPageProcessor_Town extends PersonalEquipmentMan
             return "城市";
         } else {
             const townId = context.get("townId")!;
-            const town = TownLoader.getTownById(townId)!;
+            const town = TownLoader.load(townId)!;
             return town.name;
         }
     }
