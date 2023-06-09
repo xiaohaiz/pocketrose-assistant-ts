@@ -5,9 +5,15 @@ import MonsterUtils from "./MonsterUtils";
 
 class MonsterProfileDict {
 
-    static load(code: string | null | undefined): MonsterProfile | null {
+    static load(code: string | number | null | undefined): MonsterProfile | null {
         if (!code) return null;
-        const c = _.parseInt(code);
+        let c: number;
+        if (_.isString(code)) {
+            let extracted = MonsterUtils.extractCode(code);
+            c = extracted ? _.parseInt(extracted) : _.parseInt(code);
+        } else {
+            c = code;
+        }
         // @ts-ignore
         const s = MONSTERS[c];
         return s ? parse(c, s) : null;
@@ -21,10 +27,6 @@ class MonsterProfileDict {
             ps.push(parse(c, s));
         }
         return ps;
-    }
-
-    static findByName(name: string | null | undefined): MonsterProfile | null {
-        return MonsterProfileDict.load(MonsterUtils.extractCode(name));
     }
 
     static findBySpellName(name: string | null | undefined): MonsterProfile[] {

@@ -434,11 +434,7 @@ class WeeklyReportGenerator {
             html += "<tr>";
             html += "<td style='background-color:wheat;text-align:left'>";
             for (const mn of allCatches.keys()) {
-                const profile = MonsterProfileDict.findByName(mn);
-                if (profile === null) {
-                    continue;
-                }
-                html += profile.imageHtml;
+                html += MonsterProfileDict.load(mn)?.imageHtml;
             }
             html += "</td>";
             html += "</tr>";
@@ -527,11 +523,7 @@ class WeeklyReportGenerator {
             html += "<tr>";
             html += "<td style='background-color:wheat;text-align:left'>";
             for (const mn of allPhotos.keys()) {
-                const profile = MonsterProfileDict.findByName(mn);
-                if (profile === null) {
-                    continue;
-                }
-                html += profile.imageHtml;
+                html += MonsterProfileDict.load(mn)?.imageHtml;
             }
             html += "</td>";
             html += "</tr>";
@@ -759,9 +751,8 @@ class WeeklyReportGenerator {
         html += "<tbody>";
         html += "<tr>";
         MonsterGangLoader.getGang1().forEach(it => {
-            const profile = MonsterProfileDict.findByName(it)!;
             html += "<td>";
-            html += profile.imageHtml;
+            html += MonsterProfileDict.load(it)?.imageHtml;
             html += "</td>";
         });
         html += "</tr>";
@@ -855,9 +846,8 @@ class WeeklyReportGenerator {
         html += "<tbody>";
         html += "<tr>";
         MonsterGangLoader.getGang2().forEach(it => {
-            const profile = MonsterProfileDict.findByName(it)!;
             html += "<td>";
-            html += profile.imageHtml;
+            html += MonsterProfileDict.load(it)?.imageHtml;
             html += "</td>";
         });
         html += "</tr>";

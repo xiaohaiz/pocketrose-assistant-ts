@@ -68,7 +68,7 @@ class BattleLog {
         if (NpcLoader.getZodiacNpcNames().includes(this.monster!)) {
             return "十二宫";
         }
-        let location = MonsterProfileDict.findByName(this.monster)?.locationText;
+        let location = MonsterProfileDict.load(this.monster)?.locationText;
         return location ? location : "未知（" + this.monster + "）";
     }
 }

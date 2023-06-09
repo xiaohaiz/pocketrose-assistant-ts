@@ -61,7 +61,7 @@ class PalaceTaskManager {
                         const a = ss[0];
                         const b = ss[1];
 
-                        const profile = MonsterProfileDict.findByName(a)!;
+                        const profile = MonsterProfileDict.load(a)!;
                         const s1: string = profile.nameHtml!;
                         const s2: string = profile.locationText!;
                         const s3: string = b === "1" ? "<span style='color:blue'>已完成</span>" : "进行中";

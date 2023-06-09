@@ -3,8 +3,8 @@ import Role from "../../common/Role";
 import SetupLoader from "../../config/SetupLoader";
 import MonsterProfileDict from "../../core/monster/MonsterProfileDict";
 import MonsterRelationLoader from "../../core/monster/MonsterRelationLoader";
+import MonsterSimulator from "../../core/monster/MonsterSimulator";
 import MonsterUtils from "../../core/monster/MonsterUtils";
-import PetSimulator from "../../core/PetSimulator";
 import FastLoginLoader from "../../core/team/FastLoginLoader";
 import CastleInformation from "../../pocketrose/CastleInformation";
 import CastleRanch from "../../pocketrose/CastleRanch";
@@ -163,7 +163,7 @@ function doRender(credential: Credential, petList: Pet[], studyStatus: number[],
         html += "<input type='text' id='pet_" + pet.index + "_name_text' size='15' maxlength='20'>";
         html += "</td>";
         html += "<td style='text-align:right'>";
-        html += new PetSimulator(pet).doSimulate().doGenerateHtml();
+        html += new MonsterSimulator(pet).doSimulate().doGenerateHtml();
         html += "</td>";
         html += "</tr>";
         html += "</tbody>";

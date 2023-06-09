@@ -327,7 +327,7 @@ abstract class PersonalTeamPageProcessor extends PageProcessorCredentialSupport 
     #bindSimulationButton(allPetList: Pet[]) {
         allPetList.forEach(it => {
             const buttonId = "simulate-" + it.index;
-            if (!MonsterProfileDict.findByName(it.name)) {
+            if (!MonsterProfileDict.load(it.name)) {
                 // 宠物已经改名了，不认识了
                 $("#" + buttonId).prop("disabled", true);
             } else {

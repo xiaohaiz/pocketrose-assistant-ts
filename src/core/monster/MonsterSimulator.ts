@@ -1,10 +1,10 @@
 import _ from "lodash";
-import MonsterProfile from "../common/MonsterProfile";
-import Pet from "../common/Pet";
-import PageUtils from "../util/PageUtils";
-import MonsterProfileDict from "./monster/MonsterProfileDict";
+import MonsterProfile from "../../common/MonsterProfile";
+import Pet from "../../common/Pet";
+import PageUtils from "../../util/PageUtils";
+import MonsterProfileDict from "./MonsterProfileDict";
 
-class PetSimulator {
+class MonsterSimulator {
 
     readonly #pet: Pet;
     readonly #profile: MonsterProfile;
@@ -22,7 +22,7 @@ class PetSimulator {
         this.#profile = MonsterProfileDict.load(pet.code!)!;
     }
 
-    doSimulate(): PetSimulator {
+    doSimulate(): MonsterSimulator {
         let totalHealth = 0;
         let totalAttack = 0;
         let totalDefense = 0;
@@ -107,4 +107,4 @@ class PetSimulator {
     }
 }
 
-export = PetSimulator;
+export = MonsterSimulator;

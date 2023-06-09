@@ -48,22 +48,22 @@ class Pet {
     location?: string;  // P/C/R
 
     get nameHtml() {
-        const profile = MonsterProfileDict.findByName(this.name);
+        const profile = MonsterProfileDict.load(this.name);
         return profile ? profile.nameHtml : this.name;
     }
 
     get raceHtml() {
-        const profile = MonsterProfileDict.findByName(this.race);
+        const profile = MonsterProfileDict.load(this.race);
         return profile ? profile.nameHtml : this.race;
     }
 
     get beforeHtml() {
-        const profile = MonsterProfileDict.findByName(this.before);
+        const profile = MonsterProfileDict.load(this.before);
         return profile ? profile.nameHtml : this.before;
     }
 
     get afterHtml() {
-        const profile = MonsterProfileDict.findByName(this.after);
+        const profile = MonsterProfileDict.load(this.after);
         return profile ? profile.nameHtml : this.after;
     }
 

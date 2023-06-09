@@ -1,7 +1,7 @@
 import Pet from "../../common/Pet";
 import SetupLoader from "../../config/SetupLoader";
 import MonsterProfileDict from "../../core/monster/MonsterProfileDict";
-import PetSimulator from "../../core/PetSimulator";
+import MonsterSimulator from "../../core/monster/MonsterSimulator";
 import CastleBank from "../../pocketrose/CastleBank";
 import CastlePetExpressHouse from "../../pocketrose/CastlePetExpressHouse";
 import CastleRanch from "../../pocketrose/CastleRanch";
@@ -169,7 +169,7 @@ function doRender(credential: Credential, petList: Pet[], studyStatus: number[])
         html += "<input type='text' id='pet_" + pet.index + "_name_text' size='15' maxlength='20'>";
         html += "</td>";
         html += "<td style='text-align:right'>";
-        html += new PetSimulator(pet).doSimulate().doGenerateHtml();
+        html += new MonsterSimulator(pet).doSimulate().doGenerateHtml();
         html += "</td>";
         html += "</tr>";
         html += "</tbody>";
