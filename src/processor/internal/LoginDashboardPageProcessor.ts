@@ -9,7 +9,7 @@ import PageProcessor from "../PageProcessor";
 class LoginDashboardPageProcessor implements PageProcessor {
 
     process(): void {
-        ButtonUtils.loadButtonStyle(28);
+        ButtonUtils.loadButtonStyle(10028);
         PageUtils.fixCurrentPageBrokenImages();
         PageUtils.removeUnusedHyperLinks();
         PageUtils.removeGoogleAnalyticsScript();
@@ -238,12 +238,13 @@ function doGenerateCell(lastLogin: LastLogin | null, configs: Map<number, {}>, c
         const name = config.name;
         // @ts-ignore
         if (lastRoleId === config.id) {
-            html += "<input type='button' class='fastLoginButton button-28' " +
+            html += "<input type='button' class='fastLoginButton button-10028' " +
                 "id='fastLogin_" + code + "' value='" + name + "' " +
-                "style='color:red'>";
+                "style='color:red;width:100%'>";
         } else {
-            html += "<input type='button' class='fastLoginButton button-28' " +
-                "id='fastLogin_" + code + "' value='" + name + "'>";
+            html += "<input type='button' class='fastLoginButton button-10028' " +
+                "id='fastLogin_" + code + "' value='" + name + "' " +
+                "style='width:100%'>";
         }
     }
     html += "</td>";
