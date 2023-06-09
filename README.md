@@ -1,5 +1,7 @@
 # pocketrose-assistant-ts
 
+### 版本 4.0.8-SNAPSHOT
+
 ### 版本 4.0.7
 
 1. 删除“全新宝石屋界面”的设置，默认直接启用此功能。
