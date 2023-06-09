@@ -254,11 +254,9 @@ class TownDashboardLayout005 extends TownDashboardLayout {
                                 .parent().show();
                             break;
                         case "宿":
-                            let bt2 = SetupLoader.getBattleLodgeButtonText();
-                            bt2 = bt2 === "" ? "住宿" : _.escape(bt2);
                             $("#battleMenu").html("" +
                                 "<button role='button' class='battleButton' " +
-                                "id='battleLodge' style='font-size:150%'>" + bt2 + "</button>" +
+                                "id='battleLodge' style='font-size:150%'>住宿</button>" +
                                 "")
                                 .parent().show();
                             break;
