@@ -54,10 +54,6 @@ class SetupLoader {
         return StorageUtils.getBoolean("_pa_014_" + id);
     }
 
-    static getBattleDepositButtonText(): string {
-        return StorageUtils.getString("_pa_018");
-    }
-
     static loadEquipmentSet_A(id: string) {
         const s = StorageUtils.getString("_pa_019_" + id);
         if (s === "") {

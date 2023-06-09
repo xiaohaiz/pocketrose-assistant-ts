@@ -1,5 +1,4 @@
 import _ from "lodash";
-import SetupLoader from "../config/SetupLoader";
 import BattleProcessor from "../core/battle/BattleProcessor";
 import BattleRecord from "../core/battle/BattleRecord";
 import BattleStorageManager from "../core/battle/BattleStorageManager";
@@ -144,11 +143,9 @@ class TownDashboardLayout006 extends TownDashboardLayout {
                                 .parent().show();
                             break;
                         case "存":
-                            let bt3 = SetupLoader.getBattleDepositButtonText();
-                            bt3 = bt3 === "" ? "存钱" : _.escape(bt3);
                             $("#battleMenu").html("" +
                                 "<button role='button' class='battleButton' " +
-                                "id='battleDeposit' style='font-size:150%'>" + bt3 + "</button>" +
+                                "id='battleDeposit' style='font-size:150%'>存钱</button>" +
                                 "")
                                 .parent().show();
                             break;
@@ -230,16 +227,6 @@ function generateLodgeForm(credential: Credential) {
     form += "<input type='submit' id='lodge'>";
     form += "</form>";
     $("#hidden-4").html(form);
-}
-
-function _showReportElement(children: JQuery[], index: number) {
-    if (index === children.length) {
-        return;
-    }
-    const child = children[index];
-    child.show("fast", "linear", () => {
-        _showReportElement(children, index + 1);
-    });
 }
 
 async function doBeforeReturn(credential: Credential, battleCount: number): Promise<void> {
