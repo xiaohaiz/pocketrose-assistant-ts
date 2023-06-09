@@ -1,5 +1,7 @@
 # pocketrose-assistant-ts
 
+### 版本 4.0.7-SNAPSHOT
+
 ### 版本 4.0.6
 
 1. 重新优化转职统计报告。
