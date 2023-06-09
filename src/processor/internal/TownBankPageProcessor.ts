@@ -15,7 +15,7 @@ class TownBankPageProcessor extends PageProcessorCredentialSupport {
 
     doProcess(credential: Credential, context?: PageProcessorContext): void {
         const page = TownBank.parsePage(PageUtils.currentPageHtml());
-        const town = TownLoader.getTownById(context!.get("townId")!)!;
+        const town = TownLoader.load(context?.get("townId"))!;
 
         this.#renderImmutablePage(credential, town);
         this.#renderMutablePage(credential, page, town);

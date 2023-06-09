@@ -66,8 +66,8 @@ class TownPetMapHousePageProcessor extends PageProcessorCredentialSupport {
         let returnTitle = "返回城市";
         const townId = context?.get("townId");
         if (townId !== undefined) {
-            const town = TownLoader.getTownById(townId)!;
-            returnTitle = "返回" + town.name;
+            const town = TownLoader.load(townId);
+            returnTitle = "返回" + town?.name;
         }
         html = "";
         html += "<button role='button' id='updateButton'>更新宠物信息</button>";

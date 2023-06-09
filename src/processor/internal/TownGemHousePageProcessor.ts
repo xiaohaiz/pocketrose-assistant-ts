@@ -20,7 +20,7 @@ class TownGemHousePageProcessor extends PageProcessorCredentialSupport {
 
     doProcess(credential: Credential, context?: PageProcessorContext): void {
         const townId = context!.get("townId")!;
-        const town = TownLoader.getTownById(townId)!;
+        const town = TownLoader.load(townId)!;
         new TownGemHouse(credential, town.id).parsePage(PageUtils.currentPageHtml())
             .then(page => {
                 this.#renderImmutablePage(credential, town);

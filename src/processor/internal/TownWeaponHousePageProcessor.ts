@@ -21,7 +21,7 @@ class TownWeaponHousePageProcessor extends PageProcessorCredentialSupport {
 
 function processPage(townId: string) {
     const page = TownWeaponHouse.parsePage(PageUtils.currentPageHtml());
-    const town = TownLoader.getTownById(townId)!;
+    const town = TownLoader.load(townId)!;
 
     // 重新绘制页面框架
     const t1 = $("table:eq(1)");

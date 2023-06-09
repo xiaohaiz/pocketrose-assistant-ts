@@ -18,15 +18,6 @@ class TownLoader {
         return null;
     }
 
-    static getTownById(id: string): Town | null {
-        // @ts-ignore
-        const town = TOWN_DEFINITION[id];
-        if (town === undefined) {
-            return null;
-        }
-        return town;
-    }
-
     static getTownByName(name: string): Town | null {
         for (const town of TownLoader.getTownList()) {
             if (name.startsWith(town.name)) {

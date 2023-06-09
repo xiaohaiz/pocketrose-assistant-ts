@@ -87,7 +87,7 @@ class TownTaskHousePageProcessor extends PageProcessorCredentialSupport {
         html += "<tr>";
         html += "<td style='background-color:#F8F0E0;text-align:center'>";
         html += "<button role='button' id='refreshButton'>刷新任务</button>";
-        html += "<button role='button' id='returnButton'>返回" + TownLoader.getTownById(context?.get("townId")!)?.name + "</button>";
+        html += "<button role='button' id='returnButton'>返回" + TownLoader.load(context?.get("townId"))?.name + "</button>";
         html += "</td>";
         html += "</tr>"
 
