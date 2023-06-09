@@ -1,6 +1,5 @@
 import _ from "lodash";
 import MonsterProfile from "../../common/MonsterProfile";
-import MonsterUtils from "./MonsterUtils";
 
 class MonsterRelationLoader {
 
@@ -278,7 +277,7 @@ function allProfiles() {
     const profiles = new Map<number, MonsterProfile>();
     for (let i = 1; i <= 493; i++) {
         const profile = new MonsterProfile();
-        profile.code = MonsterUtils.asCode(i)!;
+        profile.code = _.padStart(i.toString(), 3, "0");
         profile.targets = [];
         profiles.set(i, profile);
     }

@@ -4,7 +4,6 @@ import SetupLoader from "../../config/SetupLoader";
 import MonsterProfileDict from "../../core/monster/MonsterProfileDict";
 import MonsterRelationLoader from "../../core/monster/MonsterRelationLoader";
 import MonsterSimulator from "../../core/monster/MonsterSimulator";
-import MonsterUtils from "../../core/monster/MonsterUtils";
 import FastLoginLoader from "../../core/team/FastLoginLoader";
 import CastleInformation from "../../pocketrose/CastleInformation";
 import CastleRanch from "../../pocketrose/CastleRanch";
@@ -470,8 +469,7 @@ function doRenderPetProfile(code: string) {
     html += "<tr style='background-color:black;color:wheat;font-weight:bold;text-align:left'>";
     html += "<td colspan='16' style='height:64px'>";
     for (const it of MonsterRelationLoader.getPetRelations(parseInt(profile.code!))) {
-        const petCode = MonsterUtils.asCode(it);
-        html += MonsterProfileDict.load(petCode)!.imageHtml;
+        html += MonsterProfileDict.load(it)?.imageHtml;
     }
     html += "</td>";
     html += "</tr>";
@@ -1368,8 +1366,7 @@ function doRenderPetBorn(credential: Credential, petList: Pet[]) {
                 html += "<tr>";
                 html += "<td style='background-color:#E8E8D0;text-align:left;height:64px' colspan='10'>";
                 for (const it of MonsterRelationLoader.getPetRelations(parseInt(c.code!))) {
-                    const petCode = MonsterUtils.asCode(it);
-                    html += MonsterProfileDict.load(petCode)!.imageHtml;
+                    html += MonsterProfileDict.load(it)?.imageHtml;
                 }
                 html += "</td>";
                 html += "</tr>";
