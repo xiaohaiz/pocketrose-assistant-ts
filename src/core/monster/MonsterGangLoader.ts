@@ -1,6 +1,6 @@
 import _ from "lodash";
 
-class PetGangLoader {
+class MonsterGangLoader {
 
     static inGang1(monster: string): boolean {
         return G_1.includes(monster);
@@ -45,4 +45,4 @@ const G_2: string[] = [
     "钢神柱(379)",
 ];
 
-export = PetGangLoader;
+export = MonsterGangLoader;

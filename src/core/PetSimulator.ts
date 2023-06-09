@@ -1,13 +1,13 @@
 import _ from "lodash";
+import MonsterProfile from "../common/MonsterProfile";
 import Pet from "../common/Pet";
-import PetProfile from "../common/PetProfile";
 import PageUtils from "../util/PageUtils";
 import MonsterProfileDict from "./monster/MonsterProfileDict";
 
 class PetSimulator {
 
     readonly #pet: Pet;
-    readonly #profile: PetProfile;
+    readonly #profile: MonsterProfile;
 
     a0?: number;
     a1?: number;

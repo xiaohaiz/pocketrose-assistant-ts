@@ -1,11 +1,11 @@
 import _ from "lodash";
-import PetProfile from "../../common/PetProfile";
+import MonsterProfile from "../../common/MonsterProfile";
 import MonsterSpellDict from "./MonsterSpellDict";
 import MonsterUtils from "./MonsterUtils";
 
 class MonsterProfileDict {
 
-    static load(code: string | null | undefined): PetProfile | null {
+    static load(code: string | null | undefined): MonsterProfile | null {
         if (!code) return null;
         const c = _.parseInt(code);
         // @ts-ignore
@@ -13,8 +13,8 @@ class MonsterProfileDict {
         return s ? parse(c, s) : null;
     }
 
-    static loadAll(): PetProfile[] {
-        const ps: PetProfile[] = [];
+    static loadAll(): MonsterProfile[] {
+        const ps: MonsterProfile[] = [];
         for (let c = 1; c <= 493; c++) {
             // @ts-ignore
             const s = MONSTERS[c];
@@ -23,12 +23,12 @@ class MonsterProfileDict {
         return ps;
     }
 
-    static findByName(name: string | null | undefined): PetProfile | null {
+    static findByName(name: string | null | undefined): MonsterProfile | null {
         return MonsterProfileDict.load(MonsterUtils.extractCode(name));
     }
 
-    static findBySpellName(name: string | null | undefined): PetProfile[] {
-        const profiles: PetProfile[] = [];
+    static findBySpellName(name: string | null | undefined): MonsterProfile[] {
+        const profiles: MonsterProfile[] = [];
         const id = MonsterSpellDict.findBySpellName(name);
         if (!id) return profiles;
         MonsterProfileDict.loadAll()
@@ -541,7 +541,7 @@ const MONSTERS = {
 };
 
 function parse(c: number, s: string) {
-    const p = new PetProfile();
+    const p = new MonsterProfile();
     p.code = _.padStart(c.toString(), 3, "0");
     const ss = _.split(s, "/");
     p.name = ss[0] + "(" + p.code + ")";

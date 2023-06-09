@@ -1,4 +1,4 @@
-import PetProfile from "../../common/PetProfile";
+import MonsterProfile from "../../common/MonsterProfile";
 import MonsterProfileDict from "../../core/monster/MonsterProfileDict";
 import Credential from "../../util/Credential";
 import PageProcessorContext from "../PageProcessorContext";
@@ -283,7 +283,7 @@ function doBindPetDetailButton() {
     });
 }
 
-function doRenderPetDetail(pet: PetProfile) {
+function doRenderPetDetail(pet: MonsterProfile) {
     let html = "";
     html += "<table style='border-width:0;background-color:#888888;margin:auto;width:100%'>";
     html += "<tbody style='background-color:#F8F0E0;text-align:center'>";
@@ -355,7 +355,7 @@ function doRenderPetDetail(pet: PetProfile) {
     $("#pet_rank_cell").html(html).parent().show();
 }
 
-function doRender(title: string, petList: PetProfile[], allPet?: boolean) {
+function doRender(title: string, petList: MonsterProfile[], allPet?: boolean) {
     let html = "";
     html += "<table style='border-width:0;background-color:#888888;margin:auto;width:100%'>";
     html += "<tbody style='background-color:#F8F0E0;text-align:center'>";
@@ -429,8 +429,8 @@ function doRender(title: string, petList: PetProfile[], allPet?: boolean) {
     $("#pet_rank_cell").html(html).parent().show();
 }
 
-function sortByTotalBaseStats(petList: PetProfile[], reverse?: boolean): PetProfile[] {
-    const result: PetProfile[] = [];
+function sortByTotalBaseStats(petList: MonsterProfile[], reverse?: boolean): MonsterProfile[] {
+    const result: MonsterProfile[] = [];
     result.push(...petList);
     if (reverse) {
         result.sort((a, b) => {
@@ -460,8 +460,8 @@ function sortByTotalBaseStats(petList: PetProfile[], reverse?: boolean): PetProf
     return result;
 }
 
-function sortByHealth(petList: PetProfile[], reverse?: boolean): PetProfile[] {
-    const result: PetProfile[] = [];
+function sortByHealth(petList: MonsterProfile[], reverse?: boolean): MonsterProfile[] {
+    const result: MonsterProfile[] = [];
     result.push(...petList);
     if (reverse) {
         result.sort((a, b) => {
@@ -491,8 +491,8 @@ function sortByHealth(petList: PetProfile[], reverse?: boolean): PetProfile[] {
     return result;
 }
 
-function sortByAttack(petList: PetProfile[], reverse?: boolean): PetProfile[] {
-    const result: PetProfile[] = [];
+function sortByAttack(petList: MonsterProfile[], reverse?: boolean): MonsterProfile[] {
+    const result: MonsterProfile[] = [];
     result.push(...petList);
     if (reverse) {
         result.sort((a, b) => {
@@ -522,8 +522,8 @@ function sortByAttack(petList: PetProfile[], reverse?: boolean): PetProfile[] {
     return result;
 }
 
-function sortByDefense(petList: PetProfile[], reverse?: boolean): PetProfile[] {
-    const result: PetProfile[] = [];
+function sortByDefense(petList: MonsterProfile[], reverse?: boolean): MonsterProfile[] {
+    const result: MonsterProfile[] = [];
     result.push(...petList);
     if (reverse) {
         result.sort((a, b) => {
@@ -553,8 +553,8 @@ function sortByDefense(petList: PetProfile[], reverse?: boolean): PetProfile[] {
     return result;
 }
 
-function sortBySpecialAttack(petList: PetProfile[], reverse?: boolean): PetProfile[] {
-    const result: PetProfile[] = [];
+function sortBySpecialAttack(petList: MonsterProfile[], reverse?: boolean): MonsterProfile[] {
+    const result: MonsterProfile[] = [];
     result.push(...petList);
     if (reverse) {
         result.sort((a, b) => {
@@ -584,8 +584,8 @@ function sortBySpecialAttack(petList: PetProfile[], reverse?: boolean): PetProfi
     return result;
 }
 
-function sortBySpecialDefense(petList: PetProfile[], reverse?: boolean): PetProfile[] {
-    const result: PetProfile[] = [];
+function sortBySpecialDefense(petList: MonsterProfile[], reverse?: boolean): MonsterProfile[] {
+    const result: MonsterProfile[] = [];
     result.push(...petList);
     if (reverse) {
         result.sort((a, b) => {
@@ -615,8 +615,8 @@ function sortBySpecialDefense(petList: PetProfile[], reverse?: boolean): PetProf
     return result;
 }
 
-function sortBySpeed(petList: PetProfile[], reverse?: boolean): PetProfile[] {
-    const result: PetProfile[] = [];
+function sortBySpeed(petList: MonsterProfile[], reverse?: boolean): MonsterProfile[] {
+    const result: MonsterProfile[] = [];
     result.push(...petList);
     if (reverse) {
         result.sort((a, b) => {
@@ -646,8 +646,8 @@ function sortBySpeed(petList: PetProfile[], reverse?: boolean): PetProfile[] {
     return result;
 }
 
-function sortByCapacity(petList: PetProfile[], reverse?: boolean): PetProfile[] {
-    const result: PetProfile[] = [];
+function sortByCapacity(petList: MonsterProfile[], reverse?: boolean): MonsterProfile[] {
+    const result: MonsterProfile[] = [];
     result.push(...petList);
     if (reverse) {
         result.sort((a, b) => {

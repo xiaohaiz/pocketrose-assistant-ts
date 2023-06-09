@@ -2,7 +2,7 @@ import Pet from "../../common/Pet";
 import Role from "../../common/Role";
 import SetupLoader from "../../config/SetupLoader";
 import MonsterProfileDict from "../../core/monster/MonsterProfileDict";
-import PetRelationLoader from "../../core/monster/PetRelationLoader";
+import MonsterRelationLoader from "../../core/monster/MonsterRelationLoader";
 import PetSimulator from "../../core/PetSimulator";
 import FastLoginLoader from "../../core/team/FastLoginLoader";
 import CastleInformation from "../../pocketrose/CastleInformation";
@@ -469,7 +469,7 @@ function doRenderPetProfile(code: string) {
     html += "</tr>";
     html += "<tr style='background-color:black;color:wheat;font-weight:bold;text-align:left'>";
     html += "<td colspan='16' style='height:64px'>";
-    for (const it of PetRelationLoader.getPetRelations(parseInt(profile.code!))) {
+    for (const it of MonsterRelationLoader.getPetRelations(parseInt(profile.code!))) {
         const petCode = PocketUtils.asPetCode(it);
         html += MonsterProfileDict.load(petCode)!.imageHtml;
     }
@@ -1367,7 +1367,7 @@ function doRenderPetBorn(credential: Credential, petList: Pet[]) {
                 html += "</tr>";
                 html += "<tr>";
                 html += "<td style='background-color:#E8E8D0;text-align:left;height:64px' colspan='10'>";
-                for (const it of PetRelationLoader.getPetRelations(parseInt(c.code!))) {
+                for (const it of MonsterRelationLoader.getPetRelations(parseInt(c.code!))) {
                     const petCode = PocketUtils.asPetCode(it);
                     html += MonsterProfileDict.load(petCode)!.imageHtml;
                 }

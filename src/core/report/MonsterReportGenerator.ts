@@ -1,4 +1,4 @@
-import PetProfile from "../../common/PetProfile";
+import MonsterProfile from "../../common/MonsterProfile";
 import StringUtils from "../../util/StringUtils";
 import BattleResult from "../battle/BattleResult";
 import MonsterProfileDict from "../monster/MonsterProfileDict";
@@ -125,7 +125,7 @@ class MonsterReportGenerator {
                     html += "<td style='background-color:wheat;width:64px'></td>"
                 } else {
                     // @ts-ignore
-                    const profile: PetProfile = it[0];
+                    const profile: MonsterProfile = it[0];
                     html += "<td style='background-color:wheat;width:64px'>" + profile.imageHtml + "</td>"
                 }
             }
@@ -155,7 +155,7 @@ class MonsterReportGenerator {
                     html += "<td style='background-color:#F8F0E0;width:64px'></td>"
                 } else {
                     // @ts-ignore
-                    const profile: PetProfile = it[0];
+                    const profile: MonsterProfile = it[0];
                     html += "<td style='background-color:#F8F0E0;width:64px'>" + profile.imageHtml + "</td>"
                 }
             }
@@ -205,7 +205,7 @@ class MonsterReportGenerator {
                     html += "<td style='background-color:wheat;width:64px'></td>"
                 } else {
                     // @ts-ignore
-                    const profile: PetProfile = it[0];
+                    const profile: MonsterProfile = it[0];
                     html += "<td style='background-color:wheat;width:64px'>" + profile.imageHtml + "</td>"
                 }
             }
@@ -235,7 +235,7 @@ class MonsterReportGenerator {
                     html += "<td style='background-color:#F8F0E0;width:64px'></td>"
                 } else {
                     // @ts-ignore
-                    const profile: PetProfile = it[0];
+                    const profile: MonsterProfile = it[0];
                     html += "<td style='background-color:#F8F0E0;width:64px'>" + profile.imageHtml + "</td>"
                 }
             }
