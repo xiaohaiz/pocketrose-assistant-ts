@@ -107,11 +107,9 @@ class TownDashboardLayout006 extends TownDashboardLayout {
                         record.html = errMsg;
                         BattleStorageManager.getBattleRecordStorage().write(record).then();
 
-                        let buttonText = SetupLoader.getBattleReturnButtonText();
-                        buttonText = buttonText === "" ? "返回" : _.escape(buttonText);
                         $("#battleMenu").html("" +
                             "<button role='button' class='battleButton' " +
-                            "id='battleReturn' style='font-size:150%'>" + buttonText + "</button>" +
+                            "id='battleReturn' style='font-size:150%'>返回</button>" +
                             "")
                             .parent().show();
                         $("#battleReturn").on("click", () => {
@@ -159,11 +157,9 @@ class TownDashboardLayout006 extends TownDashboardLayout {
                                 .parent().show();
                             break;
                         case "回":
-                            let bt4 = SetupLoader.getBattleReturnButtonText();
-                            bt4 = bt4 === "" ? "返回" : _.escape(bt4);
                             $("#battleMenu").html("" +
                                 "<button role='button' class='battleButton' " +
-                                "id='battleReturn' style='font-size:150%'>" + bt4 + "</button>" +
+                                "id='battleReturn' style='font-size:150%'>返回</button>" +
                                 "")
                                 .parent().show();
                             break;
