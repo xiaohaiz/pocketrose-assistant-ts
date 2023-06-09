@@ -12,9 +12,12 @@ import PageProcessorCredentialSupport from "../PageProcessorCredentialSupport";
 
 class TownArmorHousePageProcessor extends PageProcessorCredentialSupport {
 
+
+    doLoadButtonStyles(): number[] {
+        return [10007, 10008];
+    }
+
     doProcess(credential: Credential, context?: PageProcessorContext): void {
-        ButtonUtils.loadButtonStyle(7);
-        ButtonUtils.loadButtonStyle(8);
         ButtonUtils.loadButtonStyle(35);
         const page = TownArmorHouse.parsePage(PageUtils.currentPageHtml());
         this.#renderImmutablePage(credential, page);
@@ -160,7 +163,7 @@ class TownArmorHousePageProcessor extends PageProcessorCredentialSupport {
                 html += "<td style='background-color:#E8E8D0'>";
                 if (equipment.isSellable) {
                     html += "<input type='button' value='出售' " +
-                        "id='sell_" + equipment.index! + "' class='dynamic_button_class button-7'>";
+                        "id='sell_" + equipment.index! + "' class='dynamic_button_class button-10007'>";
                 } else {
                     html += PageUtils.generateInvisibleButton("#E8E8D0");
                 }
@@ -230,7 +233,7 @@ class TownArmorHousePageProcessor extends PageProcessorCredentialSupport {
                 html += "<td style='background-color:#E8E8D0'>";
                 if (spaceCount > 0) {
                     html += "<input type='button' value='购买' " +
-                        "id='buy_" + merchandise.index! + "' class='dynamic_button_class button-8'>";
+                        "id='buy_" + merchandise.index! + "' class='dynamic_button_class button-10008'>";
                 } else {
                     html += PageUtils.generateInvisibleButton("#E8E8D0");
                 }
