@@ -1,4 +1,3 @@
-import SetupLoader from "../../config/SetupLoader";
 import RoleStateMachineManager from "../../core/state/RoleStateMachineManager";
 import CastleBankPageProcessor from "../../processor/internal/CastleBankPageProcessor";
 import PageProcessor from "../../processor/PageProcessor";
@@ -17,9 +16,6 @@ class CastleBankPageInterceptor implements PageInterceptor {
     }
 
     intercept(): void {
-        if (!SetupLoader.isPocketBankEnabled()) {
-            return;
-        }
         RoleStateMachineManager.create()
             .load()
             .then(machine => {

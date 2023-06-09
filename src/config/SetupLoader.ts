@@ -198,10 +198,6 @@ class SetupLoader {
         return StorageUtils.getBoolean("_pa_031");
     }
 
-    static isPocketBankEnabled(): boolean {
-        return StorageUtils.getBoolean("_pa_033");
-    }
-
     static isAsciiTextButtonEnabled(): boolean {
         return StorageUtils.getBoolean("_pa_035");
     }

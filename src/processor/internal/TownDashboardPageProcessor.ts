@@ -474,11 +474,11 @@ function doRenderMenu(credential: Credential, page: TownDashboardPage) {
     $("option[value='PETPROFILE']").text("宠物排行榜");
     $("option[value='CHANGEMAP']").text("冒险家公会");
     $("option[value='CHUJIA']").text("团队管理");
-    if (SetupLoader.isPocketBankEnabled()) {
-        $("option[value='BANK']").text("口袋银行");
-        $("option[value='MONEY_SEND']").remove();
-        $("option[value='SALARY']").remove();
-    }
+
+    $("option[value='BANK']").text("口袋银行");
+    $("option[value='MONEY_SEND']").remove();
+    $("option[value='SALARY']").remove();
+
     if (SetupLoader.isCollectTownTaxDisabled()) {
         $("option[value='MAKE_TOWN']").remove();
     }

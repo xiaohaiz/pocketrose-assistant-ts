@@ -19,12 +19,11 @@ class CastleDashboardPageProcessor implements PageProcessor {
     }
 
     #renderMenu() {
-        if (SetupLoader.isPocketBankEnabled()) {
-            $("option[value='CASTLE_BANK']")
-                .text("口袋银行城堡支行");
-            $("option[value='CASTLE_SENDMONEY']").remove();
-            $("option[value='SALARY']").remove();
-        }
+        $("option[value='CASTLE_BANK']")
+            .text("口袋银行城堡支行");
+        $("option[value='CASTLE_SENDMONEY']").remove();
+        $("option[value='SALARY']").remove();
+
         $("option[value='CASTLE_BUILDMACHINE']")
             .text("城堡驿站");
         $("option[value='LETTER']")
