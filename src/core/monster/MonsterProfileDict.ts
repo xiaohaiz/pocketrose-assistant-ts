@@ -1,7 +1,7 @@
 import _ from "lodash";
 import MonsterProfile from "../../common/MonsterProfile";
+import StringUtils from "../../util/StringUtils";
 import MonsterSpellDict from "./MonsterSpellDict";
-import MonsterUtils from "./MonsterUtils";
 
 class MonsterProfileDict {
 
@@ -9,7 +9,7 @@ class MonsterProfileDict {
         if (!code) return null;
         let c: number;
         if (_.isString(code)) {
-            let extracted = MonsterUtils.extractCode(code);
+            let extracted = extractCode(code);
             c = extracted ? _.parseInt(extracted) : _.parseInt(code);
         } else {
             c = code;
@@ -566,6 +566,12 @@ function parse(c: number, s: string) {
     p.pokemon = ss[17];
     p.spellIds = ss[18];
     return p;
+}
+
+function extractCode(name: string | null | undefined): string | null {
+    if (!name) return null;
+    if (!name.includes("(") || !name.includes(")")) return null;
+    return StringUtils.substringBetween(name, "(", ")");
 }
 
 export = MonsterProfileDict;
