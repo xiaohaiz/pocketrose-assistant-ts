@@ -16,49 +16,6 @@ class ButtonUtils {
 }
 
 const BUTTON_STYLES: {} = {
-    "5": ".button-5 {\n" +
-        "  align-items: center;\n" +
-        "  background-clip: padding-box;\n" +
-        "  background-color: #fa6400;\n" +
-        "  border: 1px solid transparent;\n" +
-        "  border-radius: .25rem;\n" +
-        "  box-shadow: rgba(0, 0, 0, 0.02) 0 1px 3px 0;\n" +
-        "  box-sizing: border-box;\n" +
-        "  color: #fff;\n" +
-        "  cursor: pointer;\n" +
-        "  display: inline-flex;\n" +
-        "  font-size: 100%;\n" +
-        "  font-weight: 600;\n" +
-        "  justify-content: center;\n" +
-        "  line-height: 1.25;\n" +
-        "  margin: 0;\n" +
-        "  min-height: 3rem;\n" +
-        "  padding: calc(.875rem - 1px) calc(1.5rem - 1px);\n" +
-        "  position: relative;\n" +
-        "  text-decoration: none;\n" +
-        "  transition: all 250ms;\n" +
-        "  user-select: none;\n" +
-        "  -webkit-user-select: none;\n" +
-        "  touch-action: manipulation;\n" +
-        "  vertical-align: baseline;\n" +
-        "  width: auto;\n" +
-        "}\n" +
-        "\n" +
-        ".button-5:hover,\n" +
-        ".button-5:focus {\n" +
-        "  background-color: #fb8332;\n" +
-        "  box-shadow: rgba(0, 0, 0, 0.1) 0 4px 12px;\n" +
-        "}\n" +
-        "\n" +
-        ".button-5:hover {\n" +
-        "  transform: translateY(-1px);\n" +
-        "}\n" +
-        "\n" +
-        ".button-5:active {\n" +
-        "  background-color: #c85000;\n" +
-        "  box-shadow: rgba(0, 0, 0, .06) 0 2px 4px;\n" +
-        "  transform: translateY(0);\n" +
-        "}\n",
     "7": ".button-7 {\n" +
         "  background-color: #0095ff;\n" +
         "  border: 1px solid transparent;\n" +
@@ -430,7 +387,7 @@ const BUTTON_STYLES: {} = {
         "  -webkit-user-select: none;\n" +
         "  touch-action: manipulation;\n" +
         "  vertical-align: baseline;\n" +
-        "  width: 100%;\n" +
+        "  /* width: 100%;\n */" +
         "}\n" +
         "\n" +
         ".button-10005:hover,\n" +
@@ -471,7 +428,7 @@ const BUTTON_STYLES: {} = {
         "  touch-action: manipulation;\n" +
         "  vertical-align: baseline;\n" +
         "  white-space: nowrap;\n" +
-        "  width: 100%;\n" +
+        "  /* width: 100%;\n */" +
         "}\n" +
         "\n" +
         ".button-10007:hover,\n" +
@@ -510,7 +467,7 @@ const BUTTON_STYLES: {} = {
         "  touch-action: manipulation;\n" +
         "  vertical-align: baseline;\n" +
         "  white-space: nowrap;\n" +
-        "  width: 100%;\n" +
+        "  /* width: 100%;\n */" +
         "}\n" +
         "\n" +
         ".button-10008:hover,\n" +
@@ -546,7 +503,7 @@ const BUTTON_STYLES: {} = {
         "  -webkit-user-select: none;\n" +
         "  touch-action: manipulation;\n" +
         "  white-space: pre;\n" +
-        "  width: 100%;\n" +
+        "  /* width: 100%;\n */" +
         "}\n" +
         "\n" +
         ".button-10016:hover {\n" +
@@ -581,7 +538,7 @@ const BUTTON_STYLES: {} = {
         "  -webkit-user-select: none;\n" +
         "  touch-action: manipulation;\n" +
         "  vertical-align: middle;\n" +
-        "  width: 100%;\n" +
+        "  /* width: 100%;\n */" +
         "}\n" +
         "\n" +
         ".button-10024:hover,\n" +
@@ -617,7 +574,7 @@ const BUTTON_STYLES: {} = {
         "  user-select: none;\n" +
         "  -webkit-user-select: none;\n" +
         "  touch-action: manipulation;\n" +
-        "  width: 100%;\n" +
+        "  /* width: 100%;\n */" +
         "  will-change: transform;\n" +
         "}\n" +
         "\n" +
@@ -645,7 +602,7 @@ const BUTTON_STYLES: {} = {
         "  padding: 2px 2px;\n" +
         "  text-align: center;\n" +
         "  transition: 200ms;\n" +
-        "  width: 100%;\n" +
+        "  /* width: 100%;\n */" +
         "  box-sizing: border-box;\n" +
         "  border: 0;\n" +
         "  font-size: 100%;\n" +
@@ -682,7 +639,7 @@ const BUTTON_STYLES: {} = {
         "  user-select: none;\n" +
         "  -webkit-user-select: none;\n" +
         "  touch-action: manipulation;\n" +
-        "  width: 100%;\n" +
+        "  /* width: 100%;\n */" +
         "}\n" +
         "\n" +
         ".button-10033:hover {\n" +
@@ -714,7 +671,7 @@ const BUTTON_STYLES: {} = {
         "  user-select: none;\n" +
         "  -webkit-user-select: none;\n" +
         "  touch-action: manipulation;\n" +
-        "  width: 100%;\n" +
+        "  /* width: 100%;\n */" +
         "}\n" +
         "\n" +
         ".button-10035:hover {\n" +
@@ -739,7 +696,7 @@ const BUTTON_STYLES: {} = {
         "  -webkit-user-select: none;\n" +
         "  touch-action: manipulation;\n" +
         "  white-space: nowrap;\n" +
-        "  width: 100%;\n" +
+        "  /* width: 100%;\n */" +
         "}\n" +
         "\n" +
         ".button-10062:not([disabled]):focus {\n" +
