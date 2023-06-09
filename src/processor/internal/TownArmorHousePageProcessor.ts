@@ -2,7 +2,6 @@ import NpcLoader from "../../core/NpcLoader";
 import TownArmorHouse from "../../pocketrose/TownArmorHouse";
 import TownArmorHousePage from "../../pocketrose/TownArmorHousePage";
 import TownBank from "../../pocketrose/TownBank";
-import ButtonUtils from "../../util/ButtonUtils";
 import Credential from "../../util/Credential";
 import MessageBoard from "../../util/MessageBoard";
 import PageUtils from "../../util/PageUtils";
@@ -18,7 +17,6 @@ class TownArmorHousePageProcessor extends PageProcessorCredentialSupport {
     }
 
     doProcess(credential: Credential, context?: PageProcessorContext): void {
-        ButtonUtils.loadButtonStyle(35);
         const page = TownArmorHouse.parsePage(PageUtils.currentPageHtml());
         this.#renderImmutablePage(credential, page);
         this.#renderMutablePage(credential, page);
@@ -95,9 +93,9 @@ class TownArmorHousePageProcessor extends PageProcessorCredentialSupport {
         // ------------------------------------------------------------------------
         html += "<tr>";
         html += "<td style='background-color:#F8F0E0;text-align:center'>";
-        html += "<input type='button' id='refresh_button' value='刷新" + page.town.name + "防具屋' class='button-35'>&nbsp;";
-        html += "<input type='button' id='return_button' value='离开" + page.town.name + "防具屋' class='button-35'>&nbsp;";
-        html += "<input type='button' id='equipment_button' value='转到装备管理' class='button-35'>";
+        html += "<input type='button' id='refresh_button' value='刷新" + page.town.name + "防具屋'>&nbsp;";
+        html += "<input type='button' id='return_button' value='离开" + page.town.name + "防具屋'>&nbsp;";
+        html += "<input type='button' id='equipment_button' value='转到装备管理'>";
         html += "</td>";
         // ------------------------------------------------------------------------
         // 个人物品栏

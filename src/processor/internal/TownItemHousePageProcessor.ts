@@ -13,7 +13,7 @@ import PageProcessorCredentialSupport from "../PageProcessorCredentialSupport";
 class TownItemHousePageProcessor extends PageProcessorCredentialSupport {
 
     doLoadButtonStyles(): number[] {
-        return [10007, 10008, 35];
+        return [10007, 10008];
     }
 
     doProcess(credential: Credential, context?: PageProcessorContext): void {
@@ -90,9 +90,9 @@ class TownItemHousePageProcessor extends PageProcessorCredentialSupport {
         // ------------------------------------------------------------------------
         html += "<tr>";
         html += "<td style='background-color:#F8F0E0;text-align:center'>";
-        html += "<input type='button' id='refreshButton' value='刷新" + page.town.name + "物品屋' class='button-35'>&nbsp;";
-        html += "<input type='button' id='returnButton' value='离开" + page.town.name + "物品屋' class='button-35'>&nbsp;";
-        html += "<input type='button' id='equipmentButton' value='转到装备管理' class='button-35'>";
+        html += "<input type='button' id='refreshButton' value='刷新" + page.town.name + "物品屋'>&nbsp;";
+        html += "<input type='button' id='returnButton' value='离开" + page.town.name + "物品屋'>&nbsp;";
+        html += "<input type='button' id='equipmentButton' value='转到装备管理'>";
         html += "</td>";
         // ------------------------------------------------------------------------
         // 个人物品栏

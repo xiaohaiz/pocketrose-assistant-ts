@@ -11,10 +11,6 @@ import PageProcessorCredentialSupport from "../PageProcessorCredentialSupport";
 
 class TownAccessoryHousePageProcessor extends PageProcessorCredentialSupport {
 
-    doLoadButtonStyles(): number[] {
-        return [35];
-    }
-
     doProcess(credential: Credential, context?: PageProcessorContext): void {
         const page = TownAccessoryHouse.parsePage(PageUtils.currentPageHtml());
         this.#renderImmutablePage(credential, page);
@@ -87,9 +83,9 @@ class TownAccessoryHousePageProcessor extends PageProcessorCredentialSupport {
         // ------------------------------------------------------------------------
         html += "<tr>";
         html += "<td style='background-color:#F8F0E0;text-align:center'>";
-        html += "<input type='button' id='refreshButton' value='刷新" + page.town.name + "饰品屋' class='button-35'>&nbsp;";
-        html += "<input type='button' id='returnButton' value='离开" + page.town.name + "饰品屋' class='button-35'>&nbsp;";
-        html += "<input type='button' id='equipmentButton' value='转到装备管理' class='button-35'>";
+        html += "<input type='button' id='refreshButton' value='刷新" + page.town.name + "饰品屋'>&nbsp;";
+        html += "<input type='button' id='returnButton' value='离开" + page.town.name + "饰品屋'>&nbsp;";
+        html += "<input type='button' id='equipmentButton' value='转到装备管理'>";
         html += "</td>";
         // ------------------------------------------------------------------------
         // 个人物品栏

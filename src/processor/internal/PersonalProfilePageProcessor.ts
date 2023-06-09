@@ -14,10 +14,6 @@ import PageProcessorCredentialSupport from "../PageProcessorCredentialSupport";
 
 abstract class PersonalProfilePageProcessor extends PageProcessorCredentialSupport {
 
-    doLoadButtonStyles(): number[] {
-        return [35];
-    }
-
     doProcess(credential: Credential, context?: PageProcessorContext) {
         // 删除老页面的所有元素
         $("center:first").html("").hide();
@@ -74,11 +70,11 @@ abstract class PersonalProfilePageProcessor extends PageProcessorCredentialSuppo
         html += "</tr>";
         html += "<tr>";
         html += "<td id='menuCell' style='background-color:#F8F0E0;text-align:center'>";
-        html += "<button role='button' id='reloadButton' class='button-35'>刷新个人面板</button>&nbsp;&nbsp;&nbsp;";
-        html += "<button role='button' id='returnButton' class='button-35'>返回</button>&nbsp;&nbsp;&nbsp;";
-        html += "<button role='button' id='equipmentManagementButton' class='button-35'>进入装备管理</button>&nbsp;&nbsp;&nbsp;";
-        html += "<button role='button' id='petManagementButton' class='button-35'>进入宠物管理</button>&nbsp;&nbsp;&nbsp;";
-        html += "<button role='button' id='careerManagementButton' class='button-35'>进入职业管理</button>";
+        html += "<button role='button' id='reloadButton'>刷新个人面板</button>&nbsp;&nbsp;&nbsp;";
+        html += "<button role='button' id='returnButton'>返回</button>&nbsp;&nbsp;&nbsp;";
+        html += "<button role='button' id='equipmentManagementButton'>进入装备管理</button>&nbsp;&nbsp;&nbsp;";
+        html += "<button role='button' id='petManagementButton'>进入宠物管理</button>&nbsp;&nbsp;&nbsp;";
+        html += "<button role='button' id='careerManagementButton'>进入职业管理</button>";
         html += "</td>";
         html += "</tr>";
         html += "</tbody>";
