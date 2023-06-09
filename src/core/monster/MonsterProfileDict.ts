@@ -546,6 +546,7 @@ function parse(c: number, s: string) {
     p.growExperience = _.parseInt(ss[15]);
     p.location = _.parseInt(ss[16]);
     p.pokemon = ss[17];
+    p.spellIds = ss[18];
     return p;
 }
 

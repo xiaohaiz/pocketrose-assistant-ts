@@ -347,7 +347,7 @@ function doRenderPetDetail(pet: PetProfile) {
     html += "</tr>";
     html += "<tr>";
     html += "<td style='background-color:#EFE0C0;text-align:left' colspan='18'>";
-    html += pet.spellText();
+    html += pet.spellText;
     html += "</td>";
     html += "</tr>";
 
@@ -420,7 +420,7 @@ function doRender(title: string, petList: PetProfile[], allPet?: boolean) {
 
         html += "<tr>";
         html += "<td style='background-color:#EFE0C0;text-align:left' colspan='18'>";
-        html += pet.spellText();
+        html += pet.spellText;
         html += "</td>";
         html += "</tr>";
     }

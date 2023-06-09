@@ -71,7 +71,7 @@ class PetProfileLoader {
         html += "</tr>";
         html += "<tr style='font-weight:bold;text-align:left'>";
         html += "<td colspan='16'>";
-        html += MonsterSpellDict.loadSpells(profile.code!);
+        html += profile.spellText;
         html += "</td>";
         html += "</tr>";
         html += "<tr style='font-weight:bold;text-align:left'>";

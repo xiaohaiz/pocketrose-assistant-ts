@@ -2,7 +2,6 @@ import Pet from "../../common/Pet";
 import Role from "../../common/Role";
 import SetupLoader from "../../config/SetupLoader";
 import MonsterProfileDict from "../../core/monster/MonsterProfileDict";
-import MonsterSpellDict from "../../core/monster/MonsterSpellDict";
 import PetRelationLoader from "../../core/pet/PetRelationLoader";
 import PetSimulator from "../../core/PetSimulator";
 import FastLoginLoader from "../../core/team/FastLoginLoader";
@@ -465,7 +464,7 @@ function doRenderPetProfile(code: string) {
     html += "</tr>";
     html += "<tr style='background-color:black;color:wheat;font-weight:bold;text-align:left'>";
     html += "<td colspan='16'>";
-    html += MonsterSpellDict.loadSpells(profile.code!);
+    html += profile.spellText;
     html += "</td>";
     html += "</tr>";
     html += "<tr style='background-color:black;color:wheat;font-weight:bold;text-align:left'>";

@@ -3,28 +3,11 @@ import MonsterUtils from "./MonsterUtils";
 
 class MonsterSpellDict {
 
-    static load(code: string): number[] {
-        const c = _.parseInt(code);
+    static getSpellName(id: number | null | undefined): string | null {
+        if (!id) return null;
         // @ts-ignore
-        return MONSTER_SPELLS[c];
-    }
-
-    static loadSpells(code: string) {
-        const c = _.parseInt(code);
-        // @ts-ignore
-        const ids: number[] = MONSTER_SPELLS[c];
-        if (!ids) {
-            return "";
-        }
-        const spells: string[] = [];
-        ids.forEach(id => {
-            // @ts-ignore
-            const name = SPELLS[id];
-            if (name) {
-                spells.push(name);
-            }
-        });
-        return _.join(spells, " ");
+        const name = SPELLS[id];
+        return name ? name : null;
     }
 
     static findBySpellName(name: string): string[] {

@@ -110,6 +110,17 @@ class PetProfile {
         }
     }
 
+    get spellText(): string {
+        if (!this.spellIds || this.spellIds === "") return "";
+        const names: string[] = [];
+        _.split(this.spellIds, ",").forEach(it => {
+            const id = _.parseInt(it);
+            const name = MonsterSpellDict.getSpellName(id);
+            if (name) names.push(name);
+        });
+        return _.join(names, " ");
+    }
+
     get totalBaseStats(): number {
         return this.healthBaseStats! +
             this.attackBaseStats! +
@@ -179,10 +190,7 @@ class PetProfile {
             this.perfectSpeed;
     }
 
-    spellText(): string {
-        const code = StringUtils.substringBetween(this.name!, "(", ")");
-        return MonsterSpellDict.loadSpells(code);
-    }
+
 }
 
 export = PetProfile;
