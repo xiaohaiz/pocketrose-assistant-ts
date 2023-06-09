@@ -1,6 +1,6 @@
 import _ from "lodash";
 import NpcLoader from "../../core/NpcLoader";
-import TownLoader from "../../core/TownLoader";
+import TownLoader from "../../core/town/TownLoader";
 import PersonalStatus from "../../pocketrose/PersonalStatus";
 import Credential from "../../util/Credential";
 import MessageBoard from "../../util/MessageBoard";

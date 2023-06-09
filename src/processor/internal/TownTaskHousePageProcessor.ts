@@ -1,5 +1,5 @@
 import NpcLoader from "../../core/NpcLoader";
-import TownLoader from "../../core/TownLoader";
+import TownLoader from "../../core/town/TownLoader";
 import Credential from "../../util/Credential";
 import PageUtils from "../../util/PageUtils";
 import StorageUtils from "../../util/StorageUtils";

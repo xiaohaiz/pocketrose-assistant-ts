@@ -1,6 +1,6 @@
 import BankAccount from "../common/BankAccount";
 import Role from "../common/Role";
-import TownLoader from "../core/TownLoader";
+import TownLoader from "../core/town/TownLoader";
 import Credential from "../util/Credential";
 import MessageBoard from "../util/MessageBoard";
 import NetworkUtils from "../util/NetworkUtils";

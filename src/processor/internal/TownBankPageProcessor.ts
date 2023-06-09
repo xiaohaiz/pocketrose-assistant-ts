@@ -1,6 +1,6 @@
 import Town from "../../common/Town";
 import NpcLoader from "../../core/NpcLoader";
-import TownLoader from "../../core/TownLoader";
+import TownLoader from "../../core/town/TownLoader";
 import TownBank from "../../pocketrose/TownBank";
 import TownBankPage from "../../pocketrose/TownBankPage";
 import Credential from "../../util/Credential";

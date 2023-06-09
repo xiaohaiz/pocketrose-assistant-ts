@@ -5,7 +5,7 @@ import MessageBoard from "../util/MessageBoard";
 import NetworkUtils from "../util/NetworkUtils";
 import StringUtils from "../util/StringUtils";
 import TimeoutUtils from "../util/TimeoutUtils";
-import TownLoader from "./TownLoader";
+import TownLoader from "./town/TownLoader";
 
 class TravelPlanExecutor {
 

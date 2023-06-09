@@ -3,7 +3,7 @@ import Credential from "../util/Credential";
 import MessageBoard from "../util/MessageBoard";
 import NetworkUtils from "../util/NetworkUtils";
 import TimeoutUtils from "../util/TimeoutUtils";
-import TownLoader from "./TownLoader";
+import TownLoader from "./town/TownLoader";
 import TravelPlanBuilder from "./TravelPlanBuilder";
 
 class TownEntrance {

@@ -1,6 +1,6 @@
 import _ from "lodash";
-import Town from "../common/Town";
-import Coordinate from "../util/Coordinate";
+import Town from "../../common/Town";
+import Coordinate from "../../util/Coordinate";
 
 class TownLoader {
 

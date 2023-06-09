@@ -4,7 +4,7 @@ import SetupLoader from "../../config/SetupLoader";
 import EquipmentSetLoader from "../../core/EquipmentSetLoader";
 import NpcLoader from "../../core/NpcLoader";
 import FastLoginLoader from "../../core/team/FastLoginLoader";
-import TownLoader from "../../core/TownLoader";
+import TownLoader from "../../core/town/TownLoader";
 import CastleEquipmentExpressHouse from "../../pocketrose/CastleEquipmentExpressHouse";
 import CastleInformation from "../../pocketrose/CastleInformation";
 import CastleWarehouse from "../../pocketrose/CastleWarehouse";

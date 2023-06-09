@@ -1,6 +1,6 @@
 import _ from "lodash";
 import Role from "../common/Role";
-import TownLoader from "../core/TownLoader";
+import TownLoader from "../core/town/TownLoader";
 import StringUtils from "../util/StringUtils";
 
 class TownDashboardPage {

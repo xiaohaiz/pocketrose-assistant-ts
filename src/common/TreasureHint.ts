@@ -1,4 +1,4 @@
-import TownLoader from "../core/TownLoader";
+import TownLoader from "../core/town/TownLoader";
 import Coordinate from "../util/Coordinate";
 
 class TreasureHint {

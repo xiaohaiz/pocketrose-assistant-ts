@@ -1,4 +1,4 @@
-import TownLoader from "../../core/TownLoader";
+import TownLoader from "../../core/town/TownLoader";
 import TownBank from "../../pocketrose/TownBank";
 import Credential from "../../util/Credential";
 import PageUtils from "../../util/PageUtils";

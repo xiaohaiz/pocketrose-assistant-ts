@@ -1,6 +1,6 @@
 import Castle from "../common/Castle";
 import Role from "../common/Role";
-import TownLoader from "../core/TownLoader";
+import TownLoader from "../core/town/TownLoader";
 import Coordinate from "../util/Coordinate";
 import Credential from "../util/Credential";
 import NetworkUtils from "../util/NetworkUtils";

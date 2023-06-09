@@ -4,7 +4,7 @@ import PetMap from "../../common/PetMap";
 import PetLocalStorage from "../../core/PetLocalStorage";
 import RoleStorageManager from "../../core/role/RoleStorageManager";
 import FastLoginLoader from "../../core/team/FastLoginLoader";
-import TownLoader from "../../core/TownLoader";
+import TownLoader from "../../core/town/TownLoader";
 import PersonalStatus from "../../pocketrose/PersonalStatus";
 import TownPetMapHouse from "../../pocketrose/TownPetMapHouse";
 import TownPetMapHousePage from "../../pocketrose/TownPetMapHousePage";

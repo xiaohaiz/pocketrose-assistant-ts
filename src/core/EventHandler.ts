@@ -2,7 +2,7 @@ import Town from "../common/Town";
 import Coordinate from "../util/Coordinate";
 import PageUtils from "../util/PageUtils";
 import StringUtils from "../util/StringUtils";
-import TownLoader from "./TownLoader";
+import TownLoader from "./town/TownLoader";
 
 class EventHandler {
 
