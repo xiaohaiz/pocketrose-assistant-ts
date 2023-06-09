@@ -1,5 +1,6 @@
 import _ from "lodash";
 import PetProfile from "../../common/PetProfile";
+import MonsterSpellDict from "./MonsterSpellDict";
 import MonsterUtils from "./MonsterUtils";
 
 class MonsterProfileDict {
@@ -26,6 +27,21 @@ class MonsterProfileDict {
         return MonsterProfileDict.load(MonsterUtils.extractCode(name));
     }
 
+    static findBySpellName(name: string | null | undefined): PetProfile[] {
+        const profiles: PetProfile[] = [];
+        const id = MonsterSpellDict.findBySpellName(name);
+        if (!id) return profiles;
+        MonsterProfileDict.loadAll()
+            .filter(it => it.spellIds)
+            .forEach(it => {
+                const ids = new Set<number>();
+                _.split(it.spellIds, ",").forEach(e => {
+                    ids.add(_.parseInt(e));
+                });
+                if (ids.has(id)) profiles.push(it);
+            });
+        return profiles;
+    }
 }
 
 const MONSTERS = {

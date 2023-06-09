@@ -1,23 +1,8 @@
-import PetProfile from "../../common/PetProfile";
 import PocketUtils from "../../util/PocketUtils";
 import MonsterProfileDict from "../monster/MonsterProfileDict";
-import MonsterSpellDict from "../monster/MonsterSpellDict";
 import PetRelationLoader from "./PetRelationLoader";
 
 class PetProfileLoader {
-
-    static load(code: string): PetProfile | null {
-        return MonsterProfileDict.load(code);
-    }
-
-    static searchBySpellName(spellName: string): PetProfile[] {
-        const codeList: string[] = MonsterSpellDict.findBySpellName1(spellName);
-        const profileList: PetProfile[] = [];
-        for (const code of codeList) {
-            profileList.push(MonsterProfileDict.load(code)!);
-        }
-        return profileList;
-    }
 
     static generatePetProfileHtml(code: string) {
         const profile = MonsterProfileDict.load(code)!;

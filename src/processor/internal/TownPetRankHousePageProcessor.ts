@@ -1,6 +1,5 @@
 import PetProfile from "../../common/PetProfile";
 import MonsterProfileDict from "../../core/monster/MonsterProfileDict";
-import PetProfileLoader from "../../core/pet/PetProfileLoader";
 import Credential from "../../util/Credential";
 import PageProcessorContext from "../PageProcessorContext";
 import PageProcessorCredentialSupport from "../PageProcessorCredentialSupport";
@@ -132,7 +131,7 @@ function doProcess(credential: Credential) {
     html += "</tr>";
     html += "<tr>";
     html += "<td style='background-color:#F8F0E0;text-align:center'>";
-    html += "<input type='text' id='spellName' value='' size='20'>";
+    html += "<input type='text' id='spellName' value='' size='20' spellcheck='false'>";
     html += "<input type='button' id='searchSpellButton' value='根据技能查询宠物'>";
     html += "<input type='button' id='petDetailButton' value='查询宠物详情'>";
     html += "</td>";
@@ -260,7 +259,7 @@ function doBindSearchButton() {
         if (spellName === "") {
             return;
         }
-        const petList = PetProfileLoader.searchBySpellName(spellName);
+        const petList = MonsterProfileDict.findBySpellName(spellName);
         petList.sort((a, b) => a.code!.localeCompare(b.code!));
         doRender("技 能 （" + spellName + "）", petList, true);
     });
