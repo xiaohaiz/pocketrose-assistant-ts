@@ -2,8 +2,8 @@ import _ from "lodash";
 import Equipment from "../../common/Equipment";
 import Pet from "../../common/Pet";
 import EquipmentLocalStorage from "../../core/EquipmentLocalStorage";
+import MonsterPageUtils from "../../core/monster/MonsterPageUtils";
 import MonsterProfileDict from "../../core/monster/MonsterProfileDict";
-import PetProfileLoader from "../../core/monster/PetProfileLoader";
 import NpcLoader from "../../core/NpcLoader";
 import PetLocalStorage from "../../core/PetLocalStorage";
 import RoleStorageManager from "../../core/role/RoleStorageManager";
@@ -348,7 +348,7 @@ abstract class PersonalTeamPageProcessor extends PageProcessorCredentialSupport 
             html += "<table style='margin:auto;border-width:0;text-align:center;background-color:#888888;width:100%'>";
             html += "<tbody>";
             html += "<tr>";
-            html += "<td colspan='11' style='background-color:#F8F0E0'>" + PetProfileLoader.generatePetProfileHtml(code) + "</td>";
+            html += "<td colspan='11' style='background-color:#F8F0E0'>" + MonsterPageUtils.generateMonsterProfileHtml(code) + "</td>";
             html += "</tr>";
             html += "<tr>";
             html += "<th style='background-color:#F8F0E0'>模拟</th>";
