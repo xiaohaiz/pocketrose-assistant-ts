@@ -1,5 +1,7 @@
 # pocketrose-assistant-ts
 
+### 版本 4.0.6-SNAPSHOT
+
 ### 版本 4.0.5
 
 1. 怪物资料字典中增加对应的宝可梦正式官方名字。
