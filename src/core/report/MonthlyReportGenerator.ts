@@ -8,7 +8,7 @@ import PetGangLoader from "../monster/PetGangLoader";
 import TeamManager from "../team/TeamManager";
 import ReportUtils from "./ReportUtils";
 
-class WeeklyReportGenerator {
+class MonthlyReportGenerator {
 
     readonly #range: MonthRange;
     readonly #target?: string;
@@ -990,4 +990,4 @@ class RoleReport {
     }
 }
 
-export = WeeklyReportGenerator;
+export = MonthlyReportGenerator;
