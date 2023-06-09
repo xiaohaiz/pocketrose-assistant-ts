@@ -168,20 +168,6 @@ function processBattle(credential: Credential,
             }
         });
 
-    // 紧凑格式显示
-    if (SetupLoader.isCompactBattleReportEnabled()) {
-        $("#delim")
-            .prev()
-            .find("> b:first")
-            .find("> font:first")
-            .find("> br")
-            .each((idx, br) => {
-                if ($(br).prev().is("br")) {
-                    $(br).hide();
-                }
-            });
-    }
-
     // 入手情况的渲染
     renderHarvestMessage(processor.obtainPage);
 

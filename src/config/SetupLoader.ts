@@ -270,10 +270,6 @@ class SetupLoader {
         return StorageUtils.getBoolean("_pa_049");
     }
 
-    static isCompactBattleReportEnabled(): boolean {
-        return StorageUtils.getBoolean("_pa_051");
-    }
-
 }
 
 export = SetupLoader;
