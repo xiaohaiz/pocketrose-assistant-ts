@@ -27,7 +27,6 @@ class PetProfile {
     pokemon?: string;                   // 对应的宝可梦的名字
     spellIds?: string;                  // 所有的技能id
 
-    id?: number;
     source?: PetProfile;
     targets?: PetProfile[];
 
