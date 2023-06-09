@@ -22,7 +22,7 @@ class TownBank {
         if (this.#townId === undefined) {
             return "口袋银行";
         } else {
-            const town = TownLoader.getTownById(this.#townId)!;
+            const town = TownLoader.load(this.#townId)!;
             return town.name + "分行";
         }
     }

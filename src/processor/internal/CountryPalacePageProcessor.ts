@@ -132,13 +132,13 @@ class CountryPalacePageProcessor extends PageProcessorCredentialSupport {
 function renderMenu(context: PageProcessorContext) {
     $("#menu")
         .each((i, td) => {
-            const town = TownLoader.getTownById(context!.get("townId")!)!;
+            const town = TownLoader.load(context?.get("townId"));
             let html = "";
             html += "<table style='background-color:transparent;border-width:unset;border-spacing:unset;margin:auto'>";
             html += "<tbody>";
             html += "<tr>";
             html += "<td>";
-            html += "<button role='button' class='palaceButton' id='returnButton'>返回" + town.name + "</button>";
+            html += "<button role='button' class='palaceButton' id='returnButton'>返回" + town?.name + "</button>";
             html += "</td>";
             html += "</tr>";
             html += "</tbody>";

@@ -40,7 +40,7 @@ class TownDashboardPage {
             .text();
         page.townId = $(html).find("input:hidden[name='townid']").val() as string;
 
-        role.town = TownLoader.getTownById(page.townId!)!;
+        role.town = TownLoader.load(page.townId)!;
         role.location = "TOWN";
 
         $(html).find("td:contains('经验值')")

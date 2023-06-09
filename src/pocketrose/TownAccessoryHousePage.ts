@@ -13,7 +13,7 @@ class TownAccessoryHousePage {
     merchandiseList?: Merchandise[];
 
     get town(): Town {
-        return TownLoader.getTownById(this.townId!)!;
+        return TownLoader.load(this.townId)!;
     }
 
     findEquipment(index: number) {
