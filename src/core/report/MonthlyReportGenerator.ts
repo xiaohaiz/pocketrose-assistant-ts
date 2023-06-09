@@ -716,7 +716,7 @@ class MonthlyReportGenerator {
 
         html += "<tr>";
         html += "<th style='background-color:black;color:white' rowspan='2'>全团队</th>";
-        for (let idx = 0; idx <= this.#maxSize; idx++) {
+        for (let idx = 0; idx < this.#maxSize; idx++) {
             const dataList = idxMap.get(idx);
             let battleCount = 0;
             if (dataList) {
@@ -726,7 +726,7 @@ class MonthlyReportGenerator {
         }
         html += "</tr>";
         html += "<tr>";
-        for (let idx = 0; idx <= this.#maxSize; idx++) {
+        for (let idx = 0; idx < this.#maxSize; idx++) {
             const dataList = idxMap.get(idx);
             let battleCount = 0;
             if (dataList) {
@@ -739,7 +739,7 @@ class MonthlyReportGenerator {
         roles.forEach(role => {
             html += "<tr>";
             html += "<th style='background-color:black;color:white'>" + role.roleName + "</th>";
-            for (let idx = 0; idx <= this.#maxSize; idx++) {
+            for (let idx = 0; idx < this.#maxSize; idx++) {
                 const dataList = role.indexMap.get(idx);
                 let battleCount = 0;
                 if (dataList) {
@@ -760,7 +760,7 @@ class MonthlyReportGenerator {
         html += "<table style='background-color:#888888;text-align:center;margin:auto;width:100%'>";
         html += "<thead>";
         html += "<tr>";
-        html += "<th style='background-color:navy;color:yellowgreen' colspan='8'>遇 见 四 天 王</th>";
+        html += "<th style='background-color:navy;color:yellowgreen' colspan='" + (this.#maxSize + 1) + "'>遇 见 四 天 王</th>";
         html += "</tr>";
         html += "<tr>";
         html += "<th style='background-color:skyblue' colspan='" + (this.#maxSize + 1) + "'>";
@@ -800,7 +800,7 @@ class MonthlyReportGenerator {
 
         html += "<tr>";
         html += "<th style='background-color:black;color:white' rowspan='2'>全团队</th>";
-        for (let idx = 0; idx <= this.#maxSize; idx++) {
+        for (let idx = 0; idx < this.#maxSize; idx++) {
             const dataList = idxMap.get(idx);
             let bc = 0;
             let gc = 0;
@@ -813,7 +813,7 @@ class MonthlyReportGenerator {
         }
         html += "</tr>";
         html += "<tr>";
-        for (let idx = 0; idx <= this.#maxSize; idx++) {
+        for (let idx = 0; idx < this.#maxSize; idx++) {
             const dataList = idxMap.get(idx);
             let bc = 0;
             let gc = 0;
@@ -828,7 +828,7 @@ class MonthlyReportGenerator {
         roles.forEach(role => {
             html += "<tr>";
             html += "<th style='background-color:black;color:white'>" + role.roleName + "</th>";
-            for (let idx = 0; idx <= this.#maxSize; idx++) {
+            for (let idx = 0; idx < this.#maxSize; idx++) {
                 const dataList = role.indexMap.get(idx);
                 let bc = 0;
                 let gc = 0;
@@ -855,7 +855,7 @@ class MonthlyReportGenerator {
         html += "<th style='background-color:navy;color:yellowgreen' colspan='" + (this.#maxSize + 1) + "'>遇 见 杰 德 天 团</th>";
         html += "</tr>";
         html += "<tr>";
-        html += "<th style='background-color:skyblue' colspan='8'>";
+        html += "<th style='background-color:skyblue' colspan='" + (this.#maxSize + 1) + "'>";
         html += "<table style='background-color:transparent;border-spacing:0;border-width:0;width:100%;text-align:center;margin:auto'>";
         html += "<tbody>";
         html += "<tr>";
@@ -892,7 +892,7 @@ class MonthlyReportGenerator {
 
         html += "<tr>";
         html += "<th style='background-color:black;color:white' rowspan='2'>全团队</th>";
-        for (let idx = 0; idx <= this.#maxSize; idx++) {
+        for (let idx = 0; idx < this.#maxSize; idx++) {
             const dataList = idxMap.get(idx);
             let bc = 0;
             let gc = 0;
@@ -905,7 +905,7 @@ class MonthlyReportGenerator {
         }
         html += "</tr>";
         html += "<tr>";
-        for (let idx = 0; idx <= this.#maxSize; idx++) {
+        for (let idx = 0; idx < this.#maxSize; idx++) {
             const dataList = idxMap.get(idx);
             let bc = 0;
             let gc = 0;
@@ -920,7 +920,7 @@ class MonthlyReportGenerator {
         roles.forEach(role => {
             html += "<tr>";
             html += "<th style='background-color:black;color:white'>" + role.roleName + "</th>";
-            for (let idx = 0; idx <= this.#maxSize; idx++) {
+            for (let idx = 0; idx < this.#maxSize; idx++) {
                 const dataList = role.indexMap.get(idx);
                 let bc = 0;
                 let gc = 0;
