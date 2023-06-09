@@ -1,5 +1,5 @@
 import PocketUtils from "../../util/PocketUtils";
-import MonsterProfileDict from "../monster/MonsterProfileDict";
+import MonsterProfileDict from "./MonsterProfileDict";
 import PetRelationLoader from "./PetRelationLoader";
 
 class PetProfileLoader {

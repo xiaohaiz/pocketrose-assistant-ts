@@ -2,7 +2,7 @@ import _ from "lodash";
 import BattleLog from "../battle/BattleLog";
 import TreasureLoader from "../equipment/TreasureLoader";
 import MonsterProfileDict from "../monster/MonsterProfileDict";
-import PetGangLoader from "../pet/PetGangLoader";
+import PetGangLoader from "../monster/PetGangLoader";
 import TeamManager from "../team/TeamManager";
 import ReportUtils from "./ReportUtils";
 

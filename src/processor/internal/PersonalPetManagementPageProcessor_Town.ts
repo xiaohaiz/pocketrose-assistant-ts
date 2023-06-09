@@ -2,7 +2,7 @@ import Pet from "../../common/Pet";
 import Role from "../../common/Role";
 import SetupLoader from "../../config/SetupLoader";
 import MonsterProfileDict from "../../core/monster/MonsterProfileDict";
-import PetRelationLoader from "../../core/pet/PetRelationLoader";
+import PetRelationLoader from "../../core/monster/PetRelationLoader";
 import PetSimulator from "../../core/PetSimulator";
 import FastLoginLoader from "../../core/team/FastLoginLoader";
 import CastleInformation from "../../pocketrose/CastleInformation";

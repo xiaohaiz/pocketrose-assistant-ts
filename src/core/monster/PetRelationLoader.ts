@@ -1,6 +1,6 @@
 import _ from "lodash";
 import PetProfile from "../../common/PetProfile";
-import MonsterUtils from "../monster/MonsterUtils";
+import MonsterUtils from "./MonsterUtils";
 
 class PetRelationLoader {
 
