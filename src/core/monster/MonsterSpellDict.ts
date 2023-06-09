@@ -3,6 +3,12 @@ import MonsterUtils from "./MonsterUtils";
 
 class MonsterSpellDict {
 
+    static load(code: string): number[] {
+        const c = _.parseInt(code);
+        // @ts-ignore
+        return MONSTER_SPELLS[c];
+    }
+
     static loadSpells(code: string) {
         const c = _.parseInt(code);
         // @ts-ignore
@@ -39,7 +45,7 @@ class MonsterSpellDict {
             // @ts-ignore
             const l: number[] = MONSTER_SPELLS[it];
             if (l.includes(id)) {
-                codes.push(MonsterUtils.asCode(_.parseInt(it)));
+                codes.push(MonsterUtils.asCode(_.parseInt(it))!);
             }
         }
         return codes;

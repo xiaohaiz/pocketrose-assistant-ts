@@ -3,7 +3,8 @@ import StringUtils from "../../util/StringUtils";
 
 class MonsterUtils {
 
-    static asCode(code: number): string {
+    static asCode(code: number | null | undefined): string | null {
+        if (!code) return null;
         return _.padStart(code.toString(), 3, "0");
     }
 
