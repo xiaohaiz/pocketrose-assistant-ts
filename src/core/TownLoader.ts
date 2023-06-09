@@ -1,7 +1,22 @@
+import _ from "lodash";
 import Town from "../common/Town";
 import Coordinate from "../util/Coordinate";
 
 class TownLoader {
+
+    static load(s: string | number | null | undefined): Town | null {
+        if (!s) return null;
+        const id = _.isNumber(s) ? s.toString() : s;
+        // @ts-ignore
+        const town = TOWN_DEFINITION[id];
+        if (town) return town;
+        for (const it of TownLoader.getTownList()) {
+            if (id.startsWith(it.name)) {
+                return it;
+            }
+        }
+        return null;
+    }
 
     static getTownById(id: string): Town | null {
         // @ts-ignore
