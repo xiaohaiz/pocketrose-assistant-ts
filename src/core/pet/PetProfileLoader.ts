@@ -11,7 +11,7 @@ class PetProfileLoader {
     }
 
     static searchBySpellName(spellName: string): PetProfile[] {
-        const codeList: string[] = MonsterSpellDict.findBySpellName(spellName);
+        const codeList: string[] = MonsterSpellDict.findBySpellName1(spellName);
         const profileList: PetProfile[] = [];
         for (const code of codeList) {
             profileList.push(MonsterProfileDict.load(code)!);

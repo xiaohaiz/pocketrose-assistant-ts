@@ -10,7 +10,21 @@ class MonsterSpellDict {
         return name ? name : null;
     }
 
-    static findBySpellName(name: string): string[] {
+    static findBySpellName(name: string | null | undefined): number | null {
+        if (!name) return null;
+        let id: number | null = null;
+        for (const it of Object.keys(SPELLS)) {
+            // @ts-ignore
+            const value = SPELLS[it];
+            if (value === name) {
+                id = _.parseInt(it);
+                break;
+            }
+        }
+        return id;
+    }
+
+    static findBySpellName1(name: string): string[] {
         let id: number | undefined = undefined;
         for (const it of Object.keys(SPELLS)) {
             // @ts-ignore
