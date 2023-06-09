@@ -194,10 +194,6 @@ class SetupLoader {
         return StorageUtils.getBoolean("_pa_030");
     }
 
-    static isGemHouseUIEnabled(): boolean {
-        return StorageUtils.getBoolean("_pa_031");
-    }
-
     static isAsciiTextButtonEnabled(): boolean {
         return StorageUtils.getBoolean("_pa_035");
     }

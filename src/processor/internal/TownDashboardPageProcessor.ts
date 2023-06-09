@@ -467,10 +467,10 @@ function doRenderMenu(credential: Credential, page: TownDashboardPage) {
         $("option[value='ACC_SHOP']").text("饰品商店");
         $("option[value='ITEM_SHOP']").text("物品商店");
     }
-    if (SetupLoader.isGemHouseUIEnabled()) {
-        $("option[value='BAOSHI_SHOP']").text("宝石镶嵌");
-        $("option[value='BAOSHI_DELSHOP']").remove();
-    }
+
+    $("option[value='BAOSHI_SHOP']").text("宝石镶嵌");
+    $("option[value='BAOSHI_DELSHOP']").remove();
+
     $("option[value='PETPROFILE']").text("宠物排行榜");
     $("option[value='CHANGEMAP']").text("冒险家公会");
     $("option[value='CHUJIA']").text("团队管理");
