@@ -341,7 +341,7 @@ function doRender(credential: Credential, petList: Pet[], studyStatus: number[],
     // 绑定按钮点击事件处理
     doBind(credential, petList);
 
-    if (role !== undefined && SetupLoader.isCastleKeeperEnabled()) {
+    if (role) {
         new CastleInformation().load(role.name!).then(() => {
             $("#ranchMenu").show();
             $("#openRanchButton").on("click", () => {
