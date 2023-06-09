@@ -54,10 +54,6 @@ class SetupLoader {
         return StorageUtils.getBoolean("_pa_014_" + id);
     }
 
-    static getBattleRepairButtonText(): string {
-        return StorageUtils.getString("_pa_017");
-    }
-
     static getBattleDepositButtonText(): string {
         return StorageUtils.getString("_pa_018");
     }

@@ -77,11 +77,7 @@ function processBattle(credential: Credential,
             ""));
 
     // 根据设置的内容修改按钮的台词
-    let buttonText = SetupLoader.getBattleRepairButtonText();
-    if (buttonText !== "") {
-        $("#repairButton").text(_.escape(buttonText));
-    }
-    buttonText = SetupLoader.getBattleDepositButtonText();
+    let buttonText = SetupLoader.getBattleDepositButtonText();
     if (buttonText !== "") {
         $("#depositButton").text(_.escape(buttonText));
     }

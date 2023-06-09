@@ -245,11 +245,9 @@ class TownDashboardLayout005 extends TownDashboardLayout {
                     const recommendation = processor.obtainRecommendation;
                     switch (recommendation) {
                         case "修":
-                            let bt1 = SetupLoader.getBattleRepairButtonText();
-                            bt1 = bt1 === "" ? "修理" : _.escape(bt1);
                             $("#battleMenu").html("" +
                                 "<button role='button' class='battleButton' " +
-                                "id='battleRepair' style='font-size:150%'>" + bt1 + "</button>" +
+                                "id='battleRepair' style='font-size:150%'>修理</button>" +
                                 "")
                                 .parent().show();
                             break;
