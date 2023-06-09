@@ -1,6 +1,6 @@
 import _ from "lodash";
+import SetupLoader from "../config/SetupLoader";
 import MonsterSpellDict from "../core/monster/MonsterSpellDict";
-import Pokemon from "../core/Pokemon";
 import Constants from "../util/Constants";
 import StringUtils from "../util/StringUtils";
 
@@ -9,12 +9,12 @@ class PetProfile {
     code?: string;
     name?: string;
     picture?: string;
-    healthBaseStats?: number;
-    attackBaseStats?: number;
-    defenseBaseStats?: number;
-    specialAttackBaseStats?: number;
-    specialDefenseBaseStats?: number;
-    speedBaseStats?: number;
+    healthBaseStats?: number;           // 生命族值
+    attackBaseStats?: number;           // 攻击族值
+    defenseBaseStats?: number;          // 防御族值
+    specialAttackBaseStats?: number;    // 特攻族值
+    specialDefenseBaseStats?: number;   // 特防族值
+    speedBaseStats?: number;            // 速度族值
     healthEffort?: number;
     attackEffort?: number;
     defenseEffort?: number;
@@ -23,10 +23,10 @@ class PetProfile {
     speedEffort?: number;
     catchRatio?: number;
     growExperience?: number;
-    location?: number;
+    location?: number;                  // 位置 1-初森 2-中塔 3-上洞
+    pokemon?: string;                   // 对应的宝可梦的名字
+    spellIds?: string;                  // 所有的技能id
 
-    spellList?: string[];
-    id?: number;
     source?: PetProfile;
     targets?: PetProfile[];
 
@@ -63,7 +63,11 @@ class PetProfile {
             "/" +
             this.growExperience +
             "/" +
-            this.location;
+            this.location +
+            "/" +
+            this.pokemon +
+            "/" +
+            this.spellIds;
     }
 
     parseName(name: string) {
@@ -73,8 +77,14 @@ class PetProfile {
         }
     }
 
-    get nameHtml() {
-        return Pokemon.pokemonWikiReplacement(this.name);
+    get nameHtml(): string | undefined {
+        if (!this.name) return this.name;
+        if (!this.pokemon) return this.name;
+        if (!SetupLoader.isPokemonWikiEnabled()) return this.name;
+        return "<a href='https://wiki.52poke.com/wiki/" + encodeURI(this.pokemon) + "' " +
+            "target='_blank' rel='noopener noreferrer'>" +
+            this.pokemon + "(" + this.code + ")" +
+            "</a>";
     }
 
     get imageHtml() {
@@ -96,6 +106,17 @@ class PetProfile {
             default:
                 return null;
         }
+    }
+
+    get spellText(): string {
+        if (!this.spellIds || this.spellIds === "") return "";
+        const names: string[] = [];
+        _.split(this.spellIds, ",").forEach(it => {
+            const id = _.parseInt(it);
+            const name = MonsterSpellDict.getSpellName(id);
+            if (name) names.push(name);
+        });
+        return _.join(names, " ");
     }
 
     get totalBaseStats(): number {
@@ -167,10 +188,7 @@ class PetProfile {
             this.perfectSpeed;
     }
 
-    spellText(): string {
-        const code = StringUtils.substringBetween(this.name!, "(", ")");
-        return MonsterSpellDict.loadSpells(code);
-    }
+
 }
 
 export = PetProfile;

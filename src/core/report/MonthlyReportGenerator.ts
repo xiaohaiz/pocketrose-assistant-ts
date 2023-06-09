@@ -1,35 +1,48 @@
 import _ from "lodash";
+import MonthRange from "../../util/MonthRange";
 import BattleLog from "../battle/BattleLog";
+import BattleStorageManager from "../battle/BattleStorageManager";
 import TreasureLoader from "../equipment/TreasureLoader";
 import MonsterProfileDict from "../monster/MonsterProfileDict";
 import PetGangLoader from "../monster/PetGangLoader";
 import TeamManager from "../team/TeamManager";
 import ReportUtils from "./ReportUtils";
 
-class WeeklyReportGenerator {
+class MonthlyReportGenerator {
 
-    readonly #logList: BattleLog[];
+    readonly #range: MonthRange;
     readonly #target?: string;
+    readonly #maxSize: number;
 
-
-    constructor(logList: BattleLog[], target?: string) {
-        this.#logList = logList;
+    constructor(range: MonthRange, target?: string) {
+        this.#range = range;
         this.#target = target;
+
+        const lastDay = new Date(this.#range.end).getDate();
+        this.#maxSize = lastDay === 31 ? 11 : 10;
+    }
+
+    get hasTarget() {
+        return this.#target && this.#target !== "";
     }
 
     generate() {
-        const candidates = this.#logList
-            .filter(it =>
-                this.#target === undefined ||
-                this.#target === "" ||
-                it.roleId === this.#target);
+        BattleStorageManager.battleLogStore
+            .findByCreateTime(this.#range.start, this.#range.end)
+            .then(dataList => {
+                const candidates = dataList
+                    .filter(it => !this.hasTarget || it.roleId === this.#target);
+                this.#doGenerate(candidates);
+            });
+    }
 
-        const roles = new Map<string, RoleWeeklyReport>();
+    #doGenerate(candidates: BattleLog[]) {
+        const roles = new Map<string, RoleReport>();
         TeamManager.loadMembers().forEach(config => {
-            if (this.#target === undefined || this.#target === "") {
-                roles.set(config.id!, new RoleWeeklyReport(config.name!));
+            if (!this.hasTarget) {
+                roles.set(config.id!, new RoleReport(config.name!));
             } else if (this.#target === config.id) {
-                roles.set(config.id!, new RoleWeeklyReport(config.name!));
+                roles.set(config.id!, new RoleReport(config.name!));
             }
         });
 
@@ -72,21 +85,21 @@ class WeeklyReportGenerator {
         let wgc = 0;
         let lgc = 0;
 
-        const dayMap = new Map<number, BattleLog[]>();
+        const idxMap = new Map<number, BattleLog[]>();
         candidates
             .filter(it => roles.has(it.roleId!))
             .forEach(it => {
-                const day = new Date(it.createTime!).getDay();
-                if (!dayMap.has(day)) {
-                    dayMap.set(day, []);
+                const idx = _.floor((new Date(it.createTime!).getDate() - 1) / 3);
+                if (!idxMap.has(idx)) {
+                    idxMap.set(idx, []);
                 }
-                dayMap.get(day)?.push(it);
+                idxMap.get(idx)?.push(it);
 
                 const role = roles.get(it.roleId!)!;
-                if (!role.dayMap.has(day)) {
-                    role.dayMap.set(day, []);
+                if (!role.indexMap.has(idx)) {
+                    role.indexMap.set(idx, []);
                 }
-                role.dayMap.get(day)?.push(it);
+                role.indexMap.get(idx)?.push(it);
 
                 const win = it.result === "战胜";
                 const battleField = it.obtainBattleField;
@@ -208,13 +221,13 @@ class WeeklyReportGenerator {
         html += "<tbody>";
 
         // --------------------------------------------------------------------
-        // 周 战 数 总 览
+        // 月 战 数 总 览
         // --------------------------------------------------------------------
         html += "<tr><td>";
         html += "<table style='background-color:#888888;text-align:center;margin:auto;width:100%'>";
         html += "<thead>";
         html += "<tr>";
-        html += "<th style='background-color:navy;color:yellowgreen' colspan='11'>周 战 数 总 览</th>";
+        html += "<th style='background-color:navy;color:yellowgreen' colspan='11'>月 战 数 总 览</th>";
         html += "</tr>";
         html += "<tr>";
         html += "<th style='background-color:skyblue' rowspan='2'>成员</th>";
@@ -273,13 +286,13 @@ class WeeklyReportGenerator {
         html += "</td></tr>";
 
         // --------------------------------------------------------------------
-        // 周 上 洞 入 手 总 览
+        // 月 上 洞 入 手 总 览
         // --------------------------------------------------------------------
         html += "<tr><td>";
         html += "<table style='background-color:#888888;text-align:center;margin:auto;width:100%'>";
         html += "<thead>";
         html += "<tr>";
-        html += "<th style='background-color:navy;color:yellowgreen' colspan='9'>周 上 洞 入 手 总 览</th>";
+        html += "<th style='background-color:navy;color:yellowgreen' colspan='9'>月 上 洞 入 手 总 览</th>";
         html += "</tr>";
         html += "<tr>";
         html += "<th style='background-color:skyblue' rowspan='2'>成员</th>";
@@ -360,13 +373,13 @@ class WeeklyReportGenerator {
         html += "</td></tr>";
 
         // --------------------------------------------------------------------
-        // 周 宠 物 入 手 总 览
+        // 月 宠 物 入 手 总 览
         // --------------------------------------------------------------------
         html += "<tr><td>";
         html += "<table style='background-color:#888888;text-align:center;margin:auto;width:100%'>";
         html += "<thead>";
         html += "<tr>";
-        html += "<th style='background-color:navy;color:yellowgreen' colspan='13'>周 物 入 手 总 览</th>";
+        html += "<th style='background-color:navy;color:yellowgreen' colspan='13'>月 物 入 手 总 览</th>";
         html += "</tr>";
         html += "<tr>";
         html += "<th style='background-color:skyblue' rowspan='2'>成员</th>";
@@ -453,13 +466,13 @@ class WeeklyReportGenerator {
         html += "</td></tr>";
 
         // --------------------------------------------------------------------
-        // 周 图 鉴 入 手 总 览
+        // 月 图 鉴 入 手 总 览
         // --------------------------------------------------------------------
         html += "<tr><td>";
         html += "<table style='background-color:#888888;text-align:center;margin:auto;width:100%'>";
         html += "<thead>";
         html += "<tr>";
-        html += "<th style='background-color:navy;color:yellowgreen' colspan='13'>周 图 鉴 入 手 总 览</th>";
+        html += "<th style='background-color:navy;color:yellowgreen' colspan='13'>月 图 鉴 入 手 总 览</th>";
         html += "</tr>";
         html += "<tr>";
         html += "<th style='background-color:skyblue' rowspan='2'>成员</th>";
@@ -546,13 +559,13 @@ class WeeklyReportGenerator {
         html += "</td></tr>";
 
         // --------------------------------------------------------------------
-        // 周 藏 宝 图 入 手 总 览
+        // 月 藏 宝 图 入 手 总 览
         // --------------------------------------------------------------------
         html += "<tr><td>";
         html += "<table style='background-color:#888888;text-align:center;margin:auto;width:100%'>";
         html += "<thead>";
         html += "<tr>";
-        html += "<th style='background-color:navy;color:yellowgreen' colspan='13'>周 藏 宝 图 入 手 总 览</th>";
+        html += "<th style='background-color:navy;color:yellowgreen' colspan='13'>月 藏 宝 图 入 手 总 览</th>";
         html += "</tr>";
         html += "<tr>";
         html += "<th style='background-color:skyblue' rowspan='2'>成员</th>";
@@ -617,13 +630,13 @@ class WeeklyReportGenerator {
         html += "</td></tr>";
 
         // --------------------------------------------------------------------
-        // 周 宝 石 入 手 总 览
+        // 月 宝 石 入 手 总 览
         // --------------------------------------------------------------------
         html += "<tr><td>";
         html += "<table style='background-color:#888888;text-align:center;margin:auto;width:100%'>";
         html += "<thead>";
         html += "<tr>";
-        html += "<th style='background-color:navy;color:yellowgreen' colspan='10'>周 宝 石 入 手 总 览</th>";
+        html += "<th style='background-color:navy;color:yellowgreen' colspan='10'>月 宝 石 入 手 总 览</th>";
         html += "</tr>";
         html += "<tr>";
         html += "<th style='background-color:skyblue' rowspan='2'>成员</th>";
@@ -679,36 +692,32 @@ class WeeklyReportGenerator {
         html += "</td></tr>";
 
         // --------------------------------------------------------------------
-        // 周 战 数 分 布
+        // 月 战 数 分 布
         // --------------------------------------------------------------------
         html += "<tr><td>";
         html += "<table style='background-color:#888888;text-align:center;margin:auto;width:100%'>";
         html += "<thead>";
         html += "<tr>";
-        html += "<th style='background-color:navy;color:yellowgreen' colspan='8'>周 战 数 分 布</th>";
+        html += "<th style='background-color:navy;color:yellowgreen' colspan='" + (this.#maxSize + 1) + "'>月 战 数 分 布</th>";
         html += "</tr>";
         html += "<tr>";
         html += "<th style='background-color:skyblue'></th>";
-        html += "<th style='background-color:skyblue'>周日</th>";
-        html += "<th style='background-color:skyblue'>周一</th>";
-        html += "<th style='background-color:skyblue'>周二</th>";
-        html += "<th style='background-color:skyblue'>周三</th>";
-        html += "<th style='background-color:skyblue'>周四</th>";
-        html += "<th style='background-color:skyblue'>周五</th>";
-        html += "<th style='background-color:skyblue'>周六</th>";
+        for (let i = 0; i < this.#maxSize; i++) {
+            html += "<th style='background-color:skyblue'>(" + (i + 1) + ")</th>";
+        }
         html += "</tr>";
         html += "</thead>";
         html += "<tbody>";
 
         let maxBattleCount = 0;
-        dayMap.forEach(v => {
+        idxMap.forEach(v => {
             maxBattleCount = _.max([v.length, maxBattleCount])!;
         });
 
         html += "<tr>";
         html += "<th style='background-color:black;color:white' rowspan='2'>全团队</th>";
-        for (let day = 0; day <= 6; day++) {
-            const dataList = dayMap.get(day);
+        for (let idx = 0; idx < this.#maxSize; idx++) {
+            const dataList = idxMap.get(idx);
             let battleCount = 0;
             if (dataList) {
                 battleCount = dataList.length;
@@ -717,8 +726,8 @@ class WeeklyReportGenerator {
         }
         html += "</tr>";
         html += "<tr>";
-        for (let day = 0; day <= 6; day++) {
-            const dataList = dayMap.get(day);
+        for (let idx = 0; idx < this.#maxSize; idx++) {
+            const dataList = idxMap.get(idx);
             let battleCount = 0;
             if (dataList) {
                 battleCount = dataList.length;
@@ -730,8 +739,8 @@ class WeeklyReportGenerator {
         roles.forEach(role => {
             html += "<tr>";
             html += "<th style='background-color:black;color:white'>" + role.roleName + "</th>";
-            for (let day = 0; day <= 6; day++) {
-                const dataList = role.dayMap.get(day);
+            for (let idx = 0; idx < this.#maxSize; idx++) {
+                const dataList = role.indexMap.get(idx);
                 let battleCount = 0;
                 if (dataList) {
                     battleCount = dataList.length;
@@ -751,10 +760,10 @@ class WeeklyReportGenerator {
         html += "<table style='background-color:#888888;text-align:center;margin:auto;width:100%'>";
         html += "<thead>";
         html += "<tr>";
-        html += "<th style='background-color:navy;color:yellowgreen' colspan='8'>遇 见 四 天 王</th>";
+        html += "<th style='background-color:navy;color:yellowgreen' colspan='" + (this.#maxSize + 1) + "'>遇 见 四 天 王</th>";
         html += "</tr>";
         html += "<tr>";
-        html += "<th style='background-color:skyblue' colspan='8'>";
+        html += "<th style='background-color:skyblue' colspan='" + (this.#maxSize + 1) + "'>";
         html += "<table style='background-color:transparent;border-spacing:0;border-width:0;width:100%;text-align:center;margin:auto'>";
         html += "<tbody>";
         html += "<tr>";
@@ -771,19 +780,15 @@ class WeeklyReportGenerator {
         html += "</tr>";
         html += "<tr>";
         html += "<th style='background-color:skyblue'></th>";
-        html += "<th style='background-color:skyblue'>周日</th>";
-        html += "<th style='background-color:skyblue'>周一</th>";
-        html += "<th style='background-color:skyblue'>周二</th>";
-        html += "<th style='background-color:skyblue'>周三</th>";
-        html += "<th style='background-color:skyblue'>周四</th>";
-        html += "<th style='background-color:skyblue'>周五</th>";
-        html += "<th style='background-color:skyblue'>周六</th>";
+        for (let i = 0; i < this.#maxSize; i++) {
+            html += "<th style='background-color:skyblue'>(" + (i + 1) + ")</th>";
+        }
         html += "</tr>";
         html += "</thead>";
         html += "<tbody>";
 
         let mr1 = 0;
-        dayMap.forEach(logs => {
+        idxMap.forEach(logs => {
             const bc = logs
                 .filter(it => it.obtainBattleField === "上洞").length;
             const gc = logs
@@ -795,8 +800,8 @@ class WeeklyReportGenerator {
 
         html += "<tr>";
         html += "<th style='background-color:black;color:white' rowspan='2'>全团队</th>";
-        for (let day = 0; day <= 6; day++) {
-            const dataList = dayMap.get(day);
+        for (let idx = 0; idx < this.#maxSize; idx++) {
+            const dataList = idxMap.get(idx);
             let bc = 0;
             let gc = 0;
             if (dataList) {
@@ -808,8 +813,8 @@ class WeeklyReportGenerator {
         }
         html += "</tr>";
         html += "<tr>";
-        for (let day = 0; day <= 6; day++) {
-            const dataList = dayMap.get(day);
+        for (let idx = 0; idx < this.#maxSize; idx++) {
+            const dataList = idxMap.get(idx);
             let bc = 0;
             let gc = 0;
             if (dataList) {
@@ -823,8 +828,8 @@ class WeeklyReportGenerator {
         roles.forEach(role => {
             html += "<tr>";
             html += "<th style='background-color:black;color:white'>" + role.roleName + "</th>";
-            for (let day = 0; day <= 6; day++) {
-                const dataList = role.dayMap.get(day);
+            for (let idx = 0; idx < this.#maxSize; idx++) {
+                const dataList = role.indexMap.get(idx);
                 let bc = 0;
                 let gc = 0;
                 if (dataList) {
@@ -847,10 +852,10 @@ class WeeklyReportGenerator {
         html += "<table style='background-color:#888888;text-align:center;margin:auto;width:100%'>";
         html += "<thead>";
         html += "<tr>";
-        html += "<th style='background-color:navy;color:yellowgreen' colspan='8'>遇 见 杰 德 天 团</th>";
+        html += "<th style='background-color:navy;color:yellowgreen' colspan='" + (this.#maxSize + 1) + "'>遇 见 杰 德 天 团</th>";
         html += "</tr>";
         html += "<tr>";
-        html += "<th style='background-color:skyblue' colspan='8'>";
+        html += "<th style='background-color:skyblue' colspan='" + (this.#maxSize + 1) + "'>";
         html += "<table style='background-color:transparent;border-spacing:0;border-width:0;width:100%;text-align:center;margin:auto'>";
         html += "<tbody>";
         html += "<tr>";
@@ -867,19 +872,15 @@ class WeeklyReportGenerator {
         html += "</tr>";
         html += "<tr>";
         html += "<th style='background-color:skyblue'></th>";
-        html += "<th style='background-color:skyblue'>周日</th>";
-        html += "<th style='background-color:skyblue'>周一</th>";
-        html += "<th style='background-color:skyblue'>周二</th>";
-        html += "<th style='background-color:skyblue'>周三</th>";
-        html += "<th style='background-color:skyblue'>周四</th>";
-        html += "<th style='background-color:skyblue'>周五</th>";
-        html += "<th style='background-color:skyblue'>周六</th>";
+        for (let i = 0; i < this.#maxSize; i++) {
+            html += "<th style='background-color:skyblue'>(" + (i + 1) + ")</th>";
+        }
         html += "</tr>";
         html += "</thead>";
         html += "<tbody>";
 
         let mr2 = 0;
-        dayMap.forEach(logs => {
+        idxMap.forEach(logs => {
             const bc = logs
                 .filter(it => it.obtainBattleField === "上洞").length;
             const gc = logs
@@ -891,8 +892,8 @@ class WeeklyReportGenerator {
 
         html += "<tr>";
         html += "<th style='background-color:black;color:white' rowspan='2'>全团队</th>";
-        for (let day = 0; day <= 6; day++) {
-            const dataList = dayMap.get(day);
+        for (let idx = 0; idx < this.#maxSize; idx++) {
+            const dataList = idxMap.get(idx);
             let bc = 0;
             let gc = 0;
             if (dataList) {
@@ -904,8 +905,8 @@ class WeeklyReportGenerator {
         }
         html += "</tr>";
         html += "<tr>";
-        for (let day = 0; day <= 6; day++) {
-            const dataList = dayMap.get(day);
+        for (let idx = 0; idx < this.#maxSize; idx++) {
+            const dataList = idxMap.get(idx);
             let bc = 0;
             let gc = 0;
             if (dataList) {
@@ -919,8 +920,8 @@ class WeeklyReportGenerator {
         roles.forEach(role => {
             html += "<tr>";
             html += "<th style='background-color:black;color:white'>" + role.roleName + "</th>";
-            for (let day = 0; day <= 6; day++) {
-                const dataList = role.dayMap.get(day);
+            for (let idx = 0; idx < this.#maxSize; idx++) {
+                const dataList = role.indexMap.get(idx);
                 let bc = 0;
                 let gc = 0;
                 if (dataList) {
@@ -939,14 +940,14 @@ class WeeklyReportGenerator {
         html += "</tbody>";
         html += "</table>";
 
-        return html;
+        $("#statistics").html(html).parent().show();
     }
 }
 
-class RoleWeeklyReport {
+class RoleReport {
 
     readonly roleName: string;
-    dayMap: Map<number, BattleLog[]>;
+    indexMap: Map<number, BattleLog[]>;
 
     bc0 = 0;
     bc1 = 0;
@@ -985,8 +986,8 @@ class RoleWeeklyReport {
 
     constructor(roleName: string) {
         this.roleName = roleName;
-        this.dayMap = new Map();
+        this.indexMap = new Map();
     }
 }
 
-export = WeeklyReportGenerator;
+export = MonthlyReportGenerator;

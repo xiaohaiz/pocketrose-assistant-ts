@@ -1,4 +1,6 @@
+import _ from "lodash";
 import PetProfile from "../../common/PetProfile";
+import MonsterUtils from "./MonsterUtils";
 
 class PetRelationLoader {
 
@@ -24,19 +26,15 @@ class PetRelationLoader {
 }
 
 function findSources(profile: PetProfile | undefined, sources: number[]) {
-    if (profile === undefined) {
-        return;
-    }
-    sources.push(profile.id!);
+    if (!profile) return;
+    sources.push(_.parseInt(profile.code!));
     findSources(profile.source, sources);
 }
 
 function findTargets(profile: PetProfile, targets: number[]) {
-    if (profile.targets === undefined || profile.targets.length === 0) {
-        return;
-    }
+    if (!profile.targets || profile.targets.length === 0) return;
     for (const target of profile.targets) {
-        targets.push(target.id!);
+        targets.push(_.parseInt(target.code!));
         findTargets(target, targets);
     }
 }
@@ -280,7 +278,7 @@ function allProfiles() {
     const profiles = new Map<number, PetProfile>();
     for (let i = 1; i <= 493; i++) {
         const profile = new PetProfile();
-        profile.id = i;
+        profile.code = MonsterUtils.asCode(i)!;
         profile.targets = [];
         profiles.set(i, profile);
     }

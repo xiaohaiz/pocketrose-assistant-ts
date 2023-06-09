@@ -4,6 +4,7 @@ import NpcLoader from "../../core/NpcLoader";
 import BattleReportGenerator from "../../core/report/BattleReportGenerator";
 import DailyReportGenerator from "../../core/report/DailyReportGenerator";
 import MonsterReportGenerator from "../../core/report/MonsterReportGenerator";
+import MonthlyReportGenerator from "../../core/report/MonthlyReportGenerator";
 import TreasureReportGenerator from "../../core/report/TreasureReportGenerator";
 import WeeklyReportGenerator from "../../core/report/WeeklyReportGenerator";
 import ZodiacReportGenerator from "../../core/report/ZodiacReportGenerator";
@@ -92,8 +93,9 @@ abstract class PersonalStatisticsPageProcessor extends PageProcessorCredentialSu
         html += "<td>";
         html += "<button role='button' id='report-3' style='width:100%'>十二宫统计报告</button>";
         html += "</td>";
-        html += "<td>";
-        html += "</td>";
+        html += "<td></td>";
+        html += "<td></td>";
+        html += "<td></td>";
         html += "</tr>";
         html += "<tr>";
         html += "<td>";
@@ -107,6 +109,12 @@ abstract class PersonalStatisticsPageProcessor extends PageProcessorCredentialSu
         html += "</td>";
         html += "<td>";
         html += "<button role='button' id='log-4' style='width:100%'>上周战报</button>";
+        html += "</td>";
+        html += "<td>";
+        html += "<button role='button' id='log-5' style='width:100%'>本月战报</button>";
+        html += "</td>";
+        html += "<td>";
+        html += "<button role='button' id='log-6' style='width:100%'>上月战报</button>";
         html += "</td>";
         html += "</tr>";
         html += "</tbody>";
@@ -192,6 +200,8 @@ abstract class PersonalStatisticsPageProcessor extends PageProcessorCredentialSu
         doBindLog2();
         doBindLog3();
         doBindLog4();
+        doBindLog5();
+        doBindLog6();
 
         if (TeamManager.isMaster(credential.id)) {
             doBindClearBattleLog();
@@ -420,6 +430,20 @@ function doBindLog4() {
                 const html = new WeeklyReportGenerator(logList, target).generate();
                 $("#statistics").html(html).parent().show();
             });
+    });
+}
+
+function doBindLog5() {
+    $("#log-5").on("click", () => {
+        const target = $("#teamMemberSelect").val()! as string;
+        new MonthlyReportGenerator(MonthRange.current(), target).generate();
+    });
+}
+
+function doBindLog6() {
+    $("#log-6").on("click", () => {
+        const target = $("#teamMemberSelect").val()! as string;
+        new MonthlyReportGenerator(MonthRange.current().previous(), target).generate();
     });
 }
 
