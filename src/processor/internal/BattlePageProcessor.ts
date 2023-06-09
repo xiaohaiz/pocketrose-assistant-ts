@@ -76,14 +76,6 @@ function processBattle(credential: Credential,
             "<div style='padding-top:10px;padding-bottom:10px'><button role='button' id='lodgeButton'>返回住宿</button></div>" +
             ""));
 
-    // 根据设置是否变成大按钮
-    if (SetupLoader.isBattleLargeButtonEnabled()) {
-        $("#returnButton").css("font-size", "200%");
-        $("#depositButton").css("font-size", "200%");
-        $("#repairButton").css("font-size", "200%");
-        $("#lodgeButton").css("font-size", "200%");
-    }
-
     // 根据设置的内容修改按钮的台词
     let buttonText = SetupLoader.getBattleReturnButtonText();
     if (buttonText !== "") {
