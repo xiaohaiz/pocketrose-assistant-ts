@@ -5,16 +5,14 @@ import BattleReportGenerator from "../../core/report/BattleReportGenerator";
 import DailyReportGenerator from "../../core/report/DailyReportGenerator";
 import MonsterReportGenerator from "../../core/report/MonsterReportGenerator";
 import MonthlyReportGenerator from "../../core/report/MonthlyReportGenerator";
-import TreasureReportGenerator from "../../core/report/TreasureReportGenerator";
+import RoleCareerTransferReportGenerator from "../../core/report/RoleCareerTransferReportGenerator";
 import WeeklyReportGenerator from "../../core/report/WeeklyReportGenerator";
 import ZodiacReportGenerator from "../../core/report/ZodiacReportGenerator";
-import RoleStorageManager from "../../core/role/RoleStorageManager";
 import TeamManager from "../../core/team/TeamManager";
 import Credential from "../../util/Credential";
 import DayRange from "../../util/DayRange";
 import MessageBoard from "../../util/MessageBoard";
 import MonthRange from "../../util/MonthRange";
-import PageUtils from "../../util/PageUtils";
 import WeekRange from "../../util/WeekRange";
 import PageProcessorContext from "../PageProcessorContext";
 import PageProcessorCredentialSupport from "../PageProcessorCredentialSupport";
@@ -74,12 +72,6 @@ abstract class PersonalStatisticsPageProcessor extends PageProcessorCredentialSu
         html += "<tr>";
         html += "<td id='operation' style='text-align:center;background-color:#F8F0E0'></td>";
         html += "<tr>";
-        html += "<tr>";
-        html += "<td style='text-align:center;background-color:#F8F0E0'>";
-        html += "<button role='button' id='s-1'>转职数据统计</button>";
-        html += "<button role='button' id='s-2'>上洞数据统计</button>";
-        html += "</td>";
-        html += "<tr>";
         html += "<td style='text-align:center;background-color:#F8F0E0'>";
         html += "<table style='background-color:transparent;border-spacing:0;border-width:0;margin:auto'>";
         html += "<tbody>";
@@ -93,7 +85,9 @@ abstract class PersonalStatisticsPageProcessor extends PageProcessorCredentialSu
         html += "<td>";
         html += "<button role='button' id='report-3' style='width:100%'>十二宫统计报告</button>";
         html += "</td>";
-        html += "<td></td>";
+        html += "<td>";
+        html += "<button role='button' id='report-4' style='width:100%'>转职统计报告</button>";
+        html += "</td>";
         html += "<td></td>";
         html += "<td></td>";
         html += "</tr>";
@@ -190,12 +184,10 @@ abstract class PersonalStatisticsPageProcessor extends PageProcessorCredentialSu
 
         $("#operation").append($("<input type='text' id='monster' size='5'>"));
 
-        doRoleCareerTransferStatistics();
-        doTreasureStatistics();
-
         doBindReport1();
         doBindReport2();
         doBindReport3();
+        doBindReport4();
         doBindLog1();
         doBindLog2();
         doBindLog3();
@@ -216,135 +208,6 @@ abstract class PersonalStatisticsPageProcessor extends PageProcessorCredentialSu
     }
 
     abstract doBindReturnButton(credential: Credential): void;
-}
-
-function doRoleCareerTransferStatistics() {
-    $("#s-1").on("click", () => {
-        const target = $("#teamMemberSelect").val()! as string;
-        if (target === "") {
-            alert("请先选择一位队员！");
-            return;
-        }
-        RoleStorageManager.getRoleCareerTransferStorage()
-            .findByRoleId(target)
-            .then(dataList => {
-                const roleName = $("#teamMemberSelect")
-                    .find("> option:selected")
-                    .text();
-
-                let html = "";
-                html += "<table style='background-color:#888888;border-width:1px;border-spacing:1px;text-align:center;width:100%;margin:auto'>";
-                html += "<tbody>";
-                html += "<tr>";
-                html += "<td colspan='18' style='background-color:navy;color:yellow;font-weight:bold;text-align:center'>" + roleName + "转职统计</td>";
-                html += "</tr>";
-                html += "<tr>";
-                html += "<th style='background-color:green;color:white'>#</th>"
-                html += "<th style='background-color:green;color:white'>时间</th>"
-                html += "<th style='background-color:green;color:white'>职业</th>"
-                html += "<th style='background-color:green;color:white'>等级</th>"
-                html += "<th style='background-color:green;color:white' colspan='2'>ＨＰ</th>"
-                html += "<th style='background-color:green;color:white' colspan='2'>ＭＰ</th>"
-                html += "<th style='background-color:green;color:white' colspan='2'>攻击</th>"
-                html += "<th style='background-color:green;color:white' colspan='2'>防御</th>"
-                html += "<th style='background-color:green;color:white' colspan='2'>智力</th>"
-                html += "<th style='background-color:green;color:white' colspan='2'>精神</th>"
-                html += "<th style='background-color:green;color:white' colspan='2'>速度</th>"
-                html += "</tr>";
-
-                let totalHealthInherit = 0;
-                let totalManaInherit = 0;
-                let totalAttackInherit = 0;
-                let totalDefenseInherit = 0;
-                let totalSpecialAttackInherit = 0;
-                let totalSpecialDefenseInherit = 0;
-                let totalSpeedInherit = 0;
-
-                let count = 0;
-                dataList.sort((a, b) => b.createTime! - a.createTime!)
-                    .forEach(data => {
-                        const transferTime = new Date(data.createTime!).toLocaleString();
-                        html += "<tr>";
-                        html += "<td style='background-color:#F8F0E0' rowspan='2'>" + (++count) + "</td>"
-                        html += "<td style='background-color:#F8F0E0' rowspan='2'>" + transferTime + "</td>"
-                        html += "<td style='background-color:#F8F0E0'>" + data.career_1 + "</td>"
-                        html += "<td style='background-color:#F8F0E0'>" + data.level_1 + "</td>"
-                        html += "<td style='background-color:#F8F0E0'>" + data.health_1 + "</td>"
-                        html += "<td style='background-color:#F8F0E0;font-weight:bold' rowspan='2'>" + data.healthInherit + "</td>"
-                        html += "<td style='background-color:#F8F0E0'>" + data.mana_1 + "</td>"
-                        html += "<td style='background-color:#F8F0E0;font-weight:bold' rowspan='2'>" + data.manaInherit + "</td>"
-                        html += "<td style='background-color:#F8F0E0'>" + data.attack_1 + "</td>"
-                        html += "<td style='background-color:#F8F0E0;font-weight:bold' rowspan='2'>" + data.attackInherit + "</td>"
-                        html += "<td style='background-color:#F8F0E0'>" + data.defense_1 + "</td>"
-                        html += "<td style='background-color:#F8F0E0;font-weight:bold' rowspan='2'>" + data.defenseInherit + "</td>"
-                        html += "<td style='background-color:#F8F0E0'>" + data.specialAttack_1 + "</td>"
-                        html += "<td style='background-color:#F8F0E0;font-weight:bold' rowspan='2'>" + data.specialAttackInherit + "</td>"
-                        html += "<td style='background-color:#F8F0E0'>" + data.specialDefense_1 + "</td>"
-                        html += "<td style='background-color:#F8F0E0;font-weight:bold' rowspan='2'>" + data.specialDefenseInherit + "</td>"
-                        html += "<td style='background-color:#F8F0E0'>" + data.speed_1 + "</td>"
-                        html += "<td style='background-color:#F8F0E0;font-weight:bold' rowspan='2'>" + data.speedInherit + "</td>"
-                        html += "</tr>";
-
-                        html += "<tr>";
-                        html += "<td style='background-color:#F8F0E0'>" + data.career_2 + "</td>"
-                        html += "<td style='background-color:#F8F0E0'>" + data.level_2 + "</td>"
-                        html += "<td style='background-color:#F8F0E0'>" + data.health_2 + "</td>"
-                        html += "<td style='background-color:#F8F0E0'>" + data.mana_2 + "</td>"
-                        html += "<td style='background-color:#F8F0E0'>" + data.attack_2 + "</td>"
-                        html += "<td style='background-color:#F8F0E0'>" + data.defense_2 + "</td>"
-                        html += "<td style='background-color:#F8F0E0'>" + data.specialAttack_2 + "</td>"
-                        html += "<td style='background-color:#F8F0E0'>" + data.specialDefense_2 + "</td>"
-                        html += "<td style='background-color:#F8F0E0'>" + data.speed_2 + "</td>"
-                        html += "</tr>";
-
-                        totalHealthInherit += parseFloat(PageUtils.convertHtmlToText(data.healthInherit));
-                        totalManaInherit += parseFloat(PageUtils.convertHtmlToText(data.manaInherit));
-                        totalAttackInherit += parseFloat(PageUtils.convertHtmlToText(data.attackInherit));
-                        totalDefenseInherit += parseFloat(PageUtils.convertHtmlToText(data.defenseInherit));
-                        totalSpecialAttackInherit += parseFloat(PageUtils.convertHtmlToText(data.specialAttackInherit));
-                        totalSpecialDefenseInherit += parseFloat(PageUtils.convertHtmlToText(data.specialDefenseInherit));
-                        totalSpeedInherit += parseFloat(PageUtils.convertHtmlToText(data.speedInherit));
-                    });
-
-                if (count > 0) {
-                    html += "<tr>";
-                    html += "<td style='background-color:#F8F0E0' colspan='5'></td>"
-                    html += "<td style='background-color:#F8F0E0;font-weight:bold' rowspan='2'>" + ((totalHealthInherit / count).toFixed(2)) + "</td>"
-                    html += "<td style='background-color:#F8F0E0'></td>"
-                    html += "<td style='background-color:#F8F0E0;font-weight:bold' rowspan='2'>" + ((totalManaInherit / count).toFixed(2)) + "</td>"
-                    html += "<td style='background-color:#F8F0E0'></td>"
-                    html += "<td style='background-color:#F8F0E0;font-weight:bold' rowspan='2'>" + ((totalAttackInherit / count).toFixed(2)) + "</td>"
-                    html += "<td style='background-color:#F8F0E0'></td>"
-                    html += "<td style='background-color:#F8F0E0;font-weight:bold' rowspan='2'>" + ((totalDefenseInherit / count).toFixed(2)) + "</td>"
-                    html += "<td style='background-color:#F8F0E0'></td>"
-                    html += "<td style='background-color:#F8F0E0;font-weight:bold' rowspan='2'>" + ((totalSpecialAttackInherit / count).toFixed(2)) + "</td>"
-                    html += "<td style='background-color:#F8F0E0'></td>"
-                    html += "<td style='background-color:#F8F0E0;font-weight:bold' rowspan='2'>" + ((totalSpecialDefenseInherit / count).toFixed(2)) + "</td>"
-                    html += "<td style='background-color:#F8F0E0'></td>"
-                    html += "<td style='background-color:#F8F0E0;font-weight:bold' rowspan='2'>" + ((totalSpeedInherit / count).toFixed(2)) + "</td>"
-                    html += "</tr>";
-                }
-
-                html += "</tbody>";
-                html += "</table>";
-
-                $("#statistics").html(html).parent().show();
-            });
-    });
-}
-
-function doTreasureStatistics() {
-    $("#s-2").on("click", () => {
-        const target = $("#teamMemberSelect").val()! as string;
-        BattleStorageManager.battleResultStorage
-            .loads()
-            .then(dataList => {
-                const candidates = dataList
-                    .filter(it => target === "" || it.roleId === target);
-                const html = new TreasureReportGenerator(candidates).generate();
-                $("#statistics").html(html).parent().show();
-            });
-    });
 }
 
 function doBindReport1() {
@@ -380,6 +243,13 @@ function doBindReport3() {
                 const html = new ZodiacReportGenerator(dataList, target).generate();
                 $("#statistics").html(html).parent().show();
             });
+    });
+}
+
+function doBindReport4() {
+    $("#report-4").on("click", () => {
+        const target = $("#teamMemberSelect").val()! as string;
+        new RoleCareerTransferReportGenerator(target).generate();
     });
 }
 
