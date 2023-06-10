@@ -116,7 +116,7 @@ class MapBuilder {
     static updateTownBackgroundColor() {
         new TownInformation().open().then(page => {
             for (const status of page.statusList!) {
-                const town = TownLoader.getTownByName(status.name!)!;
+                const town = TownLoader.load(status.name!)!;
                 const x = town.coordinate!.x;
                 const y = town.coordinate!.y;
                 const buttonId = "location_" + x + "_" + y;

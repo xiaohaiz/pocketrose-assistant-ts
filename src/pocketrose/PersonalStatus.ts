@@ -132,8 +132,8 @@ function doParsePage(pageHtml: string): PersonalStatusPage {
         castle.coordinate = new Coordinate(x, y);
         role.castle = castle;
     } else {
-        const town = TownLoader.getTownByName(s);
-        if (town !== null) {
+        const town = TownLoader.load(s);
+        if (town) {
             role.location = "TOWN";
             role.town = town;
         }

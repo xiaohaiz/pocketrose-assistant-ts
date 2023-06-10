@@ -18,15 +18,6 @@ class TownLoader {
         return null;
     }
 
-    static getTownByName(name: string): Town | null {
-        for (const town of TownLoader.getTownList()) {
-            if (name.startsWith(town.name)) {
-                return town;
-            }
-        }
-        return null;
-    }
-
     static getTownByCoordinate(coordinate: Coordinate): Town | null {
         for (const town of TownLoader.getTownList()) {
             if (town.coordinate.equals(coordinate)) {
