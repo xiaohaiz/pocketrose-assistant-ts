@@ -478,8 +478,8 @@ function doRenderMenu(credential: Credential, page: TownDashboardPage) {
     if (SetupLoader.isCollectTownTaxDisabled()) {
         $("option[value='MAKE_TOWN']").remove();
     }
-    $("option[value='COU_MAKE']").text("口袋助手使用手册");
-    $("option[value='TENNIS']").text("任务屋");
+    $("option[value='COU_MAKE']").text("使用手册");
+    $("option[value='TENNIS']").text("任务指南");
     $("option[value='DIANMING']").text("统计报告");
 }
 
