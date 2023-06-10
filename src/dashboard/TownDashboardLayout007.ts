@@ -9,6 +9,7 @@ import PersonalPetManagement from "../pocketrose/PersonalPetManagement";
 import TownDashboardPage from "../pocketrose/TownDashboardPage";
 import Credential from "../util/Credential";
 import NetworkUtils from "../util/NetworkUtils";
+import StringUtils from "../util/StringUtils";
 import TownDashboardLayout from "./TownDashboardLayout";
 
 class TownDashboardLayout007 extends TownDashboardLayout {
@@ -149,10 +150,6 @@ class TownDashboardLayout007 extends TownDashboardLayout {
                 "<div style='display:none' id='hidden-5'></div>" +
                 "");
 
-        generateDepositForm(credential);
-        generateRepairForm(credential);
-        generateLodgeForm(credential);
-
         BattleStorageManager.getBattleRecordStorage().load(credential.id).then(record => {
             const lastBattle = record.html!;
             if (lastBattle.includes("吐故纳新，扶摇直上")) {
@@ -162,25 +159,8 @@ class TownDashboardLayout007 extends TownDashboardLayout {
         });
 
 
-        // 战斗布局只支持以下战斗
-        $("select[name='level']").find("option").each(function (_idx, option) {
-            const text = $(option).text();
-            if (text.startsWith("秘宝之岛")) {
-                // do nothing, keep
-            } else if (text.startsWith("初级之森")) {
-                // do nothing, keep
-            } else if (text.startsWith("中级之塔")) {
-                // do nothing, keep
-            } else if (text.startsWith("上级之洞")) {
-                // do nothing, keep
-            } else if (text.startsWith("十二神殿")) {
-                // do nothing, keep
-            } else if (text.startsWith("------")) {
-                // do nothing, keep
-            } else {
-                $(option).remove();
-            }
-        });
+        // 战斗布局只支持标准的战斗
+        doProcessBattleLevel();
 
         $("#battleButton")
             .attr("type", "button")
@@ -228,7 +208,12 @@ class TownDashboardLayout007 extends TownDashboardLayout {
                             .parent().show();
                         $("#battleReturn").on("click", () => {
                             $("#battleReturn").prop("disabled", true);
-                            $("#refreshButton").trigger("click");
+                            const request = credential.asRequestMap();
+                            request.set("mode", "STATUS");
+                            NetworkUtils.post("status.cgi", request)
+                                .then(mainPage => {
+                                    doProcessBattleReturn(credential, mainPage);
+                                });
                         });
                         $(".battleButton").trigger("click");
                         return;
@@ -278,7 +263,12 @@ class TownDashboardLayout007 extends TownDashboardLayout {
                         new BattleReturnInterceptor(credential, currentBattleCount)
                             .doBeforeReturn()
                             .then(() => {
-                                $("#refreshButton").trigger("click");
+                                const request = credential.asRequestMap();
+                                request.set("mode", "STATUS");
+                                NetworkUtils.post("status.cgi", request)
+                                    .then(mainPage => {
+                                        doProcessBattleReturn(credential, mainPage);
+                                    });
                             });
                     });
                     $("#battleDeposit").on("click", () => {
@@ -286,7 +276,13 @@ class TownDashboardLayout007 extends TownDashboardLayout {
                         new BattleReturnInterceptor(credential, currentBattleCount)
                             .doBeforeReturn()
                             .then(() => {
-                                $("#deposit").trigger("click");
+                                const request = credential.asRequestMap();
+                                request.set("azukeru", "all");
+                                request.set("mode", "BANK_SELL");
+                                NetworkUtils.post("town.cgi", request)
+                                    .then(mainPage => {
+                                        doProcessBattleReturn(credential, mainPage);
+                                    });
                             });
                     });
                     $("#battleRepair").on("click", () => {
@@ -294,7 +290,13 @@ class TownDashboardLayout007 extends TownDashboardLayout {
                         new BattleReturnInterceptor(credential, currentBattleCount)
                             .doBeforeReturn()
                             .then(() => {
-                                $("#repair").trigger("click");
+                                const request = credential.asRequestMap();
+                                request.set("arm_mode", "all");
+                                request.set("mode", "MY_ARM2");
+                                NetworkUtils.post("town.cgi", request)
+                                    .then(mainPage => {
+                                        doProcessBattleReturn(credential, mainPage);
+                                    });
                             });
                     });
                     $("#battleLodge").on("click", () => {
@@ -302,7 +304,12 @@ class TownDashboardLayout007 extends TownDashboardLayout {
                         new BattleReturnInterceptor(credential, currentBattleCount)
                             .doBeforeReturn()
                             .then(() => {
-                                $("#lodge").trigger("click");
+                                const request = credential.asRequestMap();
+                                request.set("mode", "RECOVERY");
+                                NetworkUtils.post("town.cgi", request)
+                                    .then(mainPage => {
+                                        doProcessBattleReturn(credential, mainPage);
+                                    });
                             });
                     });
 
@@ -314,42 +321,67 @@ class TownDashboardLayout007 extends TownDashboardLayout {
 
 }
 
-function generateDepositForm(credential: Credential) {
-    let form = "";
-    // noinspection HtmlUnknownTarget
-    form += "<form action='town.cgi' method='post'>";
-    form += "<input type='hidden' name='id' value='" + credential.id + "'>";
-    form += "<input type='hidden' name='pass' value='" + credential.pass + "'>"
-    form += "<input type='hidden' name='azukeru' value='all'>";
-    form += "<input type='hidden' name='mode' value='BANK_SELL'>";
-    form += "<input type='submit' id='deposit'>";
-    form += "</form>";
-    $("#hidden-2").html(form);
+function doProcessBattleLevel() {
+    $("select[name='level']").find("option").each(function (_idx, option) {
+        const text = $(option).text();
+        if (text.startsWith("秘宝之岛")) {
+            // do nothing, keep
+        } else if (text.startsWith("初级之森")) {
+            // do nothing, keep
+        } else if (text.startsWith("中级之塔")) {
+            // do nothing, keep
+        } else if (text.startsWith("上级之洞")) {
+            // do nothing, keep
+        } else if (text.startsWith("十二神殿")) {
+            // do nothing, keep
+        } else if (text.startsWith("------")) {
+            // do nothing, keep
+        } else {
+            $(option).remove();
+        }
+    });
 }
 
-function generateRepairForm(credential: Credential) {
-    let form = "";
-    // noinspection HtmlUnknownTarget
-    form += "<form action='town.cgi' method='post'>";
-    form += "<input type='hidden' name='id' value='" + credential.id + "'>";
-    form += "<input type='hidden' name='pass' value='" + credential.pass + "'>"
-    form += "<input type='hidden' name='arm_mode' value='all'>";
-    form += "<input type='hidden' name='mode' value='MY_ARM2'>";
-    form += "<input type='submit' id='repair'>";
-    form += "</form>";
-    $("#hidden-3").html(form);
+function doProcessBattleReturn(credential: Credential, mainPage: string) {
+    $(".battleButton").off("click");
+    $("#battleMenu").html("").parent().hide();
+    $("#refreshButton").show();
+    $("#battleButton").show();
+
+    const page = TownDashboardPage.parse(mainPage);
+
+    // 更新首页战斗相关的选项
+    // ktotal
+    $("input:hidden[name='ktotal']").val(page.role!.battleCount!);
+    // session id
+    $("input:hidden[name='sessionid']").val(() => {
+        return $(mainPage).find("input:hidden[name='sessionid']").val() as string;
+    });
+    // level
+    $("select[name='level']").html(() => {
+        return $(mainPage).find("select[name='level']").html();
+    });
+    doProcessBattleLevel();
+    // verification code picture
+    $("select[name='level']").closest("form")
+        .find("> img:first")
+        .each((idx, img) => {
+            const src = $(mainPage).find("select[name='level']")
+                .closest("form")
+                .find("> img:first")
+                .attr("src") as string;
+            $(img).attr("src", src);
+        });
+
+
+    // 更新首页的战数变化
+    $("#roleTitle").find("> font:first").html((idx, fs) => {
+        const fs0 = StringUtils.substringBefore(fs, "&nbsp;&nbsp;&nbsp;");
+        return fs0 + "&nbsp;&nbsp;&nbsp;" + page.role?.battleCount + "战";
+    });
+
+
 }
 
-function generateLodgeForm(credential: Credential) {
-    let form = "";
-    // noinspection HtmlUnknownTarget
-    form += "<form action='town.cgi' method='post'>";
-    form += "<input type='hidden' name='id' value='" + credential.id + "'>";
-    form += "<input type='hidden' name='pass' value='" + credential.pass + "'>"
-    form += "<input type='hidden' name='mode' value='RECOVERY'>";
-    form += "<input type='submit' id='lodge'>";
-    form += "</form>";
-    $("#hidden-4").html(form);
-}
 
 export = TownDashboardLayout007;
