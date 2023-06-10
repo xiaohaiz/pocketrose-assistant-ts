@@ -3,7 +3,7 @@ import BattleProcessor from "../core/battle/BattleProcessor";
 import BattleRecord from "../core/battle/BattleRecord";
 import BattleReturnInterceptor from "../core/battle/BattleReturnInterceptor";
 import BattleStorageManager from "../core/battle/BattleStorageManager";
-import TownDashboardTaxManager from "../core/TownDashboardTaxManager";
+import TownDashboardTaxManager from "../core/town/TownDashboardTaxManager";
 import PersonalEquipmentManagement from "../pocketrose/PersonalEquipmentManagement";
 import PersonalPetManagement from "../pocketrose/PersonalPetManagement";
 import TownDashboardPage from "../pocketrose/TownDashboardPage";

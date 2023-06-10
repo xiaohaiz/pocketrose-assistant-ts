@@ -4,7 +4,7 @@ import TreasureHint from "../../common/TreasureHint";
 import MapBuilder from "../../core/MapBuilder";
 import MapExplorer from "../../core/MapExplorer";
 import NpcLoader from "../../core/NpcLoader";
-import TownEntrance from "../../core/TownEntrance";
+import TownEntrance from "../../core/town/TownEntrance";
 import TravelPlanExecutor from "../../core/TravelPlanExecutor";
 import TreasureHintParser from "../../core/TreasureHintParser";
 import PersonalStatus from "../../pocketrose/PersonalStatus";
