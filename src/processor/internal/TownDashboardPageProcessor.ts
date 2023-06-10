@@ -448,10 +448,10 @@ function doRenderMenu(credential: Credential, page: TownDashboardPage) {
     $("option[value='LETTER']").text("口袋助手设置");
     $("option[value='RANK_REMAKE']").text("个人面板");
     $("option[value='BATTLE_MES']").text("团队面板");
-    if (SetupLoader.isEquipmentManagementUIEnabled()) {
-        $("option[value='USE_ITEM']").text("装备管理");
-        $("option[value='ITEM_SEND']").remove();
-    }
+
+    $("option[value='USE_ITEM']").text("装备管理");
+    $("option[value='ITEM_SEND']").remove();
+
     if (SetupLoader.isPetManagementUIEnabled()) {
         $("option[value='PETSTATUS']").text("宠物管理");
         $("option[value='PET_SEND']").remove();

@@ -42,10 +42,6 @@ class SetupLoader {
         return StorageUtils.getBoolean("_pa_009");
     }
 
-    static isEquipmentManagementUIEnabled(): boolean {
-        return StorageUtils.getBoolean("_pa_010");
-    }
-
     static isCareerTransferEntranceDisabled(id: string): boolean {
         return StorageUtils.getBoolean("_pa_014_" + id);
     }

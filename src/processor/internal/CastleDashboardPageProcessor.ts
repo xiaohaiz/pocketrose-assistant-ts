@@ -28,12 +28,11 @@ class CastleDashboardPageProcessor implements PageProcessor {
             .text("城堡驿站");
         $("option[value='LETTER']")
             .text("口袋助手设置");
-        if (SetupLoader.isEquipmentManagementUIEnabled()) {
-            $("option[value='USE_ITEM']")
-                .text("装备管理");
-            $("option[value='CASTLE_ITEM']").remove();
-            $("option[value='CASTLE_SENDITEM']").remove();
-        }
+
+        $("option[value='USE_ITEM']").text("装备管理");
+        $("option[value='CASTLE_ITEM']").remove();
+        $("option[value='CASTLE_SENDITEM']").remove();
+
         if (SetupLoader.isPetManagementUIEnabled()) {
             $("option[value='PETSTATUS']")
                 .text("宠物管理");
