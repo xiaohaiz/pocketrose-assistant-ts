@@ -1,6 +1,6 @@
 import _ from "lodash";
 import NpcLoader from "../../core/NpcLoader";
-import TownLoader from "../../core/TownLoader";
+import TownLoader from "../../core/town/TownLoader";
 import PersonalStatus from "../../pocketrose/PersonalStatus";
 import Credential from "../../util/Credential";
 import MessageBoard from "../../util/MessageBoard";
@@ -82,14 +82,14 @@ class CountryTownStrengthenPageProcessor extends PageProcessorCredentialSupport 
             .find("> tbody:first")
             .find("> tr:eq(3)")
             .each((i, tr) => {
-                const town = TownLoader.getTownById(context?.get("townId")!)!;
+                const town = TownLoader.load(context?.get("townId"));
                 let html = "";
                 html += "<tr>";
                 html += "<td id='instruction' style='text-align:center'></td>";
                 html += "</tr>";
                 html += "<tr>";
                 html += "<td id='menu' style='text-align:center'>";
-                html += "<button role='button' id='returnButton'>返回" + town.name + "</button>";
+                html += "<button role='button' id='returnButton'>返回" + town?.name + "</button>";
                 html += "</td>";
                 html += "</tr>";
 

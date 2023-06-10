@@ -1,6 +1,6 @@
 import Town from "../../common/Town";
 import NpcLoader from "../../core/NpcLoader";
-import TownLoader from "../../core/TownLoader";
+import TownLoader from "../../core/town/TownLoader";
 import TownBank from "../../pocketrose/TownBank";
 import TownBankPage from "../../pocketrose/TownBankPage";
 import Credential from "../../util/Credential";
@@ -15,7 +15,7 @@ class TownBankPageProcessor extends PageProcessorCredentialSupport {
 
     doProcess(credential: Credential, context?: PageProcessorContext): void {
         const page = TownBank.parsePage(PageUtils.currentPageHtml());
-        const town = TownLoader.getTownById(context!.get("townId")!)!;
+        const town = TownLoader.load(context?.get("townId"))!;
 
         this.#renderImmutablePage(credential, town);
         this.#renderMutablePage(credential, page, town);

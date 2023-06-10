@@ -2,7 +2,7 @@ import Equipment from "../common/Equipment";
 import Merchandise from "../common/Merchandise";
 import Role from "../common/Role";
 import Town from "../common/Town";
-import TownLoader from "../core/TownLoader";
+import TownLoader from "../core/town/TownLoader";
 
 class TownArmorHousePage {
 
@@ -13,7 +13,7 @@ class TownArmorHousePage {
     merchandiseList?: Merchandise[];
 
     get town(): Town {
-        return TownLoader.getTownById(this.townId!)!;
+        return TownLoader.load(this.townId)!;
     }
 
     findEquipment(index: number) {

@@ -1,4 +1,3 @@
-import SetupLoader from "../../config/SetupLoader";
 import RoleStateMachineManager from "../../core/state/RoleStateMachineManager";
 import PersonalCareerManagementPageProcessor_Castle
     from "../../processor/internal/PersonalCareerManagementPageProcessor_Castle";
@@ -21,9 +20,6 @@ class PersonalCareerManagementPageInterceptor implements PageInterceptor {
     }
 
     intercept(): void {
-        if (!SetupLoader.isCareerManagementUIEnabled()) {
-            return;
-        }
         RoleStateMachineManager.create()
             .load()
             .then(machine => {

@@ -1,6 +1,6 @@
 import TownInformation from "../pocketrose/TownInformation";
 import Coordinate from "../util/Coordinate";
-import TownLoader from "./TownLoader";
+import TownLoader from "./town/TownLoader";
 
 class MapBuilder {
 
@@ -82,8 +82,8 @@ class MapBuilder {
                 const coordinate = new Coordinate(x, y);
                 let buttonValue = "　";
                 let buttonTitle = "坐标" + coordinate.asText();
-                const town = TownLoader.getTownByCoordinate(coordinate);
-                if (town !== null) {
+                const town = TownLoader.load(coordinate);
+                if (town) {
                     buttonValue = town.name.substring(0, 1);
                     buttonTitle = "城市" + coordinate.asText() + " " + town.name;
                 }
@@ -116,7 +116,7 @@ class MapBuilder {
     static updateTownBackgroundColor() {
         new TownInformation().open().then(page => {
             for (const status of page.statusList!) {
-                const town = TownLoader.getTownByName(status.name!)!;
+                const town = TownLoader.load(status.name!)!;
                 const x = town.coordinate!.x;
                 const y = town.coordinate!.y;
                 const buttonId = "location_" + x + "_" + y;

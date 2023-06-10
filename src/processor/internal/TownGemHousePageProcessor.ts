@@ -1,7 +1,7 @@
 import Equipment from "../../common/Equipment";
 import Town from "../../common/Town";
 import NpcLoader from "../../core/NpcLoader";
-import TownLoader from "../../core/TownLoader";
+import TownLoader from "../../core/town/TownLoader";
 import PersonalEquipmentManagement from "../../pocketrose/PersonalEquipmentManagement";
 import TownBank from "../../pocketrose/TownBank";
 import TownGemHouse from "../../pocketrose/TownGemHouse";
@@ -20,7 +20,7 @@ class TownGemHousePageProcessor extends PageProcessorCredentialSupport {
 
     doProcess(credential: Credential, context?: PageProcessorContext): void {
         const townId = context!.get("townId")!;
-        const town = TownLoader.getTownById(townId)!;
+        const town = TownLoader.load(townId)!;
         new TownGemHouse(credential, town.id).parsePage(PageUtils.currentPageHtml())
             .then(page => {
                 this.#renderImmutablePage(credential, town);

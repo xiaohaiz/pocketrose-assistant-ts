@@ -1,6 +1,6 @@
 import _ from "lodash";
 import SetupLoader from "../config/SetupLoader";
-import TownLoader from "../core/TownLoader";
+import TownLoader from "../core/town/TownLoader";
 import Coordinate from "../util/Coordinate";
 import PageUtils from "../util/PageUtils";
 import StringUtils from "../util/StringUtils";
@@ -287,7 +287,7 @@ class Equipment {
                 if (!coordinate.isAvailable) {
                     return "<b style='color:red'>活动图</b>";
                 }
-                const town = TownLoader.getTownByCoordinate(coordinate);
+                const town = TownLoader.load(coordinate);
                 if (town !== null) {
                     return "<b style='color:red'>" + town.name + "</b>";
                 } else {

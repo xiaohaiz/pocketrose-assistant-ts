@@ -76,24 +76,6 @@ function processBattle(credential: Credential,
             "<div style='padding-top:10px;padding-bottom:10px'><button role='button' id='lodgeButton'>返回住宿</button></div>" +
             ""));
 
-    // 根据设置的内容修改按钮的台词
-    let buttonText = SetupLoader.getBattleReturnButtonText();
-    if (buttonText !== "") {
-        $("#returnButton").text(_.escape(buttonText));
-    }
-    buttonText = SetupLoader.getBattleLodgeButtonText();
-    if (buttonText !== "") {
-        $("#lodgeButton").text(_.escape(buttonText));
-    }
-    buttonText = SetupLoader.getBattleRepairButtonText();
-    if (buttonText !== "") {
-        $("#repairButton").text(_.escape(buttonText));
-    }
-    buttonText = SetupLoader.getBattleDepositButtonText();
-    if (buttonText !== "") {
-        $("#depositButton").text(_.escape(buttonText));
-    }
-
     // 重新定义按钮的行为
     $("#returnButton").on("click", () => {
         $("#returnButton").prop("disabled", true);

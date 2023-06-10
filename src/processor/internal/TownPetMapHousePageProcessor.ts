@@ -4,7 +4,7 @@ import PetMap from "../../common/PetMap";
 import PetLocalStorage from "../../core/PetLocalStorage";
 import RoleStorageManager from "../../core/role/RoleStorageManager";
 import FastLoginLoader from "../../core/team/FastLoginLoader";
-import TownLoader from "../../core/TownLoader";
+import TownLoader from "../../core/town/TownLoader";
 import PersonalStatus from "../../pocketrose/PersonalStatus";
 import TownPetMapHouse from "../../pocketrose/TownPetMapHouse";
 import TownPetMapHousePage from "../../pocketrose/TownPetMapHousePage";
@@ -66,8 +66,8 @@ class TownPetMapHousePageProcessor extends PageProcessorCredentialSupport {
         let returnTitle = "返回城市";
         const townId = context?.get("townId");
         if (townId !== undefined) {
-            const town = TownLoader.getTownById(townId)!;
-            returnTitle = "返回" + town.name;
+            const town = TownLoader.load(townId);
+            returnTitle = "返回" + town?.name;
         }
         html = "";
         html += "<button role='button' id='updateButton'>更新宠物信息</button>";

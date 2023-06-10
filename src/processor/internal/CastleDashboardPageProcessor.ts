@@ -28,24 +28,18 @@ class CastleDashboardPageProcessor implements PageProcessor {
             .text("城堡驿站");
         $("option[value='LETTER']")
             .text("口袋助手设置");
-        if (SetupLoader.isEquipmentManagementUIEnabled()) {
-            $("option[value='USE_ITEM']")
-                .text("装备管理");
-            $("option[value='CASTLE_ITEM']").remove();
-            $("option[value='CASTLE_SENDITEM']").remove();
-        }
-        if (SetupLoader.isPetManagementUIEnabled()) {
-            $("option[value='PETSTATUS']")
-                .text("宠物管理");
-            $("option[value='CASTLE_PET']").remove();
-            $("option[value='CASTLE_SENDPET']").remove();
-            $("option[value='PETBORN']").remove();
-        }
-        if (SetupLoader.isCareerManagementUIEnabled()) {
-            $("option[value='CHANGE_OCCUPATION']")
-                .text("职业管理");
-            $("option[value='MAGIC']").remove();
-        }
+
+        $("option[value='USE_ITEM']").text("装备管理");
+        $("option[value='CASTLE_ITEM']").remove();
+        $("option[value='CASTLE_SENDITEM']").remove();
+
+        $("option[value='PETSTATUS']").text("宠物管理");
+        $("option[value='CASTLE_PET']").remove();
+        $("option[value='CASTLE_SENDPET']").remove();
+        $("option[value='PETBORN']").remove();
+
+        $("option[value='CHANGE_OCCUPATION']").text("职业管理");
+        $("option[value='MAGIC']").remove();
 
         $("option[value='DIANMING']").text("统计报告");
     }

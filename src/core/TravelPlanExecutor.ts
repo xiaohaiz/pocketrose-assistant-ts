@@ -5,7 +5,7 @@ import MessageBoard from "../util/MessageBoard";
 import NetworkUtils from "../util/NetworkUtils";
 import StringUtils from "../util/StringUtils";
 import TimeoutUtils from "../util/TimeoutUtils";
-import TownLoader from "./TownLoader";
+import TownLoader from "./town/TownLoader";
 
 class TravelPlanExecutor {
 
@@ -82,8 +82,8 @@ function doMoveOnPath(credential: Credential, pathList: Coordinate[], index: num
 
                 if ($("#roleLocation").length > 0) {
                     let roleLocation = to.asText();
-                    const town = TownLoader.getTownByCoordinate(to);
-                    if (town !== null) {
+                    const town = TownLoader.load(to);
+                    if (town) {
                         roleLocation = town.name + " " + roleLocation;
                     }
                     $("#roleLocation").text(roleLocation);

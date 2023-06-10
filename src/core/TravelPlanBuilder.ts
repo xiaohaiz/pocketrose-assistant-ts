@@ -2,7 +2,7 @@ import TravelPlan from "../common/TravelPlan";
 import Coordinate from "../util/Coordinate";
 import MessageBoard from "../util/MessageBoard";
 import StringUtils from "../util/StringUtils";
-import TownLoader from "./TownLoader";
+import TownLoader from "./town/TownLoader";
 
 class TravelPlanBuilder {
 
@@ -41,8 +41,8 @@ class TravelPlanBuilder {
 
         if ($("#roleLocation").length > 0) {
             let roleLocation = source.asText();
-            const town = TownLoader.getTownByCoordinate(source);
-            if (town !== null) {
+            const town = TownLoader.load(source);
+            if (town) {
                 roleLocation = town.name + " " + roleLocation;
             }
             $("#roleLocation").text(roleLocation);

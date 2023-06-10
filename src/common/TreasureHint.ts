@@ -1,4 +1,4 @@
-import TownLoader from "../core/TownLoader";
+import TownLoader from "../core/town/TownLoader";
 import Coordinate from "../util/Coordinate";
 
 class TreasureHint {
@@ -11,7 +11,7 @@ class TreasureHint {
         if (!this.coordinate!.isAvailable) {
             return "<span style='color:red'>活动图</span>";
         }
-        const town = TownLoader.getTownByCoordinate(this.coordinate!);
+        const town = TownLoader.load(this.coordinate!);
         if (town === null) {
             return "-";
         } else {

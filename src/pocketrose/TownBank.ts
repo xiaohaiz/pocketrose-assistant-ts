@@ -1,6 +1,6 @@
 import BankAccount from "../common/BankAccount";
 import Role from "../common/Role";
-import TownLoader from "../core/TownLoader";
+import TownLoader from "../core/town/TownLoader";
 import Credential from "../util/Credential";
 import MessageBoard from "../util/MessageBoard";
 import NetworkUtils from "../util/NetworkUtils";
@@ -22,7 +22,7 @@ class TownBank {
         if (this.#townId === undefined) {
             return "口袋银行";
         } else {
-            const town = TownLoader.getTownById(this.#townId)!;
+            const town = TownLoader.load(this.#townId)!;
             return town.name + "分行";
         }
     }

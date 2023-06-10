@@ -1,30 +1,26 @@
-import Town from "../common/Town";
-import Coordinate from "../util/Coordinate";
+import _ from "lodash";
+import Town from "../../common/Town";
+import Coordinate from "../../util/Coordinate";
 
 class TownLoader {
 
-    static getTownById(id: string): Town | null {
-        // @ts-ignore
-        const town = TOWN_DEFINITION[id];
-        if (town === undefined) {
+    static load(s: string | number | Coordinate | null | undefined): Town | null {
+        if (!s) return null;
+        if (s instanceof Coordinate) {
+            for (const it of TownLoader.getTownList()) {
+                if (it.coordinate.equals(s)) {
+                    return it;
+                }
+            }
             return null;
         }
-        return town;
-    }
-
-    static getTownByName(name: string): Town | null {
-        for (const town of TownLoader.getTownList()) {
-            if (name.startsWith(town.name)) {
-                return town;
-            }
-        }
-        return null;
-    }
-
-    static getTownByCoordinate(coordinate: Coordinate): Town | null {
-        for (const town of TownLoader.getTownList()) {
-            if (town.coordinate.equals(coordinate)) {
-                return town;
+        const id = _.isNumber(s) ? s.toString() : s;
+        // @ts-ignore
+        const town = TOWN_DEFINITION[id];
+        if (town) return town;
+        for (const it of TownLoader.getTownList()) {
+            if (id.startsWith(it.name)) {
+                return it;
             }
         }
         return null;

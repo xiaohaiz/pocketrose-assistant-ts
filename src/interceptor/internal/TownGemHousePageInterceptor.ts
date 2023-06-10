@@ -1,4 +1,3 @@
-import SetupLoader from "../../config/SetupLoader";
 import RoleStateMachineManager from "../../core/state/RoleStateMachineManager";
 import TownGemHousePageProcessor from "../../processor/internal/TownGemHousePageProcessor";
 import PageProcessor from "../../processor/PageProcessor";
@@ -17,9 +16,6 @@ class TownGemHousePageInterceptor implements PageInterceptor {
     }
 
     intercept(): void {
-        if (!SetupLoader.isGemHouseUIEnabled()) {
-            return;
-        }
         RoleStateMachineManager.create()
             .load()
             .then(machine => {

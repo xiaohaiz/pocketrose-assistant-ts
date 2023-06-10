@@ -1,5 +1,4 @@
 import _ from "lodash";
-import SetupLoader from "../config/SetupLoader";
 import BattleProcessor from "../core/battle/BattleProcessor";
 import BattleRecord from "../core/battle/BattleRecord";
 import BattleStorageManager from "../core/battle/BattleStorageManager";
@@ -107,11 +106,9 @@ class TownDashboardLayout006 extends TownDashboardLayout {
                         record.html = errMsg;
                         BattleStorageManager.getBattleRecordStorage().write(record).then();
 
-                        let buttonText = SetupLoader.getBattleReturnButtonText();
-                        buttonText = buttonText === "" ? "返回" : _.escape(buttonText);
                         $("#battleMenu").html("" +
                             "<button role='button' class='battleButton' " +
-                            "id='battleReturn' style='font-size:150%'>" + buttonText + "</button>" +
+                            "id='battleReturn' style='font-size:150%'>返回</button>" +
                             "")
                             .parent().show();
                         $("#battleReturn").on("click", () => {
@@ -132,38 +129,30 @@ class TownDashboardLayout006 extends TownDashboardLayout {
                     const recommendation = processor.obtainRecommendation;
                     switch (recommendation) {
                         case "修":
-                            let bt1 = SetupLoader.getBattleRepairButtonText();
-                            bt1 = bt1 === "" ? "修理" : _.escape(bt1);
                             $("#battleMenu").html("" +
                                 "<button role='button' class='battleButton' " +
-                                "id='battleRepair' style='font-size:150%'>" + bt1 + "</button>" +
+                                "id='battleRepair' style='font-size:150%'>修理</button>" +
                                 "")
                                 .parent().show();
                             break;
                         case "宿":
-                            let bt2 = SetupLoader.getBattleLodgeButtonText();
-                            bt2 = bt2 === "" ? "住宿" : _.escape(bt2);
                             $("#battleMenu").html("" +
                                 "<button role='button' class='battleButton' " +
-                                "id='battleLodge' style='font-size:150%'>" + bt2 + "</button>" +
+                                "id='battleLodge' style='font-size:150%'>住宿</button>" +
                                 "")
                                 .parent().show();
                             break;
                         case "存":
-                            let bt3 = SetupLoader.getBattleDepositButtonText();
-                            bt3 = bt3 === "" ? "存钱" : _.escape(bt3);
                             $("#battleMenu").html("" +
                                 "<button role='button' class='battleButton' " +
-                                "id='battleDeposit' style='font-size:150%'>" + bt3 + "</button>" +
+                                "id='battleDeposit' style='font-size:150%'>存钱</button>" +
                                 "")
                                 .parent().show();
                             break;
                         case "回":
-                            let bt4 = SetupLoader.getBattleReturnButtonText();
-                            bt4 = bt4 === "" ? "返回" : _.escape(bt4);
                             $("#battleMenu").html("" +
                                 "<button role='button' class='battleButton' " +
-                                "id='battleReturn' style='font-size:150%'>" + bt4 + "</button>" +
+                                "id='battleReturn' style='font-size:150%'>返回</button>" +
                                 "")
                                 .parent().show();
                             break;
@@ -238,16 +227,6 @@ function generateLodgeForm(credential: Credential) {
     form += "<input type='submit' id='lodge'>";
     form += "</form>";
     $("#hidden-4").html(form);
-}
-
-function _showReportElement(children: JQuery[], index: number) {
-    if (index === children.length) {
-        return;
-    }
-    const child = children[index];
-    child.show("fast", "linear", () => {
-        _showReportElement(children, index + 1);
-    });
 }
 
 async function doBeforeReturn(credential: Credential, battleCount: number): Promise<void> {

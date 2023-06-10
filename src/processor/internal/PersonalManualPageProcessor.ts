@@ -1,5 +1,5 @@
 import NpcLoader from "../../core/NpcLoader";
-import TownLoader from "../../core/TownLoader";
+import TownLoader from "../../core/town/TownLoader";
 import Credential from "../../util/Credential";
 import MessageBoard from "../../util/MessageBoard";
 import PageUtils from "../../util/PageUtils";
@@ -88,8 +88,8 @@ class PersonalManualPageProcessor extends PageProcessorCredentialSupport {
         $("#hidden-1").html(PageUtils.generateReturnTownForm(credential));
 
         let returnButtonTitle = "返回城市";
-        if (context?.get("townId") !== undefined) {
-            returnButtonTitle = "返回" + TownLoader.getTownById(context.get("townId")!)!.name;
+        if (context?.get("townId")) {
+            returnButtonTitle = "返回" + TownLoader.load(context?.get("townId"))?.name;
         }
         html = "";
         html += "<tr>";

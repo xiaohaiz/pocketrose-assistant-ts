@@ -1,10 +1,10 @@
 import Castle from "../../common/Castle";
 import Role from "../../common/Role";
 import Town from "../../common/Town";
-import CastleEntrance from "../../core/CastleEntrance";
+import CastleEntrance from "../../core/castle/CastleEntrance";
 import MapBuilder from "../../core/MapBuilder";
-import TownEntrance from "../../core/TownEntrance";
-import TownLoader from "../../core/TownLoader";
+import TownEntrance from "../../core/town/TownEntrance";
+import TownLoader from "../../core/town/TownLoader";
 import TravelPlanExecutor from "../../core/TravelPlanExecutor";
 import CastleInformation from "../../pocketrose/CastleInformation";
 import PersonalStatus from "../../pocketrose/PersonalStatus";
@@ -224,7 +224,7 @@ function doBindMapButton(credential: Credential) {
             .off("mouseleave");
 
         if (townName !== "") {
-            const town = TownLoader.getTownByCoordinate(coordinate)!;
+            const town = TownLoader.load(coordinate)!;
             doTravelToTown(credential, town);
         } else if (castleName !== "") {
             const castle = new Castle();

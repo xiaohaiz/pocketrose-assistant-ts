@@ -1,8 +1,8 @@
-import SetupLoader from "../config/SetupLoader";
-import TownDashboardPage from "../pocketrose/TownDashboardPage";
-import Credential from "../util/Credential";
-import MessageBoard from "../util/MessageBoard";
-import NetworkUtils from "../util/NetworkUtils";
+import SetupLoader from "../../config/SetupLoader";
+import TownDashboardPage from "../../pocketrose/TownDashboardPage";
+import Credential from "../../util/Credential";
+import MessageBoard from "../../util/MessageBoard";
+import NetworkUtils from "../../util/NetworkUtils";
 
 class TownDashboardTaxManager {
 

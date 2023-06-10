@@ -1,4 +1,4 @@
-import TownDashboardTaxManager from "../core/TownDashboardTaxManager";
+import TownDashboardTaxManager from "../core/town/TownDashboardTaxManager";
 import Conversation from "../pocketrose/Conversation";
 import TownDashboardPage from "../pocketrose/TownDashboardPage";
 import Credential from "../util/Credential";

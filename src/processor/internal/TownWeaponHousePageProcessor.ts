@@ -1,5 +1,5 @@
 import NpcLoader from "../../core/NpcLoader";
-import TownLoader from "../../core/TownLoader";
+import TownLoader from "../../core/town/TownLoader";
 import TownBank from "../../pocketrose/TownBank";
 import TownWeaponHouse from "../../pocketrose/TownWeaponHouse";
 import TownWeaponHousePage from "../../pocketrose/TownWeaponHousePage";
@@ -21,7 +21,7 @@ class TownWeaponHousePageProcessor extends PageProcessorCredentialSupport {
 
 function processPage(townId: string) {
     const page = TownWeaponHouse.parsePage(PageUtils.currentPageHtml());
-    const town = TownLoader.getTownById(townId)!;
+    const town = TownLoader.load(townId)!;
 
     // 重新绘制页面框架
     const t1 = $("table:eq(1)");

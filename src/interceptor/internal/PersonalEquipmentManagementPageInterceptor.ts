@@ -1,4 +1,3 @@
-import SetupLoader from "../../config/SetupLoader";
 import RoleStateMachineManager from "../../core/state/RoleStateMachineManager";
 import PersonalEquipmentManagementPageProcessor_Castle
     from "../../processor/internal/PersonalEquipmentManagementPageProcessor_Castle";
@@ -27,9 +26,6 @@ class PersonalEquipmentManagementPageInterceptor implements PageInterceptor {
     }
 
     intercept(): void {
-        if (!SetupLoader.isEquipmentManagementUIEnabled()) {
-            return;
-        }
         RoleStateMachineManager.create()
             .load()
             .then(machine => {

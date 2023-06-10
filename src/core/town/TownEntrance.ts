@@ -1,10 +1,10 @@
-import TravelPlan from "../common/TravelPlan";
-import Credential from "../util/Credential";
-import MessageBoard from "../util/MessageBoard";
-import NetworkUtils from "../util/NetworkUtils";
-import TimeoutUtils from "../util/TimeoutUtils";
+import TravelPlan from "../../common/TravelPlan";
+import Credential from "../../util/Credential";
+import MessageBoard from "../../util/MessageBoard";
+import NetworkUtils from "../../util/NetworkUtils";
+import TimeoutUtils from "../../util/TimeoutUtils";
+import TravelPlanBuilder from "../TravelPlanBuilder";
 import TownLoader from "./TownLoader";
-import TravelPlanBuilder from "./TravelPlanBuilder";
 
 class TownEntrance {
 
@@ -36,12 +36,12 @@ class TownEntrance {
                             request["mode"] = "MOVE";
                             NetworkUtils.sendPostRequest("status.cgi", request, function () {
                                 MessageBoard.publishMessage("门卫通情达理的收取了入城费用放你入城。");
-                                const town = TownLoader.getTownById(townId);
+                                const town = TownLoader.load(townId);
                                 MessageBoard.publishMessage("进入了<span style='color:greenyellow'>" + town!.name + "</span>。");
                                 resolve();
                             });
                         } else {
-                            const town = TownLoader.getTownById(townId);
+                            const town = TownLoader.load(townId);
                             MessageBoard.publishMessage("进入了<span style='color:greenyellow'>" + town!.name + "</span>。");
                             resolve();
                         }

@@ -364,13 +364,13 @@ function generateBattleReport(battleTable: JQuery, page: BattlePage) {
         report = _.replace(report, "<br><br>", "<br>");
     }
 
-    let brs = "";
+    let brs: string;
     if (page.battleResult === "战胜") {
-        brs = "<span style='color:indigo'>" + BattleDeclarationManager.randomWinDeclaration() + "，战胜了<span style='color:green'>" + page.monsterNameHtml + "</span>！</span>";
+        brs = BattleDeclarationManager.randomWinDeclaration(page.monsterNameHtml);
     } else if (page.battleResult === "战败") {
-        brs = "<span style='color:indigo'>涕泗横流，被<span style='color:green'>" + page.monsterNameHtml + "</span>暴揍一顿！</span>"
+        brs = BattleDeclarationManager.randomLoseDeclaration(page.monsterNameHtml);
     } else {
-        brs = "<span style='color:indigo'>与<span style='color:green'>" + page.monsterNameHtml + "</span>拳来腿往不分高下！</span>";
+        brs = BattleDeclarationManager.randomDrawDeclaration(page.monsterNameHtml);
     }
     // noinspection HtmlDeprecatedTag,HtmlDeprecatedAttribute,XmlDeprecatedElement
     report = "<p style='font-weight:bold'><font size='3'>" + brs + "</font></p>" + report;

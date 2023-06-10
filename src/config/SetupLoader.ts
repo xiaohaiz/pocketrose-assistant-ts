@@ -38,40 +38,8 @@ class SetupLoader {
         return StorageUtils.getBoolean("_pa_029");
     }
 
-    static isPetManagementUIEnabled(): boolean {
-        return StorageUtils.getBoolean("_pa_009");
-    }
-
-    static isEquipmentManagementUIEnabled(): boolean {
-        return StorageUtils.getBoolean("_pa_010");
-    }
-
-    static isCareerManagementUIEnabled(): boolean {
-        return StorageUtils.getBoolean("_pa_011");
-    }
-
-    static isPocketSuperMarketEnabled(): boolean {
-        return StorageUtils.getBoolean("_pa_013");
-    }
-
     static isCareerTransferEntranceDisabled(id: string): boolean {
         return StorageUtils.getBoolean("_pa_014_" + id);
-    }
-
-    static getBattleReturnButtonText(): string {
-        return StorageUtils.getString("_pa_015");
-    }
-
-    static getBattleLodgeButtonText(): string {
-        return StorageUtils.getString("_pa_016");
-    }
-
-    static getBattleRepairButtonText(): string {
-        return StorageUtils.getString("_pa_017");
-    }
-
-    static getBattleDepositButtonText(): string {
-        return StorageUtils.getString("_pa_018");
     }
 
     static loadEquipmentSet_A(id: string) {
@@ -192,10 +160,6 @@ class SetupLoader {
 
     static isCollectTownTaxDisabled(): boolean {
         return StorageUtils.getBoolean("_pa_030");
-    }
-
-    static isGemHouseUIEnabled(): boolean {
-        return StorageUtils.getBoolean("_pa_031");
     }
 
     static isAsciiTextButtonEnabled(): boolean {
