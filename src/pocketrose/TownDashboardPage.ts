@@ -65,8 +65,8 @@ class TownDashboardPage {
                 role.parseHealth(et);
                 return eh;
             })
-            .next()
-            .next()
+            .parent()
+            .find("> th:last")
             .html((idx, eh) => {
                 const et = PageUtils.convertHtmlToText(eh);
                 role.parseMana(et);

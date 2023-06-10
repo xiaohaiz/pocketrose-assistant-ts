@@ -8,6 +8,7 @@ import TownDashboardTaxManager from "../core/town/TownDashboardTaxManager";
 import TownDashboardPage from "../pocketrose/TownDashboardPage";
 import Credential from "../util/Credential";
 import NetworkUtils from "../util/NetworkUtils";
+import PageUtils from "../util/PageUtils";
 import TownDashboardLayout from "./TownDashboardLayout";
 
 class TownDashboardLayout007 extends TownDashboardLayout {
@@ -357,9 +358,25 @@ function doProcessBattleReturn(credential: Credential, mainPage: string) {
     }
 
 
-    // 更新首页的战数变化
+    // 更新首页的变化
     $("#role_battle_count").text(page.role!.battleCount!);
-
+    $("#role_health").text(page.role!.health + "/" + page.role!.maxHealth);
+    $("#role_mana").text(page.role!.mana + "/" + page.role!.maxMana);
+    $("#role_cash").text(page.role!.cash + " Gold");
+    $("#role_experience").each((idx, th) => {
+        if (SetupLoader.isExperienceProgressBarEnabled()) {
+            if (page.role!.level === 150) {
+                $(th).attr("style", "color: blue").text("MAX");
+            } else {
+                const ratio = page.role!.level! / 150;
+                const progressBar = PageUtils.generateProgressBarHTML(ratio);
+                const exp = page.role!.experience + " EX";
+                $(th).html("<span title='" + exp + "'>" + progressBar + "</span>");
+            }
+        }
+    });
+    $("#townTax").off("click");
+    new TownDashboardTaxManager(credential, page).processTownTax($("#townTax"));
 
 }
 
