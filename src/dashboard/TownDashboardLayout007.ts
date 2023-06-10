@@ -358,6 +358,12 @@ function doProcessBattleReturn(credential: Credential, mainPage: string) {
         }
         let timeout = _.parseInt(clock.val() as string);
         if (timeout > 0) {
+            // 感觉倒计时不是那么精准，加一个修正的逻辑试试
+            if (timeout > 20) {
+                refreshClock(credential, ct => {
+                    timeout = ct;
+                });
+            }
             const timer = setInterval(() => {
                 timeout--;
                 clock.val(timeout);
@@ -493,6 +499,21 @@ function _renderBattleMenu(credential: Credential) {
         $("select[name='level']").find("option:first").remove();
     }
 
+}
+
+function refreshClock(credential: Credential, handler: (timeout: number) => void) {
+    const timer = setInterval(() => {
+        const request = credential.asRequestMap();
+        request.set("mode", "STATUS");
+        NetworkUtils.post("status.cgi", request).then(hx => {
+            const cx = $(hx).find("input:text[name='clock']").val() as string;
+            const tx = _.parseInt(cx);
+            if (tx <= 10) {
+                clearInterval(timer);
+            }
+            handler(tx);
+        });
+    }, 10000);
 }
 
 export = TownDashboardLayout007;
