@@ -41,8 +41,8 @@ class TravelPlanBuilder {
 
         if ($("#roleLocation").length > 0) {
             let roleLocation = source.asText();
-            const town = TownLoader.getTownByCoordinate(source);
-            if (town !== null) {
+            const town = TownLoader.load(source);
+            if (town) {
                 roleLocation = town.name + " " + roleLocation;
             }
             $("#roleLocation").text(roleLocation);

@@ -224,7 +224,7 @@ function doBindMapButton(credential: Credential) {
             .off("mouseleave");
 
         if (townName !== "") {
-            const town = TownLoader.getTownByCoordinate(coordinate)!;
+            const town = TownLoader.load(coordinate)!;
             doTravelToTown(credential, town);
         } else if (castleName !== "") {
             const castle = new Castle();

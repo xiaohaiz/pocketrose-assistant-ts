@@ -4,8 +4,16 @@ import Coordinate from "../../util/Coordinate";
 
 class TownLoader {
 
-    static load(s: string | number | null | undefined): Town | null {
+    static load(s: string | number | Coordinate | null | undefined): Town | null {
         if (!s) return null;
+        if (s instanceof Coordinate) {
+            for (const it of TownLoader.getTownList()) {
+                if (it.coordinate.equals(s)) {
+                    return it;
+                }
+            }
+            return null;
+        }
         const id = _.isNumber(s) ? s.toString() : s;
         // @ts-ignore
         const town = TOWN_DEFINITION[id];
@@ -13,15 +21,6 @@ class TownLoader {
         for (const it of TownLoader.getTownList()) {
             if (id.startsWith(it.name)) {
                 return it;
-            }
-        }
-        return null;
-    }
-
-    static getTownByCoordinate(coordinate: Coordinate): Town | null {
-        for (const town of TownLoader.getTownList()) {
-            if (town.coordinate.equals(coordinate)) {
-                return town;
             }
         }
         return null;

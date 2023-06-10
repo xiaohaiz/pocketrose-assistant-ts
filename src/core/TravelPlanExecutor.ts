@@ -82,8 +82,8 @@ function doMoveOnPath(credential: Credential, pathList: Coordinate[], index: num
 
                 if ($("#roleLocation").length > 0) {
                     let roleLocation = to.asText();
-                    const town = TownLoader.getTownByCoordinate(to);
-                    if (town !== null) {
+                    const town = TownLoader.load(to);
+                    if (town) {
                         roleLocation = town.name + " " + roleLocation;
                     }
                     $("#roleLocation").text(roleLocation);
