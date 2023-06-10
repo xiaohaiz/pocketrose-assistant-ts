@@ -1,13 +1,8 @@
 import Equipment from "../common/Equipment";
 import Merchandise from "../common/Merchandise";
-import Credential from "../util/Credential";
 
-/**
- * 城市武器屋页面数据结构的描述
- */
 class TownWeaponHousePage {
 
-    readonly credential: Credential;
     readonly townId: string;
 
     personalEquipmentList?: Equipment[];    // 身上的装备
@@ -16,8 +11,7 @@ class TownWeaponHousePage {
     roleCash?: number;                      // 角色现金
     spaceCount?: number;                    // 角色身上的空间
 
-    constructor(credential: Credential, townId: string) {
-        this.credential = credential;
+    constructor(townId: string) {
         this.townId = townId;
     }
 

@@ -14,12 +14,12 @@ import PageProcessorCredentialSupport from "../PageProcessorCredentialSupport";
 class TownWeaponHousePageProcessor extends PageProcessorCredentialSupport {
 
     doProcess(credential: Credential, context?: PageProcessorContext): void {
-        processPage(context!.get("townId")!);
+        processPage(credential, context!.get("townId")!);
     }
 
 }
 
-function processPage(townId: string) {
+function processPage(credential: Credential, townId: string) {
     const page = TownWeaponHouse.parsePage(PageUtils.currentPageHtml());
     const town = TownLoader.load(townId)!;
 
@@ -101,11 +101,11 @@ function processPage(townId: string) {
 
     $("#weapon_store_UI").html(html);
 
-    doGenerateHiddenForm(page.credential);
+    doGenerateHiddenForm(credential);
     doBindReturnButton();
-    doBindRefreshButton(page);
+    doBindRefreshButton(credential, page);
 
-    doRender(page);
+    doRender(credential, page);
 }
 
 function doGenerateHiddenForm(credential: Credential) {
@@ -126,28 +126,28 @@ function doBindReturnButton() {
     });
 }
 
-function doRefresh(page: TownWeaponHousePage) {
+function doRefresh(credential: Credential, page: TownWeaponHousePage) {
     document.getElementById("title_cell")?.scrollIntoView();
     $("#personal_equipment_list_cell").parent().hide();
     $("#weapon_merchandise_list_cell").parent().hide();
     $(".dynamic_button_class").off("click");
-    new TownWeaponHouse(page.credential, page.townId).enter()
+    new TownWeaponHouse(credential, page.townId).enter()
         .then(page => {
             const roleCash = page.roleCash!;
             $("#roleCash").text(roleCash + " GOLD");
-            doRender(page);
+            doRender(credential, page);
         });
 }
 
-function doBindRefreshButton(page: TownWeaponHousePage) {
+function doBindRefreshButton(credential: Credential, page: TownWeaponHousePage) {
     $("#refresh_button").on("click", function () {
         $("#messageBoardManager").html(NpcLoader.randomNpcImageHtml());
         MessageBoard.resetMessageBoard("倍“锋”来袭,特“利”独行。");
-        doRefresh(page);
+        doRefresh(credential, page);
     });
 }
 
-function doRender(page: TownWeaponHousePage) {
+function doRender(credential: Credential, page: TownWeaponHousePage) {
     // ------------------------------------------------------------------------
     // 渲染随身装备
     // ------------------------------------------------------------------------
@@ -201,7 +201,7 @@ function doRender(page: TownWeaponHousePage) {
             .parent()
             .show();
 
-        doBindSellButton(page, indexList);
+        doBindSellButton(credential, page, indexList);
     }
 
     // ------------------------------------------------------------------------
@@ -281,11 +281,11 @@ function doRender(page: TownWeaponHousePage) {
             .parent()
             .show();
 
-        doBindBuyButton(page, indexList);
+        doBindBuyButton(credential, page, indexList);
     }
 }
 
-function doBindSellButton(page: TownWeaponHousePage, indexList: number[]) {
+function doBindSellButton(credential: Credential, page: TownWeaponHousePage, indexList: number[]) {
     for (const index of indexList) {
         const buttonId = "sell_" + index;
         $("#" + buttonId).on("click", function () {
@@ -293,18 +293,18 @@ function doBindSellButton(page: TownWeaponHousePage, indexList: number[]) {
             if (!confirm("确认要出售“" + equipment.fullName + "”？")) {
                 return;
             }
-            new TownWeaponHouse(page.credential, page.townId)
+            new TownWeaponHouse(credential, page.townId)
                 .sell(index, page.discount!)
                 .then(() => {
-                    new TownBank(page.credential).deposit().then(() => {
-                        doRefresh(page);
+                    new TownBank(credential).deposit().then(() => {
+                        doRefresh(credential, page);
                     });
                 });
         });
     }
 }
 
-function doBindBuyButton(page: TownWeaponHousePage, indexList: number[]) {
+function doBindBuyButton(credential: Credential, page: TownWeaponHousePage, indexList: number[]) {
     for (const index of indexList) {
         const buttonId = "buy_" + index;
         $("#" + buttonId).on("click", function () {
@@ -315,13 +315,13 @@ function doBindBuyButton(page: TownWeaponHousePage, indexList: number[]) {
             if (!confirm("确认要购买" + count + "把“" + merchandise.name + "”？大约需要再支取" + amount + "万GOLD。")) {
                 return;
             }
-            const bank = new TownBank(page.credential);
+            const bank = new TownBank(credential);
             bank.withdraw(amount).then(() => {
-                new TownWeaponHouse(page.credential, page.townId)
+                new TownWeaponHouse(credential, page.townId)
                     .buy(index, count, page.discount!)
                     .then(() => {
                         bank.deposit().then(() => {
-                            doRefresh(page);
+                            doRefresh(credential, page);
                         });
                     });
             })
