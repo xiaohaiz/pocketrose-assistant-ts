@@ -45,12 +45,14 @@ function doProcess(credential: Credential, petList: Pet[], studyStatus: number[]
         }
         $("#roleLocation").text(role.location!);
 
-        doRender(credential, petList, studyStatus);
-
         new PersonalEquipmentManagement(credential).open().then(page => {
             const cage = page.findGoldenCage();
-            if (cage !== null) {
+            if (cage) {
+                $("#hasGoldenCage").text("true");
                 $("#goldenCageIndex").text(cage.index!);
+            }
+            doRender(credential, petList, studyStatus);
+            if (cage) {
                 $("#openCageButton").show();
                 $("#closeCageButton").show();
             }
