@@ -1,4 +1,3 @@
-import SetupLoader from "../../config/SetupLoader";
 import RoleStateMachineManager from "../../core/state/RoleStateMachineManager";
 import TownWeaponHousePageProcessor from "../../processor/internal/TownWeaponHousePageProcessor";
 import PageProcessor from "../../processor/PageProcessor";
@@ -17,9 +16,6 @@ class TownWeaponHousePageInterceptor implements PageInterceptor {
     }
 
     intercept(): void {
-        if (!SetupLoader.isPocketSuperMarketEnabled()) {
-            return;
-        }
         RoleStateMachineManager.create()
             .load()
             .then(machine => {

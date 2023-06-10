@@ -461,12 +461,10 @@ function doRenderMenu(credential: Credential, page: TownDashboardPage) {
     $("option[value='CHANGE_OCCUPATION']").text("职业管理");
     $("option[value='MAGIC']").remove();
 
-    if (SetupLoader.isPocketSuperMarketEnabled()) {
-        $("option[value='ARM_SHOP']").text("武器商店");
-        $("option[value='PRO_SHOP']").text("防具商店");
-        $("option[value='ACC_SHOP']").text("饰品商店");
-        $("option[value='ITEM_SHOP']").text("物品商店");
-    }
+    $("option[value='ARM_SHOP']").text("武器商店");
+    $("option[value='PRO_SHOP']").text("防具商店");
+    $("option[value='ACC_SHOP']").text("饰品商店");
+    $("option[value='ITEM_SHOP']").text("物品商店");
 
     $("option[value='BAOSHI_SHOP']").text("宝石镶嵌");
     $("option[value='BAOSHI_DELSHOP']").remove();
