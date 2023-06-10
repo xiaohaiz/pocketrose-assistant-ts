@@ -38,10 +38,6 @@ class SetupLoader {
         return StorageUtils.getBoolean("_pa_029");
     }
 
-    static isPetManagementUIEnabled(): boolean {
-        return StorageUtils.getBoolean("_pa_009");
-    }
-
     static isCareerTransferEntranceDisabled(id: string): boolean {
         return StorageUtils.getBoolean("_pa_014_" + id);
     }

@@ -452,11 +452,9 @@ function doRenderMenu(credential: Credential, page: TownDashboardPage) {
     $("option[value='USE_ITEM']").text("装备管理");
     $("option[value='ITEM_SEND']").remove();
 
-    if (SetupLoader.isPetManagementUIEnabled()) {
-        $("option[value='PETSTATUS']").text("宠物管理");
-        $("option[value='PET_SEND']").remove();
-        $("option[value='PETBORN']").remove();
-    }
+    $("option[value='PETSTATUS']").text("宠物管理");
+    $("option[value='PET_SEND']").remove();
+    $("option[value='PETBORN']").remove();
 
     $("option[value='CHANGE_OCCUPATION']").text("职业管理");
     $("option[value='MAGIC']").remove();

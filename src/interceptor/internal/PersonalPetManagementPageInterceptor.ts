@@ -1,4 +1,3 @@
-import SetupLoader from "../../config/SetupLoader";
 import RoleStateMachineManager from "../../core/state/RoleStateMachineManager";
 import PersonalPetManagementPageProcessor_Castle
     from "../../processor/internal/PersonalPetManagementPageProcessor_Castle";
@@ -20,9 +19,6 @@ class PersonalPetManagementPageInterceptor implements PageInterceptor {
     }
 
     intercept(): void {
-        if (!SetupLoader.isPetManagementUIEnabled()) {
-            return;
-        }
         RoleStateMachineManager.create()
             .load()
             .then(machine => {

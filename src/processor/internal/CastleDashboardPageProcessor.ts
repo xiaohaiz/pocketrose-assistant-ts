@@ -33,13 +33,10 @@ class CastleDashboardPageProcessor implements PageProcessor {
         $("option[value='CASTLE_ITEM']").remove();
         $("option[value='CASTLE_SENDITEM']").remove();
 
-        if (SetupLoader.isPetManagementUIEnabled()) {
-            $("option[value='PETSTATUS']")
-                .text("宠物管理");
-            $("option[value='CASTLE_PET']").remove();
-            $("option[value='CASTLE_SENDPET']").remove();
-            $("option[value='PETBORN']").remove();
-        }
+        $("option[value='PETSTATUS']").text("宠物管理");
+        $("option[value='CASTLE_PET']").remove();
+        $("option[value='CASTLE_SENDPET']").remove();
+        $("option[value='PETBORN']").remove();
 
         $("option[value='CHANGE_OCCUPATION']").text("职业管理");
         $("option[value='MAGIC']").remove();
