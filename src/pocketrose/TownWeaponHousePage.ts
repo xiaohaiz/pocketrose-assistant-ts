@@ -1,5 +1,6 @@
 import Equipment from "../common/Equipment";
 import Merchandise from "../common/Merchandise";
+import TownLoader from "../core/town/TownLoader";
 
 class TownWeaponHousePage {
 
@@ -13,6 +14,10 @@ class TownWeaponHousePage {
 
     constructor(townId: string) {
         this.townId = townId;
+    }
+
+    get title() {
+        return TownLoader.load(this.townId)?.nameTitle + " 武 器 商 店";
     }
 
     findEquipment(index: number) {

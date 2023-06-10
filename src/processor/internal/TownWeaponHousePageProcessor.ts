@@ -1,5 +1,4 @@
 import NpcLoader from "../../core/NpcLoader";
-import TownLoader from "../../core/town/TownLoader";
 import TownBank from "../../pocketrose/TownBank";
 import TownWeaponHouse from "../../pocketrose/TownWeaponHouse";
 import TownWeaponHousePage from "../../pocketrose/TownWeaponHousePage";
@@ -14,14 +13,13 @@ import PageProcessorCredentialSupport from "../PageProcessorCredentialSupport";
 class TownWeaponHousePageProcessor extends PageProcessorCredentialSupport {
 
     doProcess(credential: Credential, context?: PageProcessorContext): void {
-        processPage(credential, context!.get("townId")!);
+        processPage(credential);
     }
 
 }
 
-function processPage(credential: Credential, townId: string) {
+function processPage(credential: Credential) {
     const page = TownWeaponHouse.parsePage(PageUtils.currentPageHtml());
-    const town = TownLoader.load(townId)!;
 
     // 重新绘制页面框架
     const t1 = $("table:eq(1)");
@@ -35,7 +33,7 @@ function processPage(credential: Credential, townId: string) {
         .css("font-weight", "bold")
         .css("background-color", "navy")
         .css("color", "yellowgreen")
-        .text("＜＜  " + town.nameTitle + " 武 器 屋  ＞＞")
+        .text("＜＜  " + page.title + "  ＞＞")
         .parent()
         .next()
         .find("table:first")
