@@ -1,3 +1,4 @@
+import ExtensionShortcutLoader from "../../core/ExtensionShortcutLoader";
 import MessageBoard from "../../util/MessageBoard";
 import StorageUtils from "../../util/StorageUtils";
 import SetupItem from "../SetupItem";
@@ -37,20 +38,13 @@ function doRender() {
 function doGenerateSetupItem() {
     let html = "<select id='select_" + code + "'>";
     html += "<option class='option_class_" + code + "' value='0'>禁用</option>";
-    html += "<option class='option_class_" + code + "' value='1'>使用手册</option>";
-    html += "<option class='option_class_" + code + "' value='2'>口袋驿站</option>";
-    html += "<option class='option_class_" + code + "' value='3'>武器商店</option>";
-    html += "<option class='option_class_" + code + "' value='4'>防具商店</option>";
-    html += "<option class='option_class_" + code + "' value='5'>饰品商店</option>";
-    html += "<option class='option_class_" + code + "' value='6'>物品商店</option>";
-    html += "<option class='option_class_" + code + "' value='7'>宝石镶嵌</option>";
-    html += "<option class='option_class_" + code + "' value='8'>冒险公会</option>";
-    html += "<option class='option_class_" + code + "' value='9'>团队管理</option>";
-    html += "<option class='option_class_" + code + "' value='10'>宠物联赛</option>";
-    html += "<option class='option_class_" + code + "' value='11'>宠物排行</option>";
-    html += "<option class='option_class_" + code + "' value='12'>城市收益</option>";
-    html += "<option class='option_class_" + code + "' value='13'>养精蓄锐</option>";
-    html += "<option class='option_class_" + code + "' value='14'>统计报告</option>";
+    ExtensionShortcutLoader.listAll().forEach(it => {
+        // @ts-ignore
+        const name = it[0];
+        // @ts-ignore
+        const value = it[1];
+        html += "<option class='option_class_" + code + "' value='" + value + "'>" + name + "</option>";
+    });
     html += "</select>";
     return html;
 }
