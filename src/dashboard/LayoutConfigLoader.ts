@@ -1,4 +1,20 @@
+import _ from "lodash";
+import LayoutConfig from "./LayoutConfig";
+
 class LayoutConfigLoader {
+
+    static loadAll(): LayoutConfig[] {
+        const configList: LayoutConfig[] = [];
+        Object.keys(LAYOUTS)
+            .map(id => _.parseInt(id))
+            .sort((a, b) => a - b)
+            .forEach(id => {
+                // @ts-ignore
+                const name = LAYOUTS[id];
+                configList.push(new LayoutConfig(id, name));
+            });
+        return configList;
+    }
 
 }
 
