@@ -1,5 +1,6 @@
 import _ from "lodash";
 import Role from "../common/Role";
+import EventHandler from "../core/EventHandler";
 import TownLoader from "../core/town/TownLoader";
 import PageUtils from "../util/PageUtils";
 import StringUtils from "../util/StringUtils";
@@ -10,6 +11,8 @@ class TownDashboardPage {
     townId?: string;
     townCountry?: string;
     townTax?: number;
+
+    eventBoardHtml?: string;
 
     globalMessageHtml?: string;
     personalMessageHtml?: string;
@@ -116,6 +119,43 @@ class TownDashboardPage {
         page.domesticMessageHtml = domesticMessageHtml;
         page.unitMessageHtml = unitMessageHtml;
         page.townMessageHtml = townMessageHtml;
+
+        const eventHtmlList: string[] = [];
+        $(html).find("td:contains('最近发生的事件')")
+            .filter(function () {
+                return $(this).text() === "最近发生的事件";
+            })
+            .parent()
+            .next()
+            .find("td:first")
+            .html()
+            .split("<br>")
+            .filter(it => it.endsWith(")"))
+            .map(function (it) {
+                // noinspection HtmlDeprecatedTag,XmlDeprecatedElement,HtmlDeprecatedAttribute
+                const header = "<font color=\"navy\">●</font>";
+                return StringUtils.substringAfter(it, header);
+            })
+            .map(function (it) {
+                return EventHandler.handleWithEventHtml(it);
+            })
+            .forEach(it => eventHtmlList.push(it));
+
+        let eventBoardHtml = "";
+        eventBoardHtml += "<table style='border-width:0;width:100%;height:100%;margin:auto'>";
+        eventBoardHtml += "<tbody>";
+        eventHtmlList.forEach(it => {
+            eventBoardHtml += "<tr>";
+            eventBoardHtml += "<th style='color:navy;vertical-align:top'>●</th>";
+            eventBoardHtml += "<td style='width:100%'>";
+            eventBoardHtml += it;
+            eventBoardHtml += "</td>";
+            eventBoardHtml += "</tr>";
+        });
+        eventBoardHtml += "</tbody>";
+        eventBoardHtml += "</table>";
+
+        page.eventBoardHtml = eventBoardHtml;
 
         return page;
     }

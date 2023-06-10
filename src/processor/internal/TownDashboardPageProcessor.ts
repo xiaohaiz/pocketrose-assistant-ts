@@ -1,7 +1,6 @@
 import _ from "lodash";
 import BattleFieldConfigLoader from "../../config/BattleFieldConfigLoader";
 import SetupLoader from "../../config/SetupLoader";
-import EventHandler from "../../core/EventHandler";
 import ExtensionShortcutLoader from "../../core/ExtensionShortcutLoader";
 import RankTitleLoader from "../../core/RankTitleLoader";
 import PalaceTaskManager from "../../core/task/PalaceTaskManager";
@@ -49,7 +48,7 @@ class TownDashboardPageProcessor extends PageProcessorCredentialSupport {
         doMarkElement();
         doRenderMobilization();
         doRenderMenu(credential, page);
-        doRenderEventBoard();
+        doRenderEventBoard(page);
         doRenderRoleStatus(credential, page);
         doRenderEnlargeMode();
         doProcessSafeBattleButton();
@@ -483,7 +482,7 @@ function doRenderMenu(credential: Credential, page: TownDashboardPage) {
     $("option[value='DIANMING']").text("统计报告");
 }
 
-function doRenderEventBoard() {
+function doRenderEventBoard(page: TownDashboardPage) {
     $("td:contains('最近发生的事件')")
         .filter(function () {
             return $(this).text() === "最近发生的事件";
@@ -491,37 +490,8 @@ function doRenderEventBoard() {
         .parent()
         .next()
         .find("td:first")
-        .attr("id", "eventBoard");
-
-    const eventHtmlList: string[] = [];
-    $("#eventBoard").html()
-        .split("<br>")
-        .filter(it => it.endsWith(")"))
-        .map(function (it) {
-            // noinspection HtmlDeprecatedTag,XmlDeprecatedElement,HtmlDeprecatedAttribute
-            const header = "<font color=\"navy\">●</font>";
-            return StringUtils.substringAfter(it, header);
-        })
-        .map(function (it) {
-            return EventHandler.handleWithEventHtml(it);
-        })
-        .forEach(it => eventHtmlList.push(it));
-
-    let html = "";
-    html += "<table style='border-width:0;width:100%;height:100%;margin:auto'>";
-    html += "<tbody>";
-    eventHtmlList.forEach(it => {
-        html += "<tr>";
-        html += "<th style='color:navy;vertical-align:top'>●</th>";
-        html += "<td style='width:100%'>";
-        html += it;
-        html += "</td>";
-        html += "</tr>";
-    });
-    html += "</tbody>";
-    html += "</table>";
-
-    $("#eventBoard").html(html);
+        .attr("id", "eventBoard")
+        .html(page.eventBoardHtml!);
 }
 
 function doRenderRoleStatus(credential: Credential, page: TownDashboardPage) {

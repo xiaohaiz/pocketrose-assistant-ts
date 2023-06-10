@@ -375,9 +375,9 @@ function doProcessBattleReturn(credential: Credential, mainPage: string) {
             }
         }
     });
-    $("#townTax").off("click");
+    $("#townTax").off("click").text(page.townTax!);
     new TownDashboardTaxManager(credential, page).processTownTax($("#townTax"));
-
+    $("#eventBoard").html(page.eventBoardHtml!);
 }
 
 
