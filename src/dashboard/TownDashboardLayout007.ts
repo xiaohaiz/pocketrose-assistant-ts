@@ -373,6 +373,21 @@ function doProcessBattleReturn(credential: Credential, mainPage: string) {
             $(img).attr("src", src);
         });
 
+    // 更新战斗倒计时部分
+    $("#messageNotification")
+        .parent()
+        .next()
+        .next()
+        .find("> th:first")
+        .html(() => {
+            return $(mainPage).find("form[action='battle.cgi']")
+                .closest("table")
+                .find("> tbody:first")
+                .find("> tr:eq(1)")
+                .find("> th:first")
+                .html();
+        });
+
 
     // 更新首页的战数变化
     $("#roleTitle").find("> font:first").html((idx, fs) => {
