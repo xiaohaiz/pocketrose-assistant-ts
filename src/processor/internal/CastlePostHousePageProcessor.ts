@@ -1,5 +1,5 @@
 import Town from "../../common/Town";
-import CastleEntrance from "../../core/CastleEntrance";
+import CastleEntrance from "../../core/castle/CastleEntrance";
 import MapBuilder from "../../core/MapBuilder";
 import TownEntrance from "../../core/town/TownEntrance";
 import TownLoader from "../../core/town/TownLoader";
