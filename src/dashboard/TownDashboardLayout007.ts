@@ -336,6 +336,15 @@ function doProcessBattleReturn(credential: Credential, mainPage: string) {
                 .find("> th:first")
                 .html();
         });
+    if (SetupLoader.isConsecrateStateRecognizeEnabled(credential.id) && page.role!.canConsecrate!) {
+        $("#messageNotification")
+            .parent()
+            .next()
+            .find("> th:first")
+            .css("color", "red")
+            .css("font-size", "120%");
+    }
+
     const clock = $("input:text[name='clock']");
     if (clock.length > 0) {
         const enlargeRatio = SetupLoader.getEnlargeBattleRatio();
@@ -378,6 +387,17 @@ function doProcessBattleReturn(credential: Credential, mainPage: string) {
     $("#townTax").off("click").text(page.townTax!);
     new TownDashboardTaxManager(credential, page).processTownTax($("#townTax"));
     $("#eventBoard").html(page.eventBoardHtml!);
+
+    // 更新聊天记录
+    let td = $("td:contains('全员的留言')")
+        .filter((idx, td) => _.startsWith($(td).text(), "全员的留言"));
+    td.find("> table:first").html(page.globalMessageHtml!);
+    td.find("> table:eq(1)").html(page.personalMessageHtml!);
+    td.find("> table:eq(2)").html(page.redPaperMessageHtml!);
+    td = td.next();
+    td.find("> table:first").html(page.domesticMessageHtml!);
+    td.find("> table:eq(1)").html(page.unitMessageHtml!);
+    td.find("> table:eq(2)").html(page.townMessageHtml!);
 }
 
 
