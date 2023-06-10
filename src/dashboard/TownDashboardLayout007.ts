@@ -8,7 +8,6 @@ import TownDashboardTaxManager from "../core/town/TownDashboardTaxManager";
 import TownDashboardPage from "../pocketrose/TownDashboardPage";
 import Credential from "../util/Credential";
 import NetworkUtils from "../util/NetworkUtils";
-import StringUtils from "../util/StringUtils";
 import TownDashboardLayout from "./TownDashboardLayout";
 
 class TownDashboardLayout007 extends TownDashboardLayout {
@@ -359,10 +358,7 @@ function doProcessBattleReturn(credential: Credential, mainPage: string) {
 
 
     // 更新首页的战数变化
-    $("#roleTitle").find("> font:first").html((idx, fs) => {
-        const fs0 = StringUtils.substringBefore(fs, "&nbsp;&nbsp;&nbsp;");
-        return fs0 + "&nbsp;&nbsp;&nbsp;" + page.role?.battleCount + "战";
-    });
+    $("#role_battle_count").text(page.role!.battleCount!);
 
 
 }

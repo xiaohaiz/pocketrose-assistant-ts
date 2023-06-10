@@ -551,16 +551,23 @@ function doRenderRoleStatus(credential: Credential, page: TownDashboardPage) {
             const name = StringUtils.substringBefore(html, "(");
             const unit = StringUtils.substringBetween(html, "(", "军)");
             if (unit.includes("无所属")) {
-                return name + "&nbsp;&nbsp;&nbsp;" + page.role!.battleCount + "战";
+                return name + "&nbsp;&nbsp;&nbsp;<span id='role_battle_count'>" + page.role!.battleCount + "</span>战";
             } else {
-                return name + "(" + unit + ")" + "&nbsp;&nbsp;&nbsp;" + page.role!.battleCount + "战";
+                return name + "(" + unit + ")" + "&nbsp;&nbsp;&nbsp;<span id='role_battle_count'>" + page.role!.battleCount + "</span>战";
             }
         })
         .parent()
         .parent()
         .next()
+        .find("> th:first")
+        .attr("id", "role_health")
+        .next()
+        .next()
+        .attr("id", "role_mana")
+        .parent()
         .next()
         .find("> th:first")
+        .attr("id", "role_cash")
         .each((idx, th) => {
             const text = $(th).text();
             const cash = _.parseInt(StringUtils.substringBefore(text, " Gold"));
@@ -570,6 +577,7 @@ function doRenderRoleStatus(credential: Credential, page: TownDashboardPage) {
         })
         .next()
         .next()
+        .attr("id", "role_experience")
         .each((idx, th) => {
             if (SetupLoader.isExperienceProgressBarEnabled()) {
                 if (page.role!.level === 150) {
