@@ -1,4 +1,5 @@
 import _ from "lodash";
+import BattleFieldConfigLoader from "../config/BattleFieldConfigLoader";
 import SetupLoader from "../config/SetupLoader";
 import BattleProcessor from "../core/battle/BattleProcessor";
 import BattleRecord from "../core/battle/BattleRecord";
@@ -311,6 +312,9 @@ function doProcessBattleReturn(credential: Credential, mainPage: string) {
         return $(mainPage).find("select[name='level']").html();
     });
     doProcessBattleLevel();
+
+    _renderBattleMenu(credential);
+
     // verification code picture
     $("select[name='level']").closest("form")
         .find("> img:first")
@@ -400,5 +404,95 @@ function doProcessBattleReturn(credential: Credential, mainPage: string) {
     td.find("> table:eq(2)").html(page.townMessageHtml!);
 }
 
+function _renderBattleMenu(credential: Credential) {
+    const preference = new BattleFieldConfigLoader(credential).loadConfig();
+    let count = 0;
+    // @ts-ignore
+    if (preference["primary"]) {
+        count++;
+    }
+    // @ts-ignore
+    if (preference["junior"]) {
+        count++;
+    }
+    // @ts-ignore
+    if (preference["senior"]) {
+        count++;
+    }
+    // @ts-ignore
+    if (preference["zodiac"]) {
+        count++;
+    }
+    if (count === 0) {
+        // 没有设置战斗场所偏好，忽略
+        return;
+    }
+
+    // 设置了战斗场所偏好
+    $("select[name='level']").find("option").each(function (_idx, option) {
+        const text = $(option).text();
+        if (text.startsWith("秘宝之岛")) {
+            // do nothing, keep
+        } else if (text.startsWith("初级之森")) {
+            // do nothing, keep
+        } else if (text.startsWith("中级之塔")) {
+            // do nothing, keep
+        } else if (text.startsWith("上级之洞")) {
+            // do nothing, keep
+        } else if (text.startsWith("十二神殿")) {
+            // do nothing, keep
+        } else if (text.startsWith("------")) {
+            // do nothing, keep
+        } else {
+            $(option).remove();
+        }
+    });
+    $("select[name='level']").find("option").each(function (_idx, option) {
+        const text = $(option).text();
+        if (text.startsWith("初级之森")) {
+            // @ts-ignore
+            if (!preference["primary"]) {
+                $(option).remove();
+            }
+        } else if (text.startsWith("中级之塔")) {
+            // @ts-ignore
+            if (!preference["junior"]) {
+                $(option).remove();
+            }
+        } else if (text.startsWith("上级之洞")) {
+            // @ts-ignore
+            if (!preference["senior"]) {
+                $(option).remove();
+            }
+        } else if (text.startsWith("十二神殿")) {
+            // @ts-ignore
+            if (!preference["zodiac"]) {
+                $(option).remove();
+            }
+        }
+    });
+    // 删除连续的分隔线
+    let delimMatch = false;
+    $("select[name='level']").find("option").each(function (_idx, option) {
+        const text = $(option).text();
+        if (text.startsWith("------")) {
+            if (!delimMatch) {
+                delimMatch = true;
+            } else {
+                $(option).remove();
+            }
+        } else {
+            delimMatch = false;
+        }
+    });
+    // 删除头尾的分隔线
+    if ($("select[name='level']").find("option:last").text().startsWith("------")) {
+        $("select[name='level']").find("option:last").remove();
+    }
+    if ($("select[name='level']").find("option:first").text().startsWith("------")) {
+        $("select[name='level']").find("option:first").remove();
+    }
+
+}
 
 export = TownDashboardLayout007;
