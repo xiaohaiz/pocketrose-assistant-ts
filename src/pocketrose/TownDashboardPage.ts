@@ -1,6 +1,7 @@
 import _ from "lodash";
 import Role from "../common/Role";
 import TownLoader from "../core/town/TownLoader";
+import PageUtils from "../util/PageUtils";
 import StringUtils from "../util/StringUtils";
 
 class TownDashboardPage {
@@ -49,7 +50,29 @@ class TownDashboardPage {
             .each((idx, th) => {
                 const ex = $(th).text();
                 role.experience = _.parseInt(StringUtils.substringBefore(ex, " EX"));
+            })
+            .prev()
+            .prev()
+            .html((idx, eh) => {
+                role.cash = _.parseInt(StringUtils.substringBefore(PageUtils.convertHtmlToText(eh), " Gold"));
+                return eh;
+            })
+            .parent()
+            .prev()
+            .find("> th:first")
+            .html((idx, eh) => {
+                const et = PageUtils.convertHtmlToText(eh);
+                role.parseHealth(et);
+                return eh;
+            })
+            .next()
+            .next()
+            .html((idx, eh) => {
+                const et = PageUtils.convertHtmlToText(eh);
+                role.parseMana(et);
+                return eh;
             });
+
 
         // 读取角色当前的能力值
         // 奇怪了，读不到指定id的div元素？但是可以读到里面的td子元素
