@@ -1,11 +1,10 @@
 import _ from "lodash";
+import SetupLoader from "../config/SetupLoader";
 import BattleProcessor from "../core/battle/BattleProcessor";
 import BattleRecord from "../core/battle/BattleRecord";
 import BattleReturnInterceptor from "../core/battle/BattleReturnInterceptor";
 import BattleStorageManager from "../core/battle/BattleStorageManager";
 import TownDashboardTaxManager from "../core/town/TownDashboardTaxManager";
-import PersonalEquipmentManagement from "../pocketrose/PersonalEquipmentManagement";
-import PersonalPetManagement from "../pocketrose/PersonalPetManagement";
 import TownDashboardPage from "../pocketrose/TownDashboardPage";
 import Credential from "../util/Credential";
 import NetworkUtils from "../util/NetworkUtils";
@@ -59,56 +58,6 @@ class TownDashboardLayout007 extends TownDashboardLayout {
         $("#roleTitle")
             .parent()
             .after($("<tr class='additionalStatus' style='display:none'><td colspan='4'></td></tr>"));
-
-        $("#roleTitle")
-            .find("> font:first")
-            .on("click", event => {
-                $(event.target).off("click");
-
-                new PersonalEquipmentManagement(credential, page.townId)
-                    .open()
-                    .then(equipmentPage => {
-                        new PersonalPetManagement(credential, page.townId)
-                            .open()
-                            .then(petPage => {
-
-                                let html = "";
-                                html += "<table style='text-align:center;margin:auto;border-width:1px;border-spacing:1px;width:100%'>";
-                                html += "<tbody>";
-                                for (const equipment of equipmentPage.equipmentList!) {
-                                    if (!equipment.using) {
-                                        continue;
-                                    }
-                                    html += "<tr>";
-                                    html += "<td style='background-color:#E8E8D0'>" + equipment.usingHTML + "</td>";
-                                    html += "<td style='background-color:#F8F0E0'>" + equipment.nameHTML + "</td>";
-                                    html += "<td style='background-color:#F8F0E0'>" + equipment.category + "</td>";
-                                    html += "<td style='background-color:#E8E8D0'>" + equipment.experienceHTML + "</td>";
-                                    html += "</tr>";
-                                }
-                                for (const pet of petPage.petList!) {
-                                    if (!pet.using) {
-                                        continue;
-                                    }
-                                    html += "<tr>";
-                                    html += "<td style='background-color:#E8E8D0'>" + pet.usingHtml + "</td>";
-                                    html += "<td style='background-color:#F8F0E0'>" + pet.nameHtml + "</td>";
-                                    html += "<td style='background-color:#F8F0E0'>" + pet.imageHtml + "</td>";
-                                    html += "<td style='background-color:#E8E8D0'>" + pet.levelHtml + "</td>";
-                                    html += "</tr>";
-                                }
-                                html += "</tbody>";
-                                html += "</table>";
-
-                                $(".additionalStatus")
-                                    .find("> td:first")
-                                    .html(html);
-
-                                $(".roleStatus").hide();
-                                $(".additionalStatus").show();
-                            });
-                    });
-            });
 
         // 在右面板最后增加一个新行，高度100%，保证格式显示不会变形。
         $("#rightPanel")
@@ -387,6 +336,26 @@ function doProcessBattleReturn(credential: Credential, mainPage: string) {
                 .find("> th:first")
                 .html();
         });
+    const clock = $("input:text[name='clock']");
+    if (clock.length > 0) {
+        const enlargeRatio = SetupLoader.getEnlargeBattleRatio();
+        if (enlargeRatio > 0) {
+            let fontSize = 100 * enlargeRatio;
+            clock.css("font-size", fontSize + "%");
+        }
+        let timeout = _.parseInt(clock.val() as string);
+        if (timeout > 0) {
+            const timer = setInterval(() => {
+                timeout--;
+                clock.val(timeout);
+                if (timeout <= 0) {
+                    clearInterval(timer);
+                    // @ts-ignore
+                    document.getElementById("mplayer")?.play();
+                }
+            }, 1000);
+        }
+    }
 
 
     // 更新首页的战数变化
