@@ -3,7 +3,6 @@ import Merchandise from "../common/Merchandise";
 import Credential from "../util/Credential";
 import MessageBoard from "../util/MessageBoard";
 import NetworkUtils from "../util/NetworkUtils";
-import PageUtils from "../util/PageUtils";
 import StringUtils from "../util/StringUtils";
 import TownWeaponHousePage from "./TownWeaponHousePage";
 
@@ -19,9 +18,8 @@ class TownWeaponHouse {
 
     static parsePage(pageHtml: string): TownWeaponHousePage {
         // Parse credential and townId
-        const credential = PageUtils.parseCredential(pageHtml);
         const townId = $(pageHtml).find("input:hidden[name='townid']").val() as string;
-        const page = new TownWeaponHousePage(credential, townId);
+        const page = new TownWeaponHousePage(townId);
 
         // Parse discount
         let discount = 1;

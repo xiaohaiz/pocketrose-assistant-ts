@@ -1,3 +1,5 @@
+import _ from "lodash";
+
 class ExtensionShortcutLoader {
 
     static getExtensionShortcut(id: number): string[] | null {
@@ -7,6 +9,20 @@ class ExtensionShortcutLoader {
             return null;
         }
         return value;
+    }
+
+    static listAll() {
+        const list: [][] = [];
+        Object.keys(EXT_SHORTCUTS)
+            .map(it => _.parseInt(it))
+            .sort((a, b) => a - b)
+            .forEach(id => {
+                // @ts-ignore
+                const value = EXT_SHORTCUTS[id]!;
+                // @ts-ignore
+                list.push([value[0], id]);
+            });
+        return list;
     }
 
 }

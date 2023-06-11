@@ -47,6 +47,8 @@ class TownDashboardTaxManager {
                             $("#refreshButton").trigger("click");
                         });
                 });
+        } else {
+            taxCell.removeAttr("style");
         }
     }
 }

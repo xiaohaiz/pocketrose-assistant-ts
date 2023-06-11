@@ -1,7 +1,6 @@
 import _ from "lodash";
 import BattleFieldConfigLoader from "../../config/BattleFieldConfigLoader";
 import SetupLoader from "../../config/SetupLoader";
-import EventHandler from "../../core/EventHandler";
 import ExtensionShortcutLoader from "../../core/ExtensionShortcutLoader";
 import RankTitleLoader from "../../core/RankTitleLoader";
 import PalaceTaskManager from "../../core/task/PalaceTaskManager";
@@ -49,7 +48,7 @@ class TownDashboardPageProcessor extends PageProcessorCredentialSupport {
         doMarkElement();
         doRenderMobilization();
         doRenderMenu(credential, page);
-        doRenderEventBoard();
+        doRenderEventBoard(page);
         doRenderRoleStatus(credential, page);
         doRenderEnlargeMode();
         doProcessSafeBattleButton();
@@ -478,12 +477,12 @@ function doRenderMenu(credential: Credential, page: TownDashboardPage) {
     if (SetupLoader.isCollectTownTaxDisabled()) {
         $("option[value='MAKE_TOWN']").remove();
     }
-    $("option[value='COU_MAKE']").text("口袋助手使用手册");
-    $("option[value='TENNIS']").text("任务屋");
+    $("option[value='COU_MAKE']").text("使用手册");
+    $("option[value='TENNIS']").text("任务指南");
     $("option[value='DIANMING']").text("统计报告");
 }
 
-function doRenderEventBoard() {
+function doRenderEventBoard(page: TownDashboardPage) {
     $("td:contains('最近发生的事件')")
         .filter(function () {
             return $(this).text() === "最近发生的事件";
@@ -491,37 +490,8 @@ function doRenderEventBoard() {
         .parent()
         .next()
         .find("td:first")
-        .attr("id", "eventBoard");
-
-    const eventHtmlList: string[] = [];
-    $("#eventBoard").html()
-        .split("<br>")
-        .filter(it => it.endsWith(")"))
-        .map(function (it) {
-            // noinspection HtmlDeprecatedTag,XmlDeprecatedElement,HtmlDeprecatedAttribute
-            const header = "<font color=\"navy\">●</font>";
-            return StringUtils.substringAfter(it, header);
-        })
-        .map(function (it) {
-            return EventHandler.handleWithEventHtml(it);
-        })
-        .forEach(it => eventHtmlList.push(it));
-
-    let html = "";
-    html += "<table style='border-width:0;width:100%;height:100%;margin:auto'>";
-    html += "<tbody>";
-    eventHtmlList.forEach(it => {
-        html += "<tr>";
-        html += "<th style='color:navy;vertical-align:top'>●</th>";
-        html += "<td style='width:100%'>";
-        html += it;
-        html += "</td>";
-        html += "</tr>";
-    });
-    html += "</tbody>";
-    html += "</table>";
-
-    $("#eventBoard").html(html);
+        .attr("id", "eventBoard")
+        .html(page.eventBoardHtml!);
 }
 
 function doRenderRoleStatus(credential: Credential, page: TownDashboardPage) {
@@ -551,16 +521,23 @@ function doRenderRoleStatus(credential: Credential, page: TownDashboardPage) {
             const name = StringUtils.substringBefore(html, "(");
             const unit = StringUtils.substringBetween(html, "(", "军)");
             if (unit.includes("无所属")) {
-                return name + "&nbsp;&nbsp;&nbsp;" + page.role!.battleCount + "战";
+                return name + "&nbsp;&nbsp;&nbsp;<span id='role_battle_count'>" + page.role!.battleCount + "</span>战";
             } else {
-                return name + "(" + unit + ")" + "&nbsp;&nbsp;&nbsp;" + page.role!.battleCount + "战";
+                return name + "(" + unit + ")" + "&nbsp;&nbsp;&nbsp;<span id='role_battle_count'>" + page.role!.battleCount + "</span>战";
             }
         })
         .parent()
         .parent()
         .next()
+        .find("> th:first")
+        .attr("id", "role_health")
+        .next()
+        .next()
+        .attr("id", "role_mana")
+        .parent()
         .next()
         .find("> th:first")
+        .attr("id", "role_cash")
         .each((idx, th) => {
             const text = $(th).text();
             const cash = _.parseInt(StringUtils.substringBefore(text, " Gold"));
@@ -570,6 +547,7 @@ function doRenderRoleStatus(credential: Credential, page: TownDashboardPage) {
         })
         .next()
         .next()
+        .attr("id", "role_experience")
         .each((idx, th) => {
             if (SetupLoader.isExperienceProgressBarEnabled()) {
                 if (page.role!.level === 150) {

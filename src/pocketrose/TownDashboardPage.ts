@@ -1,6 +1,8 @@
 import _ from "lodash";
 import Role from "../common/Role";
+import EventHandler from "../core/EventHandler";
 import TownLoader from "../core/town/TownLoader";
+import PageUtils from "../util/PageUtils";
 import StringUtils from "../util/StringUtils";
 
 class TownDashboardPage {
@@ -10,12 +12,16 @@ class TownDashboardPage {
     townCountry?: string;
     townTax?: number;
 
+    eventBoardHtml?: string;
+
     globalMessageHtml?: string;
     personalMessageHtml?: string;
     redPaperMessageHtml?: string;
     domesticMessageHtml?: string;
     unitMessageHtml?: string;
     townMessageHtml?: string;
+
+    messageNotificationHtml?: string;
 
     static parse(html: string) {
         const page = new TownDashboardPage();
@@ -49,7 +55,29 @@ class TownDashboardPage {
             .each((idx, th) => {
                 const ex = $(th).text();
                 role.experience = _.parseInt(StringUtils.substringBefore(ex, " EX"));
+            })
+            .prev()
+            .prev()
+            .html((idx, eh) => {
+                role.cash = _.parseInt(StringUtils.substringBefore(PageUtils.convertHtmlToText(eh), " Gold"));
+                return eh;
+            })
+            .parent()
+            .prev()
+            .find("> th:first")
+            .html((idx, eh) => {
+                const et = PageUtils.convertHtmlToText(eh);
+                role.parseHealth(et);
+                return eh;
+            })
+            .parent()
+            .find("> th:last")
+            .html((idx, eh) => {
+                const et = PageUtils.convertHtmlToText(eh);
+                role.parseMana(et);
+                return eh;
             });
+
 
         // 读取角色当前的能力值
         // 奇怪了，读不到指定id的div元素？但是可以读到里面的td子元素
@@ -94,8 +122,63 @@ class TownDashboardPage {
         page.unitMessageHtml = unitMessageHtml;
         page.townMessageHtml = townMessageHtml;
 
+        _parseMessageNotificationHtml(html, page);
+        _parseEventBoardHtml(html, page);
+
         return page;
     }
+}
+
+function _parseMessageNotificationHtml(html: string, page: TownDashboardPage) {
+    $(html).find("input:submit[value='更新']")
+        .parent()   // form
+        .parent()   // td
+        .parent()   // tr
+        .prev()     // message notification tr
+        .find("> td:first")
+        .html((idx, eh) => {
+            page.messageNotificationHtml = eh;
+            return eh;
+        });
+}
+
+function _parseEventBoardHtml(html: string, page: TownDashboardPage) {
+    const eventHtmlList: string[] = [];
+    $(html).find("td:contains('最近发生的事件')")
+        .filter(function () {
+            return $(this).text() === "最近发生的事件";
+        })
+        .parent()
+        .next()
+        .find("td:first")
+        .html()
+        .split("<br>")
+        .filter(it => it.endsWith(")"))
+        .map(function (it) {
+            // noinspection HtmlDeprecatedTag,XmlDeprecatedElement,HtmlDeprecatedAttribute
+            const header = "<font color=\"navy\">●</font>";
+            return StringUtils.substringAfter(it, header);
+        })
+        .map(function (it) {
+            return EventHandler.handleWithEventHtml(it);
+        })
+        .forEach(it => eventHtmlList.push(it));
+
+    let eventBoardHtml = "";
+    eventBoardHtml += "<table style='border-width:0;width:100%;height:100%;margin:auto'>";
+    eventBoardHtml += "<tbody>";
+    eventHtmlList.forEach(it => {
+        eventBoardHtml += "<tr>";
+        eventBoardHtml += "<th style='color:navy;vertical-align:top'>●</th>";
+        eventBoardHtml += "<td style='width:100%'>";
+        eventBoardHtml += it;
+        eventBoardHtml += "</td>";
+        eventBoardHtml += "</tr>";
+    });
+    eventBoardHtml += "</tbody>";
+    eventBoardHtml += "</table>";
+
+    page.eventBoardHtml = eventBoardHtml;
 }
 
 export = TownDashboardPage;

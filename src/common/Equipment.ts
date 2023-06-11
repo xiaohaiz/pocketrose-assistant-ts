@@ -157,6 +157,16 @@ class Equipment {
         }
     }
 
+    get nameOrder() {
+        if (this.star) {
+            return 0;
+        } else if (_.startsWith(this.name, "20")) {
+            return 1;
+        } else {
+            return 2;
+        }
+    }
+
     get categoryOrder() {
         if (this.isWeapon) {
             return 1;
@@ -434,14 +444,25 @@ class Equipment {
         if (!SetupLoader.isEquipmentPetSortEnabled()) {
             return 0;
         }
+
         let ret = a.locationOrder - b.locationOrder;
-        if (ret !== 0) {
-            return ret;
-        }
+        if (ret !== 0) return ret;
+        ret = a.nameOrder - b.nameOrder;
+        if (ret !== 0) return ret;
+
+        ret = (a.requiredCareer !== "所有职业" ? 0 : 1) - (b.requiredCareer !== "所有职业" ? 0 : 1);
+        if (ret !== 0) return ret;
+
+        let ca = (a.requiredCareer === "所有职业") ? "" : a.requiredCareer;
+        ca = ca ? ca : "";
+        let cb = (b.requiredCareer === "所有职业") ? "" : b.requiredCareer;
+        cb = cb ? cb : "";
+        ret = cb.localeCompare(ca);
+        if (ret !== 0) return ret;
+
         ret = a.categoryOrder - b.categoryOrder;
-        if (ret !== 0) {
-            return ret;
-        }
+        if (ret !== 0) return ret;
+
         let a1 = a.star! ? 1 : 0;
         let b1 = b.star! ? 1 : 0;
         ret = a1 - b1;
