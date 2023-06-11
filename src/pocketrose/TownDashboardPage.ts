@@ -21,6 +21,8 @@ class TownDashboardPage {
     unitMessageHtml?: string;
     townMessageHtml?: string;
 
+    messageNotificationHtml?: string;
+
     static parse(html: string) {
         const page = new TownDashboardPage();
         const role = new Role();
@@ -157,8 +159,23 @@ class TownDashboardPage {
 
         page.eventBoardHtml = eventBoardHtml;
 
+        _parseMessageNotificationHtml(html, page);
+
         return page;
     }
+}
+
+function _parseMessageNotificationHtml(html: string, page: TownDashboardPage) {
+    $(html).find("input:submit[value='更新']")
+        .parent()   // form
+        .parent()   // td
+        .parent()   // tr
+        .prev()     // message notification tr
+        .find("> td:first")
+        .html((idx, eh) => {
+            page.messageNotificationHtml = eh;
+            return eh;
+        });
 }
 
 export = TownDashboardPage;
