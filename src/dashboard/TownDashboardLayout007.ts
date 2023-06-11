@@ -176,6 +176,15 @@ class TownDashboardLayout007 extends TownDashboardLayout {
                     processor.doProcess();
 
                     $("#battlePanel").html(processor.obtainPage.reportHtml!);
+                    if (processor.obtainPage.reportHtml!.includes("吐故纳新，扶摇直上")) {
+                        $("#battlePanel")
+                            .css("background-color", "wheat")
+                            .css("text-align", "center");
+                    } else {
+                        $("#battlePanel")
+                            .removeAttr("style")
+                            .css("text-align", "center");
+                    }
 
                     const recommendation = processor.obtainRecommendation;
                     switch (recommendation) {
