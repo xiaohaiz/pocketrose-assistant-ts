@@ -369,6 +369,16 @@ function doProcessBattleReturn(credential: Credential, mainPage: string) {
     _renderEventBoard(page);
     _renderConversation(mainPage);
 
+    if (page.role!.level === 150) {
+        if (!SetupLoader.isCareerTransferEntranceDisabled(credential.id)) {
+            $("#battleCell").css("background-color", "red");
+        }
+    }
+    if (page.role!.level !== 150 && (page.role!.attack === 375 || page.role!.defense === 375
+        || page.role!.specialAttack === 375 || page.role!.specialDefense === 375 || page.role!.speed === 375)) {
+        $("#battleCell").css("background-color", "yellow");
+    }
+
     $("#role_battle_count").text(page.role!.battleCount!);
     $("#role_health").text(page.role!.health + "/" + page.role!.maxHealth);
     $("#role_mana").text(page.role!.mana + "/" + page.role!.maxMana);
