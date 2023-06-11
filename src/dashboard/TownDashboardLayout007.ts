@@ -5,6 +5,7 @@ import BattleProcessor from "../core/battle/BattleProcessor";
 import BattleRecord from "../core/battle/BattleRecord";
 import BattleReturnInterceptor from "../core/battle/BattleReturnInterceptor";
 import BattleStorageManager from "../core/battle/BattleStorageManager";
+import PalaceTaskManager from "../core/task/PalaceTaskManager";
 import TownDashboardTaxManager from "../core/town/TownDashboardTaxManager";
 import TownDashboardPage from "../pocketrose/TownDashboardPage";
 import Credential from "../util/Credential";
@@ -366,6 +367,7 @@ function doProcessBattleReturn(credential: Credential, mainPage: string) {
 
     // 更新首页的变化
     _renderMessageNotification(page);
+    _renderPalaceTask(credential);
     _renderEventBoard(page);
     _renderConversation(mainPage);
 
@@ -510,6 +512,18 @@ function _renderBattleMenu(credential: Credential) {
 
 function _renderMessageNotification(page: TownDashboardPage) {
     $("#messageNotification").html(page.messageNotificationHtml!);
+}
+
+function _renderPalaceTask(credential: Credential) {
+    if (SetupLoader.isNewPalaceTaskEnabled()) {
+        new PalaceTaskManager(credential)
+            .monsterTaskHtml()
+            .then(monsterTask => {
+                if (monsterTask !== "") {
+                    $("#palaceTask").html(monsterTask).parent().show();
+                }
+            })
+    }
 }
 
 function _renderEventBoard(page: TownDashboardPage) {
