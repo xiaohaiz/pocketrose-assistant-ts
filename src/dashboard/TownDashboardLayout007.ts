@@ -516,4 +516,19 @@ function refreshClock(credential: Credential, handler: (timeout: number) => void
     }, 10000);
 }
 
+function _renderConversation(mainPage: string) {
+    $("table:first")
+        .next()     // conversation table
+        .html((idx, eh) => {
+            return $(mainPage).find("input:submit[value='阅读留言']")
+                .parent()   // form
+                .parent()   // td
+                .parent()   // tr
+                .parent()   // tbody
+                .parent()   // table
+                .html();
+        });
+    $("input:text[name='message']").attr("id", "messageInputText");
+}
+
 export = TownDashboardLayout007;
