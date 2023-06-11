@@ -358,21 +358,8 @@ function doProcessBattleReturn(credential: Credential, mainPage: string) {
         }
         let timeout = _.parseInt(clock.val() as string);
         if (timeout > 0) {
-            // 感觉倒计时不是那么精准，加一个修正的逻辑试试
-            if (timeout > 20) {
-                refreshClock(credential, ct => {
-                    timeout = ct;
-                });
-            }
-            const timer = setInterval(() => {
-                timeout--;
-                clock.val(timeout);
-                if (timeout <= 0) {
-                    clearInterval(timer);
-                    // @ts-ignore
-                    document.getElementById("mplayer")?.play();
-                }
-            }, 1000);
+            const start = Date.now() / 1000;
+            _countDownClock(timeout, start, clock);
         }
     }
 
@@ -398,16 +385,21 @@ function doProcessBattleReturn(credential: Credential, mainPage: string) {
     new TownDashboardTaxManager(credential, page).processTownTax($("#townTax"));
     $("#eventBoard").html(page.eventBoardHtml!);
 
-    // 更新聊天记录
-    let td = $("td:contains('全员的留言')")
-        .filter((idx, td) => _.startsWith($(td).text(), "全员的留言"));
-    td.find("> table:first").html(page.globalMessageHtml!);
-    td.find("> table:eq(1)").html(page.personalMessageHtml!);
-    td.find("> table:eq(2)").html(page.redPaperMessageHtml!);
-    td = td.next();
-    td.find("> table:first").html(page.domesticMessageHtml!);
-    td.find("> table:eq(1)").html(page.unitMessageHtml!);
-    td.find("> table:eq(2)").html(page.townMessageHtml!);
+    _renderConversation(mainPage);
+}
+
+function _countDownClock(timeout: number, start: number, clock: JQuery) {
+    let now = Date.now() / 1000;
+    let x = timeout - (now - start);
+    clock.val(_.max([_.ceil(x), 0])!);
+    if (x > 0) {
+        setTimeout(() => {
+            _countDownClock(timeout, start, clock);
+        }, 100);
+    } else {
+        // @ts-ignore
+        document.getElementById("mplayer")?.play();
+    }
 }
 
 function _renderBattleMenu(credential: Credential) {
@@ -499,21 +491,6 @@ function _renderBattleMenu(credential: Credential) {
         $("select[name='level']").find("option:first").remove();
     }
 
-}
-
-function refreshClock(credential: Credential, handler: (timeout: number) => void) {
-    const timer = setInterval(() => {
-        const request = credential.asRequestMap();
-        request.set("mode", "STATUS");
-        NetworkUtils.post("status.cgi", request).then(hx => {
-            const cx = $(hx).find("input:text[name='clock']").val() as string;
-            const tx = _.parseInt(cx);
-            if (tx <= 10) {
-                clearInterval(timer);
-            }
-            handler(tx);
-        });
-    }, 10000);
 }
 
 function _renderConversation(mainPage: string) {
