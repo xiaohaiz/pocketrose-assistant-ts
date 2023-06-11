@@ -21,6 +21,7 @@ class TownDashboardPage {
     unitMessageHtml?: string;
     townMessageHtml?: string;
 
+    onlineListHtml?: string;
     messageNotificationHtml?: string;
 
     static parse(html: string) {
@@ -122,11 +123,37 @@ class TownDashboardPage {
         page.unitMessageHtml = unitMessageHtml;
         page.townMessageHtml = townMessageHtml;
 
+        _parseOnlineListHtml(html, page);
         _parseMessageNotificationHtml(html, page);
         _parseEventBoardHtml(html, page);
 
         return page;
     }
+}
+
+function _parseOnlineListHtml(html: string, page: TownDashboardPage) {
+    $(html).find("input:submit[value='更新']")
+        .parent()   // form
+        .parent()   // td
+        .parent()   // tr
+        .parent()   // tbody
+        .parent()   // table
+        .parent()   // td
+        .parent()   // tr
+        .parent()   // tbody
+        .parent()   // table
+        .parent()   // td
+        .parent()   // tr
+        .parent()   // tbody
+        .parent()   // table
+        .parent()   // td
+        .parent()   // tr
+        .prev()
+        .find("> td:first")
+        .html((idx, eh) => {
+            page.onlineListHtml = eh;
+            return eh;
+        });
 }
 
 function _parseMessageNotificationHtml(html: string, page: TownDashboardPage) {
