@@ -25,7 +25,7 @@ const LAYOUTS = {
     4: "聊天布局",
     5: "战斗布局",
     6: "手机版战斗布局",
-    7: "实验面板",
+    7: "战斗布局（增强版）",
 };
 
 export = LayoutConfigLoader;
