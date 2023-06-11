@@ -1,9 +1,9 @@
 import _ from "lodash";
-import Role from "../common/Role";
-import EventHandler from "../core/EventHandler";
-import TownLoader from "../core/town/TownLoader";
-import PageUtils from "../util/PageUtils";
-import StringUtils from "../util/StringUtils";
+import Role from "../../common/Role";
+import PageUtils from "../../util/PageUtils";
+import StringUtils from "../../util/StringUtils";
+import EventHandler from "../EventHandler";
+import TownLoader from "../town/TownLoader";
 
 class TownDashboardPage {
 

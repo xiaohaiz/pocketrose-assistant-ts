@@ -1,5 +1,5 @@
-import Credential from "../util/Credential";
-import NetworkUtils from "../util/NetworkUtils";
+import Credential from "../../util/Credential";
+import NetworkUtils from "../../util/NetworkUtils";
 import TownDashboardPage from "./TownDashboardPage";
 
 class TownDashboard {

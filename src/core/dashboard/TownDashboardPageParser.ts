@@ -1,0 +1,5 @@
+class TownDashboardPageParser {
+
+}
+
+export = TownDashboardPageParser;

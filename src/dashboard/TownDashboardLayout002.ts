@@ -1,6 +1,6 @@
 import SetupLoader from "../config/SetupLoader";
+import TownDashboardPage from "../core/dashboard/TownDashboardPage";
 import TownDashboardTaxManager from "../core/town/TownDashboardTaxManager";
-import TownDashboardPage from "../pocketrose/TownDashboardPage";
 import Credential from "../util/Credential";
 import TownDashboardLayout from "./TownDashboardLayout";
 
