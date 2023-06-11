@@ -1,5 +1,7 @@
 # pocketrose-assistant-ts
 
+### 版本 4.1.2-SNAPSHOT
+
 ### 版本 4.1.1
 
 1. 战斗布局增强模式支持皇宫任务的显示。
