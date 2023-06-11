@@ -383,6 +383,8 @@ function doProcessBattleReturn(credential: Credential, mainPage: string) {
                 const exp = page.role!.experience + " EX";
                 $(th).html("<span title='" + exp + "'>" + progressBar + "</span>");
             }
+        } else {
+            $(th).text(page.role!.experience + " EX");
         }
     });
     $("#townTax").off("click").text(page.townTax!);
