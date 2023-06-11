@@ -365,6 +365,10 @@ function doProcessBattleReturn(credential: Credential, mainPage: string) {
 
 
     // 更新首页的变化
+    _renderMessageNotification(page);
+    _renderEventBoard(page);
+    _renderConversation(mainPage);
+
     $("#role_battle_count").text(page.role!.battleCount!);
     $("#role_health").text(page.role!.health + "/" + page.role!.maxHealth);
     $("#role_mana").text(page.role!.mana + "/" + page.role!.maxMana);
@@ -383,9 +387,8 @@ function doProcessBattleReturn(credential: Credential, mainPage: string) {
     });
     $("#townTax").off("click").text(page.townTax!);
     new TownDashboardTaxManager(credential, page).processTownTax($("#townTax"));
-    $("#eventBoard").html(page.eventBoardHtml!);
 
-    _renderConversation(mainPage);
+
 }
 
 function _countDownClock(timeout: number, start: number, clock: JQuery) {
@@ -491,6 +494,14 @@ function _renderBattleMenu(credential: Credential) {
         $("select[name='level']").find("option:first").remove();
     }
 
+}
+
+function _renderMessageNotification(page: TownDashboardPage) {
+    $("#messageNotification").html(page.messageNotificationHtml!);
+}
+
+function _renderEventBoard(page: TownDashboardPage) {
+    $("#eventBoard").html(page.eventBoardHtml!);
 }
 
 function _renderConversation(mainPage: string) {
