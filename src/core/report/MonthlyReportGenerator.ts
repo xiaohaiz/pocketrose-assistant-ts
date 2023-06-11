@@ -379,7 +379,7 @@ class MonthlyReportGenerator {
         html += "<table style='background-color:#888888;text-align:center;margin:auto;width:100%'>";
         html += "<thead>";
         html += "<tr>";
-        html += "<th style='background-color:navy;color:yellowgreen' colspan='13'>月 物 入 手 总 览</th>";
+        html += "<th style='background-color:navy;color:yellowgreen' colspan='13'>月 宠 物 入 手 总 览</th>";
         html += "</tr>";
         html += "<tr>";
         html += "<th style='background-color:skyblue' rowspan='2'>成员</th>";
