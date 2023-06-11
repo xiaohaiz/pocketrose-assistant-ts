@@ -375,6 +375,7 @@ function doProcessBattleReturn(credential: Credential, mainPage: string) {
 
 
     // 更新首页的变化
+    _renderOnlineList(page);
     _renderMessageNotification(page);
     _renderPalaceTask(credential);
     _renderEventBoard(page);
@@ -517,6 +518,16 @@ function _renderBattleMenu(credential: Credential) {
         $("select[name='level']").find("option:first").remove();
     }
 
+}
+
+function _renderOnlineList(page: TownDashboardPage) {
+    $("table:first")
+        .find("> tbody:first")
+        .find("> tr:first")
+        .find("> td:first")
+        .html((idx, eh) => {
+            return page.onlineListHtml!;
+        });
 }
 
 function _renderMessageNotification(page: TownDashboardPage) {
