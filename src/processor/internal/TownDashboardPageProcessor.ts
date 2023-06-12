@@ -24,11 +24,8 @@ class TownDashboardPageProcessor extends PageProcessorCredentialSupport {
 
     doProcess(credential: Credential, context?: PageProcessorContext): void {
         const configId = TownDashboardLayoutManager.loadDashboardLayoutConfigId(credential);
-        let battleMode: boolean | undefined = undefined;
-        if (configId === 5 || configId === 6 || configId === 7) {
-            battleMode = true;
-        }
-        const parser = new TownDashboardPageParser(credential, PageUtils.currentPageHtml(), battleMode);
+        const layout = LAYOUT_MANAGER.getLayout(configId);
+        const parser = new TownDashboardPageParser(credential, PageUtils.currentPageHtml(), layout?.battleMode());
         const page = parser.parse();
 
         $("center:first")
@@ -58,8 +55,7 @@ class TownDashboardPageProcessor extends PageProcessorCredentialSupport {
         doRenderEnlargeMode();
         doProcessSafeBattleButton();
 
-
-        LAYOUT_MANAGER.getLayout(configId)?.render(credential, page);
+        layout?.render(credential, page);
     }
 
 }
