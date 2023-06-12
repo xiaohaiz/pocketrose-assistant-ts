@@ -667,19 +667,4 @@ function _bindShortcutButton(buttonId: string, option: string) {
     });
 }
 
-function _canCollectTownTax(page: TownDashboardPage) {
-    if (SetupLoader.isCollectTownTaxDisabled()) {
-        return false;
-    }
-    if (page.role!.country !== "在野" && page.role!.country === page.townCountry) {
-        const tax = page.townTax!;
-        if (tax >= 50000) {
-            if (tax - Math.floor(tax / 50000) * 50000 <= 10000) {
-                return true;
-            }
-        }
-    }
-    return false;
-}
-
 export = TownDashboardPageProcessor;
