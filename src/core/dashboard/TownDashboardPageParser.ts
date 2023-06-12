@@ -74,6 +74,7 @@ class TownDashboardPageParser {
         _parseRoleStatus(page, t_0_0_1, t_1.next(), this.#credential);
         _parseEventBoard(page, t_0_0_1);
         _parseConversation(page, t_1);
+        _calculateCollectTownTax(page);
 
         return page;
     }
@@ -453,6 +454,21 @@ function _parseConversation(page: TownDashboardPage, table: JQuery) {
     page.domesticMessageHtml = domesticMessageHtml;
     page.unitMessageHtml = unitMessageHtml;
     page.townMessageHtml = townMessageHtml;
+}
+
+function _calculateCollectTownTax(page: TownDashboardPage) {
+    page.canCollectTownTax = false;
+    if (SetupLoader.isCollectTownTaxDisabled()) {
+        return;
+    }
+    if (page.obtainRole.country !== "在野" && page.obtainRole.country === page.townCountry) {
+        const tax = page.townTax!;
+        if (tax >= 50000) {
+            if (tax - Math.floor(tax / 50000) * 50000 <= 10000) {
+                page.canCollectTownTax = true;
+            }
+        }
+    }
 }
 
 export = TownDashboardPageParser;

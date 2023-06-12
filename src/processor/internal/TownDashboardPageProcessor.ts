@@ -3,7 +3,6 @@ import SetupLoader from "../../config/SetupLoader";
 import TownDashboardPage from "../../core/dashboard/TownDashboardPage";
 import TownDashboardPageParser from "../../core/dashboard/TownDashboardPageParser";
 import ExtensionShortcutLoader from "../../core/ExtensionShortcutLoader";
-import RankTitleLoader from "../../core/RankTitleLoader";
 import PalaceTaskManager from "../../core/task/PalaceTaskManager";
 import TownDashboardLayoutManager from "../../dashboard/TownDashboardLayoutManager";
 import Credential from "../../util/Credential";
@@ -52,7 +51,7 @@ class TownDashboardPageProcessor extends PageProcessorCredentialSupport {
                 "<p style='display:none' id='eden-5'></p>"));
 
         doMarkElement();
-        doRenderMobilization();
+        doRenderMobilization(page);
         doRenderMenu(credential, page);
         doRenderEventBoard(page);
         doRenderRoleStatus(credential, page);
@@ -151,22 +150,11 @@ function doMarkElement() {
         .attr("id", "exitButton");
 }
 
-function doRenderMobilization() {
+function doRenderMobilization(page: TownDashboardPage) {
     $("#mobilization")
         .find("> form:first")
         .find("> font:first")
-        .each((idx, font) => {
-            let c = $(font).text();
-            let b = StringUtils.substringAfterLast(c, "(");
-            let a = StringUtils.substringBefore(c, "(" + b);
-            b = StringUtils.substringBefore(b, ")");
-            const ss = _.split(b, " ");
-            const b1 = _.replace(ss[0], "部队", "");
-            const b2 = SetupLoader.isQiHanTitleEnabled() ? RankTitleLoader.transformTitle(ss[1]) : ss[1];
-            const b3 = ss[2];
-            const s = a + "(" + b1 + " " + b2 + " " + b3 + ")";
-            $(font).text(s);
-        });
+        .text(page.processedMobilizationText!);
 }
 
 function doRenderMenu(credential: Credential, page: TownDashboardPage) {

@@ -16,6 +16,7 @@ class TownDashboardPage {
     townId?: string;
     townCountry?: string;
     townTax?: number;
+    canCollectTownTax?: boolean;
 
     onlineListHtml?: string;                        // 在线列表
     mobilizationText?: string;                      // 国家动员令
