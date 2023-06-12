@@ -12,8 +12,6 @@ class TownDashboardPage {
     townCountry?: string;
     townTax?: number;
 
-    eventBoardHtml?: string;
-
     globalMessageHtml?: string;
     personalMessageHtml?: string;
     redPaperMessageHtml?: string;
@@ -21,10 +19,23 @@ class TownDashboardPage {
     unitMessageHtml?: string;
     townMessageHtml?: string;
 
-    onlineListHtml?: string;                // 在线列表
-    mobilizationText?: string;              // 国家动员令
-    processedMobilizationText?: string;     // 国家动员令（处理后）
-    messageNotificationHtml?: string;       // 是否有未读消息
+    onlineListHtml?: string;                        // 在线列表
+    mobilizationText?: string;                      // 国家动员令
+    processedMobilizationText?: string;             // 国家动员令（处理后）
+    messageNotificationHtml?: string;               // 是否有未读消息
+    actionNotificationHtml?: string;                // 行动提示
+
+    battleSessionId?: string;                       // 战斗回话ID
+    battleLevelSelectionHtml?: string;              // 战斗选项
+    processedBattleLevelSelectionHtml?: string;     // 战斗选项（处理后）
+    battleVerificationSource?: string;              // 验证码源
+
+    eventBoardHtml?: string;                        // 事件面板
+    processedEventBoardHtml?: string;               // 事件面板（处理后）
+
+    get obtainRole(): Role {
+        return this.role!;
+    }
 
     static parse(html: string) {
         const page = new TownDashboardPage();
@@ -207,7 +218,7 @@ function _parseEventBoardHtml(html: string, page: TownDashboardPage) {
     eventBoardHtml += "</tbody>";
     eventBoardHtml += "</table>";
 
-    page.eventBoardHtml = eventBoardHtml;
+    page.processedEventBoardHtml = eventBoardHtml;
 }
 
 export = TownDashboardPage;

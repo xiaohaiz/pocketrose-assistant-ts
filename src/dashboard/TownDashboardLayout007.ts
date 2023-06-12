@@ -571,7 +571,7 @@ function _renderPalaceTask(credential: Credential) {
 }
 
 function _renderEventBoard(page: TownDashboardPage) {
-    $("#eventBoard").html(page.eventBoardHtml!);
+    $("#eventBoard").html(page.processedEventBoardHtml!);
 }
 
 function _renderConversation(mainPage: string) {

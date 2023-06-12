@@ -491,7 +491,7 @@ function doRenderEventBoard(page: TownDashboardPage) {
         .next()
         .find("td:first")
         .attr("id", "eventBoard")
-        .html(page.eventBoardHtml!);
+        .html(page.processedEventBoardHtml!);
 }
 
 function doRenderRoleStatus(credential: Credential, page: TownDashboardPage) {

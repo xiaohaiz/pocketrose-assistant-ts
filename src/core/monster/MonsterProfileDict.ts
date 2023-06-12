@@ -7,13 +7,22 @@ class MonsterProfileDict {
 
     static load(code: string | number | null | undefined): MonsterProfile | null {
         if (!code) return null;
-        let c: number;
+        let c: number | null;
         if (_.isString(code)) {
             let extracted = extractCode(code);
-            c = extracted ? _.parseInt(extracted) : _.parseInt(code);
+            if (extracted) {
+                c = _.parseInt(extracted);
+            } else {
+                if (_.isNaN(code)) {
+                    c = null;               // 不是数字，肯定不认识这个宠物
+                } else {
+                    c = _.parseInt(code);   // 数字，按照全国编号来查询
+                }
+            }
         } else {
             c = code;
         }
+        if (!c) return null;
         // @ts-ignore
         const s = MONSTERS[c];
         return s ? parse(c, s) : null;
