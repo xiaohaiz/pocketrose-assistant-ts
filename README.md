@@ -1,6 +1,6 @@
 # pocketrose-assistant-ts
 
-### 版本 4.1.3-SNAPSHOT
+### 版本 4.1.3
 
 1. 战斗布局增强模式首页显示角色当前RP值。
 2. RP>=1500，白色
