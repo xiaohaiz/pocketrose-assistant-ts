@@ -296,7 +296,7 @@ function doRenderMenu(credential: Credential, page: TownDashboardPage) {
                     let esButton = true;
                     const es = ExtensionShortcutLoader.getExtensionShortcut(extensionId)!;
                     if (es[0] === "城市收益") {
-                        esButton = _canCollectTownTax(page);
+                        esButton = page.canCollectTownTax!;
                     }
                     if (esButton) {
                         const bt = "&nbsp;" + es[0] + "&nbsp;"
