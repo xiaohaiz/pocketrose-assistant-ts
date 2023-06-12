@@ -41,6 +41,9 @@ class TownDashboardPageParser {
             .parent();
         const t_1 = t_0.next();
 
+        page.t0Html = $(t_0).html();
+        page.t1Html = $(t_1).html();
+
         const t_0_0 = $(t_0)
             .find("> tbody:first")
             .find("> tr:eq(1)")

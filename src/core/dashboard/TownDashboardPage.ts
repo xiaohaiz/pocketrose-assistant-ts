@@ -7,17 +7,13 @@ import TownLoader from "../town/TownLoader";
 
 class TownDashboardPage {
 
+    t0Html?: string;
+    t1Html?: string;
+
     role?: Role;
     townId?: string;
     townCountry?: string;
     townTax?: number;
-
-    globalMessageHtml?: string;
-    personalMessageHtml?: string;
-    redPaperMessageHtml?: string;
-    domesticMessageHtml?: string;
-    unitMessageHtml?: string;
-    townMessageHtml?: string;
 
     onlineListHtml?: string;                        // 在线列表
     mobilizationText?: string;                      // 国家动员令
@@ -32,6 +28,13 @@ class TownDashboardPage {
 
     eventBoardHtml?: string;                        // 事件面板
     processedEventBoardHtml?: string;               // 事件面板（处理后）
+
+    globalMessageHtml?: string;
+    personalMessageHtml?: string;
+    redPaperMessageHtml?: string;
+    domesticMessageHtml?: string;
+    unitMessageHtml?: string;
+    townMessageHtml?: string;
 
     get obtainRole(): Role {
         return this.role!;
