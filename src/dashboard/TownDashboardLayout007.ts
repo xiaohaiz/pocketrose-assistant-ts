@@ -1,5 +1,4 @@
 import _ from "lodash";
-import BattleFieldConfigLoader from "../config/BattleFieldConfigLoader";
 import SetupLoader from "../config/SetupLoader";
 import BattleProcessor from "../core/battle/BattleProcessor";
 import BattleRecord from "../core/battle/BattleRecord";
@@ -7,12 +6,12 @@ import BattleReturnInterceptor from "../core/battle/BattleReturnInterceptor";
 import BattleStorageManager from "../core/battle/BattleStorageManager";
 import DashboardPageUtils from "../core/dashboard/DashboardPageUtils";
 import TownDashboardPage from "../core/dashboard/TownDashboardPage";
+import TownDashboardPageParser from "../core/dashboard/TownDashboardPageParser";
 import PalaceTaskManager from "../core/task/PalaceTaskManager";
 import TownDashboardTaxManager from "../core/town/TownDashboardTaxManager";
 import PersonalStatus from "../pocketrose/PersonalStatus";
 import Credential from "../util/Credential";
 import NetworkUtils from "../util/NetworkUtils";
-import PageUtils from "../util/PageUtils";
 import TownDashboardLayout from "./TownDashboardLayout";
 
 class TownDashboardLayout007 extends TownDashboardLayout {
@@ -322,33 +321,21 @@ function doProcessBattleReturn(credential: Credential,
     $("#refreshButton").show();
     $("#battleButton").show();
 
-    const page = TownDashboardPage.parse(mainPage);
+    const parser = new TownDashboardPageParser(credential, mainPage, true);
+    const page = parser.parse();
 
     // 更新首页战斗相关的选项
     // ktotal
-    $("input:hidden[name='ktotal']").val(page.role!.battleCount!);
+    $("input:hidden[name='ktotal']").val(page.obtainRole.battleCount!);
     // session id
-    $("input:hidden[name='sessionid']").val(() => {
-        return $(mainPage).find("input:hidden[name='sessionid']").val() as string;
-    });
+    $("input:hidden[name='sessionid']").val(page.battleSessionId!);
     // level
-    $("select[name='level']").html(() => {
-        return $(mainPage).find("select[name='level']").html();
-    });
-    doProcessBattleLevel();
-
-    _renderBattleMenu(credential);
+    $("select[name='level']").html(page.processedBattleLevelSelectionHtml!);
 
     // verification code picture
     $("select[name='level']").closest("form")
         .find("> img:first")
-        .each((idx, img) => {
-            const src = $(mainPage).find("select[name='level']")
-                .closest("form")
-                .find("> img:first")
-                .attr("src") as string;
-            $(img).attr("src", src);
-        });
+        .attr("src", page.battleVerificationSource!);
 
     // 更新战斗倒计时部分
     $("#messageNotification")
@@ -356,14 +343,8 @@ function doProcessBattleReturn(credential: Credential,
         .next()
         .next()
         .find("> th:first")
-        .html(() => {
-            return $(mainPage).find("form[action='battle.cgi']")
-                .closest("table")
-                .find("> tbody:first")
-                .find("> tr:eq(1)")
-                .find("> th:first")
-                .html();
-        });
+        .html(page.actionNotificationHtml!);
+
     if (SetupLoader.isConsecrateStateRecognizeEnabled(credential.id) && page.role!.canConsecrate!) {
         $("#messageNotification")
             .parent()
@@ -393,36 +374,20 @@ function doProcessBattleReturn(credential: Credential,
     _renderMessageNotification(page);
     _renderPalaceTask(credential);
     _renderEventBoard(page);
-    _renderConversation(mainPage);
+    _renderConversation(page);
 
-    if (page.role!.level === 150) {
-        if (!SetupLoader.isCareerTransferEntranceDisabled(credential.id)) {
-            $("#battleCell").css("background-color", "red");
-        }
+    if (page.careerTransferNotification) {
+        $("#battleCell").css("background-color", "red");
     }
-    if (page.role!.level !== 150 && (page.role!.attack === 375 || page.role!.defense === 375
-        || page.role!.specialAttack === 375 || page.role!.specialDefense === 375 || page.role!.speed === 375)) {
+    if (page.capacityLimitationNotification) {
         $("#battleCell").css("background-color", "yellow");
     }
 
     $("#role_battle_count").text(page.role!.battleCount!);
     $("#role_health").text(page.role!.health + "/" + page.role!.maxHealth);
     $("#role_mana").text(page.role!.mana + "/" + page.role!.maxMana);
-    $("#role_cash").text(page.role!.cash + " Gold");
-    $("#role_experience").each((idx, th) => {
-        if (SetupLoader.isExperienceProgressBarEnabled()) {
-            if (page.role!.level === 150) {
-                $(th).attr("style", "color: blue").text("MAX");
-            } else {
-                const ratio = page.role!.level! / 150;
-                const progressBar = PageUtils.generateProgressBarHTML(ratio);
-                const exp = page.role!.experience + " EX";
-                $(th).html("<span title='" + exp + "'>" + progressBar + "</span>");
-            }
-        } else {
-            $(th).text(page.role!.experience + " EX");
-        }
-    });
+    $("#role_cash").html(page.cashHtml);
+    $("#role_experience").html(page.experienceHtml);
     $("#townTax").off("click").text(page.townTax!);
     new TownDashboardTaxManager(credential, page).processTownTax($("#townTax"));
 
@@ -451,97 +416,6 @@ function _countDownClock(timeout: number, start: number, clock: JQuery) {
         // @ts-ignore
         document.getElementById("mplayer")?.play();
     }
-}
-
-function _renderBattleMenu(credential: Credential) {
-    const preference = new BattleFieldConfigLoader(credential).loadConfig();
-    let count = 0;
-    // @ts-ignore
-    if (preference["primary"]) {
-        count++;
-    }
-    // @ts-ignore
-    if (preference["junior"]) {
-        count++;
-    }
-    // @ts-ignore
-    if (preference["senior"]) {
-        count++;
-    }
-    // @ts-ignore
-    if (preference["zodiac"]) {
-        count++;
-    }
-    if (count === 0) {
-        // 没有设置战斗场所偏好，忽略
-        return;
-    }
-
-    // 设置了战斗场所偏好
-    $("select[name='level']").find("option").each(function (_idx, option) {
-        const text = $(option).text();
-        if (text.startsWith("秘宝之岛")) {
-            // do nothing, keep
-        } else if (text.startsWith("初级之森")) {
-            // do nothing, keep
-        } else if (text.startsWith("中级之塔")) {
-            // do nothing, keep
-        } else if (text.startsWith("上级之洞")) {
-            // do nothing, keep
-        } else if (text.startsWith("十二神殿")) {
-            // do nothing, keep
-        } else if (text.startsWith("------")) {
-            // do nothing, keep
-        } else {
-            $(option).remove();
-        }
-    });
-    $("select[name='level']").find("option").each(function (_idx, option) {
-        const text = $(option).text();
-        if (text.startsWith("初级之森")) {
-            // @ts-ignore
-            if (!preference["primary"]) {
-                $(option).remove();
-            }
-        } else if (text.startsWith("中级之塔")) {
-            // @ts-ignore
-            if (!preference["junior"]) {
-                $(option).remove();
-            }
-        } else if (text.startsWith("上级之洞")) {
-            // @ts-ignore
-            if (!preference["senior"]) {
-                $(option).remove();
-            }
-        } else if (text.startsWith("十二神殿")) {
-            // @ts-ignore
-            if (!preference["zodiac"]) {
-                $(option).remove();
-            }
-        }
-    });
-    // 删除连续的分隔线
-    let delimMatch = false;
-    $("select[name='level']").find("option").each(function (_idx, option) {
-        const text = $(option).text();
-        if (text.startsWith("------")) {
-            if (!delimMatch) {
-                delimMatch = true;
-            } else {
-                $(option).remove();
-            }
-        } else {
-            delimMatch = false;
-        }
-    });
-    // 删除头尾的分隔线
-    if ($("select[name='level']").find("option:last").text().startsWith("------")) {
-        $("select[name='level']").find("option:last").remove();
-    }
-    if ($("select[name='level']").find("option:first").text().startsWith("------")) {
-        $("select[name='level']").find("option:first").remove();
-    }
-
 }
 
 function _renderOnlineList(page: TownDashboardPage) {
@@ -574,18 +448,10 @@ function _renderEventBoard(page: TownDashboardPage) {
     $("#eventBoard").html(page.processedEventBoardHtml!);
 }
 
-function _renderConversation(mainPage: string) {
+function _renderConversation(page: TownDashboardPage) {
     $("table:first")
         .next()     // conversation table
-        .html((idx, eh) => {
-            return $(mainPage).find("input:submit[value='阅读留言']")
-                .parent()   // form
-                .parent()   // td
-                .parent()   // tr
-                .parent()   // tbody
-                .parent()   // table
-                .html();
-        });
+        .html(page.t1Html!);
     $("input:text[name='message']").attr("id", "messageInputText");
 }
 
