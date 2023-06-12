@@ -50,6 +50,7 @@ class TownDashboardPageParser {
         // 解析页面上的内容
         _parseOnlineList(page, t_0);
         _parseMobilization(page, t_0_0);
+        _parseTownInformation(page, t_0_0_0);
         _parseMessageNotification(page, t_0_0_1);
 
         return page;
@@ -82,6 +83,25 @@ function _parseMobilization(page: TownDashboardPage, table: JQuery) {
             const b2 = SetupLoader.isQiHanTitleEnabled() ? RankTitleLoader.transformTitle(ss[1]) : ss[1];
             const b3 = ss[2];
             page.processedMobilizationText = a + "(" + b1 + " " + b2 + " " + b3 + ")";
+        });
+}
+
+function _parseTownInformation(page: TownDashboardPage, table: JQuery) {
+    $(table)
+        .find("> tbody:first")
+        .find("> tr:eq(3)")
+        .find("> td:first")
+        .find("> table:first")
+        .find("> tbody:first")
+        .find("> tr:eq(1)")
+        .find("> td:first")
+        .each((idx, td) => {
+            page.townTax = _.parseInt($(td).text());
+        })
+        .next()
+        .next()
+        .each((idx, th) => {
+            page.townCountry = $(th).text();
         });
 }
 
