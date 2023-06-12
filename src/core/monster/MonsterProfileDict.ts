@@ -13,7 +13,8 @@ class MonsterProfileDict {
             if (extracted) {
                 c = _.parseInt(extracted);
             } else {
-                if (_.isNaN(code)) {
+                // @ts-ignore
+                if (isNaN(code)) {
                     c = null;               // 不是数字，肯定不认识这个宠物
                 } else {
                     c = _.parseInt(code);   // 数字，按照全国编号来查询
