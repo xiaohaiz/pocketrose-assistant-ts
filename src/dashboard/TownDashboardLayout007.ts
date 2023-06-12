@@ -5,6 +5,7 @@ import BattleProcessor from "../core/battle/BattleProcessor";
 import BattleRecord from "../core/battle/BattleRecord";
 import BattleReturnInterceptor from "../core/battle/BattleReturnInterceptor";
 import BattleStorageManager from "../core/battle/BattleStorageManager";
+import DashboardPageUtils from "../core/dashboard/DashboardPageUtils";
 import TownDashboardPage from "../core/dashboard/TownDashboardPage";
 import PalaceTaskManager from "../core/task/PalaceTaskManager";
 import TownDashboardTaxManager from "../core/town/TownDashboardTaxManager";
@@ -49,7 +50,7 @@ class TownDashboardLayout007 extends TownDashboardLayout {
         new PersonalStatus(credential, page.townId)
             .load()
             .then(role => {
-                $("#additionalRP").text(role.additionalRP!);
+                $("#additionalRP").html(() => DashboardPageUtils.generateAdditionalRPHtml(role.additionalRP));
             });
 
         $("#rightPanel")
@@ -423,7 +424,7 @@ function doProcessBattleReturn(credential: Credential, mainPage: string, additio
     new TownDashboardTaxManager(credential, page).processTownTax($("#townTax"));
 
     if (additionalRP) {
-        $("#additionalRP").text(additionalRP);
+        $("#additionalRP").html(() => DashboardPageUtils.generateAdditionalRPHtml(additionalRP));
     }
 }
 
