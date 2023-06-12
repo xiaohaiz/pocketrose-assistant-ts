@@ -8,6 +8,7 @@ import BattleStorageManager from "../core/battle/BattleStorageManager";
 import TownDashboardPage from "../core/dashboard/TownDashboardPage";
 import PalaceTaskManager from "../core/task/PalaceTaskManager";
 import TownDashboardTaxManager from "../core/town/TownDashboardTaxManager";
+import PersonalStatus from "../pocketrose/PersonalStatus";
 import Credential from "../util/Credential";
 import NetworkUtils from "../util/NetworkUtils";
 import PageUtils from "../util/PageUtils";
@@ -44,6 +45,11 @@ class TownDashboardLayout007 extends TownDashboardLayout {
                     "<td>ＲＰ</td><th id='additionalRP'>-</th>" +
                     "</tr>"));
                 new TownDashboardTaxManager(credential, page).processTownTax($("#townTax"));
+            });
+        new PersonalStatus(credential, page.townId)
+            .load()
+            .then(role => {
+                $("#additionalRP").text(role.additionalRP!);
             });
 
         $("#rightPanel")
@@ -231,7 +237,7 @@ class TownDashboardLayout007 extends TownDashboardLayout {
                                 request.set("mode", "STATUS");
                                 NetworkUtils.post("status.cgi", request)
                                     .then(mainPage => {
-                                        doProcessBattleReturn(credential, mainPage);
+                                        doProcessBattleReturn(credential, mainPage, processor.obtainPage.additionalRP);
                                     });
                             });
                     });
@@ -245,7 +251,7 @@ class TownDashboardLayout007 extends TownDashboardLayout {
                                 request.set("mode", "BANK_SELL");
                                 NetworkUtils.post("town.cgi", request)
                                     .then(mainPage => {
-                                        doProcessBattleReturn(credential, mainPage);
+                                        doProcessBattleReturn(credential, mainPage, processor.obtainPage.additionalRP);
                                     });
                             });
                     });
@@ -259,7 +265,7 @@ class TownDashboardLayout007 extends TownDashboardLayout {
                                 request.set("mode", "MY_ARM2");
                                 NetworkUtils.post("town.cgi", request)
                                     .then(mainPage => {
-                                        doProcessBattleReturn(credential, mainPage);
+                                        doProcessBattleReturn(credential, mainPage, processor.obtainPage.additionalRP);
                                     });
                             });
                     });
@@ -272,7 +278,7 @@ class TownDashboardLayout007 extends TownDashboardLayout {
                                 request.set("mode", "RECOVERY");
                                 NetworkUtils.post("town.cgi", request)
                                     .then(mainPage => {
-                                        doProcessBattleReturn(credential, mainPage);
+                                        doProcessBattleReturn(credential, mainPage, processor.obtainPage.additionalRP);
                                     });
                             });
                     });
@@ -306,7 +312,7 @@ function doProcessBattleLevel() {
     });
 }
 
-function doProcessBattleReturn(credential: Credential, mainPage: string) {
+function doProcessBattleReturn(credential: Credential, mainPage: string, additionalRP?: number) {
     $(".battleButton").off("click");
     $("#battleMenu").html("").parent().hide();
     $("#refreshButton").show();
@@ -416,7 +422,9 @@ function doProcessBattleReturn(credential: Credential, mainPage: string) {
     $("#townTax").off("click").text(page.townTax!);
     new TownDashboardTaxManager(credential, page).processTownTax($("#townTax"));
 
-
+    if (additionalRP) {
+        $("#additionalRP").text(additionalRP);
+    }
 }
 
 function _countDownClock(timeout: number, start: number, clock: JQuery) {

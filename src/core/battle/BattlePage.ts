@@ -29,6 +29,8 @@ class BattlePage {
     monsterNameHtml?: string;
     reportHtml?: string;
 
+    additionalRP?: number;
+
     constructor() {
         this.treasureBattle = false;
         this.primaryBattle = false;
@@ -299,6 +301,17 @@ class BattlePage {
 
 
         generateBattleReport(battleTable, page);
+
+        $(page.reportHtml!)
+            .find("font[color='orange']")
+            .each((idx, font) => {
+                let t = $(font).text();
+                if (!page.additionalRP && _.startsWith(t, "RP上升1点")) {
+                    t = StringUtils.substringAfter(t, "RP上升1点，达到了");
+                    t = StringUtils.substringBefore(t, "点");
+                    page.additionalRP = _.parseInt(t);
+                }
+            });
 
         return page;
     }
