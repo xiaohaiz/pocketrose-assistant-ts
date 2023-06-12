@@ -238,7 +238,7 @@ class TownDashboardLayout007 extends TownDashboardLayout {
                                 request.set("mode", "STATUS");
                                 NetworkUtils.post("status.cgi", request)
                                     .then(mainPage => {
-                                        doProcessBattleReturn(credential, mainPage, processor.obtainPage.additionalRP);
+                                        doProcessBattleReturn(credential, mainPage, processor.obtainPage.additionalRP, processor.obtainPage.harvestList);
                                     });
                             });
                     });
@@ -252,7 +252,7 @@ class TownDashboardLayout007 extends TownDashboardLayout {
                                 request.set("mode", "BANK_SELL");
                                 NetworkUtils.post("town.cgi", request)
                                     .then(mainPage => {
-                                        doProcessBattleReturn(credential, mainPage, processor.obtainPage.additionalRP);
+                                        doProcessBattleReturn(credential, mainPage, processor.obtainPage.additionalRP, processor.obtainPage.harvestList);
                                     });
                             });
                     });
@@ -266,7 +266,7 @@ class TownDashboardLayout007 extends TownDashboardLayout {
                                 request.set("mode", "MY_ARM2");
                                 NetworkUtils.post("town.cgi", request)
                                     .then(mainPage => {
-                                        doProcessBattleReturn(credential, mainPage, processor.obtainPage.additionalRP);
+                                        doProcessBattleReturn(credential, mainPage, processor.obtainPage.additionalRP, processor.obtainPage.harvestList);
                                     });
                             });
                     });
@@ -279,7 +279,7 @@ class TownDashboardLayout007 extends TownDashboardLayout {
                                 request.set("mode", "RECOVERY");
                                 NetworkUtils.post("town.cgi", request)
                                     .then(mainPage => {
-                                        doProcessBattleReturn(credential, mainPage, processor.obtainPage.additionalRP);
+                                        doProcessBattleReturn(credential, mainPage, processor.obtainPage.additionalRP, processor.obtainPage.harvestList);
                                     });
                             });
                     });
@@ -313,7 +313,10 @@ function doProcessBattleLevel() {
     });
 }
 
-function doProcessBattleReturn(credential: Credential, mainPage: string, additionalRP?: number) {
+function doProcessBattleReturn(credential: Credential,
+                               mainPage: string,
+                               additionalRP?: number,
+                               harvestList?: string[]) {
     $(".battleButton").off("click");
     $("#battleMenu").html("").parent().hide();
     $("#refreshButton").show();
@@ -425,6 +428,14 @@ function doProcessBattleReturn(credential: Credential, mainPage: string, additio
 
     if (additionalRP) {
         $("#additionalRP").html(() => DashboardPageUtils.generateAdditionalRPHtml(additionalRP));
+    }
+    if (harvestList && harvestList.length > 0) {
+        // 有入手，其中有可能是干拔了，重新刷新一下RP吧。毕竟入手是小概率事件。
+        new PersonalStatus(credential)
+            .load()
+            .then(role => {
+                $("#additionalRP").html(() => DashboardPageUtils.generateAdditionalRPHtml(role.additionalRP));
+            });
     }
 }
 
