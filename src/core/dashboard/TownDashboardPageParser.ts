@@ -33,9 +33,24 @@ class TownDashboardPageParser {
             .find("> td:first")
             .find("> table:first");
 
+        // 左边面板对应的表格
+        const t_0_0_0 = $(t_0_0)
+            .find("> tbody:first")
+            .find("> tr:eq(1)")
+            .find("> td:first")
+            .find("> table:first");
+
+        // 右边面板对应的表格
+        const t_0_0_1 = $(t_0_0)
+            .find("> tbody:first")
+            .find("> tr:eq(1)")
+            .find("> td:eq(1)")
+            .find("> table:first");
+
         // 解析页面上的内容
         _parseOnlineList(page, t_0);
         _parseMobilization(page, t_0_0);
+        _parseMessageNotification(page, t_0_0_1);
 
         return page;
     }
@@ -68,6 +83,18 @@ function _parseMobilization(page: TownDashboardPage, table: JQuery) {
             const b3 = ss[2];
             page.processedMobilizationText = a + "(" + b1 + " " + b2 + " " + b3 + ")";
         });
+}
+
+function _parseMessageNotification(page: TownDashboardPage, table: JQuery) {
+    page.messageNotificationHtml = $(table)
+        .find("> tbody:first")
+        .find("> tr:first")
+        .find("> td:first")
+        .find("> table:first")
+        .find("> tbody:first")
+        .find("> tr:first")
+        .find("> td:first")
+        .html();
 }
 
 export = TownDashboardPageParser;

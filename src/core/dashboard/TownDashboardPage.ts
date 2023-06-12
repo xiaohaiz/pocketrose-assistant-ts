@@ -21,10 +21,10 @@ class TownDashboardPage {
     unitMessageHtml?: string;
     townMessageHtml?: string;
 
-    onlineListHtml?: string;
-    mobilizationText?: string;
-    processedMobilizationText?: string;
-    messageNotificationHtml?: string;
+    onlineListHtml?: string;                // 在线列表
+    mobilizationText?: string;              // 国家动员令
+    processedMobilizationText?: string;     // 国家动员令（处理后）
+    messageNotificationHtml?: string;       // 是否有未读消息
 
     static parse(html: string) {
         const page = new TownDashboardPage();
