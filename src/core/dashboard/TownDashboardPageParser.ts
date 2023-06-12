@@ -1,4 +1,8 @@
+import _ from "lodash";
 import Role from "../../common/Role";
+import SetupLoader from "../../config/SetupLoader";
+import StringUtils from "../../util/StringUtils";
+import RankTitleLoader from "../RankTitleLoader";
 import TownDashboardPage from "./TownDashboardPage";
 
 class TownDashboardPageParser {
@@ -23,8 +27,15 @@ class TownDashboardPageParser {
         const t0 = $(this.#html).find("table:first");
         const t1 = t0.next();
 
+        const t0_0 = $(t0)
+            .find("> tbody:first")
+            .find("> tr:eq(1)")
+            .find("> td:first")
+            .find("> table:first");
+
         // 解析页面上的内容
         _parseOnlineList(page, t0);
+        _parseMobilization(page, t0_0);
 
         return page;
     }
@@ -36,6 +47,26 @@ function _parseOnlineList(page: TownDashboardPage, table: JQuery) {
         .find("> tr:first")
         .find("> td:first")
         .html();
+}
+
+function _parseMobilization(page: TownDashboardPage, table: JQuery) {
+    $(table)
+        .find("> tbody:first")
+        .find("> tr:first")
+        .find("> td:first")
+        .find("> form:first")
+        .find("> font:first")
+        .each((idx, font) => {
+            let c = $(font).text();
+            let b = StringUtils.substringAfterLast(c, "(");
+            let a = StringUtils.substringBefore(c, "(" + b);
+            b = StringUtils.substringBefore(b, ")");
+            const ss = _.split(b, " ");
+            const b1 = _.replace(ss[0], "部队", "");
+            const b2 = SetupLoader.isQiHanTitleEnabled() ? RankTitleLoader.transformTitle(ss[1]) : ss[1];
+            const b3 = ss[2];
+            page.mobilizationText = a + "(" + b1 + " " + b2 + " " + b3 + ")";
+        });
 }
 
 export = TownDashboardPageParser;
