@@ -1,6 +1,7 @@
 import Credential from "../../util/Credential";
 import NetworkUtils from "../../util/NetworkUtils";
 import TownDashboardPage from "./TownDashboardPage";
+import TownDashboardPageParser from "./TownDashboardPageParser";
 
 class TownDashboard {
 
@@ -16,8 +17,8 @@ class TownDashboard {
                 const request = this.#credential.asRequestMap();
                 request.set("mode", "STATUS");
                 NetworkUtils.post("status.cgi", request).then(html => {
-                    const page = TownDashboardPage.parse(html);
-                    resolve(page);
+                    const parser = new TownDashboardPageParser(this.#credential, html);
+                    resolve(parser.parse());
                 });
             });
         })();
