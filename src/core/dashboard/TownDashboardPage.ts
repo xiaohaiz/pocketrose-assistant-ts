@@ -4,6 +4,7 @@ import SetupLoader from "../../config/SetupLoader";
 import PageUtils from "../../util/PageUtils";
 import StringUtils from "../../util/StringUtils";
 import EventHandler from "../EventHandler";
+import RankTitleLoader from "../RankTitleLoader";
 import TownLoader from "../town/TownLoader";
 
 class TownDashboardPage {
@@ -25,6 +26,7 @@ class TownDashboardPage {
     battleSessionId?: string;                       // 战斗回话ID
     battleLevelSelectionHtml?: string;              // 战斗选项
     processedBattleLevelSelectionHtml?: string;     // 战斗选项（处理后）
+    battleLevelShortcut?: boolean;
     battleVerificationSource?: string;              // 验证码源
 
     eventBoardHtml?: string;                        // 事件面板
@@ -65,6 +67,15 @@ class TownDashboardPage {
             }
         } else {
             return experience + " EX";
+        }
+    }
+
+    get rankHtml() {
+        const rank = this.obtainRole.rank!;
+        if (SetupLoader.isQiHanTitleEnabled()) {
+            return RankTitleLoader.transformTitle(rank);
+        } else {
+            return rank;
         }
     }
 

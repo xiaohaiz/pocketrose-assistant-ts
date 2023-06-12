@@ -1,5 +1,4 @@
 import _ from "lodash";
-import BattleFieldConfigLoader from "../../config/BattleFieldConfigLoader";
 import SetupLoader from "../../config/SetupLoader";
 import TownDashboardPage from "../../core/dashboard/TownDashboardPage";
 import TownDashboardPageParser from "../../core/dashboard/TownDashboardPageParser";
@@ -449,7 +448,8 @@ function doRenderMenu(credential: Credential, page: TownDashboardPage) {
     // ------------------------------------------------------------------------
     // 渲染菜单项
     // ------------------------------------------------------------------------
-    _renderBattleMenu(credential);
+    _renderBattleMenu(page);
+
     $("option[value='INN']").text("客栈·驿站");
     $("option[value='LETTER']").text("口袋助手设置");
     $("option[value='RANK_REMAKE']").text("个人面板");
@@ -550,14 +550,7 @@ function doRenderRoleStatus(credential: Credential, page: TownDashboardPage) {
         .parent()
         .next()
         .find("> th:first")
-        .each((idx, th) => {
-            if (SetupLoader.isQiHanTitleEnabled()) {
-                let c = $(th).text();
-                c = StringUtils.substringAfterLast(c, " ");
-                c = RankTitleLoader.transformTitle(c);
-                $(th).text(c);
-            }
-        });
+        .html(page.rankHtml);
 
     if (SetupLoader.isHideCountryInformationEnabled()) {
         $("#rightPanel")
@@ -636,96 +629,10 @@ function _startSafeBattleButtonTimer(clock: JQuery) {
     }, 200);
 }
 
-function _renderBattleMenu(credential: Credential) {
-    const preference = new BattleFieldConfigLoader(credential).loadConfig();
-    let count = 0;
-    // @ts-ignore
-    if (preference["primary"]) {
-        count++;
-    }
-    // @ts-ignore
-    if (preference["junior"]) {
-        count++;
-    }
-    // @ts-ignore
-    if (preference["senior"]) {
-        count++;
-    }
-    // @ts-ignore
-    if (preference["zodiac"]) {
-        count++;
-    }
-    if (count === 0) {
-        // 没有设置战斗场所偏好，忽略
-        return;
-    }
+function _renderBattleMenu(page: TownDashboardPage) {
+    $("select[name='level']").html(page.processedBattleLevelSelectionHtml!);
 
-    // 设置了战斗场所偏好
-    $("select[name='level']").find("option").each(function (_idx, option) {
-        const text = $(option).text();
-        if (text.startsWith("秘宝之岛")) {
-            // do nothing, keep
-        } else if (text.startsWith("初级之森")) {
-            // do nothing, keep
-        } else if (text.startsWith("中级之塔")) {
-            // do nothing, keep
-        } else if (text.startsWith("上级之洞")) {
-            // do nothing, keep
-        } else if (text.startsWith("十二神殿")) {
-            // do nothing, keep
-        } else if (text.startsWith("------")) {
-            // do nothing, keep
-        } else {
-            $(option).remove();
-        }
-    });
-    $("select[name='level']").find("option").each(function (_idx, option) {
-        const text = $(option).text();
-        if (text.startsWith("初级之森")) {
-            // @ts-ignore
-            if (!preference["primary"]) {
-                $(option).remove();
-            }
-        } else if (text.startsWith("中级之塔")) {
-            // @ts-ignore
-            if (!preference["junior"]) {
-                $(option).remove();
-            }
-        } else if (text.startsWith("上级之洞")) {
-            // @ts-ignore
-            if (!preference["senior"]) {
-                $(option).remove();
-            }
-        } else if (text.startsWith("十二神殿")) {
-            // @ts-ignore
-            if (!preference["zodiac"]) {
-                $(option).remove();
-            }
-        }
-    });
-    // 删除连续的分隔线
-    let delimMatch = false;
-    $("select[name='level']").find("option").each(function (_idx, option) {
-        const text = $(option).text();
-        if (text.startsWith("------")) {
-            if (!delimMatch) {
-                delimMatch = true;
-            } else {
-                $(option).remove();
-            }
-        } else {
-            delimMatch = false;
-        }
-    });
-    // 删除头尾的分隔线
-    if ($("select[name='level']").find("option:last").text().startsWith("------")) {
-        $("select[name='level']").find("option:last").remove();
-    }
-    if ($("select[name='level']").find("option:first").text().startsWith("------")) {
-        $("select[name='level']").find("option:first").remove();
-    }
-
-    if (count === 1) {
+    if (page.battleLevelShortcut) {
         // 只设置了一处战斗场所偏好
         let formBattle = $("form[action='battle.cgi']");
         let selectBattle = formBattle.find('select[name="level"]');

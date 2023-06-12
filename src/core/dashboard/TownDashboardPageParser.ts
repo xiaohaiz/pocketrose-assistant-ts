@@ -219,6 +219,9 @@ function _parseBattleMenu(page: TownDashboardPage, table: JQuery, credential: Cr
     if (preference["zodiac"]) {
         count++;
     }
+
+    page.battleLevelShortcut = count === 1;
+
     if (count > 0) {
         // 设置了战斗场所偏好
         s.find("option").each((idx, option) => {
@@ -263,28 +266,30 @@ function _parseBattleMenu(page: TownDashboardPage, table: JQuery, credential: Cr
                 }
             }
         });
-        // 删除连续的分隔线
-        let delimMatch = false;
-        s.find("option").each((idx, option) => {
-            const text = $(option).text();
-            if (text.startsWith("------")) {
-                if (!delimMatch) {
-                    delimMatch = true;
-                } else {
-                    $(option).remove();
-                }
-            } else {
-                delimMatch = false;
-            }
-        });
-        // 删除头尾的分隔线
-        if (s.find("option:last").text().startsWith("------")) {
-            s.find("option:last").remove();
-        }
-        if (s.find("option:first").text().startsWith("------")) {
-            s.find("option:first").remove();
-        }
     }
+
+    // 删除连续的分隔线
+    let delimMatch = false;
+    s.find("option").each((idx, option) => {
+        const text = $(option).text();
+        if (text.startsWith("------")) {
+            if (!delimMatch) {
+                delimMatch = true;
+            } else {
+                $(option).remove();
+            }
+        } else {
+            delimMatch = false;
+        }
+    });
+    // 删除头尾的分隔线
+    if (s.find("option:last").text().startsWith("------")) {
+        s.find("option:last").remove();
+    }
+    if (s.find("option:first").text().startsWith("------")) {
+        s.find("option:first").remove();
+    }
+
 
     page.processedBattleLevelSelectionHtml = s.html();
 }
@@ -335,8 +340,15 @@ function _parseRoleStatus(page: TownDashboardPage, table: JQuery, div: JQuery, c
             let s = $(th).text();
             s = StringUtils.substringBefore(s, " EX");
             page.obtainRole.experience = _.parseInt(s);
-        });
-
+        })
+        .parent()
+        .next()
+        .find("> th:first")
+        .each((idx, th) => {
+            let s = $(th).text();
+            s = StringUtils.substringAfterLast(s, " ");
+            page.obtainRole.rank = s;
+        })
 
     $(div).find("> table:first")
         .find("> tbody:first")
