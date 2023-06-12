@@ -371,10 +371,17 @@ function doProcessBattleReturn(credential: Credential,
         }
     }
 
+    // 更新：在线列表
+    $("#online_list").html(page.onlineListHtml!);
 
-    // 更新首页的变化
-    _renderOnlineList(page);
-    _renderMessageNotification(page);
+    // 更新：动员指令
+    $("#mobilization").find("> form:first")
+        .find("> font:first")
+        .text(page.processedMobilizationText!);
+
+    // 更新：消息通知
+    $("#messageNotification").html(page.messageNotificationHtml!);
+
     _renderPalaceTask(credential);
     _renderEventBoard(page);
     _renderConversation(page);
@@ -419,18 +426,6 @@ function _countDownClock(timeout: number, start: number, clock: JQuery) {
         // @ts-ignore
         document.getElementById("mplayer")?.play();
     }
-}
-
-function _renderOnlineList(page: TownDashboardPage) {
-    $("table:first")
-        .find("> tbody:first")
-        .find("> tr:first")
-        .find("> td:first")
-        .html(page.onlineListHtml!);
-}
-
-function _renderMessageNotification(page: TownDashboardPage) {
-    $("#messageNotification").html(page.messageNotificationHtml!);
 }
 
 function _renderPalaceTask(credential: Credential) {

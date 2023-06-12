@@ -65,6 +65,12 @@ class TownDashboardPageProcessor extends PageProcessorCredentialSupport {
 }
 
 function doMarkElement() {
+    const t0 = $("table:first");
+    $(t0).find("> tbody:first")
+        .find("> tr:first")
+        .find("> td:first")
+        .attr("id", "online_list");
+
     $("input:text:last").attr("id", "messageInputText");
     $("input:submit[value='更新']").attr("id", "refreshButton");
     $("table:first")
