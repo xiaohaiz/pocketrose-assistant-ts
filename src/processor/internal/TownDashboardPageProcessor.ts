@@ -2,6 +2,7 @@ import _ from "lodash";
 import BattleFieldConfigLoader from "../../config/BattleFieldConfigLoader";
 import SetupLoader from "../../config/SetupLoader";
 import TownDashboardPage from "../../core/dashboard/TownDashboardPage";
+import TownDashboardPageParser from "../../core/dashboard/TownDashboardPageParser";
 import ExtensionShortcutLoader from "../../core/ExtensionShortcutLoader";
 import RankTitleLoader from "../../core/RankTitleLoader";
 import PalaceTaskManager from "../../core/task/PalaceTaskManager";
@@ -24,7 +25,13 @@ class TownDashboardPageProcessor extends PageProcessorCredentialSupport {
     }
 
     doProcess(credential: Credential, context?: PageProcessorContext): void {
-        const page = TownDashboardPage.parse(PageUtils.currentPageHtml());
+        const configId = TownDashboardLayoutManager.loadDashboardLayoutConfigId(credential);
+        let battleMode: boolean | undefined = undefined;
+        if (configId === 5 || configId === 6 || configId === 7) {
+            battleMode = true;
+        }
+        const parser = new TownDashboardPageParser(credential, PageUtils.currentPageHtml(), battleMode);
+        const page = parser.parse();
 
         $("center:first")
             .attr("id", "systemAnnouncement")
@@ -53,7 +60,7 @@ class TownDashboardPageProcessor extends PageProcessorCredentialSupport {
         doRenderEnlargeMode();
         doProcessSafeBattleButton();
 
-        const configId = TownDashboardLayoutManager.loadDashboardLayoutConfigId(credential);
+
         LAYOUT_MANAGER.getLayout(configId)?.render(credential, page);
     }
 
@@ -496,14 +503,11 @@ function doRenderEventBoard(page: TownDashboardPage) {
 
 function doRenderRoleStatus(credential: Credential, page: TownDashboardPage) {
     // 如果满级并且没有关闭转职入口，则战斗标签红底显示
-    if (page.role!.level === 150) {
-        if (!SetupLoader.isCareerTransferEntranceDisabled(credential.id)) {
-            $("#battleCell").css("background-color", "red");
-        }
+    if (page.careerTransferNotification) {
+        $("#battleCell").css("background-color", "red");
     }
     // 如果没有满级但是有单项能力到达极限，战斗标签黄底显示
-    if (page.role!.level !== 150 && (page.role!.attack === 375 || page.role!.defense === 375
-        || page.role!.specialAttack === 375 || page.role!.specialDefense === 375 || page.role!.speed === 375)) {
+    if (page.capacityLimitationNotification) {
         $("#battleCell").css("background-color", "yellow");
     }
 
@@ -538,28 +542,11 @@ function doRenderRoleStatus(credential: Credential, page: TownDashboardPage) {
         .next()
         .find("> th:first")
         .attr("id", "role_cash")
-        .each((idx, th) => {
-            const text = $(th).text();
-            const cash = _.parseInt(StringUtils.substringBefore(text, " Gold"));
-            if (cash >= 1000000) {
-                $(th).css("color", "red");
-            }
-        })
+        .html(page.cashHtml)
         .next()
         .next()
         .attr("id", "role_experience")
-        .each((idx, th) => {
-            if (SetupLoader.isExperienceProgressBarEnabled()) {
-                if (page.role!.level === 150) {
-                    $(th).attr("style", "color: blue").text("MAX");
-                } else {
-                    const ratio = page.role!.level! / 150;
-                    const progressBar = PageUtils.generateProgressBarHTML(ratio);
-                    const exp = $(th).text();
-                    $(th).html("<span title='" + exp + "'>" + progressBar + "</span>");
-                }
-            }
-        })
+        .html(page.experienceHtml)
         .parent()
         .next()
         .find("> th:first")

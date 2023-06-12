@@ -71,7 +71,7 @@ class TownDashboardPageParser {
         _parseMessageNotification(page, t_0_0_1);
         _parseActionNotification(page, t_0_0_1);
         _parseBattleMenu(page, t_0_0_1, this.#credential, this.#battleMode);
-        _parseRoleStatus(page, t_0_0_1, t_1.next());
+        _parseRoleStatus(page, t_0_0_1, t_1.next(), this.#credential);
         _parseEventBoard(page, t_0_0_1);
         _parseConversation(page, t_1);
 
@@ -289,7 +289,7 @@ function _parseBattleMenu(page: TownDashboardPage, table: JQuery, credential: Cr
     page.processedBattleLevelSelectionHtml = s.html();
 }
 
-function _parseRoleStatus(page: TownDashboardPage, table: JQuery, div: JQuery) {
+function _parseRoleStatus(page: TownDashboardPage, table: JQuery, div: JQuery, credential: Credential) {
     $(table).find("> tbody:first")
         .find("> tr:first")
         .find("> td:first")
@@ -373,6 +373,14 @@ function _parseRoleStatus(page: TownDashboardPage, table: JQuery, div: JQuery) {
 
             page.obtainRole.name = $(td).find("> font:first").find("> b:first").text();
         });
+
+    if (page.obtainRole.level === 150 && !SetupLoader.isCareerTransferEntranceDisabled(credential.id)) {
+        page.careerTransferNotification = true;
+    }
+    if (page.obtainRole.level !== 150 && (page.obtainRole.attack === 375 || page.obtainRole.defense === 375
+        || page.obtainRole.specialAttack === 375 || page.obtainRole.specialDefense === 375 || page.obtainRole.speed === 375)) {
+        page.capacityLimitationNotification = true;
+    }
 }
 
 function _parseEventBoard(page: TownDashboardPage, table: JQuery) {

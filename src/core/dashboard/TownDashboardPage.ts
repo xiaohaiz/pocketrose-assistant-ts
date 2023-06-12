@@ -1,5 +1,6 @@
 import _ from "lodash";
 import Role from "../../common/Role";
+import SetupLoader from "../../config/SetupLoader";
 import PageUtils from "../../util/PageUtils";
 import StringUtils from "../../util/StringUtils";
 import EventHandler from "../EventHandler";
@@ -36,8 +37,35 @@ class TownDashboardPage {
     unitMessageHtml?: string;
     townMessageHtml?: string;
 
+    careerTransferNotification?: boolean;
+    capacityLimitationNotification?: boolean;
+
     get obtainRole(): Role {
         return this.role!;
+    }
+
+    get cashHtml() {
+        const cash = this.obtainRole.cash;
+        if (cash! >= 1000000) {
+            return "<span style='color:red'>" + cash + " Gold</span>";
+        } else {
+            return cash + " Gold";
+        }
+    }
+
+    get experienceHtml() {
+        const experience = this.obtainRole.experience!;
+        if (SetupLoader.isExperienceProgressBarEnabled()) {
+            if (this.obtainRole.level === 150) {
+                return "<span style='color:blue'>MAX</span>";
+            } else {
+                const ratio = this.obtainRole.level! / 150;
+                const progressBar = PageUtils.generateProgressBarHTML(ratio);
+                return "<span title='" + experience + " EX'>" + progressBar + "</span>";
+            }
+        } else {
+            return experience + " EX";
+        }
     }
 
     static parse(html: string) {
