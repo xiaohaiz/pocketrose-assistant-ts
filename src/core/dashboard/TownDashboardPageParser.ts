@@ -24,18 +24,18 @@ class TownDashboardPageParser {
         page.role = new Role();
 
         // 页面主体由上下两个大表格组成
-        const t0 = $(this.#html).find("table:first");
-        const t1 = t0.next();
+        const t_0 = $(this.#html).find("table:first");
+        const t_1 = t_0.next();
 
-        const t0_0 = $(t0)
+        const t_0_0 = $(t_0)
             .find("> tbody:first")
             .find("> tr:eq(1)")
             .find("> td:first")
             .find("> table:first");
 
         // 解析页面上的内容
-        _parseOnlineList(page, t0);
-        _parseMobilization(page, t0_0);
+        _parseOnlineList(page, t_0);
+        _parseMobilization(page, t_0_0);
 
         return page;
     }
