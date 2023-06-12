@@ -58,6 +58,7 @@ function _parseMobilization(page: TownDashboardPage, table: JQuery) {
         .find("> font:first")
         .each((idx, font) => {
             let c = $(font).text();
+            page.mobilizationText = c;
             let b = StringUtils.substringAfterLast(c, "(");
             let a = StringUtils.substringBefore(c, "(" + b);
             b = StringUtils.substringBefore(b, ")");
@@ -65,7 +66,7 @@ function _parseMobilization(page: TownDashboardPage, table: JQuery) {
             const b1 = _.replace(ss[0], "部队", "");
             const b2 = SetupLoader.isQiHanTitleEnabled() ? RankTitleLoader.transformTitle(ss[1]) : ss[1];
             const b3 = ss[2];
-            page.mobilizationText = a + "(" + b1 + " " + b2 + " " + b3 + ")";
+            page.processedMobilizationText = a + "(" + b1 + " " + b2 + " " + b3 + ")";
         });
 }
 

@@ -23,6 +23,7 @@ class TownDashboardPage {
 
     onlineListHtml?: string;
     mobilizationText?: string;
+    processedMobilizationText?: string;
     messageNotificationHtml?: string;
 
     static parse(html: string) {
