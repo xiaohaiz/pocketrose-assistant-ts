@@ -336,6 +336,9 @@ function doProcessBattleReturn(credential: Credential,
     $("select[name='level']").closest("form")
         .find("> img:first")
         .attr("src", page.battleVerificationSource!);
+    $("a:contains('看不到图片按这里')")
+        .filter((idx, a) => $(a).text() === '看不到图片按这里')
+        .attr("href", page.battleVerificationSource!);
 
     // 更新战斗倒计时部分
     $("#messageNotification")
@@ -423,9 +426,7 @@ function _renderOnlineList(page: TownDashboardPage) {
         .find("> tbody:first")
         .find("> tr:first")
         .find("> td:first")
-        .html((idx, eh) => {
-            return page.onlineListHtml!;
-        });
+        .html(page.onlineListHtml!);
 }
 
 function _renderMessageNotification(page: TownDashboardPage) {
