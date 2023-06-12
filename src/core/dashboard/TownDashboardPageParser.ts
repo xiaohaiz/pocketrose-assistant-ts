@@ -288,6 +288,20 @@ function _parseBattleMenu(page: TownDashboardPage, table: JQuery, credential: Cr
 
 function _parseRoleStatus(page: TownDashboardPage, table: JQuery, div: JQuery) {
     $(table).find("> tbody:first")
+        .find("> tr:first")
+        .find("> td:first")
+        .find("> table:first")
+        .find("> tbody:first")
+        .find("> tr:eq(5)")
+        .find("> td:first")
+        .find("> select[name='mode']")
+        .find("> option[value='LOCAL_RULE']")
+        .each((idx, option) => {
+            let s = $(option).text();
+            page.obtainRole.country = StringUtils.substringBefore(s, "国法");
+        });
+
+    $(table).find("> tbody:first")
         .find("> tr:eq(1)")
         .find("> td:first")
         .find("> table:first")
