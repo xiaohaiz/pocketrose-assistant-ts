@@ -1,9 +1,8 @@
 import _ from "lodash";
-import BattleFieldConfigLoader from "../../config/BattleFieldConfigLoader";
 import SetupLoader from "../../config/SetupLoader";
 import TownDashboardPage from "../../core/dashboard/TownDashboardPage";
+import TownDashboardPageParser from "../../core/dashboard/TownDashboardPageParser";
 import ExtensionShortcutLoader from "../../core/ExtensionShortcutLoader";
-import RankTitleLoader from "../../core/RankTitleLoader";
 import PalaceTaskManager from "../../core/task/PalaceTaskManager";
 import TownDashboardLayoutManager from "../../dashboard/TownDashboardLayoutManager";
 import Credential from "../../util/Credential";
@@ -24,7 +23,13 @@ class TownDashboardPageProcessor extends PageProcessorCredentialSupport {
     }
 
     doProcess(credential: Credential, context?: PageProcessorContext): void {
-        const page = TownDashboardPage.parse(PageUtils.currentPageHtml());
+        const configId = TownDashboardLayoutManager.loadDashboardLayoutConfigId(credential);
+        let battleMode: boolean | undefined = undefined;
+        if (configId === 5 || configId === 6 || configId === 7) {
+            battleMode = true;
+        }
+        const parser = new TownDashboardPageParser(credential, PageUtils.currentPageHtml(), battleMode);
+        const page = parser.parse();
 
         $("center:first")
             .attr("id", "systemAnnouncement")
@@ -46,20 +51,26 @@ class TownDashboardPageProcessor extends PageProcessorCredentialSupport {
                 "<p style='display:none' id='eden-5'></p>"));
 
         doMarkElement();
-        doRenderMobilization();
+        doRenderMobilization(page);
         doRenderMenu(credential, page);
         doRenderEventBoard(page);
         doRenderRoleStatus(credential, page);
         doRenderEnlargeMode();
         doProcessSafeBattleButton();
 
-        const configId = TownDashboardLayoutManager.loadDashboardLayoutConfigId(credential);
+
         LAYOUT_MANAGER.getLayout(configId)?.render(credential, page);
     }
 
 }
 
 function doMarkElement() {
+    const t0 = $("table:first");
+    $(t0).find("> tbody:first")
+        .find("> tr:first")
+        .find("> td:first")
+        .attr("id", "online_list");
+
     $("input:text:last").attr("id", "messageInputText");
     $("input:submit[value='更新']").attr("id", "refreshButton");
     $("table:first")
@@ -145,22 +156,11 @@ function doMarkElement() {
         .attr("id", "exitButton");
 }
 
-function doRenderMobilization() {
+function doRenderMobilization(page: TownDashboardPage) {
     $("#mobilization")
         .find("> form:first")
         .find("> font:first")
-        .each((idx, font) => {
-            let c = $(font).text();
-            let b = StringUtils.substringAfterLast(c, "(");
-            let a = StringUtils.substringBefore(c, "(" + b);
-            b = StringUtils.substringBefore(b, ")");
-            const ss = _.split(b, " ");
-            const b1 = _.replace(ss[0], "部队", "");
-            const b2 = SetupLoader.isQiHanTitleEnabled() ? RankTitleLoader.transformTitle(ss[1]) : ss[1];
-            const b3 = ss[2];
-            const s = a + "(" + b1 + " " + b2 + " " + b3 + ")";
-            $(font).text(s);
-        });
+        .text(page.processedMobilizationText!);
 }
 
 function doRenderMenu(credential: Credential, page: TownDashboardPage) {
@@ -302,7 +302,7 @@ function doRenderMenu(credential: Credential, page: TownDashboardPage) {
                     let esButton = true;
                     const es = ExtensionShortcutLoader.getExtensionShortcut(extensionId)!;
                     if (es[0] === "城市收益") {
-                        esButton = _canCollectTownTax(page);
+                        esButton = page.canCollectTownTax!;
                     }
                     if (esButton) {
                         const bt = "&nbsp;" + es[0] + "&nbsp;"
@@ -442,7 +442,8 @@ function doRenderMenu(credential: Credential, page: TownDashboardPage) {
     // ------------------------------------------------------------------------
     // 渲染菜单项
     // ------------------------------------------------------------------------
-    _renderBattleMenu(credential);
+    _renderBattleMenu(page);
+
     $("option[value='INN']").text("客栈·驿站");
     $("option[value='LETTER']").text("口袋助手设置");
     $("option[value='RANK_REMAKE']").text("个人面板");
@@ -491,19 +492,16 @@ function doRenderEventBoard(page: TownDashboardPage) {
         .next()
         .find("td:first")
         .attr("id", "eventBoard")
-        .html(page.eventBoardHtml!);
+        .html(page.processedEventBoardHtml!);
 }
 
 function doRenderRoleStatus(credential: Credential, page: TownDashboardPage) {
     // 如果满级并且没有关闭转职入口，则战斗标签红底显示
-    if (page.role!.level === 150) {
-        if (!SetupLoader.isCareerTransferEntranceDisabled(credential.id)) {
-            $("#battleCell").css("background-color", "red");
-        }
+    if (page.careerTransferNotification) {
+        $("#battleCell").css("background-color", "red");
     }
     // 如果没有满级但是有单项能力到达极限，战斗标签黄底显示
-    if (page.role!.level !== 150 && (page.role!.attack === 375 || page.role!.defense === 375
-        || page.role!.specialAttack === 375 || page.role!.specialDefense === 375 || page.role!.speed === 375)) {
+    if (page.capacityLimitationNotification) {
         $("#battleCell").css("background-color", "yellow");
     }
 
@@ -538,39 +536,15 @@ function doRenderRoleStatus(credential: Credential, page: TownDashboardPage) {
         .next()
         .find("> th:first")
         .attr("id", "role_cash")
-        .each((idx, th) => {
-            const text = $(th).text();
-            const cash = _.parseInt(StringUtils.substringBefore(text, " Gold"));
-            if (cash >= 1000000) {
-                $(th).css("color", "red");
-            }
-        })
+        .html(page.cashHtml)
         .next()
         .next()
         .attr("id", "role_experience")
-        .each((idx, th) => {
-            if (SetupLoader.isExperienceProgressBarEnabled()) {
-                if (page.role!.level === 150) {
-                    $(th).attr("style", "color: blue").text("MAX");
-                } else {
-                    const ratio = page.role!.level! / 150;
-                    const progressBar = PageUtils.generateProgressBarHTML(ratio);
-                    const exp = $(th).text();
-                    $(th).html("<span title='" + exp + "'>" + progressBar + "</span>");
-                }
-            }
-        })
+        .html(page.experienceHtml)
         .parent()
         .next()
         .find("> th:first")
-        .each((idx, th) => {
-            if (SetupLoader.isQiHanTitleEnabled()) {
-                let c = $(th).text();
-                c = StringUtils.substringAfterLast(c, " ");
-                c = RankTitleLoader.transformTitle(c);
-                $(th).text(c);
-            }
-        });
+        .html(page.rankHtml);
 
     if (SetupLoader.isHideCountryInformationEnabled()) {
         $("#rightPanel")
@@ -649,96 +623,10 @@ function _startSafeBattleButtonTimer(clock: JQuery) {
     }, 200);
 }
 
-function _renderBattleMenu(credential: Credential) {
-    const preference = new BattleFieldConfigLoader(credential).loadConfig();
-    let count = 0;
-    // @ts-ignore
-    if (preference["primary"]) {
-        count++;
-    }
-    // @ts-ignore
-    if (preference["junior"]) {
-        count++;
-    }
-    // @ts-ignore
-    if (preference["senior"]) {
-        count++;
-    }
-    // @ts-ignore
-    if (preference["zodiac"]) {
-        count++;
-    }
-    if (count === 0) {
-        // 没有设置战斗场所偏好，忽略
-        return;
-    }
+function _renderBattleMenu(page: TownDashboardPage) {
+    $("select[name='level']").html(page.processedBattleLevelSelectionHtml!);
 
-    // 设置了战斗场所偏好
-    $("select[name='level']").find("option").each(function (_idx, option) {
-        const text = $(option).text();
-        if (text.startsWith("秘宝之岛")) {
-            // do nothing, keep
-        } else if (text.startsWith("初级之森")) {
-            // do nothing, keep
-        } else if (text.startsWith("中级之塔")) {
-            // do nothing, keep
-        } else if (text.startsWith("上级之洞")) {
-            // do nothing, keep
-        } else if (text.startsWith("十二神殿")) {
-            // do nothing, keep
-        } else if (text.startsWith("------")) {
-            // do nothing, keep
-        } else {
-            $(option).remove();
-        }
-    });
-    $("select[name='level']").find("option").each(function (_idx, option) {
-        const text = $(option).text();
-        if (text.startsWith("初级之森")) {
-            // @ts-ignore
-            if (!preference["primary"]) {
-                $(option).remove();
-            }
-        } else if (text.startsWith("中级之塔")) {
-            // @ts-ignore
-            if (!preference["junior"]) {
-                $(option).remove();
-            }
-        } else if (text.startsWith("上级之洞")) {
-            // @ts-ignore
-            if (!preference["senior"]) {
-                $(option).remove();
-            }
-        } else if (text.startsWith("十二神殿")) {
-            // @ts-ignore
-            if (!preference["zodiac"]) {
-                $(option).remove();
-            }
-        }
-    });
-    // 删除连续的分隔线
-    let delimMatch = false;
-    $("select[name='level']").find("option").each(function (_idx, option) {
-        const text = $(option).text();
-        if (text.startsWith("------")) {
-            if (!delimMatch) {
-                delimMatch = true;
-            } else {
-                $(option).remove();
-            }
-        } else {
-            delimMatch = false;
-        }
-    });
-    // 删除头尾的分隔线
-    if ($("select[name='level']").find("option:last").text().startsWith("------")) {
-        $("select[name='level']").find("option:last").remove();
-    }
-    if ($("select[name='level']").find("option:first").text().startsWith("------")) {
-        $("select[name='level']").find("option:first").remove();
-    }
-
-    if (count === 1) {
+    if (page.battleLevelShortcut) {
         // 只设置了一处战斗场所偏好
         let formBattle = $("form[action='battle.cgi']");
         let selectBattle = formBattle.find('select[name="level"]');
