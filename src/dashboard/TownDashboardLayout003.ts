@@ -12,6 +12,10 @@ class TownDashboardLayout003 extends TownDashboardLayout {
         return 3;
     }
 
+    battleMode(): boolean {
+        return false;
+    }
+
     render(credential: Credential, page: TownDashboardPage): void {
         this.#layout002.render(credential, page);
         $("#townTax").off("click");

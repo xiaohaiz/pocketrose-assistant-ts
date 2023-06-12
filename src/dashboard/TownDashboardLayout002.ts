@@ -10,6 +10,10 @@ class TownDashboardLayout002 extends TownDashboardLayout {
         return 2;
     }
 
+    battleMode(): boolean {
+        return false;
+    }
+
     render(credential: Credential, page: TownDashboardPage): void {
         $("center:first").hide();
         $("br:first").hide();

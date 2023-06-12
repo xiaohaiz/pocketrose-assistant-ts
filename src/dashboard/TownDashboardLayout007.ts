@@ -20,6 +20,10 @@ class TownDashboardLayout007 extends TownDashboardLayout {
         return 7;
     }
 
+    battleMode(): boolean {
+        return true;
+    }
+
     render(credential: Credential, page: TownDashboardPage): void {
         $("#leftPanel")
             .removeAttr("width")

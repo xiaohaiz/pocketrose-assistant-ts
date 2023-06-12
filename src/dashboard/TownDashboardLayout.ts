@@ -5,6 +5,8 @@ abstract class TownDashboardLayout {
 
     abstract id(): number;
 
+    abstract battleMode(): boolean;
+
     abstract render(credential: Credential, page: TownDashboardPage): void;
 }
 
