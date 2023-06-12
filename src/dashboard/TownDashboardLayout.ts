@@ -1,4 +1,4 @@
-import TownDashboardPage from "../pocketrose/TownDashboardPage";
+import TownDashboardPage from "../core/dashboard/TownDashboardPage";
 import Credential from "../util/Credential";
 
 abstract class TownDashboardLayout {
