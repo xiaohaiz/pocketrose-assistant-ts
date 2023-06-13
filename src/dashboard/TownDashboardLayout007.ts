@@ -124,9 +124,6 @@ class TownDashboardLayout007 extends TownDashboardLayout {
         });
 
 
-        // 战斗布局只支持标准的战斗
-        doProcessBattleLevel();
-
         $("#battleButton")
             .attr("type", "button")
             .on("click", () => {
@@ -293,27 +290,6 @@ class TownDashboardLayout007 extends TownDashboardLayout {
             });
     }
 
-}
-
-function doProcessBattleLevel() {
-    $("select[name='level']").find("option").each(function (_idx, option) {
-        const text = $(option).text();
-        if (text.startsWith("秘宝之岛")) {
-            // do nothing, keep
-        } else if (text.startsWith("初级之森")) {
-            // do nothing, keep
-        } else if (text.startsWith("中级之塔")) {
-            // do nothing, keep
-        } else if (text.startsWith("上级之洞")) {
-            // do nothing, keep
-        } else if (text.startsWith("十二神殿")) {
-            // do nothing, keep
-        } else if (text.startsWith("------")) {
-            // do nothing, keep
-        } else {
-            $(option).remove();
-        }
-    });
 }
 
 function doProcessBattleReturn(credential: Credential,
