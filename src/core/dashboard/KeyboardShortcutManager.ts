@@ -3,9 +3,11 @@ import Credential from "../../util/Credential";
 class KeyboardShortcutManager {
 
     readonly #credential: Credential;
+    readonly #extension?: string;
 
-    constructor(credential: Credential) {
+    constructor(credential: Credential, extension?: string) {
         this.#credential = credential;
+        this.#extension = extension;
     }
 
     bind() {
