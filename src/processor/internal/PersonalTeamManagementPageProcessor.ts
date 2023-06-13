@@ -96,6 +96,7 @@ function doRender() {
     html += "<tr>";
     html += "<th style='background-color:skyblue'>序号</th>";
     html += "<th style='background-color:skyblue'>队长</th>";
+    html += "<th style='background-color:skyblue'>编制</th>";
     html += "<th style='background-color:skyblue'>角色名字</th>";
     html += "<th style='background-color:skyblue'>登陆名</th>";
     html += "<th style='background-color:skyblue'>密码</th>";
@@ -110,6 +111,9 @@ function doRender() {
         html += "</th>";
         html += "<td style='background-color:#E8E8D0'>";
         html += "<button role='button' id='master_" + i + "' class='master-button' style='color:grey'>队长</button>";
+        html += "</td>";
+        html += "<td style='background-color:#E8E8D0'>";
+        html += "<button role='button' id='external_" + i + "' class='external-button' style='color:grey'>编外</button>";
         html += "</td>";
         html += "<td style='background-color:#EFE0C0;text-align:left'>";
         html += "<input type='text' id='name_" + i + "' size='10' maxlength='10' spellcheck='false'>";
@@ -136,23 +140,15 @@ function doRender() {
     $("#fastLoginSetup").html(html);
 
     for (let i = 0; i < 50; i++) {
-        const config = FastLoginLoader.loadFastLoginConfig(i);
-        // @ts-ignore
-        let s = config.name;
-        if (s !== undefined) {
-            $("#name_" + i).val(s);
-        }
-        // @ts-ignore
-        s = config.id;
-        if (s !== undefined) {
-            $("#id_" + i).val(s);
-        }
-        // @ts-ignore
-        s = config.pass;
-        if (s !== undefined) {
-            $("#pass1_" + i).val(s);
-            $("#pass2_" + i).val(s);
-        }
+        const config = FastLoginLoader.loadFastLogin(i);
+        if (!config) continue;
+
+        $("#name_" + i).val(config.name!);
+        $("#id_" + i).val(config.id!);
+        $("#pass1_" + i).val(config.pass!);
+        $("#pass2_" + i).val(config.pass!);
+
+        if (config.external) $("#external_" + i).css("color", "blue");
     }
 
     const masterId = StorageUtils.getInt("_tm_", -1);
@@ -174,6 +170,7 @@ function doRender() {
     doBindFastLoginButton();
     doBindClearButton();
     doBindMasterButton();
+    doBindExternalButton();
 }
 
 function doBindFastLoginButton() {
@@ -218,6 +215,12 @@ function doBindFastLoginButton() {
             "pass": pass1,
         };
 
+        const externalId = "external_" + code;
+        if (PageUtils.isColorBlue(externalId)) {
+            // @ts-ignore
+            value.external = true;
+        }
+
         StorageUtils.set("_fl_" + code, JSON.stringify(value));
         MessageBoard.publishMessage("设置已经保存。");
 
@@ -245,6 +248,27 @@ function doBindMasterButton() {
         } else if (PageUtils.isColorGrey(buttonId)) {
             StorageUtils.set("_tm_", code.toString());
             MessageBoard.publishMessage((code + 1) + "号位设置为队长。");
+        }
+
+        doRefresh();
+    });
+}
+
+function doBindExternalButton() {
+    $(".external-button").on("click", event => {
+        const buttonId = $(event.target).attr("id")!;
+        const code = _.parseInt(_.split(buttonId, "_")[1]);
+        const config = FastLoginLoader.loadFastLogin(code);
+        if (!config) return;
+
+        if (PageUtils.isColorBlue(buttonId)) {
+            config.external = false;
+            StorageUtils.set("_fl_" + code, JSON.stringify(config.asObject()));
+            MessageBoard.publishMessage("编制已经修改。");
+        } else if (PageUtils.isColorGrey(buttonId)) {
+            config.external = true;
+            StorageUtils.set("_fl_" + code, JSON.stringify(config.asObject()));
+            MessageBoard.publishMessage("编制已经修改。");
         }
 
         doRefresh();

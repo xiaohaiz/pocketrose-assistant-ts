@@ -29,6 +29,8 @@ class FastLoginLoader {
         fastLogin.id = config.id;
         // @ts-ignore
         fastLogin.pass = config.pass;
+        // @ts-ignore
+        fastLogin.external = config.external;
 
         return fastLogin;
     }

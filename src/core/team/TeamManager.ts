@@ -29,6 +29,9 @@ class TeamManager {
         return memberList;
     }
 
+    static loadInternalIds() {
+        return TeamManager.loadMembers().filter(it => !it.external).map(it => it.id!);
+    }
 }
 
 export = TeamManager;

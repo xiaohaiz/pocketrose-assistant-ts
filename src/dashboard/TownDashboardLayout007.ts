@@ -5,6 +5,7 @@ import BattleRecord from "../core/battle/BattleRecord";
 import BattleReturnInterceptor from "../core/battle/BattleReturnInterceptor";
 import BattleStorageManager from "../core/battle/BattleStorageManager";
 import DashboardPageUtils from "../core/dashboard/DashboardPageUtils";
+import KeyboardShortcutManager from "../core/dashboard/KeyboardShortcutManager";
 import TownDashboardPage from "../core/dashboard/TownDashboardPage";
 import TownDashboardPageParser from "../core/dashboard/TownDashboardPageParser";
 import PalaceTaskManager from "../core/task/PalaceTaskManager";
@@ -18,6 +19,10 @@ class TownDashboardLayout007 extends TownDashboardLayout {
 
     id(): number {
         return 7;
+    }
+
+    battleMode(): boolean {
+        return true;
     }
 
     render(credential: Credential, page: TownDashboardPage): void {
@@ -119,9 +124,11 @@ class TownDashboardLayout007 extends TownDashboardLayout {
             $("#battlePanel").html(lastBattle);
         });
 
-
-        // 战斗布局只支持标准的战斗
-        doProcessBattleLevel();
+        const ksm = new KeyboardShortcutManager(credential);
+        if (page.battleLevelShortcut) {
+            // 只设置了一处战斗场所偏好
+            ksm.bind();
+        }
 
         $("#battleButton")
             .attr("type", "button")
@@ -291,27 +298,6 @@ class TownDashboardLayout007 extends TownDashboardLayout {
 
 }
 
-function doProcessBattleLevel() {
-    $("select[name='level']").find("option").each(function (_idx, option) {
-        const text = $(option).text();
-        if (text.startsWith("秘宝之岛")) {
-            // do nothing, keep
-        } else if (text.startsWith("初级之森")) {
-            // do nothing, keep
-        } else if (text.startsWith("中级之塔")) {
-            // do nothing, keep
-        } else if (text.startsWith("上级之洞")) {
-            // do nothing, keep
-        } else if (text.startsWith("十二神殿")) {
-            // do nothing, keep
-        } else if (text.startsWith("------")) {
-            // do nothing, keep
-        } else {
-            $(option).remove();
-        }
-    });
-}
-
 function doProcessBattleReturn(credential: Credential,
                                mainPage: string,
                                additionalRP?: number,
@@ -411,6 +397,11 @@ function doProcessBattleReturn(credential: Credential,
             .then(role => {
                 $("#additionalRP").html(() => DashboardPageUtils.generateAdditionalRPHtml(role.additionalRP));
             });
+    }
+
+    const ksm = new KeyboardShortcutManager(credential);
+    if (page.battleLevelShortcut) {
+        ksm.bind();
     }
 }
 

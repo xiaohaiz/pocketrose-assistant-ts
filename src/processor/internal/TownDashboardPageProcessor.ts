@@ -24,11 +24,8 @@ class TownDashboardPageProcessor extends PageProcessorCredentialSupport {
 
     doProcess(credential: Credential, context?: PageProcessorContext): void {
         const configId = TownDashboardLayoutManager.loadDashboardLayoutConfigId(credential);
-        let battleMode: boolean | undefined = undefined;
-        if (configId === 5 || configId === 6 || configId === 7) {
-            battleMode = true;
-        }
-        const parser = new TownDashboardPageParser(credential, PageUtils.currentPageHtml(), battleMode);
+        const layout = LAYOUT_MANAGER.getLayout(configId);
+        const parser = new TownDashboardPageParser(credential, PageUtils.currentPageHtml(), layout?.battleMode());
         const page = parser.parse();
 
         $("center:first")
@@ -58,8 +55,7 @@ class TownDashboardPageProcessor extends PageProcessorCredentialSupport {
         doRenderEnlargeMode();
         doProcessSafeBattleButton();
 
-
-        LAYOUT_MANAGER.getLayout(configId)?.render(credential, page);
+        layout?.render(credential, page);
     }
 
 }
@@ -442,7 +438,7 @@ function doRenderMenu(credential: Credential, page: TownDashboardPage) {
     // ------------------------------------------------------------------------
     // 渲染菜单项
     // ------------------------------------------------------------------------
-    _renderBattleMenu(page);
+    $("select[name='level']").html(page.processedBattleLevelSelectionHtml!);
 
     $("option[value='INN']").text("客栈·驿站");
     $("option[value='LETTER']").text("口袋助手设置");
@@ -623,43 +619,6 @@ function _startSafeBattleButtonTimer(clock: JQuery) {
     }, 200);
 }
 
-function _renderBattleMenu(page: TownDashboardPage) {
-    $("select[name='level']").html(page.processedBattleLevelSelectionHtml!);
-
-    if (page.battleLevelShortcut) {
-        // 只设置了一处战斗场所偏好
-        let formBattle = $("form[action='battle.cgi']");
-        let selectBattle = formBattle.find('select[name="level"]');
-        let inputDigits = '';
-        $(document).off('keydown.city').on('keydown.city', function (e) {
-            if ($("#messageInputText:focus").length > 0) {
-                // 当前的焦点在消息框，禁用按键辅助
-                return;
-            }
-            const key = e.key;
-            if (key !== undefined && !isNaN(parseInt(key))) {
-                inputDigits += key;
-            }
-            if (inputDigits.length === 2) {
-                switch (inputDigits) {
-                    case '11':
-                        selectBattle.find('option').eq(0).prop('selected', true);
-                        break;
-                    case '22':
-                        selectBattle.find('option').eq(1).prop('selected', true);
-                        break;
-                    default:
-                        inputDigits = '';
-                        break;
-                }
-                $("#battleButton").trigger("focus");
-                // 重置 inputDigits
-                inputDigits = '';
-            }
-        });
-    }
-}
-
 function _bindShortcutButton(buttonId: string, option: string) {
     $("#" + buttonId).on("click", () => {
         $("option[value='" + option + "']")
@@ -669,21 +628,6 @@ function _bindShortcutButton(buttonId: string, option: string) {
             .find("> input:submit:first")
             .trigger("click");
     });
-}
-
-function _canCollectTownTax(page: TownDashboardPage) {
-    if (SetupLoader.isCollectTownTaxDisabled()) {
-        return false;
-    }
-    if (page.role!.country !== "在野" && page.role!.country === page.townCountry) {
-        const tax = page.townTax!;
-        if (tax >= 50000) {
-            if (tax - Math.floor(tax / 50000) * 50000 <= 10000) {
-                return true;
-            }
-        }
-    }
-    return false;
 }
 
 export = TownDashboardPageProcessor;

@@ -1,6 +1,8 @@
+import _ from "lodash";
 import Constants from "../../util/Constants";
 import BattleResult from "../battle/BattleResult";
 import NpcLoader from "../NpcLoader";
+import TeamManager from "../team/TeamManager";
 import ReportUtils from "./ReportUtils";
 
 class ZodiacReportGenerator {
@@ -14,7 +16,9 @@ class ZodiacReportGenerator {
     }
 
     generate() {
+        const internalIds = TeamManager.loadInternalIds();
         const candidates = this.#dataList
+            .filter(it => _.includes(internalIds, it.roleId))
             .filter(it =>
                 this.#target === undefined ||
                 this.#target === "" ||

@@ -175,10 +175,11 @@ abstract class PersonalStatisticsPageProcessor extends PageProcessorCredentialSu
         html = "";
         html += "<select id='teamMemberSelect'>";
         html += "<option value=''>全团队</option>";
-        const configList = TeamManager.loadMembers();
-        configList.forEach(config => {
-            html += "<option value='" + config.id + "'>" + config.name + "</option>";
-        });
+        TeamManager.loadMembers()
+            .filter(it => !it.external)
+            .forEach(config => {
+                html += "<option value='" + config.id + "'>" + config.name + "</option>";
+            });
         html += "</select>";
         $("#operation").append($(html));
 

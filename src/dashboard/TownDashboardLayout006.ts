@@ -18,6 +18,10 @@ class TownDashboardLayout006 extends TownDashboardLayout {
         return 6;
     }
 
+    battleMode(): boolean {
+        return true;
+    }
+
     render(credential: Credential, page: TownDashboardPage): void {
         this.#layout003.render(credential, page);
 
