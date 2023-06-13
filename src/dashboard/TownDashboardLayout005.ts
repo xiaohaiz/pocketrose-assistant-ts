@@ -175,8 +175,6 @@ class TownDashboardLayout005 extends TownDashboardLayout {
         $("#battleButton")
             .attr("type", "button")
             .on("click", () => {
-                ksm.clear();
-
                 $("#refreshButton").hide();
                 $("#battleButton").hide();
 
