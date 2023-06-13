@@ -166,14 +166,17 @@ class TownDashboardLayout005 extends TownDashboardLayout {
             $("#battlePanel").html(lastBattle);
         });
 
+        const ksm = new KeyboardShortcutManager(credential);
         if (page.battleLevelShortcut) {
             // 只设置了一处战斗场所偏好
-            new KeyboardShortcutManager(credential).bind();
+            ksm.bind();
         }
 
         $("#battleButton")
             .attr("type", "button")
             .on("click", () => {
+                ksm.clear();
+
                 $("#refreshButton").hide();
                 $("#battleButton").hide();
 

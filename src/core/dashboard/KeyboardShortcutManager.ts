@@ -1,4 +1,5 @@
 import Credential from "../../util/Credential";
+import StorageUtils from "../../util/StorageUtils";
 
 class KeyboardShortcutManager {
 
@@ -6,6 +7,11 @@ class KeyboardShortcutManager {
 
     constructor(credential: Credential) {
         this.#credential = credential;
+    }
+
+    clear() {
+        const key = "_ks_" + this.#credential.id;
+        StorageUtils.remove(key);
     }
 
     bind() {
@@ -17,7 +23,6 @@ class KeyboardShortcutManager {
 function doBind(credential: Credential) {
     let formBattle = $("form[action='battle.cgi']");
     let selectBattle = formBattle.find('select[name="level"]');
-    let buffer = "";
     let optionIdx = 0;
     $(document).off('keydown.city').on('keydown.city', event => {
         if ($("#messageInputText:focus").length > 0) {
@@ -30,12 +35,15 @@ function doBind(credential: Credential) {
         }
 
         if (key === "q") {
+            const ks = "_ks_" + credential.id;
+            let buffer = StorageUtils.getString(ks);
             buffer += "q";
+            StorageUtils.set(ks, buffer);
             if (buffer.length === 1) {
                 $("#battleButton").trigger("focus");
             } else if (buffer.length === 2) {
                 // 满足按键条件
-                buffer = "";
+                StorageUtils.remove(ks);
                 // 如果战斗选项中有“秘宝之岛”，则恒定选择
                 let islandFound = false;
                 $(selectBattle).find("option")
