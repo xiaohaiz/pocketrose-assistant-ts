@@ -1,3 +1,4 @@
+import _ from "lodash";
 import MonsterProfile from "../../common/MonsterProfile";
 import StringUtils from "../../util/StringUtils";
 import BattleResult from "../battle/BattleResult";
@@ -16,7 +17,9 @@ class MonsterReportGenerator {
     }
 
     generate() {
+        const internalIds = TeamManager.loadInternalIds();
         const candidates = this.#dataList
+            .filter(it => _.includes(internalIds, it.roleId))
             .filter(it =>
                 this.#target === undefined ||
                 this.#target === "" ||
@@ -32,13 +35,15 @@ class MonsterReportGenerator {
         const monsterCount = new Map<string, number[]>();
 
         const roles = new Map<string, RoleMonster>();
-        TeamManager.loadMembers().forEach(config => {
-            if (this.#target === undefined || this.#target === "") {
-                roles.set(config.id!, new RoleMonster(config.name!));
-            } else if (this.#target === config.id) {
-                roles.set(config.id!, new RoleMonster(config.name!));
-            }
-        });
+        TeamManager.loadMembers()
+            .filter(it => !it.external)
+            .forEach(config => {
+                if (this.#target === undefined || this.#target === "") {
+                    roles.set(config.id!, new RoleMonster(config.name!));
+                } else if (this.#target === config.id) {
+                    roles.set(config.id!, new RoleMonster(config.name!));
+                }
+            });
 
         for (const data of candidates) {
             const role = roles.get(data.roleId!);

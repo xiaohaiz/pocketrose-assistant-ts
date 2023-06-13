@@ -18,20 +18,24 @@ class DailyReportGenerator {
     }
 
     generate() {
+        const internalIds = TeamManager.loadInternalIds();
         const candidates = this.#logList
+            .filter(it => _.includes(internalIds, it.roleId))
             .filter(it =>
                 this.#target === undefined ||
                 this.#target === "" ||
                 it.roleId === this.#target);
 
         const roles = new Map<string, RoleDailyReport>();
-        TeamManager.loadMembers().forEach(config => {
-            if (this.#target === undefined || this.#target === "") {
-                roles.set(config.id!, new RoleDailyReport(config.name!));
-            } else if (this.#target === config.id) {
-                roles.set(config.id!, new RoleDailyReport(config.name!));
-            }
-        });
+        TeamManager.loadMembers()
+            .filter(it => !it.external)
+            .forEach(config => {
+                if (this.#target === undefined || this.#target === "") {
+                    roles.set(config.id!, new RoleDailyReport(config.name!));
+                } else if (this.#target === config.id) {
+                    roles.set(config.id!, new RoleDailyReport(config.name!));
+                }
+            });
 
         const allTreasures = new Map<string, number>();
         const allCatches = new Map<string, number>();

@@ -30,7 +30,9 @@ class MonthlyReportGenerator {
         BattleStorageManager.battleLogStore
             .findByCreateTime(this.#range.start, this.#range.end)
             .then(dataList => {
+                const internalIds = TeamManager.loadInternalIds();
                 const candidates = dataList
+                    .filter(it => _.includes(internalIds, it.roleId))
                     .filter(it => !this.hasTarget || it.roleId === this.#target);
                 this.#doGenerate(candidates);
             });
@@ -38,13 +40,15 @@ class MonthlyReportGenerator {
 
     #doGenerate(candidates: BattleLog[]) {
         const roles = new Map<string, RoleReport>();
-        TeamManager.loadMembers().forEach(config => {
-            if (!this.hasTarget) {
-                roles.set(config.id!, new RoleReport(config.name!));
-            } else if (this.#target === config.id) {
-                roles.set(config.id!, new RoleReport(config.name!));
-            }
-        });
+        TeamManager.loadMembers()
+            .filter(it => !it.external)
+            .forEach(config => {
+                if (!this.hasTarget) {
+                    roles.set(config.id!, new RoleReport(config.name!));
+                } else if (this.#target === config.id) {
+                    roles.set(config.id!, new RoleReport(config.name!));
+                }
+            });
 
         const allTreasures = new Map<string, number>();
         const allCatches = new Map<string, number>();
