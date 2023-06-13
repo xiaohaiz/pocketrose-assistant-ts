@@ -1,5 +1,7 @@
 # pocketrose-assistant-ts
 
+### 版本 4.1.7-SNAPSHOT
+
 ### 版本 4.1.6
 
 1. 团队管理可设置成员是否为编外成员。
