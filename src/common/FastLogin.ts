@@ -7,6 +7,7 @@ class FastLogin {
     name?: string;
     id?: string;
     pass?: string;
+    external?: boolean;     // 团队编制外，不纳入统计
 
 }
 

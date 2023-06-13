@@ -96,6 +96,7 @@ function doRender() {
     html += "<tr>";
     html += "<th style='background-color:skyblue'>序号</th>";
     html += "<th style='background-color:skyblue'>队长</th>";
+    html += "<th style='background-color:skyblue'>编制</th>";
     html += "<th style='background-color:skyblue'>角色名字</th>";
     html += "<th style='background-color:skyblue'>登陆名</th>";
     html += "<th style='background-color:skyblue'>密码</th>";
@@ -110,6 +111,9 @@ function doRender() {
         html += "</th>";
         html += "<td style='background-color:#E8E8D0'>";
         html += "<button role='button' id='master_" + i + "' class='master-button' style='color:grey'>队长</button>";
+        html += "</td>";
+        html += "<td style='background-color:#E8E8D0'>";
+        html += "<button role='button' id='external_" + i + "' class='external-button' style='color:grey'>编外</button>";
         html += "</td>";
         html += "<td style='background-color:#EFE0C0;text-align:left'>";
         html += "<input type='text' id='name_" + i + "' size='10' maxlength='10' spellcheck='false'>";
@@ -174,6 +178,7 @@ function doRender() {
     doBindFastLoginButton();
     doBindClearButton();
     doBindMasterButton();
+    doBindExternalButton();
 }
 
 function doBindFastLoginButton() {
@@ -218,6 +223,12 @@ function doBindFastLoginButton() {
             "pass": pass1,
         };
 
+        const externalId = "external_" + code;
+        if (PageUtils.isColorBlue(externalId)) {
+            // @ts-ignore
+            value.external = true;
+        }
+
         StorageUtils.set("_fl_" + code, JSON.stringify(value));
         MessageBoard.publishMessage("设置已经保存。");
 
@@ -248,6 +259,17 @@ function doBindMasterButton() {
         }
 
         doRefresh();
+    });
+}
+
+function doBindExternalButton() {
+    $(".external-button").on("click", event => {
+        const buttonId = $(event.target).attr("id")!;
+        if (PageUtils.isColorBlue(buttonId)) {
+            $("#" + buttonId).css("color", "grey");
+        } else if (PageUtils.isColorGrey(buttonId)) {
+            $("#" + buttonId).css("color", "blue");
+        }
     });
 }
 
