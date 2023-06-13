@@ -5,6 +5,7 @@ import BattleRecord from "../core/battle/BattleRecord";
 import BattleReturnInterceptor from "../core/battle/BattleReturnInterceptor";
 import BattleStorageManager from "../core/battle/BattleStorageManager";
 import DashboardPageUtils from "../core/dashboard/DashboardPageUtils";
+import KeyboardShortcutManager from "../core/dashboard/KeyboardShortcutManager";
 import TownDashboardPage from "../core/dashboard/TownDashboardPage";
 import TownDashboardPageParser from "../core/dashboard/TownDashboardPageParser";
 import PalaceTaskManager from "../core/task/PalaceTaskManager";
@@ -123,6 +124,10 @@ class TownDashboardLayout007 extends TownDashboardLayout {
             $("#battlePanel").html(lastBattle);
         });
 
+        if (page.battleLevelShortcut) {
+            // 只设置了一处战斗场所偏好
+            new KeyboardShortcutManager(credential).bind();
+        }
 
         $("#battleButton")
             .attr("type", "button")

@@ -3,6 +3,7 @@ import BattleProcessor from "../core/battle/BattleProcessor";
 import BattleRecord from "../core/battle/BattleRecord";
 import BattleReturnInterceptor from "../core/battle/BattleReturnInterceptor";
 import BattleStorageManager from "../core/battle/BattleStorageManager";
+import KeyboardShortcutManager from "../core/dashboard/KeyboardShortcutManager";
 import TownDashboardPage from "../core/dashboard/TownDashboardPage";
 import TownDashboardTaxManager from "../core/town/TownDashboardTaxManager";
 import PersonalEquipmentManagement from "../pocketrose/PersonalEquipmentManagement";
@@ -165,26 +166,10 @@ class TownDashboardLayout005 extends TownDashboardLayout {
             $("#battlePanel").html(lastBattle);
         });
 
-
-        // 战斗布局只支持以下战斗
-        $("select[name='level']").find("option").each(function (_idx, option) {
-            const text = $(option).text();
-            if (text.startsWith("秘宝之岛")) {
-                // do nothing, keep
-            } else if (text.startsWith("初级之森")) {
-                // do nothing, keep
-            } else if (text.startsWith("中级之塔")) {
-                // do nothing, keep
-            } else if (text.startsWith("上级之洞")) {
-                // do nothing, keep
-            } else if (text.startsWith("十二神殿")) {
-                // do nothing, keep
-            } else if (text.startsWith("------")) {
-                // do nothing, keep
-            } else {
-                $(option).remove();
-            }
-        });
+        if (page.battleLevelShortcut) {
+            // 只设置了一处战斗场所偏好
+            new KeyboardShortcutManager(credential).bind();
+        }
 
         $("#battleButton")
             .attr("type", "button")

@@ -1,44 +1,20 @@
+import Credential from "../../util/Credential";
+
 class KeyboardShortcutManager {
 
+    readonly #credential: Credential;
+
+    constructor(credential: Credential) {
+        this.#credential = credential;
+    }
+
     bind() {
-        _mode2();
+        doBind(this.#credential);
     }
 
 }
 
-function _mode1() {
-    let formBattle = $("form[action='battle.cgi']");
-    let selectBattle = formBattle.find('select[name="level"]');
-    let inputDigits = '';
-    $(document).off('keydown.city').on('keydown.city', function (e) {
-        if ($("#messageInputText:focus").length > 0) {
-            // 当前的焦点在消息框，禁用按键辅助
-            return;
-        }
-        const key = e.key;
-        if (key !== undefined && !isNaN(parseInt(key))) {
-            inputDigits += key;
-        }
-        if (inputDigits.length === 2) {
-            switch (inputDigits) {
-                case '11':
-                    selectBattle.find('option').eq(0).prop('selected', true);
-                    break;
-                case '22':
-                    selectBattle.find('option').eq(1).prop('selected', true);
-                    break;
-                default:
-                    inputDigits = '';
-                    break;
-            }
-            $("#battleButton").trigger("focus");
-            // 重置 inputDigits
-            inputDigits = '';
-        }
-    });
-}
-
-function _mode2() {
+function doBind(credential: Credential) {
     let formBattle = $("form[action='battle.cgi']");
     let selectBattle = formBattle.find('select[name="level"]');
     let buffer = "";

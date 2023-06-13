@@ -1,6 +1,5 @@
 import _ from "lodash";
 import SetupLoader from "../../config/SetupLoader";
-import KeyboardShortcutManager from "../../core/dashboard/KeyboardShortcutManager";
 import TownDashboardPage from "../../core/dashboard/TownDashboardPage";
 import TownDashboardPageParser from "../../core/dashboard/TownDashboardPageParser";
 import ExtensionShortcutLoader from "../../core/ExtensionShortcutLoader";
@@ -439,7 +438,7 @@ function doRenderMenu(credential: Credential, page: TownDashboardPage) {
     // ------------------------------------------------------------------------
     // 渲染菜单项
     // ------------------------------------------------------------------------
-    _renderBattleMenu(page);
+    $("select[name='level']").html(page.processedBattleLevelSelectionHtml!);
 
     $("option[value='INN']").text("客栈·驿站");
     $("option[value='LETTER']").text("口袋助手设置");
@@ -618,15 +617,6 @@ function _startSafeBattleButtonTimer(clock: JQuery) {
             $("#battleButton").show();
         }
     }, 200);
-}
-
-function _renderBattleMenu(page: TownDashboardPage) {
-    $("select[name='level']").html(page.processedBattleLevelSelectionHtml!);
-
-    if (page.battleLevelShortcut) {
-        // 只设置了一处战斗场所偏好
-        new KeyboardShortcutManager().bind();
-    }
 }
 
 function _bindShortcutButton(buttonId: string, option: string) {
