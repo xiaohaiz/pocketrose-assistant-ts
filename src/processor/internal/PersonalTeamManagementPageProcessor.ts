@@ -140,23 +140,15 @@ function doRender() {
     $("#fastLoginSetup").html(html);
 
     for (let i = 0; i < 50; i++) {
-        const config = FastLoginLoader.loadFastLoginConfig(i);
-        // @ts-ignore
-        let s = config.name;
-        if (s !== undefined) {
-            $("#name_" + i).val(s);
-        }
-        // @ts-ignore
-        s = config.id;
-        if (s !== undefined) {
-            $("#id_" + i).val(s);
-        }
-        // @ts-ignore
-        s = config.pass;
-        if (s !== undefined) {
-            $("#pass1_" + i).val(s);
-            $("#pass2_" + i).val(s);
-        }
+        const config = FastLoginLoader.loadFastLogin(i);
+        if (!config) continue;
+
+        $("#name_" + i).val(config.name!);
+        $("#id_" + i).val(config.id!);
+        $("#pass1_" + i).val(config.pass!);
+        $("#pass2_" + i).val(config.pass!);
+
+        if (config.external) $("#external_" + i).css("color", "blue");
     }
 
     const masterId = StorageUtils.getInt("_tm_", -1);
@@ -265,11 +257,21 @@ function doBindMasterButton() {
 function doBindExternalButton() {
     $(".external-button").on("click", event => {
         const buttonId = $(event.target).attr("id")!;
+        const code = _.parseInt(_.split(buttonId, "_")[1]);
+        const config = FastLoginLoader.loadFastLogin(code);
+        if (!config) return;
+
         if (PageUtils.isColorBlue(buttonId)) {
-            $("#" + buttonId).css("color", "grey");
+            config.external = false;
+            StorageUtils.set("_fl_" + code, JSON.stringify(config.asObject()));
+            MessageBoard.publishMessage("编制已经修改。");
         } else if (PageUtils.isColorGrey(buttonId)) {
-            $("#" + buttonId).css("color", "blue");
+            config.external = true;
+            StorageUtils.set("_fl_" + code, JSON.stringify(config.asObject()));
+            MessageBoard.publishMessage("编制已经修改。");
         }
+
+        doRefresh();
     });
 }
 
