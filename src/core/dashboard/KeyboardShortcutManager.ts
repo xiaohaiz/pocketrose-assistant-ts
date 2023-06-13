@@ -53,6 +53,11 @@ function _mode2() {
             return;
         }
 
+        if (key === "w") {
+            $("#battleButton").trigger("focus");
+            return;
+        }
+
         if (key !== "q") {
             buffer = "";
             return;
@@ -86,14 +91,6 @@ function _mode2() {
             $(selectBattle).find("> option:eq(" + optionIdx + ")")
                 .prop("selected", true);
             $("#battleButton").trigger("focus");
-
-            // $(selectBattle).find("option")
-            //     .each((idx, option) => {
-            //         if (!$(option).prop("selected")) {
-            //             $(option).prop("selected", true);
-            //             $("#battleButton").trigger("focus");
-            //         }
-            //     });
         }
     });
 }
