@@ -1,5 +1,6 @@
 import _ from "lodash";
 import SetupLoader from "../../config/SetupLoader";
+import KeyboardShortcutManager from "../../core/dashboard/KeyboardShortcutManager";
 import TownDashboardPage from "../../core/dashboard/TownDashboardPage";
 import TownDashboardPageParser from "../../core/dashboard/TownDashboardPageParser";
 import ExtensionShortcutLoader from "../../core/ExtensionShortcutLoader";
@@ -624,35 +625,7 @@ function _renderBattleMenu(page: TownDashboardPage) {
 
     if (page.battleLevelShortcut) {
         // 只设置了一处战斗场所偏好
-        let formBattle = $("form[action='battle.cgi']");
-        let selectBattle = formBattle.find('select[name="level"]');
-        let inputDigits = '';
-        $(document).off('keydown.city').on('keydown.city', function (e) {
-            if ($("#messageInputText:focus").length > 0) {
-                // 当前的焦点在消息框，禁用按键辅助
-                return;
-            }
-            const key = e.key;
-            if (key !== undefined && !isNaN(parseInt(key))) {
-                inputDigits += key;
-            }
-            if (inputDigits.length === 2) {
-                switch (inputDigits) {
-                    case '11':
-                        selectBattle.find('option').eq(0).prop('selected', true);
-                        break;
-                    case '22':
-                        selectBattle.find('option').eq(1).prop('selected', true);
-                        break;
-                    default:
-                        inputDigits = '';
-                        break;
-                }
-                $("#battleButton").trigger("focus");
-                // 重置 inputDigits
-                inputDigits = '';
-            }
-        });
+        new KeyboardShortcutManager().bind();
     }
 }
 
