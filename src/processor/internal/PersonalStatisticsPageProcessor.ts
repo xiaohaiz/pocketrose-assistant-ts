@@ -5,6 +5,7 @@ import DailyReportGenerator from "../../core/report/DailyReportGenerator";
 import MonsterReportGenerator from "../../core/report/MonsterReportGenerator";
 import MonthlyReportGenerator from "../../core/report/MonthlyReportGenerator";
 import RoleCareerTransferReportGenerator from "../../core/report/RoleCareerTransferReportGenerator";
+import TreasureReportGenerator from "../../core/report/TreasureReportGenerator";
 import WeeklyReportGenerator from "../../core/report/WeeklyReportGenerator";
 import ZodiacReportGenerator from "../../core/report/ZodiacReportGenerator";
 import NpcLoader from "../../core/role/NpcLoader";
@@ -88,7 +89,9 @@ abstract class PersonalStatisticsPageProcessor extends PageProcessorCredentialSu
         html += "<td>";
         html += "<button role='button' id='report-4' style='width:100%'>转职统计报告</button>";
         html += "</td>";
-        html += "<td></td>";
+        html += "<td>";
+        html += "<button role='button' id='report-5' style='width:100%'>上洞入手报告</button>";
+        html += "</td>";
         html += "<td></td>";
         html += "</tr>";
         html += "<tr>";
@@ -189,6 +192,7 @@ abstract class PersonalStatisticsPageProcessor extends PageProcessorCredentialSu
         doBindReport2();
         doBindReport3();
         doBindReport4();
+        doBindReport5();
         doBindLog1();
         doBindLog2();
         doBindLog3();
@@ -251,6 +255,17 @@ function doBindReport4() {
     $("#report-4").on("click", () => {
         const target = $("#teamMemberSelect").val()! as string;
         new RoleCareerTransferReportGenerator(target).generate();
+    });
+}
+
+function doBindReport5() {
+    $("#report-5").on("click", () => {
+        const target = $("#teamMemberSelect").val()! as string;
+        BattleStorageManager.battleResultStorage
+            .loads()
+            .then(dataList => {
+                new TreasureReportGenerator(dataList, target).generate();
+            })
     });
 }
 

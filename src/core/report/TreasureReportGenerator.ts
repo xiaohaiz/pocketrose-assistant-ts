@@ -66,14 +66,15 @@ class TreasureReportGenerator {
         html += "<table style='background-color:#888888;text-align:center;margin:auto;width:100%'>";
         html += "<thead>";
         html += "<tr>";
-        html += "<th style='background-color:navy;color:yellowgreen' colspan='8'>上 洞 怪 物 入 手 总 览</th>";
+        html += "<th style='background-color:navy;color:yellowgreen' colspan='9'>上 洞 怪 物 入 手 总 览</th>";
         html += "</tr>";
         html += "<tr>";
         html += "<th style='background-color:skyblue'>怪物</th>";
         html += "<th style='background-color:skyblue'>怪物</th>";
+        html += "<th style='background-color:skyblue'>战胜</th>";
         html += "<th style='background-color:skyblue'>战数</th>";
         html += "<th style='background-color:skyblue'>胜率(%)</th>";
-        html += "<th style='background-color:skyblue'>占比(%)</th>";
+        html += "<th style='background-color:skyblue'>战数占比(%)</th>";
         html += "<th style='background-color:skyblue'>入手</th>";
         html += "<th style='background-color:skyblue'>入手数量</th>";
         html += "<th style='background-color:skyblue'>入手占比(%)</th>";
@@ -93,6 +94,7 @@ class TreasureReportGenerator {
             html += "<tr>";
             html += "<td style='background-color:#F8F0E0;width:64px'>" + profile.imageHtml + "</td>";
             html += "<td style='background-color:#F8F0E0'>" + profile.nameHtml + "</td>";
+            html += "<td style='background-color:#F8F0E0'>" + report.winCount + "</td>";
             html += "<td style='background-color:#F8F0E0'>" + report.battleCount + "</td>";
             html += "<td style='background-color:#F8F0E0'>" + ReportUtils.percentage(report.winCount, report.battleCount) + "</td>";
             html += "<td style='background-color:#F8F0E0'>" + ReportUtils.percentage(report.battleCount, battleCount) + "</td>";
