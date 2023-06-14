@@ -1,7 +1,4 @@
-/**
- * 快速登陆数据结构定义。
- */
-class FastLogin {
+class TeamMember {
 
     index?: number;
     name?: string;
@@ -31,4 +28,4 @@ class FastLogin {
     }
 }
 
-export = FastLogin;
+export = TeamMember;

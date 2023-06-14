@@ -1,6 +1,6 @@
 import StorageUtils from "../../util/StorageUtils";
-import FastLogin from "./FastLogin";
 import FastLoginLoader from "./FastLoginLoader";
+import TeamMember from "./TeamMember";
 
 class TeamManager {
 
@@ -19,7 +19,7 @@ class TeamManager {
     }
 
     static loadMembers() {
-        const memberList: FastLogin[] = [];
+        const memberList: TeamMember[] = [];
         for (let i = 0; i < 50; i++) {
             const member = FastLoginLoader.loadFastLogin(i);
             if (member !== null) {

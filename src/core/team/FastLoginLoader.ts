@@ -1,5 +1,5 @@
 import StorageUtils from "../../util/StorageUtils";
-import FastLogin from "./FastLogin";
+import TeamMember from "./TeamMember";
 
 class FastLoginLoader {
 
@@ -21,7 +21,7 @@ class FastLoginLoader {
         if (!doCheckConfigAvailability(config)) {
             return null;
         }
-        const fastLogin = new FastLogin();
+        const fastLogin = new TeamMember();
         fastLogin.index = code;
         // @ts-ignore
         fastLogin.name = config.name;

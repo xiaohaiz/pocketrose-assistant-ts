@@ -2,8 +2,8 @@ import _ from "lodash";
 import PetLocalStorage from "../../core/monster/PetLocalStorage";
 import PetMap from "../../core/monster/PetMap";
 import RoleStorageManager from "../../core/role/RoleStorageManager";
-import FastLogin from "../../core/team/FastLogin";
 import FastLoginLoader from "../../core/team/FastLoginLoader";
+import TeamMember from "../../core/team/TeamMember";
 import TownLoader from "../../core/town/TownLoader";
 import PersonalStatus from "../../pocketrose/PersonalStatus";
 import TownPetMapHouse from "../../pocketrose/TownPetMapHouse";
@@ -119,7 +119,7 @@ class TownPetMapHousePageProcessor extends PageProcessorCredentialSupport {
                 return;
             }
 
-            const configList: FastLogin[] = [];
+            const configList: TeamMember[] = [];
             for (let i = 0; i < 50; i++) {
                 const config = FastLoginLoader.loadFastLogin(i);
                 if (config === null) {
@@ -140,7 +140,7 @@ class TownPetMapHousePageProcessor extends PageProcessorCredentialSupport {
                 this.#searchPetMap((petCode as string).trim(), configList);
             } else {
                 new PersonalStatus(credential).load().then(role => {
-                    const config = new FastLogin();
+                    const config = new TeamMember();
                     config.name = role.name;
                     config.id = credential.id;
                     configList.push(config);
@@ -150,7 +150,7 @@ class TownPetMapHousePageProcessor extends PageProcessorCredentialSupport {
         });
     }
 
-    #searchPetMap(petCode: string, configList: FastLogin[]) {
+    #searchPetMap(petCode: string, configList: TeamMember[]) {
 
         const roleIdList: string[] = [];
         configList.forEach(it => {
