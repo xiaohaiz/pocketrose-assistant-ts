@@ -5,7 +5,6 @@ import BattleStorageManager from "../battle/BattleStorageManager";
 import TreasureLoader from "../equipment/TreasureLoader";
 import MonsterGangLoader from "../monster/MonsterGangLoader";
 import MonsterProfileDict from "../monster/MonsterProfileDict";
-import TeamManager from "../team/TeamManager";
 import TeamMemberLoader from "../team/TeamMemberLoader";
 import ReportUtils from "./ReportUtils";
 
@@ -41,7 +40,7 @@ class MonthlyReportGenerator {
 
     #doGenerate(candidates: BattleLog[]) {
         const roles = new Map<string, RoleReport>();
-        TeamManager.loadMembers()
+        TeamMemberLoader.loadTeamMembers()
             .filter(it => !it.external)
             .forEach(config => {
                 if (!this.hasTarget) {

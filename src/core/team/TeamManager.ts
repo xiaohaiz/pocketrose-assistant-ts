@@ -1,5 +1,4 @@
 import StorageUtils from "../../util/StorageUtils";
-import TeamMember from "./TeamMember";
 import TeamMemberLoader from "./TeamMemberLoader";
 
 class TeamManager {
@@ -16,17 +15,6 @@ class TeamManager {
             return false;
         }
         return id === member.id;
-    }
-
-    static loadMembers() {
-        const memberList: TeamMember[] = [];
-        for (let i = 0; i < 50; i++) {
-            const member = TeamMemberLoader.loadTeamMember(i);
-            if (member !== null) {
-                memberList.push(member);
-            }
-        }
-        return memberList;
     }
 
 }

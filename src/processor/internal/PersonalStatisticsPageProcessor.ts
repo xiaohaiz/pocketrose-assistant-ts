@@ -9,6 +9,7 @@ import WeeklyReportGenerator from "../../core/report/WeeklyReportGenerator";
 import ZodiacReportGenerator from "../../core/report/ZodiacReportGenerator";
 import NpcLoader from "../../core/role/NpcLoader";
 import TeamManager from "../../core/team/TeamManager";
+import TeamMemberLoader from "../../core/team/TeamMemberLoader";
 import Credential from "../../util/Credential";
 import DayRange from "../../util/DayRange";
 import MessageBoard from "../../util/MessageBoard";
@@ -175,7 +176,7 @@ abstract class PersonalStatisticsPageProcessor extends PageProcessorCredentialSu
         html = "";
         html += "<select id='teamMemberSelect'>";
         html += "<option value=''>全团队</option>";
-        TeamManager.loadMembers()
+        TeamMemberLoader.loadTeamMembers()
             .filter(it => !it.external)
             .forEach(config => {
                 html += "<option value='" + config.id + "'>" + config.name + "</option>";

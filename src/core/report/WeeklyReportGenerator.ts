@@ -3,7 +3,6 @@ import BattleLog from "../battle/BattleLog";
 import TreasureLoader from "../equipment/TreasureLoader";
 import MonsterGangLoader from "../monster/MonsterGangLoader";
 import MonsterProfileDict from "../monster/MonsterProfileDict";
-import TeamManager from "../team/TeamManager";
 import TeamMemberLoader from "../team/TeamMemberLoader";
 import ReportUtils from "./ReportUtils";
 
@@ -28,7 +27,7 @@ class WeeklyReportGenerator {
                 it.roleId === this.#target);
 
         const roles = new Map<string, RoleWeeklyReport>();
-        TeamManager.loadMembers()
+        TeamMemberLoader.loadTeamMembers()
             .filter(it => !it.external)
             .forEach(config => {
                 if (this.#target === undefined || this.#target === "") {

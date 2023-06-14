@@ -3,7 +3,6 @@ import StringUtils from "../../util/StringUtils";
 import BattleResult from "../battle/BattleResult";
 import MonsterProfile from "../monster/MonsterProfile";
 import MonsterProfileDict from "../monster/MonsterProfileDict";
-import TeamManager from "../team/TeamManager";
 import TeamMemberLoader from "../team/TeamMemberLoader";
 import ReportUtils from "./ReportUtils";
 
@@ -36,7 +35,7 @@ class MonsterReportGenerator {
         const monsterCount = new Map<string, number[]>();
 
         const roles = new Map<string, RoleMonster>();
-        TeamManager.loadMembers()
+        TeamMemberLoader.loadTeamMembers()
             .filter(it => !it.external)
             .forEach(config => {
                 if (this.#target === undefined || this.#target === "") {
