@@ -5,6 +5,7 @@ class TeamMember {
     id?: string;
     pass?: string;
     external?: boolean;     // 团队编制外，不纳入统计
+    master?: boolean;       // 队长标记
 
     get available(): boolean {
         return this.name !== undefined && this.id !== undefined && this.pass !== undefined;
@@ -27,6 +28,10 @@ class TeamMember {
         if (this.external) {
             // @ts-ignore
             obj.external = this.external;
+        }
+        if (this.master) {
+            // @ts-ignore
+            obj.master = this.master;
         }
         return obj;
     }
