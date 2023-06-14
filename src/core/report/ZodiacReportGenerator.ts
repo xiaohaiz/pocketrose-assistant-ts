@@ -1,9 +1,9 @@
 import _ from "lodash";
 import Constants from "../../util/Constants";
+import ReportUtils from "../../util/ReportUtils";
 import BattleResult from "../battle/BattleResult";
 import NpcLoader from "../role/NpcLoader";
 import TeamMemberLoader from "../team/TeamMemberLoader";
-import ReportUtils from "./ReportUtils";
 
 class ZodiacReportGenerator {
 
