@@ -1,8 +1,8 @@
 import _ from "lodash";
-import MonsterProfile from "../../common/MonsterProfile";
-import Pet from "../../common/Pet";
 import PageUtils from "../../util/PageUtils";
+import MonsterProfile from "./MonsterProfile";
 import MonsterProfileDict from "./MonsterProfileDict";
+import Pet from "./Pet";
 
 class MonsterSimulator {
 

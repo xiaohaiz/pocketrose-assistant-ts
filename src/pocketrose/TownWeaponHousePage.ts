@@ -1,5 +1,5 @@
-import Equipment from "../common/Equipment";
-import Merchandise from "../common/Merchandise";
+import Equipment from "../core/equipment/Equipment";
+import Merchandise from "../core/store/Merchandise";
 import TownLoader from "../core/town/TownLoader";
 
 class TownWeaponHousePage {

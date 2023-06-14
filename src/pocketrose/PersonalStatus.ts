@@ -1,5 +1,5 @@
-import Castle from "../common/Castle";
-import Role from "../common/Role";
+import Castle from "../core/castle/Castle";
+import Role from "../core/role/Role";
 import TownLoader from "../core/town/TownLoader";
 import Coordinate from "../util/Coordinate";
 import Credential from "../util/Credential";

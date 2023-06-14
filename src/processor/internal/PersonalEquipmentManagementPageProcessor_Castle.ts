@@ -1,4 +1,4 @@
-import Equipment from "../../common/Equipment";
+import Equipment from "../../core/equipment/Equipment";
 import CastleBank from "../../pocketrose/CastleBank";
 import CastleEquipmentExpressHouse from "../../pocketrose/CastleEquipmentExpressHouse";
 import CastleWarehouse from "../../pocketrose/CastleWarehouse";

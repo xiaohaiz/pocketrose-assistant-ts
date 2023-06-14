@@ -1,4 +1,4 @@
-import Role from "../common/Role";
+import Role from "../core/role/Role";
 import RoleCareerTransfer from "../core/role/RoleCareerTransfer";
 import RoleStorageManager from "../core/role/RoleStorageManager";
 import Credential from "../util/Credential";

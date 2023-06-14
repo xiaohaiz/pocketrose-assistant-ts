@@ -1,5 +1,5 @@
-import Pet from "../common/Pet";
-import Role from "../common/Role";
+import Pet from "../core/monster/Pet";
+import Role from "../core/role/Role";
 import StringUtils from "../util/StringUtils";
 
 class PersonalPetEvolutionPage {

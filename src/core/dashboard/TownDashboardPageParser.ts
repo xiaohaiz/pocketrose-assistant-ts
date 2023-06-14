@@ -1,11 +1,11 @@
 import _ from "lodash";
-import Role from "../../common/Role";
 import Credential from "../../util/Credential";
 import StringUtils from "../../util/StringUtils";
 import BattleFieldConfigLoader from "../config/BattleFieldConfigLoader";
 import SetupLoader from "../config/SetupLoader";
 import EventHandler from "../event/EventHandler";
 import RankTitleLoader from "../role/RankTitleLoader";
+import Role from "../role/Role";
 import TownLoader from "../town/TownLoader";
 import TownDashboardPage from "./TownDashboardPage";
 

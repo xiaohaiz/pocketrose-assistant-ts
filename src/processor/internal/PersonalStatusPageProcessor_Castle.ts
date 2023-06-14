@@ -1,4 +1,4 @@
-import Role from "../../common/Role";
+import Role from "../../core/role/Role";
 import Credential from "../../util/Credential";
 import PageUtils from "../../util/PageUtils";
 import PersonalStatusPageProcessor from "./PersonalStatusPageProcessor";

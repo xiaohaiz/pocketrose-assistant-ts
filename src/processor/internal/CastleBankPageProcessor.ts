@@ -1,4 +1,4 @@
-import BankAccount from "../../common/BankAccount";
+import BankAccount from "../../core/bank/BankAccount";
 import NpcLoader from "../../core/role/NpcLoader";
 import CastleBank from "../../pocketrose/CastleBank";
 import CastleBankPage from "../../pocketrose/CastleBankPage";

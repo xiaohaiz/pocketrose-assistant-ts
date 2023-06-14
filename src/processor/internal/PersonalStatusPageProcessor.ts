@@ -1,5 +1,5 @@
-import Role from "../../common/Role";
 import SetupLoader from "../../core/config/SetupLoader";
+import Role from "../../core/role/Role";
 import PersonalStatus from "../../pocketrose/PersonalStatus";
 import PersonalStatusPage from "../../pocketrose/PersonalStatusPage";
 import Credential from "../../util/Credential";

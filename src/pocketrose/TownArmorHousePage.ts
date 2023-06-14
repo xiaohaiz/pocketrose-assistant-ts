@@ -1,7 +1,7 @@
-import Equipment from "../common/Equipment";
-import Merchandise from "../common/Merchandise";
-import Role from "../common/Role";
-import Town from "../common/Town";
+import Equipment from "../core/equipment/Equipment";
+import Role from "../core/role/Role";
+import Merchandise from "../core/store/Merchandise";
+import Town from "../core/town/Town";
 import TownLoader from "../core/town/TownLoader";
 
 class TownArmorHousePage {

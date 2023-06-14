@@ -1,5 +1,5 @@
-import TreasureHint from "../../common/TreasureHint";
 import Coordinate from "../../util/Coordinate";
+import TreasureHint from "../equipment/TreasureHint";
 
 class TreasureHintParser {
 

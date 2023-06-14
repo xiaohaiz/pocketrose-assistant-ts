@@ -1,4 +1,4 @@
-import TownStatus from "../common/TownStatus";
+import TownStatus from "../core/town/TownStatus";
 
 class TownInformationPage {
 

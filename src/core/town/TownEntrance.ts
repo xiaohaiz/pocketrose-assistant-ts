@@ -1,8 +1,8 @@
-import TravelPlan from "../../common/TravelPlan";
 import Credential from "../../util/Credential";
 import MessageBoard from "../../util/MessageBoard";
 import NetworkUtils from "../../util/NetworkUtils";
 import TimeoutUtils from "../../util/TimeoutUtils";
+import TravelPlan from "../map/TravelPlan";
 import TravelPlanBuilder from "../map/TravelPlanBuilder";
 import TownLoader from "./TownLoader";
 

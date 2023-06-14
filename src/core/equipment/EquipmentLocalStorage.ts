@@ -1,6 +1,4 @@
 import _ from "lodash";
-import Castle from "../../common/Castle";
-import Equipment from "../../common/Equipment";
 import CastleInformation from "../../pocketrose/CastleInformation";
 import CastleWarehouse from "../../pocketrose/CastleWarehouse";
 import PersonalEquipmentManagement from "../../pocketrose/PersonalEquipmentManagement";
@@ -8,8 +6,10 @@ import PersonalEquipmentManagementPage from "../../pocketrose/PersonalEquipmentM
 import TreasureBag from "../../pocketrose/TreasureBag";
 import CommentBoard from "../../util/CommentBoard";
 import Credential from "../../util/Credential";
+import Castle from "../castle/Castle";
 import SetupLoader from "../config/SetupLoader";
 import RoleStorageManager from "../role/RoleStorageManager";
+import Equipment from "./Equipment";
 
 class EquipmentLocalStorage {
 

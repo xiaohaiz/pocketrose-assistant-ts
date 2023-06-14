@@ -1,4 +1,4 @@
-import Castle from "../common/Castle";
+import Castle from "../core/castle/Castle";
 import Coordinate from "../util/Coordinate";
 import NetworkUtils from "../util/NetworkUtils";
 import StringUtils from "../util/StringUtils";

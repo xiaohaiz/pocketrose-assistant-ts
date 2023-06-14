@@ -1,4 +1,4 @@
-import Pet from "../common/Pet";
+import Pet from "../core/monster/Pet";
 import Credential from "../util/Credential";
 import NetworkUtils from "../util/NetworkUtils";
 import NumberUtils from "../util/NumberUtils";

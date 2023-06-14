@@ -1,5 +1,5 @@
-import Equipment from "../common/Equipment";
-import Role from "../common/Role";
+import Equipment from "../core/equipment/Equipment";
+import Role from "../core/role/Role";
 
 class PersonalEquipmentManagementPage {
 

@@ -1,5 +1,5 @@
-import Role from "../../common/Role";
 import NpcLoader from "../../core/role/NpcLoader";
+import Role from "../../core/role/Role";
 import PersonalEquipmentManagement from "../../pocketrose/PersonalEquipmentManagement";
 import PersonalEquipmentManagementPage from "../../pocketrose/PersonalEquipmentManagementPage";
 import Credential from "../../util/Credential";

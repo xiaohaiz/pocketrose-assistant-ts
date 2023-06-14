@@ -1,4 +1,4 @@
-import Role from "../../common/Role";
+import Role from "../../core/role/Role";
 import PersonalMirror from "../../pocketrose/PersonalMirror";
 import PersonalStatusPage from "../../pocketrose/PersonalStatusPage";
 import Credential from "../../util/Credential";

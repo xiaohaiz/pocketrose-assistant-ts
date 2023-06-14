@@ -1,5 +1,5 @@
-import BankAccount from "../common/BankAccount";
-import Role from "../common/Role";
+import BankAccount from "../core/bank/BankAccount";
+import Role from "../core/role/Role";
 import TownLoader from "../core/town/TownLoader";
 import Credential from "../util/Credential";
 import MessageBoard from "../util/MessageBoard";

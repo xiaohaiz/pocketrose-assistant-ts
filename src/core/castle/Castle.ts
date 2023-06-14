@@ -1,4 +1,4 @@
-import Coordinate from "../util/Coordinate";
+import Coordinate from "../../util/Coordinate";
 
 class Castle {
 

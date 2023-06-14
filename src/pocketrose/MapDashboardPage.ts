@@ -1,5 +1,5 @@
 import _ from "lodash";
-import Role from "../common/Role";
+import Role from "../core/role/Role";
 import StringUtils from "../util/StringUtils";
 
 class MapDashboardPage {

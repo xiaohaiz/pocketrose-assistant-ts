@@ -1,4 +1,4 @@
-import Equipment from "../common/Equipment";
+import Equipment from "../core/equipment/Equipment";
 import Credential from "../util/Credential";
 import MessageBoard from "../util/MessageBoard";
 import NetworkUtils from "../util/NetworkUtils";

@@ -1,6 +1,6 @@
-import Equipment from "../../common/Equipment";
 import ConfigManager from "../../core/config/ConfigManager";
 import SetupItemManager from "../../core/config/SetupItemManager";
+import Equipment from "../../core/equipment/Equipment";
 import EquipmentLoader from "../../core/equipment/EquipmentLoader";
 import PersonalEquipmentManagement from "../../pocketrose/PersonalEquipmentManagement";
 import PersonalStatus from "../../pocketrose/PersonalStatus";
