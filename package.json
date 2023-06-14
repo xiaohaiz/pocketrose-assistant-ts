@@ -24,6 +24,7 @@
     "@types/lodash": "^4.14.194",
     "babel-loader": "^9.1.2",
     "bson-objectid": "^2.0.4",
+    "echarts": "^5.4.2",
     "lodash": "^4.17.21",
     "ts-loader": "^9.4.2",
     "typescript": "^5.0.4",
