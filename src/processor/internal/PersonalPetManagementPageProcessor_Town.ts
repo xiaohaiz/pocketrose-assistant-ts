@@ -4,7 +4,7 @@ import MonsterRelationLoader from "../../core/monster/MonsterRelationLoader";
 import MonsterSimulator from "../../core/monster/MonsterSimulator";
 import Pet from "../../core/monster/Pet";
 import Role from "../../core/role/Role";
-import FastLoginLoader from "../../core/team/FastLoginLoader";
+import TeamMemberLoader from "../../core/team/TeamMemberLoader";
 import CastleInformation from "../../pocketrose/CastleInformation";
 import CastleRanch from "../../pocketrose/CastleRanch";
 import GoldenCage from "../../pocketrose/GoldenCage";
@@ -173,7 +173,7 @@ function doRender(credential: Credential, petList: Pet[], studyStatus: number[],
         html += "</tr>";
     }
     html += "<tr><td style='background-color:#EFE0C0;text-align:right' colspan='20'>";
-    const fastNames = FastLoginLoader.loadAllFastLoginNames();
+    const fastNames = TeamMemberLoader.loadTeamMembers().map(it => it.name!);
     if (fastNames.length > 0) {
         html += "<select id='fastNameSelect' class='PetUIButton'>";
         html += "<option value=''>快速选人</option>"
