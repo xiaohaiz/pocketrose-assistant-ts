@@ -1,14 +1,14 @@
 import _ from "lodash";
-import BattleProcessor from "../core/battle/BattleProcessor";
-import BattleRecord from "../core/battle/BattleRecord";
-import BattleStorageManager from "../core/battle/BattleStorageManager";
-import TownDashboardPage from "../core/dashboard/TownDashboardPage";
-import EquipmentLocalStorage from "../core/equipment/EquipmentLocalStorage";
-import PetLocalStorage from "../core/monster/PetLocalStorage";
-import Credential from "../util/Credential";
-import NetworkUtils from "../util/NetworkUtils";
+import Credential from "../../util/Credential";
+import NetworkUtils from "../../util/NetworkUtils";
+import BattleProcessor from "../battle/BattleProcessor";
+import BattleRecord from "../battle/BattleRecord";
+import BattleStorageManager from "../battle/BattleStorageManager";
+import EquipmentLocalStorage from "../equipment/EquipmentLocalStorage";
+import PetLocalStorage from "../monster/PetLocalStorage";
 import TownDashboardLayout from "./TownDashboardLayout";
 import TownDashboardLayout003 from "./TownDashboardLayout003";
+import TownDashboardPage from "./TownDashboardPage";
 
 class TownDashboardLayout006 extends TownDashboardLayout {
 

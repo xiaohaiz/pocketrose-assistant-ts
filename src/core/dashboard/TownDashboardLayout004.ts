@@ -1,9 +1,9 @@
-import TownDashboardPage from "../core/dashboard/TownDashboardPage";
-import TownDashboardTaxManager from "../core/town/TownDashboardTaxManager";
-import Conversation from "../pocketrose/Conversation";
-import Credential from "../util/Credential";
-import StorageUtils from "../util/StorageUtils";
+import Conversation from "../../pocketrose/Conversation";
+import Credential from "../../util/Credential";
+import StorageUtils from "../../util/StorageUtils";
+import TownDashboardTaxManager from "../town/TownDashboardTaxManager";
 import TownDashboardLayout from "./TownDashboardLayout";
+import TownDashboardPage from "./TownDashboardPage";
 
 class TownDashboardLayout004 extends TownDashboardLayout {
 

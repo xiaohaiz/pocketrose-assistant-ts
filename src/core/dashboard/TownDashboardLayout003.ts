@@ -1,8 +1,8 @@
-import TownDashboardPage from "../core/dashboard/TownDashboardPage";
-import TownDashboardTaxManager from "../core/town/TownDashboardTaxManager";
-import Credential from "../util/Credential";
+import Credential from "../../util/Credential";
+import TownDashboardTaxManager from "../town/TownDashboardTaxManager";
 import TownDashboardLayout from "./TownDashboardLayout";
 import TownDashboardLayout002 from "./TownDashboardLayout002";
+import TownDashboardPage from "./TownDashboardPage";
 
 class TownDashboardLayout003 extends TownDashboardLayout {
 

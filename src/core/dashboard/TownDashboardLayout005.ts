@@ -1,24 +1,21 @@
 import _ from "lodash";
-import BattleProcessor from "../core/battle/BattleProcessor";
-import BattleRecord from "../core/battle/BattleRecord";
-import BattleReturnInterceptor from "../core/battle/BattleReturnInterceptor";
-import BattleStorageManager from "../core/battle/BattleStorageManager";
-import SetupLoader from "../core/config/SetupLoader";
-import DashboardPageUtils from "../core/dashboard/DashboardPageUtils";
-import KeyboardShortcutManager from "../core/dashboard/KeyboardShortcutManager";
-import TownDashboardPage from "../core/dashboard/TownDashboardPage";
-import TownDashboardPageParser from "../core/dashboard/TownDashboardPageParser";
-import PalaceTaskManager from "../core/task/PalaceTaskManager";
-import TownDashboardTaxManager from "../core/town/TownDashboardTaxManager";
-import PersonalStatus from "../pocketrose/PersonalStatus";
-import Credential from "../util/Credential";
-import NetworkUtils from "../util/NetworkUtils";
+import PersonalEquipmentManagement from "../../pocketrose/PersonalEquipmentManagement";
+import PersonalPetManagement from "../../pocketrose/PersonalPetManagement";
+import Credential from "../../util/Credential";
+import NetworkUtils from "../../util/NetworkUtils";
+import BattleProcessor from "../battle/BattleProcessor";
+import BattleRecord from "../battle/BattleRecord";
+import BattleReturnInterceptor from "../battle/BattleReturnInterceptor";
+import BattleStorageManager from "../battle/BattleStorageManager";
+import TownDashboardTaxManager from "../town/TownDashboardTaxManager";
+import KeyboardShortcutManager from "./KeyboardShortcutManager";
 import TownDashboardLayout from "./TownDashboardLayout";
+import TownDashboardPage from "./TownDashboardPage";
 
-class TownDashboardLayout007 extends TownDashboardLayout {
+class TownDashboardLayout005 extends TownDashboardLayout {
 
     id(): number {
-        return 7;
+        return 5;
     }
 
     battleMode(): boolean {
@@ -44,17 +41,8 @@ class TownDashboardLayout007 extends TownDashboardLayout {
             .find("> tr:eq(3)")
             .each((idx, tr) => {
                 const tax = page.townTax!;
-                $(tr).after($("" +
-                    "<tr class='roleStatus'>" +
-                    "<td height='5'>收益</td><th id='townTax'>" + tax + "</th>" +
-                    "<td>ＲＰ</td><th id='additionalRP'>-</th>" +
-                    "</tr>"));
+                $(tr).after($("<tr class='roleStatus'><td height='5'>收益</td><th id='townTax'>" + tax + "</th><td colspan='2'></td></tr>"));
                 new TownDashboardTaxManager(credential, page).processTownTax($("#townTax"));
-            });
-        new PersonalStatus(credential, page.townId)
-            .load()
-            .then(role => {
-                $("#additionalRP").html(() => DashboardPageUtils.generateAdditionalRPHtml(role.additionalRP));
             });
 
         $("#rightPanel")
@@ -75,6 +63,56 @@ class TownDashboardLayout007 extends TownDashboardLayout {
         $("#roleTitle")
             .parent()
             .after($("<tr class='additionalStatus' style='display:none'><td colspan='4'></td></tr>"));
+
+        $("#roleTitle")
+            .find("> font:first")
+            .on("click", event => {
+                $(event.target).off("click");
+
+                new PersonalEquipmentManagement(credential, page.townId)
+                    .open()
+                    .then(equipmentPage => {
+                        new PersonalPetManagement(credential, page.townId)
+                            .open()
+                            .then(petPage => {
+
+                                let html = "";
+                                html += "<table style='text-align:center;margin:auto;border-width:1px;border-spacing:1px;width:100%'>";
+                                html += "<tbody>";
+                                for (const equipment of equipmentPage.equipmentList!) {
+                                    if (!equipment.using) {
+                                        continue;
+                                    }
+                                    html += "<tr>";
+                                    html += "<td style='background-color:#E8E8D0'>" + equipment.usingHTML + "</td>";
+                                    html += "<td style='background-color:#F8F0E0'>" + equipment.nameHTML + "</td>";
+                                    html += "<td style='background-color:#F8F0E0'>" + equipment.category + "</td>";
+                                    html += "<td style='background-color:#E8E8D0'>" + equipment.experienceHTML + "</td>";
+                                    html += "</tr>";
+                                }
+                                for (const pet of petPage.petList!) {
+                                    if (!pet.using) {
+                                        continue;
+                                    }
+                                    html += "<tr>";
+                                    html += "<td style='background-color:#E8E8D0'>" + pet.usingHtml + "</td>";
+                                    html += "<td style='background-color:#F8F0E0'>" + pet.nameHtml + "</td>";
+                                    html += "<td style='background-color:#F8F0E0'>" + pet.imageHtml + "</td>";
+                                    html += "<td style='background-color:#E8E8D0'>" + pet.levelHtml + "</td>";
+                                    html += "</tr>";
+                                }
+                                html += "</tbody>";
+                                html += "</table>";
+
+                                $(".additionalStatus")
+                                    .find("> td:first")
+                                    .html(html);
+
+                                $(".roleStatus").hide();
+                                $(".additionalStatus").show();
+                            });
+                    });
+            });
 
         // 在右面板最后增加一个新行，高度100%，保证格式显示不会变形。
         $("#rightPanel")
@@ -115,6 +153,10 @@ class TownDashboardLayout007 extends TownDashboardLayout {
                 "<div style='display:none' id='hidden-4'></div>" +
                 "<div style='display:none' id='hidden-5'></div>" +
                 "");
+
+        generateDepositForm(credential);
+        generateRepairForm(credential);
+        generateLodgeForm(credential);
 
         BattleStorageManager.getBattleRecordStorage().load(credential.id).then(record => {
             const lastBattle = record.html!;
@@ -176,12 +218,7 @@ class TownDashboardLayout007 extends TownDashboardLayout {
                             .parent().show();
                         $("#battleReturn").on("click", () => {
                             $("#battleReturn").prop("disabled", true);
-                            const request = credential.asRequestMap();
-                            request.set("mode", "STATUS");
-                            NetworkUtils.post("status.cgi", request)
-                                .then(mainPage => {
-                                    doProcessBattleReturn(credential, mainPage);
-                                });
+                            $("#refreshButton").trigger("click");
                         });
                         $(".battleButton").trigger("click");
                         return;
@@ -193,15 +230,6 @@ class TownDashboardLayout007 extends TownDashboardLayout {
                     processor.doProcess();
 
                     $("#battlePanel").html(processor.obtainPage.reportHtml!);
-                    if (processor.obtainPage.reportHtml!.includes("吐故纳新，扶摇直上")) {
-                        $("#battlePanel")
-                            .css("background-color", "wheat")
-                            .css("text-align", "center");
-                    } else {
-                        $("#battlePanel")
-                            .removeAttr("style")
-                            .css("text-align", "center");
-                    }
 
                     const recommendation = processor.obtainRecommendation;
                     switch (recommendation) {
@@ -240,12 +268,7 @@ class TownDashboardLayout007 extends TownDashboardLayout {
                         new BattleReturnInterceptor(credential, currentBattleCount)
                             .doBeforeReturn()
                             .then(() => {
-                                const request = credential.asRequestMap();
-                                request.set("mode", "STATUS");
-                                NetworkUtils.post("status.cgi", request)
-                                    .then(mainPage => {
-                                        doProcessBattleReturn(credential, mainPage, processor.obtainPage.additionalRP, processor.obtainPage.harvestList);
-                                    });
+                                $("#refreshButton").trigger("click");
                             });
                     });
                     $("#battleDeposit").on("click", () => {
@@ -253,13 +276,7 @@ class TownDashboardLayout007 extends TownDashboardLayout {
                         new BattleReturnInterceptor(credential, currentBattleCount)
                             .doBeforeReturn()
                             .then(() => {
-                                const request = credential.asRequestMap();
-                                request.set("azukeru", "all");
-                                request.set("mode", "BANK_SELL");
-                                NetworkUtils.post("town.cgi", request)
-                                    .then(mainPage => {
-                                        doProcessBattleReturn(credential, mainPage, processor.obtainPage.additionalRP, processor.obtainPage.harvestList);
-                                    });
+                                $("#deposit").trigger("click");
                             });
                     });
                     $("#battleRepair").on("click", () => {
@@ -267,13 +284,7 @@ class TownDashboardLayout007 extends TownDashboardLayout {
                         new BattleReturnInterceptor(credential, currentBattleCount)
                             .doBeforeReturn()
                             .then(() => {
-                                const request = credential.asRequestMap();
-                                request.set("arm_mode", "all");
-                                request.set("mode", "MY_ARM2");
-                                NetworkUtils.post("town.cgi", request)
-                                    .then(mainPage => {
-                                        doProcessBattleReturn(credential, mainPage, processor.obtainPage.additionalRP, processor.obtainPage.harvestList);
-                                    });
+                                $("#repair").trigger("click");
                             });
                     });
                     $("#battleLodge").on("click", () => {
@@ -281,12 +292,7 @@ class TownDashboardLayout007 extends TownDashboardLayout {
                         new BattleReturnInterceptor(credential, currentBattleCount)
                             .doBeforeReturn()
                             .then(() => {
-                                const request = credential.asRequestMap();
-                                request.set("mode", "RECOVERY");
-                                NetworkUtils.post("town.cgi", request)
-                                    .then(mainPage => {
-                                        doProcessBattleReturn(credential, mainPage, processor.obtainPage.additionalRP, processor.obtainPage.harvestList);
-                                    });
+                                $("#lodge").trigger("click");
                             });
                     });
 
@@ -298,148 +304,42 @@ class TownDashboardLayout007 extends TownDashboardLayout {
 
 }
 
-function doProcessBattleReturn(credential: Credential,
-                               mainPage: string,
-                               additionalRP?: number,
-                               harvestList?: string[]) {
-    $(".battleButton").off("click");
-    $("#battleMenu").html("").parent().hide();
-    $("#refreshButton").show();
-    $("#battleButton").show();
-
-    const parser = new TownDashboardPageParser(credential, mainPage, true);
-    const page = parser.parse();
-
-    // 更新首页战斗相关的选项
-    // ktotal
-    $("input:hidden[name='ktotal']").val(page.obtainRole.battleCount!);
-    // session id
-    $("input:hidden[name='sessionid']").val(page.battleSessionId!);
-    // level
-    $("select[name='level']").html(page.processedBattleLevelSelectionHtml!);
-
-    // verification code picture
-    $("select[name='level']").closest("form")
-        .find("> img:first")
-        .attr("src", page.battleVerificationSource!);
-    $("a:contains('看不到图片按这里')")
-        .filter((idx, a) => $(a).text() === '看不到图片按这里')
-        .attr("href", page.battleVerificationSource!);
-
-    // 更新战斗倒计时部分
-    $("#messageNotification")
-        .parent()
-        .next()
-        .next()
-        .find("> th:first")
-        .html(page.actionNotificationHtml!);
-
-    if (SetupLoader.isConsecrateStateRecognizeEnabled(credential.id) && page.role!.canConsecrate!) {
-        $("#messageNotification")
-            .parent()
-            .next()
-            .find("> th:first")
-            .css("color", "red")
-            .css("font-size", "120%");
-    }
-
-    const clock = $("input:text[name='clock']");
-    if (clock.length > 0) {
-        const enlargeRatio = SetupLoader.getEnlargeBattleRatio();
-        if (enlargeRatio > 0) {
-            let fontSize = 100 * enlargeRatio;
-            clock.css("font-size", fontSize + "%");
-        }
-        let timeout = _.parseInt(clock.val() as string);
-        if (timeout > 0) {
-            const start = Date.now() / 1000;
-            _countDownClock(timeout, start, clock);
-        }
-    }
-
-    // 更新：在线列表
-    $("#online_list").html(page.onlineListHtml!);
-
-    // 更新：动员指令
-    $("#mobilization").find("> form:first")
-        .find("> font:first")
-        .text(page.processedMobilizationText!);
-
-    // 更新：消息通知
-    $("#messageNotification").html(page.messageNotificationHtml!);
-
-    _renderPalaceTask(credential);
-    _renderEventBoard(page);
-    _renderConversation(page);
-
-    if (page.careerTransferNotification) {
-        $("#battleCell").css("background-color", "red");
-    }
-    if (page.capacityLimitationNotification) {
-        $("#battleCell").css("background-color", "yellow");
-    }
-
-    $("#role_battle_count").text(page.role!.battleCount!);
-    $("#role_health").text(page.role!.health + "/" + page.role!.maxHealth);
-    $("#role_mana").text(page.role!.mana + "/" + page.role!.maxMana);
-    $("#role_cash").html(page.cashHtml);
-    $("#role_experience").html(page.experienceHtml);
-    $("#townTax").off("click").text(page.townTax!);
-    new TownDashboardTaxManager(credential, page).processTownTax($("#townTax"));
-
-    if (additionalRP) {
-        $("#additionalRP").html(() => DashboardPageUtils.generateAdditionalRPHtml(additionalRP));
-    }
-    if (harvestList && harvestList.length > 0) {
-        // 有入手，其中有可能是干拔了，重新刷新一下RP吧。毕竟入手是小概率事件。
-        new PersonalStatus(credential)
-            .load()
-            .then(role => {
-                $("#additionalRP").html(() => DashboardPageUtils.generateAdditionalRPHtml(role.additionalRP));
-            });
-    }
-
-    const ksm = new KeyboardShortcutManager(credential);
-    if (page.battleLevelShortcut) {
-        ksm.bind();
-    }
+function generateDepositForm(credential: Credential) {
+    let form = "";
+    // noinspection HtmlUnknownTarget
+    form += "<form action='town.cgi' method='post'>";
+    form += "<input type='hidden' name='id' value='" + credential.id + "'>";
+    form += "<input type='hidden' name='pass' value='" + credential.pass + "'>"
+    form += "<input type='hidden' name='azukeru' value='all'>";
+    form += "<input type='hidden' name='mode' value='BANK_SELL'>";
+    form += "<input type='submit' id='deposit'>";
+    form += "</form>";
+    $("#hidden-2").html(form);
 }
 
-function _countDownClock(timeout: number, start: number, clock: JQuery) {
-    let now = Date.now() / 1000;
-    let x = timeout - (now - start);
-    clock.val(_.max([_.ceil(x), 0])!);
-    if (x > 0) {
-        setTimeout(() => {
-            _countDownClock(timeout, start, clock);
-        }, 100);
-    } else {
-        // @ts-ignore
-        document.getElementById("mplayer")?.play();
-    }
+function generateRepairForm(credential: Credential) {
+    let form = "";
+    // noinspection HtmlUnknownTarget
+    form += "<form action='town.cgi' method='post'>";
+    form += "<input type='hidden' name='id' value='" + credential.id + "'>";
+    form += "<input type='hidden' name='pass' value='" + credential.pass + "'>"
+    form += "<input type='hidden' name='arm_mode' value='all'>";
+    form += "<input type='hidden' name='mode' value='MY_ARM2'>";
+    form += "<input type='submit' id='repair'>";
+    form += "</form>";
+    $("#hidden-3").html(form);
 }
 
-function _renderPalaceTask(credential: Credential) {
-    if (SetupLoader.isNewPalaceTaskEnabled()) {
-        new PalaceTaskManager(credential)
-            .monsterTaskHtml()
-            .then(monsterTask => {
-                if (monsterTask !== "") {
-                    $("#palaceTask").html(monsterTask).parent().show();
-                }
-            })
-    }
+function generateLodgeForm(credential: Credential) {
+    let form = "";
+    // noinspection HtmlUnknownTarget
+    form += "<form action='town.cgi' method='post'>";
+    form += "<input type='hidden' name='id' value='" + credential.id + "'>";
+    form += "<input type='hidden' name='pass' value='" + credential.pass + "'>"
+    form += "<input type='hidden' name='mode' value='RECOVERY'>";
+    form += "<input type='submit' id='lodge'>";
+    form += "</form>";
+    $("#hidden-4").html(form);
 }
 
-function _renderEventBoard(page: TownDashboardPage) {
-    $("#eventBoard").html(page.processedEventBoardHtml!);
-}
-
-function _renderConversation(page: TownDashboardPage) {
-    $("table:first")
-        .next()     // conversation table
-        .html(page.t1Html!);
-    $("input:text[name='message']").attr("id", "messageInputText");
-}
-
-export = TownDashboardLayout007;
+export = TownDashboardLayout005;

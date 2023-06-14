@@ -1,5 +1,5 @@
-import TownDashboardPage from "../core/dashboard/TownDashboardPage";
-import Credential from "../util/Credential";
+import Credential from "../../util/Credential";
+import TownDashboardPage from "./TownDashboardPage";
 
 abstract class TownDashboardLayout {
 

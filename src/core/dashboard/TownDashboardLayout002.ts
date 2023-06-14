@@ -1,8 +1,8 @@
-import SetupLoader from "../core/config/SetupLoader";
-import TownDashboardPage from "../core/dashboard/TownDashboardPage";
-import TownDashboardTaxManager from "../core/town/TownDashboardTaxManager";
-import Credential from "../util/Credential";
+import Credential from "../../util/Credential";
+import SetupLoader from "../config/SetupLoader";
+import TownDashboardTaxManager from "../town/TownDashboardTaxManager";
 import TownDashboardLayout from "./TownDashboardLayout";
+import TownDashboardPage from "./TownDashboardPage";
 
 class TownDashboardLayout002 extends TownDashboardLayout {
 

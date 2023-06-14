@@ -1,6 +1,6 @@
-import LayoutConfigLoader from "../../../dashboard/LayoutConfigLoader";
 import MessageBoard from "../../../util/MessageBoard";
 import StorageUtils from "../../../util/StorageUtils";
+import LayoutConfigLoader from "../../dashboard/LayoutConfigLoader";
 import SetupItem from "../SetupItem";
 
 class SetupItem052 implements SetupItem {
