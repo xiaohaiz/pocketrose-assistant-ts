@@ -1,5 +1,5 @@
 import _ from "lodash";
-import SetupLoader from "../../config/SetupLoader";
+import SetupLoader from "../../core/config/SetupLoader";
 import ExtensionShortcutLoader from "../../core/dashboard/ExtensionShortcutLoader";
 import TownDashboardPage from "../../core/dashboard/TownDashboardPage";
 import TownDashboardPageParser from "../../core/dashboard/TownDashboardPageParser";

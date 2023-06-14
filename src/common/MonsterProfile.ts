@@ -1,5 +1,5 @@
 import _ from "lodash";
-import SetupLoader from "../config/SetupLoader";
+import SetupLoader from "../core/config/SetupLoader";
 import MonsterSpellDict from "../core/monster/MonsterSpellDict";
 import Constants from "../util/Constants";
 import StringUtils from "../util/StringUtils";

@@ -1,5 +1,5 @@
 import Pet from "../../common/Pet";
-import SetupLoader from "../../config/SetupLoader";
+import SetupLoader from "../../core/config/SetupLoader";
 import MonsterProfileDict from "../../core/monster/MonsterProfileDict";
 import MonsterSimulator from "../../core/monster/MonsterSimulator";
 import CastleBank from "../../pocketrose/CastleBank";

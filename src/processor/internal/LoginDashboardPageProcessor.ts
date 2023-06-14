@@ -1,4 +1,4 @@
-import SetupLoader from "../../config/SetupLoader";
+import SetupLoader from "../../core/config/SetupLoader";
 import FastLoginLoader from "../../core/team/FastLoginLoader";
 import LastLogin from "../../core/team/LastLogin";
 import TeamStorages from "../../core/team/TeamStorages";

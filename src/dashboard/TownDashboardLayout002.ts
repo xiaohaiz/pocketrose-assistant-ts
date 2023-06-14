@@ -1,4 +1,4 @@
-import SetupLoader from "../config/SetupLoader";
+import SetupLoader from "../core/config/SetupLoader";
 import TownDashboardPage from "../core/dashboard/TownDashboardPage";
 import TownDashboardTaxManager from "../core/town/TownDashboardTaxManager";
 import Credential from "../util/Credential";

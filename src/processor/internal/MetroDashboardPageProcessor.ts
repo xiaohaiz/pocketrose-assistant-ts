@@ -1,6 +1,6 @@
 import _ from "lodash";
 import TravelPlan from "../../common/TravelPlan";
-import SetupLoader from "../../config/SetupLoader";
+import SetupLoader from "../../core/config/SetupLoader";
 import EventHandler from "../../core/event/EventHandler";
 import MapBuilder from "../../core/map/MapBuilder";
 import TravelPlanExecutor from "../../core/map/TravelPlanExecutor";

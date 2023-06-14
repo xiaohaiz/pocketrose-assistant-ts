@@ -1,6 +1,6 @@
 import Pet from "../../common/Pet";
 import Role from "../../common/Role";
-import SetupLoader from "../../config/SetupLoader";
+import SetupLoader from "../../core/config/SetupLoader";
 import MonsterProfileDict from "../../core/monster/MonsterProfileDict";
 import MonsterRelationLoader from "../../core/monster/MonsterRelationLoader";
 import MonsterSimulator from "../../core/monster/MonsterSimulator";

@@ -1,5 +1,5 @@
 import _ from "lodash";
-import SetupLoader from "../../config/SetupLoader";
+import SetupLoader from "../../core/config/SetupLoader";
 import RankTitleLoader from "../../core/role/RankTitleLoader";
 import PageUtils from "../../util/PageUtils";
 import StringUtils from "../../util/StringUtils";

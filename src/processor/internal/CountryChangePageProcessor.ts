@@ -1,5 +1,5 @@
 import _ from "lodash";
-import SetupLoader from "../../config/SetupLoader";
+import SetupLoader from "../../core/config/SetupLoader";
 import NpcLoader from "../../core/role/NpcLoader";
 import RankTitleLoader from "../../core/role/RankTitleLoader";
 import PersonalStatus from "../../pocketrose/PersonalStatus";

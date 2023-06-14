@@ -1,6 +1,6 @@
 import Equipment from "../../common/Equipment";
 import EquipmentSet from "../../common/EquipmentSet";
-import SetupLoader from "../../config/SetupLoader";
+import SetupLoader from "../../core/config/SetupLoader";
 import TownDashboard from "../../core/dashboard/TownDashboard";
 import EquipmentSetLoader from "../../core/equipment/EquipmentSetLoader";
 import NpcLoader from "../../core/role/NpcLoader";

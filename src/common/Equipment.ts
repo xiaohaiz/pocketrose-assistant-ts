@@ -1,5 +1,5 @@
 import _ from "lodash";
-import SetupLoader from "../config/SetupLoader";
+import SetupLoader from "../core/config/SetupLoader";
 import TownLoader from "../core/town/TownLoader";
 import Coordinate from "../util/Coordinate";
 import PageUtils from "../util/PageUtils";

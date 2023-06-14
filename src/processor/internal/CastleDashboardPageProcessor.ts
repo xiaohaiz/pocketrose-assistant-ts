@@ -1,4 +1,4 @@
-import SetupLoader from "../../config/SetupLoader";
+import SetupLoader from "../../core/config/SetupLoader";
 import EventHandler from "../../core/event/EventHandler";
 import RankTitleLoader from "../../core/role/RankTitleLoader";
 import PageUtils from "../../util/PageUtils";
