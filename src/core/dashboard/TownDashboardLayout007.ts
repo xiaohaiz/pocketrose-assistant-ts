@@ -302,6 +302,7 @@ function doProcessBattleReturn(credential: Credential,
                                mainPage: string,
                                additionalRP?: number,
                                harvestList?: string[]) {
+    $("#systemAnnouncement").removeAttr("style");
     $(".battleButton").off("click");
     $("#battleMenu").html("").parent().hide();
     $("#refreshButton").show();
