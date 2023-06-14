@@ -2,6 +2,7 @@ import _ from "lodash";
 import BattleResult from "../battle/BattleResult";
 import TreasureLoader from "../equipment/TreasureLoader";
 import TeamManager from "../team/TeamManager";
+import TeamMemberLoader from "../team/TeamMemberLoader";
 import ReportUtils from "./ReportUtils";
 
 class BattleReportGenerator {
@@ -15,7 +16,7 @@ class BattleReportGenerator {
     }
 
     generate() {
-        const internalIds = TeamManager.loadInternalIds();
+        const internalIds = TeamMemberLoader.loadInternalIds();
         const candidates = this.#dataList
             .filter(it => _.includes(internalIds, it.roleId))
             .filter(it =>

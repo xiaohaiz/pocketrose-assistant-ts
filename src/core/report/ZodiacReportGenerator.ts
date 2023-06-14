@@ -2,7 +2,7 @@ import _ from "lodash";
 import Constants from "../../util/Constants";
 import BattleResult from "../battle/BattleResult";
 import NpcLoader from "../role/NpcLoader";
-import TeamManager from "../team/TeamManager";
+import TeamMemberLoader from "../team/TeamMemberLoader";
 import ReportUtils from "./ReportUtils";
 
 class ZodiacReportGenerator {
@@ -16,7 +16,7 @@ class ZodiacReportGenerator {
     }
 
     generate() {
-        const internalIds = TeamManager.loadInternalIds();
+        const internalIds = TeamMemberLoader.loadInternalIds();
         const candidates = this.#dataList
             .filter(it => _.includes(internalIds, it.roleId))
             .filter(it =>

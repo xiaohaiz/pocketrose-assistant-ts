@@ -29,6 +29,10 @@ class TeamMemberLoader {
         return memberList;
     }
 
+    static loadInternalIds() {
+        return TeamMemberLoader.loadTeamMembers().filter(it => !it.external).map(it => it.id!);
+    }
+
 }
 
 function _load(index: number | null | undefined): {} {

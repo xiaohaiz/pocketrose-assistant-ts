@@ -4,6 +4,7 @@ import TreasureLoader from "../equipment/TreasureLoader";
 import MonsterGangLoader from "../monster/MonsterGangLoader";
 import MonsterProfileDict from "../monster/MonsterProfileDict";
 import TeamManager from "../team/TeamManager";
+import TeamMemberLoader from "../team/TeamMemberLoader";
 import ReportUtils from "./ReportUtils";
 
 class WeeklyReportGenerator {
@@ -18,7 +19,7 @@ class WeeklyReportGenerator {
     }
 
     generate() {
-        const internalIds = TeamManager.loadInternalIds();
+        const internalIds = TeamMemberLoader.loadInternalIds();
         const candidates = this.#logList
             .filter(it => _.includes(internalIds, it.roleId))
             .filter(it =>
