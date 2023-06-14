@@ -16,6 +16,8 @@ class TeamMemberLoader {
         // @ts-ignore
         member.pass = config.pass;
         // @ts-ignore
+        member.master = config.master;
+        // @ts-ignore
         member.external = config.external;
         return member.available ? member : null;
     }
