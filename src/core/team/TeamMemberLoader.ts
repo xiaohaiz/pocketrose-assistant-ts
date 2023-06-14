@@ -4,7 +4,7 @@ import TeamMember from "./TeamMember";
 
 class TeamMemberLoader {
 
-    loadTeamMember(index: number | null | undefined) {
+    static loadTeamMember(index: number | null | undefined) {
         if (!index) return null;
         const config = _load(index);
         const member = new TeamMember();
@@ -18,6 +18,15 @@ class TeamMemberLoader {
         // @ts-ignore
         member.external = config.external;
         return member.available ? member : null;
+    }
+
+    static loadTeamMembers() {
+        const memberList: TeamMember[] = [];
+        for (let i = 0; i < Constants.MAX_TEAM_MEMBER_COUNT; i++) {
+            const member = TeamMemberLoader.loadTeamMember(i);
+            if (member) memberList.push(member);
+        }
+        return memberList;
     }
 
 }
