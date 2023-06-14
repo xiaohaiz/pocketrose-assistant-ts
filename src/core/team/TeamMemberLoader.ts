@@ -35,6 +35,13 @@ class TeamMemberLoader {
         return TeamMemberLoader.loadTeamMembers().filter(it => !it.external).map(it => it.id!);
     }
 
+    static isMaster(id: string | null | undefined) {
+        if (!id) return false;
+        const member = TeamMemberLoader.loadTeamMembers().find(it => it.id === id);
+        if (!member) return false;
+        return member.master !== undefined && member.master;
+    }
+
 }
 
 function _load(index: number | null | undefined): {} {

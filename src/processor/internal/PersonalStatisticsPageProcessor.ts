@@ -8,7 +8,6 @@ import RoleCareerTransferReportGenerator from "../../core/report/RoleCareerTrans
 import WeeklyReportGenerator from "../../core/report/WeeklyReportGenerator";
 import ZodiacReportGenerator from "../../core/report/ZodiacReportGenerator";
 import NpcLoader from "../../core/role/NpcLoader";
-import TeamManager from "../../core/team/TeamManager";
 import TeamMemberLoader from "../../core/team/TeamMemberLoader";
 import Credential from "../../util/Credential";
 import DayRange from "../../util/DayRange";
@@ -116,7 +115,7 @@ abstract class PersonalStatisticsPageProcessor extends PageProcessorCredentialSu
         html += "</table>";
         html += "</td>";
         html += "<tr>";
-        if (TeamManager.isMaster(credential.id)) {
+        if (TeamMemberLoader.isMaster(credential.id)) {
             html += "<tr>";
             html += "<th style='background-color:red;color:white'>队 长 专 属 数 据 维 护 任 务</th>";
             html += "<tr>";
@@ -197,7 +196,7 @@ abstract class PersonalStatisticsPageProcessor extends PageProcessorCredentialSu
         doBindLog5();
         doBindLog6();
 
-        if (TeamManager.isMaster(credential.id)) {
+        if (TeamMemberLoader.isMaster(credential.id)) {
             doBindClearBattleLog();
             doBindExportBattleLog();
             doBindImportBattleLog();
