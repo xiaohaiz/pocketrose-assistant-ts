@@ -11,12 +11,12 @@ class KeyboardShortcutManager {
     }
 
     bind() {
-        doBind(this.#credential);
+        doBind(this.#credential, this.#extension);
     }
 
 }
 
-function doBind(credential: Credential) {
+function doBind(credential: Credential, extension?: string) {
     let formBattle = $("form[action='battle.cgi']");
     let selectBattle = formBattle.find('select[name="level"]');
     let optionIdx = 0;
