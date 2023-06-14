@@ -6,6 +6,10 @@ class TeamMember {
     pass?: string;
     external?: boolean;     // 团队编制外，不纳入统计
 
+    get available(): boolean {
+        return this.name !== undefined && this.id !== undefined && this.pass !== undefined;
+    }
+
     asObject(): {} {
         const obj = {};
         if (this.name) {
