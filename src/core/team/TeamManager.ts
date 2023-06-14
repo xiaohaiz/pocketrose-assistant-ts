@@ -1,6 +1,6 @@
 import StorageUtils from "../../util/StorageUtils";
-import FastLoginLoader from "./FastLoginLoader";
 import TeamMember from "./TeamMember";
+import TeamMemberLoader from "./TeamMemberLoader";
 
 class TeamManager {
 
@@ -10,7 +10,7 @@ class TeamManager {
             // No team master specified, return false
             return false;
         }
-        const member = FastLoginLoader.loadFastLogin(masterId);
+        const member = TeamMemberLoader.loadTeamMember(masterId);
         if (member === null) {
             // Specified masterId not configured, return false
             return false;
@@ -21,7 +21,7 @@ class TeamManager {
     static loadMembers() {
         const memberList: TeamMember[] = [];
         for (let i = 0; i < 50; i++) {
-            const member = FastLoginLoader.loadFastLogin(i);
+            const member = TeamMemberLoader.loadTeamMember(i);
             if (member !== null) {
                 memberList.push(member);
             }

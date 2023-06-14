@@ -1,5 +1,5 @@
 import _ from "lodash";
-import FastLoginLoader from "../../core/team/FastLoginLoader";
+import TeamMemberLoader from "../../core/team/TeamMemberLoader";
 import Credential from "../../util/Credential";
 import MessageBoard from "../../util/MessageBoard";
 import PageUtils from "../../util/PageUtils";
@@ -140,7 +140,7 @@ function doRender() {
     $("#fastLoginSetup").html(html);
 
     for (let i = 0; i < 50; i++) {
-        const config = FastLoginLoader.loadFastLogin(i);
+        const config = TeamMemberLoader.loadTeamMember(i);
         if (!config) continue;
 
         $("#name_" + i).val(config.name!);
@@ -258,7 +258,7 @@ function doBindExternalButton() {
     $(".external-button").on("click", event => {
         const buttonId = $(event.target).attr("id")!;
         const code = _.parseInt(_.split(buttonId, "_")[1]);
-        const config = FastLoginLoader.loadFastLogin(code);
+        const config = TeamMemberLoader.loadTeamMember(code);
         if (!config) return;
 
         if (PageUtils.isColorBlue(buttonId)) {

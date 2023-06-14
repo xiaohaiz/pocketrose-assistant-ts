@@ -2,8 +2,8 @@ import _ from "lodash";
 import PetLocalStorage from "../../core/monster/PetLocalStorage";
 import PetMap from "../../core/monster/PetMap";
 import RoleStorageManager from "../../core/role/RoleStorageManager";
-import FastLoginLoader from "../../core/team/FastLoginLoader";
 import TeamMember from "../../core/team/TeamMember";
+import TeamMemberLoader from "../../core/team/TeamMemberLoader";
 import TownLoader from "../../core/town/TownLoader";
 import PersonalStatus from "../../pocketrose/PersonalStatus";
 import TownPetMapHouse from "../../pocketrose/TownPetMapHouse";
@@ -119,14 +119,7 @@ class TownPetMapHousePageProcessor extends PageProcessorCredentialSupport {
                 return;
             }
 
-            const configList: TeamMember[] = [];
-            for (let i = 0; i < 50; i++) {
-                const config = FastLoginLoader.loadFastLogin(i);
-                if (config === null) {
-                    continue;
-                }
-                configList.push(config);
-            }
+            const configList: TeamMember[] = TeamMemberLoader.loadTeamMembers();
 
             let foundSelf = false;
             for (const config of configList) {
