@@ -5,7 +5,7 @@ import TeamMember from "./TeamMember";
 class TeamMemberLoader {
 
     static loadTeamMember(index: number | null | undefined) {
-        if (!index) return null;
+        if (index === null || index === undefined) return null;
         const config = _load(index);
         const member = new TeamMember();
         member.index = index;
@@ -32,7 +32,7 @@ class TeamMemberLoader {
 }
 
 function _load(index: number | null | undefined): {} {
-    if (!index) return {};
+    if (index === null || index === undefined) return {};
     if (index < 0 || index >= Constants.MAX_TEAM_MEMBER_COUNT) return {};
     const key = "_fl_" + index;
     const s = StorageUtils.getString(key);

@@ -1,6 +1,8 @@
+import _ from "lodash";
 import SetupLoader from "../../core/config/SetupLoader";
 import FastLoginLoader from "../../core/team/FastLoginLoader";
 import LastLogin from "../../core/team/LastLogin";
+import TeamMemberLoader from "../../core/team/TeamMemberLoader";
 import TeamStorages from "../../core/team/TeamStorages";
 import ButtonUtils from "../../util/ButtonUtils";
 import PageUtils from "../../util/PageUtils";
@@ -255,34 +257,24 @@ function doGenerateCell(lastLogin: LastLogin | null, configs: Map<number, {}>, c
 }
 
 function doBindFastLoginButton() {
-    for (let i = 0; i < 50; i++) {
-        const buttonId = "fastLogin_" + i;
-        if ($("#" + buttonId).length === 0) {
-            continue;
-        }
-        $("#" + buttonId).on("click", function () {
-            const code = parseInt(($(this).attr("id") as string).split("_")[1]);
-            const config = FastLoginLoader.loadFastLoginConfig(code);
-            if (!doCheckConfigAvailability(config)) {
-                return;
-            }
+    $(".fastLoginButton").on("click", event => {
+        const s = _.split($(event.target).attr("id") as string, "_");
+        const index = _.parseInt(s[1]);
+        const member = TeamMemberLoader.loadTeamMember(index);
+        if (!member) return;
 
-            // 记录最后一次使用快速登陆的id
-            // @ts-ignore
-            const lastRoleId = config.id;
-            TeamStorages.lastLoginStorage
-                .write(lastRoleId)
-                .then(() => {
-                    // @ts-ignore
-                    $("#loginId").val(config.id);
-                    // @ts-ignore
-                    $("#loginPass").val(config.pass);
+        // 记录最后一次使用快速登陆的id
+        const lastRoleId = member.id!;
+        TeamStorages.lastLoginStorage
+            .write(lastRoleId)
+            .then(() => {
+                $("#loginId").val(member.id!);
+                $("#loginPass").val(member.pass!);
 
-                    $("#loginForm").removeAttr("onsubmit");
-                    $("#loginButton").trigger("click");
-                });
-        });
-    }
+                $("#loginForm").removeAttr("onsubmit");
+                $("#loginButton").trigger("click");
+            });
+    });
 }
 
 export = LoginDashboardPageProcessor;
