@@ -1,5 +1,5 @@
-import BankAccount from "../../common/BankAccount";
-import NpcLoader from "../../core/NpcLoader";
+import BankAccount from "../../core/bank/BankAccount";
+import NpcLoader from "../../core/role/NpcLoader";
 import CastleBank from "../../pocketrose/CastleBank";
 import CastleBankPage from "../../pocketrose/CastleBankPage";
 import Credential from "../../util/Credential";

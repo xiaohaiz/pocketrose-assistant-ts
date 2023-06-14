@@ -1,4 +1,4 @@
-import EventHandler from "../../core/EventHandler";
+import EventHandler from "../../core/event/EventHandler";
 import PageUtils from "../../util/PageUtils";
 import StringUtils from "../../util/StringUtils";
 import PageProcessor from "../PageProcessor";

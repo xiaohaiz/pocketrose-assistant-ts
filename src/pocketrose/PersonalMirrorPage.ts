@@ -1,4 +1,4 @@
-import Mirror from "../common/Mirror";
+import Mirror from "../core/role/Mirror";
 import StringUtils from "../util/StringUtils";
 
 class PersonalMirrorPage {

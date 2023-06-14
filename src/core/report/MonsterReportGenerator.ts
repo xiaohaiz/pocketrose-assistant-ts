@@ -1,9 +1,9 @@
 import _ from "lodash";
-import MonsterProfile from "../../common/MonsterProfile";
 import StringUtils from "../../util/StringUtils";
 import BattleResult from "../battle/BattleResult";
+import MonsterProfile from "../monster/MonsterProfile";
 import MonsterProfileDict from "../monster/MonsterProfileDict";
-import TeamManager from "../team/TeamManager";
+import TeamMemberLoader from "../team/TeamMemberLoader";
 import ReportUtils from "./ReportUtils";
 
 class MonsterReportGenerator {
@@ -17,7 +17,7 @@ class MonsterReportGenerator {
     }
 
     generate() {
-        const internalIds = TeamManager.loadInternalIds();
+        const internalIds = TeamMemberLoader.loadInternalIds();
         const candidates = this.#dataList
             .filter(it => _.includes(internalIds, it.roleId))
             .filter(it =>
@@ -35,7 +35,7 @@ class MonsterReportGenerator {
         const monsterCount = new Map<string, number[]>();
 
         const roles = new Map<string, RoleMonster>();
-        TeamManager.loadMembers()
+        TeamMemberLoader.loadTeamMembers()
             .filter(it => !it.external)
             .forEach(config => {
                 if (this.#target === undefined || this.#target === "") {

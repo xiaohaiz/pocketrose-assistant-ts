@@ -1,7 +1,7 @@
-import SetupLoader from "../../config/SetupLoader";
 import Credential from "../../util/Credential";
 import MessageBoard from "../../util/MessageBoard";
 import NetworkUtils from "../../util/NetworkUtils";
+import SetupLoader from "../config/SetupLoader";
 import TownDashboardPage from "../dashboard/TownDashboardPage";
 
 class TownDashboardTaxManager {

@@ -1,6 +1,6 @@
 import ObjectID from "bson-objectid";
 import MonsterProfileDict from "../monster/MonsterProfileDict";
-import NpcLoader from "../NpcLoader";
+import NpcLoader from "../role/NpcLoader";
 
 class BattleLog {
 

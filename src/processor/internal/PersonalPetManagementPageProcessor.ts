@@ -1,4 +1,4 @@
-import NpcLoader from "../../core/NpcLoader";
+import NpcLoader from "../../core/role/NpcLoader";
 import PersonalPetManagement from "../../pocketrose/PersonalPetManagement";
 import PersonalPetManagementPage from "../../pocketrose/PersonalPetManagementPage";
 import Credential from "../../util/Credential";

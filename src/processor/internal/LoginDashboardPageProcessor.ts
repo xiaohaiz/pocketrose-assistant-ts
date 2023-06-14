@@ -1,6 +1,8 @@
-import SetupLoader from "../../config/SetupLoader";
-import FastLoginLoader from "../../core/team/FastLoginLoader";
+import _ from "lodash";
+import SetupLoader from "../../core/config/SetupLoader";
 import LastLogin from "../../core/team/LastLogin";
+import TeamMember from "../../core/team/TeamMember";
+import TeamMemberLoader from "../../core/team/TeamMemberLoader";
 import TeamStorages from "../../core/team/TeamStorages";
 import ButtonUtils from "../../util/ButtonUtils";
 import PageUtils from "../../util/PageUtils";
@@ -24,8 +26,6 @@ class LoginDashboardPageProcessor implements PageProcessor {
             .attr("width", "64")
             .attr("height", "48");
 
-
-        const a = "<td style='vertical-align:bottom'></td>"
         const layout = SetupLoader.getLoginPageLayout();
         switch (layout) {
             case 1:
@@ -86,16 +86,9 @@ class LoginDashboardPageProcessor implements PageProcessor {
 }
 
 function doProcess() {
-    const configs = new Map<number, {}>();
-    for (let i = 0; i < 50; i++) {
-        const config = FastLoginLoader.loadFastLoginConfig(i);
-        if (doCheckConfigAvailability(config)) {
-            configs.set(i, config);
-        }
-    }
-    if (configs.size === 0) {
-        return;
-    }
+    const members = new Map<number, TeamMember>();
+    TeamMemberLoader.loadTeamMembers().forEach(it => members.set(it.index!, it));
+    if (members.size === 0) return;
 
     $("input:text[name='id']").attr("id", "loginId");
     $("input:password[name='pass']").attr("id", "loginPass");
@@ -113,16 +106,11 @@ function doProcess() {
     TeamStorages.lastLoginStorage
         .load()
         .then(lastLogin => {
-            doRender(configs, lastLogin);
+            doRender(members, lastLogin);
         });
 }
 
-function doCheckConfigAvailability(config: {}): boolean {
-    // @ts-ignore
-    return config.name !== undefined && config.id !== undefined && config.pass !== undefined;
-}
-
-function doRender(configs: Map<number, {}>, lastLogin: LastLogin | null) {
+function doRender(members: Map<number, TeamMember>, lastLogin: LastLogin | null) {
     const fastLoginCounts: number[] = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
 
     let html = "";
@@ -134,14 +122,14 @@ function doRender(configs: Map<number, {}>, lastLogin: LastLogin | null) {
     html += "</tr>";
     html += "<tr id='tr1'>";
     for (let i = 0; i < 5; i++) {
-        html += doGenerateCell(lastLogin, configs, i, () => {
+        html += doGenerateCell(lastLogin, members, i, () => {
             fastLoginCounts[0]++;
         });
     }
     html += "</tr>";
     html += "<tr id='tr2'>";
     for (let i = 5; i < 10; i++) {
-        html += doGenerateCell(lastLogin, configs, i, () => {
+        html += doGenerateCell(lastLogin, members, i, () => {
             fastLoginCounts[1]++;
         });
     }
@@ -149,14 +137,14 @@ function doRender(configs: Map<number, {}>, lastLogin: LastLogin | null) {
 
     html += "<tr id='tr3'>";
     for (let i = 10; i < 15; i++) {
-        html += doGenerateCell(lastLogin, configs, i, () => {
+        html += doGenerateCell(lastLogin, members, i, () => {
             fastLoginCounts[2]++;
         });
     }
     html += "</tr>";
     html += "<tr id='tr4'>";
     for (let i = 15; i < 20; i++) {
-        html += doGenerateCell(lastLogin, configs, i, () => {
+        html += doGenerateCell(lastLogin, members, i, () => {
             fastLoginCounts[3]++;
         });
     }
@@ -164,14 +152,14 @@ function doRender(configs: Map<number, {}>, lastLogin: LastLogin | null) {
 
     html += "<tr id='tr5'>";
     for (let i = 20; i < 25; i++) {
-        html += doGenerateCell(lastLogin, configs, i, () => {
+        html += doGenerateCell(lastLogin, members, i, () => {
             fastLoginCounts[4]++;
         });
     }
     html += "</tr>";
     html += "<tr id='tr6'>";
     for (let i = 25; i < 30; i++) {
-        html += doGenerateCell(lastLogin, configs, i, () => {
+        html += doGenerateCell(lastLogin, members, i, () => {
             fastLoginCounts[5]++;
         });
     }
@@ -179,14 +167,14 @@ function doRender(configs: Map<number, {}>, lastLogin: LastLogin | null) {
 
     html += "<tr id='tr7'>";
     for (let i = 30; i < 35; i++) {
-        html += doGenerateCell(lastLogin, configs, i, () => {
+        html += doGenerateCell(lastLogin, members, i, () => {
             fastLoginCounts[6]++;
         });
     }
     html += "</tr>";
     html += "<tr id='tr8'>";
     for (let i = 35; i < 40; i++) {
-        html += doGenerateCell(lastLogin, configs, i, () => {
+        html += doGenerateCell(lastLogin, members, i, () => {
             fastLoginCounts[7]++;
         });
     }
@@ -194,14 +182,14 @@ function doRender(configs: Map<number, {}>, lastLogin: LastLogin | null) {
 
     html += "<tr id='tr9'>";
     for (let i = 40; i < 45; i++) {
-        html += doGenerateCell(lastLogin, configs, i, () => {
+        html += doGenerateCell(lastLogin, members, i, () => {
             fastLoginCounts[8]++;
         });
     }
     html += "</tr>";
     html += "<tr id='tr10'>";
     for (let i = 45; i < 50; i++) {
-        html += doGenerateCell(lastLogin, configs, i, () => {
+        html += doGenerateCell(lastLogin, members, i, () => {
             fastLoginCounts[9]++;
         });
     }
@@ -222,7 +210,7 @@ function doRender(configs: Map<number, {}>, lastLogin: LastLogin | null) {
     doBindFastLoginButton();
 }
 
-function doGenerateCell(lastLogin: LastLogin | null, configs: Map<number, {}>, code: number, handler?: () => void) {
+function doGenerateCell(lastLogin: LastLogin | null, members: Map<number, TeamMember>, code: number, handler?: () => void) {
     let count = 0;
     let html = "";
 
@@ -231,13 +219,11 @@ function doGenerateCell(lastLogin: LastLogin | null, configs: Map<number, {}>, c
         lastRoleId = lastLogin.roleId!;
     }
     html += "<td style='background-color:#E8E8D0;width:20%;height:32px'>";
-    let config = configs.get(code);
-    if (config !== undefined) {
+    let member = members.get(code);
+    if (member) {
         count++;
-        // @ts-ignore
-        const name = config.name;
-        // @ts-ignore
-        if (lastRoleId === config.id) {
+        const name = member.name!;
+        if (lastRoleId === member.id) {
             html += "<input type='button' class='fastLoginButton button-10028' " +
                 "id='fastLogin_" + code + "' value='" + name + "' " +
                 "style='color:red;width:100%'>";
@@ -255,34 +241,24 @@ function doGenerateCell(lastLogin: LastLogin | null, configs: Map<number, {}>, c
 }
 
 function doBindFastLoginButton() {
-    for (let i = 0; i < 50; i++) {
-        const buttonId = "fastLogin_" + i;
-        if ($("#" + buttonId).length === 0) {
-            continue;
-        }
-        $("#" + buttonId).on("click", function () {
-            const code = parseInt(($(this).attr("id") as string).split("_")[1]);
-            const config = FastLoginLoader.loadFastLoginConfig(code);
-            if (!doCheckConfigAvailability(config)) {
-                return;
-            }
+    $(".fastLoginButton").on("click", event => {
+        const s = _.split($(event.target).attr("id") as string, "_");
+        const index = _.parseInt(s[1]);
+        const member = TeamMemberLoader.loadTeamMember(index);
+        if (!member) return;
 
-            // 记录最后一次使用快速登陆的id
-            // @ts-ignore
-            const lastRoleId = config.id;
-            TeamStorages.lastLoginStorage
-                .write(lastRoleId)
-                .then(() => {
-                    // @ts-ignore
-                    $("#loginId").val(config.id);
-                    // @ts-ignore
-                    $("#loginPass").val(config.pass);
+        // 记录最后一次使用快速登陆的id
+        const lastRoleId = member.id!;
+        TeamStorages.lastLoginStorage
+            .write(lastRoleId)
+            .then(() => {
+                $("#loginId").val(member.id!);
+                $("#loginPass").val(member.pass!);
 
-                    $("#loginForm").removeAttr("onsubmit");
-                    $("#loginButton").trigger("click");
-                });
-        });
-    }
+                $("#loginForm").removeAttr("onsubmit");
+                $("#loginButton").trigger("click");
+            });
+    });
 }
 
 export = LoginDashboardPageProcessor;

@@ -1,13 +1,13 @@
 import _ from "lodash";
-import Equipment from "../../common/Equipment";
-import Pet from "../../common/Pet";
-import EquipmentLocalStorage from "../../core/EquipmentLocalStorage";
+import Equipment from "../../core/equipment/Equipment";
+import EquipmentLocalStorage from "../../core/equipment/EquipmentLocalStorage";
 import MonsterPageUtils from "../../core/monster/MonsterPageUtils";
 import MonsterProfileDict from "../../core/monster/MonsterProfileDict";
-import NpcLoader from "../../core/NpcLoader";
-import PetLocalStorage from "../../core/PetLocalStorage";
+import Pet from "../../core/monster/Pet";
+import PetLocalStorage from "../../core/monster/PetLocalStorage";
+import NpcLoader from "../../core/role/NpcLoader";
 import RoleStorageManager from "../../core/role/RoleStorageManager";
-import TeamManager from "../../core/team/TeamManager";
+import TeamMemberLoader from "../../core/team/TeamMemberLoader";
 import Credential from "../../util/Credential";
 import MessageBoard from "../../util/MessageBoard";
 import PageUtils from "../../util/PageUtils";
@@ -193,7 +193,7 @@ abstract class PersonalTeamPageProcessor extends PageProcessorCredentialSupport 
             html += "</table>";
             $("#information").html(html).parent().hide();
 
-            const configs = TeamManager.loadMembers();
+            const configs = TeamMemberLoader.loadTeamMembers();
             const idList = configs.map(it => it.id!);
             RoleStorageManager.getRoleEquipmentStatusStorage()
                 .loads(idList)
@@ -262,7 +262,7 @@ abstract class PersonalTeamPageProcessor extends PageProcessorCredentialSupport 
             html += "</table>";
             $("#information").html(html).parent().hide();
 
-            const configs = TeamManager.loadMembers();
+            const configs = TeamMemberLoader.loadTeamMembers();
 
             const idList = configs.map(it => it.id!);
             RoleStorageManager.getRolePetStatusStorage()

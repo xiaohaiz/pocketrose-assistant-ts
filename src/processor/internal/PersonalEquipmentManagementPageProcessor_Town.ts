@@ -1,10 +1,10 @@
-import Equipment from "../../common/Equipment";
-import EquipmentSet from "../../common/EquipmentSet";
-import SetupLoader from "../../config/SetupLoader";
+import SetupLoader from "../../core/config/SetupLoader";
 import TownDashboard from "../../core/dashboard/TownDashboard";
-import EquipmentSetLoader from "../../core/EquipmentSetLoader";
-import NpcLoader from "../../core/NpcLoader";
-import FastLoginLoader from "../../core/team/FastLoginLoader";
+import Equipment from "../../core/equipment/Equipment";
+import EquipmentSet from "../../core/equipment/EquipmentSet";
+import EquipmentSetLoader from "../../core/equipment/EquipmentSetLoader";
+import NpcLoader from "../../core/role/NpcLoader";
+import TeamMemberLoader from "../../core/team/TeamMemberLoader";
 import TownLoader from "../../core/town/TownLoader";
 import CastleEquipmentExpressHouse from "../../pocketrose/CastleEquipmentExpressHouse";
 import CastleInformation from "../../pocketrose/CastleInformation";
@@ -273,7 +273,7 @@ class PersonalEquipmentManagementPageProcessor_Town extends PersonalEquipmentMan
         html += "</tr>";
         html += "<tr>";
         html += "<td style='text-align:right' colspan='2'>";
-        const fastNames = FastLoginLoader.loadAllFastLoginNames();
+        const fastNames = TeamMemberLoader.loadTeamMembers().map(it => it.name!);
         if (fastNames.length > 0) {
             html += "<select id='fastNameSelect' class='mutableButton-1'>";
             html += "<option value=''>快速选人</option>"

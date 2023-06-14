@@ -1,4 +1,4 @@
-import MonsterProfile from "../../common/MonsterProfile";
+import MonsterProfile from "../../core/monster/MonsterProfile";
 import MonsterProfileDict from "../../core/monster/MonsterProfileDict";
 import Credential from "../../util/Credential";
 import PageProcessorContext from "../PageProcessorContext";

@@ -6,6 +6,8 @@ class Constants {
 
     static DATABASE_VERSION: number = 9;
 
+    static MAX_TEAM_MEMBER_COUNT: number = 50;
+
 }
 
 export = Constants;

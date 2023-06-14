@@ -2,7 +2,7 @@ import _ from "lodash";
 import PageUtils from "../../util/PageUtils";
 import RoleCareerTransfer from "../role/RoleCareerTransfer";
 import RoleStorageManager from "../role/RoleStorageManager";
-import TeamManager from "../team/TeamManager";
+import TeamMemberLoader from "../team/TeamMemberLoader";
 
 class RoleCareerTransferReportGenerator {
 
@@ -16,7 +16,7 @@ class RoleCareerTransferReportGenerator {
         RoleStorageManager.getRoleCareerTransferStorage()
             .loads()
             .then(dataList => {
-                const internalIds = TeamManager.loadInternalIds();
+                const internalIds = TeamMemberLoader.loadInternalIds();
                 const candidates = dataList
                     .filter(it => _.includes(internalIds, it.roleId))
                     .filter(it => !this.hasTarget || this.#target === it.roleId);
@@ -30,7 +30,7 @@ class RoleCareerTransferReportGenerator {
 
     #generate(candidates: RoleCareerTransfer[]) {
         const roles = new Map<string, RoleReportData>();
-        TeamManager.loadMembers()
+        TeamMemberLoader.loadTeamMembers()
             .filter(it => !it.external)
             .forEach(config => {
                 if (!this.hasTarget || this.#target === config.id) {

@@ -5,7 +5,7 @@ import BattleStorageManager from "../battle/BattleStorageManager";
 import TreasureLoader from "../equipment/TreasureLoader";
 import MonsterGangLoader from "../monster/MonsterGangLoader";
 import MonsterProfileDict from "../monster/MonsterProfileDict";
-import TeamManager from "../team/TeamManager";
+import TeamMemberLoader from "../team/TeamMemberLoader";
 import ReportUtils from "./ReportUtils";
 
 class MonthlyReportGenerator {
@@ -30,7 +30,7 @@ class MonthlyReportGenerator {
         BattleStorageManager.battleLogStore
             .findByCreateTime(this.#range.start, this.#range.end)
             .then(dataList => {
-                const internalIds = TeamManager.loadInternalIds();
+                const internalIds = TeamMemberLoader.loadInternalIds();
                 const candidates = dataList
                     .filter(it => _.includes(internalIds, it.roleId))
                     .filter(it => !this.hasTarget || it.roleId === this.#target);
@@ -40,7 +40,7 @@ class MonthlyReportGenerator {
 
     #doGenerate(candidates: BattleLog[]) {
         const roles = new Map<string, RoleReport>();
-        TeamManager.loadMembers()
+        TeamMemberLoader.loadTeamMembers()
             .filter(it => !it.external)
             .forEach(config => {
                 if (!this.hasTarget) {

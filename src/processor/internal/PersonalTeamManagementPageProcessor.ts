@@ -1,5 +1,6 @@
 import _ from "lodash";
-import FastLoginLoader from "../../core/team/FastLoginLoader";
+import TeamMemberLoader from "../../core/team/TeamMemberLoader";
+import Constants from "../../util/Constants";
 import Credential from "../../util/Credential";
 import MessageBoard from "../../util/MessageBoard";
 import PageUtils from "../../util/PageUtils";
@@ -104,7 +105,7 @@ function doRender() {
     html += "<th style='background-color:skyblue'>设置</th>";
     html += "</tr>";
 
-    for (let i = 0; i < 50; i++) {
+    for (let i = 0; i < Constants.MAX_TEAM_MEMBER_COUNT; i++) {
         html += "<tr>";
         html += "<th style='background-color:#E8E8D0'>";
         html += "#" + (i + 1);
@@ -139,8 +140,8 @@ function doRender() {
 
     $("#fastLoginSetup").html(html);
 
-    for (let i = 0; i < 50; i++) {
-        const config = FastLoginLoader.loadFastLogin(i);
+    for (let i = 0; i < Constants.MAX_TEAM_MEMBER_COUNT; i++) {
+        const config = TeamMemberLoader.loadTeamMember(i);
         if (!config) continue;
 
         $("#name_" + i).val(config.name!);
@@ -148,23 +149,20 @@ function doRender() {
         $("#pass1_" + i).val(config.pass!);
         $("#pass2_" + i).val(config.pass!);
 
+        if (config.master) {
+            $("#master_" + i).css("color", "blue");
+            $("#master_" + i)
+                .parent()
+                .parent()
+                .find("> td")
+                .css("background-color", "yellow");
+            $("#master_" + i)
+                .parent()
+                .parent()
+                .find("> th")
+                .css("background-color", "yellow");
+        }
         if (config.external) $("#external_" + i).css("color", "blue");
-    }
-
-    const masterId = StorageUtils.getInt("_tm_", -1);
-    if (masterId >= 0) {
-        $("#master_" + masterId).css("color", "blue");
-
-        $("#master_" + masterId)
-            .parent()
-            .parent()
-            .find("> td")
-            .css("background-color", "yellow");
-        $("#master_" + masterId)
-            .parent()
-            .parent()
-            .find("> th")
-            .css("background-color", "yellow");
     }
 
     doBindFastLoginButton();
@@ -215,12 +213,6 @@ function doBindFastLoginButton() {
             "pass": pass1,
         };
 
-        const externalId = "external_" + code;
-        if (PageUtils.isColorBlue(externalId)) {
-            // @ts-ignore
-            value.external = true;
-        }
-
         StorageUtils.set("_fl_" + code, JSON.stringify(value));
         MessageBoard.publishMessage("设置已经保存。");
 
@@ -241,13 +233,31 @@ function doBindClearButton() {
 function doBindMasterButton() {
     $(".master-button").on("click", event => {
         const buttonId = $(event.target).attr("id")!;
-        const code = _.parseInt(_.split(buttonId, "_")[1]);
+        const index = _.parseInt(_.split(buttonId, "_")[1]);
+        const member = TeamMemberLoader.loadTeamMember(index);
+        if (!member) return;
+
+        if (member.external) {
+            MessageBoard.publishWarning("编制外人员<b style='color:yellow'>" + member.name + "</b>不能被设置为队长！");
+            return;
+        }
+
         if (PageUtils.isColorBlue(buttonId)) {
-            StorageUtils.remove("_tm_");
-            MessageBoard.publishMessage("队长已经取消。");
+            member.master = false;
+            StorageUtils.set("_fl_" + index, JSON.stringify(member.asObject()));
+            MessageBoard.publishMessage("<b style='color:yellow'>" + member.name + "</b>已经被取消队长身份。");
         } else if (PageUtils.isColorGrey(buttonId)) {
-            StorageUtils.set("_tm_", code.toString());
-            MessageBoard.publishMessage((code + 1) + "号位设置为队长。");
+            TeamMemberLoader.loadTeamMembers()
+                .filter(it => it.master)
+                .forEach(it => {
+                    it.master = false;
+                    StorageUtils.set("_fl_" + it.index, JSON.stringify(it.asObject()));
+                    MessageBoard.publishMessage("<b style='color:yellow'>" + it.name + "</b>已经被取消队长身份。");
+                });
+
+            member.master = true;
+            StorageUtils.set("_fl_" + index, JSON.stringify(member.asObject()));
+            MessageBoard.publishMessage("<b style='color:yellow'>" + member.name + "</b>被设置为队长。");
         }
 
         doRefresh();
@@ -257,18 +267,19 @@ function doBindMasterButton() {
 function doBindExternalButton() {
     $(".external-button").on("click", event => {
         const buttonId = $(event.target).attr("id")!;
-        const code = _.parseInt(_.split(buttonId, "_")[1]);
-        const config = FastLoginLoader.loadFastLogin(code);
-        if (!config) return;
+        const index = _.parseInt(_.split(buttonId, "_")[1]);
+        const member = TeamMemberLoader.loadTeamMember(index);
+        if (!member) return;
 
         if (PageUtils.isColorBlue(buttonId)) {
-            config.external = false;
-            StorageUtils.set("_fl_" + code, JSON.stringify(config.asObject()));
-            MessageBoard.publishMessage("编制已经修改。");
+            member.external = false;
+            StorageUtils.set("_fl_" + index, JSON.stringify(member.asObject()));
+            MessageBoard.publishMessage("<b style='color:yellow'>" + member.name + "</b>被纳入编制内。");
         } else if (PageUtils.isColorGrey(buttonId)) {
-            config.external = true;
-            StorageUtils.set("_fl_" + code, JSON.stringify(config.asObject()));
-            MessageBoard.publishMessage("编制已经修改。");
+            member.external = true;
+            member.master = false;
+            StorageUtils.set("_fl_" + index, JSON.stringify(member.asObject()));
+            MessageBoard.publishMessage("<b style='color:yellow'>" + member.name + "</b>被踢出编制，如果有队长身份也同时被取消。");
         }
 
         doRefresh();

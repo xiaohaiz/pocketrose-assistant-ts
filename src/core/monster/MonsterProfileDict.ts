@@ -1,6 +1,6 @@
 import _ from "lodash";
-import MonsterProfile from "../../common/MonsterProfile";
 import StringUtils from "../../util/StringUtils";
+import MonsterProfile from "./MonsterProfile";
 import MonsterSpellDict from "./MonsterSpellDict";
 
 class MonsterProfileDict {

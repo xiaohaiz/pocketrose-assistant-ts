@@ -1,4 +1,4 @@
-import Spell from "../common/Spell";
+import Spell from "../core/role/Spell";
 import Credential from "../util/Credential";
 import MessageBoard from "../util/MessageBoard";
 import NetworkUtils from "../util/NetworkUtils";

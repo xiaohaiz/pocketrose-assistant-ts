@@ -1,5 +1,5 @@
 import _ from "lodash";
-import NpcLoader from "../../core/NpcLoader";
+import NpcLoader from "../../core/role/NpcLoader";
 import PalaceTaskManager from "../../core/task/PalaceTaskManager";
 import TownLoader from "../../core/town/TownLoader";
 import PersonalStatus from "../../pocketrose/PersonalStatus";

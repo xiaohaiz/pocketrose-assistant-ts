@@ -1,5 +1,5 @@
 import _ from "lodash";
-import Role from "../common/Role";
+import Role from "../core/role/Role";
 import Coordinate from "../util/Coordinate";
 import StringUtils from "../util/StringUtils";
 

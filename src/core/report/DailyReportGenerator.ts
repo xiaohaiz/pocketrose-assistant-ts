@@ -3,7 +3,7 @@ import BattleLog from "../battle/BattleLog";
 import TreasureLoader from "../equipment/TreasureLoader";
 import MonsterGangLoader from "../monster/MonsterGangLoader";
 import MonsterProfileDict from "../monster/MonsterProfileDict";
-import TeamManager from "../team/TeamManager";
+import TeamMemberLoader from "../team/TeamMemberLoader";
 import ReportUtils from "./ReportUtils";
 
 class DailyReportGenerator {
@@ -18,7 +18,7 @@ class DailyReportGenerator {
     }
 
     generate() {
-        const internalIds = TeamManager.loadInternalIds();
+        const internalIds = TeamMemberLoader.loadInternalIds();
         const candidates = this.#logList
             .filter(it => _.includes(internalIds, it.roleId))
             .filter(it =>
@@ -27,7 +27,7 @@ class DailyReportGenerator {
                 it.roleId === this.#target);
 
         const roles = new Map<string, RoleDailyReport>();
-        TeamManager.loadMembers()
+        TeamMemberLoader.loadTeamMembers()
             .filter(it => !it.external)
             .forEach(config => {
                 if (this.#target === undefined || this.#target === "") {

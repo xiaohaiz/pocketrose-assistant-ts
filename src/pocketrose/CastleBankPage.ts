@@ -1,5 +1,5 @@
-import BankAccount from "../common/BankAccount";
-import Role from "../common/Role";
+import BankAccount from "../core/bank/BankAccount";
+import Role from "../core/role/Role";
 
 class CastleBankPage {
 

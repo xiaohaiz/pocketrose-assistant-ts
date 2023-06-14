@@ -1,6 +1,6 @@
-import Equipment from "../common/Equipment";
-import Merchandise from "../common/Merchandise";
-import Role from "../common/Role";
+import Equipment from "../core/equipment/Equipment";
+import Role from "../core/role/Role";
+import Merchandise from "../core/store/Merchandise";
 import TownLoader from "../core/town/TownLoader";
 
 class TownItemHousePage {

@@ -1,6 +1,6 @@
 import _ from "lodash";
 import MonsterProfileDict from "../monster/MonsterProfileDict";
-import NpcLoader from "../NpcLoader";
+import NpcLoader from "../role/NpcLoader";
 import BattleLog from "./BattleLog";
 
 class BattleResult {

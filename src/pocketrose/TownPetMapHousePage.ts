@@ -1,5 +1,5 @@
-import PetMap from "../common/PetMap";
-import Role from "../common/Role";
+import PetMap from "../core/monster/PetMap";
+import Role from "../core/role/Role";
 
 class TownPetMapHousePage {
 

@@ -1,4 +1,4 @@
-import SetupLoader from "../../config/SetupLoader";
+import SetupLoader from "../../core/config/SetupLoader";
 import RoleStateMachineManager from "../../core/state/RoleStateMachineManager";
 import CountryPalacePageProcessor from "../../processor/internal/CountryPalacePageProcessor";
 import PageProcessor from "../../processor/PageProcessor";

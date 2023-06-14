@@ -1,4 +1,4 @@
-import EventHandler from "../../core/EventHandler";
+import EventHandler from "../../core/event/EventHandler";
 import Credential from "../../util/Credential";
 import StringUtils from "../../util/StringUtils";
 import PageProcessorContext from "../PageProcessorContext";

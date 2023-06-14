@@ -36,6 +36,19 @@ class TreasureLoader {
         const cn = _.parseInt(code);
         return cn === 42;
     }
+
+    static findTreasureName(code: string | null | undefined) {
+        if (!code || code === "") return null;
+        const cn = _.parseInt(code);
+        for (const key of Object.keys(TREASURES)) {
+            // @ts-ignore
+            const c = TREASURES[key];
+            if (c === cn) {
+                return key;
+            }
+        }
+        return null;
+    }
 }
 
 // ----------------------------------------------------------------------------

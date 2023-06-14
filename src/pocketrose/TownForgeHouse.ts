@@ -1,4 +1,4 @@
-import Role from "../common/Role";
+import Role from "../core/role/Role";
 import Credential from "../util/Credential";
 import NetworkUtils from "../util/NetworkUtils";
 import StringUtils from "../util/StringUtils";

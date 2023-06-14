@@ -1,4 +1,4 @@
-import Castle from "../common/Castle";
+import Castle from "../core/castle/Castle";
 
 class CastleInformationPage {
 

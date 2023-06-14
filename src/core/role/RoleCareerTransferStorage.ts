@@ -1,4 +1,4 @@
-import PocketDatabase from "../PocketDatabase";
+import PocketDatabase from "../../util/PocketDatabase";
 import RoleCareerTransfer from "./RoleCareerTransfer";
 
 class RoleCareerTransferStorage {

@@ -1,4 +1,4 @@
-import NpcLoader from "../../core/NpcLoader";
+import NpcLoader from "../../core/role/NpcLoader";
 import TownLoader from "../../core/town/TownLoader";
 import Credential from "../../util/Credential";
 import MessageBoard from "../../util/MessageBoard";

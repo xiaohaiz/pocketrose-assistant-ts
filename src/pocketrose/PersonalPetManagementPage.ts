@@ -1,4 +1,4 @@
-import Pet from "../common/Pet";
+import Pet from "../core/monster/Pet";
 
 class PersonalPetManagementPage {
 

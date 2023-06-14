@@ -1,4 +1,4 @@
-import TeamManager from "../../core/team/TeamManager";
+import TeamMemberLoader from "../../core/team/TeamMemberLoader";
 import LoginDashboardPageProcessor from "../../processor/internal/LoginDashboardPageProcessor";
 import PageProcessor from "../../processor/PageProcessor";
 import PageInterceptor from "../PageInterceptor";
@@ -15,7 +15,7 @@ class LoginDashboardPageInterceptor implements PageInterceptor {
     }
 
     intercept(): void {
-        if (TeamManager.loadMembers().length > 0) {
+        if (TeamMemberLoader.loadTeamMembers().length > 0) {
             this.#processor.process();
         }
     }

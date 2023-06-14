@@ -1,14 +1,15 @@
 import BattleLogService from "../../core/battle/BattleLogService";
 import BattleStorageManager from "../../core/battle/BattleStorageManager";
-import NpcLoader from "../../core/NpcLoader";
 import BattleReportGenerator from "../../core/report/BattleReportGenerator";
 import DailyReportGenerator from "../../core/report/DailyReportGenerator";
 import MonsterReportGenerator from "../../core/report/MonsterReportGenerator";
 import MonthlyReportGenerator from "../../core/report/MonthlyReportGenerator";
 import RoleCareerTransferReportGenerator from "../../core/report/RoleCareerTransferReportGenerator";
+import TreasureReportGenerator from "../../core/report/TreasureReportGenerator";
 import WeeklyReportGenerator from "../../core/report/WeeklyReportGenerator";
 import ZodiacReportGenerator from "../../core/report/ZodiacReportGenerator";
-import TeamManager from "../../core/team/TeamManager";
+import NpcLoader from "../../core/role/NpcLoader";
+import TeamMemberLoader from "../../core/team/TeamMemberLoader";
 import Credential from "../../util/Credential";
 import DayRange from "../../util/DayRange";
 import MessageBoard from "../../util/MessageBoard";
@@ -88,7 +89,9 @@ abstract class PersonalStatisticsPageProcessor extends PageProcessorCredentialSu
         html += "<td>";
         html += "<button role='button' id='report-4' style='width:100%'>转职统计报告</button>";
         html += "</td>";
-        html += "<td></td>";
+        html += "<td>";
+        html += "<button role='button' id='report-5' style='width:100%'>上洞入手报告</button>";
+        html += "</td>";
         html += "<td></td>";
         html += "</tr>";
         html += "<tr>";
@@ -115,7 +118,7 @@ abstract class PersonalStatisticsPageProcessor extends PageProcessorCredentialSu
         html += "</table>";
         html += "</td>";
         html += "<tr>";
-        if (TeamManager.isMaster(credential.id)) {
+        if (TeamMemberLoader.isMaster(credential.id)) {
             html += "<tr>";
             html += "<th style='background-color:red;color:white'>队 长 专 属 数 据 维 护 任 务</th>";
             html += "<tr>";
@@ -175,7 +178,7 @@ abstract class PersonalStatisticsPageProcessor extends PageProcessorCredentialSu
         html = "";
         html += "<select id='teamMemberSelect'>";
         html += "<option value=''>全团队</option>";
-        TeamManager.loadMembers()
+        TeamMemberLoader.loadTeamMembers()
             .filter(it => !it.external)
             .forEach(config => {
                 html += "<option value='" + config.id + "'>" + config.name + "</option>";
@@ -189,6 +192,7 @@ abstract class PersonalStatisticsPageProcessor extends PageProcessorCredentialSu
         doBindReport2();
         doBindReport3();
         doBindReport4();
+        doBindReport5();
         doBindLog1();
         doBindLog2();
         doBindLog3();
@@ -196,7 +200,7 @@ abstract class PersonalStatisticsPageProcessor extends PageProcessorCredentialSu
         doBindLog5();
         doBindLog6();
 
-        if (TeamManager.isMaster(credential.id)) {
+        if (TeamMemberLoader.isMaster(credential.id)) {
             doBindClearBattleLog();
             doBindExportBattleLog();
             doBindImportBattleLog();
@@ -251,6 +255,17 @@ function doBindReport4() {
     $("#report-4").on("click", () => {
         const target = $("#teamMemberSelect").val()! as string;
         new RoleCareerTransferReportGenerator(target).generate();
+    });
+}
+
+function doBindReport5() {
+    $("#report-5").on("click", () => {
+        const target = $("#teamMemberSelect").val()! as string;
+        BattleStorageManager.battleResultStorage
+            .loads()
+            .then(dataList => {
+                new TreasureReportGenerator(dataList, target).generate();
+            })
     });
 }
 

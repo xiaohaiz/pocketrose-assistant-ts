@@ -1,4 +1,4 @@
-import NpcLoader from "../../core/NpcLoader";
+import NpcLoader from "../../core/role/NpcLoader";
 import TownAccessoryHouse from "../../pocketrose/TownAccessoryHouse";
 import TownBank from "../../pocketrose/TownBank";
 import TownItemHouse from "../../pocketrose/TownItemHouse";

@@ -1,5 +1,5 @@
 import _ from "lodash";
-import MonsterProfile from "../../common/MonsterProfile";
+import MonsterProfile from "./MonsterProfile";
 
 class MonsterRelationLoader {
 

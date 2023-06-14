@@ -1,4 +1,4 @@
-import Role from "../common/Role";
+import Role from "../core/role/Role";
 
 class PersonalStatusPage {
 
