@@ -1,6 +1,6 @@
-import Constants from "../util/Constants";
-import RandomUtils from "../util/RandomUtils";
-import StringUtils from "../util/StringUtils";
+import Constants from "../../util/Constants";
+import RandomUtils from "../../util/RandomUtils";
+import StringUtils from "../../util/StringUtils";
 
 class NpcLoader {
 

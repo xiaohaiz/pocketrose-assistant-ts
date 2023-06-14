@@ -1,8 +1,8 @@
-import Town from "../common/Town";
-import Coordinate from "../util/Coordinate";
-import PageUtils from "../util/PageUtils";
-import StringUtils from "../util/StringUtils";
-import TownLoader from "./town/TownLoader";
+import Town from "../../common/Town";
+import Coordinate from "../../util/Coordinate";
+import PageUtils from "../../util/PageUtils";
+import StringUtils from "../../util/StringUtils";
+import TownLoader from "../town/TownLoader";
 
 class EventHandler {
 

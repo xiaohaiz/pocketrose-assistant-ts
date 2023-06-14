@@ -1,4 +1,4 @@
-import PocketDatabase from "../PocketDatabase";
+import PocketDatabase from "../../util/PocketDatabase";
 import RoleState from "./RoleState";
 
 class RoleStateStorage {

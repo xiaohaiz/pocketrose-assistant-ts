@@ -1,6 +1,6 @@
 import Equipment from "../../common/Equipment";
 import Town from "../../common/Town";
-import NpcLoader from "../../core/NpcLoader";
+import NpcLoader from "../../core/role/NpcLoader";
 import TownLoader from "../../core/town/TownLoader";
 import PersonalEquipmentManagement from "../../pocketrose/PersonalEquipmentManagement";
 import TownBank from "../../pocketrose/TownBank";

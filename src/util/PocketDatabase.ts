@@ -1,4 +1,4 @@
-import Constants from "../util/Constants";
+import Constants from "./Constants";
 
 class PocketDatabase {
 

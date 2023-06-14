@@ -4,8 +4,8 @@ import BattleFieldConfigLoader from "../../config/BattleFieldConfigLoader";
 import SetupLoader from "../../config/SetupLoader";
 import Credential from "../../util/Credential";
 import StringUtils from "../../util/StringUtils";
-import EventHandler from "../EventHandler";
-import RankTitleLoader from "../RankTitleLoader";
+import EventHandler from "../event/EventHandler";
+import RankTitleLoader from "../role/RankTitleLoader";
 import TownLoader from "../town/TownLoader";
 import TownDashboardPage from "./TownDashboardPage";
 

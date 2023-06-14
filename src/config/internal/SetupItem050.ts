@@ -1,4 +1,4 @@
-import ExtensionShortcutLoader from "../../core/ExtensionShortcutLoader";
+import ExtensionShortcutLoader from "../../core/dashboard/ExtensionShortcutLoader";
 import MessageBoard from "../../util/MessageBoard";
 import StorageUtils from "../../util/StorageUtils";
 import SetupItem from "../SetupItem";

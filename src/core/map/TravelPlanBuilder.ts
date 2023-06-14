@@ -1,8 +1,8 @@
-import TravelPlan from "../common/TravelPlan";
-import Coordinate from "../util/Coordinate";
-import MessageBoard from "../util/MessageBoard";
-import StringUtils from "../util/StringUtils";
-import TownLoader from "./town/TownLoader";
+import TravelPlan from "../../common/TravelPlan";
+import Coordinate from "../../util/Coordinate";
+import MessageBoard from "../../util/MessageBoard";
+import StringUtils from "../../util/StringUtils";
+import TownLoader from "../town/TownLoader";
 
 class TravelPlanBuilder {
 

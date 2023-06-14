@@ -1,6 +1,5 @@
 import BattleLogService from "../../core/battle/BattleLogService";
 import BattleStorageManager from "../../core/battle/BattleStorageManager";
-import NpcLoader from "../../core/NpcLoader";
 import BattleReportGenerator from "../../core/report/BattleReportGenerator";
 import DailyReportGenerator from "../../core/report/DailyReportGenerator";
 import MonsterReportGenerator from "../../core/report/MonsterReportGenerator";
@@ -8,6 +7,7 @@ import MonthlyReportGenerator from "../../core/report/MonthlyReportGenerator";
 import RoleCareerTransferReportGenerator from "../../core/report/RoleCareerTransferReportGenerator";
 import WeeklyReportGenerator from "../../core/report/WeeklyReportGenerator";
 import ZodiacReportGenerator from "../../core/report/ZodiacReportGenerator";
+import NpcLoader from "../../core/role/NpcLoader";
 import TeamManager from "../../core/team/TeamManager";
 import Credential from "../../util/Credential";
 import DayRange from "../../util/DayRange";

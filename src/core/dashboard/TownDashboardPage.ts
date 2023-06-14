@@ -1,7 +1,7 @@
 import Role from "../../common/Role";
 import SetupLoader from "../../config/SetupLoader";
 import PageUtils from "../../util/PageUtils";
-import RankTitleLoader from "../RankTitleLoader";
+import RankTitleLoader from "../role/RankTitleLoader";
 
 class TownDashboardPage {
 

@@ -3,7 +3,7 @@ import SetupLoader from "../../config/SetupLoader";
 import BattlePage from "../../core/battle/BattlePage";
 import BattleProcessor from "../../core/battle/BattleProcessor";
 import BattleReturnInterceptor from "../../core/battle/BattleReturnInterceptor";
-import NpcLoader from "../../core/NpcLoader";
+import NpcLoader from "../../core/role/NpcLoader";
 import TownDashboardLayoutManager from "../../dashboard/TownDashboardLayoutManager";
 import CommentBoard from "../../util/CommentBoard";
 import Credential from "../../util/Credential";

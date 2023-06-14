@@ -1,6 +1,6 @@
 import Credential from "../../util/Credential";
-import EquipmentLocalStorage from "../EquipmentLocalStorage";
-import PetLocalStorage from "../PetLocalStorage";
+import EquipmentLocalStorage from "../equipment/EquipmentLocalStorage";
+import PetLocalStorage from "../monster/PetLocalStorage";
 
 class BattleReturnInterceptor {
 
