@@ -1,0 +1,5 @@
+class BankSavingStorage {
+
+}
+
+export = BankSavingStorage;
