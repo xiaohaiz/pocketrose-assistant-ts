@@ -178,18 +178,6 @@ class SetupLoader {
         return StorageUtils.getBoolean("_pa_038");
     }
 
-    static isAutoPetMapStorageEnabled() {
-        return StorageUtils.getBoolean("_pa_039");
-    }
-
-    static isAutoPetStatusStorageEnabled() {
-        return StorageUtils.getBoolean("_pa_046");
-    }
-
-    static isAutoEquipmentStatusStorageEnabled() {
-        return StorageUtils.getBoolean("_pa_047");
-    }
-
     static getTownDashboardShortcutButton(): number {
         return StorageUtils.getInt("_pa_041", -1);
     }

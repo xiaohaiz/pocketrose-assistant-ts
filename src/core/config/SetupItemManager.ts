@@ -23,15 +23,12 @@ import SetupItem035 from "./internal/SetupItem035";
 import SetupItem036 from "./internal/SetupItem036";
 import SetupItem037 from "./internal/SetupItem037";
 import SetupItem038 from "./internal/SetupItem038";
-import SetupItem039 from "./internal/SetupItem039";
 import SetupItem040 from "./internal/SetupItem040";
 import SetupItem041 from "./internal/SetupItem041";
 import SetupItem042 from "./internal/SetupItem042";
 import SetupItem043 from "./internal/SetupItem043";
 import SetupItem044 from "./internal/SetupItem044";
 import SetupItem045 from "./internal/SetupItem045";
-import SetupItem046 from "./internal/SetupItem046";
-import SetupItem047 from "./internal/SetupItem047";
 import SetupItem048 from "./internal/SetupItem048";
 import SetupItem049 from "./internal/SetupItem049";
 import SetupItem050 from "./internal/SetupItem050";
@@ -73,9 +70,6 @@ class SetupItemManager {
             new SetupItem036(),
             new SetupItem037(),
             new SetupItem038(),
-            new SetupItem039(),
-            new SetupItem046(),
-            new SetupItem047(),
             new SetupItem041(),
             new SetupItem054(),
             new SetupItem050(),

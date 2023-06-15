@@ -7,6 +7,7 @@ import BattleRecord from "../battle/BattleRecord";
 import BattleReturnInterceptor from "../battle/BattleReturnInterceptor";
 import BattleStorageManager from "../battle/BattleStorageManager";
 import SetupLoader from "../config/SetupLoader";
+import TownForge from "../forge/TownForge";
 import TownInn from "../inn/TownInn";
 import PalaceTaskManager from "../task/PalaceTaskManager";
 import TownDashboardTaxManager from "../town/TownDashboardTaxManager";
@@ -125,7 +126,7 @@ class TownDashboardLayout007 extends TownDashboardLayout {
             $("#battlePanel").html(lastBattle);
         });
 
-        const ksm = new KeyboardShortcutManager(credential);
+        const ksm = new KeyboardShortcutManager(credential, page);
         if (page.battleLevelShortcut) {
             // 只设置了一处战斗场所偏好
             ksm.bind();
@@ -274,7 +275,7 @@ class TownDashboardLayout007 extends TownDashboardLayout {
                         new BattleReturnInterceptor(credential, currentBattleCount)
                             .doBeforeReturn()
                             .then(() => {
-                                new TownInn(credential).recovery().then(m => {
+                                new TownForge(credential).repairAll().then(m => {
                                     doProcessBattleReturn(credential, m, processor.obtainPage.additionalRP, processor.obtainPage.harvestList);
                                 });
                             });
@@ -284,12 +285,9 @@ class TownDashboardLayout007 extends TownDashboardLayout {
                         new BattleReturnInterceptor(credential, currentBattleCount)
                             .doBeforeReturn()
                             .then(() => {
-                                const request = credential.asRequestMap();
-                                request.set("mode", "RECOVERY");
-                                NetworkUtils.post("town.cgi", request)
-                                    .then(mainPage => {
-                                        doProcessBattleReturn(credential, mainPage, processor.obtainPage.additionalRP, processor.obtainPage.harvestList);
-                                    });
+                                new TownInn(credential).recovery().then(m => {
+                                    doProcessBattleReturn(credential, m, processor.obtainPage.additionalRP, processor.obtainPage.harvestList);
+                                });
                             });
                     });
 
@@ -403,7 +401,7 @@ function doProcessBattleReturn(credential: Credential,
             });
     }
 
-    const ksm = new KeyboardShortcutManager(credential);
+    const ksm = new KeyboardShortcutManager(credential, page);
     if (page.battleLevelShortcut) {
         ksm.bind();
     }
