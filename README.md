@@ -1,5 +1,7 @@
 # pocketrose-assistant-ts
 
+### 版本 4.2.2-SNAPSHOT
+
 ### 版本 4.2.1
 
 1. 数据库中记录银行资产的记录（日记录）。
