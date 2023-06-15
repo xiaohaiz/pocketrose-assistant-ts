@@ -95,6 +95,24 @@ class ZodiacReportGenerator {
         html += "</td></tr>";
 
         // --------------------------------------------------------------------
+        // 十 二 宫 胜 率 对 比
+        // --------------------------------------------------------------------
+        html += "<tr><td>";
+        html += "<table style='background-color:#888888;text-align:center;margin:auto;width:100%'>";
+        html += "<thead>";
+        html += "<tr>";
+        html += "<th style='background-color:navy;color:greenyellow'>十 二 宫 胜 率 对 比</th>"
+        html += "</tr>";
+        html += "</thead>";
+        html += "<tbody>";
+        html += "<tr>";
+        html += "<td id='zodiacWinRatioDistribution' style='height:320px;background-color:#F8F0E0'></td>"
+        html += "</tr>";
+        html += "</tbody>";
+        html += "</table>";
+        html += "</td></tr>";
+
+        // --------------------------------------------------------------------
         // 十 二 宫 战 斗 统 计
         // --------------------------------------------------------------------
         html += "<tr><td>";
@@ -151,6 +169,7 @@ class ZodiacReportGenerator {
         $("#statistics").html(html).parent().show();
 
         generateBattleCountDistribution(warriors);
+        generateWinRatioDistribution(warriors);
     }
 }
 
@@ -161,6 +180,9 @@ function generateBattleCountDistribution(reports: Map<string, ZodiacWarrior>) {
         values.push(report.battleCount);
     })
     const option: EChartsOption = {
+        tooltip: {
+            show: true
+        },
         xAxis: {
             type: 'category',
             data: NpcLoader.getZodiacNpcNames(),
@@ -180,6 +202,52 @@ function generateBattleCountDistribution(reports: Map<string, ZodiacWarrior>) {
         ]
     };
     const element = document.getElementById("zodiacBattleCountDistribution");
+    if (element) {
+        const chart = echarts.init(element);
+        chart.setOption(option);
+    }
+}
+
+function generateWinRatioDistribution(reports: Map<string, ZodiacWarrior>) {
+    const values: number[] = [];
+    NpcLoader.getZodiacNpcNames().forEach(it => {
+        const report = reports.get(it)!;
+        let r = report.winCount / report.battleCount;
+        r *= 100;
+        let s = r.toFixed(2);
+        values.push(parseFloat(s));
+    })
+
+    const formatter = function (value: number) {
+        return value + "%";
+    };
+
+    const option: EChartsOption = {
+        tooltip: {
+            show: true
+        },
+        xAxis: {
+            type: 'category',
+            data: NpcLoader.getZodiacNpcNames(),
+            axisLabel: {
+                interval: 0,
+                rotate: 40
+            }
+        },
+        yAxis: {
+            type: 'value',
+            axisLabel: {
+                formatter: (value: number) => value + "%"
+            }
+        },
+        series: [
+            {
+                data: values,
+                type: 'bar'
+            }
+        ]
+    };
+    const element = document.getElementById("zodiacWinRatioDistribution");
     if (element) {
         const chart = echarts.init(element);
         chart.setOption(option);
