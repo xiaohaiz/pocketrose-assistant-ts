@@ -1,3 +1,5 @@
+import * as echarts from "echarts";
+import {EChartsOption} from "echarts";
 import SetupLoader from "../../core/config/SetupLoader";
 import Role from "../../core/role/Role";
 import PersonalStatus from "../../pocketrose/PersonalStatus";
@@ -36,6 +38,18 @@ abstract class PersonalStatusPageProcessor extends PageProcessorCredentialSuppor
         this.doBindReturnButton();
 
         this.doPostRenderPage(credential, page, context);
+
+        $("#t0")
+            .find("> tbody:first")
+            .find("> tr:eq(1)")
+            .find("> td:first")
+            .find("> table:first")
+            .find("> tbody:first")
+            .find("> tr:eq(8)")
+            .html("<td id='roleDimension' " +
+                "style='background-color:#EFE0C0;text-align:center;height:300px' " +
+                "colspan='4'></td>");
+        _generateRoleDimension(page);
     }
 
     abstract doGenerateHiddenForm(credential: Credential, containerId: string): void;
@@ -119,6 +133,45 @@ abstract class PersonalStatusPageProcessor extends PageProcessorCredentialSuppor
         $(td).html(html);
     }
 
+}
+
+function _generateRoleDimension(page: PersonalStatusPage) {
+    const role = page.role!;
+    const option: EChartsOption = {
+        tooltip: {
+            show: true
+        },
+        radar: {
+            // shape: 'circle',
+            indicator: [
+                {name: 'ＨＰ', max: 1999},
+                {name: 'ＭＰ', max: 1999},
+                {name: '攻击', max: 375},
+                {name: '防御', max: 375},
+                {name: '智力', max: 375},
+                {name: '精神', max: 375},
+                {name: '速度', max: 375}
+            ]
+        },
+        series: [
+            {
+                name: 'Role Dimension',
+                type: 'radar',
+                data: [
+                    {
+                        value: [role.maxHealth!, role.maxMana!, role.attack!, role.defense!,
+                            role.specialAttack!, role.specialDefense!, role.speed!],
+                        name: role.name
+                    }
+                ]
+            }
+        ]
+    };
+    const element = document.getElementById("roleDimension");
+    if (element) {
+        const chart = echarts.init(element);
+        chart.setOption(option);
+    }
 }
 
 export = PersonalStatusPageProcessor;
