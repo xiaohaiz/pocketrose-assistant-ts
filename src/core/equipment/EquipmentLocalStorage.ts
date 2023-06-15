@@ -7,7 +7,6 @@ import TreasureBag from "../../pocketrose/TreasureBag";
 import CommentBoard from "../../util/CommentBoard";
 import Credential from "../../util/Credential";
 import Castle from "../castle/Castle";
-import SetupLoader from "../config/SetupLoader";
 import RoleStorageManager from "../role/RoleStorageManager";
 import Equipment from "./Equipment";
 
@@ -23,7 +22,7 @@ class EquipmentLocalStorage {
         return await (() => {
             return new Promise<void>(resolve => {
                 // 自动保存启用时，战数尾数为97时，触发装备保存
-                const doStorage = (battleCount % 100 === 97 && SetupLoader.isAutoEquipmentStatusStorageEnabled());
+                const doStorage = (battleCount % 100 === 97);
                 if (doStorage) {
                     CommentBoard.writeMessage("<br>开始更新装备状态......");
                     this.updateEquipmentStatus().then(() => resolve());

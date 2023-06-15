@@ -178,10 +178,6 @@ class SetupLoader {
         return StorageUtils.getBoolean("_pa_038");
     }
 
-    static isAutoEquipmentStatusStorageEnabled() {
-        return StorageUtils.getBoolean("_pa_047");
-    }
-
     static getTownDashboardShortcutButton(): number {
         return StorageUtils.getInt("_pa_041", -1);
     }

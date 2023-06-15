@@ -29,7 +29,6 @@ import SetupItem042 from "./internal/SetupItem042";
 import SetupItem043 from "./internal/SetupItem043";
 import SetupItem044 from "./internal/SetupItem044";
 import SetupItem045 from "./internal/SetupItem045";
-import SetupItem047 from "./internal/SetupItem047";
 import SetupItem048 from "./internal/SetupItem048";
 import SetupItem049 from "./internal/SetupItem049";
 import SetupItem050 from "./internal/SetupItem050";
@@ -71,7 +70,6 @@ class SetupItemManager {
             new SetupItem036(),
             new SetupItem037(),
             new SetupItem038(),
-            new SetupItem047(),
             new SetupItem041(),
             new SetupItem054(),
             new SetupItem050(),
