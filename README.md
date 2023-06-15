@@ -1,5 +1,7 @@
 # pocketrose-assistant-ts
 
+### 版本 4.2.1-SNAPSHOT
+
 ### 版本 4.2.0
 
 1. 添加echarts的引用。
