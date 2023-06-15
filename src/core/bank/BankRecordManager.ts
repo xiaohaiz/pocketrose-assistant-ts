@@ -13,6 +13,20 @@ class BankRecordManager {
         this.#credential = credential;
     }
 
+    async triggerUpdateBankRecord(battleCount: number): Promise<void> {
+        return await (() => {
+            return new Promise<void>(resolve => {
+                // 战数尾数为79时，触发资产更新
+                const doUpdate = (battleCount % 100 === 79);
+                if (doUpdate) {
+                    this.updateBankRecord().then(() => resolve());
+                } else {
+                    resolve();
+                }
+            });
+        })();
+    }
+
     async updateBankRecord(): Promise<void> {
         return await (() => {
             return new Promise<void>(resolve => {
