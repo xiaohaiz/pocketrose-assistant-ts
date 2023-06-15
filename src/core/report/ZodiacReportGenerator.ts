@@ -218,10 +218,6 @@ function generateWinRatioDistribution(reports: Map<string, ZodiacWarrior>) {
         values.push(parseFloat(s));
     })
 
-    const formatter = function (value: number) {
-        return value + "%";
-    };
-
     const option: EChartsOption = {
         tooltip: {
             show: true
