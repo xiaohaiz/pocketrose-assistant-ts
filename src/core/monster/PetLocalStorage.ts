@@ -8,7 +8,6 @@ import TownPetMapHouse from "../../pocketrose/TownPetMapHouse";
 import CommentBoard from "../../util/CommentBoard";
 import Credential from "../../util/Credential";
 import Castle from "../castle/Castle";
-import SetupLoader from "../config/SetupLoader";
 import Equipment from "../equipment/Equipment";
 import RoleStorageManager from "../role/RoleStorageManager";
 import Pet from "./Pet";
@@ -40,7 +39,7 @@ class PetLocalStorage {
         return await (() => {
             return new Promise<void>(resolve => {
                 // 自动保存启用时，战数尾数为89时，触发宠物保存
-                const doStorage = (battleCount % 100 === 89 && SetupLoader.isAutoPetStatusStorageEnabled());
+                const doStorage = (battleCount % 100 === 89);
                 if (doStorage) {
                     CommentBoard.writeMessage("<br>开始更新宠物状态......");
                     this.updatePetStatus().then(() => resolve());

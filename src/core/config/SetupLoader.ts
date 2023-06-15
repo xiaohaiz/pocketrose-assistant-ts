@@ -178,10 +178,6 @@ class SetupLoader {
         return StorageUtils.getBoolean("_pa_038");
     }
 
-    static isAutoPetStatusStorageEnabled() {
-        return StorageUtils.getBoolean("_pa_046");
-    }
-
     static isAutoEquipmentStatusStorageEnabled() {
         return StorageUtils.getBoolean("_pa_047");
     }
