@@ -124,6 +124,21 @@ class PocketDatabase {
                         keyPath: "id", autoIncrement: false
                     });
                 }
+
+                // ------------------------------------------------------------
+                // BankRecord
+                // ------------------------------------------------------------
+                if (!db.objectStoreNames.contains("BankRecord")) {
+                    const store = db.createObjectStore("BankRecord", {
+                        keyPath: "id", autoIncrement: false
+                    });
+                    store.createIndex("recordDate", "recordDate", {
+                        unique: false
+                    });
+                    store.createIndex("roleId", "roleId", {
+                        unique: false
+                    });
+                }
             };
         });
     };

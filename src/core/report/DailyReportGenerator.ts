@@ -1,10 +1,10 @@
 import _ from "lodash";
+import ReportUtils from "../../util/ReportUtils";
 import BattleLog from "../battle/BattleLog";
 import TreasureLoader from "../equipment/TreasureLoader";
 import MonsterGangLoader from "../monster/MonsterGangLoader";
 import MonsterProfileDict from "../monster/MonsterProfileDict";
 import TeamMemberLoader from "../team/TeamMemberLoader";
-import ReportUtils from "./ReportUtils";
 
 class DailyReportGenerator {
 

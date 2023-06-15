@@ -245,8 +245,7 @@ function doBindReport3() {
         BattleStorageManager.battleResultStorage
             .loads()
             .then(dataList => {
-                const html = new ZodiacReportGenerator(dataList, target).generate();
-                $("#statistics").html(html).parent().show();
+                new ZodiacReportGenerator(dataList, target).generate();
             });
     });
 }

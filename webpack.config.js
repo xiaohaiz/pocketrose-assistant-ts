@@ -3,7 +3,7 @@ const path = require('path');
 const webpack = require('webpack');
 
 const now = new Date();
-const buildVersion = '4.1.9-SNAPSHOT'
+const buildVersion = '4.2.3-SNAPSHOT'
 const buildDate = `${now.toLocaleString()}`;
 
 // noinspection JSUnresolvedReference
@@ -47,6 +47,7 @@ module.exports = {
                 "// @match        *://pocketrose.itsns.net.cn/*\n" +
                 "// @require      https://cdn.bootcdn.net/ajax/libs/jquery/3.6.4/jquery.min.js\n" +
                 "// @require      https://cdn.bootcdn.net/ajax/libs/lodash.js/4.17.21/lodash.min.js\n" +
+                "// @require      https://cdn.bootcdn.net/ajax/libs/echarts/5.4.2/echarts.min.js\n" +
                 "// @run-at       document-start\n" +
                 "// @unwrap\n" +
                 "// ==/UserScript==\n",
@@ -66,6 +67,7 @@ module.exports = {
         extensions: ['.ts', '.js']
     },
     externals: {
-        lodash: '_'
+        lodash: '_',
+        echarts: 'echarts'
     }
 };

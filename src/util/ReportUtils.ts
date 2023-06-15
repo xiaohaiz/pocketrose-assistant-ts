@@ -1,5 +1,5 @@
 import _ from "lodash";
-import Constants from "../../util/Constants";
+import Constants from "./Constants";
 
 class ReportUtils {
 

@@ -1,9 +1,9 @@
 import _ from "lodash";
+import ReportUtils from "../../util/ReportUtils";
 import BattleResult from "../battle/BattleResult";
 import TreasureLoader from "../equipment/TreasureLoader";
 import MonsterProfileDict from "../monster/MonsterProfileDict";
 import TeamMemberLoader from "../team/TeamMemberLoader";
-import ReportUtils from "./ReportUtils";
 
 class TreasureReportGenerator {
 
