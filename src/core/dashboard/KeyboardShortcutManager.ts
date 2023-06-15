@@ -1,22 +1,23 @@
 import Credential from "../../util/Credential";
+import TownDashboardPage from "./TownDashboardPage";
 
 class KeyboardShortcutManager {
 
     readonly #credential: Credential;
-    readonly #extension?: string;
+    readonly #page?: TownDashboardPage;
 
-    constructor(credential: Credential, extension?: string) {
+    constructor(credential: Credential, page?: TownDashboardPage) {
         this.#credential = credential;
-        this.#extension = extension;
+        this.#page = page;
     }
 
     bind() {
-        doBind(this.#credential, this.#extension);
+        doBind(this.#credential, this.#page);
     }
 
 }
 
-function doBind(credential: Credential, extension?: string) {
+function doBind(credential: Credential, page?: TownDashboardPage) {
     let formBattle = $("form[action='battle.cgi']");
     let selectBattle = formBattle.find('select[name="level"]');
     let optionIdx = 0;

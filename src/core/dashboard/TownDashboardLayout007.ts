@@ -125,7 +125,7 @@ class TownDashboardLayout007 extends TownDashboardLayout {
             $("#battlePanel").html(lastBattle);
         });
 
-        const ksm = new KeyboardShortcutManager(credential);
+        const ksm = new KeyboardShortcutManager(credential, page);
         if (page.battleLevelShortcut) {
             // 只设置了一处战斗场所偏好
             ksm.bind();
@@ -404,7 +404,7 @@ function doProcessBattleReturn(credential: Credential,
             });
     }
 
-    const ksm = new KeyboardShortcutManager(credential);
+    const ksm = new KeyboardShortcutManager(credential, page);
     if (page.battleLevelShortcut) {
         ksm.bind();
     }
