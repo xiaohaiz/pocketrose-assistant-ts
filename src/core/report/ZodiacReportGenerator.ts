@@ -1,3 +1,5 @@
+import * as echarts from "echarts";
+import {EChartsOption} from "echarts";
 import _ from "lodash";
 import Constants from "../../util/Constants";
 import ReportUtils from "../../util/ReportUtils";
@@ -71,7 +73,32 @@ class ZodiacReportGenerator {
             });
 
         let html = "";
-        html += "<table style='background-color:#888888;text-align:center;margin:auto'>";
+        html += "<table style='background-color:transparent;border-width:0;border-spacing:0;margin:auto'>";
+        html += "<tbody>";
+
+        // --------------------------------------------------------------------
+        // 十 二 宫 战 数 分 布
+        // --------------------------------------------------------------------
+        html += "<tr><td>";
+        html += "<table style='background-color:#888888;text-align:center;margin:auto;width:100%'>";
+        html += "<thead>";
+        html += "<tr>";
+        html += "<th style='background-color:navy;color:greenyellow'>十 二 宫 战 数 分 布</th>"
+        html += "</tr>";
+        html += "</thead>";
+        html += "<tbody>";
+        html += "<tr>";
+        html += "<td id='zodiacBattleCountDistribution' style='height:320px;background-color:#F8F0E0'></td>"
+        html += "</tr>";
+        html += "</tbody>";
+        html += "</table>";
+        html += "</td></tr>";
+
+        // --------------------------------------------------------------------
+        // 十 二 宫 战 斗 统 计
+        // --------------------------------------------------------------------
+        html += "<tr><td>";
+        html += "<table style='background-color:#888888;text-align:center;margin:auto;width:100%'>";
         html += "<tbody>";
         html += "<tr>";
         html += "<th style='background-color:skyblue' colspan='2'>圣斗士</th>"
@@ -114,12 +141,48 @@ class ZodiacReportGenerator {
             html += "<td style='background-color:#F8F0E0'>" + ReportUtils.percentage(warrior.gemCount, totalGemCount) + "</td>"
             html += "</tr>";
         });
-
+        html += "</tbody>";
+        html += "</table>";
+        html += "</td></tr>";
 
         html += "</tbody>";
         html += "</table>";
 
-        return html;
+        $("#statistics").html(html).parent().show();
+
+        generateBattleCountDistribution(warriors);
+    }
+}
+
+function generateBattleCountDistribution(reports: Map<string, ZodiacWarrior>) {
+    const values: number[] = [];
+    NpcLoader.getZodiacNpcNames().forEach(it => {
+        const report = reports.get(it)!;
+        values.push(report.battleCount);
+    })
+    const option: EChartsOption = {
+        xAxis: {
+            type: 'category',
+            data: NpcLoader.getZodiacNpcNames(),
+            axisLabel: {
+                interval: 0,
+                rotate: 40
+            }
+        },
+        yAxis: {
+            type: 'value'
+        },
+        series: [
+            {
+                data: values,
+                type: 'bar'
+            }
+        ]
+    };
+    const element = document.getElementById("zodiacBattleCountDistribution");
+    if (element) {
+        const chart = echarts.init(element);
+        chart.setOption(option);
     }
 }
 
