@@ -7,6 +7,7 @@ import BattleRecord from "../battle/BattleRecord";
 import BattleReturnInterceptor from "../battle/BattleReturnInterceptor";
 import BattleStorageManager from "../battle/BattleStorageManager";
 import SetupLoader from "../config/SetupLoader";
+import TownInn from "../inn/TownInn";
 import PalaceTaskManager from "../task/PalaceTaskManager";
 import TownDashboardTaxManager from "../town/TownDashboardTaxManager";
 import DashboardPageUtils from "./DashboardPageUtils";
@@ -258,7 +259,13 @@ class TownDashboardLayout007 extends TownDashboardLayout {
                                 request.set("mode", "BANK_SELL");
                                 NetworkUtils.post("town.cgi", request)
                                     .then(mainPage => {
-                                        doProcessBattleReturn(credential, mainPage, processor.obtainPage.additionalRP, processor.obtainPage.harvestList);
+                                        if (processor.obtainPage.zodiacBattle) {
+                                            new TownInn(credential).recovery().then(m => {
+                                                doProcessBattleReturn(credential, m, processor.obtainPage.additionalRP, processor.obtainPage.harvestList);
+                                            });
+                                        } else {
+                                            doProcessBattleReturn(credential, mainPage, processor.obtainPage.additionalRP, processor.obtainPage.harvestList);
+                                        }
                                     });
                             });
                     });
@@ -267,13 +274,9 @@ class TownDashboardLayout007 extends TownDashboardLayout {
                         new BattleReturnInterceptor(credential, currentBattleCount)
                             .doBeforeReturn()
                             .then(() => {
-                                const request = credential.asRequestMap();
-                                request.set("arm_mode", "all");
-                                request.set("mode", "MY_ARM2");
-                                NetworkUtils.post("town.cgi", request)
-                                    .then(mainPage => {
-                                        doProcessBattleReturn(credential, mainPage, processor.obtainPage.additionalRP, processor.obtainPage.harvestList);
-                                    });
+                                new TownInn(credential).recovery().then(m => {
+                                    doProcessBattleReturn(credential, m, processor.obtainPage.additionalRP, processor.obtainPage.harvestList);
+                                });
                             });
                     });
                     $("#battleLodge").on("click", () => {
