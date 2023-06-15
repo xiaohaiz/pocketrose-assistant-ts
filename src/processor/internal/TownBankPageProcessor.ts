@@ -1,3 +1,4 @@
+import BankRecordManager from "../../core/bank/BankRecordManager";
 import NpcLoader from "../../core/role/NpcLoader";
 import Town from "../../core/town/Town";
 import TownLoader from "../../core/town/TownLoader";
@@ -84,6 +85,7 @@ class TownBankPageProcessor extends PageProcessorCredentialSupport {
         html += "<td style='background-color:#F8F0E0;text-align:center;width:100%'>";
         html += "<input type='button' id='refreshButton' value='刷新" + town.name + "银行'>";
         html += "<input type='button' id='returnButton' value='离开" + town.name + "银行'>";
+        html += "<button role='button' id='updateButton'>更新银行资产</button>";
         html += "</td>";
         html += "</tr>";
         $("#tr2").after($(html));
@@ -158,6 +160,15 @@ class TownBankPageProcessor extends PageProcessorCredentialSupport {
         });
         $("#returnButton").on("click", () => {
             $("#returnTown").trigger("click");
+        });
+        $("#updateButton").on("click", () => {
+            $("#updateButton").prop("disabled", true);
+            new BankRecordManager(credential)
+                .updateBankRecord()
+                .then(() => {
+                    MessageBoard.publishMessage("银行资产已经更新。");
+                    $("#updateButton").prop("disabled", false);
+                });
         });
         $("#searchButton").on("click", () => {
             const s = $("#searchName").val();
