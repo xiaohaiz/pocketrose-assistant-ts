@@ -132,7 +132,7 @@ class PocketDatabase {
                     const store = db.createObjectStore("BankRecord", {
                         keyPath: "id", autoIncrement: false
                     });
-                    store.createIndex("createTime", "createTime", {
+                    store.createIndex("recordDate", "recordDate", {
                         unique: false
                     });
                     store.createIndex("roleId", "roleId", {

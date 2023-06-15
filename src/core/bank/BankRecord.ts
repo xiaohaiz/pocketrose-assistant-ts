@@ -3,8 +3,11 @@ class BankRecord {
     id?: string;
     roleId?: string;
     createTime?: number;
+    updateTime?: number;
+    recordDate?: string;
     cash?: number;
     saving?: number;
+    revision?: number;
 
     asDocument(): {} {
         const document = {};
@@ -20,6 +23,14 @@ class BankRecord {
             // @ts-ignore
             document.createTime = this.createTime;
         }
+        if (this.updateTime !== undefined) {
+            // @ts-ignore
+            document.updateTime = this.updateTime;
+        }
+        if (this.recordDate) {
+            // @ts-ignore
+            document.recordDate = this.recordDate;
+        }
         if (this.cash !== undefined) {
             // @ts-ignore
             document.cash = this.cash;
@@ -27,6 +38,10 @@ class BankRecord {
         if (this.saving !== undefined) {
             // @ts-ignore
             document.saving = this.saving;
+        }
+        if (this.revision !== undefined) {
+            // @ts-ignore
+            document.revision = this.revision;
         }
         return document;
     }
