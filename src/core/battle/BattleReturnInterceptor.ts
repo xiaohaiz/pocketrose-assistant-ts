@@ -1,4 +1,5 @@
 import Credential from "../../util/Credential";
+import BankRecordManager from "../bank/BankRecordManager";
 import EquipmentLocalStorage from "../equipment/EquipmentLocalStorage";
 import PetLocalStorage from "../monster/PetLocalStorage";
 
@@ -13,22 +14,15 @@ class BattleReturnInterceptor {
     }
 
     async doBeforeReturn(): Promise<void> {
+        await Promise.all([
+            new BankRecordManager(this.#credential).triggerUpdateBankRecord(this.#battleCount),
+            new PetLocalStorage(this.#credential).triggerUpdatePetMap(this.#battleCount),
+            new PetLocalStorage(this.#credential).triggerUpdatePetStatus(this.#battleCount),
+            new EquipmentLocalStorage(this.#credential).triggerUpdateEquipmentStatus(this.#battleCount),
+        ]);
         return await (() => {
             return new Promise<void>(resolve => {
-                const petLocalStorage = new PetLocalStorage(this.#credential);
-                petLocalStorage
-                    .triggerUpdatePetMap(this.#battleCount)
-                    .then(() => {
-                        petLocalStorage
-                            .triggerUpdatePetStatus(this.#battleCount)
-                            .then(() => {
-                                new EquipmentLocalStorage(this.#credential)
-                                    .triggerUpdateEquipmentStatus(this.#battleCount)
-                                    .then(() => {
-                                        resolve();
-                                    });
-                            });
-                    });
+                resolve();
             });
         })();
     }
