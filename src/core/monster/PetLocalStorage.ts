@@ -25,7 +25,7 @@ class PetLocalStorage {
         return await (() => {
             return new Promise<void>(resolve => {
                 // 自动保存启用时，战数尾数为83时，触发图鉴保存
-                const doStorage = (battleCount % 100 === 83 && SetupLoader.isAutoPetMapStorageEnabled());
+                const doStorage = (battleCount % 100 === 83);
                 if (doStorage) {
                     CommentBoard.writeMessage("<br>开始更新宠物图鉴......");
                     this.updatePetMap().then(() => resolve());
