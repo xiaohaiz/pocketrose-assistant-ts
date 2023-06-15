@@ -1,3 +1,5 @@
+import * as echarts from "echarts";
+import {EChartsOption} from "echarts";
 import NpcLoader from "../../core/role/NpcLoader";
 import Role from "../../core/role/Role";
 import PersonalEquipmentManagement from "../../pocketrose/PersonalEquipmentManagement";
@@ -141,85 +143,83 @@ abstract class PersonalProfilePageProcessor extends PageProcessorCredentialSuppo
             html += "<td style='background-color:#E8E8D0;font-size:150%;font-weight:bold;color:navy' colspan='2'>" + role.name + "</td>";
             html += "</tr>";
             html += "<tr>";
-            html += "<td style='width:80px;background-color:#E8E8D0' rowspan='3'>" + role.imageHtml + "</td>"
-            html += "<td style='width:100%'>";
-            html += "<table style='width:100%;margin:auto;border-width:0;text-align:center'>";
+            html += "<td style='width:80px;background-color:#E8E8D0'>" + role.imageHtml + "</td>"
+            html += "<td style='width:100%;background-color:#E8E8D0'>";
+
+            html += "<table style='width:100%;margin:auto;text-align:center;background-color:#888888'>";
             html += "<tbody>";
-            html += "<tr style='color:yellowgreen'>";
-            html += "<th style='background-color:darkred'>种族</th>";
-            html += "<th style='background-color:darkgreen'>性别</th>";
-            html += "<th style='background-color:darkred'>国家</th>";
-            html += "<th style='background-color:darkgreen'>部队</th>";
-            html += "<th style='background-color:darkred'>属性</th>";
-            html += "<th style='background-color:darkgreen'>职业</th>";
-            html += "<th style='background-color:darkred'>战数</th>";
-            html += "</tr>";
             html += "<tr>";
+            html += "<th style='background-color:#E0D0B0;white-space:nowrap'>种族</th>";
             html += "<td style='background-color:#E8E8D0'>" + role.race + "</td>";
-            html += "<td style='background-color:#E8E8D0'>" + role.gender + "</td>";
-            html += "<td style='background-color:#E8E8D0'>" + role.country + "</td>";
-            html += "<td style='background-color:#E8E8D0'>" + role.unit + "</td>";
-            html += "<td style='background-color:#E8E8D0'>" + role.attribute + "</td>";
-            html += "<td style='background-color:#E8E8D0'>" + role.career + "</td>";
-            html += "<td style='background-color:#E8E8D0'>" + role.battleCount + "/" + role.battleWinCount + "</td>";
-            html += "</tr>";
-            html += "</tbody>";
-            html += "</table>";
-            html += "</td>";
-            html += "</tr>";
-
-
-            html += "<tr>";
-            html += "<td style='width:100%'>";
-            html += "<table style='width:100%;margin:auto;border-width:0;text-align:center'>";
-            html += "<tbody>";
-            html += "<tr style='color:yellowgreen'>";
-            html += "<th style='background-color:darkred'>等级</th>";
-            html += "<th style='background-color:darkgreen'>ＨＰ</th>";
-            html += "<th style='background-color:darkred'>ＭＰ</th>";
-            html += "<th style='background-color:darkgreen'>攻击</th>";
-            html += "<th style='background-color:darkred'>防御</th>";
-            html += "<th style='background-color:darkgreen'>智力</th>";
-            html += "<th style='background-color:darkred'>精神</th>";
-            html += "<th style='background-color:darkgreen'>速度</th>";
-            html += "</tr>";
-            html += "<tr>";
+            html += "<th style='background-color:#E0D0B0;white-space:nowrap'>等级</th>";
             html += "<td style='background-color:#E8E8D0'>" + role.level + "</td>";
+            html += "<td style='background-color:#E8E8D0;width:100%' rowspan='13' id='roleDimension'></td>";
+            html += "</tr>";
+            html += "<tr>";
+            html += "<th style='background-color:#E0D0B0;white-space:nowrap'>性别</th>";
+            html += "<td style='background-color:#E8E8D0'>" + role.gender + "</td>";
+            html += "<th style='background-color:#E0D0B0;white-space:nowrap'>ＨＰ</th>";
             html += "<td style='background-color:#E8E8D0'>" + role.health + "/" + role.maxHealth + "</td>";
+            html += "</tr>";
+            html += "<tr>";
+            html += "<th style='background-color:#E0D0B0;white-space:nowrap'>国家</th>";
+            html += "<td style='background-color:#E8E8D0'>" + role.country + "</td>";
+            html += "<th style='background-color:#E0D0B0;white-space:nowrap'>ＭＰ</th>";
             html += "<td style='background-color:#E8E8D0'>" + role.mana + "/" + role.maxMana + "</td>";
+            html += "</tr>";
+            html += "<tr>";
+            html += "<th style='background-color:#E0D0B0;white-space:nowrap'>部队</th>";
+            html += "<td style='background-color:#E8E8D0'>" + role.unit + "</td>";
+            html += "<th style='background-color:#E0D0B0;white-space:nowrap'>攻击</th>";
             html += "<td style='background-color:#E8E8D0'>" + role.attack + "</td>";
+            html += "</tr>";
+            html += "<tr>";
+            html += "<th style='background-color:#E0D0B0;white-space:nowrap'>属性</th>";
+            html += "<td style='background-color:#E8E8D0'>" + role.attribute + "</td>";
+            html += "<th style='background-color:#E0D0B0;white-space:nowrap'>防御</th>";
             html += "<td style='background-color:#E8E8D0'>" + role.defense + "</td>";
+            html += "</tr>";
+            html += "<tr>";
+            html += "<th style='background-color:#E0D0B0;white-space:nowrap'>职业</th>";
+            html += "<td style='background-color:#E8E8D0'>" + role.career + "</td>";
+            html += "<th style='background-color:#E0D0B0;white-space:nowrap'>智力</th>";
             html += "<td style='background-color:#E8E8D0'>" + role.specialAttack + "</td>";
+            html += "</tr>";
+            html += "<tr>";
+            html += "<th style='background-color:#E0D0B0;white-space:nowrap'>战数</th>";
+            html += "<td style='background-color:#E8E8D0'>" + role.battleCount + "/" + role.battleWinCount + "</td>";
+            html += "<th style='background-color:#E0D0B0;white-space:nowrap'>精神</th>";
             html += "<td style='background-color:#E8E8D0'>" + role.specialDefense + "</td>";
+            html += "</tr>";
+            html += "<tr>";
+            html += "<th style='background-color:#E0D0B0;white-space:nowrap'>经验</th>";
+            html += "<td style='background-color:#E8E8D0'>" + role.experienceHtml + "</td>";
+            html += "<th style='background-color:#E0D0B0;white-space:nowrap'>速度</th>";
             html += "<td style='background-color:#E8E8D0'>" + role.speed + "</td>";
             html += "</tr>";
+            html += "<tr>";
+            html += "<th style='background-color:#E0D0B0;white-space:nowrap'>幸运</th>";
+            html += "<td style='background-color:#E8E8D0' colspan='3'>" + role.additionalLuck + "</td>";
+            html += "</tr>";
+            html += "<tr>";
+            html += "<th style='background-color:#E0D0B0;white-space:nowrap'>祭奠RP</th>";
+            html += "<td style='background-color:#E8E8D0' colspan='3'>" + role.consecrateRP + "</td>";
+            html += "</tr>";
+            html += "<tr>";
+            html += "<th style='background-color:#E0D0B0;white-space:nowrap'>额外RP</th>";
+            html += "<td style='background-color:#E8E8D0' colspan='3'>" + role.additionalRP + "</td>";
+            html += "</tr>";
+            html += "<tr>";
+            html += "<th style='background-color:#E0D0B0;white-space:nowrap'>现金</th>";
+            html += "<td style='background-color:#E8E8D0' colspan='3'>" + role.cash + " GOLD</td>";
+            html += "</tr>";
+            html += "<tr>";
+            html += "<th style='background-color:#E0D0B0;white-space:nowrap'>存款</th>";
+            html += "<td style='background-color:#E8E8D0' colspan='3' id='roleSaving'></td>";
+            html += "</tr>";
             html += "</tbody>";
             html += "</table>";
-            html += "</td>";
-            html += "</tr>";
 
-            html += "<tr>";
-            html += "<td style='width:100%'>";
-            html += "<table style='width:100%;margin:auto;border-width:0;text-align:center'>";
-            html += "<tbody>";
-            html += "<tr style='color:yellowgreen'>";
-            html += "<th style='background-color:darkred'>经验</th>";
-            html += "<th style='background-color:darkgreen'>幸运</th>";
-            html += "<th style='background-color:darkred'>祭奠RP</th>";
-            html += "<th style='background-color:darkgreen'>额外RP</th>";
-            html += "<th style='background-color:darkred'>现金</th>";
-            html += "<th style='background-color:darkgreen'>存款</th>";
-            html += "</tr>";
-            html += "<tr>";
-            html += "<td style='background-color:#E8E8D0'>" + role.experience + "</td>";
-            html += "<td style='background-color:#E8E8D0'>" + role.additionalLuck + "</td>";
-            html += "<td style='background-color:#E8E8D0'>" + role.consecrateRP + "</td>";
-            html += "<td style='background-color:#E8E8D0'>" + role.additionalRP + "</td>";
-            html += "<td style='background-color:#E8E8D0'>" + role.cash + " GOLD</td>";
-            html += "<td style='background-color:#E8E8D0' id='roleSaving'></td>";
-            html += "</tr>";
-            html += "</tbody>";
-            html += "</table>";
             html += "</td>";
             html += "</tr>";
 
@@ -227,6 +227,8 @@ abstract class PersonalProfilePageProcessor extends PageProcessorCredentialSuppo
             html += "</table>";
 
             $("#personalStatus").html(html);
+
+            _generateRoleDimension(role);
 
             this.doLoadBankAccount(credential);
 
@@ -539,6 +541,44 @@ abstract class PersonalProfilePageProcessor extends PageProcessorCredentialSuppo
         this.#renderEquipmentStatus(credential, context);
         this.#renderPetStatus(credential, context);
         this.#renderMirrorStatus(credential, context);
+    }
+}
+
+function _generateRoleDimension(role: Role) {
+    const option: EChartsOption = {
+        tooltip: {
+            show: true
+        },
+        radar: {
+            // shape: 'circle',
+            indicator: [
+                {name: 'ＨＰ', max: 1999},
+                {name: 'ＭＰ', max: 1999},
+                {name: '攻击', max: 375},
+                {name: '防御', max: 375},
+                {name: '智力', max: 375},
+                {name: '精神', max: 375},
+                {name: '速度', max: 375}
+            ]
+        },
+        series: [
+            {
+                name: 'Role Dimension',
+                type: 'radar',
+                data: [
+                    {
+                        value: [role.maxHealth!, role.maxMana!, role.attack!, role.defense!,
+                            role.specialAttack!, role.specialDefense!, role.speed!],
+                        name: role.name
+                    }
+                ]
+            }
+        ]
+    };
+    const element = document.getElementById("roleDimension");
+    if (element) {
+        const chart = echarts.init(element);
+        chart.setOption(option);
     }
 }
 
