@@ -7,6 +7,7 @@ import BattleRecord from "../battle/BattleRecord";
 import BattleReturnInterceptor from "../battle/BattleReturnInterceptor";
 import BattleStorageManager from "../battle/BattleStorageManager";
 import SetupLoader from "../config/SetupLoader";
+import TownForge from "../forge/TownForge";
 import TownInn from "../inn/TownInn";
 import PalaceTaskManager from "../task/PalaceTaskManager";
 import TownDashboardTaxManager from "../town/TownDashboardTaxManager";
@@ -274,13 +275,9 @@ class TownDashboardLayout007 extends TownDashboardLayout {
                         new BattleReturnInterceptor(credential, currentBattleCount)
                             .doBeforeReturn()
                             .then(() => {
-                                const request = credential.asRequestMap();
-                                request.set("arm_mode", "all");
-                                request.set("mode", "MY_ARM2");
-                                NetworkUtils.post("town.cgi", request)
-                                    .then(mainPage => {
-                                        doProcessBattleReturn(credential, mainPage, processor.obtainPage.additionalRP, processor.obtainPage.harvestList);
-                                    });
+                                new TownForge(credential).repairAll().then(m => {
+                                    doProcessBattleReturn(credential, m, processor.obtainPage.additionalRP, processor.obtainPage.harvestList);
+                                });
                             });
                     });
                     $("#battleLodge").on("click", () => {
