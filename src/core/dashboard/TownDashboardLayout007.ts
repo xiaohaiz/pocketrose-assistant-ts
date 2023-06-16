@@ -6,6 +6,7 @@ import PageUtils from "../../util/PageUtils";
 import BattleProcessor from "../battle/BattleProcessor";
 import BattleRecord from "../battle/BattleRecord";
 import BattleReturnInterceptor from "../battle/BattleReturnInterceptor";
+import BattleSafeButtonManager from "../battle/BattleSafeButtonManager";
 import BattleScene from "../battle/BattleScene";
 import BattleStorages from "../battle/BattleStorages";
 import SetupLoader from "../config/SetupLoader";
@@ -454,6 +455,8 @@ function doProcessBattleReturn(credential: Credential,
     if (page.battleLevelShortcut) {
         ksm.bind();
     }
+
+    new BattleSafeButtonManager().createSafeBattleButton().then();
 }
 
 function _showTime() {
