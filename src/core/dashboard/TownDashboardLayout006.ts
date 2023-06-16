@@ -126,69 +126,69 @@ class TownDashboardLayout006 extends TownDashboardLayout {
                     const currentBattleCount = battleCount + 1;
 
                     const processor = new BattleProcessor(credential, html, currentBattleCount);
-                    processor.doProcess();
+                    processor.doProcess().then(() => {
+                        $("#battlePanel").html(processor.obtainPage!.reportHtml!);
 
-                    $("#battlePanel").html(processor.obtainPage!.reportHtml!);
+                        const recommendation = processor.obtainRecommendation;
+                        switch (recommendation) {
+                            case "修":
+                                $("#battleMenu").html("" +
+                                    "<button role='button' class='battleButton' " +
+                                    "id='battleRepair' style='font-size:150%'>修理</button>" +
+                                    "")
+                                    .parent().show();
+                                break;
+                            case "宿":
+                                $("#battleMenu").html("" +
+                                    "<button role='button' class='battleButton' " +
+                                    "id='battleLodge' style='font-size:150%'>住宿</button>" +
+                                    "")
+                                    .parent().show();
+                                break;
+                            case "存":
+                                $("#battleMenu").html("" +
+                                    "<button role='button' class='battleButton' " +
+                                    "id='battleDeposit' style='font-size:150%'>存钱</button>" +
+                                    "")
+                                    .parent().show();
+                                break;
+                            case "回":
+                                $("#battleMenu").html("" +
+                                    "<button role='button' class='battleButton' " +
+                                    "id='battleReturn' style='font-size:150%'>返回</button>" +
+                                    "")
+                                    .parent().show();
+                                break;
+                        }
 
-                    const recommendation = processor.obtainRecommendation;
-                    switch (recommendation) {
-                        case "修":
-                            $("#battleMenu").html("" +
-                                "<button role='button' class='battleButton' " +
-                                "id='battleRepair' style='font-size:150%'>修理</button>" +
-                                "")
-                                .parent().show();
-                            break;
-                        case "宿":
-                            $("#battleMenu").html("" +
-                                "<button role='button' class='battleButton' " +
-                                "id='battleLodge' style='font-size:150%'>住宿</button>" +
-                                "")
-                                .parent().show();
-                            break;
-                        case "存":
-                            $("#battleMenu").html("" +
-                                "<button role='button' class='battleButton' " +
-                                "id='battleDeposit' style='font-size:150%'>存钱</button>" +
-                                "")
-                                .parent().show();
-                            break;
-                        case "回":
-                            $("#battleMenu").html("" +
-                                "<button role='button' class='battleButton' " +
-                                "id='battleReturn' style='font-size:150%'>返回</button>" +
-                                "")
-                                .parent().show();
-                            break;
-                    }
+                        $("#battleReturn").on("click", () => {
+                            $("#battleReturn").prop("disabled", true);
+                            doBeforeReturn(credential, currentBattleCount).then(() => {
+                                $("#refreshButton").trigger("click");
+                            });
+                        });
+                        $("#battleDeposit").on("click", () => {
+                            $("#battleDeposit").prop("disabled", true);
+                            doBeforeReturn(credential, currentBattleCount).then(() => {
+                                $("#deposit").trigger("click");
+                            });
+                        });
+                        $("#battleRepair").on("click", () => {
+                            $("#battleRepair").prop("disabled", true);
+                            doBeforeReturn(credential, currentBattleCount).then(() => {
+                                $("#repair").trigger("click");
+                            });
+                        });
+                        $("#battleLodge").on("click", () => {
+                            $("#battleLodge").prop("disabled", true);
+                            doBeforeReturn(credential, currentBattleCount).then(() => {
+                                $("#lodge").trigger("click");
+                            });
+                        });
 
-                    $("#battleReturn").on("click", () => {
-                        $("#battleReturn").prop("disabled", true);
-                        doBeforeReturn(credential, currentBattleCount).then(() => {
-                            $("#refreshButton").trigger("click");
-                        });
+                        // 战斗布局模式默认开启极速战斗
+                        $(".battleButton").trigger("click");
                     });
-                    $("#battleDeposit").on("click", () => {
-                        $("#battleDeposit").prop("disabled", true);
-                        doBeforeReturn(credential, currentBattleCount).then(() => {
-                            $("#deposit").trigger("click");
-                        });
-                    });
-                    $("#battleRepair").on("click", () => {
-                        $("#battleRepair").prop("disabled", true);
-                        doBeforeReturn(credential, currentBattleCount).then(() => {
-                            $("#repair").trigger("click");
-                        });
-                    });
-                    $("#battleLodge").on("click", () => {
-                        $("#battleLodge").prop("disabled", true);
-                        doBeforeReturn(credential, currentBattleCount).then(() => {
-                            $("#lodge").trigger("click");
-                        });
-                    });
-
-                    // 战斗布局模式默认开启极速战斗
-                    $(".battleButton").trigger("click");
                 });
             });
     }

@@ -36,7 +36,7 @@ class BattleProcessor {
         return this.recommendation!;
     }
 
-    doProcess() {
+    async doProcess() {
         // 解析战斗页面
         this.page = BattlePage.parse(this.#html);
 
@@ -45,22 +45,21 @@ class BattleProcessor {
 
         // 检查是否完成了皇宫任务
         if (SetupLoader.isNewPalaceTaskEnabled() && this.page.monsterTask!) {
-            new PalaceTaskManager(this.#credential)
-                .completeMonsterTask()
-                .then(() => {
-                    this.#internalProcess();
-                });
-        } else {
-            this.#internalProcess();
+            await new PalaceTaskManager(this.#credential).completeMonsterTask();
         }
+        await this.#internalProcess();
+
+        return await (() => {
+            return new Promise<void>(resolve => resolve());
+        })();
     }
 
-    #internalProcess() {
+    async #internalProcess() {
         // 写入战斗记录到DB
         const record = new BattleRecord();
         record.id = this.#credential.id;
         record.html = this.obtainPage.reportHtml;
-        BattleStorageManager.getBattleRecordStorage().write(record).then();
+        await BattleStorageManager.getBattleRecordStorage().write(record);
 
         // 分析入手的结果
         let catchCount: number | undefined = undefined;
@@ -105,13 +104,12 @@ class BattleProcessor {
         log.catch = catchCount;
         log.photo = photoCount;
         log.treasures = treasures;
-        BattleStorageManager.battleLogStore
-            .write(log)                                     // 写入战斗日志
-            .then(() => {
-                BattleStorageManager.battleResultStorage
-                    .replay(log)                            // 写入战斗结果
-                    .then();
-            });
+        await BattleStorageManager.battleLogStore.write(log);       // 写入战斗日志
+        await BattleStorageManager.battleResultStorage.replay(log); // 写入战斗结果
+
+        return await (() => {
+            return new Promise<void>(resolve => resolve());
+        })();
     }
 
     #doRecommendation(): string {

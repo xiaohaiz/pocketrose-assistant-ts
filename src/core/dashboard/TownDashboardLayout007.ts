@@ -217,7 +217,7 @@ async function doProcessBattleVerificationError(credential: Credential, html: st
 
 async function doProcessBattle(credential: Credential, html: string, currentBattleCount: number) {
     const processor = new BattleProcessor(credential, html, currentBattleCount);
-    processor.doProcess();
+    await processor.doProcess();
 
     $("#battlePanel").html(processor.obtainPage.reportHtml!);
     if (processor.obtainPage.reportHtml!.includes("吐故纳新，扶摇直上")) {
