@@ -1,5 +1,7 @@
 # pocketrose-assistant-ts
 
+### 版本 4.2.6-SNAPSHOT
+
 ### 版本 4.2.5
 
 1. 删除旧的战斗布局，仅保留战斗增强布局。
