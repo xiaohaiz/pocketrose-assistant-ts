@@ -28,6 +28,12 @@ class TownDashboardLayout007 extends TownDashboardLayout {
     }
 
     render(credential: Credential, page: TownDashboardPage): void {
+        $("input[name='watch']")
+            .hide()
+            .after($("<span style='background-color:green;color:white;font-weight:bold;font-size:120%' " +
+                "id='watch2'></span>"));
+        _showTime();
+
         $("#leftPanel")
             .removeAttr("width")
             .css("width", "40%")
@@ -405,6 +411,19 @@ function doProcessBattleReturn(credential: Credential,
     if (page.battleLevelShortcut) {
         ksm.bind();
     }
+}
+
+function _showTime() {
+    const date = new Date();
+    const h = date.getHours(); // 0 - 23
+    const m = date.getMinutes(); // 0 - 59
+    const s = date.getSeconds(); // 0 - 59
+    const hour = _.padStart(h.toString(), 2, "0");
+    const minute = _.padStart(m.toString(), 2, "0");
+    const second = _.padStart(s.toString(), 2, "0");
+    const time = hour + ":" + minute + ":" + second;
+    $("#watch2").html("&nbsp;&nbsp;&nbsp;" + time + "&nbsp;&nbsp;&nbsp;");
+    setTimeout(_showTime, 1000);
 }
 
 function _countDownClock(timeout: number, start: number, clock: JQuery) {
