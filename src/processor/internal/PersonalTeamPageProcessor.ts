@@ -1,4 +1,5 @@
 import _ from "lodash";
+import BankRecordReportGenerator from "../../core/bank/BankRecordReportGenerator";
 import Equipment from "../../core/equipment/Equipment";
 import EquipmentLocalStorage from "../../core/equipment/EquipmentLocalStorage";
 import MonsterPageUtils from "../../core/monster/MonsterPageUtils";
@@ -73,6 +74,9 @@ abstract class PersonalTeamPageProcessor extends PageProcessorCredentialSupport 
         html += "<td>";
         html += "<button role='button' id='listPetButton'>团队宠物列表</button>";
         html += "</td>";
+        html += "<td>";
+        html += "<button role='button' id='bankRecordButton'>银行资产分析</button>";
+        html += "</td>";
         html += "</tr>";
         html += "</tbody>";
         html += "</table>";
@@ -120,6 +124,7 @@ abstract class PersonalTeamPageProcessor extends PageProcessorCredentialSupport 
         this.#bindUpdatePetButton(credential);
         this.#bindListEquipmentButton();
         this.#bindListPetButton();
+        this.#bindBankRecordButton();
     }
 
     #welcomeMessageHtml() {
@@ -321,6 +326,12 @@ abstract class PersonalTeamPageProcessor extends PageProcessorCredentialSupport 
                 });
 
 
+        });
+    }
+
+    #bindBankRecordButton() {
+        $("#bankRecordButton").on("click", () => {
+            new BankRecordReportGenerator().generate();
         });
     }
 
