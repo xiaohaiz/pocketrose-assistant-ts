@@ -417,7 +417,15 @@ function generateBattleReport(battleTable: JQuery, page: BattlePage) {
         "&nbsp;&nbsp;&nbsp;<b style='font-size:300%;color:red'>VS</b>&nbsp;&nbsp;&nbsp;" +
         page.monsterImageHtml + "</p>" + report;
 
-    report = "<p><b style='color:navy;font-size:120%'>" + page.battleField + "</b></p>" + report;
+
+    if (page.battleResult !== "战胜" && page.zodiacBattle) {
+        // 十二宫战斗没有取得胜利，显示圣斗士剩余的生命
+        report = "<p><b style='color:navy;font-size:120%'>" + page.battleField + "</b></p>" +
+            "<p><b style='background-color:red;color:white;font-size:120%'>" + page.monsterHealth + "/" + page.monsterMaxHealth + "</b></p>" +
+            "" + report;
+    } else {
+        report = "<p><b style='color:navy;font-size:120%'>" + page.battleField + "</b></p>" + report;
+    }
 
     page.reportHtml = report;
 }
