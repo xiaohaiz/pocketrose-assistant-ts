@@ -6,6 +6,7 @@ import PageUtils from "../../util/PageUtils";
 import BattleProcessor from "../battle/BattleProcessor";
 import BattleRecord from "../battle/BattleRecord";
 import BattleReturnInterceptor from "../battle/BattleReturnInterceptor";
+import BattleScene from "../battle/BattleScene";
 import BattleStorages from "../battle/BattleStorages";
 import SetupLoader from "../config/SetupLoader";
 import TownForge from "../forge/TownForge";
@@ -224,6 +225,18 @@ async function doBeforeProcessBattle(credential: Credential,
                                      beforePage: string,
                                      afterPage: string,
                                      request: Map<string, string>) {
+    const scene = new BattleScene();
+    scene.roleId = credential.id;
+    scene.beforePage = beforePage;
+    scene.afterPage = afterPage;
+    const r = {};
+    request.forEach((v, k) => {
+        // @ts-ignore
+        r[k] = v;
+    });
+    scene.request = JSON.stringify(r);
+    await BattleStorages.battleSceneStorage.writeLast(scene);
+
     return await (() => {
         return new Promise<void>(resolve => resolve());
     })();
