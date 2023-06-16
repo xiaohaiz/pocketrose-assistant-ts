@@ -168,30 +168,9 @@ class TownDashboardLayout007 extends TownDashboardLayout {
 
                 NetworkUtils.post("battle.cgi", request).then(html => {
                     if (html.includes("ERROR !")) {
-                        let errMsg = $(html).find("font:first").html();
-                        errMsg = "<p style='color:red;font-size:200%'>" + errMsg + "</p>";
-                        $("#battlePanel").html(errMsg);
-
-                        const record = new BattleRecord();
-                        record.id = credential.id;
-                        record.html = errMsg;
-                        BattleStorageManager.getBattleRecordStorage().write(record).then();
-
-                        $("#battleMenu").html("" +
-                            "<button role='button' class='battleButton' " +
-                            "id='battleReturn' style='font-size:150%'>返回</button>" +
-                            "")
-                            .parent().show();
-                        $("#battleReturn").on("click", () => {
-                            $("#battleReturn").prop("disabled", true);
-                            const request = credential.asRequestMap();
-                            request.set("mode", "STATUS");
-                            NetworkUtils.post("status.cgi", request)
-                                .then(mainPage => {
-                                    doProcessBattleReturn(credential, mainPage);
-                                });
+                        doProcessBattleVerificationError(credential, html).then(() => {
+                            $(".battleButton").trigger("click");
                         });
-                        $(".battleButton").trigger("click");
                         return;
                     }
 
@@ -303,6 +282,35 @@ class TownDashboardLayout007 extends TownDashboardLayout {
             });
     }
 
+}
+
+async function doProcessBattleVerificationError(credential: Credential, html: string) {
+    let errMsg = $(html).find("font:first").html();
+    errMsg = "<p style='color:red;font-size:200%'>" + errMsg + "</p>";
+    $("#battlePanel").html(errMsg);
+
+    const record = new BattleRecord();
+    record.id = credential.id;
+    record.html = errMsg;
+    await BattleStorageManager.getBattleRecordStorage().write(record);
+
+    $("#battleMenu").html("" +
+        "<button role='button' class='battleButton' " +
+        "id='battleReturn' style='font-size:150%'>返回</button>" +
+        "")
+        .parent().show();
+    $("#battleReturn").on("click", () => {
+        $("#battleReturn").prop("disabled", true);
+        const request = credential.asRequestMap();
+        request.set("mode", "STATUS");
+        NetworkUtils.post("status.cgi", request)
+            .then(mainPage => {
+                doProcessBattleReturn(credential, mainPage);
+            });
+    });
+    return await (() => {
+        return new Promise<void>(resolve => resolve());
+    })();
 }
 
 function doProcessBattleReturn(credential: Credential,
