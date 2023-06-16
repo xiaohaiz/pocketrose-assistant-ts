@@ -9,12 +9,9 @@ import EquipmentLocalStorage from "../equipment/EquipmentLocalStorage";
 import PetLocalStorage from "../monster/PetLocalStorage";
 import TownDashboardTaxManager from "../town/TownDashboardTaxManager";
 import TownDashboardLayout from "./TownDashboardLayout";
-import TownDashboardLayout003 from "./TownDashboardLayout003";
 import TownDashboardPage from "./TownDashboardPage";
 
 class TownDashboardLayout006 extends TownDashboardLayout {
-
-    readonly #layout003: TownDashboardLayout = new TownDashboardLayout003();
 
     id(): number {
         return 6;
