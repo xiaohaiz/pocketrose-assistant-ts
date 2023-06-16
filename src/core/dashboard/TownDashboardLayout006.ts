@@ -4,8 +4,10 @@ import NetworkUtils from "../../util/NetworkUtils";
 import BattleProcessor from "../battle/BattleProcessor";
 import BattleRecord from "../battle/BattleRecord";
 import BattleStorages from "../battle/BattleStorages";
+import SetupLoader from "../config/SetupLoader";
 import EquipmentLocalStorage from "../equipment/EquipmentLocalStorage";
 import PetLocalStorage from "../monster/PetLocalStorage";
+import TownDashboardTaxManager from "../town/TownDashboardTaxManager";
 import TownDashboardLayout from "./TownDashboardLayout";
 import TownDashboardLayout003 from "./TownDashboardLayout003";
 import TownDashboardPage from "./TownDashboardPage";
@@ -22,8 +24,131 @@ class TownDashboardLayout006 extends TownDashboardLayout {
         return true;
     }
 
+    render2(credential: Credential, page: TownDashboardPage): void {
+        $("center:first").hide();
+        $("br:first").hide();
+
+        $("table:first")
+            .find("> tbody:first")
+            .find("> tr:eq(1)")
+            .find("> td:first")
+            .find("> table:first")
+            .find("> tbody:first")
+            .find("> tr:first").hide();
+
+        $("#leftPanel").hide();
+
+        $("#rightPanel")
+            .removeAttr("width")
+            .css("width", "100%")
+            .find("> table:first")
+            .find("> tbody:first")
+            .find("> tr:eq(1)")
+            .find("> td:first")
+            .find("> table:first")
+            .find("> tbody:first")
+            .find("> tr:first")
+            .find("> th:first")
+            .css("font-size", "200%");
+
+        $("#rightPanel")
+            .find("> table:first")
+            .find("> tbody:first")
+            .find("> tr:eq(1)")
+            .find("> td:first")
+            .find("> table:first")
+            .find("> tbody:first")
+            .find("> tr:eq(3)")
+            .each((idx, tr) => {
+                const tax = page.townTax!;
+                $(tr).after($("<tr><td height='5'>收益</td><th id='townTax'>" + tax + "</th><td colspan='2'></td></tr>"));
+                new TownDashboardTaxManager(credential, page).processTownTax($("#townTax"));
+            });
+
+        $("table:first")
+            .next()
+            .find("> tbody:first")
+            .find("> tr:first").hide()
+            .next()
+            .next()
+            .find("> td:first")
+            .removeAttr("width")
+            .css("width", "100%")
+            .next().hide();
+
+        const enlargeRatio = SetupLoader.getEnlargeBattleRatio();
+        if (enlargeRatio > 0) {
+            const fontSize = 100 * enlargeRatio;
+            $("#battleCell")
+                .find("select:first")
+                .css("font-size", fontSize + "%");
+            $("#townCell")
+                .find("select:first")
+                .css("font-size", fontSize + "%");
+            $("#personalCell")
+                .find("select:first")
+                .css("font-size", fontSize + "%");
+            $("#countryNormalCell")
+                .find("select:first")
+                .css("font-size", fontSize + "%");
+            $("#countryAdvancedCell")
+                .find("select:first")
+                .css("font-size", fontSize + "%");
+        }
+        $("#battleCell")
+            .parent()
+            .before($("<tr><td colspan='4'>　</td></tr>"))
+            .after($("<tr><td colspan='4'>　</td></tr>"));
+        $("#townCell")
+            .parent()
+            .after($("<tr><td colspan='4'>　</td></tr>"));
+        $("#personalCell")
+            .parent()
+            .after($("<tr><td colspan='4'>　</td></tr>"));
+        $("#countryNormalCell")
+            .parent()
+            .after($("<tr><td colspan='4'>　</td></tr>"));
+    }
+
+    render3(credential: Credential, page: TownDashboardPage): void {
+        this.render2(credential, page);
+        $("#townTax").off("click");
+
+        let tr1 = "";
+        let tr2 = "";
+        $("#rightPanel")
+            .find("> table:first")
+            .find("> tbody:first")
+            .find("> tr:eq(1)")
+            .each((idx, tr) => {
+                tr1 = $(tr).html();
+            })
+            .next()
+            .each((idx, tr) => {
+                tr2 = $(tr).html();
+            });
+        $("#rightPanel")
+            .find("> table:first")
+            .find("> tbody:first")
+            .find("> tr")
+            .filter(idx => idx > 0)
+            .each((idx, tr) => {
+                $(tr).remove();
+            });
+        $("#rightPanel")
+            .find("> table:first")
+            .find("> tbody:first")
+            .prepend("<tr>" + tr2 + "</tr>");
+        $("#rightPanel")
+            .find("> table:first")
+            .find("> tbody:first")
+            .prepend("<tr>" + tr1 + "</tr>");
+
+        new TownDashboardTaxManager(credential, page).processTownTax($("#townTax"));
+    }
+
     render(credential: Credential, page: TownDashboardPage): void {
-        this.#layout003.render(credential, page);
+        this.render3(credential, page);
 
         $("table:first")
             .next()
