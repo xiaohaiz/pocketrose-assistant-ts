@@ -2,10 +2,12 @@ import _ from "lodash";
 import PersonalStatus from "../../pocketrose/PersonalStatus";
 import Credential from "../../util/Credential";
 import NetworkUtils from "../../util/NetworkUtils";
+import PageUtils from "../../util/PageUtils";
 import BattleProcessor from "../battle/BattleProcessor";
 import BattleRecord from "../battle/BattleRecord";
 import BattleReturnInterceptor from "../battle/BattleReturnInterceptor";
-import BattleStorageManager from "../battle/BattleStorageManager";
+import BattleScene from "../battle/BattleScene";
+import BattleStorages from "../battle/BattleStorages";
 import SetupLoader from "../config/SetupLoader";
 import TownForge from "../forge/TownForge";
 import TownInn from "../inn/TownInn";
@@ -30,7 +32,7 @@ class TownDashboardLayout007 extends TownDashboardLayout {
     render(credential: Credential, page: TownDashboardPage): void {
         $("input[name='watch']")
             .hide()
-            .after($("<span style='background-color:green;color:white;font-weight:bold;font-size:120%' " +
+            .after($("<span style='background-color:lightgreen;font-weight:bold;font-size:120%' " +
                 "id='watch2'></span>"));
         _showTime();
 
@@ -124,7 +126,7 @@ class TownDashboardLayout007 extends TownDashboardLayout {
                 "<div style='display:none' id='hidden-5'></div>" +
                 "");
 
-        BattleStorageManager.getBattleRecordStorage().load(credential.id).then(record => {
+        BattleStorages.getBattleRecordStorage().load(credential.id).then(record => {
             const lastBattle = record.html!;
             if (lastBattle.includes("吐故纳新，扶摇直上")) {
                 $("#battlePanel").css("background-color", "wheat");
@@ -168,141 +170,182 @@ class TownDashboardLayout007 extends TownDashboardLayout {
 
                 NetworkUtils.post("battle.cgi", request).then(html => {
                     if (html.includes("ERROR !")) {
-                        let errMsg = $(html).find("font:first").html();
-                        errMsg = "<p style='color:red;font-size:200%'>" + errMsg + "</p>";
-                        $("#battlePanel").html(errMsg);
-
-                        const record = new BattleRecord();
-                        record.id = credential.id;
-                        record.html = errMsg;
-                        BattleStorageManager.getBattleRecordStorage().write(record).then();
-
-                        $("#battleMenu").html("" +
-                            "<button role='button' class='battleButton' " +
-                            "id='battleReturn' style='font-size:150%'>返回</button>" +
-                            "")
-                            .parent().show();
-                        $("#battleReturn").on("click", () => {
-                            $("#battleReturn").prop("disabled", true);
-                            const request = credential.asRequestMap();
-                            request.set("mode", "STATUS");
-                            NetworkUtils.post("status.cgi", request)
-                                .then(mainPage => {
-                                    doProcessBattleReturn(credential, mainPage);
-                                });
+                        doProcessBattleVerificationError(credential, html).then(() => {
+                            $(".battleButton").trigger("click");
                         });
-                        $(".battleButton").trigger("click");
                         return;
                     }
 
                     const currentBattleCount = battleCount + 1;
 
-                    const processor = new BattleProcessor(credential, html, currentBattleCount);
-                    processor.doProcess();
-
-                    $("#battlePanel").html(processor.obtainPage.reportHtml!);
-                    if (processor.obtainPage.reportHtml!.includes("吐故纳新，扶摇直上")) {
-                        $("#battlePanel")
-                            .css("background-color", "wheat")
-                            .css("text-align", "center");
-                    } else {
-                        $("#battlePanel")
-                            .removeAttr("style")
-                            .css("text-align", "center");
-                    }
-
-                    const recommendation = processor.obtainRecommendation;
-                    switch (recommendation) {
-                        case "修":
-                            $("#battleMenu").html("" +
-                                "<button role='button' class='battleButton' " +
-                                "id='battleRepair' style='font-size:150%'>修理</button>" +
-                                "")
-                                .parent().show();
-                            break;
-                        case "宿":
-                            $("#battleMenu").html("" +
-                                "<button role='button' class='battleButton' " +
-                                "id='battleLodge' style='font-size:150%'>住宿</button>" +
-                                "")
-                                .parent().show();
-                            break;
-                        case "存":
-                            $("#battleMenu").html("" +
-                                "<button role='button' class='battleButton' " +
-                                "id='battleDeposit' style='font-size:150%'>存钱</button>" +
-                                "")
-                                .parent().show();
-                            break;
-                        case "回":
-                            $("#battleMenu").html("" +
-                                "<button role='button' class='battleButton' " +
-                                "id='battleReturn' style='font-size:150%'>返回</button>" +
-                                "")
-                                .parent().show();
-                            break;
-                    }
-
-                    $("#battleReturn").on("click", () => {
-                        $("#battleReturn").prop("disabled", true);
-                        new BattleReturnInterceptor(credential, currentBattleCount)
-                            .doBeforeReturn()
-                            .then(() => {
-                                const request = credential.asRequestMap();
-                                request.set("mode", "STATUS");
-                                NetworkUtils.post("status.cgi", request)
-                                    .then(mainPage => {
-                                        doProcessBattleReturn(credential, mainPage, processor.obtainPage.additionalRP, processor.obtainPage.harvestList);
-                                    });
-                            });
+                    doBeforeProcessBattle(credential, currentBattleCount, PageUtils.currentPageHtml(), html, request).then(() => {
+                        // 开始处理战斗返回的结果
+                        doProcessBattle(credential, html, currentBattleCount).then(() => {
+                            // 战斗布局模式默认开启极速战斗
+                            $(".battleButton").trigger("click");
+                        });
                     });
-                    $("#battleDeposit").on("click", () => {
-                        $("#battleDeposit").prop("disabled", true);
-                        new BattleReturnInterceptor(credential, currentBattleCount)
-                            .doBeforeReturn()
-                            .then(() => {
-                                const request = credential.asRequestMap();
-                                request.set("azukeru", "all");
-                                request.set("mode", "BANK_SELL");
-                                NetworkUtils.post("town.cgi", request)
-                                    .then(mainPage => {
-                                        if (processor.obtainPage.zodiacBattle) {
-                                            new TownInn(credential).recovery().then(m => {
-                                                doProcessBattleReturn(credential, m, processor.obtainPage.additionalRP, processor.obtainPage.harvestList);
-                                            });
-                                        } else {
-                                            doProcessBattleReturn(credential, mainPage, processor.obtainPage.additionalRP, processor.obtainPage.harvestList);
-                                        }
-                                    });
-                            });
-                    });
-                    $("#battleRepair").on("click", () => {
-                        $("#battleRepair").prop("disabled", true);
-                        new BattleReturnInterceptor(credential, currentBattleCount)
-                            .doBeforeReturn()
-                            .then(() => {
-                                new TownForge(credential).repairAll().then(m => {
-                                    doProcessBattleReturn(credential, m, processor.obtainPage.additionalRP, processor.obtainPage.harvestList);
-                                });
-                            });
-                    });
-                    $("#battleLodge").on("click", () => {
-                        $("#battleLodge").prop("disabled", true);
-                        new BattleReturnInterceptor(credential, currentBattleCount)
-                            .doBeforeReturn()
-                            .then(() => {
-                                new TownInn(credential).recovery().then(m => {
-                                    doProcessBattleReturn(credential, m, processor.obtainPage.additionalRP, processor.obtainPage.harvestList);
-                                });
-                            });
-                    });
-
-                    // 战斗布局模式默认开启极速战斗
-                    $(".battleButton").trigger("click");
                 });
             });
     }
 
+}
+
+async function doProcessBattleVerificationError(credential: Credential, html: string) {
+    let errMsg = $(html).find("font:first").html();
+    errMsg = "<p style='color:red;font-size:200%'>" + errMsg + "</p>";
+    $("#battlePanel").html(errMsg);
+
+    const record = new BattleRecord();
+    record.id = credential.id;
+    record.html = errMsg;
+    await BattleStorages.getBattleRecordStorage().write(record);
+
+    $("#battleMenu").html("" +
+        "<button role='button' class='battleButton' " +
+        "id='battleReturn' style='font-size:150%'>返回</button>" +
+        "")
+        .parent().show();
+    $("#battleReturn").on("click", () => {
+        $("#battleReturn").prop("disabled", true);
+        const request = credential.asRequestMap();
+        request.set("mode", "STATUS");
+        NetworkUtils.post("status.cgi", request)
+            .then(mainPage => {
+                doProcessBattleReturn(credential, mainPage);
+            });
+    });
+    return await (() => {
+        return new Promise<void>(resolve => resolve());
+    })();
+}
+
+async function doBeforeProcessBattle(credential: Credential,
+                                     currentBattleCount: number,
+                                     beforePage: string,
+                                     afterPage: string,
+                                     request: Map<string, string>) {
+    const scene = new BattleScene();
+    scene.roleId = credential.id;
+    scene.beforePage = beforePage;
+    scene.afterPage = afterPage;
+    const r = {};
+    request.forEach((v, k) => {
+        // @ts-ignore
+        r[k] = v;
+    });
+    scene.request = JSON.stringify(r);
+    await BattleStorages.battleSceneStorage.writeLast(scene);
+
+    return await (() => {
+        return new Promise<void>(resolve => resolve());
+    })();
+}
+
+async function doProcessBattle(credential: Credential, html: string, currentBattleCount: number) {
+    const processor = new BattleProcessor(credential, html, currentBattleCount);
+    await processor.doProcess();
+
+    $("#battlePanel").html(processor.obtainPage.reportHtml!);
+    if (processor.obtainPage.reportHtml!.includes("吐故纳新，扶摇直上")) {
+        $("#battlePanel")
+            .css("background-color", "wheat")
+            .css("text-align", "center");
+    } else {
+        $("#battlePanel")
+            .removeAttr("style")
+            .css("text-align", "center");
+    }
+
+    const recommendation = processor.obtainRecommendation;
+    switch (recommendation) {
+        case "修":
+            $("#battleMenu").html("" +
+                "<button role='button' class='battleButton' " +
+                "id='battleRepair' style='font-size:150%'>修理</button>" +
+                "")
+                .parent().show();
+            break;
+        case "宿":
+            $("#battleMenu").html("" +
+                "<button role='button' class='battleButton' " +
+                "id='battleLodge' style='font-size:150%'>住宿</button>" +
+                "")
+                .parent().show();
+            break;
+        case "存":
+            $("#battleMenu").html("" +
+                "<button role='button' class='battleButton' " +
+                "id='battleDeposit' style='font-size:150%'>存钱</button>" +
+                "")
+                .parent().show();
+            break;
+        case "回":
+            $("#battleMenu").html("" +
+                "<button role='button' class='battleButton' " +
+                "id='battleReturn' style='font-size:150%'>返回</button>" +
+                "")
+                .parent().show();
+            break;
+    }
+
+    $("#battleReturn").on("click", () => {
+        $("#battleReturn").prop("disabled", true);
+        new BattleReturnInterceptor(credential, currentBattleCount)
+            .doBeforeReturn()
+            .then(() => {
+                const request = credential.asRequestMap();
+                request.set("mode", "STATUS");
+                NetworkUtils.post("status.cgi", request)
+                    .then(mainPage => {
+                        doProcessBattleReturn(credential, mainPage, processor.obtainPage.additionalRP, processor.obtainPage.harvestList);
+                    });
+            });
+    });
+    $("#battleDeposit").on("click", () => {
+        $("#battleDeposit").prop("disabled", true);
+        new BattleReturnInterceptor(credential, currentBattleCount)
+            .doBeforeReturn()
+            .then(() => {
+                const request = credential.asRequestMap();
+                request.set("azukeru", "all");
+                request.set("mode", "BANK_SELL");
+                NetworkUtils.post("town.cgi", request)
+                    .then(mainPage => {
+                        if (processor.obtainPage.zodiacBattle) {
+                            new TownInn(credential).recovery().then(m => {
+                                doProcessBattleReturn(credential, m, processor.obtainPage.additionalRP, processor.obtainPage.harvestList);
+                            });
+                        } else {
+                            doProcessBattleReturn(credential, mainPage, processor.obtainPage.additionalRP, processor.obtainPage.harvestList);
+                        }
+                    });
+            });
+    });
+    $("#battleRepair").on("click", () => {
+        $("#battleRepair").prop("disabled", true);
+        new BattleReturnInterceptor(credential, currentBattleCount)
+            .doBeforeReturn()
+            .then(() => {
+                new TownForge(credential).repairAll().then(m => {
+                    doProcessBattleReturn(credential, m, processor.obtainPage.additionalRP, processor.obtainPage.harvestList);
+                });
+            });
+    });
+    $("#battleLodge").on("click", () => {
+        $("#battleLodge").prop("disabled", true);
+        new BattleReturnInterceptor(credential, currentBattleCount)
+            .doBeforeReturn()
+            .then(() => {
+                new TownInn(credential).recovery().then(m => {
+                    doProcessBattleReturn(credential, m, processor.obtainPage.additionalRP, processor.obtainPage.harvestList);
+                });
+            });
+    });
+
+    return await (() => {
+        return new Promise<void>(resolve => resolve());
+    })();
 }
 
 function doProcessBattleReturn(credential: Credential,

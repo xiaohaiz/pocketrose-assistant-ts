@@ -2,10 +2,7 @@ import Credential from "../../util/Credential";
 import StorageUtils from "../../util/StorageUtils";
 import TownDashboardLayout from "./TownDashboardLayout";
 import TownDashboardLayout001 from "./TownDashboardLayout001";
-import TownDashboardLayout002 from "./TownDashboardLayout002";
-import TownDashboardLayout003 from "./TownDashboardLayout003";
 import TownDashboardLayout004 from "./TownDashboardLayout004";
-import TownDashboardLayout005 from "./TownDashboardLayout005";
 import TownDashboardLayout006 from "./TownDashboardLayout006";
 import TownDashboardLayout007 from "./TownDashboardLayout007";
 
@@ -17,10 +14,7 @@ class TownDashboardLayoutManager {
         this.#buffer = new Map<number, TownDashboardLayout>();
         const list: TownDashboardLayout[] = [
             new TownDashboardLayout001(),
-            new TownDashboardLayout002(),
-            new TownDashboardLayout003(),
             new TownDashboardLayout004(),
-            new TownDashboardLayout005(),
             new TownDashboardLayout006(),
             new TownDashboardLayout007(),
         ];

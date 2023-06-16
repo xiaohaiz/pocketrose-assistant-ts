@@ -66,6 +66,15 @@ class PocketDatabase {
                 }
 
                 // ------------------------------------------------------------
+                // BattleScene
+                // ------------------------------------------------------------
+                if (!db.objectStoreNames.contains("BattleScene")) {
+                    db.createObjectStore("BattleScene", {
+                        keyPath: "id", autoIncrement: false
+                    });
+                }
+
+                // ------------------------------------------------------------
                 // RolePetMap
                 // ------------------------------------------------------------
                 if (!db.objectStoreNames.contains("RolePetMap")) {
