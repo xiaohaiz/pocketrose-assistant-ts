@@ -1,5 +1,7 @@
 # pocketrose-assistant-ts
 
+### 版本 4.2.5-SNAPSHOT
+
 ### 版本 4.2.4
 
 1. 删除“自动触发存图鉴”设置，默认启用此功能。
