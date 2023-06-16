@@ -7,7 +7,7 @@ import PalaceTaskManager from "../task/PalaceTaskManager";
 import BattleLog from "./BattleLog";
 import BattlePage from "./BattlePage";
 import BattleRecord from "./BattleRecord";
-import BattleStorageManager from "./BattleStorageManager";
+import BattleStorages from "./BattleStorages";
 
 class BattleProcessor {
 
@@ -59,7 +59,7 @@ class BattleProcessor {
         const record = new BattleRecord();
         record.id = this.#credential.id;
         record.html = this.obtainPage.reportHtml;
-        await BattleStorageManager.getBattleRecordStorage().write(record);
+        await BattleStorages.getBattleRecordStorage().write(record);
 
         // 分析入手的结果
         let catchCount: number | undefined = undefined;
@@ -104,8 +104,8 @@ class BattleProcessor {
         log.catch = catchCount;
         log.photo = photoCount;
         log.treasures = treasures;
-        await BattleStorageManager.battleLogStore.write(log);       // 写入战斗日志
-        await BattleStorageManager.battleResultStorage.replay(log); // 写入战斗结果
+        await BattleStorages.battleLogStore.write(log);       // 写入战斗日志
+        await BattleStorages.battleResultStorage.replay(log); // 写入战斗结果
 
         return await (() => {
             return new Promise<void>(resolve => resolve());

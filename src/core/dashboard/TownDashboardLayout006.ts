@@ -3,7 +3,7 @@ import Credential from "../../util/Credential";
 import NetworkUtils from "../../util/NetworkUtils";
 import BattleProcessor from "../battle/BattleProcessor";
 import BattleRecord from "../battle/BattleRecord";
-import BattleStorageManager from "../battle/BattleStorageManager";
+import BattleStorages from "../battle/BattleStorages";
 import EquipmentLocalStorage from "../equipment/EquipmentLocalStorage";
 import PetLocalStorage from "../monster/PetLocalStorage";
 import TownDashboardLayout from "./TownDashboardLayout";
@@ -42,7 +42,7 @@ class TownDashboardLayout006 extends TownDashboardLayout {
         generateRepairForm(credential);
         generateLodgeForm(credential);
 
-        BattleStorageManager.getBattleRecordStorage().load(credential.id).then(record => {
+        BattleStorages.getBattleRecordStorage().load(credential.id).then(record => {
             const lastBattle = record.html!;
             if (lastBattle.includes("吐故纳新，扶摇直上")) {
                 $("#battlePanel").css("background-color", "wheat");
@@ -108,7 +108,7 @@ class TownDashboardLayout006 extends TownDashboardLayout {
                         const record = new BattleRecord();
                         record.id = credential.id;
                         record.html = errMsg;
-                        BattleStorageManager.getBattleRecordStorage().write(record).then();
+                        BattleStorages.getBattleRecordStorage().write(record).then();
 
                         $("#battleMenu").html("" +
                             "<button role='button' class='battleButton' " +

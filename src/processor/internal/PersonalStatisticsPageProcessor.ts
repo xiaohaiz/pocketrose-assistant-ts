@@ -1,5 +1,5 @@
 import BattleLogService from "../../core/battle/BattleLogService";
-import BattleStorageManager from "../../core/battle/BattleStorageManager";
+import BattleStorages from "../../core/battle/BattleStorages";
 import BattleReportGenerator from "../../core/report/BattleReportGenerator";
 import DailyReportGenerator from "../../core/report/DailyReportGenerator";
 import MonsterReportGenerator from "../../core/report/MonsterReportGenerator";
@@ -218,7 +218,7 @@ abstract class PersonalStatisticsPageProcessor extends PageProcessorCredentialSu
 function doBindReport1() {
     $("#report-1").on("click", () => {
         const target = $("#teamMemberSelect").val()! as string;
-        BattleStorageManager.battleResultStorage
+        BattleStorages.battleResultStorage
             .loads()
             .then(dataList => {
                 const html = new BattleReportGenerator(dataList, target).generate();
@@ -230,7 +230,7 @@ function doBindReport1() {
 function doBindReport2() {
     $("#report-2").on("click", () => {
         const target = $("#teamMemberSelect").val()! as string;
-        BattleStorageManager.battleResultStorage
+        BattleStorages.battleResultStorage
             .loads()
             .then(dataList => {
                 const html = new MonsterReportGenerator(dataList, target).generate();
@@ -242,7 +242,7 @@ function doBindReport2() {
 function doBindReport3() {
     $("#report-3").on("click", () => {
         const target = $("#teamMemberSelect").val()! as string;
-        BattleStorageManager.battleResultStorage
+        BattleStorages.battleResultStorage
             .loads()
             .then(dataList => {
                 new ZodiacReportGenerator(dataList, target).generate();
@@ -260,7 +260,7 @@ function doBindReport4() {
 function doBindReport5() {
     $("#report-5").on("click", () => {
         const target = $("#teamMemberSelect").val()! as string;
-        BattleStorageManager.battleResultStorage
+        BattleStorages.battleResultStorage
             .loads()
             .then(dataList => {
                 new TreasureReportGenerator(dataList, target).generate();
@@ -271,7 +271,7 @@ function doBindReport5() {
 function doBindLog1() {
     $("#log-1").on("click", () => {
         const target = $("#teamMemberSelect").val()! as string;
-        BattleStorageManager.battleLogStore
+        BattleStorages.battleLogStore
             .findByCreateTime(DayRange.current().start)
             .then(logList => {
                 const html = new DailyReportGenerator(logList, target).generate();
@@ -284,7 +284,7 @@ function doBindLog2() {
     $("#log-2").on("click", () => {
         const target = $("#teamMemberSelect").val()! as string;
         const yesterday = DayRange.current().previous();
-        BattleStorageManager.battleLogStore
+        BattleStorages.battleLogStore
             .findByCreateTime(yesterday.start, yesterday.end)
             .then(logList => {
                 const html = new DailyReportGenerator(logList, target).generate();
@@ -296,7 +296,7 @@ function doBindLog2() {
 function doBindLog3() {
     $("#log-3").on("click", () => {
         const target = $("#teamMemberSelect").val()! as string;
-        BattleStorageManager.battleLogStore
+        BattleStorages.battleLogStore
             .findByCreateTime(WeekRange.current().start)
             .then(logList => {
                 const html = new WeeklyReportGenerator(logList, target).generate();
@@ -309,7 +309,7 @@ function doBindLog4() {
     $("#log-4").on("click", () => {
         const target = $("#teamMemberSelect").val()! as string;
         const lastWeek = WeekRange.current().previous();
-        BattleStorageManager.battleLogStore
+        BattleStorages.battleLogStore
             .findByCreateTime(lastWeek.start, lastWeek.end)
             .then(logList => {
                 const html = new WeeklyReportGenerator(logList, target).generate();
@@ -345,10 +345,10 @@ function doBindClearBattleLog() {
         }
 
         $(".databaseButton").prop("disabled", true);
-        BattleStorageManager.battleLogStore
+        BattleStorages.battleLogStore
             .clear()
             .then(() => {
-                BattleStorageManager.battleResultStorage
+                BattleStorages.battleResultStorage
                     .clear()
                     .then(() => {
                         const message: string = "<b style='font-weight:bold;font-size:300%;color:red'>所有战斗记录数据已经全部清除！</b>";
@@ -367,7 +367,7 @@ function doBindExportBattleLog() {
 
         // 上个月的第一天00:00:00.000作为查询起始时间
         const startTime = MonthRange.current().previous().start;
-        BattleStorageManager.battleLogStore
+        BattleStorages.battleLogStore
             .findByCreateTime(startTime)
             .then(logList => {
                 const documentList = logList

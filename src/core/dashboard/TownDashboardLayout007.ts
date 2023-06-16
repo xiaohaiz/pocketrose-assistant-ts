@@ -6,7 +6,7 @@ import PageUtils from "../../util/PageUtils";
 import BattleProcessor from "../battle/BattleProcessor";
 import BattleRecord from "../battle/BattleRecord";
 import BattleReturnInterceptor from "../battle/BattleReturnInterceptor";
-import BattleStorageManager from "../battle/BattleStorageManager";
+import BattleStorages from "../battle/BattleStorages";
 import SetupLoader from "../config/SetupLoader";
 import TownForge from "../forge/TownForge";
 import TownInn from "../inn/TownInn";
@@ -125,7 +125,7 @@ class TownDashboardLayout007 extends TownDashboardLayout {
                 "<div style='display:none' id='hidden-5'></div>" +
                 "");
 
-        BattleStorageManager.getBattleRecordStorage().load(credential.id).then(record => {
+        BattleStorages.getBattleRecordStorage().load(credential.id).then(record => {
             const lastBattle = record.html!;
             if (lastBattle.includes("吐故纳新，扶摇直上")) {
                 $("#battlePanel").css("background-color", "wheat");
@@ -198,7 +198,7 @@ async function doProcessBattleVerificationError(credential: Credential, html: st
     const record = new BattleRecord();
     record.id = credential.id;
     record.html = errMsg;
-    await BattleStorageManager.getBattleRecordStorage().write(record);
+    await BattleStorages.getBattleRecordStorage().write(record);
 
     $("#battleMenu").html("" +
         "<button role='button' class='battleButton' " +
