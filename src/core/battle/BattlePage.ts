@@ -421,7 +421,7 @@ function generateBattleReport(battleTable: JQuery, page: BattlePage) {
     if (page.battleResult !== "战胜" && page.zodiacBattle) {
         // 十二宫战斗没有取得胜利，显示圣斗士剩余的生命
         report = "<p><b style='color:navy;font-size:120%'>" + page.battleField + "</b></p>" +
-            "<p><b style='background-color:red;color:white;font-size:120%'>" + page.monsterHealth + "/" + page.monsterMaxHealth + "</b></p>" +
+            "<p><b style='background-color:lightgreen;font-size:120%'>" + page.monsterHealth + "/" + page.monsterMaxHealth + "</b></p>" +
             "" + report;
     } else {
         report = "<p><b style='color:navy;font-size:120%'>" + page.battleField + "</b></p>" + report;

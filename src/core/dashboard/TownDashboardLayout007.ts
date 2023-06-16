@@ -32,7 +32,7 @@ class TownDashboardLayout007 extends TownDashboardLayout {
     render(credential: Credential, page: TownDashboardPage): void {
         $("input[name='watch']")
             .hide()
-            .after($("<span style='background-color:green;color:white;font-weight:bold;font-size:120%' " +
+            .after($("<span style='background-color:lightgreen;font-weight:bold;font-size:120%' " +
                 "id='watch2'></span>"));
         _showTime();
 
