@@ -176,108 +176,10 @@ class TownDashboardLayout007 extends TownDashboardLayout {
 
                     const currentBattleCount = battleCount + 1;
 
-                    const processor = new BattleProcessor(credential, html, currentBattleCount);
-                    processor.doProcess();
-
-                    $("#battlePanel").html(processor.obtainPage.reportHtml!);
-                    if (processor.obtainPage.reportHtml!.includes("吐故纳新，扶摇直上")) {
-                        $("#battlePanel")
-                            .css("background-color", "wheat")
-                            .css("text-align", "center");
-                    } else {
-                        $("#battlePanel")
-                            .removeAttr("style")
-                            .css("text-align", "center");
-                    }
-
-                    const recommendation = processor.obtainRecommendation;
-                    switch (recommendation) {
-                        case "修":
-                            $("#battleMenu").html("" +
-                                "<button role='button' class='battleButton' " +
-                                "id='battleRepair' style='font-size:150%'>修理</button>" +
-                                "")
-                                .parent().show();
-                            break;
-                        case "宿":
-                            $("#battleMenu").html("" +
-                                "<button role='button' class='battleButton' " +
-                                "id='battleLodge' style='font-size:150%'>住宿</button>" +
-                                "")
-                                .parent().show();
-                            break;
-                        case "存":
-                            $("#battleMenu").html("" +
-                                "<button role='button' class='battleButton' " +
-                                "id='battleDeposit' style='font-size:150%'>存钱</button>" +
-                                "")
-                                .parent().show();
-                            break;
-                        case "回":
-                            $("#battleMenu").html("" +
-                                "<button role='button' class='battleButton' " +
-                                "id='battleReturn' style='font-size:150%'>返回</button>" +
-                                "")
-                                .parent().show();
-                            break;
-                    }
-
-                    $("#battleReturn").on("click", () => {
-                        $("#battleReturn").prop("disabled", true);
-                        new BattleReturnInterceptor(credential, currentBattleCount)
-                            .doBeforeReturn()
-                            .then(() => {
-                                const request = credential.asRequestMap();
-                                request.set("mode", "STATUS");
-                                NetworkUtils.post("status.cgi", request)
-                                    .then(mainPage => {
-                                        doProcessBattleReturn(credential, mainPage, processor.obtainPage.additionalRP, processor.obtainPage.harvestList);
-                                    });
-                            });
+                    doProcessBattle(credential, html, currentBattleCount).then(() => {
+                        // 战斗布局模式默认开启极速战斗
+                        $(".battleButton").trigger("click");
                     });
-                    $("#battleDeposit").on("click", () => {
-                        $("#battleDeposit").prop("disabled", true);
-                        new BattleReturnInterceptor(credential, currentBattleCount)
-                            .doBeforeReturn()
-                            .then(() => {
-                                const request = credential.asRequestMap();
-                                request.set("azukeru", "all");
-                                request.set("mode", "BANK_SELL");
-                                NetworkUtils.post("town.cgi", request)
-                                    .then(mainPage => {
-                                        if (processor.obtainPage.zodiacBattle) {
-                                            new TownInn(credential).recovery().then(m => {
-                                                doProcessBattleReturn(credential, m, processor.obtainPage.additionalRP, processor.obtainPage.harvestList);
-                                            });
-                                        } else {
-                                            doProcessBattleReturn(credential, mainPage, processor.obtainPage.additionalRP, processor.obtainPage.harvestList);
-                                        }
-                                    });
-                            });
-                    });
-                    $("#battleRepair").on("click", () => {
-                        $("#battleRepair").prop("disabled", true);
-                        new BattleReturnInterceptor(credential, currentBattleCount)
-                            .doBeforeReturn()
-                            .then(() => {
-                                new TownForge(credential).repairAll().then(m => {
-                                    doProcessBattleReturn(credential, m, processor.obtainPage.additionalRP, processor.obtainPage.harvestList);
-                                });
-                            });
-                    });
-                    $("#battleLodge").on("click", () => {
-                        $("#battleLodge").prop("disabled", true);
-                        new BattleReturnInterceptor(credential, currentBattleCount)
-                            .doBeforeReturn()
-                            .then(() => {
-                                new TownInn(credential).recovery().then(m => {
-                                    doProcessBattleReturn(credential, m, processor.obtainPage.additionalRP, processor.obtainPage.harvestList);
-                                });
-                            });
-                    });
-
-                    // 战斗布局模式默认开启极速战斗
-                    $(".battleButton").trigger("click");
                 });
             });
     }
@@ -308,6 +210,112 @@ async function doProcessBattleVerificationError(credential: Credential, html: st
                 doProcessBattleReturn(credential, mainPage);
             });
     });
+    return await (() => {
+        return new Promise<void>(resolve => resolve());
+    })();
+}
+
+async function doProcessBattle(credential: Credential, html: string, currentBattleCount: number) {
+    const processor = new BattleProcessor(credential, html, currentBattleCount);
+    processor.doProcess();
+
+    $("#battlePanel").html(processor.obtainPage.reportHtml!);
+    if (processor.obtainPage.reportHtml!.includes("吐故纳新，扶摇直上")) {
+        $("#battlePanel")
+            .css("background-color", "wheat")
+            .css("text-align", "center");
+    } else {
+        $("#battlePanel")
+            .removeAttr("style")
+            .css("text-align", "center");
+    }
+
+    const recommendation = processor.obtainRecommendation;
+    switch (recommendation) {
+        case "修":
+            $("#battleMenu").html("" +
+                "<button role='button' class='battleButton' " +
+                "id='battleRepair' style='font-size:150%'>修理</button>" +
+                "")
+                .parent().show();
+            break;
+        case "宿":
+            $("#battleMenu").html("" +
+                "<button role='button' class='battleButton' " +
+                "id='battleLodge' style='font-size:150%'>住宿</button>" +
+                "")
+                .parent().show();
+            break;
+        case "存":
+            $("#battleMenu").html("" +
+                "<button role='button' class='battleButton' " +
+                "id='battleDeposit' style='font-size:150%'>存钱</button>" +
+                "")
+                .parent().show();
+            break;
+        case "回":
+            $("#battleMenu").html("" +
+                "<button role='button' class='battleButton' " +
+                "id='battleReturn' style='font-size:150%'>返回</button>" +
+                "")
+                .parent().show();
+            break;
+    }
+
+    $("#battleReturn").on("click", () => {
+        $("#battleReturn").prop("disabled", true);
+        new BattleReturnInterceptor(credential, currentBattleCount)
+            .doBeforeReturn()
+            .then(() => {
+                const request = credential.asRequestMap();
+                request.set("mode", "STATUS");
+                NetworkUtils.post("status.cgi", request)
+                    .then(mainPage => {
+                        doProcessBattleReturn(credential, mainPage, processor.obtainPage.additionalRP, processor.obtainPage.harvestList);
+                    });
+            });
+    });
+    $("#battleDeposit").on("click", () => {
+        $("#battleDeposit").prop("disabled", true);
+        new BattleReturnInterceptor(credential, currentBattleCount)
+            .doBeforeReturn()
+            .then(() => {
+                const request = credential.asRequestMap();
+                request.set("azukeru", "all");
+                request.set("mode", "BANK_SELL");
+                NetworkUtils.post("town.cgi", request)
+                    .then(mainPage => {
+                        if (processor.obtainPage.zodiacBattle) {
+                            new TownInn(credential).recovery().then(m => {
+                                doProcessBattleReturn(credential, m, processor.obtainPage.additionalRP, processor.obtainPage.harvestList);
+                            });
+                        } else {
+                            doProcessBattleReturn(credential, mainPage, processor.obtainPage.additionalRP, processor.obtainPage.harvestList);
+                        }
+                    });
+            });
+    });
+    $("#battleRepair").on("click", () => {
+        $("#battleRepair").prop("disabled", true);
+        new BattleReturnInterceptor(credential, currentBattleCount)
+            .doBeforeReturn()
+            .then(() => {
+                new TownForge(credential).repairAll().then(m => {
+                    doProcessBattleReturn(credential, m, processor.obtainPage.additionalRP, processor.obtainPage.harvestList);
+                });
+            });
+    });
+    $("#battleLodge").on("click", () => {
+        $("#battleLodge").prop("disabled", true);
+        new BattleReturnInterceptor(credential, currentBattleCount)
+            .doBeforeReturn()
+            .then(() => {
+                new TownInn(credential).recovery().then(m => {
+                    doProcessBattleReturn(credential, m, processor.obtainPage.additionalRP, processor.obtainPage.harvestList);
+                });
+            });
+    });
+
     return await (() => {
         return new Promise<void>(resolve => resolve());
     })();
