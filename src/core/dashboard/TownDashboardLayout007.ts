@@ -2,6 +2,7 @@ import _ from "lodash";
 import PersonalStatus from "../../pocketrose/PersonalStatus";
 import Credential from "../../util/Credential";
 import NetworkUtils from "../../util/NetworkUtils";
+import PageUtils from "../../util/PageUtils";
 import BattleProcessor from "../battle/BattleProcessor";
 import BattleRecord from "../battle/BattleRecord";
 import BattleReturnInterceptor from "../battle/BattleReturnInterceptor";
@@ -176,9 +177,12 @@ class TownDashboardLayout007 extends TownDashboardLayout {
 
                     const currentBattleCount = battleCount + 1;
 
-                    doProcessBattle(credential, html, currentBattleCount).then(() => {
-                        // 战斗布局模式默认开启极速战斗
-                        $(".battleButton").trigger("click");
+                    doBeforeProcessBattle(credential, currentBattleCount, PageUtils.currentPageHtml(), html, request).then(() => {
+                        // 开始处理战斗返回的结果
+                        doProcessBattle(credential, html, currentBattleCount).then(() => {
+                            // 战斗布局模式默认开启极速战斗
+                            $(".battleButton").trigger("click");
+                        });
                     });
                 });
             });
@@ -210,6 +214,16 @@ async function doProcessBattleVerificationError(credential: Credential, html: st
                 doProcessBattleReturn(credential, mainPage);
             });
     });
+    return await (() => {
+        return new Promise<void>(resolve => resolve());
+    })();
+}
+
+async function doBeforeProcessBattle(credential: Credential,
+                                     currentBattleCount: number,
+                                     beforePage: string,
+                                     afterPage: string,
+                                     request: Map<string, string>) {
     return await (() => {
         return new Promise<void>(resolve => resolve());
     })();
