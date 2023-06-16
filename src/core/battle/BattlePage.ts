@@ -16,6 +16,7 @@ class BattlePage {
     roleMana?: number;              // 角色剩余魔力
     roleMaxMana?: number;           // 角色最大魔力
     monsterHealth?: number;         // 怪物剩余生命
+    monsterMaxHealth?: number;      // 怪物最大生命
     battleResult?: string;          // 战斗结果
     harvestList?: string[];         // 入手列表
     monsterTask?: boolean;          // 杀怪任务
@@ -271,6 +272,8 @@ class BattlePage {
                     .each((i, td) => {
                         let s = StringUtils.substringBefore($(td).text(), " / ");
                         page.monsterHealth = _.parseInt(s);
+                        s = StringUtils.substringAfter($(td).text(), " / ");
+                        page.monsterMaxHealth = _.parseInt(s);
                     })
             });
 
