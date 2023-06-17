@@ -13,7 +13,7 @@ import PageProcessorCredentialSupport from "../PageProcessorCredentialSupport";
 
 class CastleBankPageProcessor extends PageProcessorCredentialSupport {
 
-    doProcess(credential: Credential, context?: PageProcessorContext): void {
+    doProcess1(credential: Credential, context?: PageProcessorContext): void {
         const page = CastleBank.parsePage(PageUtils.currentPageHtml());
         const castleName = context!.get("castleName")!;
         this.#createImmutablePage(credential, castleName);

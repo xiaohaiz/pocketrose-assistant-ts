@@ -8,7 +8,7 @@ import PageProcessorCredentialSupport from "../PageProcessorCredentialSupport";
 abstract class PersonalCareerManagementPageProcessor extends PageProcessorCredentialSupport {
 
 
-    doProcess(credential: Credential, context?: PageProcessorContext) {
+    doProcess1(credential: Credential, context?: PageProcessorContext) {
         const page = PersonalCareerManagement.parsePage(PageUtils.currentPageHtml());
         this.doProcessPageParsed(credential, page, context);
     }

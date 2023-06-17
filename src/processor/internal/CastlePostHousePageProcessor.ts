@@ -20,7 +20,7 @@ class CastlePostHousePageProcessor extends PageProcessorCredentialSupport {
         super();
     }
 
-    doProcess(credential: Credential, context?: PageProcessorContext): void {
+    doProcess1(credential: Credential, context?: PageProcessorContext): void {
         doProcess(credential);
     }
 

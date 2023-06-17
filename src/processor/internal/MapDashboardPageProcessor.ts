@@ -18,7 +18,7 @@ import PageProcessorCredentialSupport from "../PageProcessorCredentialSupport";
 
 class MapDashboardPageProcessor extends PageProcessorCredentialSupport {
 
-    doProcess(credential: Credential, context?: PageProcessorContext): void {
+    doProcess1(credential: Credential, context?: PageProcessorContext): void {
         if (context === undefined || context.get("coordinate") === undefined) {
             return;
         }

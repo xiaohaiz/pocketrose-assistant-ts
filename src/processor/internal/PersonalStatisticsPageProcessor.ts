@@ -20,7 +20,7 @@ import PageProcessorCredentialSupport from "../PageProcessorCredentialSupport";
 
 abstract class PersonalStatisticsPageProcessor extends PageProcessorCredentialSupport {
 
-    doProcess(credential: Credential, context?: PageProcessorContext): void {
+    doProcess1(credential: Credential, context?: PageProcessorContext): void {
         // 点名的页面也是令人无语，全部在一个大form里面。
         let lastDivHtml = "";
         $("form:first")

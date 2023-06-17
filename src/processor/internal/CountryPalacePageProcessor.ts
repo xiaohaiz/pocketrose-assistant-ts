@@ -14,7 +14,7 @@ import PageProcessorCredentialSupport from "../PageProcessorCredentialSupport";
 
 class CountryPalacePageProcessor extends PageProcessorCredentialSupport {
 
-    doProcess(credential: Credential, context?: PageProcessorContext): void {
+    doProcess1(credential: Credential, context?: PageProcessorContext): void {
         $("table[height='100%']").removeAttr("height");
 
         const pageTitle = $("table:first")

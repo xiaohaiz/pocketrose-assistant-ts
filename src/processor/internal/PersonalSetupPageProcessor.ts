@@ -24,7 +24,7 @@ abstract class PersonalSetupPageProcessor extends PageProcessorCredentialSupport
             10132];
     }
 
-    doProcess(credential: Credential) {
+    doProcess1(credential: Credential) {
         // 整个页面是放在一个大form里面，删除重组
         const lastDivHtml = $("div:last").html();
         $("form:first").remove();

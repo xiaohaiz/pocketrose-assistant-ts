@@ -6,7 +6,7 @@ import PageProcessorCredentialSupport from "../PageProcessorCredentialSupport";
 
 class ConversationPageProcessor extends PageProcessorCredentialSupport {
 
-    doProcess(credential: Credential, context?: PageProcessorContext): void {
+    doProcess1(credential: Credential, context?: PageProcessorContext): void {
 
         $("table:first")
             .next()

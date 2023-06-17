@@ -28,7 +28,7 @@ class BattlePageProcessor extends PageProcessorCredentialSupport {
         processBattle(credential, processor);
     }
 
-    doProcess(credential: Credential, context?: PageProcessorContext): void {
+    doProcess1(credential: Credential, context?: PageProcessorContext): void {
     }
 
 }

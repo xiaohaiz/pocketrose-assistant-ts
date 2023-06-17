@@ -11,7 +11,7 @@ import PageProcessorCredentialSupport from "../PageProcessorCredentialSupport";
 
 class CountryChangePageProcessor extends PageProcessorCredentialSupport {
 
-    doProcess(credential: Credential, context?: PageProcessorContext): void {
+    doProcess1(credential: Credential, context?: PageProcessorContext): void {
         $("table:first")
             .find("> tbody:first")
             .find("> tr:first")

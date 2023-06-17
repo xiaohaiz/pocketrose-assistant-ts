@@ -16,7 +16,7 @@ import PageProcessorCredentialSupport from "../PageProcessorCredentialSupport";
 
 class MetroDashboardPageProcessor extends PageProcessorCredentialSupport {
 
-    doProcess(credential: Credential, context?: PageProcessorContext): void {
+    doProcess1(credential: Credential, context?: PageProcessorContext): void {
         const page = MetroDashboardPage.parse(PageUtils.currentPageHtml());
 
         renderAnnouncement();

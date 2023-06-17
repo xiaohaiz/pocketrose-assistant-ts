@@ -11,7 +11,7 @@ import PageProcessorCredentialSupport from "../PageProcessorCredentialSupport";
 
 class CountryTownStrengthenPageProcessor extends PageProcessorCredentialSupport {
 
-    doProcess(credential: Credential, context?: PageProcessorContext): void {
+    doProcess1(credential: Credential, context?: PageProcessorContext): void {
         $("table[height='100%']").removeAttr("height");
         $("form[action='status.cgi']").hide();
 

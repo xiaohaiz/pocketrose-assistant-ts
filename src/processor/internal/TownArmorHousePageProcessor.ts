@@ -16,7 +16,7 @@ class TownArmorHousePageProcessor extends PageProcessorCredentialSupport {
         return [10007, 10008];
     }
 
-    doProcess(credential: Credential, context?: PageProcessorContext): void {
+    doProcess1(credential: Credential, context?: PageProcessorContext): void {
         const page = TownArmorHouse.parsePage(PageUtils.currentPageHtml());
         this.#renderImmutablePage(credential, page);
         this.#renderMutablePage(credential, page);

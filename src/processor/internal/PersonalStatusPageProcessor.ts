@@ -16,7 +16,7 @@ abstract class PersonalStatusPageProcessor extends PageProcessorCredentialSuppor
         super();
     }
 
-    doProcess(credential: Credential, context?: PageProcessorContext) {
+    doProcess1(credential: Credential, context?: PageProcessorContext) {
         const page = PersonalStatus.parsePage(PageUtils.currentPageHtml());
 
         this.#renderPage(page.role!);

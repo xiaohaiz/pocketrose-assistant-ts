@@ -11,7 +11,7 @@ import PageProcessorCredentialSupport from "../PageProcessorCredentialSupport";
 
 class TownAccessoryHousePageProcessor extends PageProcessorCredentialSupport {
 
-    doProcess(credential: Credential, context?: PageProcessorContext): void {
+    doProcess1(credential: Credential, context?: PageProcessorContext): void {
         const page = TownAccessoryHouse.parsePage(PageUtils.currentPageHtml());
         this.#renderImmutablePage(credential, page);
         this.#renderMutablePage(credential, page);
