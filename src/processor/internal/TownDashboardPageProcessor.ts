@@ -21,10 +21,10 @@ class TownDashboardPageProcessor extends PageProcessorCredentialSupport {
     }
 
     async doProcess(credential: Credential, context?: PageProcessorContext): Promise<void> {
-        await this.#internalProcess(credential, context);
+        await this.#internalProcess(credential);
     }
 
-    async #internalProcess(credential: Credential, context?: PageProcessorContext) {
+    async #internalProcess(credential: Credential) {
         const configId = TownDashboardLayoutManager.loadDashboardLayoutConfigId(credential);
         const layout = LAYOUT_MANAGER.getLayout(configId);
         const parser = new TownDashboardPageParser(credential, PageUtils.currentPageHtml(), layout?.battleMode());
@@ -57,11 +57,9 @@ class TownDashboardPageProcessor extends PageProcessorCredentialSupport {
         doRenderEnlargeMode();
         await new BattleButtonManager().createSafeBattleButton();
 
-        layout?.render(credential, page);
-
-        return await (() => {
-            return new Promise<void>(resolve => resolve());
-        })();
+        if (layout) {
+            await layout.render(credential, page);
+        }
     }
 
 }
