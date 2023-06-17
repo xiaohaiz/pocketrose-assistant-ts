@@ -4,10 +4,14 @@ import TimeoutUtils from "../../util/TimeoutUtils";
 
 class BattleButtonManager {
 
+    static isSafeButtonEnabled() {
+        return StorageUtils.getBoolean("_pa_045");
+    }
+
     async createSafeBattleButton() {
         return await (() => {
             return new Promise<void>(resolve => {
-                if (!StorageUtils.getBoolean("_pa_045")) {
+                if (!BattleButtonManager.isSafeButtonEnabled()) {
                     resolve();
                     return;
                 }
