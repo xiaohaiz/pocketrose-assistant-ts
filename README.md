@@ -1,5 +1,7 @@
 # pocketrose-assistant-ts
 
+### 版本 4.2.7-SNAPSHOT
+
 ### 版本 4.2.6
 
 1. 战斗模式支持战斗安全按钮的设置。
