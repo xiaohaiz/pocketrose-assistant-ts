@@ -11,12 +11,11 @@ import PageProcessorCredentialSupport from "../PageProcessorCredentialSupport";
 
 class TownArmorHousePageProcessor extends PageProcessorCredentialSupport {
 
-
     doLoadButtonStyles(): number[] {
         return [10007, 10008];
     }
 
-    doProcess1(credential: Credential, context?: PageProcessorContext): void {
+    async doProcess(credential: Credential, context?: PageProcessorContext): Promise<void> {
         const page = TownArmorHouse.parsePage(PageUtils.currentPageHtml());
         this.#renderImmutablePage(credential, page);
         this.#renderMutablePage(credential, page);

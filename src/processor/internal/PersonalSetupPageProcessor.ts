@@ -8,6 +8,7 @@ import TreasureBag from "../../pocketrose/TreasureBag";
 import Credential from "../../util/Credential";
 import MessageBoard from "../../util/MessageBoard";
 import PageUtils from "../../util/PageUtils";
+import PageProcessorContext from "../PageProcessorContext";
 import PageProcessorCredentialSupport from "../PageProcessorCredentialSupport";
 
 abstract class PersonalSetupPageProcessor extends PageProcessorCredentialSupport {
@@ -24,7 +25,7 @@ abstract class PersonalSetupPageProcessor extends PageProcessorCredentialSupport
             10132];
     }
 
-    doProcess1(credential: Credential) {
+    async doProcess(credential: Credential, context?: PageProcessorContext): Promise<void> {
         // 整个页面是放在一个大form里面，删除重组
         const lastDivHtml = $("div:last").html();
         $("form:first").remove();

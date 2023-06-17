@@ -24,9 +24,6 @@ class TownDashboardPageProcessor extends PageProcessorCredentialSupport {
         await this.#internalProcess(credential, context);
     }
 
-    doProcess1(credential: Credential, context?: PageProcessorContext): void {
-    }
-
     async #internalProcess(credential: Credential, context?: PageProcessorContext) {
         const configId = TownDashboardLayoutManager.loadDashboardLayoutConfigId(credential);
         const layout = LAYOUT_MANAGER.getLayout(configId);

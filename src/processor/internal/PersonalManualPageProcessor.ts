@@ -9,7 +9,7 @@ import PageProcessorCredentialSupport from "../PageProcessorCredentialSupport";
 
 class PersonalManualPageProcessor extends PageProcessorCredentialSupport {
 
-    doProcess1(credential: Credential, context?: PageProcessorContext): void {
+    async doProcess(credential: Credential, context?: PageProcessorContext): Promise<void> {
         $("table[height='100%']").removeAttr("height");
         $("form[action='status.cgi']").remove();
 

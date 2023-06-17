@@ -18,11 +18,7 @@ import PageProcessorCredentialSupport from "../PageProcessorCredentialSupport";
 
 class MapDashboardPageProcessor extends PageProcessorCredentialSupport {
 
-    doProcess1(credential: Credential, context?: PageProcessorContext): void {
-        if (context === undefined || context.get("coordinate") === undefined) {
-            return;
-        }
-
+    async doProcess(credential: Credential, context?: PageProcessorContext): Promise<void> {
         const page = MapDashboardPage.parse(PageUtils.currentPageHtml());
 
         $("center:first")
@@ -99,7 +95,7 @@ class MapDashboardPageProcessor extends PageProcessorCredentialSupport {
                 });
         }
 
-        const coordinate = Coordinate.parse(context.get("coordinate")!);
+        const coordinate = Coordinate.parse(context!.get("coordinate")!);
         const buttonId = "location_" + coordinate.x + "_" + coordinate.y;
         $("#" + buttonId)
             .closest("td")

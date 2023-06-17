@@ -8,7 +8,7 @@ import PageProcessorCredentialSupport from "../PageProcessorCredentialSupport";
 
 class TownTaskHousePageProcessor extends PageProcessorCredentialSupport {
 
-    doProcess1(credential: Credential, context?: PageProcessorContext): void {
+    async doProcess(credential: Credential, context?: PageProcessorContext): Promise<void> {
         const roleTask = loadRoleTask(credential);
 
         $("table:eq(1)")

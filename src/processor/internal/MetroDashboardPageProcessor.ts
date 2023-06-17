@@ -16,9 +16,8 @@ import PageProcessorCredentialSupport from "../PageProcessorCredentialSupport";
 
 class MetroDashboardPageProcessor extends PageProcessorCredentialSupport {
 
-    doProcess1(credential: Credential, context?: PageProcessorContext): void {
+    async doProcess(credential: Credential, context?: PageProcessorContext): Promise<void> {
         const page = MetroDashboardPage.parse(PageUtils.currentPageHtml());
-
         renderAnnouncement();
         renderMobilization();
         renderRoleStatus();

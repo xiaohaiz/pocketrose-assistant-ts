@@ -19,11 +19,7 @@ import PageProcessorCredentialSupport from "../PageProcessorCredentialSupport";
 
 class TownAdventureGuildPageProcessor extends PageProcessorCredentialSupport {
 
-    constructor() {
-        super();
-    }
-
-    doProcess1(credential: Credential, context?: PageProcessorContext): void {
+    async doProcess(credential: Credential, context?: PageProcessorContext): Promise<void> {
         const pageHtml = document.documentElement.outerHTML;
         const treasureHintList = TreasureHintParser.parseTreasureHintList(pageHtml);
         doProcess(credential, treasureHintList);

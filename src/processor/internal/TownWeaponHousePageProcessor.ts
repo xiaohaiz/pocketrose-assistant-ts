@@ -16,9 +16,6 @@ class TownWeaponHousePageProcessor extends PageProcessorCredentialSupport {
         processPage(credential);
     }
 
-    doProcess1(credential: Credential, context?: PageProcessorContext): void {
-    }
-
 }
 
 function processPage(credential: Credential) {

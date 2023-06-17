@@ -12,11 +12,7 @@ import PageProcessorCredentialSupport from "../PageProcessorCredentialSupport";
 
 abstract class PersonalStatusPageProcessor extends PageProcessorCredentialSupport {
 
-    protected constructor() {
-        super();
-    }
-
-    doProcess1(credential: Credential, context?: PageProcessorContext) {
+    async doProcess(credential: Credential, context?: PageProcessorContext): Promise<void> {
         const page = PersonalStatus.parsePage(PageUtils.currentPageHtml());
 
         this.#renderPage(page.role!);

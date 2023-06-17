@@ -22,9 +22,6 @@ class TownPostHousePageProcessor extends PageProcessorCredentialSupport {
         doProcess(credential);
     }
 
-    doProcess1(credential: Credential, context?: PageProcessorContext): void {
-    }
-
 }
 
 function doProcess(credential: Credential): void {

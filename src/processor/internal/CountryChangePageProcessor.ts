@@ -11,7 +11,7 @@ import PageProcessorCredentialSupport from "../PageProcessorCredentialSupport";
 
 class CountryChangePageProcessor extends PageProcessorCredentialSupport {
 
-    doProcess1(credential: Credential, context?: PageProcessorContext): void {
+    async doProcess(credential: Credential, context?: PageProcessorContext): Promise<void> {
         $("table:first")
             .find("> tbody:first")
             .find("> tr:first")

@@ -16,11 +16,7 @@ import PageProcessorCredentialSupport from "../PageProcessorCredentialSupport";
 
 class CastlePostHousePageProcessor extends PageProcessorCredentialSupport {
 
-    constructor() {
-        super();
-    }
-
-    doProcess1(credential: Credential, context?: PageProcessorContext): void {
+    async doProcess(credential: Credential, context?: PageProcessorContext): Promise<void> {
         doProcess(credential);
     }
 

@@ -18,7 +18,7 @@ import PageProcessorCredentialSupport from "../PageProcessorCredentialSupport";
 
 class TownGemHousePageProcessor extends PageProcessorCredentialSupport {
 
-    doProcess1(credential: Credential, context?: PageProcessorContext): void {
+    async doProcess(credential: Credential, context?: PageProcessorContext): Promise<void> {
         const townId = context!.get("townId")!;
         const town = TownLoader.load(townId)!;
         new TownGemHouse(credential, town.id).parsePage(PageUtils.currentPageHtml())
