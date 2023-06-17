@@ -33,7 +33,11 @@ abstract class PageProcessorCredentialSupport implements PageProcessor {
     async doProcess(credential: Credential, context?: PageProcessorContext): Promise<void> {
     }
 
-    abstract doProcess1(credential: Credential, context?: PageProcessorContext): void;
+    /**
+     * @deprecated
+     */
+    doProcess1(credential: Credential, context?: PageProcessorContext) {
+    }
 
     doLoadButtonStyles(): number[] {
         return [];
