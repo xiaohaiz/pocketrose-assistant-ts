@@ -147,6 +147,9 @@ class TownDashboardLayout007 extends TownDashboardLayout {
                 if (BattleButtonManager.isHiddenButtonEnabled()) {
                     $("#refreshButton").hide();
                     $("#battleButton").hide();
+                } else {
+                    $("#refreshButton").prop("disabled", true);
+                    $("#battleButton").prop("disabled", true);
                 }
 
                 const request = credential.asRequestMap();
@@ -361,6 +364,9 @@ function doProcessBattleReturn(credential: Credential,
     if (BattleButtonManager.isHiddenButtonEnabled()) {
         $("#refreshButton").show();
         $("#battleButton").show();
+    } else {
+        $("#refreshButton").prop("disabled", false);
+        $("#battleButton").prop("disabled", false);
     }
 
     const parser = new TownDashboardPageParser(credential, mainPage, true);
