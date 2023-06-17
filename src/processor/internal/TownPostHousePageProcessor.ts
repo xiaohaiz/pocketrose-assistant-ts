@@ -18,8 +18,11 @@ import PageProcessorCredentialSupport from "../PageProcessorCredentialSupport";
 
 class TownPostHousePageProcessor extends PageProcessorCredentialSupport {
 
-    doProcess(credential: Credential, context?: PageProcessorContext): void {
+    async doProcess0(credential: Credential, context?: PageProcessorContext): Promise<void> {
         doProcess(credential);
+    }
+
+    doProcess(credential: Credential, context?: PageProcessorContext): void {
     }
 
 }
