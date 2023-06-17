@@ -3,10 +3,10 @@ import PersonalStatus from "../../pocketrose/PersonalStatus";
 import Credential from "../../util/Credential";
 import NetworkUtils from "../../util/NetworkUtils";
 import PageUtils from "../../util/PageUtils";
+import BattleButtonManager from "../battle/BattleButtonManager";
 import BattleProcessor from "../battle/BattleProcessor";
 import BattleRecord from "../battle/BattleRecord";
 import BattleReturnInterceptor from "../battle/BattleReturnInterceptor";
-import BattleSafeButtonManager from "../battle/BattleSafeButtonManager";
 import BattleScene from "../battle/BattleScene";
 import BattleStorages from "../battle/BattleStorages";
 import SetupLoader from "../config/SetupLoader";
@@ -129,8 +129,12 @@ class TownDashboardLayout007 extends TownDashboardLayout {
 
         BattleStorages.getBattleRecordStorage().load(credential.id).then(record => {
             const lastBattle = record.html!;
-            if (lastBattle.includes("吐故纳新，扶摇直上")) {
+            if (lastBattle.includes("吐故纳新，扶摇直上") && lastBattle.includes("孵化成功")) {
+                $("#battlePanel").css("background-color", "yellow");
+            } else if (lastBattle.includes("吐故纳新，扶摇直上")) {
                 $("#battlePanel").css("background-color", "wheat");
+            } else if (lastBattle.includes("孵化成功")) {
+                $("#battlePanel").css("background-color", "skyblue");
             }
             $("#battlePanel").html(lastBattle);
         });
@@ -144,8 +148,13 @@ class TownDashboardLayout007 extends TownDashboardLayout {
         $("#battleButton")
             .attr("type", "button")
             .on("click", () => {
-                $("#refreshButton").hide();
-                $("#battleButton").hide();
+                if (BattleButtonManager.isHiddenButtonEnabled()) {
+                    $("#refreshButton").hide();
+                    $("#battleButton").hide();
+                } else {
+                    $("#refreshButton").prop("disabled", true);
+                    $("#battleButton").prop("disabled", true);
+                }
 
                 const request = credential.asRequestMap();
                 $("#battleCell")
@@ -248,9 +257,18 @@ async function doProcessBattle(credential: Credential, html: string, currentBatt
     await processor.doProcess();
 
     $("#battlePanel").html(processor.obtainPage.reportHtml!);
-    if (processor.obtainPage.reportHtml!.includes("吐故纳新，扶摇直上")) {
+    if (processor.obtainPage.reportHtml!.includes("吐故纳新，扶摇直上") &&
+        processor.obtainPage.reportHtml!.includes("孵化成功")) {
         $("#battlePanel")
             .css("background-color", "wheat")
+            .css("text-align", "yellow");
+    } else if (processor.obtainPage.reportHtml!.includes("吐故纳新，扶摇直上")) {
+        $("#battlePanel")
+            .css("background-color", "wheat")
+            .css("text-align", "center");
+    } else if (processor.obtainPage.reportHtml!.includes("孵化成功")) {
+        $("#battlePanel")
+            .css("background-color", "skyblue")
             .css("text-align", "center");
     } else {
         $("#battlePanel")
@@ -356,8 +374,13 @@ function doProcessBattleReturn(credential: Credential,
     $("#systemAnnouncement").removeAttr("style");
     $(".battleButton").off("click");
     $("#battleMenu").html("").parent().hide();
-    $("#refreshButton").show();
-    $("#battleButton").show();
+    if (BattleButtonManager.isHiddenButtonEnabled()) {
+        $("#refreshButton").show();
+        $("#battleButton").show();
+    } else {
+        $("#refreshButton").prop("disabled", false);
+        $("#battleButton").prop("disabled", false);
+    }
 
     const parser = new TownDashboardPageParser(credential, mainPage, true);
     const page = parser.parse();
@@ -456,7 +479,7 @@ function doProcessBattleReturn(credential: Credential,
         ksm.bind();
     }
 
-    new BattleSafeButtonManager().createSafeBattleButton().then();
+    new BattleButtonManager().createSafeBattleButton().then();
 }
 
 function _showTime() {

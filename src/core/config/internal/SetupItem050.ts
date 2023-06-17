@@ -22,7 +22,7 @@ function doRender() {
     html += "<th style='background-color:#E8E8D0'>" + name + "</th>";
     html += "<td style='background-color:#E8E8D0'></td>";
     html += "<td style='background-color:#EFE0C0'><input type='button' class='dynamic_button' id='setup_" + code + "' value='设置'></td>";
-    html += "<td style='background-color:#E0D0B0;text-align:left'>" + doGenerateSetupItem() + "</td>";
+    html += "<td style='background-color:#E0D0B0;text-align:left' colspan='2'>" + doGenerateSetupItem() + "</td>";
     html += "</tr>";
 
     $("#setup_item_table").append($(html));

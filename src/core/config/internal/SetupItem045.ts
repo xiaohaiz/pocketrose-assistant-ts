@@ -21,6 +21,7 @@ function doRender() {
     html += "<td style='background-color:#E8E8D0'></td>";
     html += "<td style='background-color:#EFE0C0'><input type='button' class='dynamic_button' id='setup_" + code + "' value='设置'></td>";
     html += "<td style='background-color:#E0D0B0;text-align:left'>" + doGenerateSetupItem() + "</td>";
+    html += "<td style='background-color:#E8E8D0;text-align:left'>在读秒未完成之前禁用战斗按钮以避免额外的验证码损耗（可能会造成稍微读秒损耗）</td>";
     html += "</tr>";
 
     $("#setup_item_table").append($(html));
@@ -39,7 +40,6 @@ function doGenerateSetupItem() {
     html += "<option class='option_class_" + code + "' value='1'>启用</option>";
     html += "<option class='option_class_" + code + "' value='0'>禁用</option>";
     html += "</select>";
-    html += "在读秒未完成之前禁用战斗按钮以避免额外的验证码损耗（可能会造成稍微读秒损耗）";
     return html;
 }
 

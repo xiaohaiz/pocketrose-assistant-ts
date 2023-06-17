@@ -1,4 +1,6 @@
+import {ECharts} from "echarts";
 import SetupLoader from "../../core/config/SetupLoader";
+import MonsterDimensionGenerator from "../../core/monster/MonsterDimensionGenerator";
 import MonsterProfileDict from "../../core/monster/MonsterProfileDict";
 import MonsterRelationLoader from "../../core/monster/MonsterRelationLoader";
 import MonsterSimulator from "../../core/monster/MonsterSimulator";
@@ -161,7 +163,7 @@ function doRender(credential: Credential, petList: Pet[], studyStatus: number[],
         html += "<input type='button' class='PetUIButton' value='献祭' id='pet_" + pet.index + "_consecrate'>";
         html += "<input type='button' class='PetUIButton' value='发送' id='pet_" + pet.index + "_send'>";
         html += "<input type='button' class='PetUIButton' value='改名' id='pet_" + pet.index + "_rename'>&nbsp;";
-        html += "<input type='text' id='pet_" + pet.index + "_name_text' size='15' maxlength='20'>";
+        html += "<input type='text' id='pet_" + pet.index + "_name_text' size='15' maxlength='20' spellcheck='false'>";
         html += "</td>";
         html += "<td style='text-align:right'>";
         html += new MonsterSimulator(pet).doSimulate().doGenerateHtml();
@@ -172,38 +174,66 @@ function doRender(credential: Credential, petList: Pet[], studyStatus: number[],
         html += "</td>";
         html += "</tr>";
     }
-    html += "<tr><td style='background-color:#EFE0C0;text-align:right' colspan='20'>";
-    const fastNames = TeamMemberLoader.loadTeamMembers().map(it => it.name!);
-    if (fastNames.length > 0) {
+
+    html += "<tr>";
+    html += "<td style='background-color:#EFE0C0;text-align:center' colspan='20'>";
+
+    html += "<table style='background-color:#888888;margin:auto;width:100%'>";
+    html += "<tbody>";
+    html += "<tr>";
+    html += "<td style='background-color:#EFE0C0;width:40%;height:300px' id='monsterDimension'></td>";
+    html += "<td style='background-color:#EFE0C0;height:300px;vertical-align:top'>";
+    html += "<table style='background-color:#888888;margin:auto;width:100%;height:100%'>";
+    html += "<tbody>";
+    // LINE
+    html += "<tr>";
+    html += "<td style='background-color:#EFE0C0;text-align:center'>"
+    const teamMemberNames = TeamMemberLoader.loadTeamMembers().map(it => it.name!);
+    if (teamMemberNames.length > 0) {
         html += "<select id='fastNameSelect' class='PetUIButton'>";
         html += "<option value=''>快速选人</option>"
-        for (const fastName of fastNames) {
+        for (const fastName of teamMemberNames) {
             // noinspection JSDeprecatedSymbols
             const v = "fastName_" + escape(fastName);
             html += "<option value='" + v + "'>" + fastName + "</option>";
         }
         html += "</select>";
     }
-    html += "<input type='text' id='receiverName' size='15' maxlength='20'>";
+    html += "<input type='text' id='receiverName' size='15' maxlength='20' spellcheck='false'>";
     html += "<input type='button' class='PetUIButton' id='searchReceiverButton' value='找人'>";
     html += "<select name='eid' id='receiverCandidates'><option value=''>选择发送对象</select>";
-    html += "</td></tr>";
-    html += "<tr><td style='background-color:#EFE0C0;text-align:center' colspan='20'>";
+    html += "</td>"
+    html += "</tr>";
+    // LINE
+    html += "<tr><td style='background-color:#EFE0C0;text-align:center'>";
     html += "<b style='color:navy'>设置宠物升级时学习技能情况</b>";
     html += "</td></tr>";
-    html += "<tr><td style='background-color:#E8E8D0;text-align:center' colspan='20'>";
+    // LINE
+    html += "<tr><td style='background-color:#E8E8D0;text-align:center'>";
     html += "<input type='button' class='PetUIButton' value='第１技能位' id='pet_spell_study_1'>";
     html += "<input type='button' class='PetUIButton' value='第２技能位' id='pet_spell_study_2'>";
     html += "<input type='button' class='PetUIButton' value='第３技能位' id='pet_spell_study_3'>";
     html += "<input type='button' class='PetUIButton' value='第４技能位' id='pet_spell_study_4'>";
     html += "</td></tr>";
-    html += "<tr><td style='background-color:#E8E8D0;text-align:center' colspan='20'>";
+    // LINE
+    html += "<tr><td style='background-color:#E8E8D0;text-align:center'>";
     html += "<input type='button' class='PetUIButton' value='刷新宠物管理' id='refreshButton'>";
     html += "<input type='button' class='PetUIButton' value='打开黄金笼子' id='openCageButton'>";
     html += "<input type='button' class='PetUIButton' value='关闭黄金笼子' id='closeCageButton'>";
     html += "<input type='button' class='PetUIButton' value='从黄金笼子盲取' id='takeOutFirstFromCageButton' disabled style='display:none'>";
     html += "</td></tr>";
-    html += "<tr id='ranchMenu' style='display:none'><td style='background-color:#E8E8D0;text-align:center' colspan='20'>";
+    // LINE
+    html += "<tr><td style='background-color:#E8E8D0;text-align:center;height:100%'></td></tr>";
+    html += "</tbody>";
+    html += "</table>";
+    html += "</td>";
+    html += "</tr>";
+    html += "</tbody>";
+    html += "</table>";
+    html += "</td>";
+    html += "</tr>";
+
+    html += "<tr id='ranchMenu' style='display:none'><td style='background-color:#E8E8D0;text-align:right' colspan='20'>";
     html += "<input type='button' class='PetUIButton' value='打开城堡牧场' id='openRanchButton'>";
     html += "<input type='button' class='PetUIButton' value='关闭城堡牧场' id='closeRanchButton'>";
     html += "</td></tr>";
@@ -395,16 +425,26 @@ function doRender(credential: Credential, petList: Pet[], studyStatus: number[],
 }
 
 function doBindPetProfile(petList: Pet[]) {
+    const charts = new Map<number, ECharts>();
     for (const pet of petList) {
         const code = pet.code!;
         if ($("#pet_picture_" + code).length > 0) {
             $("#pet_picture_" + code)
                 .on("mouseenter", function () {
                     doRenderPetProfile(code);
+                    MonsterDimensionGenerator.generate(pet).then(chart => {
+                        if (chart) charts.set(pet.index!, chart);
+                    });
                 })
                 .on("mouseleave", function () {
                     MessageBoard.resetMessageBoard("全新的宠物管理UI为您带来不一样的感受，试试把鼠标停留在宠物图片上有惊喜。<br>" +
                         "手机用户请试试单击宠物名字那一栏。");
+                    //$("#monsterDimension").html("");
+                    const chart = charts.get(pet.index!);
+                    if (chart) {
+                        chart.dispose();
+                        charts.delete(pet.index!);
+                    }
                 })
                 .on("click", () => {
                     doRenderPetProfile(code);

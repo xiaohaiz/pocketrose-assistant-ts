@@ -2,12 +2,20 @@ import _ from "lodash";
 import StorageUtils from "../../util/StorageUtils";
 import TimeoutUtils from "../../util/TimeoutUtils";
 
-class BattleSafeButtonManager {
+class BattleButtonManager {
+
+    static isSafeButtonEnabled() {
+        return StorageUtils.getBoolean("_pa_045");
+    }
+
+    static isHiddenButtonEnabled() {
+        return StorageUtils.getBoolean("_pa_046");
+    }
 
     async createSafeBattleButton() {
         return await (() => {
             return new Promise<void>(resolve => {
-                if (!StorageUtils.getBoolean("_pa_045")) {
+                if (!BattleButtonManager.isSafeButtonEnabled()) {
                     resolve();
                     return;
                 }
@@ -45,4 +53,4 @@ class BattleSafeButtonManager {
     }
 }
 
-export = BattleSafeButtonManager;
+export = BattleButtonManager;

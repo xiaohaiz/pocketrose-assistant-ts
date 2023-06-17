@@ -156,11 +156,12 @@ abstract class PersonalSetupPageProcessor extends PageProcessorCredentialSupport
         let html = "";
         html += "<table style='background-color:#888888;width:100%;text-align:center'>";
         html += "<tbody style='background-color:#F8F0E0' id='setup_item_table'>";
-        html += "<tr style='background-color:green;color:white'>";
+        html += "<tr style='background-color:skyblue'>";
         html += "<th>名字</th>";
         html += "<th>专属</th>";
         html += "<th>设置</th>";
         html += "<th>选择</th>";
+        html += "<th>说明</th>";
         html += "</tr>";
         html += "</tbody>";
         html += "</table>";
