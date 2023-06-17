@@ -8,6 +8,10 @@ class BattleButtonManager {
         return StorageUtils.getBoolean("_pa_045");
     }
 
+    static isHiddenButtonEnabled() {
+        return StorageUtils.getBoolean("_pa_046");
+    }
+
     async createSafeBattleButton() {
         return await (() => {
             return new Promise<void>(resolve => {
