@@ -161,7 +161,7 @@ function doRender(credential: Credential, petList: Pet[], studyStatus: number[],
         html += "<input type='button' class='PetUIButton' value='献祭' id='pet_" + pet.index + "_consecrate'>";
         html += "<input type='button' class='PetUIButton' value='发送' id='pet_" + pet.index + "_send'>";
         html += "<input type='button' class='PetUIButton' value='改名' id='pet_" + pet.index + "_rename'>&nbsp;";
-        html += "<input type='text' id='pet_" + pet.index + "_name_text' size='15' maxlength='20'>";
+        html += "<input type='text' id='pet_" + pet.index + "_name_text' size='15' maxlength='20' spellcheck='false'>";
         html += "</td>";
         html += "<td style='text-align:right'>";
         html += new MonsterSimulator(pet).doSimulate().doGenerateHtml();
@@ -184,7 +184,7 @@ function doRender(credential: Credential, petList: Pet[], studyStatus: number[],
         }
         html += "</select>";
     }
-    html += "<input type='text' id='receiverName' size='15' maxlength='20'>";
+    html += "<input type='text' id='receiverName' size='15' maxlength='20' spellcheck='false'>";
     html += "<input type='button' class='PetUIButton' id='searchReceiverButton' value='找人'>";
     html += "<select name='eid' id='receiverCandidates'><option value=''>选择发送对象</select>";
     html += "</td></tr>";
