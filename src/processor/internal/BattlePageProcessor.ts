@@ -13,7 +13,7 @@ import PageProcessorCredentialSupport from "../PageProcessorCredentialSupport";
 
 class BattlePageProcessor extends PageProcessorCredentialSupport {
 
-    async doProcess0(credential: Credential, context?: PageProcessorContext): Promise<void> {
+    async doProcess(credential: Credential, context?: PageProcessorContext): Promise<void> {
         // 解析当前的战数
         const battleCount = parseBattleCount(context);
         if (battleCount === undefined) {

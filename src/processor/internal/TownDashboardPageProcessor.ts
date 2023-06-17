@@ -20,7 +20,7 @@ class TownDashboardPageProcessor extends PageProcessorCredentialSupport {
             10132];
     }
 
-    async doProcess0(credential: Credential, context?: PageProcessorContext): Promise<void> {
+    async doProcess(credential: Credential, context?: PageProcessorContext): Promise<void> {
         await this.#internalProcess(credential, context);
     }
 

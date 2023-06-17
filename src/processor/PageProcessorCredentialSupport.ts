@@ -25,12 +25,12 @@ abstract class PageProcessorCredentialSupport implements PageProcessor {
         }
 
         const credential = new Credential(id.toString(), pass.toString());
-        this.doProcess0(credential, context).then(() => {
+        this.doProcess(credential, context).then(() => {
             this.doProcess1(credential, context);
         });
     }
 
-    async doProcess0(credential: Credential, context?: PageProcessorContext): Promise<void> {
+    async doProcess(credential: Credential, context?: PageProcessorContext): Promise<void> {
     }
 
     abstract doProcess1(credential: Credential, context?: PageProcessorContext): void;
