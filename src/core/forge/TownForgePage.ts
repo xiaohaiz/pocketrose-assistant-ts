@@ -1,0 +1,4 @@
+class TownForgePage {
+}
+
+export = TownForgePage;
