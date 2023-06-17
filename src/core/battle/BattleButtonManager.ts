@@ -2,7 +2,7 @@ import _ from "lodash";
 import StorageUtils from "../../util/StorageUtils";
 import TimeoutUtils from "../../util/TimeoutUtils";
 
-class BattleSafeButtonManager {
+class BattleButtonManager {
 
     async createSafeBattleButton() {
         return await (() => {
@@ -45,4 +45,4 @@ class BattleSafeButtonManager {
     }
 }
 
-export = BattleSafeButtonManager;
+export = BattleButtonManager;

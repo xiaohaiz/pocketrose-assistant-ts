@@ -1,4 +1,4 @@
-import BattleSafeButtonManager from "../../core/battle/BattleSafeButtonManager";
+import BattleButtonManager from "../../core/battle/BattleButtonManager";
 import SetupLoader from "../../core/config/SetupLoader";
 import ExtensionShortcutLoader from "../../core/dashboard/ExtensionShortcutLoader";
 import TownDashboardLayoutManager from "../../core/dashboard/TownDashboardLayoutManager";
@@ -55,7 +55,7 @@ class TownDashboardPageProcessor extends PageProcessorCredentialSupport {
         doRenderEventBoard(page);
         doRenderRoleStatus(credential, page);
         doRenderEnlargeMode();
-        await new BattleSafeButtonManager().createSafeBattleButton();
+        await new BattleButtonManager().createSafeBattleButton();
 
         layout?.render(credential, page);
 
