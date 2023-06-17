@@ -15,6 +15,7 @@ class BattlePage {
     monsterMaxHealth?: number;      // 怪物最大生命
     battleResult?: string;          // 战斗结果
     harvestList?: string[];         // 入手列表
+    eggBorn?: boolean;              // 孵化成功
     monsterTask?: boolean;          // 杀怪任务
     petLearnSpell?: boolean;        // 宠物是否学会新技能
 

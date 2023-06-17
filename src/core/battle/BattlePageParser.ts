@@ -238,19 +238,12 @@ class BattlePageParser {
                 _.split($(p).html(), "<br>").forEach(it => {
                     if (it.endsWith("入手！")) {
                         page.harvestList!.push(it);
-                    } else if (it.includes("孵化成功")) {
-                        page.harvestList!.push(it);
-                    } else if (it.includes("完成杀怪任务")) {
-                        page.harvestList!.push(it);
-                    } else if (it.includes("遗忘了技能")) {
-                        page.harvestList!.push(it);
-                    } else if (it.includes("学会了新技能")) {
-                        page.harvestList!.push(it);
                     }
                 });
             });
 
 
+        page.eggBorn = html.includes("孵化成功");
         page.monsterTask = html.includes("完成杀怪任务");
         page.petLearnSpell = html.includes("遗忘了技能") || html.includes("学会了新技能");
 
