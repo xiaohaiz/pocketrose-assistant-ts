@@ -166,8 +166,12 @@ class TownDashboardLayout006 extends TownDashboardLayout {
 
         BattleStorages.getBattleRecordStorage().load(credential.id).then(record => {
             const lastBattle = record.html!;
-            if (lastBattle.includes("吐故纳新，扶摇直上")) {
+            if (lastBattle.includes("吐故纳新，扶摇直上") && lastBattle.includes("孵化成功")) {
+                $("#battlePanel").css("background-color", "yellow");
+            } else if (lastBattle.includes("吐故纳新，扶摇直上")) {
                 $("#battlePanel").css("background-color", "wheat");
+            } else if (lastBattle.includes("孵化成功")) {
+                $("#battlePanel").css("background-color", "skyblue");
             }
             $("#battlePanel").html(lastBattle);
         });

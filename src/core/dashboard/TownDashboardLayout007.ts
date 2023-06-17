@@ -129,8 +129,12 @@ class TownDashboardLayout007 extends TownDashboardLayout {
 
         BattleStorages.getBattleRecordStorage().load(credential.id).then(record => {
             const lastBattle = record.html!;
-            if (lastBattle.includes("吐故纳新，扶摇直上")) {
+            if (lastBattle.includes("吐故纳新，扶摇直上") && lastBattle.includes("孵化成功")) {
+                $("#battlePanel").css("background-color", "yellow");
+            } else if (lastBattle.includes("吐故纳新，扶摇直上")) {
                 $("#battlePanel").css("background-color", "wheat");
+            } else if (lastBattle.includes("孵化成功")) {
+                $("#battlePanel").css("background-color", "skyblue");
             }
             $("#battlePanel").html(lastBattle);
         });
@@ -253,9 +257,18 @@ async function doProcessBattle(credential: Credential, html: string, currentBatt
     await processor.doProcess();
 
     $("#battlePanel").html(processor.obtainPage.reportHtml!);
-    if (processor.obtainPage.reportHtml!.includes("吐故纳新，扶摇直上")) {
+    if (processor.obtainPage.reportHtml!.includes("吐故纳新，扶摇直上") &&
+        processor.obtainPage.reportHtml!.includes("孵化成功")) {
         $("#battlePanel")
             .css("background-color", "wheat")
+            .css("text-align", "yellow");
+    } else if (processor.obtainPage.reportHtml!.includes("吐故纳新，扶摇直上")) {
+        $("#battlePanel")
+            .css("background-color", "wheat")
+            .css("text-align", "center");
+    } else if (processor.obtainPage.reportHtml!.includes("孵化成功")) {
+        $("#battlePanel")
+            .css("background-color", "skyblue")
             .css("text-align", "center");
     } else {
         $("#battlePanel")
