@@ -25,7 +25,7 @@ class TownWeaponHouse {
                 // @ts-ignore
                 request.mode = "ARM_SHOP";
                 NetworkUtils.sendPostRequest("town.cgi", request, function (pageHtml) {
-                    TownWeaponHousePageParser.parse(pageHtml).then(page => resolve(page));
+                    new TownWeaponHousePageParser().parse(pageHtml).then(page => resolve(page));
                 });
             });
         };
