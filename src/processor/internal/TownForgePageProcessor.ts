@@ -54,7 +54,7 @@ async function renderPage(credential: Credential, page: TownForgePage, town: Tow
         .find("> tbody:first")
         .find("> tr:eq(2)")
         .find("> td:last")
-        .html((idx, eh) => {
+        .html(() => {
             return "<span id='roleCash'>" + page.role.cash + "</span> GOLD";
         });
     $("#tr1")
