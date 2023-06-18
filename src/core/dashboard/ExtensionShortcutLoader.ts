@@ -39,7 +39,7 @@ const EXT_SHORTCUTS = {
     9: ["团队管理", "CHUJIA"],
     10: ["宠物联赛", "PET_TZ"],
     11: ["宠物排行", "PETPROFILE"],
-    12: ["城市收益", "MAKE_TOWN"],
+    12: ["装备修理", "MY_ARM"],
     13: ["养精蓄锐", ""],
     14: ["统计报告", "DIANMING"],
 };

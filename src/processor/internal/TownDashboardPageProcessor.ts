@@ -299,24 +299,18 @@ function doRenderMenu(credential: Credential, page: TownDashboardPage) {
                 const extensionId = SetupLoader.getTownDashboardExtensionShortcutButton();
                 $(th).html("");
                 if (extensionId > 0) {
-                    let esButton = true;
                     const es = ExtensionShortcutLoader.getExtensionShortcut(extensionId)!;
-                    if (es[0] === "城市收益") {
-                        esButton = page.canCollectTownTax!;
-                    }
-                    if (esButton) {
-                        const bt = "&nbsp;" + es[0] + "&nbsp;"
-                        $(th).css("vertical-align", "bottom")
-                            .html("<button role='button' class='" + buttonClass + "' id='shortcut0' " +
-                                "style='margin-bottom:8px;white-space:nowrap;width:100%'>" + bt + "</button>")
-                        if (es[0] === "养精蓄锐") {
-                            $("#eden-1").html(PageUtils.generateFullRecoveryForm(credential));
-                            $("#shortcut0").on("click", () => {
-                                $("#fullRecovery").trigger("click");
-                            });
-                        } else {
-                            _bindShortcutButton("shortcut0", es[1]);
-                        }
+                    const bt = "&nbsp;" + es[0] + "&nbsp;"
+                    $(th).css("vertical-align", "bottom")
+                        .html("<button role='button' class='" + buttonClass + "' id='shortcut0' " +
+                            "style='margin-bottom:8px;white-space:nowrap;width:100%'>" + bt + "</button>")
+                    if (es[0] === "养精蓄锐") {
+                        $("#eden-1").html(PageUtils.generateFullRecoveryForm(credential));
+                        $("#shortcut0").on("click", () => {
+                            $("#fullRecovery").trigger("click");
+                        });
+                    } else {
+                        _bindShortcutButton("shortcut0", es[1]);
                     }
                 }
             })
