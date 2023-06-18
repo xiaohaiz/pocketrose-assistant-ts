@@ -12,12 +12,13 @@ class TownForgePageProcessor extends PageProcessorCredentialSupport {
     async doProcess(credential: Credential, context?: PageProcessorContext): Promise<void> {
         const page = await TownForgePageParser.parse(PageUtils.currentPageHtml());
         const town = TownLoader.load(context?.get("townId"));
-        await renderPage(page, town!);
+        await renderPage(credential, page, town!);
+        await renderEquipmentList(credential, page);
     }
 
 }
 
-async function renderPage(page: TownForgePage, town: Town) {
+async function renderPage(credential: Credential, page: TownForgePage, town: Town) {
     $("table:first")
         .find("> tbody:first")
         .find("> tr:first")
@@ -70,6 +71,28 @@ async function renderPage(page: TownForgePage, town: Town) {
         .css("color", "white")
         .next()
         .attr("id", "messageBoardManager");
+    $("#tr2")
+        .next()
+        .attr("id", "tr3")
+        .find("> td:first")
+        .attr("id", "equipmentList")
+        .html("");
+    $("#tr3")
+        .next()
+        .attr("id", "tr4")
+        .find("> td:first")
+        .css("text-align", "center")
+        .html("" +
+            "<div id='hidden-1' style='display:none'>" + PageUtils.generateReturnTownForm(credential) + "</div>" +
+            "<button role='button' id='returnButton'>返回" + town.name + "</button>" +
+            "");
+    $("#returnButton").on("click", () => {
+        $("#returnTown").trigger("click");
+    });
+}
+
+async function renderEquipmentList(credential: Credential, page: TownForgePage) {
+
 }
 
 export = TownForgePageProcessor;
