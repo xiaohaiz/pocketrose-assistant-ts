@@ -92,7 +92,45 @@ async function renderPage(credential: Credential, page: TownForgePage, town: Tow
 }
 
 async function renderEquipmentList(credential: Credential, page: TownForgePage) {
-
+    let html = "";
+    html += "<table style='margin:auto;background-color:#888888'>";
+    html += "<thead>";
+    html += "<tr>";
+    html += "<th style='background-color:skyblue;'>装备</th>";
+    html += "<th style='background-color:skyblue;'>所持物品</th>";
+    html += "<th style='background-color:skyblue;'>种类</th>";
+    html += "<th style='background-color:skyblue;'>威力</th>";
+    html += "<th style='background-color:skyblue;'>重量</th>";
+    html += "<th style='background-color:skyblue;'>耐久</th>";
+    html += "<th style='background-color:skyblue;'>修理费</th>";
+    html += "<th style='background-color:skyblue;'>修理</th>";
+    html += "</tr>";
+    for (const equipment of page.equipmentList) {
+        if (!equipment.selectable!) {
+            continue;
+        }
+        if (!equipment.isRepairable) {
+            continue;
+        }
+        if (equipment.endure! === equipment.maxEndure!) {
+            continue;
+        }
+        html += "<tr>";
+        html += "<td style='background-color:#F8F0E0;text-align:center'>" + equipment.usingHTML + "</td>";
+        html += "<td style='background-color:#F8F0E0;text-align:center;font-weight:bold'>" + equipment.nameHTML + "</td>";
+        html += "<td style='background-color:#F8F0E0;text-align:center'>" + equipment.category + "</td>";
+        html += "<td style='background-color:#F8F0E0;text-align:right'>" + equipment.power + "</td>";
+        html += "<td style='background-color:#F8F0E0;text-align:right'>" + equipment.weight + "</td>";
+        html += "<td style='background-color:#F8F0E0;text-align:right'>" + equipment.endureHtml + "</td>";
+        html += "<td style='background-color:#F8F0E0;text-align:right'>" + equipment.repairPrice + " GOLD</td>";
+        html += "<td style='background-color:#F8F0E0;text-align:center'>修理</td>";
+        html += "</tr>";
+    }
+    html += "</thead>";
+    html += "<tbody>";
+    html += "</tbody>";
+    html += "</table>";
+    $("#equipmentList").html(html);
 }
 
 export = TownForgePageProcessor;
