@@ -3,7 +3,6 @@ import BattlePage from "../../core/battle/BattlePage";
 import BattleProcessor from "../../core/battle/BattleProcessor";
 import BattleReturnInterceptor from "../../core/battle/BattleReturnInterceptor";
 import SetupLoader from "../../core/config/SetupLoader";
-import TownDashboardLayoutManager from "../../core/dashboard/TownDashboardLayoutManager";
 import NpcLoader from "../../core/role/NpcLoader";
 import CommentBoard from "../../util/CommentBoard";
 import Credential from "../../util/Credential";
@@ -162,9 +161,6 @@ function processBattle(credential: Credential,
         const buttonId = $("button[tabindex='1']").attr("id")!;
         PageUtils.scrollIntoView(buttonId);
     }
-
-    // 是否使用极简战斗界面
-    renderMinimalBattle(credential);
 }
 
 function renderHarvestMessage(page: BattlePage) {
@@ -261,56 +257,6 @@ function generateLodgeForm(credential: Credential) {
     form += "<input type='submit' id='lodge'>";
     form += "</form>";
     $("#hidden-4").html(form);
-}
-
-function renderMinimalBattle(credential: Credential) {
-    const layout = TownDashboardLayoutManager.loadDashboardLayoutConfigId(credential);
-    if (layout === 2 || layout === 3) {
-        $("table:first")
-            .find("tr:first")
-            .next()
-            .next()
-            .next()
-            .next()
-            .next()
-            .next().hide()
-            .next().hide()
-            .next().hide()
-            .next().hide();
-
-        let lastIndex = -1;
-        $("table:eq(5)")
-            .find("tbody:first")
-            .find("tr:first")
-            .find("td:first")
-            .find("center:first")
-            .find("h1:first").hide()
-            .next()
-            .find("font:first")
-            .find("b:first")
-            .attr("id", "battleRecordContainer")
-            .find("p")
-            .each((idx, p) => {
-                const text = $(p).text();
-                if (text.startsWith("第") && text.includes("回合")) {
-                    lastIndex = idx;
-                }
-            });
-
-        $("#battleRecordContainer")
-            .find("p")
-            .each((idx, p) => {
-                const text = $(p).text();
-                if (text.startsWith("第") && text.includes("回合")) {
-                    if (idx !== lastIndex) {
-                        $(p).hide();
-                    } else {
-                        $(p).find("table:eq(1)")
-                            .hide();
-                    }
-                }
-            });
-    }
 }
 
 export = BattlePageProcessor;
