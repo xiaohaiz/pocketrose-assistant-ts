@@ -1,5 +1,6 @@
 import _ from "lodash";
 import StringUtils from "../../util/StringUtils";
+import Equipment from "../equipment/Equipment";
 import Role from "../role/Role";
 import TownForgePage from "./TownForgePage";
 
@@ -49,6 +50,30 @@ class TownForgePageParser {
                 let s = $(td).text();
                 s = StringUtils.substringBefore(s, " GOLD");
                 page.role.cash = _.parseInt(s);
+            });
+
+        $(html).find("input:radio")
+            .each((idx, radio) => {
+                const c1 = $(radio).parent();
+                const c2 = c1.next();
+                const c3 = c2.next();
+                const c4 = c3.next();
+                const c5 = c4.next();
+                const c6 = c5.next();
+                const c7 = c6.next();
+                const c8 = c7.next();
+
+                const equipment = new Equipment();
+                equipment.index = _.parseInt($(radio).val() as string);
+                equipment.selectable = !$(radio).prop("disabled");
+                equipment.using = c2.text() === "★";
+                equipment.parseName(c3.html());
+                equipment.category = c4.text();
+                equipment.power = _.parseInt(c5.text());
+                equipment.weight = _.parseInt(c6.text());
+                equipment.parseEndure(c7.text());
+                equipment.repairPrice = _.parseInt(StringUtils.substringBefore(c8.text(), " Gold"));
+                page.equipmentList.push(equipment);
             });
 
         return page;
