@@ -1,0 +1,4 @@
+class TownGemMeltHouseParser {
+}
+
+export = TownGemMeltHouseParser;
