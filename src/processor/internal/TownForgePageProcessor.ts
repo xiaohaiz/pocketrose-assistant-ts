@@ -1,5 +1,7 @@
+import TownForge from "../../core/forge/TownForge";
 import TownForgePage from "../../core/forge/TownForgePage";
 import TownForgePageParser from "../../core/forge/TownForgePageParser";
+import NpcLoader from "../../core/role/NpcLoader";
 import Town from "../../core/town/Town";
 import TownLoader from "../../core/town/TownLoader";
 import Credential from "../../util/Credential";
@@ -75,17 +77,21 @@ async function renderPage(credential: Credential, page: TownForgePage, town: Tow
         .next()
         .attr("id", "tr3")
         .find("> td:first")
-        .attr("id", "equipmentList")
-        .html("");
+        .html("" +
+            "<div id='hidden-1' style='display:none'>" + PageUtils.generateReturnTownForm(credential) + "</div>" +
+            "<button role='button' id='refreshButton'>刷新锻冶屋</button>" +
+            "<button role='button' id='returnButton'>返回" + town.name + "</button>" +
+            "");
     $("#tr3")
         .next()
         .attr("id", "tr4")
         .find("> td:first")
+        .attr("id", "equipmentList")
         .css("text-align", "center")
-        .html("" +
-            "<div id='hidden-1' style='display:none'>" + PageUtils.generateReturnTownForm(credential) + "</div>" +
-            "<button role='button' id='returnButton'>返回" + town.name + "</button>" +
-            "");
+        .html("");
+    $("#refreshButton").on("click", () => {
+        refreshPage(credential, town).then();
+    });
     $("#returnButton").on("click", () => {
         $("#returnTown").trigger("click");
     });
@@ -131,6 +137,14 @@ async function renderEquipmentList(credential: Credential, page: TownForgePage) 
     html += "</tbody>";
     html += "</table>";
     $("#equipmentList").html(html);
+}
+
+async function refreshPage(credential: Credential, town: Town) {
+    const page = await new TownForge(credential, town.id).open();
+    $("#messageBoardManager").html(NpcLoader.randomNpcImageHtml());
+    $(".repairButton").off("click");
+    $("#roleCash").text(page.role.cash!);
+    await renderEquipmentList(credential, page);
 }
 
 export = TownForgePageProcessor;
