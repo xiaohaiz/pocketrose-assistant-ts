@@ -171,13 +171,6 @@ function processBattle(credential: Credential,
         if (SetupLoader.isZodiacFlashBattleEnabled()) {
             $("button[tabindex='1']").trigger("click");
         }
-    } else {
-        // 普通战斗极速模式
-        if (SetupLoader.isNormalFlashBattleEnabled()) {
-            if (!petLearnSpell && processor.obtainPage.harvestList!.length === 0) {
-                $("button[tabindex='1']").trigger("click");
-            }
-        }
     }
 }
 

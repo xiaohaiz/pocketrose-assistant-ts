@@ -17,7 +17,6 @@ import SetupItem024 from "./internal/SetupItem024";
 import SetupItem025 from "./internal/SetupItem025";
 import SetupItem026 from "./internal/SetupItem026";
 import SetupItem028 from "./internal/SetupItem028";
-import SetupItem029 from "./internal/SetupItem029";
 import SetupItem030 from "./internal/SetupItem030";
 import SetupItem035 from "./internal/SetupItem035";
 import SetupItem036 from "./internal/SetupItem036";
@@ -47,7 +46,6 @@ class SetupItemManager {
         this.#setupItemList = [
             new SetupItem012(),
             new SetupItem056(),
-            new SetupItem029(),
             new SetupItem001(),
             new SetupItem002(),
             new SetupItem003(),
