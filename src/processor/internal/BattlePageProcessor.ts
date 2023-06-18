@@ -165,13 +165,6 @@ function processBattle(credential: Credential,
 
     // 是否使用极简战斗界面
     renderMinimalBattle(credential);
-
-    if (processor.obtainPage.zodiacBattle!) {
-        // 十二宫极速战斗模式
-        if (SetupLoader.isZodiacFlashBattleEnabled()) {
-            $("button[tabindex='1']").trigger("click");
-        }
-    }
 }
 
 function renderHarvestMessage(page: BattlePage) {
