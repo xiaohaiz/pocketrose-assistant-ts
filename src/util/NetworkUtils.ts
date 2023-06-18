@@ -76,7 +76,13 @@ function __internalSendPostRequest(count: number, cgi: string, request: {}, hand
     })
         .then((response) => {
             if (!response.ok) {
-                MessageBoard.publishWarning("请求" + cgi + "时返回错误[status=" + response.status + "]，尝试重试！");
+                // @ts-ignore
+                const mode = request.mode;
+                if (mode) {
+                    MessageBoard.publishWarning("请求" + cgi + "时返回错误[mode=" + mode + ",status=" + response.status + "]，尝试重试！");
+                } else {
+                    MessageBoard.publishWarning("请求" + cgi + "时返回错误[status=" + response.status + "]，尝试重试！");
+                }
                 throw new Error("RESPONSE was not ok");
             }
             if (count !== 0) {
