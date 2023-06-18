@@ -1,6 +1,7 @@
 import BankRecordManager from "../../core/bank/BankRecordManager";
 import TownBank from "../../core/bank/TownBank";
 import TownBankPage from "../../core/bank/TownBankPage";
+import TownBankPageParser from "../../core/bank/TownBankPageParser";
 import NpcLoader from "../../core/role/NpcLoader";
 import Town from "../../core/town/Town";
 import TownLoader from "../../core/town/TownLoader";
@@ -14,8 +15,10 @@ import PageProcessorCredentialSupport from "../PageProcessorCredentialSupport";
 
 class TownBankPageProcessor extends PageProcessorCredentialSupport {
 
+    readonly #townBankPageParser = new TownBankPageParser();
+
     async doProcess(credential: Credential, context?: PageProcessorContext): Promise<void> {
-        const page = TownBank.parsePage(PageUtils.currentPageHtml());
+        const page = await this.#townBankPageParser.parse(PageUtils.currentPageHtml());
         const town = TownLoader.load(context?.get("townId"))!;
 
         this.#renderImmutablePage(credential, town);
