@@ -27,6 +27,7 @@ import TownAdventureGuildPageInterceptor from "./internal/TownAdventureGuildPage
 import TownArmorHousePageInterceptor from "./internal/TownArmorHousePageInterceptor";
 import TownBankPageInterceptor from "./internal/TownBankPageInterceptor";
 import TownDashboardPageInterceptor from "./internal/TownDashboardPageInterceptor";
+import TownForgePageInterceptor from "./internal/TownForgePageInterceptor";
 import TownGemHousePageInterceptor from "./internal/TownGemHousePageInterceptor";
 import TownInformationPageInterceptor from "./internal/TownInformationPageInterceptor";
 import TownItemHousePageInterceptor from "./internal/TownItemHousePageInterceptor";
@@ -72,6 +73,7 @@ class PageInterceptorManager {
             new TownArmorHousePageInterceptor(),
             new TownBankPageInterceptor(),
             new TownDashboardPageInterceptor(),
+            new TownForgePageInterceptor(),
             new TownGemHousePageInterceptor(),
             new TownInformationPageInterceptor(),
             new TownItemHousePageInterceptor(),
