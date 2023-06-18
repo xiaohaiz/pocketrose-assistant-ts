@@ -1,3 +1,4 @@
+import _ from "lodash";
 import TownForge from "../../core/forge/TownForge";
 import TownForgePage from "../../core/forge/TownForgePage";
 import TownForgePageParser from "../../core/forge/TownForgePageParser";
@@ -5,6 +6,7 @@ import NpcLoader from "../../core/role/NpcLoader";
 import Town from "../../core/town/Town";
 import TownLoader from "../../core/town/TownLoader";
 import Credential from "../../util/Credential";
+import MessageBoard from "../../util/MessageBoard";
 import PageUtils from "../../util/PageUtils";
 import PageProcessorContext from "../PageProcessorContext";
 import PageProcessorCredentialSupport from "../PageProcessorCredentialSupport";
@@ -15,7 +17,7 @@ class TownForgePageProcessor extends PageProcessorCredentialSupport {
         const page = await TownForgePageParser.parse(PageUtils.currentPageHtml());
         const town = TownLoader.load(context?.get("townId"));
         await renderPage(credential, page, town!);
-        await renderEquipmentList(credential, page);
+        await renderEquipmentList(credential, page, town!);
     }
 
 }
@@ -90,6 +92,7 @@ async function renderPage(credential: Credential, page: TownForgePage, town: Tow
         .css("text-align", "center")
         .html("");
     $("#refreshButton").on("click", () => {
+        $("#messageBoardManager").html(NpcLoader.randomNpcImageHtml());
         refreshPage(credential, town).then();
     });
     $("#returnButton").on("click", () => {
@@ -97,7 +100,7 @@ async function renderPage(credential: Credential, page: TownForgePage, town: Tow
     });
 }
 
-async function renderEquipmentList(credential: Credential, page: TownForgePage) {
+async function renderEquipmentList(credential: Credential, page: TownForgePage, town: Town) {
     let html = "";
     html += "<table style='margin:auto;background-color:#888888'>";
     html += "<thead>";
@@ -111,6 +114,7 @@ async function renderEquipmentList(credential: Credential, page: TownForgePage) 
     html += "<th style='background-color:skyblue;'>修理费</th>";
     html += "<th style='background-color:skyblue;'>修理</th>";
     html += "</tr>";
+    let count = 0;
     for (const equipment of page.equipmentList) {
         if (!equipment.selectable!) {
             continue;
@@ -129,7 +133,17 @@ async function renderEquipmentList(credential: Credential, page: TownForgePage) 
         html += "<td style='background-color:#F8F0E0;text-align:right'>" + equipment.weight + "</td>";
         html += "<td style='background-color:#F8F0E0;text-align:right'>" + equipment.endureHtml + "</td>";
         html += "<td style='background-color:#F8F0E0;text-align:right'>" + equipment.repairPrice + " GOLD</td>";
-        html += "<td style='background-color:#F8F0E0;text-align:center'>修理</td>";
+        html += "<td style='background-color:#F8F0E0;text-align:center'>";
+        html += "<button role='button' id='repair-" + equipment.index + "' class='repairButton'>修理</button>";
+        html += "</td>";
+        html += "</tr>";
+        count++;
+    }
+    if (count > 0) {
+        html += "<tr>";
+        html += "<td style='background-color:#F8F0E0;text-align:center' colspan='8'>";
+        html += "<button role='button' id='repairAll' class='repairAllButton'>全部修理</button>";
+        html += "</td>";
         html += "</tr>";
     }
     html += "</thead>";
@@ -137,14 +151,31 @@ async function renderEquipmentList(credential: Credential, page: TownForgePage) 
     html += "</tbody>";
     html += "</table>";
     $("#equipmentList").html(html);
+
+    $(".repairButton").on("click", event => {
+        const buttonId = $(event.target).attr("id") as string;
+        const index = _.parseInt(_.split(buttonId, "-")[1]);
+        new TownForge(credential, town.id).repair(index).then(() => {
+            refreshPage(credential, town).then(() => {
+                MessageBoard.publishMessage("装备已经修理。");
+            });
+        });
+    });
+    $("#repairAll").on("click", () => {
+        new TownForge(credential, town.id).repairAll().then(() => {
+            refreshPage(credential, town).then(() => {
+                MessageBoard.publishMessage("所有装备修理完成。");
+            });
+        });
+    });
 }
 
 async function refreshPage(credential: Credential, town: Town) {
     const page = await new TownForge(credential, town.id).open();
-    $("#messageBoardManager").html(NpcLoader.randomNpcImageHtml());
     $(".repairButton").off("click");
+    $(".repairAllButton").off("click");
     $("#roleCash").text(page.role.cash!);
-    await renderEquipmentList(credential, page);
+    await renderEquipmentList(credential, page, town);
 }
 
 export = TownForgePageProcessor;
