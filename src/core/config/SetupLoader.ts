@@ -22,10 +22,6 @@ class SetupLoader {
         return StorageUtils.getInt("_pa_005", 10);
     }
 
-    static isBattleResultAutoScrollEnabled(): boolean {
-        return StorageUtils.getBoolean("_pa_006");
-    }
-
     static isBattleForceRecommendationEnabled(): boolean {
         return StorageUtils.getBoolean("_pa_007");
     }

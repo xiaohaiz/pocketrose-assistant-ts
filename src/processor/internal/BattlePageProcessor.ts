@@ -156,11 +156,9 @@ function processBattle(credential: Credential,
         });
     }
 
-    // 战斗页自动触底开启
-    if (SetupLoader.isBattleResultAutoScrollEnabled()) {
-        const buttonId = $("button[tabindex='1']").attr("id")!;
-        PageUtils.scrollIntoView(buttonId);
-    }
+    // 战斗页自动触底
+    const buttonId = $("button[tabindex='1']").attr("id")!;
+    PageUtils.scrollIntoView(buttonId);
 }
 
 function renderHarvestMessage(page: BattlePage) {
