@@ -510,15 +510,13 @@ function _countDownClock(timeout: number, start: number, clock: JQuery) {
 }
 
 function _renderPalaceTask(credential: Credential) {
-    if (SetupLoader.isNewPalaceTaskEnabled()) {
-        new PalaceTaskManager(credential)
-            .monsterTaskHtml()
-            .then(monsterTask => {
-                if (monsterTask !== "") {
-                    $("#palaceTask").html(monsterTask).parent().show();
-                }
-            })
-    }
+    new PalaceTaskManager(credential)
+        .monsterTaskHtml()
+        .then(monsterTask => {
+            if (monsterTask !== "") {
+                $("#palaceTask").html(monsterTask).parent().show();
+            }
+        })
 }
 
 function _renderEventBoard(page: TownDashboardPage) {
