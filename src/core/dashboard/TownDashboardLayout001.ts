@@ -13,7 +13,7 @@ class TownDashboardLayout001 extends TownDashboardLayout {
         return false;
     }
 
-    render(credential: Credential, page: TownDashboardPage): void {
+    async render(credential: Credential, page: TownDashboardPage): Promise<void> {
         $("#leftPanel")
             .removeAttr("width")
             .css("width", "40%")

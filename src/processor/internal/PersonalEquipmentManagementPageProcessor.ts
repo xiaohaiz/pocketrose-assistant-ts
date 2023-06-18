@@ -10,7 +10,7 @@ import PageProcessorCredentialSupport from "../PageProcessorCredentialSupport";
 
 abstract class PersonalEquipmentManagementPageProcessor extends PageProcessorCredentialSupport {
 
-    doProcess(credential: Credential, context?: PageProcessorContext) {
+    async doProcess(credential: Credential, context?: PageProcessorContext): Promise<void> {
         const page = PersonalEquipmentManagement.parsePage(PageUtils.currentPageHtml());
         this.#renderImmutablePage(credential, page, context);
     }

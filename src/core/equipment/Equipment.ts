@@ -81,6 +81,7 @@ class Equipment {
     attribute?: string;                  // 属性
     price?: number;                      // 价格
     priceHTML?: string;                  // 价格HTML代码
+    repairPrice?: number;
     gemCount?: number;
     maxGemCount?: number;
     location?: string;

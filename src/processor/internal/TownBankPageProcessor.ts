@@ -14,7 +14,7 @@ import PageProcessorCredentialSupport from "../PageProcessorCredentialSupport";
 
 class TownBankPageProcessor extends PageProcessorCredentialSupport {
 
-    doProcess(credential: Credential, context?: PageProcessorContext): void {
+    async doProcess(credential: Credential, context?: PageProcessorContext): Promise<void> {
         const page = TownBank.parsePage(PageUtils.currentPageHtml());
         const town = TownLoader.load(context?.get("townId"))!;
 

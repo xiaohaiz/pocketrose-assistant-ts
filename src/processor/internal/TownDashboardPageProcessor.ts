@@ -20,11 +20,11 @@ class TownDashboardPageProcessor extends PageProcessorCredentialSupport {
             10132];
     }
 
-    doProcess(credential: Credential, context?: PageProcessorContext): void {
-        this.#internalProcess(credential, context).then();
+    async doProcess(credential: Credential, context?: PageProcessorContext): Promise<void> {
+        await this.#internalProcess(credential);
     }
 
-    async #internalProcess(credential: Credential, context?: PageProcessorContext) {
+    async #internalProcess(credential: Credential) {
         const configId = TownDashboardLayoutManager.loadDashboardLayoutConfigId(credential);
         const layout = LAYOUT_MANAGER.getLayout(configId);
         const parser = new TownDashboardPageParser(credential, PageUtils.currentPageHtml(), layout?.battleMode());
@@ -57,11 +57,9 @@ class TownDashboardPageProcessor extends PageProcessorCredentialSupport {
         doRenderEnlargeMode();
         await new BattleButtonManager().createSafeBattleButton();
 
-        layout?.render(credential, page);
-
-        return await (() => {
-            return new Promise<void>(resolve => resolve());
-        })();
+        if (layout) {
+            await layout.render(credential, page);
+        }
     }
 
 }
@@ -301,24 +299,18 @@ function doRenderMenu(credential: Credential, page: TownDashboardPage) {
                 const extensionId = SetupLoader.getTownDashboardExtensionShortcutButton();
                 $(th).html("");
                 if (extensionId > 0) {
-                    let esButton = true;
                     const es = ExtensionShortcutLoader.getExtensionShortcut(extensionId)!;
-                    if (es[0] === "城市收益") {
-                        esButton = page.canCollectTownTax!;
-                    }
-                    if (esButton) {
-                        const bt = "&nbsp;" + es[0] + "&nbsp;"
-                        $(th).css("vertical-align", "bottom")
-                            .html("<button role='button' class='" + buttonClass + "' id='shortcut0' " +
-                                "style='margin-bottom:8px;white-space:nowrap;width:100%'>" + bt + "</button>")
-                        if (es[0] === "养精蓄锐") {
-                            $("#eden-1").html(PageUtils.generateFullRecoveryForm(credential));
-                            $("#shortcut0").on("click", () => {
-                                $("#fullRecovery").trigger("click");
-                            });
-                        } else {
-                            _bindShortcutButton("shortcut0", es[1]);
-                        }
+                    const bt = "&nbsp;" + es[0] + "&nbsp;"
+                    $(th).css("vertical-align", "bottom")
+                        .html("<button role='button' class='" + buttonClass + "' id='shortcut0' " +
+                            "style='margin-bottom:8px;white-space:nowrap;width:100%'>" + bt + "</button>")
+                    if (es[0] === "养精蓄锐") {
+                        $("#eden-1").html(PageUtils.generateFullRecoveryForm(credential));
+                        $("#shortcut0").on("click", () => {
+                            $("#fullRecovery").trigger("click");
+                        });
+                    } else {
+                        _bindShortcutButton("shortcut0", es[1]);
                     }
                 }
             })

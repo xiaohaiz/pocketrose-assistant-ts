@@ -30,7 +30,7 @@ class TownDashboardLayout007 extends TownDashboardLayout {
         return true;
     }
 
-    render(credential: Credential, page: TownDashboardPage): void {
+    async render(credential: Credential, page: TownDashboardPage): Promise<void> {
         $("input[name='watch']")
             .hide()
             .after($("<span style='background-color:lightgreen;font-weight:bold;font-size:120%' " +

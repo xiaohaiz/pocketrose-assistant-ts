@@ -16,7 +16,7 @@ import PageProcessorCredentialSupport from "../PageProcessorCredentialSupport";
 
 abstract class PersonalProfilePageProcessor extends PageProcessorCredentialSupport {
 
-    doProcess(credential: Credential, context?: PageProcessorContext) {
+    async doProcess(credential: Credential, context?: PageProcessorContext): Promise<void> {
         // 删除老页面的所有元素
         $("center:first").html("").hide();
 

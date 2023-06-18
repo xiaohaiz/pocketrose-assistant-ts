@@ -1,4 +1,5 @@
 import NpcLoader from "../../core/role/NpcLoader";
+import TownWeaponHousePageParser from "../../core/store/TownWeaponHousePageParser";
 import TownBank from "../../pocketrose/TownBank";
 import TownWeaponHouse from "../../pocketrose/TownWeaponHouse";
 import TownWeaponHousePage from "../../pocketrose/TownWeaponHousePage";
@@ -12,14 +13,14 @@ import PageProcessorCredentialSupport from "../PageProcessorCredentialSupport";
 
 class TownWeaponHousePageProcessor extends PageProcessorCredentialSupport {
 
-    doProcess(credential: Credential, context?: PageProcessorContext): void {
-        processPage(credential);
+    async doProcess(credential: Credential, context?: PageProcessorContext): Promise<void> {
+        await processPage(credential);
     }
 
 }
 
-function processPage(credential: Credential) {
-    const page = TownWeaponHouse.parsePage(PageUtils.currentPageHtml());
+async function processPage(credential: Credential): Promise<void> {
+    const page = await TownWeaponHousePageParser.parse(PageUtils.currentPageHtml());
 
     // 重新绘制页面框架
     const t1 = $("table:eq(1)");

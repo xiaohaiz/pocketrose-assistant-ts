@@ -7,7 +7,8 @@ abstract class TownDashboardLayout {
 
     abstract battleMode(): boolean;
 
-    abstract render(credential: Credential, page: TownDashboardPage): void;
+    async render(credential: Credential, page: TownDashboardPage): Promise<void> {
+    }
 }
 
 export = TownDashboardLayout;

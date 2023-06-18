@@ -24,10 +24,12 @@ abstract class PageProcessorCredentialSupport implements PageProcessor {
             return;
         }
 
-        this.doProcess(new Credential(id.toString(), pass.toString()), context);
+        const credential = new Credential(id.toString(), pass.toString());
+        this.doProcess(credential, context).then();
     }
 
-    abstract doProcess(credential: Credential, context?: PageProcessorContext): void;
+    async doProcess(credential: Credential, context?: PageProcessorContext): Promise<void> {
+    }
 
     doLoadButtonStyles(): number[] {
         return [];

@@ -144,7 +144,7 @@ class TownDashboardLayout006 extends TownDashboardLayout {
         new TownDashboardTaxManager(credential, page).processTownTax($("#townTax"));
     }
 
-    render(credential: Credential, page: TownDashboardPage): void {
+    async render(credential: Credential, page: TownDashboardPage): Promise<void> {
         this.render3(credential, page);
 
         $("table:first")

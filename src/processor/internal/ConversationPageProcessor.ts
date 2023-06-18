@@ -6,8 +6,7 @@ import PageProcessorCredentialSupport from "../PageProcessorCredentialSupport";
 
 class ConversationPageProcessor extends PageProcessorCredentialSupport {
 
-    doProcess(credential: Credential, context?: PageProcessorContext): void {
-
+    async doProcess(credential: Credential, context?: PageProcessorContext): Promise<void> {
         $("table:first")
             .next()
             .find("> tbody:first")
