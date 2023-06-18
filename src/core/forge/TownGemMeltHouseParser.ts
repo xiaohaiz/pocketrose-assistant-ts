@@ -6,7 +6,7 @@ import TownGemMeltHousePage from "./TownGemMeltHousePage";
 class TownGemMeltHouseParser {
 
     static async parse(html: string): Promise<TownGemMeltHousePage> {
-        const role = new Role();
+        const page = new TownGemMeltHousePage(new Role());
         $(html)
             .find("td:contains('姓名')")
             .filter((_idx, td) => $(td).text() === "姓名")
@@ -15,21 +15,21 @@ class TownGemMeltHouseParser {
             .next()
             .find("td:first")
             .each((_idx, td) => {
-                role.name = $(td).text();
+                page.role.name = $(td).text();
             })
             .next()
             .each((_idx, td) => {
                 let s = $(td).text();
-                role.level = parseInt(s);
+                page.role.level = parseInt(s);
             })
             .next()
             .each((_idx, td) => {
                 let s = $(td).text();
-                role.attribute = StringUtils.substringBefore(s, "属");
+                page.role.attribute = StringUtils.substringBefore(s, "属");
             })
             .next()
             .each((_idx, td) => {
-                role.career = $(td).text();
+                page.role.career = $(td).text();
             })
             .parent()
             .next()
@@ -38,10 +38,9 @@ class TownGemMeltHouseParser {
             .each((_idx, td) => {
                 let s = $(td).text();
                 s = StringUtils.substringBefore(s, " GOLD");
-                role.cash = parseInt(s);
+                page.role.cash = parseInt(s);
             });
 
-        const equipmentList: Equipment[] = [];
         $(html).find("input:radio")
             .each(function (_idx, radio) {
                 const c0 = $(radio).parent();
@@ -64,12 +63,9 @@ class TownGemMeltHouseParser {
                 equipment.additionalLuck = parseInt(c6.text());
                 equipment.parseGemCount(c7.text());
 
-                equipmentList.push(equipment);
+                page.equipmentList.push(equipment);
             });
 
-        const page = new TownGemMeltHousePage();
-        page.role = role;
-        page.equipmentList = equipmentList;
         return page;
     }
 }
