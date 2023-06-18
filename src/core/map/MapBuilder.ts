@@ -1,5 +1,5 @@
-import TownInformation from "../../pocketrose/TownInformation";
 import Coordinate from "../../util/Coordinate";
+import TownInformation from "../dashboard/TownInformation";
 import TownLoader from "../town/TownLoader";
 
 class MapBuilder {

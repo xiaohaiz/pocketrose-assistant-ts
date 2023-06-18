@@ -1,9 +1,9 @@
 import _ from "lodash";
-import TownBank from "../../pocketrose/TownBank";
 import Credential from "../../util/Credential";
 import DayRange from "../../util/DayRange";
 import BankRecord from "./BankRecord";
 import BankStorages from "./BankStorages";
+import TownBank from "./TownBank";
 
 class BankRecordManager {
 

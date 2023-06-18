@@ -1,3 +1,4 @@
+import TownBank from "../../core/bank/TownBank";
 import TreasureHint from "../../core/equipment/TreasureHint";
 import MapBuilder from "../../core/map/MapBuilder";
 import MapExplorer from "../../core/map/MapExplorer";
@@ -5,10 +6,9 @@ import TravelPlan from "../../core/map/TravelPlan";
 import TravelPlanExecutor from "../../core/map/TravelPlanExecutor";
 import TreasureHintParser from "../../core/map/TreasureHintParser";
 import NpcLoader from "../../core/role/NpcLoader";
+import PersonalStatus from "../../core/role/PersonalStatus";
 import Town from "../../core/town/Town";
 import TownEntrance from "../../core/town/TownEntrance";
-import PersonalStatus from "../../pocketrose/PersonalStatus";
-import TownBank from "../../pocketrose/TownBank";
 import Coordinate from "../../util/Coordinate";
 import Credential from "../../util/Credential";
 import MessageBoard from "../../util/MessageBoard";

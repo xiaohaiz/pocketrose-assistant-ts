@@ -1,5 +1,5 @@
-import PersonalCareerManagement from "../../pocketrose/PersonalCareerManagement";
-import PersonalCareerManagementPage from "../../pocketrose/PersonalCareerManagementPage";
+import PersonalCareerManagement from "../../core/career/PersonalCareerManagement";
+import PersonalCareerManagementPage from "../../core/career/PersonalCareerManagementPage";
 import Credential from "../../util/Credential";
 import PageUtils from "../../util/PageUtils";
 import PageProcessorContext from "../PageProcessorContext";
