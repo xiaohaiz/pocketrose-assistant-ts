@@ -208,7 +208,7 @@ abstract class PersonalStatisticsPageProcessor extends PageProcessorCredentialSu
     }
 
     #welcomeMessageHtml() {
-        return "<b style='font-size:120%;color:wheat'>想不想对自己的团队有更深层次的了解？</b><br>" +
+        return "<b style='font-size:120%;color:wheat'>想不想对自己的团队有更深层次的了解？在让人失望上我们从不让人失望！</b><br>" +
             "<b style='font-size:120%;color:yellow'>什么，你是想要点名？单击我的头像即可。</b>";
     }
 

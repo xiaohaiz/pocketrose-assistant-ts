@@ -430,6 +430,7 @@ class DailyReportGenerator {
             html += "</tr>";
         });
 
+        let imageCount = 0;
         if (allCatches.size > 0) {
             html += "<tr>";
             html += "<td style='background-color:#F8F0E0' colspan='13'>";
@@ -439,6 +440,8 @@ class DailyReportGenerator {
             html += "<td style='background-color:wheat;text-align:left'>";
             for (const mn of allCatches.keys()) {
                 html += MonsterProfileDict.load(mn)?.imageHtml;
+                imageCount++;
+                if (imageCount % 10 === 0) html += "<br>";
             }
             html += "</td>";
             html += "</tr>";
@@ -519,6 +522,7 @@ class DailyReportGenerator {
             html += "</tr>";
         });
 
+        imageCount = 0;
         if (allPhotos.size > 0) {
             html += "<tr>";
             html += "<td style='background-color:#F8F0E0' colspan='13'>";
@@ -528,6 +532,8 @@ class DailyReportGenerator {
             html += "<td style='background-color:wheat;text-align:left'>";
             for (const mn of allPhotos.keys()) {
                 html += MonsterProfileDict.load(mn)?.imageHtml;
+                imageCount++;
+                if (imageCount % 10 === 0) html += "<br>";
             }
             html += "</td>";
             html += "</tr>";
