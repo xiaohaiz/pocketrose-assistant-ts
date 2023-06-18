@@ -144,17 +144,15 @@ function processBattle(credential: Credential,
     // 入手情况的渲染
     renderHarvestMessage(processor.obtainPage);
 
-    // 如果强制推荐启用，则删除其余所有的按钮
-    if (SetupLoader.isBattleForceRecommendationEnabled()) {
-        $("button").each((idx, button) => {
-            const tabindex = $(button).attr("tabindex");
-            if (tabindex !== "1") {
-                $(button).parent().remove();
-            } else {
-                $(button).trigger("focus");
-            }
-        });
-    }
+    // 强制推荐，则删除其余所有的按钮
+    $("button").each((idx, button) => {
+        const tabindex = $(button).attr("tabindex");
+        if (tabindex !== "1") {
+            $(button).parent().remove();
+        } else {
+            $(button).trigger("focus");
+        }
+    });
 
     // 战斗页自动触底
     const buttonId = $("button[tabindex='1']").attr("id")!;

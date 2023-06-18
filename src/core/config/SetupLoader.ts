@@ -22,10 +22,6 @@ class SetupLoader {
         return StorageUtils.getInt("_pa_005", 10);
     }
 
-    static isBattleForceRecommendationEnabled(): boolean {
-        return StorageUtils.getBoolean("_pa_007");
-    }
-
     static isCareerTransferEntranceDisabled(id: string): boolean {
         return StorageUtils.getBoolean("_pa_014_" + id);
     }
