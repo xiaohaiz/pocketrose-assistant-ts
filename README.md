@@ -1,5 +1,7 @@
 # pocketrose-assistant-ts
 
+### 版本 4.2.8-SNAPSHOT
+
 ### 版本 4.2.7
 
 1. 主体实现逐渐由同步变为异步。
