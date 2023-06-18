@@ -1,7 +1,7 @@
-import Conversation from "../../pocketrose/Conversation";
 import Credential from "../../util/Credential";
 import StorageUtils from "../../util/StorageUtils";
 import TownDashboardTaxManager from "../town/TownDashboardTaxManager";
+import Conversation from "./Conversation";
 import TownDashboardLayout from "./TownDashboardLayout";
 import TownDashboardPage from "./TownDashboardPage";
 

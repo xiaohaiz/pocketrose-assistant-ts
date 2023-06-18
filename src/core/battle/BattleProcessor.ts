@@ -1,7 +1,6 @@
 import Credential from "../../util/Credential";
 import PageUtils from "../../util/PageUtils";
 import StringUtils from "../../util/StringUtils";
-import SetupLoader from "../config/SetupLoader";
 import TreasureLoader from "../equipment/TreasureLoader";
 import PalaceTaskManager from "../task/PalaceTaskManager";
 import BattleLog from "./BattleLog";
@@ -46,7 +45,7 @@ class BattleProcessor {
         this.recommendation = await BattleRecommendation.analysis(this.#battleCount, this.obtainPage);
 
         // 检查是否完成了皇宫任务
-        if (SetupLoader.isNewPalaceTaskEnabled() && this.page.monsterTask!) {
+        if (this.page.monsterTask!) {
             await new PalaceTaskManager(this.#credential).completeMonsterTask();
         }
         await this.#internalProcess();

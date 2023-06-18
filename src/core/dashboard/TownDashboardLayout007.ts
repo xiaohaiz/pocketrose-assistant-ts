@@ -1,5 +1,4 @@
 import _ from "lodash";
-import PersonalStatus from "../../pocketrose/PersonalStatus";
 import Credential from "../../util/Credential";
 import NetworkUtils from "../../util/NetworkUtils";
 import PageUtils from "../../util/PageUtils";
@@ -12,6 +11,7 @@ import BattleStorages from "../battle/BattleStorages";
 import SetupLoader from "../config/SetupLoader";
 import TownForge from "../forge/TownForge";
 import TownInn from "../inn/TownInn";
+import PersonalStatus from "../role/PersonalStatus";
 import PalaceTaskManager from "../task/PalaceTaskManager";
 import TownDashboardTaxManager from "../town/TownDashboardTaxManager";
 import DashboardPageUtils from "./DashboardPageUtils";
@@ -510,15 +510,13 @@ function _countDownClock(timeout: number, start: number, clock: JQuery) {
 }
 
 function _renderPalaceTask(credential: Credential) {
-    if (SetupLoader.isNewPalaceTaskEnabled()) {
-        new PalaceTaskManager(credential)
-            .monsterTaskHtml()
-            .then(monsterTask => {
-                if (monsterTask !== "") {
-                    $("#palaceTask").html(monsterTask).parent().show();
-                }
-            })
-    }
+    new PalaceTaskManager(credential)
+        .monsterTaskHtml()
+        .then(monsterTask => {
+            if (monsterTask !== "") {
+                $("#palaceTask").html(monsterTask).parent().show();
+            }
+        })
 }
 
 function _renderEventBoard(page: TownDashboardPage) {

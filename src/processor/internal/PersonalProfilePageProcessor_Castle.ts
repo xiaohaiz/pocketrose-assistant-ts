@@ -1,4 +1,4 @@
-import CastleBank from "../../pocketrose/CastleBank";
+import CastleBank from "../../core/bank/CastleBank";
 import Credential from "../../util/Credential";
 import PageUtils from "../../util/PageUtils";
 import PageProcessorContext from "../PageProcessorContext";

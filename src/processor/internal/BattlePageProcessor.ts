@@ -3,7 +3,6 @@ import BattlePage from "../../core/battle/BattlePage";
 import BattleProcessor from "../../core/battle/BattleProcessor";
 import BattleReturnInterceptor from "../../core/battle/BattleReturnInterceptor";
 import SetupLoader from "../../core/config/SetupLoader";
-import TownDashboardLayoutManager from "../../core/dashboard/TownDashboardLayoutManager";
 import NpcLoader from "../../core/role/NpcLoader";
 import CommentBoard from "../../util/CommentBoard";
 import Credential from "../../util/Credential";
@@ -145,40 +144,19 @@ function processBattle(credential: Credential,
     // 入手情况的渲染
     renderHarvestMessage(processor.obtainPage);
 
-    // 如果强制推荐启用，则删除其余所有的按钮
-    if (SetupLoader.isBattleForceRecommendationEnabled()) {
-        $("button").each((idx, button) => {
-            const tabindex = $(button).attr("tabindex");
-            if (tabindex !== "1") {
-                $(button).parent().remove();
-            } else {
-                $(button).trigger("focus");
-            }
-        });
-    }
-
-    // 战斗页自动触底开启
-    if (SetupLoader.isBattleResultAutoScrollEnabled()) {
-        const buttonId = $("button[tabindex='1']").attr("id")!;
-        PageUtils.scrollIntoView(buttonId);
-    }
-
-    // 是否使用极简战斗界面
-    renderMinimalBattle(credential);
-
-    if (processor.obtainPage.zodiacBattle!) {
-        // 十二宫极速战斗模式
-        if (SetupLoader.isZodiacFlashBattleEnabled()) {
-            $("button[tabindex='1']").trigger("click");
+    // 强制推荐，则删除其余所有的按钮
+    $("button").each((idx, button) => {
+        const tabindex = $(button).attr("tabindex");
+        if (tabindex !== "1") {
+            $(button).parent().remove();
+        } else {
+            $(button).trigger("focus");
         }
-    } else {
-        // 普通战斗极速模式
-        if (SetupLoader.isNormalFlashBattleEnabled()) {
-            if (!petLearnSpell && processor.obtainPage.harvestList!.length === 0) {
-                $("button[tabindex='1']").trigger("click");
-            }
-        }
-    }
+    });
+
+    // 战斗页自动触底
+    const buttonId = $("button[tabindex='1']").attr("id")!;
+    PageUtils.scrollIntoView(buttonId);
 }
 
 function renderHarvestMessage(page: BattlePage) {
@@ -275,56 +253,6 @@ function generateLodgeForm(credential: Credential) {
     form += "<input type='submit' id='lodge'>";
     form += "</form>";
     $("#hidden-4").html(form);
-}
-
-function renderMinimalBattle(credential: Credential) {
-    const layout = TownDashboardLayoutManager.loadDashboardLayoutConfigId(credential);
-    if (layout === 2 || layout === 3) {
-        $("table:first")
-            .find("tr:first")
-            .next()
-            .next()
-            .next()
-            .next()
-            .next()
-            .next().hide()
-            .next().hide()
-            .next().hide()
-            .next().hide();
-
-        let lastIndex = -1;
-        $("table:eq(5)")
-            .find("tbody:first")
-            .find("tr:first")
-            .find("td:first")
-            .find("center:first")
-            .find("h1:first").hide()
-            .next()
-            .find("font:first")
-            .find("b:first")
-            .attr("id", "battleRecordContainer")
-            .find("p")
-            .each((idx, p) => {
-                const text = $(p).text();
-                if (text.startsWith("第") && text.includes("回合")) {
-                    lastIndex = idx;
-                }
-            });
-
-        $("#battleRecordContainer")
-            .find("p")
-            .each((idx, p) => {
-                const text = $(p).text();
-                if (text.startsWith("第") && text.includes("回合")) {
-                    if (idx !== lastIndex) {
-                        $(p).hide();
-                    } else {
-                        $(p).find("table:eq(1)")
-                            .hide();
-                    }
-                }
-            });
-    }
 }
 
 export = BattlePageProcessor;

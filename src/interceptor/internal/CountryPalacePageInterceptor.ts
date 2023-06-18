@@ -1,4 +1,3 @@
-import SetupLoader from "../../core/config/SetupLoader";
 import RoleStateMachineManager from "../../core/state/RoleStateMachineManager";
 import CountryPalacePageProcessor from "../../processor/internal/CountryPalacePageProcessor";
 import PageProcessor from "../../processor/PageProcessor";
@@ -17,9 +16,6 @@ class CountryPalacePageInterceptor implements PageInterceptor {
     }
 
     intercept(): void {
-        if (!SetupLoader.isNewPalaceTaskEnabled()) {
-            return;
-        }
         RoleStateMachineManager.create()
             .load()
             .then(machine => {

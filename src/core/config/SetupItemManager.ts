@@ -3,9 +3,6 @@ import SetupItem002 from "./internal/SetupItem002";
 import SetupItem003 from "./internal/SetupItem003";
 import SetupItem004 from "./internal/SetupItem004";
 import SetupItem005 from "./internal/SetupItem005";
-import SetupItem006 from "./internal/SetupItem006";
-import SetupItem007 from "./internal/SetupItem007";
-import SetupItem008 from "./internal/SetupItem008";
 import SetupItem012 from "./internal/SetupItem012";
 import SetupItem014 from "./internal/SetupItem014";
 import SetupItem019 from "./internal/SetupItem019";
@@ -17,7 +14,6 @@ import SetupItem024 from "./internal/SetupItem024";
 import SetupItem025 from "./internal/SetupItem025";
 import SetupItem026 from "./internal/SetupItem026";
 import SetupItem028 from "./internal/SetupItem028";
-import SetupItem029 from "./internal/SetupItem029";
 import SetupItem030 from "./internal/SetupItem030";
 import SetupItem035 from "./internal/SetupItem035";
 import SetupItem036 from "./internal/SetupItem036";
@@ -31,7 +27,6 @@ import SetupItem044 from "./internal/SetupItem044";
 import SetupItem045 from "./internal/SetupItem045";
 import SetupItem046 from "./internal/SetupItem046";
 import SetupItem048 from "./internal/SetupItem048";
-import SetupItem049 from "./internal/SetupItem049";
 import SetupItem050 from "./internal/SetupItem050";
 import SetupItem052 from "./internal/SetupItem052";
 import SetupItem053 from "./internal/SetupItem053";
@@ -47,15 +42,11 @@ class SetupItemManager {
         this.#setupItemList = [
             new SetupItem012(),
             new SetupItem056(),
-            new SetupItem029(),
             new SetupItem001(),
             new SetupItem002(),
             new SetupItem003(),
             new SetupItem004(),
             new SetupItem005(),
-            new SetupItem006(),
-            new SetupItem007(),
-            new SetupItem008(),
             new SetupItem014(),
             new SetupItem019(),
             new SetupItem020(),
@@ -78,7 +69,6 @@ class SetupItemManager {
             new SetupItem043(),
             new SetupItem044(),
             new SetupItem048(),
-            new SetupItem049(),
             new SetupItem052(),
             new SetupItem053(),
             new SetupItem040(),

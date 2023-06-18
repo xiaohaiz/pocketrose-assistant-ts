@@ -1,10 +1,10 @@
-import PersonalEquipmentManagement from "../../pocketrose/PersonalEquipmentManagement";
-import TreasureBag from "../../pocketrose/TreasureBag";
 import Credential from "../../util/Credential";
 import MessageBoard from "../../util/MessageBoard";
 import NetworkUtils from "../../util/NetworkUtils";
 import Equipment from "./Equipment";
 import EquipmentSet from "./EquipmentSet";
+import PersonalEquipmentManagement from "./PersonalEquipmentManagement";
+import TreasureBag from "./TreasureBag";
 
 class EquipmentSetLoader {
 

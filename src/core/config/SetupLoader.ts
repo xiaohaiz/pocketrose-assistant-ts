@@ -22,22 +22,6 @@ class SetupLoader {
         return StorageUtils.getInt("_pa_005", 10);
     }
 
-    static isBattleResultAutoScrollEnabled(): boolean {
-        return StorageUtils.getBoolean("_pa_006");
-    }
-
-    static isBattleForceRecommendationEnabled(): boolean {
-        return StorageUtils.getBoolean("_pa_007");
-    }
-
-    static isZodiacFlashBattleEnabled(): boolean {
-        return StorageUtils.getBoolean("_pa_008");
-    }
-
-    static isNormalFlashBattleEnabled(): boolean {
-        return StorageUtils.getBoolean("_pa_029");
-    }
-
     static isCareerTransferEntranceDisabled(id: string): boolean {
         return StorageUtils.getBoolean("_pa_014_" + id);
     }
@@ -204,10 +188,6 @@ class SetupLoader {
 
     static isQiHanTitleEnabled(): boolean {
         return StorageUtils.getBoolean("_pa_048");
-    }
-
-    static isNewPalaceTaskEnabled(): boolean {
-        return StorageUtils.getBoolean("_pa_049");
     }
 
 }

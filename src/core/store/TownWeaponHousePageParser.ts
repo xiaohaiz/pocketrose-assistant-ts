@@ -1,7 +1,7 @@
-import TownWeaponHousePage from "../../pocketrose/TownWeaponHousePage";
 import StringUtils from "../../util/StringUtils";
 import Equipment from "../equipment/Equipment";
 import Merchandise from "./Merchandise";
+import TownWeaponHousePage from "./TownWeaponHousePage";
 
 class TownWeaponHousePageParser {
 

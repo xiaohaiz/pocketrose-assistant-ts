@@ -1,9 +1,9 @@
 import * as echarts from "echarts";
 import {EChartsOption} from "echarts";
 import SetupLoader from "../../core/config/SetupLoader";
+import PersonalStatus from "../../core/role/PersonalStatus";
+import PersonalStatusPage from "../../core/role/PersonalStatusPage";
 import Role from "../../core/role/Role";
-import PersonalStatus from "../../pocketrose/PersonalStatus";
-import PersonalStatusPage from "../../pocketrose/PersonalStatusPage";
 import Credential from "../../util/Credential";
 import PageUtils from "../../util/PageUtils";
 import StringUtils from "../../util/StringUtils";

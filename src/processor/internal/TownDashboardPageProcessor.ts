@@ -412,15 +412,13 @@ function doRenderMenu(credential: Credential, page: TownDashboardPage) {
             "style='background-color:#F8F0E0;text-align:center;font-weight:bold'></td>" +
             "</tr>" +
             "");
-    if (SetupLoader.isNewPalaceTaskEnabled()) {
-        new PalaceTaskManager(credential)
-            .monsterTaskHtml()
-            .then(monsterTask => {
-                if (monsterTask !== "") {
-                    $("#palaceTask").html(monsterTask).parent().show();
-                }
-            })
-    }
+    new PalaceTaskManager(credential)
+        .monsterTaskHtml()
+        .then(monsterTask => {
+            if (monsterTask !== "") {
+                $("#palaceTask").html(monsterTask).parent().show();
+            }
+        })
 
     // ------------------------------------------------------------------------
     // 根据配置决定是否隐藏出城和退出按钮

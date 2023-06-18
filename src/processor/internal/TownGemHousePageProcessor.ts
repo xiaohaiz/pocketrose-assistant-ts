@@ -1,12 +1,13 @@
+import TownBank from "../../core/bank/TownBank";
 import Equipment from "../../core/equipment/Equipment";
+import PersonalEquipmentManagement from "../../core/equipment/PersonalEquipmentManagement";
+import TownGemHouse from "../../core/forge/TownGemHouse";
+import TownGemHousePage from "../../core/forge/TownGemHousePage";
+import TownGemHouseParser from "../../core/forge/TownGemHouseParser";
+import TownGemMeltHouse from "../../core/forge/TownGemMeltHouse";
 import NpcLoader from "../../core/role/NpcLoader";
 import Town from "../../core/town/Town";
 import TownLoader from "../../core/town/TownLoader";
-import PersonalEquipmentManagement from "../../pocketrose/PersonalEquipmentManagement";
-import TownBank from "../../pocketrose/TownBank";
-import TownGemHouse from "../../pocketrose/TownGemHouse";
-import TownGemHousePage from "../../pocketrose/TownGemHousePage";
-import TownGemMeltHouse from "../../pocketrose/TownGemMeltHouse";
 import CommentBoard from "../../util/CommentBoard";
 import Credential from "../../util/Credential";
 import MessageBoard from "../../util/MessageBoard";
@@ -21,11 +22,9 @@ class TownGemHousePageProcessor extends PageProcessorCredentialSupport {
     async doProcess(credential: Credential, context?: PageProcessorContext): Promise<void> {
         const townId = context!.get("townId")!;
         const town = TownLoader.load(townId)!;
-        new TownGemHouse(credential, town.id).parsePage(PageUtils.currentPageHtml())
-            .then(page => {
-                this.#renderImmutablePage(credential, town);
-                this.#renderMutablePage(credential, page, town);
-            });
+        const page = await new TownGemHouseParser(credential, town.id).parse(PageUtils.currentPageHtml())
+        this.#renderImmutablePage(credential, town);
+        this.#renderMutablePage(credential, page, town);
     }
 
     #renderImmutablePage(credential: Credential, town: Town) {

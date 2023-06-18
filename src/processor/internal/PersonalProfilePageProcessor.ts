@@ -1,12 +1,12 @@
 import * as echarts from "echarts";
 import {EChartsOption} from "echarts";
+import PersonalEquipmentManagement from "../../core/equipment/PersonalEquipmentManagement";
+import PersonalPetManagement from "../../core/monster/PersonalPetManagement";
 import NpcLoader from "../../core/role/NpcLoader";
+import PersonalMirror from "../../core/role/PersonalMirror";
+import PersonalSpell from "../../core/role/PersonalSpell";
+import PersonalStatus from "../../core/role/PersonalStatus";
 import Role from "../../core/role/Role";
-import PersonalEquipmentManagement from "../../pocketrose/PersonalEquipmentManagement";
-import PersonalMirror from "../../pocketrose/PersonalMirror";
-import PersonalPetManagement from "../../pocketrose/PersonalPetManagement";
-import PersonalSpell from "../../pocketrose/PersonalSpell";
-import PersonalStatus from "../../pocketrose/PersonalStatus";
 import Credential from "../../util/Credential";
 import MessageBoard from "../../util/MessageBoard";
 import PageUtils from "../../util/PageUtils";
