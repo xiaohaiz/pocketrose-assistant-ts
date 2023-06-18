@@ -1,0 +1,4 @@
+class CareerChangeLog {
+}
+
+export = CareerChangeLog;
