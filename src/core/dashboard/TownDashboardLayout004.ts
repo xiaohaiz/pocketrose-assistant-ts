@@ -2,6 +2,7 @@ import Credential from "../../util/Credential";
 import StorageUtils from "../../util/StorageUtils";
 import TownDashboardTaxManager from "../town/TownDashboardTaxManager";
 import Conversation from "./Conversation";
+import KeyboardShortcutManager from "./KeyboardShortcutManager";
 import TownDashboardLayout from "./TownDashboardLayout";
 import TownDashboardPage from "./TownDashboardPage";
 
@@ -151,6 +152,10 @@ class TownDashboardLayout004 extends TownDashboardLayout {
                     $("input:submit[value='阅读留言']").trigger("click");
                 });
             });
+
+        if (page.battleLevelShortcut) {
+            new KeyboardShortcutManager(credential, page).bind();
+        }
 
         // 启动自动刷新
         // globalMessageContainer

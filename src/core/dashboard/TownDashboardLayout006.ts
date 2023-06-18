@@ -8,6 +8,7 @@ import SetupLoader from "../config/SetupLoader";
 import EquipmentLocalStorage from "../equipment/EquipmentLocalStorage";
 import PetLocalStorage from "../monster/PetLocalStorage";
 import TownDashboardTaxManager from "../town/TownDashboardTaxManager";
+import KeyboardShortcutManager from "./KeyboardShortcutManager";
 import TownDashboardLayout from "./TownDashboardLayout";
 import TownDashboardPage from "./TownDashboardPage";
 
@@ -177,25 +178,9 @@ class TownDashboardLayout006 extends TownDashboardLayout {
         });
 
 
-        // 战斗布局只支持以下战斗
-        $("select[name='level']").find("option").each(function (_idx, option) {
-            const text = $(option).text();
-            if (text.startsWith("秘宝之岛")) {
-                // do nothing, keep
-            } else if (text.startsWith("初级之森")) {
-                // do nothing, keep
-            } else if (text.startsWith("中级之塔")) {
-                // do nothing, keep
-            } else if (text.startsWith("上级之洞")) {
-                // do nothing, keep
-            } else if (text.startsWith("十二神殿")) {
-                // do nothing, keep
-            } else if (text.startsWith("------")) {
-                // do nothing, keep
-            } else {
-                $(option).remove();
-            }
-        });
+        if (page.battleLevelShortcut) {
+            new KeyboardShortcutManager(credential, page).bind();
+        }
 
         $("#battleButton")
             .attr("type", "button")
