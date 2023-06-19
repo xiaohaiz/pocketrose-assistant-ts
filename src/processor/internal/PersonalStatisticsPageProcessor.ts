@@ -217,6 +217,7 @@ abstract class PersonalStatisticsPageProcessor extends PageProcessorCredentialSu
             doBindClearBattleLog();
             doBindExportBattleLog();
             doBindImportBattleLog();
+            doBindClearBankRecord();
             doBindExportBankRecord();
             doBindImportBankRecord();
         }
@@ -452,6 +453,27 @@ function doBindImportBattleLog() {
                 $(".databaseButton").prop("disabled", false);
             }
         }
+    });
+}
+
+function doBindClearBankRecord() {
+    $("#clearBankRecord").on("click", () => {
+        if (!confirm("银行记录一旦清除就彻底丢失了，正常玩家不需要执行此操作！")) {
+            return;
+        }
+        if (!confirm("二次确认！银行记录真的清除后就彻底丢失，有造成数据不一致的隐患。不明白数据同步含义的不要执行！")) {
+            return;
+        }
+        if (!confirm("最终确认！你要确认你在做什么！免责声明：每个人都是自己数据的唯一责任人！")) {
+            return;
+        }
+
+        $(".databaseButton").prop("disabled", true);
+        BankStorages.bankRecordStorage.clear().then(() => {
+            const message: string = "<b style='font-weight:bold;font-size:300%;color:red'>所有银行记录数据已经全部清除！</b>";
+            $("#statistics").html(message).parent().show();
+            $(".databaseButton").prop("disabled", false);
+        });
     });
 }
 
