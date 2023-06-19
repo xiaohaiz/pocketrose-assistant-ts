@@ -1,5 +1,7 @@
 # pocketrose-assistant-ts
 
+### 版本 4.2.9-SNAPSHOT
+
 ### 版本 4.2.8
 
 1. 城市银行界面显示角色银行资产的变化。
