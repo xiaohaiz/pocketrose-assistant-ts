@@ -158,6 +158,43 @@ class BankRecordStorage {
         })();
     }
 
+    async replay(data: BankRecord) {
+        const db = await PocketDatabase.connectDatabase();
+        return new Promise<void>((resolve, reject) => {
+            const id = data.roleId + "/" + data.recordDate;
+            const store = db
+                .transaction(["BankRecord"], "readwrite")
+                .objectStore("BankRecord");
+            const readRequest = store.get(id);
+            readRequest.onerror = reject;
+            readRequest.onsuccess = () => {
+                if (readRequest.result) {
+                    const document = readRequest.result;
+                    if (document.updateTime >= data.updateTime!) {
+                        reject();
+                    } else {
+                        document.updateTime = data.updateTime;
+                        // Increment revision
+                        let revision = document.revision;
+                        revision = revision === undefined ? 1 : revision;
+                        revision++;
+                        document.revision = revision;
+                        document.cash = data.cash!;
+                        document.saving = data.saving!;
+                        const writeRequest = store.put(document);
+                        writeRequest.onerror = reject;
+                        writeRequest.onsuccess = () => resolve();
+                    }
+                } else {
+                    const document = data.asDocument();
+                    const writeRequest = store.add(document);
+                    writeRequest.onerror = reject;
+                    writeRequest.onsuccess = () => resolve();
+                }
+            };
+        });
+    }
+
     async clear() {
         const db = await PocketDatabase.connectDatabase();
         return new Promise<void>((resolve, reject) => {
