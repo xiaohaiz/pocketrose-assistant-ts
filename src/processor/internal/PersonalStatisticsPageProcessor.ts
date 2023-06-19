@@ -1,3 +1,4 @@
+import BankStorages from "../../core/bank/BankStorages";
 import BattleLogService from "../../core/battle/BattleLogService";
 import BattleStorages from "../../core/battle/BattleStorages";
 import BattleReportGenerator from "../../core/report/BattleReportGenerator";
@@ -137,6 +138,17 @@ abstract class PersonalStatisticsPageProcessor extends PageProcessorCredentialSu
             html += "<button role='button' class='databaseButton' id='importBattleLog'>导入战斗日志</button>";
             html += "</td>";
             html += "</tr>";
+            html += "<tr>";
+            html += "<td>";
+            html += "<button role='button' class='databaseButton' id='clearBankRecord'>清除银行记录</button>";
+            html += "</td>";
+            html += "<td>";
+            html += "<button role='button' class='databaseButton' id='exportBankRecord'>导出银行记录</button>";
+            html += "</td>";
+            html += "<td>";
+            html += "<button role='button' class='databaseButton' id='importBankRecord'>导入银行记录</button>";
+            html += "</td>";
+            html += "</tr>";
             html += "</tbody>";
             html += "</table>";
             html += "</td>";
@@ -204,6 +216,7 @@ abstract class PersonalStatisticsPageProcessor extends PageProcessorCredentialSu
             doBindClearBattleLog();
             doBindExportBattleLog();
             doBindImportBattleLog();
+            doBindExportBankRecord();
         }
     }
 
@@ -437,6 +450,23 @@ function doBindImportBattleLog() {
                 $(".databaseButton").prop("disabled", false);
             }
         }
+    });
+}
+
+function doBindExportBankRecord() {
+    $("#exportBankRecord").on("click", () => {
+        $(".databaseButton").prop("disabled", true);
+        BankStorages.bankRecordStorage.loads().then(dataList => {
+            const documentList = dataList.map(it => it.asDocument());
+            const json = JSON.stringify(documentList);
+            const html = "<textarea id='exportBankRecordData' " +
+                "rows='15' spellcheck='false' " +
+                "style=\"height:expression((this.scrollHeight>150)?'150px':(this.scrollHeight+5)+'px');overflow:auto;width:100%;word-break;break-all;\">" +
+                "</textarea>";
+            $("#statistics").html(html).parent().show();
+            $("#exportBankRecordData").val(json);
+            $(".databaseButton").prop("disabled", false);
+        });
     });
 }
 

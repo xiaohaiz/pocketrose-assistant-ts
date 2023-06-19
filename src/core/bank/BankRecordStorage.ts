@@ -158,6 +158,18 @@ class BankRecordStorage {
         })();
     }
 
+    async clear() {
+        const db = await PocketDatabase.connectDatabase();
+        return new Promise<void>((resolve, reject) => {
+            const request = db
+                .transaction(["BankRecord"], "readwrite")
+                .objectStore("BankRecord")
+                .clear();
+            request.onerror = reject;
+            request.onsuccess = () => resolve();
+        });
+    }
+
 }
 
 export = BankRecordStorage;
