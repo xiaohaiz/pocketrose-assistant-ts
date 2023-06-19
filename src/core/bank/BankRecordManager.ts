@@ -48,6 +48,50 @@ class BankRecordManager {
             });
         })();
     }
+
+    static async importFromJson(json: string) {
+        const documentList = JSON.parse(json);
+        $("#bankRecordCount").html(documentList.length);
+        if (documentList.length > 0) doImport(0, documentList);
+    }
+}
+
+function doImport(index: number, documentList: {}[]) {
+    const document = documentList[index];
+    if (!document) {
+        return;
+    }
+    const data = new BankRecord();
+    // @ts-ignore
+    data.id = document.id;
+    // @ts-ignore
+    data.roleId = document.roleId;
+    // @ts-ignore
+    data.createTime = document.createTime;
+    // @ts-ignore
+    data.updateTime = document.updateTime;
+    // @ts-ignore
+    data.recordDate = document.recordDate;
+    // @ts-ignore
+    data.cash = document.cash;
+    // @ts-ignore
+    data.saving = document.saving;
+    // @ts-ignore
+    data.revision = document.revision;
+
+    BankStorages.bankRecordStorage.replay(data)
+        .then(() => {
+            let c = _.parseInt($("#importedBankRecordCount").text());
+            c++;
+            $("#importedBankRecordCount").text(c);
+            doImport(index + 1, documentList);
+        })
+        .catch(() => {
+            let c = _.parseInt($("#duplicatedBankRecordCount").text());
+            c++;
+            $("#duplicatedBankRecordCount").text(c);
+            doImport(index + 1, documentList);
+        });
 }
 
 export = BankRecordManager;
