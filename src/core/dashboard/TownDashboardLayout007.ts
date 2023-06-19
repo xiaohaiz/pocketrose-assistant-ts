@@ -416,9 +416,9 @@ function doProcessBattleReturn(credential: Credential,
         .html(page.actionNotificationHtml!);
 
     if (SetupLoader.isConsecrateStateRecognizeEnabled(credential.id) && page.role!.canConsecrate!) {
-        $("#messageNotification")
+        $("#battleCell")
             .parent()
-            .next()
+            .prev()
             .find("> th:first")
             .css("color", "red")
             .css("font-size", "120%");
