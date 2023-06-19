@@ -1,4 +1,8 @@
+import * as echarts from "echarts";
+import {EChartsOption} from "echarts";
+import _ from "lodash";
 import BankRecordManager from "../../core/bank/BankRecordManager";
+import BankStorages from "../../core/bank/BankStorages";
 import TownBank from "../../core/bank/TownBank";
 import TownBankPage from "../../core/bank/TownBankPage";
 import TownBankPageParser from "../../core/bank/TownBankPageParser";
@@ -149,6 +153,9 @@ class TownBankPageProcessor extends PageProcessorCredentialSupport {
         html += "<input type='button' id='salaryButton' value='发薪' class='dynamicButton'>";
         html += "</td>";
         html += "</tr>";
+        html += "<tr id='tr10' style='display:none'>";
+        html += "<td style='background-color:#F8F0E0;width:100%;text-align:center'><div id='bankRecordReport' style='height:300px;margin:auto'></div></td>";
+        html += "</tr>";
         $("#tr7").after($(html));
 
         this.#bindImmutableButtons(credential, town);
@@ -171,6 +178,7 @@ class TownBankPageProcessor extends PageProcessorCredentialSupport {
                 .then(() => {
                     MessageBoard.publishMessage("银行资产已经更新。");
                     $("#updateButton").prop("disabled", false);
+                    this.#refreshMutablePage(credential, town);
                 });
         });
         $("#searchButton").on("click", () => {
@@ -194,6 +202,43 @@ class TownBankPageProcessor extends PageProcessorCredentialSupport {
 
     #renderMutablePage(credential: Credential, page: TownBankPage, town?: Town) {
         this.#bindMutableButtons(credential, page, town);
+        BankStorages.bankRecordStorage.find(credential.id).then(dataList => {
+            if (dataList.length > 0) {
+                $("#tr10").show();
+                const categories: string[] = [];
+                const values: number[] = [];
+                dataList
+                    .sort((a, b) => {
+                        return _.parseInt(a.recordDate!) - _.parseInt(b.recordDate!);
+                    })
+                    .forEach(data => {
+                        categories.push(data.recordDate!);
+                        values.push(data.saving!);
+                    });
+                const option: EChartsOption = {
+                    tooltip: {
+                        show: true
+                    },
+                    xAxis: {
+                        type: 'category',
+                        data: categories
+                    },
+                    yAxis: {
+                        type: 'value'
+                    },
+                    series: [
+                        {
+                            data: values,
+                            type: 'line',
+                            smooth: true
+                        }
+                    ]
+                };
+                const element = document.getElementById("bankRecordReport")!;
+                const chart = echarts.init(element);
+                chart.setOption(option);
+            }
+        });
     }
 
     #bindMutableButtons(credential: Credential, page: TownBankPage, town?: Town) {
@@ -321,6 +366,7 @@ class TownBankPageProcessor extends PageProcessorCredentialSupport {
             $("#withdrawAmount").val("");
             $("#transferAmount").val("");
             $(".dynamicButton").off("click");
+            $("#tr10").hide();
             this.#renderMutablePage(credential, page, town);
         });
     }

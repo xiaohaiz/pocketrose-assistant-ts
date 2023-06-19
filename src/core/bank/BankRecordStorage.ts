@@ -17,14 +17,14 @@ class BankRecordStorage {
                 if (request.result && request.result.length > 0) {
                     request.result.forEach(it => {
                         const data = new BankRecord();
-                        data.id = it.result.id;
-                        data.roleId = it.result.roleId;
-                        data.createTime = it.result.createTime;
-                        data.updateTime = it.result.updateTime;
-                        data.recordDate = it.result.recordDate;
-                        data.cash = it.result.cash;
-                        data.saving = it.result.saving;
-                        data.revision = it.result.revision;
+                        data.id = it.id;
+                        data.roleId = it.roleId;
+                        data.createTime = it.createTime;
+                        data.updateTime = it.updateTime;
+                        data.recordDate = it.recordDate;
+                        data.cash = it.cash;
+                        data.saving = it.saving;
+                        data.revision = it.revision;
                         dataList.push(data);
                     });
                 }
@@ -92,14 +92,14 @@ class BankRecordStorage {
                     if (request.result && request.result.length > 0) {
                         request.result.forEach(it => {
                             const data = new BankRecord();
-                            data.id = it.result.id;
-                            data.roleId = it.result.roleId;
-                            data.createTime = it.result.createTime;
-                            data.updateTime = it.result.updateTime;
-                            data.recordDate = it.result.recordDate;
-                            data.cash = it.result.cash;
-                            data.saving = it.result.saving;
-                            data.revision = it.result.revision;
+                            data.id = it.id;
+                            data.roleId = it.roleId;
+                            data.createTime = it.createTime;
+                            data.updateTime = it.updateTime;
+                            data.recordDate = it.recordDate;
+                            data.cash = it.cash;
+                            data.saving = it.saving;
+                            data.revision = it.revision;
                             dataList.push(data);
                         });
                     }
