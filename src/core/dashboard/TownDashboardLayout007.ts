@@ -57,14 +57,20 @@ class TownDashboardLayout007 extends TownDashboardLayout {
                 const tax = page.townTax!;
                 $(tr).after($("" +
                     "<tr class='roleStatus'>" +
+                    "<td height='5'>职业</td><th id='roleCareer'>-</th>" +
+                    "<td>祭奠ＲＰ</td><th id='consecrateRP'>-</th>" +
+                    "</tr>" +
+                    "<tr class='roleStatus'>" +
                     "<td height='5'>收益</td><th id='townTax'>" + tax + "</th>" +
-                    "<td>ＲＰ</td><th id='additionalRP'>-</th>" +
+                    "<td>额外ＲＰ</td><th id='additionalRP'>-</th>" +
                     "</tr>"));
                 new TownDashboardTaxManager(credential, page).processTownTax($("#townTax"));
             });
         new PersonalStatus(credential, page.townId)
             .load()
             .then(role => {
+                $("#roleCareer").text(role.career!);
+                $("#consecrateRP").text(role.consecrateRP!);
                 $("#additionalRP").html(() => DashboardPageUtils.generateAdditionalRPHtml(role.additionalRP));
             });
 
@@ -462,7 +468,7 @@ function doProcessBattleReturn(credential: Credential,
     $("#townTax").off("click").text(page.townTax!);
     new TownDashboardTaxManager(credential, page).processTownTax($("#townTax"));
 
-    if (additionalRP) {
+    if (additionalRP !== undefined) {
         $("#additionalRP").html(() => DashboardPageUtils.generateAdditionalRPHtml(additionalRP));
     }
     if (harvestList && harvestList.length > 0) {
@@ -470,6 +476,7 @@ function doProcessBattleReturn(credential: Credential,
         new PersonalStatus(credential)
             .load()
             .then(role => {
+                $("#consecrateRP").text(role.consecrateRP!);
                 $("#additionalRP").html(() => DashboardPageUtils.generateAdditionalRPHtml(role.additionalRP));
             });
     }
