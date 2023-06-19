@@ -1,6 +1,6 @@
 import _ from "lodash";
 import PageUtils from "../../util/PageUtils";
-import RoleCareerTransfer from "../role/RoleCareerTransfer";
+import RoleCareerTransfer from "../career/RoleCareerTransfer";
 import RoleStorageManager from "../role/RoleStorageManager";
 import TeamMemberLoader from "../team/TeamMemberLoader";
 

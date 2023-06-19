@@ -1,10 +1,13 @@
-import RoleCareerTransferStorage from "./RoleCareerTransferStorage";
+import RoleCareerTransferStorage from "../career/RoleCareerTransferStorage";
 import RoleEquipmentStatusStorage from "./RoleEquipmentStatusStorage";
 import RolePetMapStorage from "./RolePetMapStorage";
 import RolePetStatusStorage from "./RolePetStatusStorage";
 
 class RoleStorageManager {
 
+    /**
+     * @deprecated
+     */
     static getRoleCareerTransferStorage() {
         return roleCareerTransferStorage;
     }

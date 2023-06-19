@@ -4,9 +4,9 @@ import NetworkUtils from "../../util/NetworkUtils";
 import StringUtils from "../../util/StringUtils";
 import PersonalStatus from "../role/PersonalStatus";
 import Role from "../role/Role";
-import RoleCareerTransfer from "../role/RoleCareerTransfer";
 import RoleStorageManager from "../role/RoleStorageManager";
 import PersonalCareerManagementPage from "./PersonalCareerManagementPage";
+import RoleCareerTransfer from "./RoleCareerTransfer";
 
 class PersonalCareerManagement {
 
