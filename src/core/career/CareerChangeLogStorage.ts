@@ -1,4 +1,5 @@
 import ObjectID from "bson-objectid";
+import _ from "lodash";
 import PocketDatabase from "../../util/PocketDatabase";
 import CareerChangeLog from "./CareerChangeLog";
 import RoleCareerTransfer from "./RoleCareerTransfer";
@@ -96,6 +97,48 @@ class CareerChangeLogStorage {
                 .add(document);
             request.onerror = reject;
             request.onsuccess = () => resolve();
+        });
+    }
+
+    async importFromJson(json: string) {
+        const documentList = JSON.parse(json);
+        $("#careerChangeCount").html(documentList.length);
+        if (documentList.length === 0) return;
+        for (const document of documentList) {
+            await this.importDocument(document);
+        }
+    }
+
+    async importDocument(document: {}) {
+        // @ts-ignore
+        const id = document.id;
+        const db = await PocketDatabase.connectDatabase();
+        return new Promise<void>((resolve, reject) => {
+            const readRequest = db
+                .transaction(["CareerChangeLog"], "readwrite")
+                .objectStore("CareerChangeLog")
+                .get(id);
+            readRequest.onerror = reject;
+            readRequest.onsuccess = () => {
+                if (readRequest.result) {
+                    let c = _.parseInt($("#duplicatedCareerChangeCount").text());
+                    c++;
+                    $("#duplicatedCareerChangeCount").text(c);
+                    resolve();
+                } else {
+                    const writeRequest = db
+                        .transaction(["CareerChangeLog"], "readwrite")
+                        .objectStore("CareerChangeLog")
+                        .add(document);
+                    writeRequest.onerror = reject;
+                    writeRequest.onsuccess = () => {
+                        let c = _.parseInt($("#importedCareerChangeCount").text());
+                        c++;
+                        $("#importedCareerChangeCount").text(c);
+                        resolve();
+                    };
+                }
+            };
         });
     }
 }

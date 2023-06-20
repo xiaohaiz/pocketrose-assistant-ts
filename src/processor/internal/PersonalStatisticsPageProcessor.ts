@@ -161,6 +161,7 @@ abstract class PersonalStatisticsPageProcessor extends PageProcessorCredentialSu
             html += "<button role='button' class='databaseButton' id='exportCareerChange'>导出转职记录</button>";
             html += "</td>";
             html += "<td>";
+            html += "<button role='button' class='databaseButton' id='importCareerChange'>导入转职记录</button>";
             html += "</td>";
             html += "</tr>";
             html += "</tbody>";
@@ -235,6 +236,7 @@ abstract class PersonalStatisticsPageProcessor extends PageProcessorCredentialSu
             doBindImportBankRecord();
             doBindMigrateCareerChange();
             doBindExportCareerChange();
+            doBindImportCareerChange();
         }
     }
 
@@ -594,6 +596,58 @@ function doBindExportCareerChange() {
             $("#exportCareerChangeData").val(json);
             $(".databaseButton").prop("disabled", false);
         });
+    });
+}
+
+function doBindImportCareerChange() {
+    $("#importCareerChange").on("click", () => {
+        if ($("#careerChangeData").length === 0) {
+            let html = "";
+            html += "<table style='background-color:transparent;border-width:0;border-spacing:0;width:100%;margin:auto'>";
+            html += "<tbody>";
+            html += "<tr>";
+            html += "<th style='text-align:center;background-color:navy;color:yellow'>将待导入的转职记录数据粘贴到下方文本框，然后再次点击“导入战斗日志”按钮。</th>";
+            html += "</tr>";
+            html += "<tr>";
+            html += "<td>";
+            html += "<textarea id='careerChangeData' " +
+                "rows='15' spellcheck='false' " +
+                "style=\"height:expression((this.scrollHeight>150)?'150px':(this.scrollHeight+5)+'px');overflow:auto;width:100%;word-break;break-all;\">" +
+                "</textarea>";
+            html += "</td>";
+            html += "</tr>";
+            html += "</tbody>";
+            html += "</table>";
+            $("#statistics").html(html).parent().show();
+        } else {
+            const json = $("#careerChangeData").val() as string;
+            if (json !== "") {
+                $(".databaseButton").prop("disabled", true);
+
+                let html = "";
+                html += "<table style='background-color:#888888;text-align:center;margin:auto;'>";
+                html += "<tbody>";
+                html += "<tr>";
+                html += "<th style='background-color:#F8F0E0'>转职记录条目</th>";
+                html += "<td style='background-color:#F8F0E0' id='careerChangeCount'>0</td>";
+                html += "</tr>";
+                html += "<tr>";
+                html += "<th style='background-color:#F8F0E0'>重复转职记录条目</th>";
+                html += "<td style='background-color:#F8F0E0;color:red' id='duplicatedCareerChangeCount'>0</td>";
+                html += "</tr>";
+                html += "<tr>";
+                html += "<th style='background-color:#F8F0E0'>导入转职记录条目</th>";
+                html += "<td style='background-color:#F8F0E0;color:blue' id='importedCareerChangeCount'>0</td>";
+                html += "</tr>";
+                html += "</tbody>";
+                html += "</table>";
+                $("#statistics").html(html).parent().show();
+
+                CareerChangeLogStorage.getInstance()
+                    .importFromJson(json)
+                    .then(() => $(".databaseButton").prop("disabled", false));
+            }
+        }
     });
 }
 
