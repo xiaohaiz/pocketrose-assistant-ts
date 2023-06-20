@@ -3,6 +3,18 @@ import RoleCareerTransfer from "./RoleCareerTransfer";
 
 class RoleCareerTransferStorage {
 
+    async delete(id: number) {
+        const db = await PocketDatabase.connectDatabase();
+        return new Promise<void>((resolve, reject) => {
+            const request = db
+                .transaction(["RoleCareerTransfer"], "readwrite")
+                .objectStore("RoleCareerTransfer")
+                .delete(id);
+            request.onerror = reject;
+            request.onsuccess = () => resolve();
+        });
+    }
+
     async loads(): Promise<RoleCareerTransfer[]> {
         const db = await PocketDatabase.connectDatabase();
         return await (() => {

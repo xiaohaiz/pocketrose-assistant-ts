@@ -2,6 +2,8 @@ import BankRecordManager from "../../core/bank/BankRecordManager";
 import BankStorages from "../../core/bank/BankStorages";
 import BattleLogService from "../../core/battle/BattleLogService";
 import BattleStorages from "../../core/battle/BattleStorages";
+import CareerChangeLogStorage from "../../core/career/CareerChangeLogStorage";
+import RoleCareerTransfer from "../../core/career/RoleCareerTransfer";
 import BattleReportGenerator from "../../core/report/BattleReportGenerator";
 import DailyReportGenerator from "../../core/report/DailyReportGenerator";
 import MonsterReportGenerator from "../../core/report/MonsterReportGenerator";
@@ -11,6 +13,7 @@ import TreasureReportGenerator from "../../core/report/TreasureReportGenerator";
 import WeeklyReportGenerator from "../../core/report/WeeklyReportGenerator";
 import ZodiacReportGenerator from "../../core/report/ZodiacReportGenerator";
 import NpcLoader from "../../core/role/NpcLoader";
+import RoleStorageManager from "../../core/role/RoleStorageManager";
 import TeamMemberLoader from "../../core/team/TeamMemberLoader";
 import Credential from "../../util/Credential";
 import DayRange from "../../util/DayRange";
@@ -150,6 +153,11 @@ abstract class PersonalStatisticsPageProcessor extends PageProcessorCredentialSu
             html += "<button role='button' class='databaseButton' id='importBankRecord'>导入银行记录</button>";
             html += "</td>";
             html += "</tr>";
+            html += "<tr>";
+            html += "<td colspan='3'>";
+            html += "<button role='button' class='databaseButton' id='migrateCareerChange'>迁移转职记录</button>";
+            html += "</td>";
+            html += "</tr>";
             html += "</tbody>";
             html += "</table>";
             html += "</td>";
@@ -220,6 +228,7 @@ abstract class PersonalStatisticsPageProcessor extends PageProcessorCredentialSu
             doBindClearBankRecord();
             doBindExportBankRecord();
             doBindImportBankRecord();
+            doBindMigrateCareerChange();
         }
     }
 
@@ -545,6 +554,24 @@ function doBindImportBankRecord() {
             }
         }
     });
+}
+
+function doBindMigrateCareerChange() {
+    $("#migrateCareerChange").on("click", () => {
+        $(".databaseButton").prop("disabled", true);
+        RoleStorageManager.getRoleCareerTransferStorage()
+            .loads()
+            .then(dataList => migrate(dataList).then(() => {
+                $(".databaseButton").prop("disabled", false);
+            }));
+    });
+}
+
+async function migrate(dataList: RoleCareerTransfer[]) {
+    for (const data of dataList) {
+        await CareerChangeLogStorage.getInstance().migrate(data);
+        await RoleStorageManager.getRoleCareerTransferStorage().delete(data.id!);
+    }
 }
 
 export = PersonalStatisticsPageProcessor;
