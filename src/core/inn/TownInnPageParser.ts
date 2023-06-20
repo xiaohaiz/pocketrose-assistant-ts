@@ -37,6 +37,13 @@ class TownInnPageParser {
                 s = StringUtils.substringBefore(s, " GOLD");
                 page.role.cash = _.parseInt(s);
             });
+
+        const s = $(table).find("> tbody:first > tr:last > td:first")
+            .find("> form:first")
+            .find("> input:hidden[name='inn_gold']")
+            .val() as string;
+        page.lodgeFee = _.parseInt(s);
+
         return page;
     }
 }
