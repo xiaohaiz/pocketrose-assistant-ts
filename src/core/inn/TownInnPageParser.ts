@@ -7,7 +7,9 @@ class TownInnPageParser {
 
     async parse(html: string): Promise<TownInnPage> {
         const page = new TownInnPage(new Role());
-        let table = $("table:first");
+        let table = $("table:first")
+            .find("> tbody:first > tr:first > td:first")
+            .find("> table:first");
         $(table).find("> tbody > tr:eq(1) > td:first")
             .find("> table:first > tbody:first > tr:first > td:last")
             .find("> table:first > tbody:first > tr:first > td:first")

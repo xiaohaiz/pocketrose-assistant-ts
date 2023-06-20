@@ -2,6 +2,7 @@ import TownBank from "../../core/bank/TownBank";
 import Castle from "../../core/castle/Castle";
 import CastleEntrance from "../../core/castle/CastleEntrance";
 import CastleInformation from "../../core/dashboard/CastleInformation";
+import TownInnPageParser from "../../core/inn/TownInnPageParser";
 import MapBuilder from "../../core/map/MapBuilder";
 import TravelPlanExecutor from "../../core/map/TravelPlanExecutor";
 import PersonalStatus from "../../core/role/PersonalStatus";
@@ -12,6 +13,7 @@ import TownLoader from "../../core/town/TownLoader";
 import Coordinate from "../../util/Coordinate";
 import Credential from "../../util/Credential";
 import MessageBoard from "../../util/MessageBoard";
+import PageUtils from "../../util/PageUtils";
 import StringUtils from "../../util/StringUtils";
 import PageProcessorContext from "../PageProcessorContext";
 import PageProcessorCredentialSupport from "../PageProcessorCredentialSupport";
@@ -19,6 +21,7 @@ import PageProcessorCredentialSupport from "../PageProcessorCredentialSupport";
 class TownInnPageProcessor extends PageProcessorCredentialSupport {
 
     async doProcess(credential: Credential, context?: PageProcessorContext): Promise<void> {
+        const page = await new TownInnPageParser().parse(PageUtils.currentPageHtml());
         doProcess(credential);
     }
 
