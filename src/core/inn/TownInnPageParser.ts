@@ -42,7 +42,7 @@ class TownInnPageParser {
             .find("> form:first")
             .find("> input:hidden[name='inn_gold']")
             .val() as string;
-        page.lodgeFee = _.parseInt(s);
+        page.lodgeExpense = _.parseInt(s);
 
         return page;
     }
