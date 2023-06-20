@@ -16,7 +16,7 @@ import StringUtils from "../../util/StringUtils";
 import PageProcessorContext from "../PageProcessorContext";
 import PageProcessorCredentialSupport from "../PageProcessorCredentialSupport";
 
-class TownPostHousePageProcessor extends PageProcessorCredentialSupport {
+class TownInnPageProcessor extends PageProcessorCredentialSupport {
 
     async doProcess(credential: Credential, context?: PageProcessorContext): Promise<void> {
         doProcess(credential);
@@ -322,4 +322,4 @@ function doTravelToLocation(credential: Credential, location: Coordinate) {
         });
 }
 
-export = TownPostHousePageProcessor;
+export = TownInnPageProcessor;
