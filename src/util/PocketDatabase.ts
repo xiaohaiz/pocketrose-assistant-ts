@@ -129,6 +129,12 @@ class PocketDatabase {
                     store.createIndex("createTime", "createTime", {
                         unique: false
                     });
+                    store.createIndex("career_1", "career_1", {
+                        unique: false
+                    });
+                    store.createIndex("career_2", "career_2", {
+                        unique: false
+                    });
                 }
 
                 // ------------------------------------------------------------
