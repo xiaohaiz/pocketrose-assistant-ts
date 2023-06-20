@@ -117,6 +117,21 @@ class PocketDatabase {
                 }
 
                 // ------------------------------------------------------------
+                // CareerChangeLog
+                // ------------------------------------------------------------
+                if (!db.objectStoreNames.contains("CareerChangeLog")) {
+                    const store = db.createObjectStore("CareerChangeLog", {
+                        keyPath: "id", autoIncrement: false
+                    });
+                    store.createIndex("roleId", "roleId", {
+                        unique: false
+                    });
+                    store.createIndex("createTime", "createTime", {
+                        unique: false
+                    });
+                }
+
+                // ------------------------------------------------------------
                 // PalaceTask
                 // ------------------------------------------------------------
                 if (!db.objectStoreNames.contains("PalaceTask")) {
