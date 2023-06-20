@@ -1,3 +1,6 @@
+import * as echarts from "echarts";
+import {EChartsOption} from "echarts";
+import CareerChangeLogStorage from "../../core/career/CareerChangeLogStorage";
 import CareerLoader from "../../core/career/CareerLoader";
 import PersonalCareerManagement from "../../core/career/PersonalCareerManagement";
 import PersonalCareerManagementPage from "../../core/career/PersonalCareerManagementPage";
@@ -9,8 +12,10 @@ import PersonalStatus from "../../core/role/PersonalStatus";
 import Role from "../../core/role/Role";
 import CommentBoard from "../../util/CommentBoard";
 import Credential from "../../util/Credential";
+import DayRange from "../../util/DayRange";
 import MessageBoard from "../../util/MessageBoard";
 import NetworkUtils from "../../util/NetworkUtils";
+import PageUtils from "../../util/PageUtils";
 import PageProcessorContext from "../PageProcessorContext";
 import PersonalCareerManagementPageProcessor from "./PersonalCareerManagementPageProcessor";
 
@@ -59,6 +64,9 @@ function doProcess(credential: Credential, candidateList: string[]) {
         .after($("<tr><td style='background-color:#F8F0E0;text-align:center'>" +
             "<input type='button' value='返回城市' id='returnButton'>" +
             "<input type='button' value='装备管理' id='itemManagementButton'>" +
+            "</td></tr>" +
+            "<tr style='display:none'><td style='background-color:#F8F0E0;text-align:center'>" +
+            "<div id='careerChangeReport' style='height:300px;margin:auto'></div>" +
             "</td></tr>"));
 
     $("#returnButton").on("click", function () {
@@ -77,7 +85,125 @@ function doProcess(credential: Credential, candidateList: string[]) {
     CommentBoard.writeMessage("是的，你没有看错，换人了，某幕后黑手不愿意出镜。不过请放心，转职方面我是专业的，毕竟我一直制霸钉耙榜。<br>");
     CommentBoard.writeMessage("蓝色的职业代表你已经掌握了。我会把为你推荐的职业红色加深标识出来，当然，前提是如果有能推荐的。<br>");
 
-    doRender(credential, candidateList);
+    renderCareerChangeReport(credential).then(() => {
+        doRender(credential, candidateList);
+    });
+}
+
+async function renderCareerChangeReport(credential: Credential) {
+    const dataList = (await CareerChangeLogStorage.getInstance().findByRoleId(credential.id))
+        .sort((a, b) => a.createTime! - b.createTime!);
+    if (dataList.length > 0) {
+        const categories = dataList.map(it => it.createTime!)
+            .map(it => new DayRange(it))
+            .map(it => it.asText());
+
+        const hpValues = dataList.map(it => it.healthInherit)
+            .map(it => PageUtils.convertHtmlToText(it))
+            .map(it => parseFloat(it));
+        const mpValues = dataList.map(it => it.manaInherit)
+            .map(it => PageUtils.convertHtmlToText(it))
+            .map(it => parseFloat(it));
+        const atValues = dataList.map(it => it.attackInherit)
+            .map(it => PageUtils.convertHtmlToText(it))
+            .map(it => parseFloat(it));
+        const dfValues = dataList.map(it => it.defenseInherit)
+            .map(it => PageUtils.convertHtmlToText(it))
+            .map(it => parseFloat(it));
+        const saValues = dataList.map(it => it.specialAttackInherit)
+            .map(it => PageUtils.convertHtmlToText(it))
+            .map(it => parseFloat(it));
+        const sdValues = dataList.map(it => it.specialDefenseInherit)
+            .map(it => PageUtils.convertHtmlToText(it))
+            .map(it => parseFloat(it));
+        const spValues = dataList.map(it => it.speedInherit)
+            .map(it => PageUtils.convertHtmlToText(it))
+            .map(it => parseFloat(it));
+        const option: EChartsOption = {
+            title: {
+                text: '转职继承'
+            },
+            tooltip: {
+                trigger: 'axis'
+            },
+            legend: {
+                data: ['ＨＰ', 'ＭＰ', '攻击', '防御', '智力', '精神', '速度']
+            },
+            grid: {
+                left: '3%',
+                right: '4%',
+                bottom: '3%',
+                containLabel: true
+            },
+            toolbox: {
+                feature: {
+                    saveAsImage: {}
+                }
+            },
+            xAxis: {
+                type: 'category',
+                boundaryGap: false,
+                data: categories,
+                axisLabel: {
+                    interval: 0,
+                    rotate: 40
+                }
+            },
+            yAxis: {
+                type: 'value'
+            },
+            series: [
+                {
+                    name: 'ＨＰ',
+                    type: 'line',
+                    smooth: false,
+                    data: hpValues
+                },
+                {
+                    name: 'ＭＰ',
+                    type: 'line',
+                    smooth: false,
+                    data: mpValues
+                },
+                {
+                    name: '攻击',
+                    type: 'line',
+                    smooth: false,
+                    data: atValues
+                },
+                {
+                    name: '防御',
+                    type: 'line',
+                    smooth: false,
+                    data: dfValues
+                },
+                {
+                    name: '智力',
+                    type: 'line',
+                    smooth: false,
+                    data: saValues
+                },
+                {
+                    name: '精神',
+                    type: 'line',
+                    smooth: false,
+                    data: sdValues
+                },
+                {
+                    name: '速度',
+                    type: 'line',
+                    smooth: false,
+                    data: spValues
+                }
+            ]
+        };
+        const element = document.getElementById("careerChangeReport");
+        if (element) {
+            $("#careerChangeReport").parent().parent().show();
+            const chart = echarts.init(element);
+            chart.setOption(option);
+        }
+    }
 }
 
 function doRender(credential: Credential, candidateList: string[]) {
