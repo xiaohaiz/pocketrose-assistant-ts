@@ -154,8 +154,13 @@ abstract class PersonalStatisticsPageProcessor extends PageProcessorCredentialSu
             html += "</td>";
             html += "</tr>";
             html += "<tr>";
-            html += "<td colspan='3'>";
+            html += "<td>";
             html += "<button role='button' class='databaseButton' id='migrateCareerChange'>迁移转职记录</button>";
+            html += "</td>";
+            html += "<td>";
+            html += "<button role='button' class='databaseButton' id='exportCareerChange'>导出转职记录</button>";
+            html += "</td>";
+            html += "<td>";
             html += "</td>";
             html += "</tr>";
             html += "</tbody>";
@@ -229,6 +234,7 @@ abstract class PersonalStatisticsPageProcessor extends PageProcessorCredentialSu
             doBindExportBankRecord();
             doBindImportBankRecord();
             doBindMigrateCareerChange();
+            doBindExportCareerChange();
         }
     }
 
@@ -572,6 +578,23 @@ async function migrate(dataList: RoleCareerTransfer[]) {
         await CareerChangeLogStorage.getInstance().migrate(data);
         await RoleStorageManager.getRoleCareerTransferStorage().delete(data.id!);
     }
+}
+
+function doBindExportCareerChange() {
+    $("#exportCareerChange").on("click", () => {
+        $(".databaseButton").prop("disabled", true);
+        CareerChangeLogStorage.getInstance().loads().then(dataList => {
+            const documentList = dataList.map(it => it.asDocument());
+            const json = JSON.stringify(documentList);
+            const html = "<textarea id='exportCareerChangeData' " +
+                "rows='15' spellcheck='false' " +
+                "style=\"height:expression((this.scrollHeight>150)?'150px':(this.scrollHeight+5)+'px');overflow:auto;width:100%;word-break;break-all;\">" +
+                "</textarea>";
+            $("#statistics").html(html).parent().show();
+            $("#exportCareerChangeData").val(json);
+            $(".databaseButton").prop("disabled", false);
+        });
+    });
 }
 
 export = PersonalStatisticsPageProcessor;
