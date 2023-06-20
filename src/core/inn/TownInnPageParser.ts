@@ -1,3 +1,5 @@
+import _ from "lodash";
+import StringUtils from "../../util/StringUtils";
 import Role from "../role/Role";
 import TownInnPage from "./TownInnPage";
 
@@ -13,19 +15,27 @@ class TownInnPageParser {
             .find("> tr:eq(1)")
             .find("> td:first")
             .each((idx, td) => {
+                page.role.name = $(td).text();
             })
             .next()
             .each((idx, td) => {
+                page.role.level = _.parseInt($(td).text());
             })
             .next()
             .each((idx, td) => {
+                let s = $(td).text();
+                page.role.attribute = StringUtils.substringBefore(s, "属");
             })
             .next()
             .each((idx, td) => {
+                page.role.career = $(td).text();
             })
             .parent().next()
             .find("> td:eq(1)")
             .each((idx, td) => {
+                let s = $(td).text();
+                s = StringUtils.substringBefore(s, " GOLD");
+                page.role.cash = _.parseInt(s);
             });
         return page;
     }
