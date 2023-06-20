@@ -29,8 +29,8 @@ class CareerChangeLogStorage {
         const db = await PocketDatabase.connectDatabase();
         return new Promise<CareerChangeLog[]>((resolve, reject) => {
             const request = db
-                .transaction(["RoleCareerTransfer"], "readonly")
-                .objectStore("RoleCareerTransfer")
+                .transaction(["CareerChangeLog"], "readonly")
+                .objectStore("CareerChangeLog")
                 .getAll();
             request.onerror = reject;
             request.onsuccess = () => {
@@ -64,6 +64,20 @@ class CareerChangeLogStorage {
                 }
                 resolve(dataList);
             };
+        });
+    }
+
+    // 迁移数据的临时方法
+    async hasCreateTime(createTime: number): Promise<boolean> {
+        const db = await PocketDatabase.connectDatabase();
+        return new Promise<boolean>((resolve, reject) => {
+            const request = db
+                .transaction(["CareerChangeLog"], "readonly")
+                .objectStore("CareerChangeLog")
+                .index("createTime")
+                .getAllKeys(createTime);
+            request.onerror = reject;
+            request.onsuccess = () => resolve(request.result && request.result.length > 0);
         });
     }
 }
