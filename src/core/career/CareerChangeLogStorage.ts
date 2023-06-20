@@ -4,6 +4,10 @@ import CareerChangeLog from "./CareerChangeLog";
 
 class CareerChangeLogStorage {
 
+    static getInstance() {
+        return instance;
+    }
+
     async insert(data: CareerChangeLog) {
         const db = await PocketDatabase.connectDatabase();
         const document = data.asDocument();
@@ -22,5 +26,7 @@ class CareerChangeLogStorage {
     }
 
 }
+
+const instance = new CareerChangeLogStorage();
 
 export = CareerChangeLogStorage;
