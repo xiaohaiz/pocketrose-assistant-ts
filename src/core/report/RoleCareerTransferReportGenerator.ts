@@ -1,7 +1,7 @@
 import _ from "lodash";
 import PageUtils from "../../util/PageUtils";
-import RoleCareerTransfer from "../career/RoleCareerTransfer";
-import RoleStorageManager from "../role/RoleStorageManager";
+import CareerChangeLog from "../career/CareerChangeLog";
+import CareerChangeLogStorage from "../career/CareerChangeLogStorage";
 import TeamMemberLoader from "../team/TeamMemberLoader";
 
 class RoleCareerTransferReportGenerator {
@@ -13,7 +13,7 @@ class RoleCareerTransferReportGenerator {
     }
 
     generate() {
-        RoleStorageManager.getRoleCareerTransferStorage()
+        CareerChangeLogStorage.getInstance()
             .loads()
             .then(dataList => {
                 const internalIds = TeamMemberLoader.loadInternalIds();
@@ -28,7 +28,7 @@ class RoleCareerTransferReportGenerator {
         return this.#target && this.#target !== "";
     }
 
-    #generate(candidates: RoleCareerTransfer[]) {
+    #generate(candidates: CareerChangeLog[]) {
         const roles = new Map<string, RoleReportData>();
         TeamMemberLoader.loadTeamMembers()
             .filter(it => !it.external)
@@ -144,7 +144,7 @@ class RoleCareerTransferReportGenerator {
 class RoleReportData {
 
     readonly roleName: string;
-    logList: RoleCareerTransfer[];
+    logList: CareerChangeLog[];
 
     totalHealthInherit = 0;
     totalManaInherit = 0;
