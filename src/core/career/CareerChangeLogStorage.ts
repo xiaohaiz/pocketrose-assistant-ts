@@ -1,6 +1,7 @@
 import ObjectID from "bson-objectid";
 import PocketDatabase from "../../util/PocketDatabase";
 import CareerChangeLog from "./CareerChangeLog";
+import RoleCareerTransfer from "./RoleCareerTransfer";
 
 class CareerChangeLogStorage {
 
@@ -78,6 +79,23 @@ class CareerChangeLogStorage {
                 .getAllKeys(createTime);
             request.onerror = reject;
             request.onsuccess = () => resolve(request.result && request.result.length > 0);
+        });
+    }
+
+    async migrate(data: RoleCareerTransfer) {
+        if (data.createTime === undefined) return;
+        if (await this.hasCreateTime(data.createTime)) return;
+        const db = await PocketDatabase.connectDatabase();
+        const document = data.asDocument();
+        // @ts-ignore
+        document.id = ObjectID().toHexString();
+        return new Promise<void>((resolve, reject) => {
+            const request = db
+                .transaction(["CareerChangeLog"], "readwrite")
+                .objectStore("CareerChangeLog")
+                .add(document);
+            request.onerror = reject;
+            request.onsuccess = () => resolve();
         });
     }
 }

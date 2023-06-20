@@ -72,6 +72,52 @@ class RoleCareerTransfer {
         return "<span style='color:" + color + "'>" + r.toFixed(2) + "</span>";
     }
 
+    asDocument() {
+        const document = {};
+        // @ts-ignore
+        this.id && (document.id = this.id);
+        // @ts-ignore
+        this.roleId && (document.roleId = this.roleId);
+        // @ts-ignore
+        (this.createTime !== undefined) && (document.createTime = this.createTime);
+        // @ts-ignore
+        this.career_1 && (document.career_1 = this.career_1);
+        // @ts-ignore
+        (this.level_1 !== undefined) && (document.level_1 = this.level_1);
+        // @ts-ignore
+        (this.health_1 !== undefined) && (document.health_1 = this.health_1);
+        // @ts-ignore
+        (this.mana_1 !== undefined) && (document.mana_1 = this.mana_1);
+        // @ts-ignore
+        (this.attack_1 !== undefined) && (document.attack_1 = this.attack_1);
+        // @ts-ignore
+        (this.defense_1 !== undefined) && (document.defense_1 = this.defense_1);
+        // @ts-ignore
+        (this.specialAttack_1 !== undefined) && (document.specialAttack_1 = this.specialAttack_1);
+        // @ts-ignore
+        (this.specialDefense_1 !== undefined) && (document.specialDefense_1 = this.specialDefense_1);
+        // @ts-ignore
+        (this.speed_1 !== undefined) && (document.speed_1 = this.speed_1);
+        // @ts-ignore
+        this.career_2 && (document.career_2 = this.career_2);
+        // @ts-ignore
+        (this.level_2 !== undefined) && (document.level_2 = this.level_2);
+        // @ts-ignore
+        (this.health_2 !== undefined) && (document.health_2 = this.health_2);
+        // @ts-ignore
+        (this.mana_2 !== undefined) && (document.mana_2 = this.mana_2);
+        // @ts-ignore
+        (this.attack_2 !== undefined) && (document.attack_2 = this.attack_2);
+        // @ts-ignore
+        (this.defense_2 !== undefined) && (document.defense_2 = this.defense_2);
+        // @ts-ignore
+        (this.specialAttack_2 !== undefined) && (document.specialAttack_2 = this.specialAttack_2);
+        // @ts-ignore
+        (this.specialDefense_2 !== undefined) && (document.specialDefense_2 = this.specialDefense_2);
+        // @ts-ignore
+        (this.speed_2 !== undefined) && (document.speed_2 = this.speed_2);
+        return document;
+    }
 }
 
 export = RoleCareerTransfer;
