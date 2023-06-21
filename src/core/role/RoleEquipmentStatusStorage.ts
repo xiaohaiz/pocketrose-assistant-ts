@@ -3,6 +3,10 @@ import RoleEquipmentStatus from "./RoleEquipmentStatus";
 
 class RoleEquipmentStatusStorage {
 
+    static getInstance() {
+        return instance;
+    }
+
     async loads(idList: string[]): Promise<Map<string, RoleEquipmentStatus>> {
         const db = await PocketDatabase.connectDatabase();
         return await (() => {
@@ -57,5 +61,7 @@ class RoleEquipmentStatusStorage {
         })();
     }
 }
+
+const instance = new RoleEquipmentStatusStorage();
 
 export = RoleEquipmentStatusStorage;
