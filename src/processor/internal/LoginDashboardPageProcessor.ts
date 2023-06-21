@@ -1,9 +1,9 @@
 import _ from "lodash";
 import SetupLoader from "../../core/config/SetupLoader";
 import LastLogin from "../../core/team/LastLogin";
+import LastLoginStorage from "../../core/team/LastLoginStorage";
 import TeamMember from "../../core/team/TeamMember";
 import TeamMemberLoader from "../../core/team/TeamMemberLoader";
-import TeamStorages from "../../core/team/TeamStorages";
 import ButtonUtils from "../../util/ButtonUtils";
 import PageUtils from "../../util/PageUtils";
 import PageProcessor from "../PageProcessor";
@@ -103,7 +103,7 @@ function doProcess() {
         .closest("tr")
         .after($(html));
 
-    TeamStorages.lastLoginStorage
+    LastLoginStorage.getInstance()
         .load()
         .then(lastLogin => {
             doRender(members, lastLogin);
@@ -249,7 +249,7 @@ function doBindFastLoginButton() {
 
         // 记录最后一次使用快速登陆的id
         const lastRoleId = member.id!;
-        TeamStorages.lastLoginStorage
+        LastLoginStorage.getInstance()
             .write(lastRoleId)
             .then(() => {
                 $("#loginId").val(member.id!);
