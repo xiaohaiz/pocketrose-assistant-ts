@@ -7,11 +7,11 @@ import MapBuilder from "../../core/map/MapBuilder";
 import TravelPlanBuilder from "../../core/map/TravelPlanBuilder";
 import TravelPlanExecutor from "../../core/map/TravelPlanExecutor";
 import RankTitleLoader from "../../core/role/RankTitleLoader";
+import TaskGuideManager from "../../core/task/TaskGuideManager";
 import Coordinate from "../../util/Coordinate";
 import Credential from "../../util/Credential";
 import MessageBoard from "../../util/MessageBoard";
 import PageUtils from "../../util/PageUtils";
-import StorageUtils from "../../util/StorageUtils";
 import StringUtils from "../../util/StringUtils";
 import PageProcessorContext from "../PageProcessorContext";
 import PageProcessorCredentialSupport from "../PageProcessorCredentialSupport";
@@ -76,10 +76,8 @@ class MapDashboardPageProcessor extends PageProcessorCredentialSupport {
 
         MapBuilder.updateTownBackgroundColor();
 
-        const taskKey = "_ct_" + credential.id;
-        const roleTask = StorageUtils.getString(taskKey);
-
-        if (roleTask === "") {
+        const roleTask = await new TaskGuideManager(credential).currentTask();
+        if (roleTask === null || roleTask === "") {
             // 如果有必要的话绘制城堡
             new CastleInformation()
                 .load(page.role!.name!)
@@ -104,7 +102,7 @@ class MapDashboardPageProcessor extends PageProcessorCredentialSupport {
             .css("text-align", "center")
             .html($("#" + buttonId).val() as string);
 
-        if (roleTask === "") {
+        if (roleTask === null || roleTask === "") {
             this.#bindLocationButtons(credential);
         } else {
             processTask(credential, roleTask);

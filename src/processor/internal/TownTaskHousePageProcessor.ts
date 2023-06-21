@@ -1,15 +1,15 @@
 import NpcLoader from "../../core/role/NpcLoader";
+import TaskGuideManager from "../../core/task/TaskGuideManager";
 import TownLoader from "../../core/town/TownLoader";
 import Credential from "../../util/Credential";
 import PageUtils from "../../util/PageUtils";
-import StorageUtils from "../../util/StorageUtils";
 import PageProcessorContext from "../PageProcessorContext";
 import PageProcessorCredentialSupport from "../PageProcessorCredentialSupport";
 
 class TownTaskHousePageProcessor extends PageProcessorCredentialSupport {
 
     async doProcess(credential: Credential, context?: PageProcessorContext): Promise<void> {
-        const roleTask = loadRoleTask(credential);
+        const roleTask = await new TaskGuideManager(credential).currentTask();
 
         $("table:eq(1)")
             .find("tbody:first")
@@ -45,7 +45,7 @@ class TownTaskHousePageProcessor extends PageProcessorCredentialSupport {
                 "<tr>" +
                 "<td style='background-color:#E0D0B0'>当前任务</td>" +
                 "<td style='background-color:#E8E8D0;color:red;text-align:right;font-weight:bold' " +
-                "id='roleTask' colspan='3'>" + (roleTask === "" ? "-" : roleTask) + "</td>" +
+                "id='roleTask' colspan='3'>" + (roleTask === null || roleTask === "" ? "-" : roleTask) + "</td>" +
                 "</tr>" +
                 ""));
 
@@ -112,7 +112,7 @@ class TownTaskHousePageProcessor extends PageProcessorCredentialSupport {
 
 }
 
-function renderTask(credential: Credential, roleTask: string) {
+function renderTask(credential: Credential, roleTask: string | null) {
     let html = "";
     html += "<table style='margin:auto;border-width:0;text-align:center;background-color:#888888'>";
     html += "<tbody>";
@@ -456,7 +456,7 @@ function renderTask(credential: Credential, roleTask: string) {
     html += "</table>";
     $("#task").html(html);
 
-    if (roleTask === "") {
+    if (roleTask === null || roleTask === "") {
         $(".cancelTask").prop("disabled", true);
         doBindGetTaskButton(credential);
     } else {
@@ -472,34 +472,26 @@ function doBindGetTaskButton(credential: Credential) {
             .parent()
             .prev()
             .text();
-        const key = "_ct_" + credential.id;
-        StorageUtils.set(key, task);
-        refresh(credential);
+        new TaskGuideManager(credential).setTask(task).then(() => refresh(credential));
     });
 }
 
 function doBindCancelTaskButton(credential: Credential) {
     $(".cancelTask").on("click", () => {
-        const key = "_ct_" + credential.id;
-        StorageUtils.remove(key);
-        refresh(credential);
+        new TaskGuideManager(credential).finishTask().then(() => refresh(credential));
     });
-}
-
-function loadRoleTask(credential: Credential) {
-    const key = "_ct_" + credential.id;
-    return StorageUtils.getString(key);
 }
 
 function refresh(credential: Credential) {
     $(".taskButton").off("click");
-    const roleTask = loadRoleTask(credential);
-    if (roleTask !== "") {
-        $("#roleTask").text(roleTask);
-    } else {
-        $("#roleTask").text("-");
-    }
-    renderTask(credential, roleTask);
+    new TaskGuideManager(credential).currentTask().then(roleTask => {
+        if (roleTask !== null && roleTask !== "") {
+            $("#roleTask").text(roleTask);
+        } else {
+            $("#roleTask").text("-");
+        }
+        renderTask(credential, roleTask);
+    });
 }
 
 export = TownTaskHousePageProcessor;
