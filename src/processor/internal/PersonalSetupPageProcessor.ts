@@ -13,13 +13,6 @@ import PageProcessorCredentialSupport from "../PageProcessorCredentialSupport";
 
 abstract class PersonalSetupPageProcessor extends PageProcessorCredentialSupport {
 
-    readonly #setupItemManager: SetupItemManager;
-
-    constructor() {
-        super();
-        this.#setupItemManager = new SetupItemManager();
-    }
-
     doLoadButtonStyles(): number[] {
         return [10005, 10007, 10008, 10016, 10024, 10028, 10032, 10033, 10035, 10062,
             10132];
@@ -168,7 +161,7 @@ abstract class PersonalSetupPageProcessor extends PageProcessorCredentialSupport
         html += "</table>";
         $("#setup_item_container").html(html);
 
-        for (const it of this.#setupItemManager.getSetupItem()) {
+        for (const it of SetupItemManager.getInstance().getSetupItem()) {
             it.render(credential.id);
         }
     }

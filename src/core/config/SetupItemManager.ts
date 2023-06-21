@@ -81,6 +81,11 @@ class SetupItemManager {
         return this.#setupItemList;
     }
 
+    static getInstance() {
+        return instance;
+    }
 }
+
+const instance = new SetupItemManager();
 
 export = SetupItemManager;
