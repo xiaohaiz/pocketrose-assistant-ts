@@ -2,7 +2,7 @@ import _ from "lodash";
 import MonthRange from "../../util/MonthRange";
 import ReportUtils from "../../util/ReportUtils";
 import BattleLog from "../battle/BattleLog";
-import BattleStorages from "../battle/BattleStorages";
+import BattleLogStorage from "../battle/BattleLogStorage";
 import TreasureLoader from "../equipment/TreasureLoader";
 import MonsterGangLoader from "../monster/MonsterGangLoader";
 import MonsterProfileDict from "../monster/MonsterProfileDict";
@@ -27,7 +27,7 @@ class MonthlyReportGenerator {
     }
 
     generate() {
-        BattleStorages.battleLogStore
+        BattleLogStorage.getInstance()
             .findByCreateTime(this.#range.start, this.#range.end)
             .then(dataList => {
                 const internalIds = TeamMemberLoader.loadInternalIds();

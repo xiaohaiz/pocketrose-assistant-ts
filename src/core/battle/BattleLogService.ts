@@ -1,7 +1,7 @@
 import _ from "lodash";
 import BattleLog from "./BattleLog";
+import BattleLogStorage from "./BattleLogStorage";
 import BattleResultStorage from "./BattleResultStorage";
-import BattleStorages from "./BattleStorages";
 
 class BattleLogService {
 
@@ -21,7 +21,7 @@ function doImportBattleLog(index: number, documentList: {}[]) {
     if (!document) {
         return;
     }
-    BattleStorages.battleLogStore
+    BattleLogStorage.getInstance()
         .importDocument(document)
         .then(() => {
 

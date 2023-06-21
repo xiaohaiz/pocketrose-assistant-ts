@@ -4,13 +4,13 @@ import StringUtils from "../../util/StringUtils";
 import TreasureLoader from "../equipment/TreasureLoader";
 import PalaceTaskManager from "../task/PalaceTaskManager";
 import BattleLog from "./BattleLog";
+import BattleLogStorage from "./BattleLogStorage";
 import BattlePage from "./BattlePage";
 import BattlePageParser from "./BattlePageParser";
 import BattleRecommendation from "./BattleRecommendation";
 import BattleRecord from "./BattleRecord";
 import BattleRecordStorage from "./BattleRecordStorage";
 import BattleResultStorage from "./BattleResultStorage";
-import BattleStorages from "./BattleStorages";
 
 class BattleProcessor {
 
@@ -107,7 +107,7 @@ class BattleProcessor {
         log.catch = catchCount;
         log.photo = photoCount;
         log.treasures = treasures;
-        await BattleStorages.battleLogStore.write(log);       // 写入战斗日志
+        await BattleLogStorage.getInstance().write(log);     // 写入战斗日志
         await BattleResultStorage.getInstance().replay(log); // 写入战斗结果
 
         return await (() => {

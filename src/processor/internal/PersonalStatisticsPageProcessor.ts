@@ -1,8 +1,8 @@
 import BankRecordManager from "../../core/bank/BankRecordManager";
 import BankRecordStorage from "../../core/bank/BankRecordStorage";
 import BattleLogService from "../../core/battle/BattleLogService";
+import BattleLogStorage from "../../core/battle/BattleLogStorage";
 import BattleResultStorage from "../../core/battle/BattleResultStorage";
-import BattleStorages from "../../core/battle/BattleStorages";
 import CareerChangeLogStorage from "../../core/career/CareerChangeLogStorage";
 import RoleCareerTransfer from "../../core/career/RoleCareerTransfer";
 import RoleCareerTransferStorage from "../../core/career/RoleCareerTransferStorage";
@@ -305,7 +305,7 @@ function doBindReport5() {
 function doBindLog1() {
     $("#log-1").on("click", () => {
         const target = $("#teamMemberSelect").val()! as string;
-        BattleStorages.battleLogStore
+        BattleLogStorage.getInstance()
             .findByCreateTime(DayRange.current().start)
             .then(logList => {
                 const html = new DailyReportGenerator(logList, target).generate();
@@ -318,7 +318,7 @@ function doBindLog2() {
     $("#log-2").on("click", () => {
         const target = $("#teamMemberSelect").val()! as string;
         const yesterday = DayRange.current().previous();
-        BattleStorages.battleLogStore
+        BattleLogStorage.getInstance()
             .findByCreateTime(yesterday.start, yesterday.end)
             .then(logList => {
                 const html = new DailyReportGenerator(logList, target).generate();
@@ -330,7 +330,7 @@ function doBindLog2() {
 function doBindLog3() {
     $("#log-3").on("click", () => {
         const target = $("#teamMemberSelect").val()! as string;
-        BattleStorages.battleLogStore
+        BattleLogStorage.getInstance()
             .findByCreateTime(WeekRange.current().start)
             .then(logList => {
                 const html = new WeeklyReportGenerator(logList, target).generate();
@@ -343,7 +343,7 @@ function doBindLog4() {
     $("#log-4").on("click", () => {
         const target = $("#teamMemberSelect").val()! as string;
         const lastWeek = WeekRange.current().previous();
-        BattleStorages.battleLogStore
+        BattleLogStorage.getInstance()
             .findByCreateTime(lastWeek.start, lastWeek.end)
             .then(logList => {
                 const html = new WeeklyReportGenerator(logList, target).generate();
@@ -379,7 +379,7 @@ function doBindClearBattleLog() {
         }
 
         $(".databaseButton").prop("disabled", true);
-        BattleStorages.battleLogStore
+        BattleLogStorage.getInstance()
             .clear()
             .then(() => {
                 BattleResultStorage.getInstance()
@@ -401,7 +401,7 @@ function doBindExportBattleLog() {
 
         // 上个月的第一天00:00:00.000作为查询起始时间
         const startTime = MonthRange.current().previous().start;
-        BattleStorages.battleLogStore
+        BattleLogStorage.getInstance()
             .findByCreateTime(startTime)
             .then(logList => {
                 const documentList = logList
