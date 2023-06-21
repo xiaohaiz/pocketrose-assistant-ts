@@ -1,5 +1,7 @@
 interface SetupItem {
 
+    code(): string;
+
     render(id?: string): void
 
 }

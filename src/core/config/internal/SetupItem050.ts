@@ -6,6 +6,10 @@ import SetupLoader from "../SetupLoader";
 
 class SetupItem050 implements SetupItem {
 
+    code(): string {
+        return code;
+    }
+
     render(id?: string): void {
         doRender();
     }
