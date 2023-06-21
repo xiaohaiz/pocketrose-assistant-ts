@@ -16,7 +16,19 @@ class TaskGuideStorage {
             const request = db
                 .transaction(["TaskGuide"], "readwrite")
                 .objectStore("TaskGuide")
-                .add(data);
+                .add(document);
+            request.onerror = reject;
+            request.onsuccess = () => resolve();
+        });
+    }
+
+    async delete(id: string) {
+        const db = await PocketDatabase.connectDatabase();
+        return new Promise<void>((resolve, reject) => {
+            const request = db
+                .transaction(["TaskGuide"], "readwrite")
+                .objectStore("TaskGuide")
+                .delete(id);
             request.onerror = reject;
             request.onsuccess = () => resolve();
         });
