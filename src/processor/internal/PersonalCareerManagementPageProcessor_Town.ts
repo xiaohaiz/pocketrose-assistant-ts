@@ -85,9 +85,7 @@ function doProcess(credential: Credential, candidateList: string[]) {
     CommentBoard.writeMessage("是的，你没有看错，换人了，某幕后黑手不愿意出镜。不过请放心，转职方面我是专业的，毕竟我一直制霸钉耙榜。<br>");
     CommentBoard.writeMessage("蓝色的职业代表你已经掌握了。我会把为你推荐的职业红色加深标识出来，当然，前提是如果有能推荐的。<br>");
 
-    renderCareerChangeReport(credential).then(() => {
-        doRender(credential, candidateList);
-    });
+    doRender(credential, candidateList);
 }
 
 async function renderCareerChangeReport(credential: Credential) {
@@ -239,6 +237,8 @@ function doRender(credential: Credential, candidateList: string[]) {
             doRenderSpell(credential, role, spellList);
             doBindSpellButton(credential, spellList);
         });
+
+        renderCareerChangeReport(credential).then();
     });
 }
 
