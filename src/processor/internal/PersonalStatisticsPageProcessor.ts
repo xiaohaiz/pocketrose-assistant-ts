@@ -4,6 +4,7 @@ import BattleLogService from "../../core/battle/BattleLogService";
 import BattleStorages from "../../core/battle/BattleStorages";
 import CareerChangeLogStorage from "../../core/career/CareerChangeLogStorage";
 import RoleCareerTransfer from "../../core/career/RoleCareerTransfer";
+import RoleCareerTransferStorage from "../../core/career/RoleCareerTransferStorage";
 import BattleReportGenerator from "../../core/report/BattleReportGenerator";
 import DailyReportGenerator from "../../core/report/DailyReportGenerator";
 import MonsterReportGenerator from "../../core/report/MonsterReportGenerator";
@@ -13,7 +14,6 @@ import TreasureReportGenerator from "../../core/report/TreasureReportGenerator";
 import WeeklyReportGenerator from "../../core/report/WeeklyReportGenerator";
 import ZodiacReportGenerator from "../../core/report/ZodiacReportGenerator";
 import NpcLoader from "../../core/role/NpcLoader";
-import RoleStorageManager from "../../core/role/RoleStorageManager";
 import TeamMemberLoader from "../../core/team/TeamMemberLoader";
 import Credential from "../../util/Credential";
 import DayRange from "../../util/DayRange";
@@ -567,7 +567,7 @@ function doBindImportBankRecord() {
 function doBindMigrateCareerChange() {
     $("#migrateCareerChange").on("click", () => {
         $(".databaseButton").prop("disabled", true);
-        RoleStorageManager.getRoleCareerTransferStorage()
+        RoleCareerTransferStorage.getInstance()
             .loads()
             .then(dataList => migrate(dataList).then(() => {
                 $(".databaseButton").prop("disabled", false);
@@ -578,7 +578,7 @@ function doBindMigrateCareerChange() {
 async function migrate(dataList: RoleCareerTransfer[]) {
     for (const data of dataList) {
         await CareerChangeLogStorage.getInstance().migrate(data);
-        await RoleStorageManager.getRoleCareerTransferStorage().delete(data.id!);
+        await RoleCareerTransferStorage.getInstance().delete(data.id!);
     }
 }
 

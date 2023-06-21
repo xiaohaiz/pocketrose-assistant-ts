@@ -3,6 +3,10 @@ import RoleCareerTransfer from "./RoleCareerTransfer";
 
 class RoleCareerTransferStorage {
 
+    static getInstance() {
+        return instance;
+    }
+
     async delete(id: number) {
         const db = await PocketDatabase.connectDatabase();
         return new Promise<void>((resolve, reject) => {
@@ -60,5 +64,7 @@ class RoleCareerTransferStorage {
     }
 
 }
+
+const instance = new RoleCareerTransferStorage();
 
 export = RoleCareerTransferStorage;
