@@ -6,7 +6,7 @@ import CastleInformation from "../dashboard/CastleInformation";
 import Equipment from "../equipment/Equipment";
 import PersonalEquipmentManagement from "../equipment/PersonalEquipmentManagement";
 import RolePetMapStorage from "../role/RolePetMapStorage";
-import RoleStorageManager from "../role/RoleStorageManager";
+import RolePetStatusStorage from "../role/RolePetStatusStorage";
 import CastleRanch from "./CastleRanch";
 import GoldenCage from "./GoldenCage";
 import PersonalPetManagement from "./PersonalPetManagement";
@@ -95,7 +95,7 @@ class PetLocalStorage {
                         petStatusList.push(s);
                     }
 
-                    RoleStorageManager.getRolePetStatusStorage()
+                    RolePetStatusStorage.getInstance()
                         .write(this.#credential.id, JSON.stringify(petStatusList))
                         .then(() => {
                             resolve();

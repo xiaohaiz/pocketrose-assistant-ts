@@ -7,6 +7,7 @@ import MonsterProfileDict from "../../core/monster/MonsterProfileDict";
 import Pet from "../../core/monster/Pet";
 import PetLocalStorage from "../../core/monster/PetLocalStorage";
 import NpcLoader from "../../core/role/NpcLoader";
+import RolePetStatusStorage from "../../core/role/RolePetStatusStorage";
 import RoleStorageManager from "../../core/role/RoleStorageManager";
 import TeamMemberLoader from "../../core/team/TeamMemberLoader";
 import Credential from "../../util/Credential";
@@ -270,7 +271,7 @@ abstract class PersonalTeamPageProcessor extends PageProcessorCredentialSupport 
             const configs = TeamMemberLoader.loadTeamMembers();
 
             const idList = configs.map(it => it.id!);
-            RoleStorageManager.getRolePetStatusStorage()
+            RolePetStatusStorage.getInstance()
                 .loads(idList)
                 .then(dataMap => {
                     const allPetList: Pet[] = [];
