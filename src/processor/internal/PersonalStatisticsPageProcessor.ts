@@ -1,6 +1,7 @@
 import BankRecordManager from "../../core/bank/BankRecordManager";
 import BankRecordStorage from "../../core/bank/BankRecordStorage";
 import BattleLogService from "../../core/battle/BattleLogService";
+import BattleResultStorage from "../../core/battle/BattleResultStorage";
 import BattleStorages from "../../core/battle/BattleStorages";
 import CareerChangeLogStorage from "../../core/career/CareerChangeLogStorage";
 import RoleCareerTransfer from "../../core/career/RoleCareerTransfer";
@@ -251,7 +252,7 @@ abstract class PersonalStatisticsPageProcessor extends PageProcessorCredentialSu
 function doBindReport1() {
     $("#report-1").on("click", () => {
         const target = $("#teamMemberSelect").val()! as string;
-        BattleStorages.battleResultStorage
+        BattleResultStorage.getInstance()
             .loads()
             .then(dataList => {
                 const html = new BattleReportGenerator(dataList, target).generate();
@@ -263,7 +264,7 @@ function doBindReport1() {
 function doBindReport2() {
     $("#report-2").on("click", () => {
         const target = $("#teamMemberSelect").val()! as string;
-        BattleStorages.battleResultStorage
+        BattleResultStorage.getInstance()
             .loads()
             .then(dataList => {
                 const html = new MonsterReportGenerator(dataList, target).generate();
@@ -275,7 +276,7 @@ function doBindReport2() {
 function doBindReport3() {
     $("#report-3").on("click", () => {
         const target = $("#teamMemberSelect").val()! as string;
-        BattleStorages.battleResultStorage
+        BattleResultStorage.getInstance()
             .loads()
             .then(dataList => {
                 new ZodiacReportGenerator(dataList, target).generate();
@@ -293,7 +294,7 @@ function doBindReport4() {
 function doBindReport5() {
     $("#report-5").on("click", () => {
         const target = $("#teamMemberSelect").val()! as string;
-        BattleStorages.battleResultStorage
+        BattleResultStorage.getInstance()
             .loads()
             .then(dataList => {
                 new TreasureReportGenerator(dataList, target).generate();
@@ -381,7 +382,7 @@ function doBindClearBattleLog() {
         BattleStorages.battleLogStore
             .clear()
             .then(() => {
-                BattleStorages.battleResultStorage
+                BattleResultStorage.getInstance()
                     .clear()
                     .then(() => {
                         const message: string = "<b style='font-weight:bold;font-size:300%;color:red'>所有战斗记录数据已经全部清除！</b>";

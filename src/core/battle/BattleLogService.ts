@@ -1,5 +1,6 @@
 import _ from "lodash";
 import BattleLog from "./BattleLog";
+import BattleResultStorage from "./BattleResultStorage";
 import BattleStorages from "./BattleStorages";
 
 class BattleLogService {
@@ -51,7 +52,7 @@ function doImportBattleLog(index: number, documentList: {}[]) {
                     });
             }
 
-            BattleStorages.battleResultStorage
+            BattleResultStorage.getInstance()
                 .replay(log)
                 .then(() => {
                     let c = _.parseInt($("#importedBattleLogCount").text());

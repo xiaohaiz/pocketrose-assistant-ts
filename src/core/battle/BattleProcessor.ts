@@ -9,6 +9,7 @@ import BattlePageParser from "./BattlePageParser";
 import BattleRecommendation from "./BattleRecommendation";
 import BattleRecord from "./BattleRecord";
 import BattleRecordStorage from "./BattleRecordStorage";
+import BattleResultStorage from "./BattleResultStorage";
 import BattleStorages from "./BattleStorages";
 
 class BattleProcessor {
@@ -107,7 +108,7 @@ class BattleProcessor {
         log.photo = photoCount;
         log.treasures = treasures;
         await BattleStorages.battleLogStore.write(log);       // 写入战斗日志
-        await BattleStorages.battleResultStorage.replay(log); // 写入战斗结果
+        await BattleResultStorage.getInstance().replay(log); // 写入战斗结果
 
         return await (() => {
             return new Promise<void>(resolve => resolve());
