@@ -3,7 +3,7 @@ import {EChartsOption} from "echarts";
 import _ from "lodash";
 import TeamMemberLoader from "../team/TeamMemberLoader";
 import BankRecord from "./BankRecord";
-import BankStorages from "./BankStorages";
+import BankRecordStorage from "./BankRecordStorage";
 
 class BankRecordReportGenerator {
 
@@ -104,7 +104,7 @@ async function _loadBankRecords(): Promise<Map<string, Report>> {
         .filter(it => !it.external)
         .forEach(it => names.set(it.id!, it.name!));
 
-    const storage = BankStorages.bankRecordStorage;
+    const storage = BankRecordStorage.getInstance();
     const promises: Promise<BankRecord | null>[] = [];
     TeamMemberLoader.loadTeamMembers()
         .filter(it => !it.external)

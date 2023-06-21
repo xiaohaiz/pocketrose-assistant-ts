@@ -1,5 +1,5 @@
 import BankRecordManager from "../../core/bank/BankRecordManager";
-import BankStorages from "../../core/bank/BankStorages";
+import BankRecordStorage from "../../core/bank/BankRecordStorage";
 import BattleLogService from "../../core/battle/BattleLogService";
 import BattleStorages from "../../core/battle/BattleStorages";
 import CareerChangeLogStorage from "../../core/career/CareerChangeLogStorage";
@@ -486,7 +486,7 @@ function doBindClearBankRecord() {
         }
 
         $(".databaseButton").prop("disabled", true);
-        BankStorages.bankRecordStorage.clear().then(() => {
+        BankRecordStorage.getInstance().clear().then(() => {
             const message: string = "<b style='font-weight:bold;font-size:300%;color:red'>所有银行记录数据已经全部清除！</b>";
             $("#statistics").html(message).parent().show();
             $(".databaseButton").prop("disabled", false);
@@ -497,7 +497,7 @@ function doBindClearBankRecord() {
 function doBindExportBankRecord() {
     $("#exportBankRecord").on("click", () => {
         $(".databaseButton").prop("disabled", true);
-        BankStorages.bankRecordStorage.loads().then(dataList => {
+        BankRecordStorage.getInstance().loads().then(dataList => {
             const documentList = dataList.map(it => it.asDocument());
             const json = JSON.stringify(documentList);
             const html = "<textarea id='exportBankRecordData' " +

@@ -2,7 +2,7 @@ import * as echarts from "echarts";
 import {EChartsOption} from "echarts";
 import _ from "lodash";
 import BankRecordManager from "../../core/bank/BankRecordManager";
-import BankStorages from "../../core/bank/BankStorages";
+import BankRecordStorage from "../../core/bank/BankRecordStorage";
 import TownBank from "../../core/bank/TownBank";
 import TownBankPage from "../../core/bank/TownBankPage";
 import TownBankPageParser from "../../core/bank/TownBankPageParser";
@@ -202,7 +202,7 @@ class TownBankPageProcessor extends PageProcessorCredentialSupport {
 
     #renderMutablePage(credential: Credential, page: TownBankPage, town?: Town) {
         this.#bindMutableButtons(credential, page, town);
-        BankStorages.bankRecordStorage.find(credential.id).then(dataList => {
+        BankRecordStorage.getInstance().find(credential.id).then(dataList => {
             if (dataList.length > 0) {
                 $("#tr10").show();
                 const categories: string[] = [];

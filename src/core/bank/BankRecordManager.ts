@@ -2,7 +2,7 @@ import _ from "lodash";
 import Credential from "../../util/Credential";
 import DayRange from "../../util/DayRange";
 import BankRecord from "./BankRecord";
-import BankStorages from "./BankStorages";
+import BankRecordStorage from "./BankRecordStorage";
 import TownBank from "./TownBank";
 
 class BankRecordManager {
@@ -41,7 +41,7 @@ class BankRecordManager {
                         data.recordDate = DayRange.current().asText();
                         data.cash = account.cash;
                         data.saving = account.saving;
-                        BankStorages.bankRecordStorage.upsert(data).then(() => resolve());
+                        BankRecordStorage.getInstance().upsert(data).then(() => resolve());
                     }
                 });
 
@@ -79,7 +79,7 @@ function doImport(index: number, documentList: {}[]) {
     // @ts-ignore
     data.revision = document.revision;
 
-    BankStorages.bankRecordStorage.replay(data)
+    BankRecordStorage.getInstance().replay(data)
         .then(() => {
             let c = _.parseInt($("#importedBankRecordCount").text());
             c++;

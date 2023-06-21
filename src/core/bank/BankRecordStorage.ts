@@ -4,6 +4,10 @@ import BankRecord from "./BankRecord";
 
 class BankRecordStorage {
 
+    static getInstance() {
+        return instance;
+    }
+
     async loads(): Promise<BankRecord[]> {
         const db = await PocketDatabase.connectDatabase();
         return new Promise<BankRecord[]>((resolve, reject) => {
@@ -208,5 +212,7 @@ class BankRecordStorage {
     }
 
 }
+
+const instance = new BankRecordStorage();
 
 export = BankRecordStorage;
