@@ -8,6 +8,7 @@ import BattlePage from "./BattlePage";
 import BattlePageParser from "./BattlePageParser";
 import BattleRecommendation from "./BattleRecommendation";
 import BattleRecord from "./BattleRecord";
+import BattleRecordStorage from "./BattleRecordStorage";
 import BattleStorages from "./BattleStorages";
 
 class BattleProcessor {
@@ -60,7 +61,7 @@ class BattleProcessor {
         const record = new BattleRecord();
         record.id = this.#credential.id;
         record.html = this.obtainPage.reportHtml;
-        await BattleStorages.getBattleRecordStorage().write(record);
+        await BattleRecordStorage.getInstance().write(record);
 
         // 分析入手的结果
         let catchCount: number | undefined = undefined;
