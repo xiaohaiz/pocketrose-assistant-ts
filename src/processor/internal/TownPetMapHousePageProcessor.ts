@@ -4,7 +4,7 @@ import PetMap from "../../core/monster/PetMap";
 import TownPetMapHouse from "../../core/monster/TownPetMapHouse";
 import TownPetMapHousePage from "../../core/monster/TownPetMapHousePage";
 import PersonalStatus from "../../core/role/PersonalStatus";
-import RoleStorageManager from "../../core/role/RoleStorageManager";
+import RolePetMapStorage from "../../core/role/RolePetMapStorage";
 import TeamMember from "../../core/team/TeamMember";
 import TeamMemberLoader from "../../core/team/TeamMemberLoader";
 import TownLoader from "../../core/town/TownLoader";
@@ -151,7 +151,7 @@ class TownPetMapHousePageProcessor extends PageProcessorCredentialSupport {
             roleIdList.push(roleId);
         });
 
-        RoleStorageManager.getRolePetMapStorage()
+        RolePetMapStorage.getInstance()
             .loads(roleIdList)
             .then(dataMap => {
                 const foundList: string[] = [];

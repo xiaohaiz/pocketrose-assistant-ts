@@ -5,6 +5,7 @@ import Castle from "../castle/Castle";
 import CastleInformation from "../dashboard/CastleInformation";
 import Equipment from "../equipment/Equipment";
 import PersonalEquipmentManagement from "../equipment/PersonalEquipmentManagement";
+import RolePetMapStorage from "../role/RolePetMapStorage";
 import RoleStorageManager from "../role/RoleStorageManager";
 import CastleRanch from "./CastleRanch";
 import GoldenCage from "./GoldenCage";
@@ -55,7 +56,7 @@ class PetLocalStorage {
             return new Promise<void>(resolve => {
                 new TownPetMapHouse(this.#credential).open().then(page => {
                     const json = page.asJson();
-                    RoleStorageManager.getRolePetMapStorage()
+                    RolePetMapStorage.getInstance()
                         .write(this.#credential.id, json)
                         .then(() => {
                             resolve();

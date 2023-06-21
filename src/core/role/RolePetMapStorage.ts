@@ -3,6 +3,10 @@ import RolePetMap from "./RolePetMap";
 
 class RolePetMapStorage {
 
+    static getInstance() {
+        return instance;
+    }
+
     async loads(idList: string[]): Promise<Map<string, RolePetMap>> {
         const db = await PocketDatabase.connectDatabase();
         return await (() => {
@@ -83,5 +87,7 @@ class RolePetMapStorage {
     }
 
 }
+
+const instance = new RolePetMapStorage();
 
 export = RolePetMapStorage;
