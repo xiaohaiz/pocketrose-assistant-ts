@@ -147,6 +147,15 @@ class PocketDatabase {
                 }
 
                 // ------------------------------------------------------------
+                // TaskGuide
+                // ------------------------------------------------------------
+                if (!db.objectStoreNames.contains("TaskGuide")) {
+                    db.createObjectStore("TaskGuide", {
+                        keyPath: "id", autoIncrement: false
+                    });
+                }
+
+                // ------------------------------------------------------------
                 // LastLogin
                 // ------------------------------------------------------------
                 if (!db.objectStoreNames.contains("LastLogin")) {
