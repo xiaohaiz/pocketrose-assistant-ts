@@ -3,7 +3,7 @@ import Constants from "../../util/Constants";
 import PageUtils from "../../util/PageUtils";
 import StringUtils from "../../util/StringUtils";
 import SetupLoader from "../config/SetupLoader";
-import MonsterProfileDict from "./MonsterProfileDict";
+import MonsterProfileLoader from "./MonsterProfileLoader";
 
 class Pet {
 
@@ -48,22 +48,22 @@ class Pet {
     location?: string;  // P/C/R
 
     get nameHtml() {
-        const profile = MonsterProfileDict.load(this.name);
+        const profile = MonsterProfileLoader.load(this.name);
         return profile ? profile.nameHtml : this.name;
     }
 
     get raceHtml() {
-        const profile = MonsterProfileDict.load(this.race);
+        const profile = MonsterProfileLoader.load(this.race);
         return profile ? profile.nameHtml : this.race;
     }
 
     get beforeHtml() {
-        const profile = MonsterProfileDict.load(this.before);
+        const profile = MonsterProfileLoader.load(this.before);
         return profile ? profile.nameHtml : this.before;
     }
 
     get afterHtml() {
-        const profile = MonsterProfileDict.load(this.after);
+        const profile = MonsterProfileLoader.load(this.after);
         return profile ? profile.nameHtml : this.after;
     }
 

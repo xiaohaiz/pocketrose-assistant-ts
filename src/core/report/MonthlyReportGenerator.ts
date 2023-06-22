@@ -5,7 +5,7 @@ import BattleLog from "../battle/BattleLog";
 import BattleLogStorage from "../battle/BattleLogStorage";
 import TreasureLoader from "../equipment/TreasureLoader";
 import MonsterGangLoader from "../monster/MonsterGangLoader";
-import MonsterProfileDict from "../monster/MonsterProfileDict";
+import MonsterProfileLoader from "../monster/MonsterProfileLoader";
 import TeamMemberLoader from "../team/TeamMemberLoader";
 
 class MonthlyReportGenerator {
@@ -452,7 +452,7 @@ class MonthlyReportGenerator {
             html += "<tr>";
             html += "<td style='background-color:wheat;text-align:left'>";
             for (const mn of allCatches.keys()) {
-                html += MonsterProfileDict.load(mn)?.imageHtml;
+                html += MonsterProfileLoader.load(mn)?.imageHtml;
                 imageCount++;
                 if (imageCount % 10 === 0) html += "<br>";
             }
@@ -544,7 +544,7 @@ class MonthlyReportGenerator {
             html += "<tr>";
             html += "<td style='background-color:wheat;text-align:left'>";
             for (const mn of allPhotos.keys()) {
-                html += MonsterProfileDict.load(mn)?.imageHtml;
+                html += MonsterProfileLoader.load(mn)?.imageHtml;
                 imageCount++;
                 if (imageCount % 10 === 0) html += "<br>";
             }
@@ -771,7 +771,7 @@ class MonthlyReportGenerator {
         html += "<tr>";
         MonsterGangLoader.getGang1().forEach(it => {
             html += "<td>";
-            html += MonsterProfileDict.load(it)?.imageHtml;
+            html += MonsterProfileLoader.load(it)?.imageHtml;
             html += "</td>";
         });
         html += "</tr>";
@@ -862,7 +862,7 @@ class MonthlyReportGenerator {
         html += "<tr>";
         MonsterGangLoader.getGang2().forEach(it => {
             html += "<td>";
-            html += MonsterProfileDict.load(it)?.imageHtml;
+            html += MonsterProfileLoader.load(it)?.imageHtml;
             html += "</td>";
         });
         html += "</tr>";

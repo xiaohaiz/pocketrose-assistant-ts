@@ -1,9 +1,9 @@
 import _ from "lodash";
 import StringUtils from "../../util/StringUtils";
 import MonsterProfile from "./MonsterProfile";
-import MonsterSpellDict from "./MonsterSpellDict";
+import MonsterSpellLoader from "./MonsterSpellLoader";
 
-class MonsterProfileDict {
+class MonsterProfileLoader {
 
     static load(code: string | number | null | undefined): MonsterProfile | null {
         if (!code) return null;
@@ -41,9 +41,9 @@ class MonsterProfileDict {
 
     static findBySpellName(name: string | null | undefined): MonsterProfile[] {
         const profiles: MonsterProfile[] = [];
-        const id = MonsterSpellDict.findBySpellName(name);
+        const id = MonsterSpellLoader.findBySpellName(name);
         if (!id) return profiles;
-        MonsterProfileDict.loadAll()
+        MonsterProfileLoader.loadAll()
             .filter(it => it.spellIds)
             .forEach(it => {
                 const ids = new Set<number>();
@@ -584,4 +584,4 @@ function extractCode(name: string | null | undefined): string | null {
     return StringUtils.substringBetween(name, "(", ")");
 }
 
-export = MonsterProfileDict;
+export = MonsterProfileLoader;
