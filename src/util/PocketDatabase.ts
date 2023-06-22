@@ -102,21 +102,6 @@ class PocketDatabase {
                 }
 
                 // ------------------------------------------------------------
-                // RoleCareerTransfer
-                // ------------------------------------------------------------
-                if (!db.objectStoreNames.contains("RoleCareerTransfer")) {
-                    const store = db.createObjectStore("RoleCareerTransfer", {
-                        keyPath: "id", autoIncrement: true
-                    });
-                    store.createIndex("roleId", "roleId", {
-                        unique: false
-                    });
-                    store.createIndex("createTime", "createTime", {
-                        unique: false
-                    });
-                }
-
-                // ------------------------------------------------------------
                 // CareerChangeLog
                 // ------------------------------------------------------------
                 if (!db.objectStoreNames.contains("CareerChangeLog")) {
