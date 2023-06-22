@@ -1,10 +1,9 @@
 import _ from "lodash";
+import Constants from "../../util/Constants";
+import SetupItemManager from "./SetupItemManager";
 
 class ConfigManager {
 
-    /**
-     * 导出助手配置数据，包括快速登陆的数据。
-     */
     static exportAsJson() {
         const s = {};
         for (let i = 0; i < localStorage.length; i++) {
@@ -12,8 +11,7 @@ class ConfigManager {
             if (key === null) {
                 continue;
             }
-            if (_.startsWith(key, "_pa_") || _.startsWith(key, "_fl_")) {
-                // 只导出配置信息
+            if (isRecognizedKey(key)) {
                 const value = localStorage.getItem(key);
                 if (value === null) {
                     continue;
@@ -25,10 +23,6 @@ class ConfigManager {
         return JSON.stringify(s);
     }
 
-    /**
-     * 从JSON导入配置
-     * @param json Configs' json
-     */
     static importFromJson(json: string) {
         const allConfigs = JSON.parse(json);
         const keys = Object.keys(allConfigs);
@@ -39,12 +33,26 @@ class ConfigManager {
         }
     }
 
-    /**
-     * 清理所有的配置数据。
-     */
     static purge() {
         localStorage.clear();
     }
+}
+
+function isRecognizedKey(key: string) {
+    let ss: string[] = [];
+    for (let i = 0; i < Constants.MAX_TEAM_MEMBER_COUNT; i++) {
+        ss.push("_fl_" + i);
+    }
+    if (_.includes(ss, key)) return true;
+    ss = SetupItemManager.getInstance().getSetupItem()
+        .map(it => it.code())
+        .map(it => "_pa_" + it);
+    for (const s of ss) {
+        if (s === key || _.startsWith(key, s)) {
+            return true;
+        }
+    }
+    return false;
 }
 
 export = ConfigManager;
