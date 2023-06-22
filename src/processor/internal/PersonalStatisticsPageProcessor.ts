@@ -4,8 +4,6 @@ import BattleLogService from "../../core/battle/BattleLogService";
 import BattleLogStorage from "../../core/battle/BattleLogStorage";
 import BattleResultStorage from "../../core/battle/BattleResultStorage";
 import CareerChangeLogStorage from "../../core/career/CareerChangeLogStorage";
-import RoleCareerTransfer from "../../core/career/RoleCareerTransfer";
-import RoleCareerTransferStorage from "../../core/career/RoleCareerTransferStorage";
 import BattleReportGenerator from "../../core/report/BattleReportGenerator";
 import DailyReportGenerator from "../../core/report/DailyReportGenerator";
 import MonsterReportGenerator from "../../core/report/MonsterReportGenerator";
@@ -156,7 +154,7 @@ abstract class PersonalStatisticsPageProcessor extends PageProcessorCredentialSu
             html += "</tr>";
             html += "<tr>";
             html += "<td>";
-            html += "<button role='button' class='databaseButton' id='migrateCareerChange'>迁移转职记录</button>";
+            html += "<button role='button' class='databaseButton' id='clearCareerChange'>清除转职记录</button>";
             html += "</td>";
             html += "<td>";
             html += "<button role='button' class='databaseButton' id='exportCareerChange'>导出转职记录</button>";
@@ -235,7 +233,7 @@ abstract class PersonalStatisticsPageProcessor extends PageProcessorCredentialSu
             doBindClearBankRecord();
             doBindExportBankRecord();
             doBindImportBankRecord();
-            doBindMigrateCareerChange();
+            doBindClearCareerChange();
             doBindExportCareerChange();
             doBindImportCareerChange();
         }
@@ -565,22 +563,25 @@ function doBindImportBankRecord() {
     });
 }
 
-function doBindMigrateCareerChange() {
-    $("#migrateCareerChange").on("click", () => {
-        $(".databaseButton").prop("disabled", true);
-        RoleCareerTransferStorage.getInstance()
-            .loads()
-            .then(dataList => migrate(dataList).then(() => {
-                $(".databaseButton").prop("disabled", false);
-            }));
-    });
-}
+function doBindClearCareerChange() {
+    $("#clearCareerChange").on("click", () => {
+        if (!confirm("转职记录一旦清除就彻底丢失了，正常玩家不需要执行此操作！")) {
+            return;
+        }
+        if (!confirm("二次确认！转职记录真的清除后就彻底丢失，有造成数据不一致的隐患。不明白数据同步含义的不要执行！")) {
+            return;
+        }
+        if (!confirm("最终确认！你要确认你在做什么！免责声明：每个人都是自己数据的唯一责任人！")) {
+            return;
+        }
 
-async function migrate(dataList: RoleCareerTransfer[]) {
-    for (const data of dataList) {
-        await CareerChangeLogStorage.getInstance().migrate(data);
-        await RoleCareerTransferStorage.getInstance().delete(data.id!);
-    }
+        $(".databaseButton").prop("disabled", true);
+        CareerChangeLogStorage.getInstance().clear().then(() => {
+            const message: string = "<b style='font-weight:bold;font-size:300%;color:red'>所有转职记录数据已经全部清除！</b>";
+            $("#statistics").html(message).parent().show();
+            $(".databaseButton").prop("disabled", false);
+        });
+    });
 }
 
 function doBindExportCareerChange() {

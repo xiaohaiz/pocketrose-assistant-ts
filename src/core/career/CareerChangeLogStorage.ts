@@ -112,6 +112,18 @@ class CareerChangeLogStorage {
         });
     }
 
+    async clear() {
+        const db = await PocketDatabase.connectDatabase();
+        return new Promise<void>((resolve, reject) => {
+            const request = db
+                .transaction(["CareerChangeLog"], "readwrite")
+                .objectStore("CareerChangeLog")
+                .clear();
+            request.onerror = reject;
+            request.onsuccess = () => resolve();
+        });
+    }
+
     // 迁移数据的临时方法
     async hasCreateTime(createTime: number): Promise<boolean> {
         const db = await PocketDatabase.connectDatabase();
