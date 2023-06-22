@@ -1,5 +1,4 @@
 import _ from "lodash";
-import StorageUtils from "../../util/StorageUtils";
 
 class ConfigManager {
 
@@ -44,19 +43,7 @@ class ConfigManager {
      * 清理所有的配置数据。
      */
     static purge() {
-        const candidates: string[] = [];
-        for (let i = 0; i < localStorage.length; i++) {
-            const key = localStorage.key(i);
-            if (key === null) {
-                continue;
-            }
-            if (!_.startsWith(key, "_lc_")) {
-                candidates.push(key);
-            }
-        }
-        for (const candidate of candidates) {
-            StorageUtils.remove(candidate);
-        }
+        localStorage.clear();
     }
 }
 
