@@ -121,6 +121,9 @@ class PocketDatabase {
                         unique: false
                     });
                 }
+                if (db.objectStoreNames.contains("RoleCareerTransfer")) {
+                    db.deleteObjectStore("RoleCareerTransfer");
+                }
 
                 // ------------------------------------------------------------
                 // PalaceTask
