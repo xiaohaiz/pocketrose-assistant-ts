@@ -1,6 +1,6 @@
 import MessageBoard from "../../../util/MessageBoard";
 import StorageUtils from "../../../util/StorageUtils";
-import BattleFieldConfigLoader from "../BattleFieldConfigLoader";
+import BattleFieldConfigLoader from "../../battle/BattleFieldConfigLoader";
 import SetupItem from "../SetupItem";
 
 class SetupItem056 implements SetupItem {
