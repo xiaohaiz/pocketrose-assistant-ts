@@ -1,5 +1,6 @@
 import Credential from "../../util/Credential";
 import StorageUtils from "../../util/StorageUtils";
+import BattleFieldConfig from "./BattleFieldConfig";
 
 class BattleFieldConfigLoader {
 
@@ -15,6 +16,18 @@ class BattleFieldConfigLoader {
             return config;
         }
         return BattleFieldConfigLoader.loadCustomizedConfig(this.#credential.id);
+    }
+
+    static loadGlobalConfig2(): BattleFieldConfig {
+        const config = new BattleFieldConfig();
+        const s = StorageUtils.getString("_pa_056");
+        if (s === "") return config;
+        const value = JSON.parse(s);
+        (value.primary !== undefined) && (config.primary = value.primary);
+        (value.junior !== undefined) && (config.junior = value.junior);
+        (value.senior !== undefined) && (config.senior = value.senior);
+        (value.zodiac !== undefined) && (config.zodiac = value.zodiac);
+        return config;
     }
 
     static loadGlobalConfig(): {} {
