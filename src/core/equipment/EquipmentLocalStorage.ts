@@ -3,11 +3,11 @@ import CommentBoard from "../../util/CommentBoard";
 import Credential from "../../util/Credential";
 import Castle from "../castle/Castle";
 import CastleInformation from "../dashboard/CastleInformation";
-import RoleEquipmentStatusStorage from "../role/RoleEquipmentStatusStorage";
 import CastleWarehouse from "./CastleWarehouse";
 import Equipment from "./Equipment";
 import PersonalEquipmentManagement from "./PersonalEquipmentManagement";
 import PersonalEquipmentManagementPage from "./PersonalEquipmentManagementPage";
+import RoleEquipmentStatusStorage from "./RoleEquipmentStatusStorage";
 import TreasureBag from "./TreasureBag";
 
 class EquipmentLocalStorage {
