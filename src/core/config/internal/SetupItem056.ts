@@ -30,15 +30,11 @@ function doRender() {
 
     $("#setup_item_table").append($(html));
 
-    let value = BattleFieldConfigLoader.loadGlobalConfig();
-    // @ts-ignore
-    $("#primary_battle_global").prop("checked", value["primary"]);
-    // @ts-ignore
-    $("#junior_battle_global").prop("checked", value["junior"]);
-    // @ts-ignore
-    $("#senior_battle_global").prop("checked", value["senior"]);
-    // @ts-ignore
-    $("#zodiac_battle_global").prop("checked", value["zodiac"]);
+    const config = BattleFieldConfigLoader.loadGlobalConfig();
+    $("#primary_battle_global").prop("checked", config.primary);
+    $("#junior_battle_global").prop("checked", config.junior);
+    $("#senior_battle_global").prop("checked", config.senior);
+    $("#zodiac_battle_global").prop("checked", config.zodiac);
 
     $("#setup_" + code).on("click", function () {
         doSaveSetupItem();
