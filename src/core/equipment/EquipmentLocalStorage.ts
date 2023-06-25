@@ -3,11 +3,11 @@ import CommentBoard from "../../util/CommentBoard";
 import Credential from "../../util/Credential";
 import Castle from "../castle/Castle";
 import CastleInformation from "../dashboard/CastleInformation";
-import RoleStorageManager from "../role/RoleStorageManager";
 import CastleWarehouse from "./CastleWarehouse";
 import Equipment from "./Equipment";
 import PersonalEquipmentManagement from "./PersonalEquipmentManagement";
 import PersonalEquipmentManagementPage from "./PersonalEquipmentManagementPage";
+import RoleEquipmentStatusStorage from "./RoleEquipmentStatusStorage";
 import TreasureBag from "./TreasureBag";
 
 class EquipmentLocalStorage {
@@ -67,7 +67,7 @@ class EquipmentLocalStorage {
                         equipmentStatusList.push(s);
                     }
 
-                    RoleStorageManager.getRoleEquipmentStatusStorage()
+                    RoleEquipmentStatusStorage.getInstance()
                         .write(this.#credential.id, JSON.stringify(equipmentStatusList))
                         .then(() => {
                             resolve();

@@ -1,23 +1,27 @@
 import PocketDatabase from "../../util/PocketDatabase";
-import RolePetMap from "./RolePetMap";
+import RoleEquipmentStatus from "./RoleEquipmentStatus";
 
-class RolePetMapStorage {
+class RoleEquipmentStatusStorage {
 
-    async loads(idList: string[]): Promise<Map<string, RolePetMap>> {
+    static getInstance() {
+        return instance;
+    }
+
+    async loads(idList: string[]): Promise<Map<string, RoleEquipmentStatus>> {
         const db = await PocketDatabase.connectDatabase();
         return await (() => {
-            return new Promise<Map<string, RolePetMap>>((resolve, reject) => {
-                const request = db.transaction(["RolePetMap"], "readonly")
-                    .objectStore("RolePetMap")
+            return new Promise<Map<string, RoleEquipmentStatus>>((resolve, reject) => {
+                const request = db.transaction(["RoleEquipmentStatus"], "readonly")
+                    .objectStore("RoleEquipmentStatus")
                     .getAll();  // Bad usage here
 
                 request.onerror = reject;
 
                 request.onsuccess = () => {
                     if (request.result) {
-                        const dataMap = new Map<string, RolePetMap>();
+                        const dataMap = new Map<string, RoleEquipmentStatus>();
                         for (const it of request.result) {
-                            const data = new RolePetMap();
+                            const data = new RoleEquipmentStatus();
                             data.id = it.id;
                             data.json = it.json;
                             data.updateTime = it.updateTime;
@@ -26,31 +30,6 @@ class RolePetMapStorage {
                             }
                         }
                         resolve(dataMap);
-                    } else {
-                        reject();
-                    }
-                };
-            });
-        })();
-    }
-
-    async load(id: string): Promise<RolePetMap> {
-        const db = await PocketDatabase.connectDatabase();
-        return await (() => {
-            return new Promise<RolePetMap>((resolve, reject) => {
-                const request = db.transaction(["RolePetMap"], "readonly")
-                    .objectStore("RolePetMap")
-                    .get(id);
-
-                request.onerror = reject;
-
-                request.onsuccess = () => {
-                    if (request.result) {
-                        const data = new RolePetMap();
-                        data.id = request.result.id;
-                        data.json = request.result.json;
-                        data.updateTime = request.result.updateTime;
-                        resolve(data);
                     } else {
                         reject();
                     }
@@ -71,8 +50,8 @@ class RolePetMapStorage {
                 // @ts-ignore
                 document.updateTime = new Date().getTime();
 
-                const request = db.transaction(["RolePetMap"], "readwrite")
-                    .objectStore("RolePetMap")
+                const request = db.transaction(["RoleEquipmentStatus"], "readwrite")
+                    .objectStore("RoleEquipmentStatus")
                     .put(document);
 
                 request.onerror = reject;
@@ -81,7 +60,8 @@ class RolePetMapStorage {
             });
         })();
     }
-
 }
 
-export = RolePetMapStorage;
+const instance = new RoleEquipmentStatusStorage();
+
+export = RoleEquipmentStatusStorage;

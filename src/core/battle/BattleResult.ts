@@ -1,5 +1,5 @@
 import _ from "lodash";
-import MonsterProfileDict from "../monster/MonsterProfileDict";
+import MonsterProfileLoader from "../monster/MonsterProfileLoader";
 import NpcLoader from "../role/NpcLoader";
 import BattleLog from "./BattleLog";
 
@@ -158,7 +158,7 @@ class BattleResult {
         if (NpcLoader.getZodiacNpcNames().includes(this.monster!)) {
             return "十二宫";
         }
-        const location = MonsterProfileDict.load(this.monster)?.locationText;
+        const location = MonsterProfileLoader.load(this.monster)?.locationText;
         return location ? location : "未知（" + this.monster + "）";
     }
 }

@@ -1,6 +1,6 @@
 import _ from "lodash";
 
-class MonsterSpellDict {
+class MonsterSpellLoader {
 
     static getSpellName(id: number | null | undefined): string | null {
         if (!id) return null;
@@ -562,4 +562,4 @@ const SPELLS = {
     533: "龙遁"
 };
 
-export = MonsterSpellDict;
+export = MonsterSpellLoader;

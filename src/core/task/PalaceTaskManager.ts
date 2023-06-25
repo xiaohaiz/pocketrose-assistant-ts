@@ -1,7 +1,7 @@
 import _ from "lodash";
 import Credential from "../../util/Credential";
-import MonsterProfileDict from "../monster/MonsterProfileDict";
-import TaskStorageManager from "./TaskStorageManager";
+import MonsterProfileLoader from "../monster/MonsterProfileLoader";
+import PalaceTaskStorage from "./PalaceTaskStorage";
 
 class PalaceTaskManager {
 
@@ -14,7 +14,7 @@ class PalaceTaskManager {
     async updateMonsterTask(monsterName: string): Promise<void> {
         return await (() => {
             return new Promise<void>(resolve => {
-                TaskStorageManager.getPalaceTaskStorage()
+                PalaceTaskStorage.getInstance()
                     .updateMonsterTask(this.#credential.id, monsterName)
                     .then(() => resolve());
             });
@@ -24,7 +24,7 @@ class PalaceTaskManager {
     async completeMonsterTask(): Promise<void> {
         return await (() => {
             return new Promise<void>(resolve => {
-                TaskStorageManager.getPalaceTaskStorage()
+                PalaceTaskStorage.getInstance()
                     .completeMonsterTask(this.#credential.id)
                     .then(() => resolve());
             });
@@ -35,7 +35,7 @@ class PalaceTaskManager {
     async finishMonsterTask(): Promise<void> {
         return await (() => {
             return new Promise<void>(resolve => {
-                TaskStorageManager.getPalaceTaskStorage()
+                PalaceTaskStorage.getInstance()
                     .finishMonsterTask(this.#credential.id)
                     .then(() => resolve());
             });
@@ -45,7 +45,7 @@ class PalaceTaskManager {
     async monsterTaskHtml(): Promise<string> {
         return await (() => {
             return new Promise<string>(resolve => {
-                TaskStorageManager.getPalaceTaskStorage()
+                PalaceTaskStorage.getInstance()
                     .load(this.#credential.id)
                     .then(task => {
                         if (task === null) {
@@ -61,7 +61,7 @@ class PalaceTaskManager {
                         const a = ss[0];
                         const b = ss[1];
 
-                        const profile = MonsterProfileDict.load(a)!;
+                        const profile = MonsterProfileLoader.load(a)!;
                         const s1: string = profile.nameHtml!;
                         const s2: string = profile.locationText!;
                         const s3: string = b === "1" ? "<span style='color:blue'>已完成</span>" : "进行中";

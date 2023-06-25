@@ -2,7 +2,7 @@ import _ from "lodash";
 import Constants from "../../util/Constants";
 import StringUtils from "../../util/StringUtils";
 import SetupLoader from "../config/SetupLoader";
-import MonsterSpellDict from "./MonsterSpellDict";
+import MonsterSpellLoader from "./MonsterSpellLoader";
 
 class MonsterProfile {
 
@@ -113,7 +113,7 @@ class MonsterProfile {
         const names: string[] = [];
         _.split(this.spellIds, ",").forEach(it => {
             const id = _.parseInt(it);
-            const name = MonsterSpellDict.getSpellName(id);
+            const name = MonsterSpellLoader.getSpellName(id);
             if (name) names.push(name);
         });
         return _.join(names, " ");

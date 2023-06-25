@@ -102,11 +102,11 @@ class PocketDatabase {
                 }
 
                 // ------------------------------------------------------------
-                // RoleCareerTransfer
+                // CareerChangeLog
                 // ------------------------------------------------------------
-                if (!db.objectStoreNames.contains("RoleCareerTransfer")) {
-                    const store = db.createObjectStore("RoleCareerTransfer", {
-                        keyPath: "id", autoIncrement: true
+                if (!db.objectStoreNames.contains("CareerChangeLog")) {
+                    const store = db.createObjectStore("CareerChangeLog", {
+                        keyPath: "id", autoIncrement: false
                     });
                     store.createIndex("roleId", "roleId", {
                         unique: false
@@ -114,6 +114,15 @@ class PocketDatabase {
                     store.createIndex("createTime", "createTime", {
                         unique: false
                     });
+                    store.createIndex("career_1", "career_1", {
+                        unique: false
+                    });
+                    store.createIndex("career_2", "career_2", {
+                        unique: false
+                    });
+                }
+                if (db.objectStoreNames.contains("RoleCareerTransfer")) {
+                    db.deleteObjectStore("RoleCareerTransfer");
                 }
 
                 // ------------------------------------------------------------
@@ -121,6 +130,15 @@ class PocketDatabase {
                 // ------------------------------------------------------------
                 if (!db.objectStoreNames.contains("PalaceTask")) {
                     db.createObjectStore("PalaceTask", {
+                        keyPath: "id", autoIncrement: false
+                    });
+                }
+
+                // ------------------------------------------------------------
+                // TaskGuide
+                // ------------------------------------------------------------
+                if (!db.objectStoreNames.contains("TaskGuide")) {
+                    db.createObjectStore("TaskGuide", {
                         keyPath: "id", autoIncrement: false
                     });
                 }

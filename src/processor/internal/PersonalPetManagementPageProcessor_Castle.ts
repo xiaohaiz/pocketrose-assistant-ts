@@ -4,7 +4,7 @@ import PersonalEquipmentManagement from "../../core/equipment/PersonalEquipmentM
 import CastlePetExpressHouse from "../../core/monster/CastlePetExpressHouse";
 import CastleRanch from "../../core/monster/CastleRanch";
 import GoldenCage from "../../core/monster/GoldenCage";
-import MonsterProfileDict from "../../core/monster/MonsterProfileDict";
+import MonsterProfileLoader from "../../core/monster/MonsterProfileLoader";
 import MonsterSimulator from "../../core/monster/MonsterSimulator";
 import PersonalPetEvolution from "../../core/monster/PersonalPetEvolution";
 import PersonalPetEvolutionPage from "../../core/monster/PersonalPetEvolutionPage";
@@ -147,7 +147,7 @@ function doRender(credential: Credential, petList: Pet[], studyStatus: number[])
             (pet.attribute2 === "无" ? "-" : pet.attribute2) +
             "</td>";
         html += "<td style='background-color:#E8E8D0'>";
-        const petFuture = MonsterProfileDict.load(pet.code!);
+        const petFuture = MonsterProfileLoader.load(pet.code!);
         if (petFuture !== null) {
             html += petFuture.growExperience;
         }
@@ -383,7 +383,7 @@ function doBindPetFuture(petList: Pet[]) {
         if ($("#pet_name_" + code).length > 0) {
             $("#pet_name_" + code)
                 .on("click", function () {
-                    const petFuture = MonsterProfileDict.load(code)!;
+                    const petFuture = MonsterProfileLoader.load(code)!;
                     let html = "";
                     html += "<table style='width:100%;border-width:0;background-color:wheat;margin:auto'>";
                     html += "<tbody>";
@@ -432,7 +432,7 @@ function doBindPetFuture(petList: Pet[]) {
         if ($("#pet_picture_" + code).length > 0) {
             $("#pet_picture_" + code)
                 .on("mouseenter", function () {
-                    const petFuture = MonsterProfileDict.load(code)!;
+                    const petFuture = MonsterProfileLoader.load(code)!;
                     let html = "";
                     html += "<table style='width:100%;border-width:0;background-color:wheat;margin:auto'>";
                     html += "<tbody>";
@@ -1241,8 +1241,8 @@ function doRenderPetBorn(credential: Credential, petList: Pet[]) {
                 if (!pet.selectable) {
                     continue;
                 }
-                const beforeHtml = MonsterProfileDict.load(pet.beforeCode)!.imageHtml;
-                const afterHtml = MonsterProfileDict.load(pet.afterCode)!.imageHtml;
+                const beforeHtml = MonsterProfileLoader.load(pet.beforeCode)!.imageHtml;
+                const afterHtml = MonsterProfileLoader.load(pet.afterCode)!.imageHtml;
                 html += "<tr>";
                 html += "<td style='background-color:#EFE0C0'>";
                 html += "<button role='button' class='PetUIButton evolutionButton' id='evolution_" + pet.index + "_" + pet.evolution + "'>进化</button>";
@@ -1299,8 +1299,8 @@ function doRenderPetBorn(credential: Credential, petList: Pet[]) {
                 if (!pet.selectable) {
                     continue;
                 }
-                const beforeHtml = MonsterProfileDict.load(pet.beforeCode)!.imageHtml;
-                const afterHtml = MonsterProfileDict.load(pet.afterCode)!.imageHtml;
+                const beforeHtml = MonsterProfileLoader.load(pet.beforeCode)!.imageHtml;
+                const afterHtml = MonsterProfileLoader.load(pet.afterCode)!.imageHtml;
                 html += "<tr>";
                 html += "<td style='background-color:#EFE0C0'>";
                 html += "<button role='button' class='PetUIButton degradationButton' id='degradation_" + pet.index + "'>退化</button>";

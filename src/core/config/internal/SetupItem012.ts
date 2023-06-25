@@ -1,9 +1,13 @@
 import MessageBoard from "../../../util/MessageBoard";
 import StorageUtils from "../../../util/StorageUtils";
-import BattleFieldConfigLoader from "../BattleFieldConfigLoader";
+import BattleFieldConfigLoader from "../../battle/BattleFieldConfigLoader";
 import SetupItem from "../SetupItem";
 
 class SetupItem012 implements SetupItem {
+
+    code(): string {
+        return code;
+    }
 
     render(id?: string): void {
         doRender(id!);
@@ -26,15 +30,11 @@ function doRender(id: string) {
 
     $("#setup_item_table").append($(html));
 
-    let value = BattleFieldConfigLoader.loadCustomizedConfig(id);
-    // @ts-ignore
-    $("#primary_battle").prop("checked", value["primary"]);
-    // @ts-ignore
-    $("#junior_battle").prop("checked", value["junior"]);
-    // @ts-ignore
-    $("#senior_battle").prop("checked", value["senior"]);
-    // @ts-ignore
-    $("#zodiac_battle").prop("checked", value["zodiac"]);
+    const config = BattleFieldConfigLoader.loadCustomizedConfig(id);
+    $("#primary_battle").prop("checked", config.primary);
+    $("#junior_battle").prop("checked", config.junior);
+    $("#senior_battle").prop("checked", config.senior);
+    $("#zodiac_battle").prop("checked", config.zodiac);
 
     $("#setup_" + code).on("click", function () {
         doSaveSetupItem(id);

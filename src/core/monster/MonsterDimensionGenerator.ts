@@ -1,6 +1,6 @@
 import * as echarts from "echarts";
 import {ECharts, EChartsOption} from "echarts";
-import MonsterProfileDict from "./MonsterProfileDict";
+import MonsterProfileLoader from "./MonsterProfileLoader";
 import Pet from "./Pet";
 
 class MonsterDimensionGenerator {
@@ -8,7 +8,7 @@ class MonsterDimensionGenerator {
     static async generate(pet: Pet): Promise<ECharts | null> {
         let chart: ECharts | null = null;
         const code = pet.code;
-        const profile = MonsterProfileDict.load(code);
+        const profile = MonsterProfileLoader.load(code);
         if (profile) {
             const option: EChartsOption = {
                 tooltip: {

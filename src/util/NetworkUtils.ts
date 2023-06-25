@@ -1,3 +1,4 @@
+import Constants from "./Constants";
 import MessageBoard from "./MessageBoard";
 import PocketUtils from "./PocketUtils";
 
@@ -35,7 +36,7 @@ class NetworkUtils {
 }
 
 function __internalSendGetRequest(count: number, cgi: string, handler?: (html: string) => void) {
-    if (count === 3) {
+    if (count === Constants.MAX_NETWORK_FAILURE_RETRIES) {
         MessageBoard.publishWarning("请求" + cgi + "达到最大重试次数，依然失败，看起来口袋出问题了，请联系GM！");
         return;
     }
@@ -76,7 +77,13 @@ function __internalSendPostRequest(count: number, cgi: string, request: {}, hand
     })
         .then((response) => {
             if (!response.ok) {
-                MessageBoard.publishWarning("请求" + cgi + "时返回错误[status=" + response.status + "]，尝试重试！");
+                // @ts-ignore
+                const mode = request.mode;
+                if (mode) {
+                    MessageBoard.publishWarning("请求" + cgi + "时返回错误[mode=" + mode + ",status=" + response.status + "]，尝试重试！");
+                } else {
+                    MessageBoard.publishWarning("请求" + cgi + "时返回错误[status=" + response.status + "]，尝试重试！");
+                }
                 throw new Error("RESPONSE was not ok");
             }
             if (count !== 0) {

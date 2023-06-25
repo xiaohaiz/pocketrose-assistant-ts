@@ -1,10 +1,10 @@
 import * as echarts from "echarts";
 import {EChartsOption} from "echarts";
+import PersonalSpell from "../../core/career/PersonalSpell";
 import PersonalEquipmentManagement from "../../core/equipment/PersonalEquipmentManagement";
 import PersonalPetManagement from "../../core/monster/PersonalPetManagement";
 import NpcLoader from "../../core/role/NpcLoader";
 import PersonalMirror from "../../core/role/PersonalMirror";
-import PersonalSpell from "../../core/role/PersonalSpell";
 import PersonalStatus from "../../core/role/PersonalStatus";
 import Role from "../../core/role/Role";
 import Credential from "../../util/Credential";

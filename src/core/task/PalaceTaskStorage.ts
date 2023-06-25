@@ -4,6 +4,10 @@ import PalaceTask from "./PalaceTask";
 
 class PalaceTaskStorage {
 
+    static getInstance() {
+        return instance;
+    }
+
     async load(id: string): Promise<PalaceTask | null> {
         const db = await PocketDatabase.connectDatabase();
         return await (() => {
@@ -115,5 +119,7 @@ class PalaceTaskStorage {
     }
 
 }
+
+const instance = new PalaceTaskStorage();
 
 export = PalaceTaskStorage;

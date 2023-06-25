@@ -20,7 +20,7 @@ class TownWeaponHousePageProcessor extends PageProcessorCredentialSupport {
 }
 
 async function processPage(credential: Credential): Promise<void> {
-    const page = await TownWeaponHousePageParser.parse(PageUtils.currentPageHtml());
+    const page = await new TownWeaponHousePageParser().parse(PageUtils.currentPageHtml());
 
     // 重新绘制页面框架
     const t1 = $("table:eq(1)");

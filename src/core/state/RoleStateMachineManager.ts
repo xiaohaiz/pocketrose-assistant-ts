@@ -3,7 +3,7 @@ import Coordinate from "../../util/Coordinate";
 import StringUtils from "../../util/StringUtils";
 import RoleState from "./RoleState";
 import RoleStateMachine from "./RoleStateMachine";
-import StateStorageManager from "./StateStorageManager";
+import RoleStateStorage from "./RoleStateStorage";
 
 class RoleStateMachineManager {
 
@@ -30,7 +30,7 @@ class RoleStateMachineManager {
                 document.townId = townId;
                 document.battleCount = battleCount;
 
-                StateStorageManager.getRoleStateStorage()
+                RoleStateStorage.getInstance()
                     .write(document)
                     .then(() => {
                         resolve(document);
@@ -58,7 +58,7 @@ class RoleStateMachineManager {
                 document.location = "CASTLE";
                 document.castleName = castleName;
 
-                StateStorageManager.getRoleStateStorage()
+                RoleStateStorage.getInstance()
                     .write(document)
                     .then(() => {
                         resolve(document);
@@ -82,7 +82,7 @@ class RoleStateMachineManager {
                 document.location = "WILD";
                 document.coordinate = Coordinate.parse(s).asText();
 
-                StateStorageManager.getRoleStateStorage()
+                RoleStateStorage.getInstance()
                     .write(document)
                     .then(() => {
                         resolve(document);
@@ -106,7 +106,7 @@ class RoleStateMachineManager {
                 document.location = "METRO";
                 document.coordinate = Coordinate.parse(s).asText();
 
-                StateStorageManager.getRoleStateStorage()
+                RoleStateStorage.getInstance()
                     .write(document)
                     .then(() => {
                         resolve(document);
@@ -130,7 +130,7 @@ class RoleStateMachineManager {
                 document.location = "TANG";
                 document.coordinate = Coordinate.parse(s).asText();
 
-                StateStorageManager.getRoleStateStorage()
+                RoleStateStorage.getInstance()
                     .write(document)
                     .then(() => {
                         resolve(document);
@@ -142,7 +142,7 @@ class RoleStateMachineManager {
     async load(): Promise<RoleStateMachine> {
         return await (() => {
             return new Promise<RoleStateMachine>(resolve => {
-                StateStorageManager.getRoleStateStorage()
+                RoleStateStorage.getInstance()
                     .load(this.#id)
                     .then(state => {
                         const machine = new RoleStateMachine(state);

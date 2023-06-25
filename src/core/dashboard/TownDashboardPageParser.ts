@@ -1,7 +1,7 @@
 import _ from "lodash";
 import Credential from "../../util/Credential";
 import StringUtils from "../../util/StringUtils";
-import BattleFieldConfigLoader from "../config/BattleFieldConfigLoader";
+import BattleFieldConfigLoader from "../battle/BattleFieldConfigLoader";
 import SetupLoader from "../config/SetupLoader";
 import EventHandler from "../event/EventHandler";
 import RankTitleLoader from "../role/RankTitleLoader";
@@ -202,28 +202,10 @@ function _parseBattleMenu(page: TownDashboardPage, table: JQuery, credential: Cr
             }
         });
     }
-    const preference = new BattleFieldConfigLoader(credential).loadConfig();
-    let count = 0;
-    // @ts-ignore
-    if (preference["primary"]) {
-        count++;
-    }
-    // @ts-ignore
-    if (preference["junior"]) {
-        count++;
-    }
-    // @ts-ignore
-    if (preference["senior"]) {
-        count++;
-    }
-    // @ts-ignore
-    if (preference["zodiac"]) {
-        count++;
-    }
+    const config = new BattleFieldConfigLoader(credential).loadConfig();
+    page.battleLevelShortcut = config.count === 1;
 
-    page.battleLevelShortcut = count === 1;
-
-    if (count > 0) {
+    if (config.configured) {
         // 设置了战斗场所偏好
         s.find("option").each((idx, option) => {
             const text = $(option).text();
@@ -246,23 +228,19 @@ function _parseBattleMenu(page: TownDashboardPage, table: JQuery, credential: Cr
         s.find("option").each((idx, option) => {
             const text = $(option).text();
             if (text.startsWith("初级之森")) {
-                // @ts-ignore
-                if (!preference["primary"]) {
+                if (!config.primary) {
                     $(option).remove();
                 }
             } else if (text.startsWith("中级之塔")) {
-                // @ts-ignore
-                if (!preference["junior"]) {
+                if (!config.junior) {
                     $(option).remove();
                 }
             } else if (text.startsWith("上级之洞")) {
-                // @ts-ignore
-                if (!preference["senior"]) {
+                if (!config.senior) {
                     $(option).remove();
                 }
             } else if (text.startsWith("十二神殿")) {
-                // @ts-ignore
-                if (!preference["zodiac"]) {
+                if (!config.zodiac) {
                     $(option).remove();
                 }
             }

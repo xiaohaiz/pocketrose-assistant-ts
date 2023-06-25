@@ -4,6 +4,10 @@ import BattleResult from "./BattleResult";
 
 class BattleResultStorage {
 
+    static getInstance() {
+        return instance;
+    }
+
     async loads(): Promise<BattleResult[]> {
         const db = await PocketDatabase.connectDatabase();
         return await (() => {
@@ -148,5 +152,7 @@ class BattleResultStorage {
         })();
     }
 }
+
+const instance = new BattleResultStorage();
 
 export = BattleResultStorage;

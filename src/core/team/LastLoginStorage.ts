@@ -3,6 +3,10 @@ import LastLogin from "./LastLogin";
 
 class LastLoginStorage {
 
+    static getInstance() {
+        return instance;
+    }
+
     async load(): Promise<LastLogin | null> {
         const db = await PocketDatabase.connectDatabase();
         return await (() => {
@@ -50,5 +54,7 @@ class LastLoginStorage {
     }
 
 }
+
+const instance = new LastLoginStorage();
 
 export = LastLoginStorage;

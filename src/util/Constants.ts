@@ -4,10 +4,11 @@ class Constants {
 
     static DATABASE_NAME: string = "pocketrose";
 
-    static DATABASE_VERSION: number = 11;
+    static DATABASE_VERSION: number = 13;
 
     static MAX_TEAM_MEMBER_COUNT: number = 50;
 
+    static MAX_NETWORK_FAILURE_RETRIES: number = 5;
 }
 
 export = Constants;

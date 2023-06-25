@@ -3,6 +3,10 @@ import BattleLog from "./BattleLog";
 
 class BattleLogStorage {
 
+    static getInstance() {
+        return instance;
+    }
+
     async importDocument(document: {}): Promise<void> {
         const db = await PocketDatabase.connectDatabase();
         return await (() => {
@@ -113,5 +117,7 @@ class BattleLogStorage {
         })();
     }
 }
+
+const instance = new BattleLogStorage();
 
 export = BattleLogStorage;

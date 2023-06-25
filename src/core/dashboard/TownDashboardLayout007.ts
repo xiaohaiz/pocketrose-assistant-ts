@@ -5,9 +5,10 @@ import PageUtils from "../../util/PageUtils";
 import BattleButtonManager from "../battle/BattleButtonManager";
 import BattleProcessor from "../battle/BattleProcessor";
 import BattleRecord from "../battle/BattleRecord";
+import BattleRecordStorage from "../battle/BattleRecordStorage";
 import BattleReturnInterceptor from "../battle/BattleReturnInterceptor";
 import BattleScene from "../battle/BattleScene";
-import BattleStorages from "../battle/BattleStorages";
+import BattleSceneStorage from "../battle/BattleSceneStorage";
 import SetupLoader from "../config/SetupLoader";
 import TownForge from "../forge/TownForge";
 import TownInn from "../inn/TownInn";
@@ -57,14 +58,20 @@ class TownDashboardLayout007 extends TownDashboardLayout {
                 const tax = page.townTax!;
                 $(tr).after($("" +
                     "<tr class='roleStatus'>" +
+                    "<td height='5'>职业</td><th id='roleCareer'>-</th>" +
+                    "<td>祭奠ＲＰ</td><th id='consecrateRP'>-</th>" +
+                    "</tr>" +
+                    "<tr class='roleStatus'>" +
                     "<td height='5'>收益</td><th id='townTax'>" + tax + "</th>" +
-                    "<td>ＲＰ</td><th id='additionalRP'>-</th>" +
+                    "<td>额外ＲＰ</td><th id='additionalRP'>-</th>" +
                     "</tr>"));
                 new TownDashboardTaxManager(credential, page).processTownTax($("#townTax"));
             });
         new PersonalStatus(credential, page.townId)
             .load()
             .then(role => {
+                $("#roleCareer").text(role.career!);
+                $("#consecrateRP").text(role.consecrateRP!);
                 $("#additionalRP").html(() => DashboardPageUtils.generateAdditionalRPHtml(role.additionalRP));
             });
 
@@ -127,7 +134,7 @@ class TownDashboardLayout007 extends TownDashboardLayout {
                 "<div style='display:none' id='hidden-5'></div>" +
                 "");
 
-        BattleStorages.getBattleRecordStorage().load(credential.id).then(record => {
+        BattleRecordStorage.getInstance().load(credential.id).then(record => {
             const lastBattle = record.html!;
             if (lastBattle.includes("吐故纳新，扶摇直上") && lastBattle.includes("孵化成功")) {
                 $("#battlePanel").css("background-color", "yellow");
@@ -209,7 +216,7 @@ async function doProcessBattleVerificationError(credential: Credential, html: st
     const record = new BattleRecord();
     record.id = credential.id;
     record.html = errMsg;
-    await BattleStorages.getBattleRecordStorage().write(record);
+    await BattleRecordStorage.getInstance().write(record);
 
     $("#battleMenu").html("" +
         "<button role='button' class='battleButton' " +
@@ -245,7 +252,7 @@ async function doBeforeProcessBattle(credential: Credential,
         r[k] = v;
     });
     scene.request = JSON.stringify(r);
-    await BattleStorages.battleSceneStorage.writeLast(scene);
+    await BattleSceneStorage.getInstance().writeLast(scene);
 
     return await (() => {
         return new Promise<void>(resolve => resolve());
@@ -410,9 +417,9 @@ function doProcessBattleReturn(credential: Credential,
         .html(page.actionNotificationHtml!);
 
     if (SetupLoader.isConsecrateStateRecognizeEnabled(credential.id) && page.role!.canConsecrate!) {
-        $("#messageNotification")
+        $("#battleCell")
             .parent()
-            .next()
+            .prev()
             .find("> th:first")
             .css("color", "red")
             .css("font-size", "120%");
@@ -462,7 +469,7 @@ function doProcessBattleReturn(credential: Credential,
     $("#townTax").off("click").text(page.townTax!);
     new TownDashboardTaxManager(credential, page).processTownTax($("#townTax"));
 
-    if (additionalRP) {
+    if (additionalRP !== undefined) {
         $("#additionalRP").html(() => DashboardPageUtils.generateAdditionalRPHtml(additionalRP));
     }
     if (harvestList && harvestList.length > 0) {
@@ -470,6 +477,7 @@ function doProcessBattleReturn(credential: Credential,
         new PersonalStatus(credential)
             .load()
             .then(role => {
+                $("#consecrateRP").text(role.consecrateRP!);
                 $("#additionalRP").html(() => DashboardPageUtils.generateAdditionalRPHtml(role.additionalRP));
             });
     }

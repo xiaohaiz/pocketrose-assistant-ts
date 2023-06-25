@@ -2,6 +2,7 @@ import TownBank from "../../core/bank/TownBank";
 import NpcLoader from "../../core/role/NpcLoader";
 import TownAccessoryHouse from "../../core/store/TownAccessoryHouse";
 import TownAccessoryHousePage from "../../core/store/TownAccessoryHousePage";
+import TownAccessoryHousePageParser from "../../core/store/TownAccessoryHousePageParser";
 import Credential from "../../util/Credential";
 import MessageBoard from "../../util/MessageBoard";
 import PageUtils from "../../util/PageUtils";
@@ -12,7 +13,7 @@ import PageProcessorCredentialSupport from "../PageProcessorCredentialSupport";
 class TownAccessoryHousePageProcessor extends PageProcessorCredentialSupport {
 
     async doProcess(credential: Credential, context?: PageProcessorContext): Promise<void> {
-        const page = TownAccessoryHouse.parsePage(PageUtils.currentPageHtml());
+        const page = await new TownAccessoryHousePageParser().parse(PageUtils.currentPageHtml());
         this.#renderImmutablePage(credential, page);
         this.#renderMutablePage(credential, page);
     }

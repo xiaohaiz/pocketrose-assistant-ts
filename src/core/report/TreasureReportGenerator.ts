@@ -2,7 +2,7 @@ import _ from "lodash";
 import ReportUtils from "../../util/ReportUtils";
 import BattleResult from "../battle/BattleResult";
 import TreasureLoader from "../equipment/TreasureLoader";
-import MonsterProfileDict from "../monster/MonsterProfileDict";
+import MonsterProfileLoader from "../monster/MonsterProfileLoader";
 import TeamMemberLoader from "../team/TeamMemberLoader";
 
 class TreasureReportGenerator {
@@ -83,7 +83,7 @@ class TreasureReportGenerator {
         html += "<tbody>";
 
         for (let i = 1; i <= 493; i++) {
-            const profile = MonsterProfileDict.load(i);
+            const profile = MonsterProfileLoader.load(i);
             if (!profile) continue;
             const name = profile.name!;
             const report = reports.get(name);

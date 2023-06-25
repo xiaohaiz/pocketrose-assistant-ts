@@ -2,12 +2,13 @@ import _ from "lodash";
 import BankRecordReportGenerator from "../../core/bank/BankRecordReportGenerator";
 import Equipment from "../../core/equipment/Equipment";
 import EquipmentLocalStorage from "../../core/equipment/EquipmentLocalStorage";
+import RoleEquipmentStatusStorage from "../../core/equipment/RoleEquipmentStatusStorage";
 import MonsterPageUtils from "../../core/monster/MonsterPageUtils";
-import MonsterProfileDict from "../../core/monster/MonsterProfileDict";
+import MonsterProfileLoader from "../../core/monster/MonsterProfileLoader";
 import Pet from "../../core/monster/Pet";
 import PetLocalStorage from "../../core/monster/PetLocalStorage";
+import RolePetStatusStorage from "../../core/monster/RolePetStatusStorage";
 import NpcLoader from "../../core/role/NpcLoader";
-import RoleStorageManager from "../../core/role/RoleStorageManager";
 import TeamMemberLoader from "../../core/team/TeamMemberLoader";
 import Credential from "../../util/Credential";
 import MessageBoard from "../../util/MessageBoard";
@@ -200,7 +201,7 @@ abstract class PersonalTeamPageProcessor extends PageProcessorCredentialSupport 
 
             const configs = TeamMemberLoader.loadTeamMembers();
             const idList = configs.map(it => it.id!);
-            RoleStorageManager.getRoleEquipmentStatusStorage()
+            RoleEquipmentStatusStorage.getInstance()
                 .loads(idList)
                 .then(dataMap => {
                     for (const config of configs) {
@@ -270,7 +271,7 @@ abstract class PersonalTeamPageProcessor extends PageProcessorCredentialSupport 
             const configs = TeamMemberLoader.loadTeamMembers();
 
             const idList = configs.map(it => it.id!);
-            RoleStorageManager.getRolePetStatusStorage()
+            RolePetStatusStorage.getInstance()
                 .loads(idList)
                 .then(dataMap => {
                     const allPetList: Pet[] = [];
@@ -338,7 +339,7 @@ abstract class PersonalTeamPageProcessor extends PageProcessorCredentialSupport 
     #bindSimulationButton(allPetList: Pet[]) {
         allPetList.forEach(it => {
             const buttonId = "simulate-" + it.index;
-            if (!MonsterProfileDict.load(it.name)) {
+            if (!MonsterProfileLoader.load(it.name)) {
                 // 宠物已经改名了，不认识了
                 $("#" + buttonId).prop("disabled", true);
             } else {
@@ -353,7 +354,7 @@ abstract class PersonalTeamPageProcessor extends PageProcessorCredentialSupport 
     #doPetSimulation(pet: Pet, buttonId: string) {
         $("#" + buttonId).on("click", () => {
             const code = StringUtils.substringBetween(pet.name!, "(", ")");
-            const profile = MonsterProfileDict.load(code)!;
+            const profile = MonsterProfileLoader.load(code)!;
 
             let html = "";
             html += "<table style='margin:auto;border-width:0;text-align:center;background-color:#888888;width:100%'>";

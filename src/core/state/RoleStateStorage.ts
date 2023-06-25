@@ -3,6 +3,10 @@ import RoleState from "./RoleState";
 
 class RoleStateStorage {
 
+    static getInstance() {
+        return instance;
+    }
+
     async load(id: string): Promise<RoleState | null> {
         const db = await PocketDatabase.connectDatabase();
         return await (() => {
@@ -51,5 +55,7 @@ class RoleStateStorage {
         })();
     }
 }
+
+const instance = new RoleStateStorage();
 
 export = RoleStateStorage;

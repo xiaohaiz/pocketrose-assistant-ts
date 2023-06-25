@@ -1,7 +1,7 @@
 import _ from "lodash";
 import PageUtils from "../../util/PageUtils";
 import MonsterProfile from "./MonsterProfile";
-import MonsterProfileDict from "./MonsterProfileDict";
+import MonsterProfileLoader from "./MonsterProfileLoader";
 import Pet from "./Pet";
 
 class MonsterSimulator {
@@ -19,7 +19,7 @@ class MonsterSimulator {
 
     constructor(pet: Pet) {
         this.#pet = pet;
-        this.#profile = MonsterProfileDict.load(pet.code!)!;
+        this.#profile = MonsterProfileLoader.load(pet.code!)!;
     }
 
     doSimulate(): MonsterSimulator {

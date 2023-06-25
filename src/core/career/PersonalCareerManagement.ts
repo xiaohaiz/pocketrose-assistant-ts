@@ -4,8 +4,8 @@ import NetworkUtils from "../../util/NetworkUtils";
 import StringUtils from "../../util/StringUtils";
 import PersonalStatus from "../role/PersonalStatus";
 import Role from "../role/Role";
-import RoleCareerTransfer from "../role/RoleCareerTransfer";
-import RoleStorageManager from "../role/RoleStorageManager";
+import CareerChangeLog from "./CareerChangeLog";
+import CareerChangeLogStorage from "./CareerChangeLogStorage";
 import PersonalCareerManagementPage from "./PersonalCareerManagementPage";
 
 class PersonalCareerManagement {
@@ -62,7 +62,7 @@ class PersonalCareerManagement {
     #postTransfer(before: Role, after: Role, handler: () => void) {
         if (before.level! !== after.level! && after.level! === 1) {
             // 成功完成了转职操作
-            const data = new RoleCareerTransfer();
+            const data = new CareerChangeLog();
             data.roleId = this.#credential.id;
             data.career_1 = before.career;
             data.level_1 = before.level;
@@ -83,11 +83,7 @@ class PersonalCareerManagement {
             data.specialDefense_2 = after.specialDefense;
             data.speed_2 = after.speed;
             // 保存转职的记录
-            RoleStorageManager.getRoleCareerTransferStorage()
-                .write(data)
-                .then(() => {
-                    handler();
-                });
+            CareerChangeLogStorage.getInstance().insert(data).then(() => handler());
         } else {
             // 没有转职，大概率是由于需要转职任务引发的
             handler();

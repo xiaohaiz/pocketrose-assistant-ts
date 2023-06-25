@@ -1,5 +1,5 @@
 import MonsterProfile from "../../core/monster/MonsterProfile";
-import MonsterProfileDict from "../../core/monster/MonsterProfileDict";
+import MonsterProfileLoader from "../../core/monster/MonsterProfileLoader";
 import Credential from "../../util/Credential";
 import PageProcessorContext from "../PageProcessorContext";
 import PageProcessorCredentialSupport from "../PageProcessorCredentialSupport";
@@ -168,82 +168,82 @@ function doBindReturnButton() {
 
 function doBindRankButton() {
     $("#total_base_stats_rank").on("click", function () {
-        let petList = MonsterProfileDict.loadAll();
+        let petList = MonsterProfileLoader.loadAll();
         petList = sortByTotalBaseStats(petList);
         doRender("族 值 排 行 榜", petList);
     });
     $("#r_total_base_stats_rank").on("click", function () {
-        let petList = MonsterProfileDict.loadAll();
+        let petList = MonsterProfileLoader.loadAll();
         petList = sortByTotalBaseStats(petList, true);
         doRender("族 值 （垫 底） 排 行 榜", petList);
     });
     $("#health_rank").on("click", function () {
-        let petList = MonsterProfileDict.loadAll();
+        let petList = MonsterProfileLoader.loadAll();
         petList = sortByHealth(petList);
         doRender("生 命 排 行 榜", petList);
     });
     $("#r_health_rank").on("click", function () {
-        let petList = MonsterProfileDict.loadAll();
+        let petList = MonsterProfileLoader.loadAll();
         petList = sortByHealth(petList, true);
         doRender("生 命 （垫 底） 排 行 榜", petList);
     });
     $("#attack_rank").on("click", function () {
-        let petList = MonsterProfileDict.loadAll();
+        let petList = MonsterProfileLoader.loadAll();
         petList = sortByAttack(petList);
         doRender("攻 击 排 行 榜", petList);
     });
     $("#r_attack_rank").on("click", function () {
-        let petList = MonsterProfileDict.loadAll();
+        let petList = MonsterProfileLoader.loadAll();
         petList = sortByAttack(petList, true);
         doRender("攻 击 （垫 底） 排 行 榜", petList);
     });
     $("#defense_rank").on("click", function () {
-        let petList = MonsterProfileDict.loadAll();
+        let petList = MonsterProfileLoader.loadAll();
         petList = sortByDefense(petList);
         doRender("防 御 排 行 榜", petList);
     });
     $("#r_defense_rank").on("click", function () {
-        let petList = MonsterProfileDict.loadAll();
+        let petList = MonsterProfileLoader.loadAll();
         petList = sortByDefense(petList, true);
         doRender("防 御 （垫 底） 排 行 榜", petList);
     });
     $("#special_attack_rank").on("click", function () {
-        let petList = MonsterProfileDict.loadAll();
+        let petList = MonsterProfileLoader.loadAll();
         petList = sortBySpecialAttack(petList);
         doRender("智 力 排 行 榜", petList);
     });
     $("#r_special_attack_rank").on("click", function () {
-        let petList = MonsterProfileDict.loadAll();
+        let petList = MonsterProfileLoader.loadAll();
         petList = sortBySpecialAttack(petList, true);
         doRender("智 力 （垫 底） 排 行 榜", petList);
     });
     $("#special_defense_rank").on("click", function () {
-        let petList = MonsterProfileDict.loadAll();
+        let petList = MonsterProfileLoader.loadAll();
         petList = sortBySpecialDefense(petList);
         doRender("精 神 排 行 榜", petList);
     });
     $("#r_special_defense_rank").on("click", function () {
-        let petList = MonsterProfileDict.loadAll();
+        let petList = MonsterProfileLoader.loadAll();
         petList = sortBySpecialDefense(petList, true);
         doRender("精 神 （垫 底） 排 行 榜", petList);
     });
     $("#speed_rank").on("click", function () {
-        let petList = MonsterProfileDict.loadAll();
+        let petList = MonsterProfileLoader.loadAll();
         petList = sortBySpeed(petList);
         doRender("速 度 排 行 榜", petList);
     });
     $("#r_speed_rank").on("click", function () {
-        let petList = MonsterProfileDict.loadAll();
+        let petList = MonsterProfileLoader.loadAll();
         petList = sortBySpeed(petList, true);
         doRender("速 度 （垫 底） 排 行 榜", petList);
     });
     $("#capacity_rank").on("click", function () {
-        let petList = MonsterProfileDict.loadAll();
+        let petList = MonsterProfileLoader.loadAll();
         petList = sortByCapacity(petList);
         doRender("能 力 排 行 榜", petList);
     });
     $("#r_capacity_rank").on("click", function () {
-        let petList = MonsterProfileDict.loadAll();
+        let petList = MonsterProfileLoader.loadAll();
         petList = sortByCapacity(petList, true);
         doRender("能 力 （垫 底） 排 行 榜", petList);
     });
@@ -259,7 +259,7 @@ function doBindSearchButton() {
         if (spellName === "") {
             return;
         }
-        const petList = MonsterProfileDict.findBySpellName(spellName);
+        const petList = MonsterProfileLoader.findBySpellName(spellName);
         petList.sort((a, b) => a.code!.localeCompare(b.code!));
         doRender("技 能 （" + spellName + "）", petList, true);
     });
@@ -275,7 +275,7 @@ function doBindPetDetailButton() {
         if (petCode === "") {
             return;
         }
-        const profile = MonsterProfileDict.load(petCode);
+        const profile = MonsterProfileLoader.load(petCode);
         if (profile === null) {
             return;
         }

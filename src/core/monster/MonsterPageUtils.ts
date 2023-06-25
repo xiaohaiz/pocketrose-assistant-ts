@@ -1,10 +1,10 @@
-import MonsterProfileDict from "./MonsterProfileDict";
+import MonsterProfileLoader from "./MonsterProfileLoader";
 import MonsterRelationLoader from "./MonsterRelationLoader";
 
 class MonsterPageUtils {
 
     static generateMonsterProfileHtml(code: string | null | undefined) {
-        const profile = MonsterProfileDict.load(code);
+        const profile = MonsterProfileLoader.load(code);
         if (!profile) return "";
         let html = "";
         html += "<table style='width:100%;border-width:1px;background-color:transparent;margin:auto' id='petProfile-" + profile.code + "'>";
@@ -62,7 +62,7 @@ class MonsterPageUtils {
         html += "<tr style='font-weight:bold;text-align:left'>";
         html += "<td colspan='16' style='height:64px'>";
         for (const it of MonsterRelationLoader.getPetRelations(parseInt(profile.code!))) {
-            html += MonsterProfileDict.load(it)?.imageHtml;
+            html += MonsterProfileLoader.load(it)?.imageHtml;
         }
         html += "</td>";
         html += "</tr>";

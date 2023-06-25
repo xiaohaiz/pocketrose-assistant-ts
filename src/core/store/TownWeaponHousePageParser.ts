@@ -5,7 +5,7 @@ import TownWeaponHousePage from "./TownWeaponHousePage";
 
 class TownWeaponHousePageParser {
 
-    static async parse(pageHtml: string): Promise<TownWeaponHousePage> {
+    async parse(pageHtml: string): Promise<TownWeaponHousePage> {
         // Parse townId
         const townId = $(pageHtml).find("input:hidden[name='townid']").val() as string;
         const page = new TownWeaponHousePage(townId);

@@ -3,6 +3,10 @@ import BattleScene from "./BattleScene";
 
 class BattleSceneStorage {
 
+    static getInstance() {
+        return instance;
+    }
+
     async loadLast(): Promise<BattleScene | null> {
         const db = await PocketDatabase.connectDatabase();
         return await (() => {
@@ -49,5 +53,7 @@ class BattleSceneStorage {
     }
 
 }
+
+const instance = new BattleSceneStorage();
 
 export = BattleSceneStorage;
