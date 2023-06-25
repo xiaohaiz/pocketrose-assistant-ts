@@ -1,8 +1,10 @@
 # pocketrose-assistant-ts
 
-### 版本 4.2.10-SNAPSHOT
+### 版本 4.2.10
 
 1. 任务指南的数据存储从LocalStorage迁移到IndexedDB。
+2. 转职报告中可以查看MP继承的分布饼图。
+3. 其余非功能性重构。
 
 ### 版本 4.2.9
 

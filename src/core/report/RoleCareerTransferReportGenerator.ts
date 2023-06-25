@@ -1,3 +1,5 @@
+import * as echarts from "echarts";
+import {EChartsOption} from "echarts";
 import _ from "lodash";
 import PageUtils from "../../util/PageUtils";
 import CareerChangeLog from "../career/CareerChangeLog";
@@ -38,13 +40,37 @@ class RoleCareerTransferReportGenerator {
                 }
             });
 
+        const manaInherit: number[] = [0, 0, 0, 0, 0, 0, 0];
         candidates.forEach(it => {
             roles.get(it.roleId!)?.logList.push(it);
+
+            const mi = parseFloat(PageUtils.convertHtmlToText(it.manaInherit));
+            if (mi < 0.45) {
+                manaInherit[0]++;
+            } else if (mi < 0.55) {
+                manaInherit[1]++;
+            } else if (mi < 0.65) {
+                manaInherit[2]++;
+            } else if (mi < 0.75) {
+                manaInherit[3]++;
+            } else if (mi < 0.85) {
+                manaInherit[4]++;
+            } else if (mi < 0.95) {
+                manaInherit[5]++;
+            } else {
+                manaInherit[6]++;
+            }
         });
 
         let html = "";
         html += "<table style='background-color:#888888;text-align:center;margin:auto'>";
         html += "<tbody>";
+        html += "<tr>";
+        html += "<th colspan='19' style='background-color:navy;color:greenyellow'>Ｍ Ｐ 继 承 分 布</th>"
+        html += "</tr>";
+        html += "<tr>";
+        html += "<td colspan='19' id='manaInheritDistribution' style='height:320px;background-color:#F8F0E0'></td>"
+        html += "</tr>";
         html += "<tr>";
         html += "<td colspan='19' style='background-color:navy;color:yellow;font-weight:bold;text-align:center'>转 职 统 计</td>";
         html += "</tr>";
@@ -138,6 +164,42 @@ class RoleCareerTransferReportGenerator {
         html += "</table>";
 
         $("#statistics").html(html).parent().show();
+
+        const pieData: {}[] = [];
+        pieData.push({name: "0.4", value: manaInherit[0]});
+        pieData.push({name: "0.5", value: manaInherit[1]});
+        pieData.push({name: "0.6", value: manaInherit[2]});
+        pieData.push({name: "0.7", value: manaInherit[3]});
+        pieData.push({name: "0.8", value: manaInherit[4]});
+        pieData.push({name: "0.9", value: manaInherit[5]});
+        pieData.push({name: "1.0", value: manaInherit[6]});
+        const option: EChartsOption = {
+            tooltip: {
+                trigger: 'item'
+            },
+            legend: {
+                top: '5%',
+                left: 'center'
+            },
+            series: [
+                {
+                    name: 'ＭＰ继承分布',
+                    type: 'pie',
+                    radius: '50%',
+                    data: pieData,
+                    emphasis: {
+                        itemStyle: {
+                            shadowBlur: 10,
+                            shadowOffsetX: 0,
+                            shadowColor: 'rgba(0, 0, 0, 0.5)'
+                        }
+                    }
+                }
+            ]
+        };
+        const element = document.getElementById("manaInheritDistribution")!;
+        const chart = echarts.init(element);
+        chart.setOption(option);
     }
 }
 
