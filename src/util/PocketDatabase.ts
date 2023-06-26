@@ -166,6 +166,21 @@ class PocketDatabase {
                         unique: false
                     });
                 }
+
+                // ------------------------------------------------------------
+                // EquipmentConsecrateLog
+                // ------------------------------------------------------------
+                if (!db.objectStoreNames.contains("EquipmentConsecrateLog")) {
+                    const store = db.createObjectStore("EquipmentConsecrateLog", {
+                        keyPath: "id", autoIncrement: false
+                    });
+                    store.createIndex("createTime", "createTime", {
+                        unique: false
+                    });
+                    store.createIndex("roleId", "roleId", {
+                        unique: false
+                    });
+                }
             };
         });
     };

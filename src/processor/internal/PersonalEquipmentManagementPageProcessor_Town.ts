@@ -5,6 +5,7 @@ import TownDashboard from "../../core/dashboard/TownDashboard";
 import CastleEquipmentExpressHouse from "../../core/equipment/CastleEquipmentExpressHouse";
 import CastleWarehouse from "../../core/equipment/CastleWarehouse";
 import Equipment from "../../core/equipment/Equipment";
+import EquipmentConsecrateManager from "../../core/equipment/EquipmentConsecrateManager";
 import EquipmentSet from "../../core/equipment/EquipmentSet";
 import EquipmentSetLoader from "../../core/equipment/EquipmentSetLoader";
 import PersonalEquipmentManagement from "../../core/equipment/PersonalEquipmentManagement";
@@ -76,6 +77,7 @@ class PersonalEquipmentManagementPageProcessor_Town extends PersonalEquipmentMan
         CommentBoard.writeMessage("我就要一键祭奠，就要，就要！");
         CommentBoard.writeMessage("<input type='button' id='consecrateButton' value='祭奠选择的装备'>");
         $("#consecrateButton").hide();
+        const instance = this;
         $("#consecrateButton").on("click", function () {
             const consecrateCandidates: number[] = [];
             const consecrateCandidateNames: string[] = [];
@@ -109,13 +111,15 @@ class PersonalEquipmentManagementPageProcessor_Town extends PersonalEquipmentMan
             if (!confirm("请务必确认你将要祭奠的这些装备：" + consecrateCandidateNames.join())) {
                 return;
             }
-            new TownBank(credential, context?.get("townId")).withdraw(100).then(() => {
-                let html = "";
-                consecrateCandidates.forEach(it => {
-                    html += "<input type='hidden' name='item" + it + "' value='" + it + "'>";
-                });
-                $("#consecrateItems").html(html);
-                $("#consecrateSubmit").trigger("click");
+            const bank = new TownBank(credential, context?.get("townId"));
+            bank.withdraw(100).then(() => {
+                const ecm = new EquipmentConsecrateManager(credential);
+                ecm.consecrate(consecrateCandidates, consecrateCandidateNames)
+                    .then(() => {
+                        bank.deposit().then(() => {
+                            instance.doRefreshMutablePage(credential, context);
+                        });
+                    });
             });
         });
         $("#p_3139").on("click", function () {
