@@ -7,7 +7,7 @@ import Pet from "./Pet";
 class MonsterSimulator {
 
     readonly #pet: Pet;
-    readonly #profile: MonsterProfile;
+    readonly #profile: MonsterProfile | null;
 
     a0?: number;
     a1?: number;
@@ -19,10 +19,11 @@ class MonsterSimulator {
 
     constructor(pet: Pet) {
         this.#pet = pet;
-        this.#profile = MonsterProfileLoader.load(pet.code!)!;
+        this.#profile = MonsterProfileLoader.load(pet.code);
     }
 
     doSimulate(): MonsterSimulator {
+        if (!this.#profile) return this;
         let totalHealth = 0;
         let totalAttack = 0;
         let totalDefense = 0;
@@ -95,6 +96,7 @@ class MonsterSimulator {
     }
 
     doGenerateHtml() {
+        if (!this.#profile) return "<span style='color:red'>无法模拟</span>";
         const d0 = (Math.min(1, this.a0! / (this.#profile.perfectHealth)) * 100);
         const d1 = (Math.min(1, this.a1! / (this.#profile.perfectAttack)) * 100);
         const d2 = (Math.min(1, this.a2! / (this.#profile.perfectDefense)) * 100);
