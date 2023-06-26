@@ -1,5 +1,7 @@
 # pocketrose-assistant-ts
 
+### 版本 4.2.13-SNAPSHOT
+
 ### 版本 4.2.12
 
 1. 任务指南的数据存储从LocalStorage迁移到IndexedDB。
