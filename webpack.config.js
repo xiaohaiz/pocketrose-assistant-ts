@@ -13,7 +13,7 @@ module.exports = {
         filename: 'pocketrose.js',
         path: path.resolve(__dirname, 'dist'),
     },
-    mode: "none",
+    mode: "production",
     module: {
         rules: [
             {
