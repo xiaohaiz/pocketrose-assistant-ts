@@ -24,6 +24,18 @@ class EquipmentConsecrateLogStorage {
             request.onsuccess = () => resolve();
         });
     }
+
+    async clear() {
+        const db = await PocketDatabase.connectDatabase();
+        return new Promise<void>((resolve, reject) => {
+            const request = db
+                .transaction(["EquipmentConsecrateLog"], "readwrite")
+                .objectStore("EquipmentConsecrateLog")
+                .clear();
+            request.onerror = reject;
+            request.onsuccess = () => resolve();
+        });
+    }
 }
 
 const instance = new EquipmentConsecrateLogStorage();
