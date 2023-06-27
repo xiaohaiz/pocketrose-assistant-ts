@@ -254,6 +254,7 @@ abstract class PersonalStatisticsPageProcessor extends PageProcessorCredentialSu
             doBindImportCareerChange();
             doBindClearConsecrateLog();
             doBindExportConsecrateLog();
+            doBindImportConsecrateLog();
         }
     }
 
@@ -713,6 +714,58 @@ function doBindExportConsecrateLog() {
             $("#exportConsecrateLogData").val(json);
             $(".databaseButton").prop("disabled", false);
         });
+    });
+}
+
+function doBindImportConsecrateLog() {
+    $("#importConsecrateLog").on("click", () => {
+        if ($("#consecrateLogData").length === 0) {
+            let html = "";
+            html += "<table style='background-color:transparent;border-width:0;border-spacing:0;width:100%;margin:auto'>";
+            html += "<tbody>";
+            html += "<tr>";
+            html += "<th style='text-align:center;background-color:navy;color:yellow'>将待导入的祭奠记录数据粘贴到下方文本框，然后再次点击“导入战斗日志”按钮。</th>";
+            html += "</tr>";
+            html += "<tr>";
+            html += "<td>";
+            html += "<textarea id='consecrateLogData' " +
+                "rows='15' spellcheck='false' " +
+                "style=\"height:expression((this.scrollHeight>150)?'150px':(this.scrollHeight+5)+'px');overflow:auto;width:100%;word-break;break-all;\">" +
+                "</textarea>";
+            html += "</td>";
+            html += "</tr>";
+            html += "</tbody>";
+            html += "</table>";
+            $("#statistics").html(html).parent().show();
+        } else {
+            const json = $("#consecrateLogData").val() as string;
+            if (json !== "") {
+                $(".databaseButton").prop("disabled", true);
+
+                let html = "";
+                html += "<table style='background-color:#888888;text-align:center;margin:auto;'>";
+                html += "<tbody>";
+                html += "<tr>";
+                html += "<th style='background-color:#F8F0E0'>祭奠记录条目</th>";
+                html += "<td style='background-color:#F8F0E0' id='consecrateLogCount'>0</td>";
+                html += "</tr>";
+                html += "<tr>";
+                html += "<th style='background-color:#F8F0E0'>重复祭奠记录条目</th>";
+                html += "<td style='background-color:#F8F0E0;color:red' id='duplicatedConsecrateLogCount'>0</td>";
+                html += "</tr>";
+                html += "<tr>";
+                html += "<th style='background-color:#F8F0E0'>导入祭奠记录条目</th>";
+                html += "<td style='background-color:#F8F0E0;color:blue' id='importedConsecrateLogCount'>0</td>";
+                html += "</tr>";
+                html += "</tbody>";
+                html += "</table>";
+                $("#statistics").html(html).parent().show();
+
+                EquipmentConsecrateLogStorage.getInstance()
+                    .importFromJson(json)
+                    .then(() => $(".databaseButton").prop("disabled", false));
+            }
+        }
     });
 }
 
