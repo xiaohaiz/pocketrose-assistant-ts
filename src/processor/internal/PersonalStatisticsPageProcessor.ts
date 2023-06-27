@@ -5,6 +5,7 @@ import BattleLogStorage from "../../core/battle/BattleLogStorage";
 import BattleResultStorage from "../../core/battle/BattleResultStorage";
 import CareerChangeLogStorage from "../../core/career/CareerChangeLogStorage";
 import BattleReportGenerator from "../../core/report/BattleReportGenerator";
+import ConsecrateReportGenerator from "../../core/report/ConsecrateReportGenerator";
 import DailyReportGenerator from "../../core/report/DailyReportGenerator";
 import MonsterReportGenerator from "../../core/report/MonsterReportGenerator";
 import MonthlyReportGenerator from "../../core/report/MonthlyReportGenerator";
@@ -96,7 +97,9 @@ abstract class PersonalStatisticsPageProcessor extends PageProcessorCredentialSu
         html += "<td>";
         html += "<button role='button' id='report-5' style='width:100%'>上洞入手报告</button>";
         html += "</td>";
-        html += "<td></td>";
+        html += "<td>";
+        html += "<button role='button' id='report-6' style='width:100%'>祭奠统计报告</button>";
+        html += "<td>";
         html += "</tr>";
         html += "<tr>";
         html += "<td>";
@@ -163,6 +166,17 @@ abstract class PersonalStatisticsPageProcessor extends PageProcessorCredentialSu
             html += "<button role='button' class='databaseButton' id='importCareerChange'>导入转职记录</button>";
             html += "</td>";
             html += "</tr>";
+            html += "<tr>";
+            html += "<td>";
+            html += "<button role='button' class='databaseButton' id='clearConsecrateChange'>清除祭奠记录</button>";
+            html += "</td>";
+            html += "<td>";
+            html += "<button role='button' class='databaseButton' id='exportConsecrateChange'>导出祭奠记录</button>";
+            html += "</td>";
+            html += "<td>";
+            html += "<button role='button' class='databaseButton' id='importConsecrateChange'>导入祭奠记录</button>";
+            html += "</td>";
+            html += "</tr>";
             html += "</tbody>";
             html += "</table>";
             html += "</td>";
@@ -219,6 +233,7 @@ abstract class PersonalStatisticsPageProcessor extends PageProcessorCredentialSu
         doBindReport3();
         doBindReport4();
         doBindReport5();
+        doBindReport6();
         doBindLog1();
         doBindLog2();
         doBindLog3();
@@ -297,6 +312,13 @@ function doBindReport5() {
             .then(dataList => {
                 new TreasureReportGenerator(dataList, target).generate();
             })
+    });
+}
+
+function doBindReport6() {
+    $("#report-6").on("click", () => {
+        const target = $("#teamMemberSelect").val()! as string;
+        new ConsecrateReportGenerator(target).generate().then();
     });
 }
 
