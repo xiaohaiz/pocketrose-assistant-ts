@@ -4,6 +4,7 @@ import BattleLogService from "../../core/battle/BattleLogService";
 import BattleLogStorage from "../../core/battle/BattleLogStorage";
 import BattleResultStorage from "../../core/battle/BattleResultStorage";
 import CareerChangeLogStorage from "../../core/career/CareerChangeLogStorage";
+import EquipmentConsecrateLogStorage from "../../core/equipment/EquipmentConsecrateLogStorage";
 import BattleReportGenerator from "../../core/report/BattleReportGenerator";
 import ConsecrateReportGenerator from "../../core/report/ConsecrateReportGenerator";
 import DailyReportGenerator from "../../core/report/DailyReportGenerator";
@@ -168,13 +169,13 @@ abstract class PersonalStatisticsPageProcessor extends PageProcessorCredentialSu
             html += "</tr>";
             html += "<tr>";
             html += "<td>";
-            html += "<button role='button' class='databaseButton' id='clearConsecrateChange'>清除祭奠记录</button>";
+            html += "<button role='button' class='databaseButton' id='clearConsecrateLog'>清除祭奠记录</button>";
             html += "</td>";
             html += "<td>";
-            html += "<button role='button' class='databaseButton' id='exportConsecrateChange'>导出祭奠记录</button>";
+            html += "<button role='button' class='databaseButton' id='exportConsecrateLog'>导出祭奠记录</button>";
             html += "</td>";
             html += "<td>";
-            html += "<button role='button' class='databaseButton' id='importConsecrateChange'>导入祭奠记录</button>";
+            html += "<button role='button' class='databaseButton' id='importConsecrateLog'>导入祭奠记录</button>";
             html += "</td>";
             html += "</tr>";
             html += "</tbody>";
@@ -251,6 +252,7 @@ abstract class PersonalStatisticsPageProcessor extends PageProcessorCredentialSu
             doBindClearCareerChange();
             doBindExportCareerChange();
             doBindImportCareerChange();
+            doBindClearConsecrateLog();
         }
     }
 
@@ -672,6 +674,27 @@ function doBindImportCareerChange() {
                     .then(() => $(".databaseButton").prop("disabled", false));
             }
         }
+    });
+}
+
+function doBindClearConsecrateLog() {
+    $("#clearConsecrateLog").on("click", () => {
+        if (!confirm("祭奠记录一旦清除就彻底丢失了，正常玩家不需要执行此操作！")) {
+            return;
+        }
+        if (!confirm("二次确认！祭奠记录真的清除后就彻底丢失，有造成数据不一致的隐患。不明白数据同步含义的不要执行！")) {
+            return;
+        }
+        if (!confirm("最终确认！你要确认你在做什么！免责声明：每个人都是自己数据的唯一责任人！")) {
+            return;
+        }
+
+        $(".databaseButton").prop("disabled", true);
+        EquipmentConsecrateLogStorage.getInstance().clear().then(() => {
+            const message: string = "<b style='font-weight:bold;font-size:300%;color:red'>所有祭奠记录数据已经全部清除！</b>";
+            $("#statistics").html(message).parent().show();
+            $(".databaseButton").prop("disabled", false);
+        });
     });
 }
 
