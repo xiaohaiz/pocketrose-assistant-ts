@@ -253,6 +253,7 @@ abstract class PersonalStatisticsPageProcessor extends PageProcessorCredentialSu
             doBindExportCareerChange();
             doBindImportCareerChange();
             doBindClearConsecrateLog();
+            doBindExportConsecrateLog();
         }
     }
 
@@ -693,6 +694,23 @@ function doBindClearConsecrateLog() {
         EquipmentConsecrateLogStorage.getInstance().clear().then(() => {
             const message: string = "<b style='font-weight:bold;font-size:300%;color:red'>所有祭奠记录数据已经全部清除！</b>";
             $("#statistics").html(message).parent().show();
+            $(".databaseButton").prop("disabled", false);
+        });
+    });
+}
+
+function doBindExportConsecrateLog() {
+    $("#exportConsecrateLog").on("click", () => {
+        $(".databaseButton").prop("disabled", true);
+        EquipmentConsecrateLogStorage.getInstance().loads().then(dataList => {
+            const documentList = dataList.map(it => it.asDocument());
+            const json = JSON.stringify(documentList);
+            const html = "<textarea id='exportConsecrateLogData' " +
+                "rows='15' spellcheck='false' " +
+                "style=\"height:expression((this.scrollHeight>150)?'150px':(this.scrollHeight+5)+'px');overflow:auto;width:100%;word-break;break-all;\">" +
+                "</textarea>";
+            $("#statistics").html(html).parent().show();
+            $("#exportConsecrateLogData").val(json);
             $(".databaseButton").prop("disabled", false);
         });
     });
