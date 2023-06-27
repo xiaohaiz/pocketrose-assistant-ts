@@ -4,7 +4,9 @@ import BattleLogService from "../../core/battle/BattleLogService";
 import BattleLogStorage from "../../core/battle/BattleLogStorage";
 import BattleResultStorage from "../../core/battle/BattleResultStorage";
 import CareerChangeLogStorage from "../../core/career/CareerChangeLogStorage";
+import EquipmentConsecrateLogStorage from "../../core/equipment/EquipmentConsecrateLogStorage";
 import BattleReportGenerator from "../../core/report/BattleReportGenerator";
+import ConsecrateReportGenerator from "../../core/report/ConsecrateReportGenerator";
 import DailyReportGenerator from "../../core/report/DailyReportGenerator";
 import MonsterReportGenerator from "../../core/report/MonsterReportGenerator";
 import MonthlyReportGenerator from "../../core/report/MonthlyReportGenerator";
@@ -96,7 +98,9 @@ abstract class PersonalStatisticsPageProcessor extends PageProcessorCredentialSu
         html += "<td>";
         html += "<button role='button' id='report-5' style='width:100%'>上洞入手报告</button>";
         html += "</td>";
-        html += "<td></td>";
+        html += "<td>";
+        html += "<button role='button' id='report-6' style='width:100%'>祭奠统计报告</button>";
+        html += "<td>";
         html += "</tr>";
         html += "<tr>";
         html += "<td>";
@@ -163,6 +167,17 @@ abstract class PersonalStatisticsPageProcessor extends PageProcessorCredentialSu
             html += "<button role='button' class='databaseButton' id='importCareerChange'>导入转职记录</button>";
             html += "</td>";
             html += "</tr>";
+            html += "<tr>";
+            html += "<td>";
+            html += "<button role='button' class='databaseButton' id='clearConsecrateLog'>清除祭奠记录</button>";
+            html += "</td>";
+            html += "<td>";
+            html += "<button role='button' class='databaseButton' id='exportConsecrateLog'>导出祭奠记录</button>";
+            html += "</td>";
+            html += "<td>";
+            html += "<button role='button' class='databaseButton' id='importConsecrateLog'>导入祭奠记录</button>";
+            html += "</td>";
+            html += "</tr>";
             html += "</tbody>";
             html += "</table>";
             html += "</td>";
@@ -219,6 +234,7 @@ abstract class PersonalStatisticsPageProcessor extends PageProcessorCredentialSu
         doBindReport3();
         doBindReport4();
         doBindReport5();
+        doBindReport6();
         doBindLog1();
         doBindLog2();
         doBindLog3();
@@ -236,6 +252,9 @@ abstract class PersonalStatisticsPageProcessor extends PageProcessorCredentialSu
             doBindClearCareerChange();
             doBindExportCareerChange();
             doBindImportCareerChange();
+            doBindClearConsecrateLog();
+            doBindExportConsecrateLog();
+            doBindImportConsecrateLog();
         }
     }
 
@@ -297,6 +316,13 @@ function doBindReport5() {
             .then(dataList => {
                 new TreasureReportGenerator(dataList, target).generate();
             })
+    });
+}
+
+function doBindReport6() {
+    $("#report-6").on("click", () => {
+        const target = $("#teamMemberSelect").val()! as string;
+        new ConsecrateReportGenerator(target).generate().then();
     });
 }
 
@@ -646,6 +672,96 @@ function doBindImportCareerChange() {
                 $("#statistics").html(html).parent().show();
 
                 CareerChangeLogStorage.getInstance()
+                    .importFromJson(json)
+                    .then(() => $(".databaseButton").prop("disabled", false));
+            }
+        }
+    });
+}
+
+function doBindClearConsecrateLog() {
+    $("#clearConsecrateLog").on("click", () => {
+        if (!confirm("祭奠记录一旦清除就彻底丢失了，正常玩家不需要执行此操作！")) {
+            return;
+        }
+        if (!confirm("二次确认！祭奠记录真的清除后就彻底丢失，有造成数据不一致的隐患。不明白数据同步含义的不要执行！")) {
+            return;
+        }
+        if (!confirm("最终确认！你要确认你在做什么！免责声明：每个人都是自己数据的唯一责任人！")) {
+            return;
+        }
+
+        $(".databaseButton").prop("disabled", true);
+        EquipmentConsecrateLogStorage.getInstance().clear().then(() => {
+            const message: string = "<b style='font-weight:bold;font-size:300%;color:red'>所有祭奠记录数据已经全部清除！</b>";
+            $("#statistics").html(message).parent().show();
+            $(".databaseButton").prop("disabled", false);
+        });
+    });
+}
+
+function doBindExportConsecrateLog() {
+    $("#exportConsecrateLog").on("click", () => {
+        $(".databaseButton").prop("disabled", true);
+        EquipmentConsecrateLogStorage.getInstance().loads().then(dataList => {
+            const documentList = dataList.map(it => it.asDocument());
+            const json = JSON.stringify(documentList);
+            const html = "<textarea id='exportConsecrateLogData' " +
+                "rows='15' spellcheck='false' " +
+                "style=\"height:expression((this.scrollHeight>150)?'150px':(this.scrollHeight+5)+'px');overflow:auto;width:100%;word-break;break-all;\">" +
+                "</textarea>";
+            $("#statistics").html(html).parent().show();
+            $("#exportConsecrateLogData").val(json);
+            $(".databaseButton").prop("disabled", false);
+        });
+    });
+}
+
+function doBindImportConsecrateLog() {
+    $("#importConsecrateLog").on("click", () => {
+        if ($("#consecrateLogData").length === 0) {
+            let html = "";
+            html += "<table style='background-color:transparent;border-width:0;border-spacing:0;width:100%;margin:auto'>";
+            html += "<tbody>";
+            html += "<tr>";
+            html += "<th style='text-align:center;background-color:navy;color:yellow'>将待导入的祭奠记录数据粘贴到下方文本框，然后再次点击“导入战斗日志”按钮。</th>";
+            html += "</tr>";
+            html += "<tr>";
+            html += "<td>";
+            html += "<textarea id='consecrateLogData' " +
+                "rows='15' spellcheck='false' " +
+                "style=\"height:expression((this.scrollHeight>150)?'150px':(this.scrollHeight+5)+'px');overflow:auto;width:100%;word-break;break-all;\">" +
+                "</textarea>";
+            html += "</td>";
+            html += "</tr>";
+            html += "</tbody>";
+            html += "</table>";
+            $("#statistics").html(html).parent().show();
+        } else {
+            const json = $("#consecrateLogData").val() as string;
+            if (json !== "") {
+                $(".databaseButton").prop("disabled", true);
+
+                let html = "";
+                html += "<table style='background-color:#888888;text-align:center;margin:auto;'>";
+                html += "<tbody>";
+                html += "<tr>";
+                html += "<th style='background-color:#F8F0E0'>祭奠记录条目</th>";
+                html += "<td style='background-color:#F8F0E0' id='consecrateLogCount'>0</td>";
+                html += "</tr>";
+                html += "<tr>";
+                html += "<th style='background-color:#F8F0E0'>重复祭奠记录条目</th>";
+                html += "<td style='background-color:#F8F0E0;color:red' id='duplicatedConsecrateLogCount'>0</td>";
+                html += "</tr>";
+                html += "<tr>";
+                html += "<th style='background-color:#F8F0E0'>导入祭奠记录条目</th>";
+                html += "<td style='background-color:#F8F0E0;color:blue' id='importedConsecrateLogCount'>0</td>";
+                html += "</tr>";
+                html += "</tbody>";
+                html += "</table>";
+                $("#statistics").html(html).parent().show();
+
+                EquipmentConsecrateLogStorage.getInstance()
                     .importFromJson(json)
                     .then(() => $(".databaseButton").prop("disabled", false));
             }
