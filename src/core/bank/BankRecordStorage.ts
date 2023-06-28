@@ -81,38 +81,6 @@ class BankRecordStorage {
         })();
     }
 
-    async find(roleId: string): Promise<BankRecord[]> {
-        const db = await PocketDatabase.connectDatabase();
-        return await (() => {
-            return new Promise<BankRecord[]>((resolve, reject) => {
-                const store = db
-                    .transaction(["BankRecord"], "readonly")
-                    .objectStore("BankRecord");
-                const request = store.index("roleId")
-                    .getAll(roleId);
-                request.onerror = reject;
-                request.onsuccess = () => {
-                    const dataList: BankRecord[] = [];
-                    if (request.result && request.result.length > 0) {
-                        request.result.forEach(it => {
-                            const data = new BankRecord();
-                            data.id = it.id;
-                            data.roleId = it.roleId;
-                            data.createTime = it.createTime;
-                            data.updateTime = it.updateTime;
-                            data.recordDate = it.recordDate;
-                            data.cash = it.cash;
-                            data.saving = it.saving;
-                            data.revision = it.revision;
-                            dataList.push(data);
-                        });
-                    }
-                    resolve(dataList);
-                };
-            });
-        })();
-    }
-
     async upsert(data: BankRecord): Promise<void> {
         const db = await PocketDatabase.connectDatabase();
         return await (() => {
