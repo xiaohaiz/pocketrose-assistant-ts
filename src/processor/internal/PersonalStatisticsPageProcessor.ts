@@ -6,11 +6,11 @@ import BattleResultStorage from "../../core/battle/BattleResultStorage";
 import CareerChangeLogStorage from "../../core/career/CareerChangeLogStorage";
 import EquipmentConsecrateLogStorage from "../../core/equipment/EquipmentConsecrateLogStorage";
 import BattleReportGenerator from "../../core/report/BattleReportGenerator";
+import CareerChangeReportGenerator from "../../core/report/CareerChangeReportGenerator";
 import ConsecrateReportGenerator from "../../core/report/ConsecrateReportGenerator";
 import DailyReportGenerator from "../../core/report/DailyReportGenerator";
 import MonsterReportGenerator from "../../core/report/MonsterReportGenerator";
 import MonthlyReportGenerator from "../../core/report/MonthlyReportGenerator";
-import RoleCareerTransferReportGenerator from "../../core/report/RoleCareerTransferReportGenerator";
 import TreasureReportGenerator from "../../core/report/TreasureReportGenerator";
 import WeeklyReportGenerator from "../../core/report/WeeklyReportGenerator";
 import ZodiacReportGenerator from "../../core/report/ZodiacReportGenerator";
@@ -304,7 +304,7 @@ function doBindReport3() {
 function doBindReport4() {
     $("#report-4").on("click", () => {
         const target = $("#teamMemberSelect").val()! as string;
-        new RoleCareerTransferReportGenerator(target).generate();
+        new CareerChangeReportGenerator(target).generate();
     });
 }
 

@@ -6,7 +6,7 @@ import CareerChangeLog from "../career/CareerChangeLog";
 import CareerChangeLogStorage from "../career/CareerChangeLogStorage";
 import TeamMemberLoader from "../team/TeamMemberLoader";
 
-class RoleCareerTransferReportGenerator {
+class CareerChangeReportGenerator {
 
     readonly #target?: string;
 
@@ -223,4 +223,4 @@ class RoleReportData {
 
 }
 
-export = RoleCareerTransferReportGenerator;
+export = CareerChangeReportGenerator;
