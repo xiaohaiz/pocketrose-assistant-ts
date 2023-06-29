@@ -242,6 +242,24 @@ class PageUtils {
                 .off("change");
         }
     }
+
+    static onDoubleEscape(handler?: () => void) {
+        if (!handler) return;
+        let count = 0;
+        $(document).off("keydown.city").on("keydown.city", event => {
+            const key = event.key;
+            if (!key) return;
+            if (key === "Escape") {
+                count++;
+                if (count === 2) {
+                    count = 0;
+                    handler();
+                }
+            } else {
+                count = 0;
+            }
+        });
+    }
 }
 
 export = PageUtils;
