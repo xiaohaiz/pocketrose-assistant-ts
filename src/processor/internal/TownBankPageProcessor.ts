@@ -23,6 +23,8 @@ class TownBankPageProcessor extends PageProcessorCredentialSupport {
 
         this.#renderImmutablePage(credential, town);
         this.#renderMutablePage(credential, page, town);
+
+        PageUtils.onDoubleEscape(() => $("#returnButton").trigger("click"));
     }
 
     #renderImmutablePage(credential: Credential, town: Town) {

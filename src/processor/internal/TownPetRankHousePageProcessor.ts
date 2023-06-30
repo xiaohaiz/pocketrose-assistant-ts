@@ -1,6 +1,7 @@
 import MonsterProfile from "../../core/monster/MonsterProfile";
 import MonsterProfileLoader from "../../core/monster/MonsterProfileLoader";
 import Credential from "../../util/Credential";
+import PageUtils from "../../util/PageUtils";
 import PageProcessorContext from "../PageProcessorContext";
 import PageProcessorCredentialSupport from "../PageProcessorCredentialSupport";
 
@@ -8,6 +9,7 @@ class TownPetRankHousePageProcessor extends PageProcessorCredentialSupport {
 
     async doProcess(credential: Credential, context?: PageProcessorContext): Promise<void> {
         doProcess(credential);
+        PageUtils.onDoubleEscape(() => $("#return_button").trigger("click"));
     }
 
 }

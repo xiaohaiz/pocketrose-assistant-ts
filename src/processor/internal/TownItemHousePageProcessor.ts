@@ -21,6 +21,7 @@ class TownItemHousePageProcessor extends PageProcessorCredentialSupport {
         const page = await new TownItemHousePageParser().parse(PageUtils.currentPageHtml());
         this.#renderImmutablePage(credential, page);
         this.#renderMutablePage(credential, page);
+        PageUtils.onDoubleEscape(() => $("#returnButton").trigger("click"));
     }
 
     #renderImmutablePage(credential: Credential, page: TownItemHousePage) {

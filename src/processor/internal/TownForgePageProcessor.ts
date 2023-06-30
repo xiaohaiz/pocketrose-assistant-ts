@@ -18,6 +18,7 @@ class TownForgePageProcessor extends PageProcessorCredentialSupport {
         const town = TownLoader.load(context?.get("townId"));
         await renderPage(credential, page, town!);
         await renderEquipmentList(credential, page, town!);
+        PageUtils.onDoubleEscape(() => $("#returnButton").trigger("click"));
     }
 
 }
