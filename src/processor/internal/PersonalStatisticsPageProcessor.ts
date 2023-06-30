@@ -6,11 +6,11 @@ import BattleResultStorage from "../../core/battle/BattleResultStorage";
 import CareerChangeLogStorage from "../../core/career/CareerChangeLogStorage";
 import EquipmentConsecrateLogStorage from "../../core/equipment/EquipmentConsecrateLogStorage";
 import BattleReportGenerator from "../../core/report/BattleReportGenerator";
+import CareerChangeReportGenerator from "../../core/report/CareerChangeReportGenerator";
 import ConsecrateReportGenerator from "../../core/report/ConsecrateReportGenerator";
 import DailyReportGenerator from "../../core/report/DailyReportGenerator";
 import MonsterReportGenerator from "../../core/report/MonsterReportGenerator";
 import MonthlyReportGenerator from "../../core/report/MonthlyReportGenerator";
-import RoleCareerTransferReportGenerator from "../../core/report/RoleCareerTransferReportGenerator";
 import TreasureReportGenerator from "../../core/report/TreasureReportGenerator";
 import WeeklyReportGenerator from "../../core/report/WeeklyReportGenerator";
 import ZodiacReportGenerator from "../../core/report/ZodiacReportGenerator";
@@ -20,6 +20,7 @@ import Credential from "../../util/Credential";
 import DayRange from "../../util/DayRange";
 import MessageBoard from "../../util/MessageBoard";
 import MonthRange from "../../util/MonthRange";
+import PageUtils from "../../util/PageUtils";
 import WeekRange from "../../util/WeekRange";
 import PageProcessorContext from "../PageProcessorContext";
 import PageProcessorCredentialSupport from "../PageProcessorCredentialSupport";
@@ -256,6 +257,8 @@ abstract class PersonalStatisticsPageProcessor extends PageProcessorCredentialSu
             doBindExportConsecrateLog();
             doBindImportConsecrateLog();
         }
+
+        PageUtils.onDoubleEscape(() => $("#returnButton").trigger("click"));
     }
 
     #welcomeMessageHtml() {
@@ -304,7 +307,7 @@ function doBindReport3() {
 function doBindReport4() {
     $("#report-4").on("click", () => {
         const target = $("#teamMemberSelect").val()! as string;
-        new RoleCareerTransferReportGenerator(target).generate();
+        new CareerChangeReportGenerator(target).generate();
     });
 }
 

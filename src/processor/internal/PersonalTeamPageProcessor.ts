@@ -126,6 +126,8 @@ abstract class PersonalTeamPageProcessor extends PageProcessorCredentialSupport 
         this.#bindListEquipmentButton();
         this.#bindListPetButton();
         this.#bindBankRecordButton();
+
+        PageUtils.onDoubleEscape(() => $("#returnButton").trigger("click"));
     }
 
     #welcomeMessageHtml() {

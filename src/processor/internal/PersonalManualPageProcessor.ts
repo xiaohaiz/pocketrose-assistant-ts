@@ -120,6 +120,8 @@ class PersonalManualPageProcessor extends PageProcessorCredentialSupport {
         });
 
         this.#renderManual();
+
+        PageUtils.onDoubleEscape(() => $("#returnButton").trigger("click"));
     }
 
     #welcomeMessageHtml() {

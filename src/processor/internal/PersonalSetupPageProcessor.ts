@@ -144,6 +144,8 @@ abstract class PersonalSetupPageProcessor extends PageProcessorCredentialSupport
         });
 
         this.#render(credential);
+
+        PageUtils.onDoubleEscape(() => $("#returnButton").trigger("click"));
     }
 
     #render(credential: Credential) {

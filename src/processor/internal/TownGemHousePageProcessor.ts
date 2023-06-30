@@ -25,6 +25,7 @@ class TownGemHousePageProcessor extends PageProcessorCredentialSupport {
         const page = await new TownGemHouseParser(credential, town.id).parse(PageUtils.currentPageHtml())
         this.#renderImmutablePage(credential, town);
         this.#renderMutablePage(credential, page, town);
+        PageUtils.onDoubleEscape(() => $("#return_button").trigger("click"));
     }
 
     #renderImmutablePage(credential: Credential, town: Town) {

@@ -13,6 +13,7 @@ abstract class PersonalPetManagementPageProcessor extends PageProcessorCredentia
     async doProcess(credential: Credential, context?: PageProcessorContext): Promise<void> {
         const page = PersonalPetManagement.parsePage(PageUtils.currentPageHtml());
         this.#renderImmutablePage(credential, page, context);
+        PageUtils.onDoubleEscape(() => $("#returnButton").trigger("click"));
     }
 
     #renderImmutablePage(credential: Credential, page: PersonalPetManagementPage, context?: PageProcessorContext) {

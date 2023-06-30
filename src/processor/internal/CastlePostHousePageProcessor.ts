@@ -10,6 +10,7 @@ import TownLoader from "../../core/town/TownLoader";
 import Coordinate from "../../util/Coordinate";
 import Credential from "../../util/Credential";
 import MessageBoard from "../../util/MessageBoard";
+import PageUtils from "../../util/PageUtils";
 import StringUtils from "../../util/StringUtils";
 import PageProcessorContext from "../PageProcessorContext";
 import PageProcessorCredentialSupport from "../PageProcessorCredentialSupport";
@@ -18,6 +19,7 @@ class CastlePostHousePageProcessor extends PageProcessorCredentialSupport {
 
     async doProcess(credential: Credential, context?: PageProcessorContext): Promise<void> {
         doProcess(credential);
+        PageUtils.onDoubleEscape(() => $("#returnButton").trigger("click"));
     }
 
 }
