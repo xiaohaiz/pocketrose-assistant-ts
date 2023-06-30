@@ -1,5 +1,7 @@
 # pocketrose-assistant-ts
 
+### 版本 4.2.15-SNAPSHOT
+
 ### 版本 4.2.14
 
 1. 精简，城市转职页面不再显示历史数据。
