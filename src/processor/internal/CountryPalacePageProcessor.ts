@@ -117,6 +117,8 @@ class CountryPalacePageProcessor extends PageProcessorCredentialSupport {
         renderMenu(context!);
         renderTask(credential, context!);
         renderPrompt(credential);
+
+        PageUtils.onDoubleEscape(() => $("#returnButton").trigger("click"));
     }
 
     #welcomeMessageHtml() {

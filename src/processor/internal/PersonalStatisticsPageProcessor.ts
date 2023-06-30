@@ -20,6 +20,7 @@ import Credential from "../../util/Credential";
 import DayRange from "../../util/DayRange";
 import MessageBoard from "../../util/MessageBoard";
 import MonthRange from "../../util/MonthRange";
+import PageUtils from "../../util/PageUtils";
 import WeekRange from "../../util/WeekRange";
 import PageProcessorContext from "../PageProcessorContext";
 import PageProcessorCredentialSupport from "../PageProcessorCredentialSupport";
@@ -256,6 +257,8 @@ abstract class PersonalStatisticsPageProcessor extends PageProcessorCredentialSu
             doBindExportConsecrateLog();
             doBindImportConsecrateLog();
         }
+
+        PageUtils.onDoubleEscape(() => $("#returnButton").trigger("click"));
     }
 
     #welcomeMessageHtml() {

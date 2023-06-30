@@ -28,6 +28,8 @@ abstract class PersonalProfilePageProcessor extends PageProcessorCredentialSuppo
         this.#renderEquipmentStatus(credential, context);
         this.#renderPetStatus(credential, context);
         this.#renderMirrorStatus(credential, context);
+
+        PageUtils.onDoubleEscape(() => $("#returnButton").trigger("click"));
     }
 
     #renderImmutablePage(credential: Credential, context?: PageProcessorContext) {

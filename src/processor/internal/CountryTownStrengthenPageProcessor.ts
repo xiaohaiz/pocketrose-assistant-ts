@@ -137,6 +137,8 @@ class CountryTownStrengthenPageProcessor extends PageProcessorCredentialSupport 
         $("#instruction").html(html);
 
         doBindPublishButton(credential);
+
+        PageUtils.onDoubleEscape(() => $("#returnButton").trigger("click"));
     }
 
     #welcomeMessageHtml() {

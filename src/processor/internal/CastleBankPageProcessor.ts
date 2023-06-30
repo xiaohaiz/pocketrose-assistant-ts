@@ -18,6 +18,7 @@ class CastleBankPageProcessor extends PageProcessorCredentialSupport {
         const castleName = context!.get("castleName")!;
         this.#createImmutablePage(credential, castleName);
         this.#renderMutablePage(credential, page);
+        PageUtils.onDoubleEscape(() => $("#returnButton").trigger("click"));
     }
 
     #createImmutablePage(credential: Credential, castleName: string) {

@@ -10,6 +10,7 @@ abstract class PersonalCareerManagementPageProcessor extends PageProcessorCreden
     async doProcess(credential: Credential, context?: PageProcessorContext): Promise<void> {
         const page = PersonalCareerManagement.parsePage(PageUtils.currentPageHtml());
         this.doProcessPageParsed(credential, page, context);
+        PageUtils.onDoubleEscape(() => $("#returnButton").trigger("click"));
     }
 
     abstract doProcessPageParsed(credential: Credential, page: PersonalCareerManagementPage, context?: PageProcessorContext): void;
