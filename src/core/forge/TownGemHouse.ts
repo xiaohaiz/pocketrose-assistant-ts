@@ -1,6 +1,10 @@
+import _ from "lodash";
 import Credential from "../../util/Credential";
 import MessageBoard from "../../util/MessageBoard";
 import NetworkUtils from "../../util/NetworkUtils";
+import StringUtils from "../../util/StringUtils";
+import GemFuseLog from "./GemFuseLog";
+import GemFuseLogStorage from "./GemFuseLogStorage";
 import TownGemHousePage from "./TownGemHousePage";
 import TownGemHouseParser from "./TownGemHouseParser";
 
@@ -41,7 +45,20 @@ class TownGemHouse {
                 request.set("mode", "BAOSHI_MAKE");
                 NetworkUtils.post("town.cgi", request).then(html => {
                     MessageBoard.processResponseMessage(html);
-                    resolve();
+                    const text = $(html).text();
+                    if (text.includes("所选装备提升威力")) {
+                        const t = StringUtils.substringBetween(text, "所选装备提升威力", "点");
+                        const effort = _.parseInt(t);
+                        const log = new GemFuseLog();
+                        log.roleId = this.#credential.id;
+                        log.gem = "威力";
+                        log.effort = effort;
+                        GemFuseLogStorage.getInstance().insert(log).then(() => {
+                            resolve();
+                        });
+                    } else {
+                        resolve();
+                    }
                 });
             });
         };
