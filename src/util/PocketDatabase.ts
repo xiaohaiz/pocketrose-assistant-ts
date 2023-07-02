@@ -181,6 +181,21 @@ class PocketDatabase {
                         unique: false
                     });
                 }
+
+                // ------------------------------------------------------------
+                // GemFuseLog
+                // ------------------------------------------------------------
+                if (!db.objectStoreNames.contains("GemFuseLog")) {
+                    const store = db.createObjectStore("GemFuseLog", {
+                        keyPath: "id", autoIncrement: false
+                    });
+                    store.createIndex("createTime", "createTime", {
+                        unique: false
+                    });
+                    store.createIndex("roleId", "roleId", {
+                        unique: false
+                    });
+                }
             };
         });
     };
