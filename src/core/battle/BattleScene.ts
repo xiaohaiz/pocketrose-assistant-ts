@@ -17,6 +17,10 @@ class BattleScene {
         (this.afterPage) && (document.afterPage = this.afterPage);
         return document;
     }
+
+    get isExpired() {
+        return this.updateTime === undefined || Date.now() - this.updateTime > 120000;
+    }
 }
 
 export = BattleScene;
