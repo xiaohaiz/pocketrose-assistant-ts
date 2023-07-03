@@ -243,6 +243,7 @@ async function doBeforeProcessBattle(credential: Credential,
                                      afterPage: string,
                                      request: Map<string, string>) {
     const scene = new BattleScene();
+    scene.id = credential.id;
     scene.roleId = credential.id;
     scene.beforePage = beforePage;
     scene.afterPage = afterPage;
@@ -252,7 +253,7 @@ async function doBeforeProcessBattle(credential: Credential,
         r[k] = v;
     });
     scene.request = JSON.stringify(r);
-    await BattleSceneStorage.getInstance().writeLast(scene);
+    await BattleSceneStorage.getInstance().upsert(scene);
 
     return await (() => {
         return new Promise<void>(resolve => resolve());
