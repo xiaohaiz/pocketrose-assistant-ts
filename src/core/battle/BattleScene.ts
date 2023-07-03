@@ -8,32 +8,18 @@ class BattleScene {
     afterPage?: string;
 
     asDocument() {
-        const document = {};
-        if (this.id) {
-            // @ts-ignore
-            document.id = this.id;
-        }
-        if (this.updateTime) {
-            // @ts-ignore
-            document.updateTime = this.updateTime;
-        }
-        if (this.roleId) {
-            // @ts-ignore
-            document.roleId = this.roleId;
-        }
-        if (this.request) {
-            // @ts-ignore
-            document.request = this.request;
-        }
-        if (this.beforePage) {
-            // @ts-ignore
-            document.beforePage = this.beforePage;
-        }
-        if (this.afterPage) {
-            // @ts-ignore
-            document.afterPage = this.afterPage;
-        }
+        const document: any = {};
+        (this.id) && (document.id = this.id);
+        (this.updateTime !== undefined) && (document.updateTime = this.updateTime);
+        (this.roleId) && (document.roleId = this.roleId);
+        (this.request) && (document.request = this.request);
+        (this.beforePage) && (document.beforePage = this.beforePage);
+        (this.afterPage) && (document.afterPage = this.afterPage);
         return document;
+    }
+
+    get isExpired() {
+        return this.updateTime === undefined || Date.now() - this.updateTime > 120000;
     }
 }
 

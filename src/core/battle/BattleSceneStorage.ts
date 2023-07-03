@@ -7,49 +7,45 @@ class BattleSceneStorage {
         return instance;
     }
 
-    async loadLast(): Promise<BattleScene | null> {
+    async loads(): Promise<BattleScene[]> {
         const db = await PocketDatabase.connectDatabase();
-        return await (() => {
-            return new Promise<BattleScene | null>((resolve, reject) => {
-                const request = db
-                    .transaction(["BattleScene"], "readonly")
-                    .objectStore("BattleScene")
-                    .get("LAST");
-                request.onerror = reject;
-                request.onsuccess = () => {
-                    let data: BattleScene | null = null;
-                    if (request.result) {
-                        data = new BattleScene();
-                        data.id = request.result.id;
-                        data.updateTime = request.result.updateTime;
-                        data.roleId = request.result.roleId;
-                        data.request = request.result.request;
-                        data.beforePage = request.result.beforePage;
-                        data.afterPage = request.result.afterPage;
-                    }
-                    resolve(data);
-                };
-            });
-        })();
+        return new Promise<BattleScene[]>((resolve, reject) => {
+            const request = db
+                .transaction(["BattleScene"], "readonly")
+                .objectStore("BattleScene")
+                .getAll();
+            request.onerror = reject;
+            request.onsuccess = () => {
+                const dataList: BattleScene[] = [];
+                if (request.result && request.result.length > 0) {
+                    request.result.forEach(it => {
+                        const data = new BattleScene();
+                        data.id = it.id;
+                        data.updateTime = it.updateTime;
+                        data.roleId = it.roleId;
+                        data.request = it.request;
+                        data.beforePage = it.beforePage;
+                        data.afterPage = it.afterPage;
+                        dataList.push(data);
+                    });
+                }
+                resolve(dataList);
+            };
+        });
     }
 
-    async writeLast(data: BattleScene) {
+    async upsert(data: BattleScene) {
+        const document = data.asDocument();
+        document.updateTime = Date.now();
         const db = await PocketDatabase.connectDatabase();
-        return await (() => {
-            return new Promise<void>((resolve, reject) => {
-                const document = data.asDocument();
-                // @ts-ignore
-                document.id = "LAST";
-                // @ts-ignore
-                document.updateTime = Date.now();
-                const request = db
-                    .transaction(["BattleScene"], "readwrite")
-                    .objectStore("BattleScene")
-                    .put(document);
-                request.onerror = reject;
-                request.onsuccess = () => resolve();
-            });
-        })();
+        return new Promise<void>((resolve, reject) => {
+            const request = db
+                .transaction(["BattleScene"], "readwrite")
+                .objectStore("BattleScene")
+                .put(document);
+            request.onerror = reject;
+            request.onsuccess = () => resolve();
+        });
     }
 
 }
