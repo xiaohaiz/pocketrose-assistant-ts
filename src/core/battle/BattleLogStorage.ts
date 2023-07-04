@@ -1,3 +1,4 @@
+import MonthRange from "../../util/MonthRange";
 import PocketDatabase from "../../util/PocketDatabase";
 import BattleLog from "./BattleLog";
 
@@ -5,6 +6,26 @@ class BattleLogStorage {
 
     static getInstance() {
         return instance;
+    }
+
+    async purgeExpired() {
+        const start = MonthRange.current().previous().start;
+        const range = IDBKeyRange.upperBound(start - 1);
+        const db = await PocketDatabase.connectDatabase();
+        return new Promise<void>((resolve, reject) => {
+            const request = db
+                .transaction(["BattleLog"], "readwrite")
+                .objectStore("BattleLog")
+                .index("createTime")
+                .openCursor(range);
+            request.onsuccess = () => {
+                const cursor = request.result;
+                if (cursor) {
+                    cursor.delete();
+                    cursor.continue();
+                }
+            };
+        });
     }
 
     async importDocument(document: {}): Promise<void> {
