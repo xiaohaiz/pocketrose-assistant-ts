@@ -1,4 +1,3 @@
-import ObjectID from "bson-objectid";
 import MonsterProfileLoader from "../monster/MonsterProfileLoader";
 import NpcLoader from "../role/NpcLoader";
 
@@ -12,16 +11,6 @@ class BattleLog {
     catch?: number;
     photo?: number;
     treasures?: Map<string, number>;
-
-    initialize(): BattleLog {
-        if (this.id === undefined) {
-            this.id = ObjectID().toHexString();
-        }
-        if (this.createTime === undefined) {
-            this.createTime = new Date().getTime();
-        }
-        return this;
-    }
 
     asObject() {
         const obj = {};
