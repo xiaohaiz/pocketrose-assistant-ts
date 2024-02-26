@@ -73,6 +73,10 @@ function doBind(credential: Credential, bindBattle?: boolean, page?: TownDashboa
             if (input === "rr") {
                 $("#refreshButton").trigger("click");
             }
+            if (input === "ss") {
+                $("option[value='ITEM_SHOP']").prop("selected", true);
+                $("#townButton").trigger("click");
+            }
         }
     });
 }
