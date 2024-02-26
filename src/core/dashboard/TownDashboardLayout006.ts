@@ -178,9 +178,7 @@ class TownDashboardLayout006 extends TownDashboardLayout {
         });
 
 
-        if (page.battleLevelShortcut) {
-            new KeyboardShortcutManager(credential, page).bind();
-        }
+        new KeyboardShortcutManager(credential, page.battleLevelShortcut, page).bind();
 
         $("#battleButton")
             .attr("type", "button")

@@ -38,9 +38,7 @@ class TownDashboardLayout001 extends TownDashboardLayout {
                 new TownDashboardTaxManager(credential, page).processTownTax($(td));
             });
 
-        if (page.battleLevelShortcut) {
-            new KeyboardShortcutManager(credential, page).bind();
-        }
+        new KeyboardShortcutManager(credential, page.battleLevelShortcut, page).bind();
     }
 
 }
