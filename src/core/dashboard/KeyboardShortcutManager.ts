@@ -24,6 +24,7 @@ function doBind(credential: Credential, bindBattle?: boolean, page?: TownDashboa
     let selectBattle = formBattle.find('select[name="level"]');
     let optionIdx = 0;
     let buffer = "";
+    let buffer2 = "";
     $(document).off('keydown.city').on('keydown.city', event => {
         if ($("#messageInputText:focus").length > 0) {
             // 当前的焦点在消息框，禁用按键辅助
@@ -65,10 +66,10 @@ function doBind(credential: Credential, bindBattle?: boolean, page?: TownDashboa
             }
         }
 
-        buffer += key;
-        if (buffer.length === 2) {
-            let input = buffer;
-            buffer = "";
+        buffer2 += key;
+        if (buffer2.length === 2) {
+            let input = buffer2;
+            buffer2 = "";
             if (input === "rr") {
                 $("#refreshButton").trigger("click");
             }
