@@ -24,7 +24,6 @@ function doBind(credential: Credential, bindBattle?: boolean, page?: TownDashboa
     let selectBattle = formBattle.find('select[name="level"]');
     let optionIdx = 0;
     let buffer = "";
-    let buffer2 = "";
     $(document).off('keydown.city').on('keydown.city', event => {
         if ($("#messageInputText:focus").length > 0) {
             // 当前的焦点在消息框，禁用按键辅助
@@ -37,12 +36,9 @@ function doBind(credential: Credential, bindBattle?: boolean, page?: TownDashboa
 
         if (bindBattle) {
             if (key === "q") {
-                buffer += "q";
-                if (buffer.length === 1) {
+                if ($("#battleButton:focus").length === 0) {
                     $("#battleButton").trigger("focus");
-                } else if (buffer.length === 2) {
-                    // 满足按键条件
-                    buffer = "";
+                } else {
                     // 如果战斗选项中有“秘宝之岛”，则恒定选择
                     let islandFound = false;
                     $(selectBattle).find("option")
@@ -66,17 +62,15 @@ function doBind(credential: Credential, bindBattle?: boolean, page?: TownDashboa
             }
         }
 
-        buffer2 += key;
-        if (buffer2.length === 2) {
-            let input = buffer2;
-            buffer2 = "";
-            if (input === "rr") {
-                $("#refreshButton").trigger("click");
-            }
-            if (input === "ss") {
-                $("option[value='ITEM_SHOP']").prop("selected", true);
-                $("#townButton").trigger("click");
-            }
+        if (key === "r") {
+            $("#refreshButton").trigger("click");
+            return;
+        }
+
+        if (key === "s") {
+            $("option[value='ITEM_SHOP']").prop("selected", true);
+            $("#townButton").trigger("click");
+            return;
         }
     });
 }
