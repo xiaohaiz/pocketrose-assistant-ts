@@ -23,7 +23,6 @@ function doBind(credential: Credential, bindBattle?: boolean, page?: TownDashboa
     let formBattle = $("form[action='battle.cgi']");
     let selectBattle = formBattle.find('select[name="level"]');
     let optionIdx = 0;
-    let buffer = "";
     $(document).off('keydown.city').on('keydown.city', event => {
         if ($("#messageInputText:focus").length > 0) {
             // 当前的焦点在消息框，禁用按键辅助
