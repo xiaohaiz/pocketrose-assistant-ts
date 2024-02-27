@@ -72,7 +72,7 @@ function doBind(credential: Credential, bindBattle?: boolean, page?: TownDashboa
             return;
         }
 
-        if (key === "c") {
+        if (key === "p") {
             $("option[value='PET_TZ']").prop("selected", true);
             $("#townButton").trigger("click");
             return;
