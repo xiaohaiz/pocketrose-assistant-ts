@@ -23,7 +23,7 @@ class TownInnPageProcessor extends PageProcessorCredentialSupport {
     async doProcess(credential: Credential, context?: PageProcessorContext): Promise<void> {
         const page = await new TownInnPageParser().parse(PageUtils.currentPageHtml());
         doProcess(credential);
-        PageUtils.onDoubleEscape(() => $("#returnButton").trigger("click"));
+        PageUtils.onEscapePressed(() => $("#returnButton").trigger("click"));
     }
 
 }

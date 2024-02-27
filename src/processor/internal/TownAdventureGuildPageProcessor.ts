@@ -24,7 +24,7 @@ class TownAdventureGuildPageProcessor extends PageProcessorCredentialSupport {
         const pageHtml = document.documentElement.outerHTML;
         const treasureHintList = TreasureHintParser.parseTreasureHintList(pageHtml);
         doProcess(credential, treasureHintList);
-        PageUtils.onDoubleEscape(() => $("#returnButton").trigger("click"));
+        PageUtils.onEscapePressed(() => $("#returnButton").trigger("click"));
     }
 
 }

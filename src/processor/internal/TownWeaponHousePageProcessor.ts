@@ -15,7 +15,7 @@ class TownWeaponHousePageProcessor extends PageProcessorCredentialSupport {
 
     async doProcess(credential: Credential, context?: PageProcessorContext): Promise<void> {
         await processPage(credential);
-        PageUtils.onDoubleEscape(() => $("#return_button").trigger("click"));
+        PageUtils.onEscapePressed(() => $("#return_button").trigger("click"));
     }
 
 }

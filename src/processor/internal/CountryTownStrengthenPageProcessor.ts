@@ -138,7 +138,7 @@ class CountryTownStrengthenPageProcessor extends PageProcessorCredentialSupport 
 
         doBindPublishButton(credential);
 
-        PageUtils.onDoubleEscape(() => $("#returnButton").trigger("click"));
+        PageUtils.onEscapePressed(() => $("#returnButton").trigger("click"));
     }
 
     #welcomeMessageHtml() {

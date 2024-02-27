@@ -13,7 +13,7 @@ class PersonalTeamManagementPageProcessor extends PageProcessorCredentialSupport
 
     async doProcess(credential: Credential, context?: PageProcessorContext): Promise<void> {
         doProcess(credential);
-        PageUtils.onDoubleEscape(() => $("#returnButton").trigger("click"));
+        PageUtils.onEscapePressed(() => $("#returnButton").trigger("click"));
     }
 
 }

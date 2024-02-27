@@ -47,7 +47,7 @@ abstract class PersonalStatusPageProcessor extends PageProcessorCredentialSuppor
                 "colspan='4'></td>");
         _generateRoleDimension(page);
 
-        PageUtils.onDoubleEscape(() => $("#returnButton").trigger("click"));
+        PageUtils.onEscapePressed(() => $("#returnButton").trigger("click"));
     }
 
     abstract doGenerateHiddenForm(credential: Credential, containerId: string): void;

@@ -258,7 +258,7 @@ abstract class PersonalStatisticsPageProcessor extends PageProcessorCredentialSu
             doBindImportConsecrateLog();
         }
 
-        PageUtils.onDoubleEscape(() => $("#returnButton").trigger("click"));
+        PageUtils.onEscapePressed(() => $("#returnButton").trigger("click"));
     }
 
     #welcomeMessageHtml() {
