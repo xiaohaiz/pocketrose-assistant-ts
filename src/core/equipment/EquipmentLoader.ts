@@ -161,7 +161,12 @@ const ARMOR_LIST = [
     "咒袍 孤星",
     "巨人之铠",
     "孔雀袍",
-    "羽毛帽"
+    "羽毛帽",
+    "Armani西装",
+    "burberry风衣",
+    "去死去死团团服",
+    "情人套装（女式）",
+    "情人套装（男式）"
 ];
 
 const ACCESSORY_LIST = [
@@ -230,7 +235,8 @@ const ACCESSORY_LIST = [
     "晶之冠",
     "金制胸针",
     "极光之翼",
-    "雪的结晶"
+    "雪的结晶",
+    "好人卡"
 ];
 
 export = EquipmentLoader;
