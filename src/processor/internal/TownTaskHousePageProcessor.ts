@@ -109,7 +109,7 @@ class TownTaskHousePageProcessor extends PageProcessorCredentialSupport {
 
         renderTask(credential, roleTask);
 
-        PageUtils.onDoubleEscape(() => $("#returnButton").trigger("click"));
+        PageUtils.onEscapePressed(() => $("#returnButton").trigger("click"));
     }
 
 }

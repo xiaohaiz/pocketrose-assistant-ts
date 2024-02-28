@@ -29,7 +29,7 @@ abstract class PersonalProfilePageProcessor extends PageProcessorCredentialSuppo
         this.#renderPetStatus(credential, context);
         this.#renderMirrorStatus(credential, context);
 
-        PageUtils.onDoubleEscape(() => $("#returnButton").trigger("click"));
+        PageUtils.onEscapePressed(() => $("#returnButton").trigger("click"));
     }
 
     #renderImmutablePage(credential: Credential, context?: PageProcessorContext) {
@@ -260,11 +260,11 @@ abstract class PersonalProfilePageProcessor extends PageProcessorCredentialSuppo
             html += "</tr>";
 
             for (const spell of spellList) {
-                const using = spell.name === role.spell;
+                const spellIsUsing = spell.name === role.spell;
                 html += "<tr>";
-                html += "<td style='background-color:#E8E8D0'>" + (using ? "★" : "") + "</td>";
+                html += "<td style='background-color:#E8E8D0'>" + (spellIsUsing ? "★" : "") + "</td>";
                 html += "<td style='background-color:#E8E8D0'>";
-                if (using) {
+                if (spellIsUsing) {
                     html += "<button role='button' class='spellButton' id='spell_" + spell.id + "' " +
                         "style='color:blue'>" + spell.name + "</button>";
                 } else {
@@ -425,7 +425,7 @@ abstract class PersonalProfilePageProcessor extends PageProcessorCredentialSuppo
                 html += "<td style='background-color:#E8E8D0'>" + pet.speedHtml + "</td>";
                 html += "<td style='background-color:#E8E8D0'>" + pet.spell1 + "</td>";
                 html += "<td style='background-color:#E8E8D0'>" + pet.spell2 + "</td>";
-                html += "<td style='background-color:#E0D0C0'>" + pet.spell3 + "</td>";
+                html += "<td style='background-color:#E8E8D0'>" + pet.spell3 + "</td>";
                 html += "<td style='background-color:#E8E8D0'>" + pet.spell4 + "</td>";
                 html += "<td style='background-color:#E8E8D0'>" + pet.love + "</td>";
                 html += "<td style='background-color:#E8E8D0'>" + pet.raceHtml + "</td>";

@@ -153,9 +153,7 @@ class TownDashboardLayout004 extends TownDashboardLayout {
                 });
             });
 
-        if (page.battleLevelShortcut) {
-            new KeyboardShortcutManager(credential, page).bind();
-        }
+        new KeyboardShortcutManager(credential, page.battleLevelShortcut, page).bind();
 
         // 启动自动刷新
         // globalMessageContainer

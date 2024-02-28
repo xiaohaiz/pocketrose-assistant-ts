@@ -121,7 +121,7 @@ class PersonalManualPageProcessor extends PageProcessorCredentialSupport {
 
         this.#renderManual();
 
-        PageUtils.onDoubleEscape(() => $("#returnButton").trigger("click"));
+        PageUtils.onEscapePressed(() => $("#returnButton").trigger("click"));
     }
 
     #welcomeMessageHtml() {

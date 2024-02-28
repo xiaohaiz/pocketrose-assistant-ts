@@ -9,40 +9,16 @@ class BankRecord {
     saving?: number;
     revision?: number;
 
-    asDocument(): {} {
-        const document = {};
-        if (this.id) {
-            // @ts-ignore
-            document.id = this.id;
-        }
-        if (this.roleId) {
-            // @ts-ignore
-            document.roleId = this.roleId;
-        }
-        if (this.createTime !== undefined) {
-            // @ts-ignore
-            document.createTime = this.createTime;
-        }
-        if (this.updateTime !== undefined) {
-            // @ts-ignore
-            document.updateTime = this.updateTime;
-        }
-        if (this.recordDate) {
-            // @ts-ignore
-            document.recordDate = this.recordDate;
-        }
-        if (this.cash !== undefined) {
-            // @ts-ignore
-            document.cash = this.cash;
-        }
-        if (this.saving !== undefined) {
-            // @ts-ignore
-            document.saving = this.saving;
-        }
-        if (this.revision !== undefined) {
-            // @ts-ignore
-            document.revision = this.revision;
-        }
+    asDocument() {
+        const document: any = {};
+        (this.id) && (document.id = this.id);
+        (this.roleId) && (document.roleId = this.roleId);
+        (this.createTime !== undefined) && (document.createTime = this.createTime);
+        (this.updateTime !== undefined) && (document.updateTime = this.updateTime);
+        (this.recordDate) && (document.recordDate = this.recordDate);
+        (this.cash !== undefined) && (document.cash = this.cash);
+        (this.saving !== undefined) && (document.saving = this.saving);
+        (this.revision !== undefined) && (document.revision = this.revision);
         return document;
     }
 }

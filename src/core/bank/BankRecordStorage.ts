@@ -113,13 +113,9 @@ class BankRecordStorage {
                     } else {
                         const current = Date.now();
                         const document = data.asDocument();
-                        // @ts-ignore
                         document.id = id;
-                        // @ts-ignore
                         document.createTime = current;
-                        // @ts-ignore
                         document.updateTime = current;
-                        // @ts-ignore
                         document.revision = 1;
                         const writeRequest = store.add(document);
                         writeRequest.onerror = reject;

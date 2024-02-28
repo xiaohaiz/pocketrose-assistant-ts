@@ -21,7 +21,7 @@ class TownArmorHousePageProcessor extends PageProcessorCredentialSupport {
         this.#renderImmutablePage(credential, page);
         this.#renderMutablePage(credential, page);
 
-        PageUtils.onDoubleEscape(() => $("#return_button").trigger("click"));
+        PageUtils.onEscapePressed(() => $("#return_button").trigger("click"));
     }
 
     #renderImmutablePage(credential: Credential, page: TownArmorHousePage) {

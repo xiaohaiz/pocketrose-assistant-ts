@@ -1,3 +1,4 @@
+import ObjectID from "bson-objectid";
 import Credential from "../../util/Credential";
 import PageUtils from "../../util/PageUtils";
 import StringUtils from "../../util/StringUtils";
@@ -100,7 +101,8 @@ class BattleProcessor {
 
         // 战斗日志
         const log = new BattleLog();
-        log.initialize();
+        log.id = ObjectID().toHexString();
+        log.createTime = Date.now();
         log.roleId = this.#credential.id;
         log.monster = monster;
         log.result = this.page!.battleResult!;

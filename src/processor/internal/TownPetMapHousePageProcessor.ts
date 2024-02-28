@@ -19,7 +19,7 @@ class TownPetMapHousePageProcessor extends PageProcessorCredentialSupport {
     async doProcess(credential: Credential, context?: PageProcessorContext): Promise<void> {
         const page = TownPetMapHouse.parsePage(PageUtils.currentPageHtml());
         this.#renderImmutablePage(credential, page, context);
-        PageUtils.onDoubleEscape(() => $("#returnButton").trigger("click"));
+        PageUtils.onEscapePressed(() => $("#returnButton").trigger("click"));
     }
 
     #renderImmutablePage(credential: Credential, page: TownPetMapHousePage, context?: PageProcessorContext) {
