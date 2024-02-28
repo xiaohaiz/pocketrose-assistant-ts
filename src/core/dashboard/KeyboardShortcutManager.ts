@@ -83,6 +83,12 @@ function doBind(credential: Credential, bindBattle?: boolean, page?: TownDashboa
             $("#townButton").trigger("click");
             return;
         }
+
+        if (key === "k") {
+            $("option[value='SINGLE_BATTLE']").prop("selected", true);
+            $("#townButton").trigger("click");
+            return;
+        }
     });
 }
 
