@@ -40,13 +40,13 @@ class SetupItemManager {
 
     constructor() {
         this.#setupItemList = [
-            new SetupItem012(),
-            new SetupItem056(),
             new SetupItem001(),
             new SetupItem002(),
             new SetupItem003(),
             new SetupItem004(),
             new SetupItem005(),
+            new SetupItem012(),
+            new SetupItem056(),
             new SetupItem014(),
             new SetupItem019(),
             new SetupItem020(),
