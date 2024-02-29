@@ -6,6 +6,7 @@ import BattleRecord from "../battle/BattleRecord";
 import BattleRecordStorage from "../battle/BattleRecordStorage";
 import SetupLoader from "../config/SetupLoader";
 import EquipmentLocalStorage from "../equipment/EquipmentLocalStorage";
+import TownInn from "../inn/TownInn";
 import PetLocalStorage from "../monster/PetLocalStorage";
 import TownDashboardTaxManager from "../town/TownDashboardTaxManager";
 import KeyboardShortcutManager from "./KeyboardShortcutManager";
@@ -278,9 +279,17 @@ class TownDashboardLayout006 extends TownDashboardLayout {
                         });
                         $("#battleDeposit").on("click", () => {
                             $("#battleDeposit").prop("disabled", true);
-                            doBeforeReturn(credential, currentBattleCount).then(() => {
-                                $("#deposit").trigger("click");
-                            });
+                            doBeforeReturn(credential, currentBattleCount)
+                                .then(() => {
+                                    if (processor.obtainPage.zodiacBattle) {
+                                        new TownInn(credential).recovery()
+                                            .then(() => {
+                                                $("#deposit").trigger("click");
+                                            });
+                                    } else {
+                                        $("#deposit").trigger("click");
+                                    }
+                                });
                         });
                         $("#battleRepair").on("click", () => {
                             $("#battleRepair").prop("disabled", true);

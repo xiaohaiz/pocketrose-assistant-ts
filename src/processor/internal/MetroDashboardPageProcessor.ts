@@ -215,7 +215,7 @@ function renderMetroMap(credential: Credential, page: MetroDashboardPage) {
     html += "<li>去(10,10)，选择据点转移</li>";
     html += "<li>重装跟匹诺曹战斗，失败的话吃药补HP和MP，继续跟匹诺曹战斗，直到打赢</li>";
     html += "<li>打赢后跟比诺曹谈话，选择‘抓住你了’</li>";
-    html += "<li>点击回到枫丹按钮</li>";
+    html += "<li>点击回到枫丹按钮，选择据点转移</li>";
     html += "<li>去客栈住宿补满HP和MP，换好打葫芦娃的7hit装和面具，设置打葫芦娃的血宠</li>";
     html += "<li>回到迪士尼</li>";
     html += "<li>在(8,9)和白雪公主问话，选择‘匹诺曹抓来了’</li>";

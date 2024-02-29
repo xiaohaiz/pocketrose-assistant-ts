@@ -1,5 +1,7 @@
 # pocketrose-assistant-ts
 
+### 版本 4.2.17-SNAPSHOT
+
 ### 版本 4.2.16
 
 1. 键盘快捷键支持。城市主页面r刷新，s进入物品商店，p进入宠联（仅限Chrome内核浏览器）。
