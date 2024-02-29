@@ -1,5 +1,7 @@
 # pocketrose-assistant-ts
 
+### 版本 4.2.18-SNAPSHOT
+
 ### 版本 4.2.17
 
 1. 快捷键m进入冒险家公会。
