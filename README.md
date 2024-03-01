@@ -1,5 +1,7 @@
 # pocketrose-assistant-ts
 
+### 版本 4.2.19-SNAPSHOT
+
 ### 版本 4.2.18
 
 1. 团队面板中增加威力宝石统计。
