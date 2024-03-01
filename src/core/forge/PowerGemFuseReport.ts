@@ -1,4 +1,4 @@
-class PowerGemFuseStatistics {
+class PowerGemFuseReport {
 
     roleName?: string;
 
@@ -114,4 +114,4 @@ class PowerGemFuseStatistics {
     }
 }
 
-export = PowerGemFuseStatistics;
+export = PowerGemFuseReport;

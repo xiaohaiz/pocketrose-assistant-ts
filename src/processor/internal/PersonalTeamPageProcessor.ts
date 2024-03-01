@@ -3,6 +3,7 @@ import BankRecordReportGenerator from "../../core/bank/BankRecordReportGenerator
 import Equipment from "../../core/equipment/Equipment";
 import EquipmentLocalStorage from "../../core/equipment/EquipmentLocalStorage";
 import RoleEquipmentStatusStorage from "../../core/equipment/RoleEquipmentStatusStorage";
+import PowerGemFuseReportGenerator from "../../core/forge/PowerGemFuseReportGenerator";
 import MonsterPageUtils from "../../core/monster/MonsterPageUtils";
 import MonsterProfileLoader from "../../core/monster/MonsterProfileLoader";
 import Pet from "../../core/monster/Pet";
@@ -78,6 +79,9 @@ abstract class PersonalTeamPageProcessor extends PageProcessorCredentialSupport 
         html += "<td>";
         html += "<button role='button' id='bankRecordButton'>银行资产分析</button>";
         html += "</td>";
+        html += "<td>";
+        html += "<button role='button' id='powerGemButton'>威力宝石统计</button>";
+        html += "</td>";
         html += "</tr>";
         html += "</tbody>";
         html += "</table>";
@@ -126,6 +130,7 @@ abstract class PersonalTeamPageProcessor extends PageProcessorCredentialSupport 
         this.#bindListEquipmentButton();
         this.#bindListPetButton();
         this.#bindBankRecordButton();
+        this.#bindPowerGemButton();
 
         PageUtils.onEscapePressed(() => $("#returnButton").trigger("click"));
     }
@@ -335,6 +340,12 @@ abstract class PersonalTeamPageProcessor extends PageProcessorCredentialSupport 
     #bindBankRecordButton() {
         $("#bankRecordButton").on("click", () => {
             new BankRecordReportGenerator().generate();
+        });
+    }
+
+    #bindPowerGemButton() {
+        $("#powerGemButton").on("click", () => {
+            new PowerGemFuseReportGenerator().generate();
         });
     }
 
