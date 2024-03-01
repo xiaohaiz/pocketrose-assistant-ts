@@ -36,6 +36,75 @@ class PowerGemFuseStatistics {
 
     count: number = 0;
     totalEffort: number = 0;
+
+    increase(e: number) {
+        this.count++;
+        this.totalEffort += e;
+
+        if (e === -10) {
+            this.m10++;
+        } else if (e === -9) {
+            this.m9++;
+        } else if (e === -8) {
+            this.m8++;
+        } else if (e === -7) {
+            this.m7++;
+        } else if (e === -6) {
+            this.m6++;
+        } else if (e === -5) {
+            this.m5++;
+        } else if (e === -4) {
+            this.m4++;
+        } else if (e === -3) {
+            this.m3++;
+        } else if (e === -2) {
+            this.m2++;
+        } else if (e === -1) {
+            this.m1++;
+        } else if (e === 0) {
+            this.z++;
+        } else if (e === 1) {
+            this.p1++;
+        } else if (e === 2) {
+            this.p2++;
+        } else if (e === 3) {
+            this.p3++;
+        } else if (e === 4) {
+            this.p4++;
+        } else if (e === 5) {
+            this.p5++;
+        } else if (e === 6) {
+            this.p6++;
+        } else if (e === 7) {
+            this.p7++;
+        } else if (e === 8) {
+            this.p8++;
+        } else if (e === 9) {
+            this.p9++;
+        } else if (e === 10) {
+            this.p10++;
+        } else if (e === 11) {
+            this.p11++;
+        } else if (e === 12) {
+            this.p12++;
+        } else if (e === 13) {
+            this.p13++;
+        } else if (e === 14) {
+            this.p14++;
+        } else if (e === 15) {
+            this.p15++;
+        } else if (e === 16) {
+            this.p16++;
+        } else if (e === 17) {
+            this.p17++;
+        } else if (e === 18) {
+            this.p18++;
+        } else if (e === 19) {
+            this.p19++;
+        } else if (e === 20) {
+            this.p20++;
+        }
+    }
 }
 
 export = PowerGemFuseStatistics;
