@@ -105,6 +105,13 @@ class PowerGemFuseStatistics {
             this.p20++;
         }
     }
+
+    average() {
+        if (this.count === 0) {
+            return "0";
+        }
+        return (this.totalEffort / this.count).toFixed(2);
+    }
 }
 
 export = PowerGemFuseStatistics;
