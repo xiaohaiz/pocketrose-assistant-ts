@@ -7,8 +7,8 @@ import BankRecordStorage from "./BankRecordStorage";
 
 class BankRecordReportGenerator {
 
-    generate() {
-        _loadBankRecords().then(reports => _doGenerate(reports));
+    generate(includeExternal: boolean) {
+        _loadBankRecords(includeExternal).then(reports => _doGenerate(reports));
     }
 
 }
@@ -97,17 +97,17 @@ function _doGenerate(reports: Map<string, Report>) {
     mc1.setOption(option);
 }
 
-async function _loadBankRecords(): Promise<Map<string, Report>> {
+async function _loadBankRecords(includeExternal: boolean): Promise<Map<string, Report>> {
 
     const names = new Map<string, string>();
     TeamMemberLoader.loadTeamMembers()
-        .filter(it => !it.external)
+        .filter(it => includeExternal || it.external === undefined || !it.external)
         .forEach(it => names.set(it.id!, it.name!));
 
     const storage = BankRecordStorage.getInstance();
     const promises: Promise<BankRecord | null>[] = [];
     TeamMemberLoader.loadTeamMembers()
-        .filter(it => !it.external)
+        .filter(it => includeExternal || it.external === undefined || !it.external)
         .map(it => it.id!)
         .forEach(it => promises.push(storage.load(it)));
 

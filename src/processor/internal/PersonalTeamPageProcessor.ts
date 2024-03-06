@@ -364,7 +364,7 @@ abstract class PersonalTeamPageProcessor extends PageProcessorCredentialSupport 
 
             const includeExternal = $("#includeExternal").prop("checked") as boolean;
 
-            new BankRecordReportGenerator().generate();
+            new BankRecordReportGenerator().generate(includeExternal);
         });
     }
 
