@@ -295,7 +295,8 @@ abstract class PersonalTeamPageProcessor extends PageProcessorCredentialSupport 
             html += "</table>";
             $("#information").html(html).parent().hide();
 
-            const configs = TeamMemberLoader.loadTeamMembers();
+            const configs = TeamMemberLoader.loadTeamMembers()
+                .filter(it => includeExternal || it.external === undefined || !it.external);
 
             const idList = configs.map(it => it.id!);
             RolePetStatusStorage.getInstance()
