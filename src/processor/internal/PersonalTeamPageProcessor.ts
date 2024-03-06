@@ -374,7 +374,7 @@ abstract class PersonalTeamPageProcessor extends PageProcessorCredentialSupport 
 
             const includeExternal = $("#includeExternal").prop("checked") as boolean;
 
-            new PowerGemFuseReportGenerator().generate();
+            new PowerGemFuseReportGenerator().generate(includeExternal);
         });
     }
 
