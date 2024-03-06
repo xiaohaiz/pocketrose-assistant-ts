@@ -139,6 +139,7 @@ abstract class PersonalTeamPageProcessor extends PageProcessorCredentialSupport 
         this.#bindBankRecordButton();
         this.#bindPowerGemButton();
         this.#bindSearchTeamEquipmentButton();
+        this.#bindSearchTeamPetButton();
 
         PageUtils.onEscapePressed(() => $("#returnButton").trigger("click"));
     }
@@ -428,6 +429,97 @@ abstract class PersonalTeamPageProcessor extends PageProcessorCredentialSupport 
 
                         $("#equipmentStatusList").append($(html));
                     }
+                    $("#information").parent().show();
+                });
+        });
+    }
+
+    #bindSearchTeamPetButton() {
+        $("#searchTeamPetButton").on("click", () => {
+            $(".simulationButton").off("click");
+
+            const s = $("#searchName").val();
+            let searchName = "";
+            if (s) searchName = s as string;
+
+            let html = "";
+            html += "<table style='margin:auto;border-width:0;text-align:center;background-color:#888888;width:100%'>";
+            html += "<tbody id='petStatusList'>";
+            html += "<tr>";
+            html += "<th style='background-color:#F8F0E0'>队员</th>";
+            html += "<th style='background-color:#F8F0E0'>名字</th>";
+            html += "<th style='background-color:#F8F0E0'>性别</th>";
+            html += "<th style='background-color:#F8F0E0'>等级</th>";
+            html += "<th style='background-color:#F8F0E0'>生命</th>";
+            html += "<th style='background-color:#F8F0E0'>攻击</th>";
+            html += "<th style='background-color:#F8F0E0'>防御</th>";
+            html += "<th style='background-color:#F8F0E0'>智力</th>";
+            html += "<th style='background-color:#F8F0E0'>精神</th>";
+            html += "<th style='background-color:#F8F0E0'>速度</th>";
+            html += "<th style='background-color:#F8F0E0'>位置</th>";
+            html += "<th style='background-color:#F8F0E0'>模拟</th>";
+            html += "</tr>";
+            html += "</tbody>";
+            html += "</table>";
+            $("#information").html(html).parent().hide();
+
+            const configs = TeamMemberLoader.loadTeamMembers();
+
+            const idList = configs.map(it => it.id!);
+            RolePetStatusStorage.getInstance()
+                .loads(idList)
+                .then(dataMap => {
+                    const allPetList: Pet[] = [];
+                    let petIndex = 0;
+
+                    for (const config of configs) {
+                        const data = dataMap.get(config.id!);
+                        if (data === undefined) {
+                            continue;
+                        }
+
+                        const pets: string[] = JSON.parse(data.json!);
+                        let html = "";
+                        let row = 0;
+                        const petList = pets.map(it => Pet.parse(it))
+                            .sort(Pet.sorter)
+                            .filter(it => it.name?.includes(searchName));
+                        petList.forEach(it => {
+                            it.index = petIndex++;
+                            allPetList.push(it);
+
+                            html += "<tr>";
+                            if (row === 0) {
+                                html += "<td style='background-color:black;color:white;white-space:nowrap;font-weight:bold;vertical-align:center' " +
+                                    "rowspan='" + (petList.length) + "'>" + config.name + "</td>";
+                            }
+                            html += "<td style='background-color:#E8E8D0;text-align:left'>" + it.nameHtml + "</td>";
+                            html += "<td style='background-color:#E8E8B0'>" + it.gender + "</td>";
+                            html += "<td style='background-color:#E8E8D0'>" + it.levelHtml + "</td>";
+                            html += "<td style='background-color:#E8E8B0'>" + it.maxHealth + "</td>";
+                            html += "<td style='background-color:#E8E8D0'>" + it.attackHtml + "</td>";
+                            html += "<td style='background-color:#E8E8B0'>" + it.defenseHtml + "</td>";
+                            html += "<td style='background-color:#E8E8D0'>" + it.specialAttackHtml + "</td>";
+                            html += "<td style='background-color:#E8E8B0'>" + it.specialDefenseHtml + "</td>";
+                            html += "<td style='background-color:#E8E8D0'>" + it.speedHtml + "</td>";
+                            html += "<td style='background-color:#E8E8B0'>" + it.location + "</td>";
+                            html += "<td style='background-color:#E8E8D0'>";
+                            html += "<button role='button' class='simulationButton' id='simulate-" + it.index + "'>模拟</button>";
+                            html += "</td>";
+                            html += "</tr>";
+                            row++;
+                        });
+
+                        $("#petStatusList").append($(html));
+                    }
+
+                    html = "";
+                    html += "<tr style='display:none'>";
+                    html += "<td id='simulation' style='background-color:#F8F0E0' colspan='12'></td>";
+                    html += "</tr>";
+                    $("#petStatusList").append($(html));
+                    this.#bindSimulationButton(allPetList);
+
                     $("#information").parent().show();
                 });
         });
