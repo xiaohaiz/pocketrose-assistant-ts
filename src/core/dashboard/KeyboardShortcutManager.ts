@@ -107,6 +107,12 @@ function doBind(credential: Credential, bindBattle?: boolean, page?: TownDashboa
             $("#townButton").trigger("click");
             return;
         }
+
+        if (key === "e") {
+            $("option[value='USE_ITEM']").prop("selected", true);
+            $("#personalButton").trigger("click");
+            return;
+        }
     });
 }
 
