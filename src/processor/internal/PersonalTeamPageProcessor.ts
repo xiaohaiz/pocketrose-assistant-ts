@@ -200,6 +200,9 @@ abstract class PersonalTeamPageProcessor extends PageProcessorCredentialSupport 
         $("#listEquipmentButton").on("click", () => {
             $(".simulationButton").off("click");
 
+            const includeExternal = $("#includeExternal").prop("checked") as boolean;
+
+
             let html = "";
             html += "<table style='margin:auto;border-width:0;text-align:center;background-color:#888888;width:100%'>";
             html += "<tbody id='equipmentStatusList'>";
@@ -267,6 +270,8 @@ abstract class PersonalTeamPageProcessor extends PageProcessorCredentialSupport 
     #bindListPetButton() {
         $("#listPetButton").on("click", () => {
             $(".simulationButton").off("click");
+
+            const includeExternal = $("#includeExternal").prop("checked") as boolean;
 
             let html = "";
             html += "<table style='margin:auto;border-width:0;text-align:center;background-color:#888888;width:100%'>";
@@ -354,6 +359,9 @@ abstract class PersonalTeamPageProcessor extends PageProcessorCredentialSupport 
     #bindBankRecordButton() {
         $("#bankRecordButton").on("click", () => {
             $(".simulationButton").off("click");
+
+            const includeExternal = $("#includeExternal").prop("checked") as boolean;
+
             new BankRecordReportGenerator().generate();
         });
     }
@@ -361,6 +369,9 @@ abstract class PersonalTeamPageProcessor extends PageProcessorCredentialSupport 
     #bindPowerGemButton() {
         $("#powerGemButton").on("click", () => {
             $(".simulationButton").off("click");
+
+            const includeExternal = $("#includeExternal").prop("checked") as boolean;
+
             new PowerGemFuseReportGenerator().generate();
         });
     }
@@ -368,6 +379,8 @@ abstract class PersonalTeamPageProcessor extends PageProcessorCredentialSupport 
     #bindSearchTeamEquipmentButton() {
         $("#searchTeamEquipmentButton").on("click", () => {
             $(".simulationButton").off("click");
+
+            const includeExternal = $("#includeExternal").prop("checked") as boolean;
 
             const s = $("#searchName").val();
             let searchName = "";
@@ -442,6 +455,8 @@ abstract class PersonalTeamPageProcessor extends PageProcessorCredentialSupport 
     #bindSearchTeamPetButton() {
         $("#searchTeamPetButton").on("click", () => {
             $(".simulationButton").off("click");
+
+            const includeExternal = $("#includeExternal").prop("checked") as boolean;
 
             const s = $("#searchName").val();
             let searchName = "";
