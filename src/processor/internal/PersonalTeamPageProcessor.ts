@@ -83,6 +83,13 @@ abstract class PersonalTeamPageProcessor extends PageProcessorCredentialSupport 
         html += "<button role='button' id='powerGemButton'>威力宝石统计</button>";
         html += "</td>";
         html += "</tr>";
+        html += "<tr>";
+        html += "<td colspan='6' style='text-align:center'>";
+        html += "<input type='text' id='searchName' size='15' maxlength='40' spellcheck='false'>";
+        html += "<input type='button' id='searchTeamEquipmentButton' value='查找团队装备'>";
+        html += "<input type='button' id='searchTeamPetButton' value='查找团队宠物'>";
+        html += "</td>";
+        html += "</tr>";
         html += "</tbody>";
         html += "</table>";
         html += "</td>";
@@ -131,6 +138,7 @@ abstract class PersonalTeamPageProcessor extends PageProcessorCredentialSupport 
         this.#bindListPetButton();
         this.#bindBankRecordButton();
         this.#bindPowerGemButton();
+        this.#bindSearchTeamEquipmentButton();
 
         PageUtils.onEscapePressed(() => $("#returnButton").trigger("click"));
     }
@@ -339,13 +347,89 @@ abstract class PersonalTeamPageProcessor extends PageProcessorCredentialSupport 
 
     #bindBankRecordButton() {
         $("#bankRecordButton").on("click", () => {
+            $(".simulationButton").off("click");
             new BankRecordReportGenerator().generate();
         });
     }
 
     #bindPowerGemButton() {
         $("#powerGemButton").on("click", () => {
+            $(".simulationButton").off("click");
             new PowerGemFuseReportGenerator().generate();
+        });
+    }
+
+    #bindSearchTeamEquipmentButton() {
+        $("#searchTeamEquipmentButton").on("click", () => {
+            $(".simulationButton").off("click");
+
+            const s = $("#searchName").val();
+            let searchName = "";
+            if (s) searchName = s as string;
+
+            let html = "";
+            html += "<table style='margin:auto;border-width:0;text-align:center;background-color:#888888;width:100%'>";
+            html += "<tbody id='equipmentStatusList'>";
+            html += "<tr>";
+            html += "<th style='background-color:#F8F0E0'>队员</th>";
+            html += "<th style='background-color:#F8F0E0'>名字</th>";
+            html += "<th style='background-color:#F8F0E0'>种类</th>";
+            html += "<th style='background-color:#F8F0E0'>效果</th>";
+            html += "<th style='background-color:#F8F0E0'>重量</th>";
+            html += "<th style='background-color:#F8F0E0'>耐久</th>";
+            html += "<th style='background-color:#F8F0E0'>威＋</th>";
+            html += "<th style='background-color:#F8F0E0'>重＋</th>";
+            html += "<th style='background-color:#F8F0E0'>幸＋</th>";
+            html += "<th style='background-color:#F8F0E0'>经验</th>";
+            html += "<th style='background-color:#F8F0E0'>位置</th>";
+            html += "</tr>";
+            html += "</tbody>";
+            html += "</table>";
+            $("#information").html(html).parent().hide();
+
+            const configs = TeamMemberLoader.loadTeamMembers();
+            const idList = configs.map(it => it.id!);
+            RoleEquipmentStatusStorage.getInstance()
+                .loads(idList)
+                .then(dataMap => {
+                    for (const config of configs) {
+                        const data = dataMap.get(config.id!);
+                        if (data === undefined) {
+                            continue;
+                        }
+                        const equipments: string[] = JSON.parse(data.json!);
+
+                        let html = "";
+                        let row = 0;
+
+                        const equipmentList = equipments
+                            .map(it => Equipment.parse(it))
+                            .sort(Equipment.sorter)
+                            .filter(it => it.fullName.includes(searchName));
+                        equipmentList.forEach(it => {
+                            html += "<tr>";
+                            if (row === 0) {
+                                html += "<td style='background-color:black;color:white;white-space:nowrap;font-weight:bold;vertical-align:center' " +
+                                    "rowspan='" + (equipmentList.length) + "'>" + config.name + "</td>";
+                            }
+                            html += "<td style='background-color:#E8E8D0;text-align:left'>" + it.fullName + "</td>";
+                            html += "<td style='background-color:#E8E8B0'>" + it.category + "</td>";
+                            html += "<td style='background-color:#E8E8D0'>" + it.power + "</td>";
+                            html += "<td style='background-color:#E8E8B0'>" + it.weight + "</td>";
+                            html += "<td style='background-color:#E8E8D0'>" + it.endure + "</td>";
+                            html += "<td style='background-color:#E8E8B0'>" + it.additionalPowerHtml + "</td>";
+                            html += "<td style='background-color:#E8E8D0'>" + it.additionalWeightHtml + "</td>";
+                            html += "<td style='background-color:#E8E8B0'>" + it.additionalLuckHtml + "</td>";
+                            html += "<td style='background-color:#E8E8D0'>" + it.experienceHTML + "</td>";
+                            html += "<td style='background-color:#E8E8B0'>" + it.location + "</td>";
+                            html += "</tr>";
+                            row++;
+                        });
+
+                        $("#equipmentStatusList").append($(html));
+                    }
+                    $("#information").parent().show();
+                });
         });
     }
 
