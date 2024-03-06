@@ -4,8 +4,8 @@ import PowerGemFuseReport from "./PowerGemFuseReport";
 
 class PowerGemFuseReportGenerator {
 
-    generate() {
-        this.#loadReports().then(reports => {
+    generate(includeExternal: boolean) {
+        this.#loadReports(includeExternal).then(reports => {
             if (reports.size === 1) {
                 let html = "<span style='font-size:200%;font-weight:bold;color:red'>" +
                     "没有镶嵌威力宝石的记录！" +
@@ -117,10 +117,10 @@ class PowerGemFuseReportGenerator {
     }
 
 
-    async #loadReports(): Promise<Map<string, PowerGemFuseReport>> {
+    async #loadReports(includeExternal: boolean): Promise<Map<string, PowerGemFuseReport>> {
         const reports = new Map<string, PowerGemFuseReport>();
         TeamMemberLoader.loadTeamMembers()
-            .filter(it => !it.external)
+            .filter(it => includeExternal || it.external === undefined || !it.external)
             .forEach(it => {
                 const report = new PowerGemFuseReport();
                 report.roleName = it.name!;

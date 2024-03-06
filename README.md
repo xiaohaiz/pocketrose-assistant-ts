@@ -1,5 +1,7 @@
 # pocketrose-assistant-ts
 
+### 版本 4.2.20-SNAPSHOT
+
 ### 版本 4.2.19
 
 1. 宠物管理中宠物资料表增加进退化相关宠物的编号。

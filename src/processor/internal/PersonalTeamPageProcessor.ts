@@ -64,6 +64,11 @@ abstract class PersonalTeamPageProcessor extends PageProcessorCredentialSupport 
         html += "<table style='background-color:transparent;margin:auto;border-spacing:0;border-width:0'>";
         html += "<tbody>";
         html += "<tr>";
+        html += "<td colspan='6' style='text-align:center'>";
+        html += "<input type='checkbox' id='includeExternal' checked>是否包含编外队员";
+        html += "</td>";
+        html += "</tr>";
+        html += "<tr>";
         html += "<td>";
         html += "<button role='button' id='updateEquipmentButton'>更新装备数据</button>";
         html += "</td>";
@@ -195,6 +200,9 @@ abstract class PersonalTeamPageProcessor extends PageProcessorCredentialSupport 
         $("#listEquipmentButton").on("click", () => {
             $(".simulationButton").off("click");
 
+            const includeExternal = $("#includeExternal").prop("checked") as boolean;
+
+
             let html = "";
             html += "<table style='margin:auto;border-width:0;text-align:center;background-color:#888888;width:100%'>";
             html += "<tbody id='equipmentStatusList'>";
@@ -215,7 +223,8 @@ abstract class PersonalTeamPageProcessor extends PageProcessorCredentialSupport 
             html += "</table>";
             $("#information").html(html).parent().hide();
 
-            const configs = TeamMemberLoader.loadTeamMembers();
+            const configs = TeamMemberLoader.loadTeamMembers()
+                .filter(it => includeExternal || it.external === undefined || !it.external);
             const idList = configs.map(it => it.id!);
             RoleEquipmentStatusStorage.getInstance()
                 .loads(idList)
@@ -263,6 +272,8 @@ abstract class PersonalTeamPageProcessor extends PageProcessorCredentialSupport 
         $("#listPetButton").on("click", () => {
             $(".simulationButton").off("click");
 
+            const includeExternal = $("#includeExternal").prop("checked") as boolean;
+
             let html = "";
             html += "<table style='margin:auto;border-width:0;text-align:center;background-color:#888888;width:100%'>";
             html += "<tbody id='petStatusList'>";
@@ -284,7 +295,8 @@ abstract class PersonalTeamPageProcessor extends PageProcessorCredentialSupport 
             html += "</table>";
             $("#information").html(html).parent().hide();
 
-            const configs = TeamMemberLoader.loadTeamMembers();
+            const configs = TeamMemberLoader.loadTeamMembers()
+                .filter(it => includeExternal || it.external === undefined || !it.external);
 
             const idList = configs.map(it => it.id!);
             RolePetStatusStorage.getInstance()
@@ -349,20 +361,28 @@ abstract class PersonalTeamPageProcessor extends PageProcessorCredentialSupport 
     #bindBankRecordButton() {
         $("#bankRecordButton").on("click", () => {
             $(".simulationButton").off("click");
-            new BankRecordReportGenerator().generate();
+
+            const includeExternal = $("#includeExternal").prop("checked") as boolean;
+
+            new BankRecordReportGenerator().generate(includeExternal);
         });
     }
 
     #bindPowerGemButton() {
         $("#powerGemButton").on("click", () => {
             $(".simulationButton").off("click");
-            new PowerGemFuseReportGenerator().generate();
+
+            const includeExternal = $("#includeExternal").prop("checked") as boolean;
+
+            new PowerGemFuseReportGenerator().generate(includeExternal);
         });
     }
 
     #bindSearchTeamEquipmentButton() {
         $("#searchTeamEquipmentButton").on("click", () => {
             $(".simulationButton").off("click");
+
+            const includeExternal = $("#includeExternal").prop("checked") as boolean;
 
             const s = $("#searchName").val();
             let searchName = "";
@@ -388,7 +408,9 @@ abstract class PersonalTeamPageProcessor extends PageProcessorCredentialSupport 
             html += "</table>";
             $("#information").html(html).parent().hide();
 
-            const configs = TeamMemberLoader.loadTeamMembers();
+            const configs = TeamMemberLoader.loadTeamMembers()
+                .filter(it => includeExternal || it.external === undefined || !it.external);
+
             const idList = configs.map(it => it.id!);
             RoleEquipmentStatusStorage.getInstance()
                 .loads(idList)
@@ -438,6 +460,8 @@ abstract class PersonalTeamPageProcessor extends PageProcessorCredentialSupport 
         $("#searchTeamPetButton").on("click", () => {
             $(".simulationButton").off("click");
 
+            const includeExternal = $("#includeExternal").prop("checked") as boolean;
+
             const s = $("#searchName").val();
             let searchName = "";
             if (s) searchName = s as string;
@@ -463,7 +487,8 @@ abstract class PersonalTeamPageProcessor extends PageProcessorCredentialSupport 
             html += "</table>";
             $("#information").html(html).parent().hide();
 
-            const configs = TeamMemberLoader.loadTeamMembers();
+            const configs = TeamMemberLoader.loadTeamMembers()
+                .filter(it => includeExternal || it.external === undefined || !it.external);
 
             const idList = configs.map(it => it.id!);
             RolePetStatusStorage.getInstance()
