@@ -511,7 +511,11 @@ function doRenderPetProfile(code: string) {
     html += "<tr style='background-color:black;color:wheat;font-weight:bold;text-align:left'>";
     html += "<td colspan='16' style='height:64px'>";
     for (const it of MonsterRelationLoader.getPetRelations(parseInt(profile.code!))) {
-        html += MonsterProfileLoader.load(it)?.imageHtml;
+        const monsterProfile = MonsterProfileLoader.load(it);
+        if (monsterProfile !== null) {
+            html += monsterProfile.imageHtml;
+            html += monsterProfile.code;
+        }
     }
     html += "</td>";
     html += "</tr>";
