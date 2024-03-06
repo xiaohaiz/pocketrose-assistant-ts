@@ -64,6 +64,11 @@ abstract class PersonalTeamPageProcessor extends PageProcessorCredentialSupport 
         html += "<table style='background-color:transparent;margin:auto;border-spacing:0;border-width:0'>";
         html += "<tbody>";
         html += "<tr>";
+        html += "<td colspan='6' style='text-align:center'>";
+        html += "<input type='checkbox' id='includeExternal' checked>是否包含编外队员";
+        html += "</td>";
+        html += "</tr>";
+        html += "<tr>";
         html += "<td>";
         html += "<button role='button' id='updateEquipmentButton'>更新装备数据</button>";
         html += "</td>";
