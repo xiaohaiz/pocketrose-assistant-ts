@@ -212,6 +212,7 @@ async function doProcessBattleVerificationError(credential: Credential, html: st
     const record = new BattleRecord();
     record.id = credential.id;
     record.html = errMsg;
+    record.validationCodeFailed = true;
     await BattleRecordStorage.getInstance().write(record);
 
     $("#battleMenu").html("" +

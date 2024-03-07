@@ -232,6 +232,7 @@ class TownDashboardLayout006 extends TownDashboardLayout {
                         const record = new BattleRecord();
                         record.id = credential.id;
                         record.html = errMsg;
+                        record.validationCodeFailed = true;
                         BattleRecordStorage.getInstance().write(record).then();
 
                         $("#battleMenu").html("" +
