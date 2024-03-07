@@ -24,6 +24,7 @@ class BattleRecordStorage {
                         const record = new BattleRecord();
                         record.id = request.result.id;
                         record.html = request.result.html;
+                        record.harvestList = request.result.harvestList;
                         resolve(record);
                     } else {
                         reject();
