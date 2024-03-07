@@ -1,5 +1,6 @@
 import _ from "lodash";
 import StringUtils from "../../util/StringUtils";
+import SetupLoader from "../config/SetupLoader";
 import BattleDeclarationManager from "./BattleDeclarationManager";
 import BattlePage from "./BattlePage";
 
@@ -319,13 +320,16 @@ function generateBattleReport(battleTable: JQuery, page: BattlePage) {
         .find("> p:first")
         .html();
 
-    // noinspection HtmlDeprecatedTag,HtmlDeprecatedAttribute,XmlDeprecatedElement
-    let report = "<b><font size='3'>" + p1 + "</font></b><br><b><font size='3'>" + p2 + "</font></b><br>" + p3;
-    while (true) {
-        if (!report.includes("<br><br>")) {
-            break;
+    let report = "";
+    if (!SetupLoader.isQuietBattleModeEnabled()) {
+        // noinspection HtmlDeprecatedTag,HtmlDeprecatedAttribute,XmlDeprecatedElement
+        report = "<b><font size='3'>" + p1 + "</font></b><br><b><font size='3'>" + p2 + "</font></b><br>" + p3;
+        while (true) {
+            if (!report.includes("<br><br>")) {
+                break;
+            }
+            report = _.replace(report, "<br><br>", "<br>");
         }
-        report = _.replace(report, "<br><br>", "<br>");
     }
 
     let brs: string;
@@ -360,10 +364,13 @@ function generateBattleReport(battleTable: JQuery, page: BattlePage) {
         report = "<p style='font-weight:bold'><font size='3'>" + pu + "</font></p>" + report;
     }
 
-    report = "<p>" + page.roleImageHtml +
-        (page.petImageHtml === undefined ? "" : page.petImageHtml) +
-        "&nbsp;&nbsp;&nbsp;<b style='font-size:300%;color:red'>VS</b>&nbsp;&nbsp;&nbsp;" +
-        page.monsterImageHtml + "</p>" + report;
+    // 展现战斗双方
+    if (!SetupLoader.isQuietBattleModeEnabled()) {
+        report = "<p>" + page.roleImageHtml +
+            (page.petImageHtml === undefined ? "" : page.petImageHtml) +
+            "&nbsp;&nbsp;&nbsp;<b style='font-size:300%;color:red'>VS</b>&nbsp;&nbsp;&nbsp;" +
+            page.monsterImageHtml + "</p>" + report;
+    }
 
 
     if (page.battleResult !== "战胜" && page.zodiacBattle) {

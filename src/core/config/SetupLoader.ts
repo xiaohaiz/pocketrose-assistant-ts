@@ -190,7 +190,7 @@ class SetupLoader {
         return StorageUtils.getBoolean("_pa_048");
     }
 
-    static isQuietModeEnabled(): boolean {
+    static isQuietBattleModeEnabled(): boolean {
         return StorageUtils.getBoolean("_pa_057");
     }
 
