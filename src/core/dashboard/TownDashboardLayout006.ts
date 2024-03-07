@@ -169,8 +169,6 @@ class TownDashboardLayout006 extends TownDashboardLayout {
         BattleRecordStorage.getInstance().load(credential.id).then(record => {
             const lastBattle = record.html!;
 
-            console.log("x")
-            console.log(record.harvestList)
             // 提示入手 sephirothy
             let harvest = record.harvestList;
             if (harvest !== undefined && harvest.length > 0) {
