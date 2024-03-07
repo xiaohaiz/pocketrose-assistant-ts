@@ -63,6 +63,7 @@ class BattleProcessor {
         const record = new BattleRecord();
         record.id = this.#credential.id;
         record.html = this.obtainPage.reportHtml;
+        record.harvestList = this.obtainPage.harvestList;
         await BattleRecordStorage.getInstance().write(record);
 
         // 分析入手的结果

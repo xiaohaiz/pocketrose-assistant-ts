@@ -402,6 +402,20 @@ function doRenderMenu(credential: Credential, page: TownDashboardPage) {
 
     // ------------------------------------------------------------------------
     // 增加皇宫任务的通知栏
+    // sephirothy: 增加入手信息栏
+    // ------------------------------------------------------------------------
+    $("#messageNotification")
+        .parent()
+        .before("" +
+            "<tr style='display:none'>" +
+            "<td colspan='4' " +
+            "id='harvestInfo' " +
+            "style='background-color:#F8F0E0;text-align:center;font-weight:bold'></td>" +
+            "</tr>" +
+            "");
+
+    // ------------------------------------------------------------------------
+    // 增加皇宫任务的通知栏
     // ------------------------------------------------------------------------
     $("#messageNotification")
         .parent()

@@ -190,6 +190,10 @@ class SetupLoader {
         return StorageUtils.getBoolean("_pa_048");
     }
 
+    static isQuietBattleModeEnabled(): boolean {
+        return StorageUtils.getBoolean("_pa_057");
+    }
+
 }
 
 export = SetupLoader;

@@ -168,6 +168,22 @@ class TownDashboardLayout006 extends TownDashboardLayout {
 
         BattleRecordStorage.getInstance().load(credential.id).then(record => {
             const lastBattle = record.html!;
+
+            console.log("x")
+            console.log(record.harvestList)
+            // 提示入手 sephirothy
+            let harvest = record.harvestList;
+            if (harvest !== undefined && harvest.length > 0) {
+                let harvestInfo = "";
+                for (const ht of harvest) {
+                    harvestInfo += ht;
+                }
+                harvestInfo = "<span style='color: red;font-size:200%'>" + harvestInfo + "</span>";
+                $("#harvestInfo").html(harvestInfo).parent().show();
+            } else {
+                $("#harvestInfo").html("").parent().hide();
+            }
+
             if (lastBattle.includes("吐故纳新，扶摇直上") && lastBattle.includes("孵化成功")) {
                 $("#battlePanel").css("background-color", "yellow");
             } else if (lastBattle.includes("吐故纳新，扶摇直上")) {

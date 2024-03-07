@@ -1,5 +1,7 @@
 # pocketrose-assistant-ts
 
+### 版本 4.2.21-SNAPSHOT
+
 ### 版本 4.2.20
 
 1. 团队面板中增加是否选择编外队员的选择框。

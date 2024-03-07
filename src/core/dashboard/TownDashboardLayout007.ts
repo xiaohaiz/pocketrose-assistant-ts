@@ -261,16 +261,15 @@ async function doProcessBattle(credential: Credential, html: string, currentBatt
     await processor.doProcess();
 
     $("#battlePanel").html(processor.obtainPage.reportHtml!);
-    if (processor.obtainPage.reportHtml!.includes("吐故纳新，扶摇直上") &&
-        processor.obtainPage.reportHtml!.includes("孵化成功")) {
+    if (processor.obtainPage.petLearnSpell && processor.obtainPage.eggBorn) {
         $("#battlePanel")
             .css("background-color", "wheat")
             .css("text-align", "yellow");
-    } else if (processor.obtainPage.reportHtml!.includes("吐故纳新，扶摇直上")) {
+    } else if (processor.obtainPage.petLearnSpell) {
         $("#battlePanel")
             .css("background-color", "wheat")
             .css("text-align", "center");
-    } else if (processor.obtainPage.reportHtml!.includes("孵化成功")) {
+    } else if (processor.obtainPage.eggBorn) {
         $("#battlePanel")
             .css("background-color", "skyblue")
             .css("text-align", "center");
