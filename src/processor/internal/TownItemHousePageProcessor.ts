@@ -13,10 +13,6 @@ import PageProcessorCredentialSupport from "../PageProcessorCredentialSupport";
 
 class TownItemHousePageProcessor extends PageProcessorCredentialSupport {
 
-    doLoadButtonStyles(): number[] {
-        return [10007, 10008];
-    }
-
     async doProcess(credential: Credential, context?: PageProcessorContext): Promise<void> {
         const page = await new TownItemHousePageParser().parse(PageUtils.currentPageHtml());
         this.#renderImmutablePage(credential, page);
@@ -160,7 +156,7 @@ class TownItemHousePageProcessor extends PageProcessorCredentialSupport {
                 html += "<td style='background-color:#E8E8D0'>";
                 if (equipment.isSellable) {
                     html += "<input type='button' value='出售' " +
-                        "id='sell_" + equipment.index! + "' class='mutableButton button-10007'>";
+                        "id='sell_" + equipment.index! + "' class='mutableButton'>";
                 } else {
                     html += PageUtils.generateInvisibleButton("#E8E8D0");
                 }
@@ -223,7 +219,7 @@ class TownItemHousePageProcessor extends PageProcessorCredentialSupport {
                 html += "<td style='background-color:#E8E8D0'>";
                 if (spaceCount > 0) {
                     html += "<input type='button' value='购买' " +
-                        "id='buy_" + merchandise.index! + "' class='dynamic_button_class button-10008'>";
+                        "id='buy_" + merchandise.index! + "' class='dynamic_button_class'>";
                 }
                 html += "</td>";
                 html += "<td style='background-color:#E0D0B0'>" + merchandise.nameHtml + "</td>";
