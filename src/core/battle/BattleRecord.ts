@@ -7,6 +7,22 @@ class BattleRecord {
     petSpellLearned?: boolean;      // 是否宠物学会新技能
     validationCodeFailed?: boolean; // 是否验证码选择错误
 
+    hasAdditionalNotification(): boolean {
+        if (this.harvestList && this.harvestList.length > 0) {
+            return true;
+        }
+        if (this.petEggHatched) {
+            return true;
+        }
+        if (this.petSpellLearned) {
+            return true;
+        }
+        if (this.validationCodeFailed) {
+            return true;
+        }
+        return false;
+    }
+
     asObject() {
         const obj = {};
         // @ts-ignore

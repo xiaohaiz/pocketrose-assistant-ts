@@ -170,14 +170,25 @@ class TownDashboardLayout006 extends TownDashboardLayout {
             const lastBattle = record.html!;
 
             // 提示入手 sephirothy
-            let harvest = record.harvestList;
-            if (harvest !== undefined && harvest.length > 0) {
-                let harvestInfo = "";
-                for (const ht of harvest) {
-                    harvestInfo += ht;
+            if (record.hasAdditionalNotification()) {
+                const additionalNotifications: string[] = [];
+                const harvestList = record.harvestList;
+                if (harvestList && harvestList.length > 0) {
+                    for (const ht of harvestList) {
+                        additionalNotifications.push("<span style='color:red;font-size:200%'>" + ht + "</span>");
+                    }
                 }
-                harvestInfo = "<span style='color: red;font-size:200%'>" + harvestInfo + "</span>";
-                $("#harvestInfo").html(harvestInfo).parent().show();
+                if (record.petEggHatched) {
+                    additionalNotifications.push("宠物蛋孵化成功！");
+                }
+                if (record.petSpellLearned) {
+                    additionalNotifications.push("宠物学会了新技能！");
+                }
+                if (record.validationCodeFailed) {
+                    additionalNotifications.push("选择验证码错误！");
+                }
+                const anHtml = _.join(additionalNotifications, "<br>");
+                $("#harvestInfo").html(anHtml).parent().show();
             } else {
                 $("#harvestInfo").html("").parent().hide();
             }
