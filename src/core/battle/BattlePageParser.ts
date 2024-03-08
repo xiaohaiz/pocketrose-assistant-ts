@@ -371,7 +371,7 @@ function generateBattleReport(battleTable: JQuery, page: BattlePage) {
 
     // 展现战斗双方
     if (!SetupLoader.isQuietBattleModeEnabled()) {
-        if (loseBattle) {
+        if (loseBattle && SetupLoader.isWinnerLeftEnabled()) {
             report = "<p>" + page.monsterImageHtml +
                 "&nbsp;&nbsp;&nbsp;<b style='font-size:300%;color:red'>VS</b>&nbsp;&nbsp;&nbsp;" +
                 page.roleImageHtml +
