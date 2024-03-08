@@ -206,13 +206,14 @@ class TownDashboardLayout007 extends TownDashboardLayout {
 
 async function doProcessBattleVerificationError(credential: Credential, html: string) {
     let errMsg = $(html).find("font:first").html();
+    const validationCodeFailed = errMsg.includes("验证码");
     errMsg = "<p style='color:red;font-size:200%'>" + errMsg + "</p>";
     $("#battlePanel").html(errMsg);
 
     const record = new BattleRecord();
     record.id = credential.id;
     record.html = errMsg;
-    record.validationCodeFailed = true;
+    record.validationCodeFailed = validationCodeFailed;
     await BattleRecordStorage.getInstance().write(record);
 
     $("#battleMenu").html("" +

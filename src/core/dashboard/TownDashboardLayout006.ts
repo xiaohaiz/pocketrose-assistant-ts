@@ -226,13 +226,14 @@ class TownDashboardLayout006 extends TownDashboardLayout {
                 NetworkUtils.post("battle.cgi", request).then(html => {
                     if (html.includes("ERROR !")) {
                         let errMsg = $(html).find("font:first").html();
+                        const validationCodeFailed = errMsg.includes("验证码");
                         errMsg = "<p style='color:red;font-size:200%'>" + errMsg + "</p>";
                         $("#battlePanel").html(errMsg);
 
                         const record = new BattleRecord();
                         record.id = credential.id;
                         record.html = errMsg;
-                        record.validationCodeFailed = true;
+                        record.validationCodeFailed = validationCodeFailed;
                         BattleRecordStorage.getInstance().write(record).then();
 
                         $("#battleMenu").html("" +
