@@ -21,8 +21,11 @@ class EquipmentLocalStorage {
     async triggerUpdateEquipmentStatus(battleCount: number): Promise<void> {
         return await (() => {
             return new Promise<void>(resolve => {
-                // 自动保存启用时，战数尾数为47/97时，触发装备保存
-                const doStorage = (battleCount % 100 === 47) || (battleCount % 100 === 97);
+                // 自动保存启用时，战数尾数为13/47/79/97时，触发装备保存
+                const doStorage = (battleCount % 100 === 13)
+                    || (battleCount % 100 === 47)
+                    || (battleCount % 100 === 79)
+                    || (battleCount % 100 === 97);
                 if (doStorage) {
                     CommentBoard.writeMessage("<br>开始更新装备状态......");
                     this.updateEquipmentStatus().then(() => resolve());
