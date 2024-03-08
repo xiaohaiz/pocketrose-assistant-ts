@@ -169,17 +169,26 @@ class TownDashboardLayout006 extends TownDashboardLayout {
         BattleRecordStorage.getInstance().load(credential.id).then(record => {
             const lastBattle = record.html!;
 
-            console.log("x")
-            console.log(record.harvestList)
             // 提示入手 sephirothy
-            let harvest = record.harvestList;
-            if (harvest !== undefined && harvest.length > 0) {
-                let harvestInfo = "";
-                for (const ht of harvest) {
-                    harvestInfo += ht;
+            if (record.hasAdditionalNotification()) {
+                const additionalNotifications: string[] = [];
+                const harvestList = record.harvestList;
+                if (harvestList && harvestList.length > 0) {
+                    for (const ht of harvestList) {
+                        additionalNotifications.push("<span style='color:red;font-size:200%'>" + ht + "</span>");
+                    }
                 }
-                harvestInfo = "<span style='color: red;font-size:200%'>" + harvestInfo + "</span>";
-                $("#harvestInfo").html(harvestInfo).parent().show();
+                if (record.petEggHatched) {
+                    additionalNotifications.push("<span style='color:blue;font-size:200%'>" + "宠物蛋孵化成功！" + "</span>");
+                }
+                if (record.petSpellLearned) {
+                    additionalNotifications.push("<span style='color:blue;font-size:200%'>" + "宠物学会了新技能！" + "</span>");
+                }
+                if (record.validationCodeFailed) {
+                    additionalNotifications.push("<span style='color:red;font-size:200%'>" + "选择验证码错误！" + "</span>");
+                }
+                const anHtml = _.join(additionalNotifications, "<br>");
+                $("#harvestInfo").html(anHtml).parent().show();
             } else {
                 $("#harvestInfo").html("").parent().hide();
             }
@@ -228,12 +237,14 @@ class TownDashboardLayout006 extends TownDashboardLayout {
                 NetworkUtils.post("battle.cgi", request).then(html => {
                     if (html.includes("ERROR !")) {
                         let errMsg = $(html).find("font:first").html();
+                        const validationCodeFailed = errMsg.includes("验证码");
                         errMsg = "<p style='color:red;font-size:200%'>" + errMsg + "</p>";
                         $("#battlePanel").html(errMsg);
 
                         const record = new BattleRecord();
                         record.id = credential.id;
                         record.html = errMsg;
+                        record.validationCodeFailed = validationCodeFailed;
                         BattleRecordStorage.getInstance().write(record).then();
 
                         $("#battleMenu").html("" +

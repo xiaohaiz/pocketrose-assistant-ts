@@ -332,12 +332,17 @@ function generateBattleReport(battleTable: JQuery, page: BattlePage) {
         }
     }
 
+    let loseBattle = false;
     let brs: string;
     if (page.battleResult === "战胜") {
         brs = BattleDeclarationManager.randomWinDeclaration(page.monsterNameHtml);
     } else if (page.battleResult === "战败") {
+        loseBattle = true;
         brs = BattleDeclarationManager.randomLoseDeclaration(page.monsterNameHtml);
     } else {
+        if (page.zodiacBattle) {
+            loseBattle = true;
+        }
         brs = BattleDeclarationManager.randomDrawDeclaration(page.monsterNameHtml);
     }
     // noinspection HtmlDeprecatedTag,HtmlDeprecatedAttribute,XmlDeprecatedElement
@@ -366,10 +371,17 @@ function generateBattleReport(battleTable: JQuery, page: BattlePage) {
 
     // 展现战斗双方
     if (!SetupLoader.isQuietBattleModeEnabled()) {
-        report = "<p>" + page.roleImageHtml +
-            (page.petImageHtml === undefined ? "" : page.petImageHtml) +
-            "&nbsp;&nbsp;&nbsp;<b style='font-size:300%;color:red'>VS</b>&nbsp;&nbsp;&nbsp;" +
-            page.monsterImageHtml + "</p>" + report;
+        if (loseBattle && SetupLoader.isWinnerLeftEnabled()) {
+            report = "<p>" + page.monsterImageHtml +
+                "&nbsp;&nbsp;&nbsp;<b style='font-size:300%;color:red'>VS</b>&nbsp;&nbsp;&nbsp;" +
+                page.roleImageHtml +
+                (page.petImageHtml === undefined ? "" : page.petImageHtml) + "</p>" + report;
+        } else {
+            report = "<p>" + page.roleImageHtml +
+                (page.petImageHtml === undefined ? "" : page.petImageHtml) +
+                "&nbsp;&nbsp;&nbsp;<b style='font-size:300%;color:red'>VS</b>&nbsp;&nbsp;&nbsp;" +
+                page.monsterImageHtml + "</p>" + report;
+        }
     }
 
 

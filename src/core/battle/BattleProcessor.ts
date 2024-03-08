@@ -64,6 +64,8 @@ class BattleProcessor {
         record.id = this.#credential.id;
         record.html = this.obtainPage.reportHtml;
         record.harvestList = this.obtainPage.harvestList;
+        record.petEggHatched = this.obtainPage.eggBorn;
+        record.petSpellLearned = this.obtainPage.petLearnSpell;
         await BattleRecordStorage.getInstance().write(record);
 
         // 分析入手的结果

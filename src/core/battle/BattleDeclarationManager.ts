@@ -37,11 +37,11 @@ const WIN_DECLARATIONS: string[] = [
 ];
 
 const LOSE_DECLARATIONS: string[] = [
-    "<span style='background-color:darkorange'>涕泗横流</span>，被%MONSTER%暴揍一顿！",
-    "<span style='background-color:darkorange'>如丧考妣</span>，竟然会败给%MONSTER%！",
-    "<span style='background-color:darkorange'>哀毁骨立</span>，%MONSTER%默默的看着你！",
-    "<span style='background-color:darkorange'>捶胸顿足</span>，%MONSTER%你给我等着！",
-    "<span style='background-color:darkorange'>辙乱旗靡</span>，能逃过%MONSTER%的追杀？",
+    "涕泗横流，被%MONSTER%暴揍一顿！",
+    "如丧考妣，竟然会败给%MONSTER%！",
+    "哀毁骨立，%MONSTER%默默的看着你！",
+    "捶胸顿足，%MONSTER%你给我等着！",
+    "辙乱旗靡，能逃过%MONSTER%的追杀？",
 ];
 
 const DRAW_DECLARATIONS: string[] = [
