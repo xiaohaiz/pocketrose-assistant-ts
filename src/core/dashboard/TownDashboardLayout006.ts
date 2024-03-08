@@ -179,10 +179,10 @@ class TownDashboardLayout006 extends TownDashboardLayout {
                     }
                 }
                 if (record.petEggHatched) {
-                    additionalNotifications.push("<span style='color:red;font-size:200%'>" + "宠物蛋孵化成功！" + "</span>");
+                    additionalNotifications.push("<span style='color:blue;font-size:200%'>" + "宠物蛋孵化成功！" + "</span>");
                 }
                 if (record.petSpellLearned) {
-                    additionalNotifications.push("<span style='color:red;font-size:200%'>" + "宠物学会了新技能！" + "</span>");
+                    additionalNotifications.push("<span style='color:blue;font-size:200%'>" + "宠物学会了新技能！" + "</span>");
                 }
                 if (record.validationCodeFailed) {
                     additionalNotifications.push("<span style='color:red;font-size:200%'>" + "选择验证码错误！" + "</span>");
