@@ -194,6 +194,10 @@ class SetupLoader {
         return StorageUtils.getBoolean("_pa_057");
     }
 
+    static isWinnerLeftEnabled(): boolean {
+        return StorageUtils.getBoolean("_pa_058");
+    }
+
 }
 
 export = SetupLoader;
