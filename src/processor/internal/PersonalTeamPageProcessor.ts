@@ -1,8 +1,6 @@
 import _ from "lodash";
 import BankRecordReportGenerator from "../../core/bank/BankRecordReportGenerator";
-import Equipment from "../../core/equipment/Equipment";
 import EquipmentLocalStorage from "../../core/equipment/EquipmentLocalStorage";
-import RoleEquipmentStatusStorage from "../../core/equipment/RoleEquipmentStatusStorage";
 import PowerGemFuseReportGenerator from "../../core/forge/PowerGemFuseReportGenerator";
 import MonsterPageUtils from "../../core/monster/MonsterPageUtils";
 import MonsterProfileLoader from "../../core/monster/MonsterProfileLoader";
@@ -324,78 +322,11 @@ abstract class PersonalTeamPageProcessor extends PageProcessorCredentialSupport 
     #bindSearchTeamEquipmentButton() {
         $("#searchTeamEquipmentButton").on("click", () => {
             $(".simulationButton").off("click");
-
             const includeExternal = $("#includeExternal").prop("checked") as boolean;
-
             const s = $("#searchName").val();
             let searchName = "";
             if (s) searchName = s as string;
-
-            let html = "";
-            html += "<table style='margin:auto;border-width:0;text-align:center;background-color:#888888;width:100%'>";
-            html += "<tbody id='equipmentStatusList'>";
-            html += "<tr>";
-            html += "<th style='background-color:#F8F0E0'>队员</th>";
-            html += "<th style='background-color:#F8F0E0'>名字</th>";
-            html += "<th style='background-color:#F8F0E0'>种类</th>";
-            html += "<th style='background-color:#F8F0E0'>效果</th>";
-            html += "<th style='background-color:#F8F0E0'>重量</th>";
-            html += "<th style='background-color:#F8F0E0'>耐久</th>";
-            html += "<th style='background-color:#F8F0E0'>威＋</th>";
-            html += "<th style='background-color:#F8F0E0'>重＋</th>";
-            html += "<th style='background-color:#F8F0E0'>幸＋</th>";
-            html += "<th style='background-color:#F8F0E0'>经验</th>";
-            html += "<th style='background-color:#F8F0E0'>位置</th>";
-            html += "</tr>";
-            html += "</tbody>";
-            html += "</table>";
-            $("#information").html(html).parent().hide();
-
-            const configs = TeamMemberLoader.loadTeamMembers()
-                .filter(it => includeExternal || it.external === undefined || !it.external);
-
-            const idList = configs.map(it => it.id!);
-            RoleEquipmentStatusStorage.getInstance()
-                .loads(idList)
-                .then(dataMap => {
-                    for (const config of configs) {
-                        const data = dataMap.get(config.id!);
-                        if (data === undefined) {
-                            continue;
-                        }
-                        const equipments: string[] = JSON.parse(data.json!);
-
-                        let html = "";
-                        let row = 0;
-
-                        const equipmentList = equipments
-                            .map(it => Equipment.parse(it))
-                            .sort(Equipment.sorter)
-                            .filter(it => it.fullName.includes(searchName));
-                        equipmentList.forEach(it => {
-                            html += "<tr>";
-                            if (row === 0) {
-                                html += "<td style='background-color:black;color:white;white-space:nowrap;font-weight:bold;vertical-align:center' " +
-                                    "rowspan='" + (equipmentList.length) + "'>" + config.name + "</td>";
-                            }
-                            html += "<td style='background-color:#E8E8D0;text-align:left'>" + it.fullName + "</td>";
-                            html += "<td style='background-color:#E8E8B0'>" + it.category + "</td>";
-                            html += "<td style='background-color:#E8E8D0'>" + it.power + "</td>";
-                            html += "<td style='background-color:#E8E8B0'>" + it.weight + "</td>";
-                            html += "<td style='background-color:#E8E8D0'>" + it.endure + "</td>";
-                            html += "<td style='background-color:#E8E8B0'>" + it.additionalPowerHtml + "</td>";
-                            html += "<td style='background-color:#E8E8D0'>" + it.additionalWeightHtml + "</td>";
-                            html += "<td style='background-color:#E8E8B0'>" + it.additionalLuckHtml + "</td>";
-                            html += "<td style='background-color:#E8E8D0'>" + it.experienceHTML + "</td>";
-                            html += "<td style='background-color:#E8E8B0'>" + it.location + "</td>";
-                            html += "</tr>";
-                            row++;
-                        });
-
-                        $("#equipmentStatusList").append($(html));
-                    }
-                    $("#information").parent().show();
-                });
+            new TeamEquipmentReportGenerator(includeExternal, searchName).generate();
         });
     }
 
