@@ -113,6 +113,18 @@ function doBind(credential: Credential, bindBattle?: boolean, page?: TownDashboa
             $("#personalButton").trigger("click");
             return;
         }
+
+        if (key === "u") {
+            $("option[value='PETSTATUS']").prop("selected", true);
+            $("#personalButton").trigger("click");
+            return;
+        }
+
+        if (key === "i") {
+            $("option[value='STATUS_PRINT']").prop("selected", true);
+            $("#personalButton").trigger("click");
+            return;
+        }
     });
 }
 
