@@ -93,6 +93,10 @@ abstract class PersonalTeamPageProcessor extends PageProcessorCredentialSupport 
         html += "<input type='text' id='searchName' size='15' maxlength='40' spellcheck='false'>";
         html += "<input type='button' id='searchTeamEquipmentButton' value='查找团队装备'>";
         html += "<input type='button' id='searchTeamPetButton' value='查找团队宠物'>";
+        html += "</td>";
+        html += "</tr>";
+        html += "<tr>";
+        html += "<td colspan='6' style='text-align:center'>";
         html += "<input type='button' id='searchTeamNonFullExperienceEquipmentButton' value='经验未满装备'>";
         html += "</td>";
         html += "</tr>";
@@ -558,10 +562,6 @@ abstract class PersonalTeamPageProcessor extends PageProcessorCredentialSupport 
 
             const includeExternal = $("#includeExternal").prop("checked") as boolean;
 
-            const s = $("#searchName").val();
-            let searchName = "";
-            if (s) searchName = s as string;
-
             let html = "";
             html += "<table style='margin:auto;border-width:0;text-align:center;background-color:#888888;width:100%'>";
             html += "<tbody id='equipmentStatusList'>";
@@ -602,7 +602,6 @@ abstract class PersonalTeamPageProcessor extends PageProcessorCredentialSupport 
                         const equipmentList = equipments
                             .map(it => Equipment.parse(it))
                             .sort(Equipment.sorter)
-                            .filter(it => it.fullName.includes(searchName))
                             .filter(it => it.fullExperienceRatio >= 0 && it.fullExperienceRatio < 1);
                         equipmentList.forEach(it => {
                             html += "<tr>";
