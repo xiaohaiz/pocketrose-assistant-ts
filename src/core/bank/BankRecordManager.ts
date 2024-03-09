@@ -16,8 +16,8 @@ class BankRecordManager {
     async triggerUpdateBankRecord(battleCount: number): Promise<void> {
         return await (() => {
             return new Promise<void>(resolve => {
-                // 战数尾数为79时，触发资产更新
-                const doUpdate = (battleCount % 100 === 79);
+                // 战数尾数为73时，触发资产更新
+                const doUpdate = (battleCount % 100 === 73);
                 if (doUpdate) {
                     this.updateBankRecord().then(() => resolve());
                 } else {
