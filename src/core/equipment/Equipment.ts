@@ -99,6 +99,9 @@ class Equipment {
         equipment.additionalLuck = _.parseInt(ss[7]);
         equipment.experience = _.parseInt(ss[8]);
         equipment.location = ss[9];
+        if (ss.length > 10) {
+            equipment.using = (ss[10] === "true");
+        }
         return equipment;
     }
 

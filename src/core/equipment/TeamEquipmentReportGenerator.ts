@@ -22,6 +22,7 @@ class TeamEquipmentReportGenerator {
         html += "<tbody id='equipmentStatusList'>";
         html += "<tr>";
         html += "<th style='background-color:#F8F0E0'>队员</th>";
+        html += "<th style='background-color:#F8F0E0'>装备</th>";
         html += "<th style='background-color:#F8F0E0'>名字</th>";
         html += "<th style='background-color:#F8F0E0'>种类</th>";
         html += "<th style='background-color:#F8F0E0'>效果</th>";
@@ -64,6 +65,7 @@ class TeamEquipmentReportGenerator {
                             html += "<td style='background-color:black;color:white;white-space:nowrap;font-weight:bold;vertical-align:center' " +
                                 "rowspan='" + (equipmentList.length) + "'>" + config.name + "</td>";
                         }
+                        html += "<td style='background-color:#E8E8B0'>" + it.usingHTML + "</td>";
                         html += "<td style='background-color:#E8E8D0;text-align:left'>" + it.fullName + "</td>";
                         html += "<td style='background-color:#E8E8B0'>" + it.category + "</td>";
                         html += "<td style='background-color:#E8E8D0'>" + it.power + "</td>";
