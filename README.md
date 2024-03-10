@@ -1,5 +1,7 @@
 # pocketrose-assistant-ts
 
+### 版本 4.2.25-SNAPSHOT
+
 ### 版本 4.2.24
 
 1. 团队面板中可以查询齐心装备。
