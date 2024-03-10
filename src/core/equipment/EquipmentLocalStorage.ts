@@ -67,6 +67,10 @@ class EquipmentLocalStorage {
                         s += equipment.experience;
                         s += "/";
                         s += equipment.location;
+                        if (equipment.using !== undefined) {
+                            s += "/";
+                            s += equipment.using;
+                        }
 
                         equipmentStatusList.push(s);
                     }

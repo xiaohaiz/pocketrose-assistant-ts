@@ -1,5 +1,7 @@
 # pocketrose-assistant-ts
 
+### 版本 4.2.24-SNAPSHOT
+
 ### 版本 4.2.23
 
 1. 自动触发资产记录更新的战数尾数由79调整为73。

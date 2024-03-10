@@ -20,19 +20,6 @@ class TeamEquipmentReportGenerator {
         let html = "";
         html += "<table style='margin:auto;border-width:0;text-align:center;background-color:#888888;width:100%'>";
         html += "<tbody id='equipmentStatusList'>";
-        html += "<tr>";
-        html += "<th style='background-color:#F8F0E0'>队员</th>";
-        html += "<th style='background-color:#F8F0E0'>名字</th>";
-        html += "<th style='background-color:#F8F0E0'>种类</th>";
-        html += "<th style='background-color:#F8F0E0'>效果</th>";
-        html += "<th style='background-color:#F8F0E0'>重量</th>";
-        html += "<th style='background-color:#F8F0E0'>耐久</th>";
-        html += "<th style='background-color:#F8F0E0'>威＋</th>";
-        html += "<th style='background-color:#F8F0E0'>重＋</th>";
-        html += "<th style='background-color:#F8F0E0'>幸＋</th>";
-        html += "<th style='background-color:#F8F0E0'>经验</th>";
-        html += "<th style='background-color:#F8F0E0'>位置</th>";
-        html += "</tr>";
         html += "</tbody>";
         html += "</table>";
         $("#information").html(html).parent().hide();
@@ -59,11 +46,28 @@ class TeamEquipmentReportGenerator {
                         .filter(it => this.#searchName === undefined || this.#searchName === "" || it.fullName.includes(this.#searchName))
                         .filter(it => this.#equipmentFilter === undefined || this.#equipmentFilter(it));
                     equipmentList.forEach(it => {
-                        html += "<tr>";
                         if (row === 0) {
+                            html += "<tr>";
+                            html += "<th style='background-color:skyblue'>队员</th>";
+                            html += "<th style='background-color:skyblue'>装备</th>";
+                            html += "<th style='background-color:skyblue'>名字</th>";
+                            html += "<th style='background-color:skyblue'>种类</th>";
+                            html += "<th style='background-color:skyblue'>效果</th>";
+                            html += "<th style='background-color:skyblue'>重量</th>";
+                            html += "<th style='background-color:skyblue'>耐久</th>";
+                            html += "<th style='background-color:skyblue'>威＋</th>";
+                            html += "<th style='background-color:skyblue'>重＋</th>";
+                            html += "<th style='background-color:skyblue'>幸＋</th>";
+                            html += "<th style='background-color:skyblue'>经验</th>";
+                            html += "<th style='background-color:skyblue'>位置</th>";
+                            html += "</tr>";
+                            html += "<tr>";
                             html += "<td style='background-color:black;color:white;white-space:nowrap;font-weight:bold;vertical-align:center' " +
                                 "rowspan='" + (equipmentList.length) + "'>" + config.name + "</td>";
+                        } else {
+                            html += "<tr>";
                         }
+                        html += "<td style='background-color:#E8E8B0'>" + it.usingHTML + "</td>";
                         html += "<td style='background-color:#E8E8D0;text-align:left'>" + it.fullName + "</td>";
                         html += "<td style='background-color:#E8E8B0'>" + it.category + "</td>";
                         html += "<td style='background-color:#E8E8D0'>" + it.power + "</td>";
