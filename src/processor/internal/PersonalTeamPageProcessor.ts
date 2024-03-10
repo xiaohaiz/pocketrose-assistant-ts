@@ -96,6 +96,21 @@ abstract class PersonalTeamPageProcessor extends PageProcessorCredentialSupport 
         html += "</tr>";
         html += "<tr>";
         html += "<td colspan='6' style='text-align:center'>";
+        html += "<input type='button' id='searchTeamSpecialEquipmentButton_A' value='神枪' style='color:red'>";
+        html += "<input type='button' id='searchTeamSpecialEquipmentButton_B' value='斧头' style='color:green'>";
+        html += "<input type='button' id='searchTeamSpecialEquipmentButton_C' value='神器' style='color:blue'>";
+        html += "<input type='button' id='searchTeamSpecialEquipmentButton_D' value='魔刀' style='color:red'>";
+        html += "<input type='button' id='searchTeamSpecialEquipmentButton_E' value='魔神器' style='color:green'>";
+        html += "<input type='button' id='searchTeamSpecialEquipmentButton_F' value='圣剑' style='color:blue'>";
+        html += "<input type='button' id='searchTeamSpecialEquipmentButton_G' value='重铠' style='color:red'>";
+        html += "<input type='button' id='searchTeamSpecialEquipmentButton_H' value='龟壳' style='color:green'>";
+        html += "<input type='button' id='searchTeamSpecialEquipmentButton_I' value='魔盔' style='color:blue'>";
+        html += "<input type='button' id='searchTeamSpecialEquipmentButton_J' value='神冠' style='color:red'>";
+        html += "<input type='button' id='searchTeamSpecialEquipmentButton_K' value='龙' style='color:green'>";
+        html += "</td>";
+        html += "</tr>";
+        html += "<tr>";
+        html += "<td colspan='6' style='text-align:center'>";
         html += "<input type='button' id='searchTeamNonFullExperienceEquipmentButton' value='经验未满装备'>";
         html += "<input type='button' id='searchTeamUsingEquipmentButton' value='使用中的装备'>";
         html += "<input type='button' id='searchTeamStarEquipmentButton' value='有齐心的装备'>";
@@ -156,6 +171,17 @@ abstract class PersonalTeamPageProcessor extends PageProcessorCredentialSupport 
         this.#bindSearchTeamUsingEquipmentButton();
         this.#bindSearchTeamStarEquipmentButton();
         this.#bindSearchTeamPowerGemButton();
+        this.#bindSearchTeamSpecialEquipmentButton_A();
+        this.#bindSearchTeamSpecialEquipmentButton_B();
+        this.#bindSearchTeamSpecialEquipmentButton_C();
+        this.#bindSearchTeamSpecialEquipmentButton_D();
+        this.#bindSearchTeamSpecialEquipmentButton_E();
+        this.#bindSearchTeamSpecialEquipmentButton_F();
+        this.#bindSearchTeamSpecialEquipmentButton_G();
+        this.#bindSearchTeamSpecialEquipmentButton_H();
+        this.#bindSearchTeamSpecialEquipmentButton_I();
+        this.#bindSearchTeamSpecialEquipmentButton_J();
+        this.#bindSearchTeamSpecialEquipmentButton_K();
 
         PageUtils.onEscapePressed(() => $("#returnButton").trigger("click"));
     }
@@ -473,6 +499,113 @@ abstract class PersonalTeamPageProcessor extends PageProcessorCredentialSupport 
             new TeamEquipmentReportGenerator(includeExternal, "威力宝石").generate();
         });
     }
+
+    #bindSearchTeamSpecialEquipmentButton_A() {
+        $("#searchTeamSpecialEquipmentButton_A").on("click", () => {
+            $(".simulationButton").off("click");
+            const includeExternal = $("#includeExternal").prop("checked") as boolean;
+            new TeamEquipmentReportGenerator(includeExternal, "神枪 永恒").generate();
+        });
+    }
+
+    #bindSearchTeamSpecialEquipmentButton_B() {
+        $("#searchTeamSpecialEquipmentButton_B").on("click", () => {
+            $(".simulationButton").off("click");
+            const includeExternal = $("#includeExternal").prop("checked") as boolean;
+            new TeamEquipmentReportGenerator(includeExternal, "霸邪斧 天煌").generate();
+        });
+    }
+
+    #bindSearchTeamSpecialEquipmentButton_C() {
+        $("#searchTeamSpecialEquipmentButton_C").on("click", () => {
+            $(".simulationButton").off("click");
+            const includeExternal = $("#includeExternal").prop("checked") as boolean;
+            new TeamEquipmentReportGenerator(includeExternal, "神器 苍穹").generate();
+        });
+    }
+
+    #bindSearchTeamSpecialEquipmentButton_D() {
+        $("#searchTeamSpecialEquipmentButton_D").on("click", () => {
+            $(".simulationButton").off("click");
+            const includeExternal = $("#includeExternal").prop("checked") as boolean;
+            new TeamEquipmentReportGenerator(includeExternal, "魔刀 哭杀").generate();
+        });
+    }
+
+    #bindSearchTeamSpecialEquipmentButton_E() {
+        $("#searchTeamSpecialEquipmentButton_E").on("click", () => {
+            $(".simulationButton").off("click");
+            const includeExternal = $("#includeExternal").prop("checked") as boolean;
+            new TeamEquipmentReportGenerator(includeExternal, "魔神器 幻空").generate();
+        });
+    }
+
+    #bindSearchTeamSpecialEquipmentButton_F() {
+        $("#searchTeamSpecialEquipmentButton_F").on("click", () => {
+            $(".simulationButton").off("click");
+            const includeExternal = $("#includeExternal").prop("checked") as boolean;
+            new TeamEquipmentReportGenerator(includeExternal, "真·圣剑 苍白的正义").generate();
+        });
+    }
+
+    #bindSearchTeamSpecialEquipmentButton_G() {
+        $("#searchTeamSpecialEquipmentButton_G").on("click", () => {
+            $(".simulationButton").off("click");
+            const includeExternal = $("#includeExternal").prop("checked") as boolean;
+            new TeamEquipmentReportGenerator(
+                includeExternal,
+                undefined,
+                equipment => {
+                    const name = equipment.fullName;
+                    return name.includes("千幻碧水猿洛克奇斯")
+                        || name.includes("地纹玄甲龟斯特奥特斯")
+                        || name.includes("幽冥黑鳞蟒罗尼科斯")
+                        || name.includes("火睛混沌兽哈贝达")
+                        || name.includes("羽翅圣光虎阿基勒斯")
+                        || name.includes("金翅追日鹰庞塔雷斯")
+                        || name.includes("风翼三足凤纳托利斯");
+                }).generate();
+        });
+    }
+
+    #bindSearchTeamSpecialEquipmentButton_H() {
+        $("#searchTeamSpecialEquipmentButton_H").on("click", () => {
+            $(".simulationButton").off("click");
+            const includeExternal = $("#includeExternal").prop("checked") as boolean;
+            new TeamEquipmentReportGenerator(includeExternal, "圣皇铠甲 天威").generate();
+        });
+    }
+
+    #bindSearchTeamSpecialEquipmentButton_I() {
+        $("#searchTeamSpecialEquipmentButton_I").on("click", () => {
+            $(".simulationButton").off("click");
+            const includeExternal = $("#includeExternal").prop("checked") as boolean;
+            new TeamEquipmentReportGenerator(includeExternal, "魔盔 虚无").generate();
+        });
+    }
+
+    #bindSearchTeamSpecialEquipmentButton_J() {
+        $("#searchTeamSpecialEquipmentButton_J").on("click", () => {
+            $(".simulationButton").off("click");
+            const includeExternal = $("#includeExternal").prop("checked") as boolean;
+            new TeamEquipmentReportGenerator(includeExternal, "神冠 灵通").generate();
+        });
+    }
+
+    #bindSearchTeamSpecialEquipmentButton_K() {
+        $("#searchTeamSpecialEquipmentButton_K").on("click", () => {
+            $(".simulationButton").off("click");
+            const includeExternal = $("#includeExternal").prop("checked") as boolean;
+            new TeamEquipmentReportGenerator(
+                includeExternal,
+                undefined,
+                equipment => {
+                    const name = equipment.fullName;
+                    return name === "龙" || name === "齐心★龙";
+                }).generate();
+        });
+    }
+
 
     #bindSimulationButton(allPetList: Pet[]) {
         allPetList.forEach(it => {
