@@ -98,6 +98,7 @@ abstract class PersonalTeamPageProcessor extends PageProcessorCredentialSupport 
         html += "<td colspan='6' style='text-align:center'>";
         html += "<input type='button' id='searchTeamNonFullExperienceEquipmentButton' value='经验未满装备'>";
         html += "<input type='button' id='searchTeamUsingEquipmentButton' value='使用中的装备'>";
+        html += "<input type='button' id='searchTeamStarEquipmentButton' value='有齐心的装备'>";
         html += "<input type='button' id='searchTeamPowerGemButton' value='威力宝石库存'>";
         html += "</td>";
         html += "</tr>";
@@ -153,6 +154,7 @@ abstract class PersonalTeamPageProcessor extends PageProcessorCredentialSupport 
         this.#bindSearchTeamPetButton();
         this.#bindSearchTeamNonFullExperienceEquipmentButton();
         this.#bindSearchTeamUsingEquipmentButton();
+        this.#bindSearchTeamStarEquipmentButton();
         this.#bindSearchTeamPowerGemButton();
 
         PageUtils.onEscapePressed(() => $("#returnButton").trigger("click"));
@@ -453,6 +455,14 @@ abstract class PersonalTeamPageProcessor extends PageProcessorCredentialSupport 
                     return equipment.using !== undefined && equipment.using;
                 })
                 .generate();
+        });
+    }
+
+    #bindSearchTeamStarEquipmentButton() {
+        $("#searchTeamStarEquipmentButton").on("click", () => {
+            $(".simulationButton").off("click");
+            const includeExternal = $("#includeExternal").prop("checked") as boolean;
+            new TeamEquipmentReportGenerator(includeExternal, "齐心★").generate();
         });
     }
 
