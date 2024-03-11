@@ -6,16 +6,6 @@ import SetupLoader from "../config/SetupLoader";
 import TownLoader from "../town/TownLoader";
 import EquipmentConstants from "./EquipmentConstants";
 
-const ATTRIBUTE_HEAVY_ARMOR_ITEM_LIST = [
-    "千幻碧水猿洛克奇斯",
-    "地纹玄甲龟斯特奥特斯",
-    "幽冥黑鳞蟒罗尼科斯",
-    "火睛混沌兽哈贝达",
-    "羽翅圣光虎阿基勒斯",
-    "金翅追日鹰庞塔雷斯",
-    "风翼三足凤纳托利斯"
-];
-
 class Equipment {
 
     index?: number;                      // 下标（唯一性）
@@ -447,7 +437,7 @@ class Equipment {
 }
 
 function isAttributeHeavyArmor(name: string) {
-    for (const it of ATTRIBUTE_HEAVY_ARMOR_ITEM_LIST) {
+    for (const it of EquipmentConstants.ATTRIBUTE_HEAVY_ARMOR_ITEM_LIST) {
         if (name.endsWith(it)) {
             return true;
         }
