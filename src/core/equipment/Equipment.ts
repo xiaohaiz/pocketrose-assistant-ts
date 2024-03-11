@@ -6,13 +6,6 @@ import SetupLoader from "../config/SetupLoader";
 import TownLoader from "../town/TownLoader";
 import EquipmentConstants from "./EquipmentConstants";
 
-const NO_EXPERIENCE_ITEM_LIST = [
-    "大师球",
-    "宗师球",
-    "超力怪兽球",
-    "宠物蛋"
-];
-
 const NONE_REPAIRABLE_ITEM_LIST = [
     "大师球",
     "宗师球",
@@ -223,7 +216,7 @@ class Equipment {
         if (this.isItem) {
             return -1;
         }
-        if (NO_EXPERIENCE_ITEM_LIST.includes(this.name!)) {
+        if (EquipmentConstants.NO_EXPERIENCE_ITEM_LIST.includes(this.name!)) {
             return -1;
         }
         let maxExperience = 0;
