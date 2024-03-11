@@ -13,6 +13,7 @@ import PageUtils from "../../util/PageUtils";
 import StringUtils from "../../util/StringUtils";
 import PageProcessorContext from "../PageProcessorContext";
 import PageProcessorCredentialSupport from "../PageProcessorCredentialSupport";
+import KeyboardShortcutBuilder from "../../util/KeyboardShortcutBuilder";
 
 abstract class PersonalProfilePageProcessor extends PageProcessorCredentialSupport {
 
@@ -29,7 +30,9 @@ abstract class PersonalProfilePageProcessor extends PageProcessorCredentialSuppo
         this.#renderPetStatus(credential, context);
         this.#renderMirrorStatus(credential, context);
 
-        PageUtils.onEscapePressed(() => $("#returnButton").trigger("click"));
+        new KeyboardShortcutBuilder()
+            .onKeyPressed("Escape", () => $("#returnButton").trigger("click"))
+            .bind();
     }
 
     #renderImmutablePage(credential: Credential, context?: PageProcessorContext) {
