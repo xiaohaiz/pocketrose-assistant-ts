@@ -1,6 +1,8 @@
 import _ from "lodash";
 import BankRecordReportGenerator from "../../core/bank/BankRecordReportGenerator";
+import EquipmentConstants from "../../core/equipment/EquipmentConstants";
 import EquipmentLocalStorage from "../../core/equipment/EquipmentLocalStorage";
+import TeamEquipmentReportGenerator from "../../core/equipment/TeamEquipmentReportGenerator";
 import PowerGemFuseReportGenerator from "../../core/forge/PowerGemFuseReportGenerator";
 import MonsterPageUtils from "../../core/monster/MonsterPageUtils";
 import MonsterProfileLoader from "../../core/monster/MonsterProfileLoader";
@@ -15,7 +17,6 @@ import PageUtils from "../../util/PageUtils";
 import StringUtils from "../../util/StringUtils";
 import PageProcessorContext from "../PageProcessorContext";
 import PageProcessorCredentialSupport from "../PageProcessorCredentialSupport";
-import TeamEquipmentReportGenerator from "../../core/equipment/TeamEquipmentReportGenerator";
 
 abstract class PersonalTeamPageProcessor extends PageProcessorCredentialSupport {
 
@@ -557,13 +558,12 @@ abstract class PersonalTeamPageProcessor extends PageProcessorCredentialSupport 
                 undefined,
                 equipment => {
                     const name = equipment.fullName;
-                    return name.includes("千幻碧水猿洛克奇斯")
-                        || name.includes("地纹玄甲龟斯特奥特斯")
-                        || name.includes("幽冥黑鳞蟒罗尼科斯")
-                        || name.includes("火睛混沌兽哈贝达")
-                        || name.includes("羽翅圣光虎阿基勒斯")
-                        || name.includes("金翅追日鹰庞塔雷斯")
-                        || name.includes("风翼三足凤纳托利斯");
+                    for (const armorName of EquipmentConstants.ATTRIBUTE_HEAVY_ARMOR_ITEM_LIST) {
+                        if (name.includes(armorName)) {
+                            return true;
+                        }
+                    }
+                    return false;
                 }).generate();
         });
     }
