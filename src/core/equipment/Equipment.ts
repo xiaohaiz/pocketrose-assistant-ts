@@ -6,13 +6,6 @@ import SetupLoader from "../config/SetupLoader";
 import TownLoader from "../town/TownLoader";
 import EquipmentConstants from "./EquipmentConstants";
 
-const NONE_REPAIRABLE_ITEM_LIST = [
-    "大师球",
-    "宗师球",
-    "超力怪兽球",
-    "宠物蛋"
-];
-
 const ATTRIBUTE_HEAVY_ARMOR_ITEM_LIST = [
     "千幻碧水猿洛克奇斯",
     "地纹玄甲龟斯特奥特斯",
@@ -198,7 +191,7 @@ class Equipment {
         if (this.isItem) {
             return this.name!.includes("(自动)");
         } else {
-            return !NONE_REPAIRABLE_ITEM_LIST.includes(this.name!);
+            return !EquipmentConstants.NONE_REPAIRABLE_ITEM_LIST.includes(this.name!);
         }
     }
 
@@ -209,7 +202,7 @@ class Equipment {
         if (this.isItem) {
             return false;
         }
-        return !NONE_REPAIRABLE_ITEM_LIST.includes(this.name!);
+        return !EquipmentConstants.NONE_REPAIRABLE_ITEM_LIST.includes(this.name!);
     }
 
     get fullExperienceRatio() {
