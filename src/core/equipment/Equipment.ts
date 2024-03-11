@@ -4,32 +4,7 @@ import PageUtils from "../../util/PageUtils";
 import StringUtils from "../../util/StringUtils";
 import SetupLoader from "../config/SetupLoader";
 import TownLoader from "../town/TownLoader";
-
-const PROHIBIT_SELLING_ITEM_LIST = [
-    "千与千寻",
-    "勿忘我",
-    "神枪 永恒",
-    "霸邪斧 天煌",
-    "魔刀 哭杀",
-    "神器 苍穹",
-    "魔神器 幻空",
-    "真·圣剑 苍白的正义",
-    "双经斩",
-    "千幻碧水猿洛克奇斯",
-    "地纹玄甲龟斯特奥特斯",
-    "幽冥黑鳞蟒罗尼科斯",
-    "火睛混沌兽哈贝达",
-    "羽翅圣光虎阿基勒斯",
-    "金翅追日鹰庞塔雷斯",
-    "风翼三足凤纳托利斯",
-    "圣皇铠甲 天威",
-    "薄翼甲",
-    "魔盔 虚无",
-    "神冠 灵通",
-    "龙",
-    "玉佩",
-    "宠物蛋"
-];
+import EquipmentConstants from "./EquipmentConstants";
 
 const NO_EXPERIENCE_ITEM_LIST = [
     "大师球",
@@ -218,7 +193,7 @@ class Equipment {
         if (this.using !== undefined && this.using) {
             return false;
         }
-        for (const it of PROHIBIT_SELLING_ITEM_LIST) {
+        for (const it of EquipmentConstants.PROHIBIT_SELLING_ITEM_LIST) {
             if (this.name!.endsWith(it)) {
                 return false;
             }
