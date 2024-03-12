@@ -78,7 +78,9 @@ abstract class PersonalStatisticsPageProcessor extends PageProcessorCredentialSu
         html += "<td id='hidden-5'></td>";
         html += "</tr>";
         html += "<tr>";
-        html += "<td id='operation' style='text-align:center;background-color:#F8F0E0'></td>";
+        html += "<td id='operation' style='text-align:center;background-color:#F8F0E0'>";
+        html += "<input type='checkbox' id='includeExternal' checked>是否包含编外队员";
+        html += "</td>";
         html += "<tr>";
         html += "<td style='text-align:center;background-color:#F8F0E0'>";
         html += "<table style='background-color:transparent;border-spacing:0;border-width:0;margin:auto'>";
@@ -271,11 +273,13 @@ abstract class PersonalStatisticsPageProcessor extends PageProcessorCredentialSu
 
 function doBindReport1() {
     $("#report-1").on("click", () => {
-        const target = $("#teamMemberSelect").val()! as string;
+        const includeExternal = $("#includeExternal").prop("checked") as boolean;
         BattleResultStorage.getInstance()
             .loads()
             .then(dataList => {
-                const html = new BattleReportGenerator(dataList, target).generate();
+                const html = new BattleReportGenerator(dataList)
+                    .includeExternal(includeExternal)
+                    .generate();
                 $("#statistics").html(html).parent().show();
             });
     });
