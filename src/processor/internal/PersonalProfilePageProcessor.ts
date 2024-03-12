@@ -32,6 +32,7 @@ abstract class PersonalProfilePageProcessor extends PageProcessorCredentialSuppo
 
         new KeyboardShortcutBuilder()
             .onKeyPressed("Escape", () => $("#returnButton").trigger("click"))
+            .onKeyPressed("e", () => $("#equipmentManagementButton").trigger("click"))
             .bind();
     }
 
