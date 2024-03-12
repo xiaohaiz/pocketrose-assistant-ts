@@ -6,6 +6,7 @@ import PersonalEquipmentManagement from "../../core/equipment/PersonalEquipmentM
 import TreasureBag from "../../core/equipment/TreasureBag";
 import PersonalStatus from "../../core/role/PersonalStatus";
 import Credential from "../../util/Credential";
+import KeyboardShortcutBuilder from "../../util/KeyboardShortcutBuilder";
 import MessageBoard from "../../util/MessageBoard";
 import PageUtils from "../../util/PageUtils";
 import PageProcessorContext from "../PageProcessorContext";
@@ -125,7 +126,14 @@ abstract class PersonalSetupPageProcessor extends PageProcessorCredentialSupport
 
         this.#render(credential);
 
-        PageUtils.onEscapePressed(() => $("#returnButton").trigger("click"));
+        new KeyboardShortcutBuilder()
+            .onKeyPressed("r", () =>
+                $("#refreshButton").trigger("click"))
+            .onEscapePressed(() =>
+                $("#returnButton").trigger("click"))
+            .withPredicate(() =>
+                $("input:text:focus").length === 0 && $("textarea:focus").length === 0)
+            .bind();
     }
 
     #render(credential: Credential) {
