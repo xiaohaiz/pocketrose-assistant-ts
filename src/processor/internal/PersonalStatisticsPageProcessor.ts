@@ -314,8 +314,10 @@ function doBindReport3() {
 
 function doBindReport4() {
     $("#report-4").on("click", () => {
-        const target = $("#teamMemberSelect").val()! as string;
-        new CareerChangeReportGenerator(target).generate();
+        const includeExternal = $("#includeExternal").prop("checked") as boolean;
+        new CareerChangeReportGenerator()
+            .includeExternal(includeExternal)
+            .generate();
     });
 }
 
