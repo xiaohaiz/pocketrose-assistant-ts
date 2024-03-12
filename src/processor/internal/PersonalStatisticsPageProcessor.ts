@@ -336,8 +336,11 @@ function doBindReport5() {
 
 function doBindReport6() {
     $("#report-6").on("click", () => {
-        const target = $("#teamMemberSelect").val()! as string;
-        new ConsecrateReportGenerator(target).generate().then();
+        const includeExternal = $("#includeExternal").prop("checked") as boolean;
+        new ConsecrateReportGenerator()
+            .includeExternal(includeExternal)
+            .generate()
+            .then();
     });
 }
 

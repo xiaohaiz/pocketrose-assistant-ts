@@ -5,32 +5,31 @@ import TeamMemberLoader from "../team/TeamMemberLoader";
 
 class ConsecrateReportGenerator {
 
-    readonly #target?: string;
+    #includeExternal = true;
 
-    constructor(target: string) {
-        this.#target = target;
-    }
-
-    get hasTarget() {
-        return this.#target && this.#target !== "";
+    includeExternal(includeExternal: boolean): ConsecrateReportGenerator {
+        this.#includeExternal = includeExternal;
+        return this;
     }
 
     async generate() {
-        const internalIds = TeamMemberLoader.loadInternalIds();
+        const memberIds = TeamMemberLoader.loadTeamMembers()
+            .filter(it => this.#includeExternal || !it.external)
+            .map(it => it.id!);
         const logList = (await EquipmentConsecrateLogStorage.getInstance().loads())
-            .filter(it => _.includes(internalIds, it.roleId))
-            .filter(it => !this.hasTarget || this.#target === it.roleId);
+            .filter(it => _.includes(memberIds, it.roleId));
         await this.#doGenerate(logList);
     }
 
     async #doGenerate(candidates: EquipmentConsecrateLog[]) {
         const roles = new Map<string, RoleReport>();
+        const memberIds = TeamMemberLoader.loadTeamMembers()
+            .filter(it => this.#includeExternal || !it.external)
+            .map(it => it.id!);
         TeamMemberLoader.loadTeamMembers()
-            .filter(it => !it.external)
+            .filter(it => _.includes(memberIds, it.id))
             .forEach(config => {
-                if (!this.hasTarget || this.#target === config.id) {
-                    roles.set(config.id!, new RoleReport(config.name!));
-                }
+                roles.set(config.id!, new RoleReport(config.name!));
             });
         candidates.forEach(it => {
             roles.get(it.roleId!)?.logList.push(it);
