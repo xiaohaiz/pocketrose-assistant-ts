@@ -287,11 +287,13 @@ function doBindReport1() {
 
 function doBindReport2() {
     $("#report-2").on("click", () => {
-        const target = $("#teamMemberSelect").val()! as string;
+        const includeExternal = $("#includeExternal").prop("checked") as boolean;
         BattleResultStorage.getInstance()
             .loads()
             .then(dataList => {
-                const html = new MonsterReportGenerator(dataList, target).generate();
+                const html = new MonsterReportGenerator(dataList)
+                    .includeExternal(includeExternal)
+                    .generate();
                 $("#statistics").html(html).parent().show();
             });
     });

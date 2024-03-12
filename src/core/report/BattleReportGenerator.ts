@@ -7,7 +7,6 @@ import TeamMemberLoader from "../team/TeamMemberLoader";
 class BattleReportGenerator {
 
     readonly #dataList: BattleResult[];
-
     #includeExternal = true;
 
     constructor(dataList: BattleResult[]) {
