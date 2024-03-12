@@ -5,6 +5,7 @@ import PersonalStatus from "../../core/role/PersonalStatus";
 import PersonalStatusPage from "../../core/role/PersonalStatusPage";
 import Role from "../../core/role/Role";
 import Credential from "../../util/Credential";
+import KeyboardShortcutBuilder from "../../util/KeyboardShortcutBuilder";
 import PageUtils from "../../util/PageUtils";
 import StringUtils from "../../util/StringUtils";
 import PageProcessorContext from "../PageProcessorContext";
@@ -47,7 +48,7 @@ abstract class PersonalStatusPageProcessor extends PageProcessorCredentialSuppor
                 "colspan='4'></td>");
         _generateRoleDimension(page);
 
-        PageUtils.onEscapePressed(() => $("#returnButton").trigger("click"));
+        this.doBindKeyboardShortcut();
     }
 
     abstract doGenerateHiddenForm(credential: Credential, containerId: string): void;
@@ -57,6 +58,13 @@ abstract class PersonalStatusPageProcessor extends PageProcessorCredentialSuppor
     abstract doBindReturnButton(): void;
 
     doPostRenderPage(credential: Credential, page: PersonalStatusPage, context?: PageProcessorContext) {
+    }
+
+    doBindKeyboardShortcut() {
+        new KeyboardShortcutBuilder()
+            .onEscapePressed(() => $("#returnButton").trigger("click"))
+            .withPredicate(() => $("input:text:focus").length === 0)
+            .bind();
     }
 
     #renderPage(role: Role) {

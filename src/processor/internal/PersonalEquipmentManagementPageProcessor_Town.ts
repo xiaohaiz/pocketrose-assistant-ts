@@ -1,3 +1,4 @@
+import {escape, parseInt, unescape} from "lodash";
 import TownBank from "../../core/bank/TownBank";
 import SetupLoader from "../../core/config/SetupLoader";
 import CastleInformation from "../../core/dashboard/CastleInformation";
@@ -19,6 +20,7 @@ import TeamMemberLoader from "../../core/team/TeamMemberLoader";
 import TownLoader from "../../core/town/TownLoader";
 import CommentBoard from "../../util/CommentBoard";
 import Credential from "../../util/Credential";
+import KeyboardShortcutBuilder from "../../util/KeyboardShortcutBuilder";
 import MessageBoard from "../../util/MessageBoard";
 import PageUtils from "../../util/PageUtils";
 import StringUtils from "../../util/StringUtils";
@@ -26,6 +28,15 @@ import PageProcessorContext from "../PageProcessorContext";
 import PersonalEquipmentManagementPageProcessor from "./PersonalEquipmentManagementPageProcessor";
 
 class PersonalEquipmentManagementPageProcessor_Town extends PersonalEquipmentManagementPageProcessor {
+
+    doBindKeyboardShortcut() {
+        new KeyboardShortcutBuilder()
+            .onEscapePressed(() => $("#returnButton").trigger("click"))
+            .onKeyPressed("r", () => $("#refreshButton").trigger("click"))
+            .onKeyPressed("s", () => $("#openItemShop").trigger("click"))
+            .withPredicate(() => $("input:text:focus").length === 0)
+            .bind();
+    }
 
     doGeneratePageTitleHtml(context?: PageProcessorContext): string {
         if (context === undefined) {
@@ -49,6 +60,15 @@ class PersonalEquipmentManagementPageProcessor_Town extends PersonalEquipmentMan
 
     doGenerateWelcomeMessageHtml(): string {
         return "<b style='font-size:120%;color:wheat'>又来管理您的装备来啦？就这点破烂折腾来折腾去的，您累不累啊。</b>";
+    }
+
+    doBindImmutableButtons(credential: Credential, context?: PageProcessorContext) {
+        super.doBindImmutableButtons(credential, context);
+        if (context) {
+            const townId = context.get("townId")!;
+            const html = PageUtils.generateItemShopForm(credential, townId);
+            $("#hiddenFormContainer1").html(html);
+        }
     }
 
     doBindReturnButton(credential: Credential): void {

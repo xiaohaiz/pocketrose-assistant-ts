@@ -1,7 +1,9 @@
+import {parseInt} from "lodash";
 import PersonalMirror from "../../core/role/PersonalMirror";
 import PersonalStatusPage from "../../core/role/PersonalStatusPage";
 import Role from "../../core/role/Role";
 import Credential from "../../util/Credential";
+import KeyboardShortcutBuilder from "../../util/KeyboardShortcutBuilder";
 import PageUtils from "../../util/PageUtils";
 import StringUtils from "../../util/StringUtils";
 import PageProcessorContext from "../PageProcessorContext";
@@ -13,6 +15,20 @@ class PersonalStatusPageProcessor_Town extends PersonalStatusPageProcessor {
         super();
     }
 
+
+    doBindKeyboardShortcut() {
+        new KeyboardShortcutBuilder()
+            .onKeyPressed("e", () =>
+                $("#openEquipmentManagement").trigger("click"))
+            .onKeyPressed("u", () =>
+                $("#openPetManagement").trigger("click"))
+            .onEscapePressed(() =>
+                $("#returnButton").trigger("click"))
+            .withPredicate(() =>
+                $("input:text:focus").length === 0)
+            .bind();
+    }
+
     doBindReturnButton(): void {
         $("#returnButton").on("click", () => {
             $("#returnTown").trigger("click");
@@ -21,14 +37,8 @@ class PersonalStatusPageProcessor_Town extends PersonalStatusPageProcessor {
 
     doGenerateHiddenForm(credential: Credential, containerId: string): void {
         let html = PageUtils.generateReturnTownForm(credential);
-
-        // noinspection HtmlUnknownTarget
-        html += "<form action='mydata.cgi' method='post'>";
-        html += "<input type='hidden' name='id' value='" + credential.id + "'>";
-        html += "<input type='hidden' name='pass' value='" + credential.pass + "'>"
-        html += "<input type='hidden' name='mode' value='USE_ITEM'>";
-        html += "<input type='submit' id='equipmentButton'>";
-        html += "</form>";
+        html += PageUtils.generateEquipmentManagementForm(credential);
+        html += PageUtils.generatePetManagementForm(credential);
 
         $("#" + containerId).html(html);
         $("#returnTown").attr("tabIndex", 1);
@@ -71,7 +81,7 @@ class PersonalStatusPageProcessor_Town extends PersonalStatusPageProcessor {
                         return;
                     }
                     mirrorManager.change(index).then(() => {
-                        $("#equipmentButton").trigger("click");
+                        $("#openEquipmentManagement").trigger("click");
                     });
                 });
             }

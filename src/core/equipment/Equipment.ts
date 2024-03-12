@@ -4,56 +4,7 @@ import PageUtils from "../../util/PageUtils";
 import StringUtils from "../../util/StringUtils";
 import SetupLoader from "../config/SetupLoader";
 import TownLoader from "../town/TownLoader";
-
-const PROHIBIT_SELLING_ITEM_LIST = [
-    "千与千寻",
-    "勿忘我",
-    "神枪 永恒",
-    "霸邪斧 天煌",
-    "魔刀 哭杀",
-    "神器 苍穹",
-    "魔神器 幻空",
-    "真·圣剑 苍白的正义",
-    "双经斩",
-    "千幻碧水猿洛克奇斯",
-    "地纹玄甲龟斯特奥特斯",
-    "幽冥黑鳞蟒罗尼科斯",
-    "火睛混沌兽哈贝达",
-    "羽翅圣光虎阿基勒斯",
-    "金翅追日鹰庞塔雷斯",
-    "风翼三足凤纳托利斯",
-    "圣皇铠甲 天威",
-    "薄翼甲",
-    "魔盔 虚无",
-    "神冠 灵通",
-    "龙",
-    "玉佩",
-    "宠物蛋"
-];
-
-const NO_EXPERIENCE_ITEM_LIST = [
-    "大师球",
-    "宗师球",
-    "超力怪兽球",
-    "宠物蛋"
-];
-
-const NONE_REPAIRABLE_ITEM_LIST = [
-    "大师球",
-    "宗师球",
-    "超力怪兽球",
-    "宠物蛋"
-];
-
-const ATTRIBUTE_HEAVY_ARMOR_ITEM_LIST = [
-    "千幻碧水猿洛克奇斯",
-    "地纹玄甲龟斯特奥特斯",
-    "幽冥黑鳞蟒罗尼科斯",
-    "火睛混沌兽哈贝达",
-    "羽翅圣光虎阿基勒斯",
-    "金翅追日鹰庞塔雷斯",
-    "风翼三足凤纳托利斯"
-];
+import EquipmentConstants from "./EquipmentConstants";
 
 class Equipment {
 
@@ -218,7 +169,7 @@ class Equipment {
         if (this.using !== undefined && this.using) {
             return false;
         }
-        for (const it of PROHIBIT_SELLING_ITEM_LIST) {
+        for (const it of EquipmentConstants.PROHIBIT_SELLING_ITEM_LIST) {
             if (this.name!.endsWith(it)) {
                 return false;
             }
@@ -230,7 +181,7 @@ class Equipment {
         if (this.isItem) {
             return this.name!.includes("(自动)");
         } else {
-            return !NONE_REPAIRABLE_ITEM_LIST.includes(this.name!);
+            return !EquipmentConstants.NONE_REPAIRABLE_ITEM_LIST.includes(this.name!);
         }
     }
 
@@ -241,14 +192,14 @@ class Equipment {
         if (this.isItem) {
             return false;
         }
-        return !NONE_REPAIRABLE_ITEM_LIST.includes(this.name!);
+        return !EquipmentConstants.NONE_REPAIRABLE_ITEM_LIST.includes(this.name!);
     }
 
     get fullExperienceRatio() {
         if (this.isItem) {
             return -1;
         }
-        if (NO_EXPERIENCE_ITEM_LIST.includes(this.name!)) {
+        if (EquipmentConstants.NO_EXPERIENCE_ITEM_LIST.includes(this.name!)) {
             return -1;
         }
         let maxExperience = 0;
@@ -486,7 +437,7 @@ class Equipment {
 }
 
 function isAttributeHeavyArmor(name: string) {
-    for (const it of ATTRIBUTE_HEAVY_ARMOR_ITEM_LIST) {
+    for (const it of EquipmentConstants.ATTRIBUTE_HEAVY_ARMOR_ITEM_LIST) {
         if (name.endsWith(it)) {
             return true;
         }
