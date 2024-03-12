@@ -10,21 +10,23 @@ import TeamMemberLoader from "../team/TeamMemberLoader";
 class ZodiacReportGenerator {
 
     readonly #dataList: BattleResult[];
-    readonly #target?: string;
+    #includeExternal = true;
 
-    constructor(dataList: BattleResult[], target?: string) {
+    constructor(dataList: BattleResult[]) {
         this.#dataList = dataList;
-        this.#target = target;
+    }
+
+    includeExternal(includeExternal: boolean): ZodiacReportGenerator {
+        this.#includeExternal = includeExternal;
+        return this;
     }
 
     generate() {
-        const internalIds = TeamMemberLoader.loadInternalIds();
+        const memberIds = TeamMemberLoader.loadTeamMembers()
+            .filter(it => this.#includeExternal || !it.external)
+            .map(it => it.id!);
         const candidates = this.#dataList
-            .filter(it => _.includes(internalIds, it.roleId))
-            .filter(it =>
-                this.#target === undefined ||
-                this.#target === "" ||
-                it.roleId === this.#target);
+            .filter(it => _.includes(memberIds, it.roleId));
 
         let zodiacCode = 0;
         const warriors = new Map<string, ZodiacWarrior>();

@@ -301,11 +301,13 @@ function doBindReport2() {
 
 function doBindReport3() {
     $("#report-3").on("click", () => {
-        const target = $("#teamMemberSelect").val()! as string;
+        const includeExternal = $("#includeExternal").prop("checked") as boolean;
         BattleResultStorage.getInstance()
             .loads()
             .then(dataList => {
-                new ZodiacReportGenerator(dataList, target).generate();
+                new ZodiacReportGenerator(dataList)
+                    .includeExternal(includeExternal)
+                    .generate();
             });
     });
 }
