@@ -14,6 +14,10 @@ class KeyboardShortcutBuilder {
         return this;
     }
 
+    onEscapePressed(handler?: () => void): KeyboardShortcutBuilder {
+        return this.onKeyPressed("Escape");
+    }
+
     bind() {
         $(document).off("keydown.city").on("keydown.city", event => {
             const key = event.key;

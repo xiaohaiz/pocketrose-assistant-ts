@@ -8,12 +8,12 @@ import PersonalMirror from "../../core/role/PersonalMirror";
 import PersonalStatus from "../../core/role/PersonalStatus";
 import Role from "../../core/role/Role";
 import Credential from "../../util/Credential";
+import KeyboardShortcutBuilder from "../../util/KeyboardShortcutBuilder";
 import MessageBoard from "../../util/MessageBoard";
 import PageUtils from "../../util/PageUtils";
 import StringUtils from "../../util/StringUtils";
 import PageProcessorContext from "../PageProcessorContext";
 import PageProcessorCredentialSupport from "../PageProcessorCredentialSupport";
-import KeyboardShortcutBuilder from "../../util/KeyboardShortcutBuilder";
 
 abstract class PersonalProfilePageProcessor extends PageProcessorCredentialSupport {
 
@@ -31,7 +31,7 @@ abstract class PersonalProfilePageProcessor extends PageProcessorCredentialSuppo
         this.#renderMirrorStatus(credential, context);
 
         new KeyboardShortcutBuilder()
-            .onKeyPressed("Escape", () => $("#returnButton").trigger("click"))
+            .onEscapePressed(() => $("#returnButton").trigger("click"))
             .onKeyPressed("e", () => $("#equipmentManagementButton").trigger("click"))
             .bind();
     }
