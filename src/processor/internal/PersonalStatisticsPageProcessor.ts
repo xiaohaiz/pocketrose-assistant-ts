@@ -346,11 +346,13 @@ function doBindReport6() {
 
 function doBindLog1() {
     $("#log-1").on("click", () => {
-        const target = $("#teamMemberSelect").val()! as string;
+        const includeExternal = $("#includeExternal").prop("checked") as boolean;
         BattleLogStorage.getInstance()
             .findByCreateTime(DayRange.current().start)
             .then(logList => {
-                const html = new DailyReportGenerator(logList, target).generate();
+                const html = new DailyReportGenerator(logList)
+                    .includeExternal(includeExternal)
+                    .generate();
                 $("#statistics").html(html).parent().show();
             });
     });
@@ -358,12 +360,14 @@ function doBindLog1() {
 
 function doBindLog2() {
     $("#log-2").on("click", () => {
-        const target = $("#teamMemberSelect").val()! as string;
+        const includeExternal = $("#includeExternal").prop("checked") as boolean;
         const yesterday = DayRange.current().previous();
         BattleLogStorage.getInstance()
             .findByCreateTime(yesterday.start, yesterday.end)
             .then(logList => {
-                const html = new DailyReportGenerator(logList, target).generate();
+                const html = new DailyReportGenerator(logList)
+                    .includeExternal(includeExternal)
+                    .generate();
                 $("#statistics").html(html).parent().show();
             });
     });
