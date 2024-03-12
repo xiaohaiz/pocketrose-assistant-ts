@@ -323,11 +323,13 @@ function doBindReport4() {
 
 function doBindReport5() {
     $("#report-5").on("click", () => {
-        const target = $("#teamMemberSelect").val()! as string;
+        const includeExternal = $("#includeExternal").prop("checked") as boolean;
         BattleResultStorage.getInstance()
             .loads()
             .then(dataList => {
-                new TreasureReportGenerator(dataList, target).generate();
+                new TreasureReportGenerator(dataList)
+                    .includeExternal(includeExternal)
+                    .generate();
             })
     });
 }
