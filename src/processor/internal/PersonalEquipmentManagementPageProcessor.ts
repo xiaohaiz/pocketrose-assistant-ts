@@ -3,6 +3,7 @@ import PersonalEquipmentManagementPage from "../../core/equipment/PersonalEquipm
 import NpcLoader from "../../core/role/NpcLoader";
 import Role from "../../core/role/Role";
 import Credential from "../../util/Credential";
+import KeyboardShortcutBuilder from "../../util/KeyboardShortcutBuilder";
 import MessageBoard from "../../util/MessageBoard";
 import PageUtils from "../../util/PageUtils";
 import PageProcessorContext from "../PageProcessorContext";
@@ -13,7 +14,13 @@ abstract class PersonalEquipmentManagementPageProcessor extends PageProcessorCre
     async doProcess(credential: Credential, context?: PageProcessorContext): Promise<void> {
         const page = PersonalEquipmentManagement.parsePage(PageUtils.currentPageHtml());
         this.#renderImmutablePage(credential, page, context);
-        PageUtils.onEscapePressed(() => $("#returnButton").trigger("click"));
+        this.doBindKeyboardShortcut();
+    }
+
+    doBindKeyboardShortcut() {
+        new KeyboardShortcutBuilder()
+            .onEscapePressed(() => $("#returnButton").trigger("click"))
+            .bind();
     }
 
     #renderImmutablePage(credential: Credential, page: PersonalEquipmentManagementPage, context?: PageProcessorContext) {
