@@ -233,6 +233,20 @@ class PageUtils {
         return form;
     }
 
+    static generateItemShopForm(credential: Credential, townId: string) {
+        let form = "";
+        // noinspection HtmlUnknownTarget
+        form += "<form action='town.cgi' method='post'>";
+        form += "<input type='hidden' name='id' value='" + credential.id + "'>";
+        form += "<input type='hidden' name='pass' value='" + credential.pass + "'>"
+        form += "<input type='hidden' name='town' value='" + townId + "'>";
+        form += "<input type='hidden' name='con_str' value='50'>";
+        form += "<input type='hidden' name='mode' value='ITEM_SHOP'>";
+        form += "<input type='submit' id='openItemShop'>";
+        form += "</form>";
+        return form;
+    }
+
     static unbindEventBySpecifiedClass(className: string) {
         if ($("." + className).length > 0) {
             $("." + className)
