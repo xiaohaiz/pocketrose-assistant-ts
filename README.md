@@ -1,5 +1,7 @@
 # pocketrose-assistant-ts
 
+### 版本 4.2.26-SNAPSHOT
+
 ### 版本 4.2.25
 
 1. 抽象通用键盘快捷键构建器。
