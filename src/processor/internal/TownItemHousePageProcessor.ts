@@ -5,6 +5,7 @@ import TownItemHouse from "../../core/store/TownItemHouse";
 import TownItemHousePage from "../../core/store/TownItemHousePage";
 import TownItemHousePageParser from "../../core/store/TownItemHousePageParser";
 import Credential from "../../util/Credential";
+import KeyboardShortcutBuilder from "../../util/KeyboardShortcutBuilder";
 import MessageBoard from "../../util/MessageBoard";
 import PageUtils from "../../util/PageUtils";
 import PocketUtils from "../../util/PocketUtils";
@@ -17,7 +18,11 @@ class TownItemHousePageProcessor extends PageProcessorCredentialSupport {
         const page = await new TownItemHousePageParser().parse(PageUtils.currentPageHtml());
         this.#renderImmutablePage(credential, page);
         this.#renderMutablePage(credential, page);
-        PageUtils.onEscapePressed(() => $("#returnButton").trigger("click"));
+        new KeyboardShortcutBuilder()
+            .onKeyPressed("r", () => $("#refreshButton").trigger("click"))
+            .onKeyPressed("e", () => $("#equipmentButton").trigger("click"))
+            .onEscapePressed(() => $("#returnButton").trigger("click"))
+            .bind();
     }
 
     #renderImmutablePage(credential: Credential, page: TownItemHousePage) {
