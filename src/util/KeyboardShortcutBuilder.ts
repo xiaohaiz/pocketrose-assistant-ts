@@ -6,6 +6,7 @@
 class KeyboardShortcutBuilder {
 
     readonly #handlerBuffer = new Map<string, () => void>;
+    #predicate?: (key: string) => boolean;
 
     onKeyPressed(key: string, handler?: () => void): KeyboardShortcutBuilder {
         if (handler) {
@@ -18,10 +19,18 @@ class KeyboardShortcutBuilder {
         return this.onKeyPressed("Escape", handler);
     }
 
+    withPredicate(predicate?: (key: string) => boolean): KeyboardShortcutBuilder {
+        this.#predicate = predicate;
+        return this;
+    }
+
     bind() {
         $(document).off("keydown.city").on("keydown.city", event => {
             const key = event.key;
             if (!key) return;
+            if (this.#predicate && !this.#predicate(key)) {
+                return;
+            }
             const handler = this.#handlerBuffer.get(key);
             if (!handler) return;
             handler();

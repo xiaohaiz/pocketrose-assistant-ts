@@ -21,6 +21,7 @@ abstract class PersonalEquipmentManagementPageProcessor extends PageProcessorCre
         new KeyboardShortcutBuilder()
             .onEscapePressed(() => $("#returnButton").trigger("click"))
             .onKeyPressed("r", () => $("#refreshButton").trigger("click"))
+            .withPredicate(() => $("#searchName:focus").length === 0)
             .bind();
     }
 

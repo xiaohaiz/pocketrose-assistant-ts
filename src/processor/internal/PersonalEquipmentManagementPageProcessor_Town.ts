@@ -34,6 +34,7 @@ class PersonalEquipmentManagementPageProcessor_Town extends PersonalEquipmentMan
             .onEscapePressed(() => $("#returnButton").trigger("click"))
             .onKeyPressed("r", () => $("#refreshButton").trigger("click"))
             .onKeyPressed("s", () => $("#openItemShop").trigger("click"))
+            .withPredicate(() => $("#searchName:focus").length === 0)
             .bind();
     }
 
