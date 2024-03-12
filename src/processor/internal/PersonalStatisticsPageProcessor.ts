@@ -219,19 +219,6 @@ abstract class PersonalStatisticsPageProcessor extends PageProcessorCredentialSu
 
         this.doBindReturnButton(credential);
 
-        html = "";
-        html += "<select id='teamMemberSelect'>";
-        html += "<option value=''>全团队</option>";
-        TeamMemberLoader.loadTeamMembers()
-            .filter(it => !it.external)
-            .forEach(config => {
-                html += "<option value='" + config.id + "'>" + config.name + "</option>";
-            });
-        html += "</select>";
-        $("#operation").append($(html));
-
-        $("#operation").append($("<input type='text' id='monster' size='5'>"));
-
         doBindReport1();
         doBindReport2();
         doBindReport3();
@@ -404,15 +391,19 @@ function doBindLog4() {
 
 function doBindLog5() {
     $("#log-5").on("click", () => {
-        const target = $("#teamMemberSelect").val()! as string;
-        new MonthlyReportGenerator(MonthRange.current(), target).generate();
+        const includeExternal = $("#includeExternal").prop("checked") as boolean;
+        new MonthlyReportGenerator(MonthRange.current())
+            .includeExternal(includeExternal)
+            .generate();
     });
 }
 
 function doBindLog6() {
     $("#log-6").on("click", () => {
-        const target = $("#teamMemberSelect").val()! as string;
-        new MonthlyReportGenerator(MonthRange.current().previous(), target).generate();
+        const includeExternal = $("#includeExternal").prop("checked") as boolean;
+        new MonthlyReportGenerator(MonthRange.current().previous())
+            .includeExternal(includeExternal)
+            .generate();
     });
 }
 

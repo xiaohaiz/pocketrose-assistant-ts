@@ -11,43 +11,42 @@ import TeamMemberLoader from "../team/TeamMemberLoader";
 class MonthlyReportGenerator {
 
     readonly #range: MonthRange;
-    readonly #target?: string;
     readonly #maxSize: number;
+    #includeExternal = true;
 
-    constructor(range: MonthRange, target?: string) {
+    constructor(range: MonthRange) {
         this.#range = range;
-        this.#target = target;
-
         const lastDay = new Date(this.#range.end).getDate();
         this.#maxSize = lastDay === 31 ? 11 : 10;
     }
 
-    get hasTarget() {
-        return this.#target && this.#target !== "";
+    includeExternal(includeExternal: boolean): MonthlyReportGenerator {
+        this.#includeExternal = includeExternal;
+        return this;
     }
 
     generate() {
         BattleLogStorage.getInstance()
             .findByCreateTime(this.#range.start, this.#range.end)
             .then(dataList => {
-                const internalIds = TeamMemberLoader.loadInternalIds();
+                const memberIds = TeamMemberLoader.loadTeamMembers()
+                    .filter(it => this.#includeExternal || !it.external)
+                    .map(it => it.id!);
                 const candidates = dataList
-                    .filter(it => _.includes(internalIds, it.roleId))
-                    .filter(it => !this.hasTarget || it.roleId === this.#target);
+                    .filter(it => _.includes(memberIds, it.roleId));
                 this.#doGenerate(candidates);
             });
     }
 
     #doGenerate(candidates: BattleLog[]) {
         const roles = new Map<string, RoleReport>();
+        const memberIds = TeamMemberLoader.loadTeamMembers()
+            .filter(it => this.#includeExternal || !it.external)
+            .map(it => it.id!);
         TeamMemberLoader.loadTeamMembers()
-            .filter(it => !it.external)
+            .filter(it => _.includes(memberIds, it.id))
             .forEach(config => {
-                if (!this.hasTarget) {
-                    roles.set(config.id!, new RoleReport(config.name!));
-                } else if (this.#target === config.id) {
-                    roles.set(config.id!, new RoleReport(config.name!));
-                }
+                roles.set(config.id!, new RoleReport(config.name!));
             });
 
         const allTreasures = new Map<string, number>();
