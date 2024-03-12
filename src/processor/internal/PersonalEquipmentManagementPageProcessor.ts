@@ -102,7 +102,11 @@ abstract class PersonalEquipmentManagementPageProcessor extends PageProcessorCre
         // ------------------------------------------------------------------------
         let html = "";
         html += "<tr id='tr3' style='display:none'>";
-        html += "<td id='hiddenFormContainer'>";
+        html += "<td>";
+        html += "<div id='hiddenFormContainer'></div>"
+        html += "<div id='hiddenFormContainer1'></div>"
+        html += "<div id='hiddenFormContainer2'></div>"
+        html += "<div id='hiddenFormContainer3'></div>"
         html += "</td>";
         html += "</tr>"
         $("#tr2").after($(html));
@@ -165,14 +169,14 @@ abstract class PersonalEquipmentManagementPageProcessor extends PageProcessorCre
         html += "</tr>"
         $("#tr8").after($(html));
 
-        this.#bindImmutableButtons(credential, context);
+        this.doBindImmutableButtons(credential, context);
 
         this.doBeforeRenderMutablePage(credential, context);
 
         this.doRenderMutablePage(credential, page, context);
     }
 
-    #bindImmutableButtons(credential: Credential, context?: PageProcessorContext) {
+    doBindImmutableButtons(credential: Credential, context?: PageProcessorContext) {
         this.doBindReturnButton(credential);
         $("#refreshButton").on("click", () => {
             this.doScrollToPageTitle();

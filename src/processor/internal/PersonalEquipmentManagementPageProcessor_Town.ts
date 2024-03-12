@@ -33,6 +33,7 @@ class PersonalEquipmentManagementPageProcessor_Town extends PersonalEquipmentMan
         new KeyboardShortcutBuilder()
             .onEscapePressed(() => $("#returnButton").trigger("click"))
             .onKeyPressed("r", () => $("#refreshButton").trigger("click"))
+            .onKeyPressed("s", () => $("#openItemShop").trigger("click"))
             .bind();
     }
 
@@ -58,6 +59,15 @@ class PersonalEquipmentManagementPageProcessor_Town extends PersonalEquipmentMan
 
     doGenerateWelcomeMessageHtml(): string {
         return "<b style='font-size:120%;color:wheat'>又来管理您的装备来啦？就这点破烂折腾来折腾去的，您累不累啊。</b>";
+    }
+
+    doBindImmutableButtons(credential: Credential, context?: PageProcessorContext) {
+        super.doBindImmutableButtons(credential, context);
+        if (context) {
+            const townId = context.get("townId")!;
+            const html = PageUtils.generateItemShopForm(credential, townId);
+            $("#hiddenFormContainer1").html(html);
+        }
     }
 
     doBindReturnButton(credential: Credential): void {
