@@ -12,6 +12,14 @@ class ConsecrateReportGenerator {
         return this;
     }
 
+    async generateReportHTML(): Promise<string> {
+        return await (() => {
+            return new Promise<string>(resolve => {
+                resolve("");
+            });
+        })();
+    }
+
     async generate() {
         const memberIds = TeamMemberLoader.loadTeamMembers()
             .filter(it => this.#includeExternal || !it.external)
