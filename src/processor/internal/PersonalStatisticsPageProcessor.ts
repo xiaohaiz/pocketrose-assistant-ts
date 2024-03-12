@@ -375,11 +375,13 @@ function doBindLog2() {
 
 function doBindLog3() {
     $("#log-3").on("click", () => {
-        const target = $("#teamMemberSelect").val()! as string;
+        const includeExternal = $("#includeExternal").prop("checked") as boolean;
         BattleLogStorage.getInstance()
             .findByCreateTime(WeekRange.current().start)
             .then(logList => {
-                const html = new WeeklyReportGenerator(logList, target).generate();
+                const html = new WeeklyReportGenerator(logList)
+                    .includeExternal(includeExternal)
+                    .generate();
                 $("#statistics").html(html).parent().show();
             });
     });
@@ -387,12 +389,14 @@ function doBindLog3() {
 
 function doBindLog4() {
     $("#log-4").on("click", () => {
-        const target = $("#teamMemberSelect").val()! as string;
+        const includeExternal = $("#includeExternal").prop("checked") as boolean;
         const lastWeek = WeekRange.current().previous();
         BattleLogStorage.getInstance()
             .findByCreateTime(lastWeek.start, lastWeek.end)
             .then(logList => {
-                const html = new WeeklyReportGenerator(logList, target).generate();
+                const html = new WeeklyReportGenerator(logList)
+                    .includeExternal(includeExternal)
+                    .generate();
                 $("#statistics").html(html).parent().show();
             });
     });
