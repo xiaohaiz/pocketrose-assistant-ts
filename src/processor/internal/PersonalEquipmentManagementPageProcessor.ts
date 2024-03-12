@@ -20,6 +20,7 @@ abstract class PersonalEquipmentManagementPageProcessor extends PageProcessorCre
     doBindKeyboardShortcut() {
         new KeyboardShortcutBuilder()
             .onEscapePressed(() => $("#returnButton").trigger("click"))
+            .onKeyPressed("r", () => $("#refreshButton").trigger("click"))
             .bind();
     }
 

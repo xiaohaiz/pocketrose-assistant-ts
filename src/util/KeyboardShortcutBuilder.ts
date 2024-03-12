@@ -15,7 +15,7 @@ class KeyboardShortcutBuilder {
     }
 
     onEscapePressed(handler?: () => void): KeyboardShortcutBuilder {
-        return this.onKeyPressed("Escape");
+        return this.onKeyPressed("Escape", handler);
     }
 
     bind() {

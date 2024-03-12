@@ -1,3 +1,4 @@
+import {escape, parseInt, unescape} from "lodash";
 import TownBank from "../../core/bank/TownBank";
 import SetupLoader from "../../core/config/SetupLoader";
 import CastleInformation from "../../core/dashboard/CastleInformation";
@@ -19,6 +20,7 @@ import TeamMemberLoader from "../../core/team/TeamMemberLoader";
 import TownLoader from "../../core/town/TownLoader";
 import CommentBoard from "../../util/CommentBoard";
 import Credential from "../../util/Credential";
+import KeyboardShortcutBuilder from "../../util/KeyboardShortcutBuilder";
 import MessageBoard from "../../util/MessageBoard";
 import PageUtils from "../../util/PageUtils";
 import StringUtils from "../../util/StringUtils";
@@ -26,6 +28,13 @@ import PageProcessorContext from "../PageProcessorContext";
 import PersonalEquipmentManagementPageProcessor from "./PersonalEquipmentManagementPageProcessor";
 
 class PersonalEquipmentManagementPageProcessor_Town extends PersonalEquipmentManagementPageProcessor {
+
+    doBindKeyboardShortcut() {
+        new KeyboardShortcutBuilder()
+            .onEscapePressed(() => $("#returnButton").trigger("click"))
+            .onKeyPressed("r", () => $("#refreshButton").trigger("click"))
+            .bind();
+    }
 
     doGeneratePageTitleHtml(context?: PageProcessorContext): string {
         if (context === undefined) {
