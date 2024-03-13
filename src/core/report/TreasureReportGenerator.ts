@@ -1,65 +1,104 @@
-import _ from "lodash";
+import * as echarts from "echarts";
+import {EChartsOption} from "echarts";
 import ReportUtils from "../../util/ReportUtils";
-import BattleResult from "../battle/BattleResult";
+import BattleResultStorage from "../battle/BattleResultStorage";
 import TreasureLoader from "../equipment/TreasureLoader";
 import MonsterProfileLoader from "../monster/MonsterProfileLoader";
+import TeamMember from "../team/TeamMember";
 import TeamMemberLoader from "../team/TeamMemberLoader";
 
 class TreasureReportGenerator {
 
-    readonly #dataList: BattleResult[];
     #includeExternal = true;
-
-    constructor(dataList: BattleResult[]) {
-        this.#dataList = dataList;
-    }
 
     includeExternal(includeExternal: boolean): TreasureReportGenerator {
         this.#includeExternal = includeExternal;
         return this;
     }
 
-    generate() {
-        const memberIds = TeamMemberLoader.loadTeamMembers()
-            .filter(it => this.#includeExternal || !it.external)
-            .map(it => it.id!);
-        const candidates = this.#dataList
-            .filter(it => _.includes(memberIds, it.roleId))
-            .filter(it => it.obtainBattleField === "上洞");
-
-        const reports = new Map<string, Report>();
-
+    async generateReport() {
+        const roleReports = new Map<string, RoleTreasureReport>();
+        const monsterReports = new Map<string, MonsterTreasureReport>();
         let battleCount = 0;
         let winCount = 0;
         let treasureCount = 0;
 
-        candidates.forEach(data => {
-            battleCount += data.obtainTotalCount;
-            winCount += data.obtainWinCount;
+        TeamMemberLoader.loadTeamMembersAsMap(this.#includeExternal)
+            .forEach(it => {
+                const report = new RoleTreasureReport(it);
+                roleReports.set(it.id!, report);
+            });
 
-            const monster = data.monster!;
-            if (!reports.has(monster)) {
-                reports.set(monster, new Report());
-            }
-            const report = reports.get(monster)!;
-            report.battleCount += data.obtainTotalCount;
-            report.winCount += data.obtainWinCount;
+        (await BattleResultStorage.getInstance().loads())
+            .filter(it => it.obtainBattleField === "上洞")
+            .filter(it => it.roleId !== undefined)
+            .filter(it => roleReports.has(it.roleId!))
+            .forEach(data => {
+                battleCount += data.obtainTotalCount;
+                winCount += data.obtainWinCount;
 
-            if (data.treasures) {
-                data.treasures.forEach((count, code) => {
-                    if (TreasureLoader.isTreasure(code)) {
-                        treasureCount += count;
+                const monster = data.monster!;
+                if (!monsterReports.has(monster)) {
+                    monsterReports.set(monster, new MonsterTreasureReport());
+                }
+                const monsterReport = monsterReports.get(monster)!;
+                monsterReport.battleCount += data.obtainTotalCount;
+                monsterReport.winCount += data.obtainWinCount;
 
-                        report.treasureCode = code;
-                        report.treasureCount += count;
-                    }
-                });
-            }
-        });
+                if (data.treasures) {
+                    data.treasures.forEach((count, code) => {
+                        if (TreasureLoader.isTreasure(code)) {
+                            treasureCount += count;
+                            monsterReport.treasureCode = code;
+                            monsterReport.treasureCount += count;
+
+                            const roleReport = roleReports.get(data.roleId!)!;
+                            roleReport.treasureCount++;
+                        }
+                    });
+                }
+            });
 
         let html = "";
         html += "<table style='background-color:transparent;border-width:0;border-spacing:0;margin:auto'>";
         html += "<tbody>";
+
+        let totalTreasureCount = 0;
+        roleReports.forEach(it => totalTreasureCount += it.treasureCount);
+
+        // --------------------------------------------------------------------
+        // 团队入手数量统计
+        // --------------------------------------------------------------------
+        html += "<tr><td>";
+        html += "<table style='text-align:center;background-color:#888888;margin:auto;width:100%'>";
+        html += "<tbody>";
+        html += "<tr>";
+        html += "<th style='background-color:navy;color:yellow' colspan='3'>团 队 上 洞 入 手 统 计 （ 含 祭 奠 ）</th>";
+        html += "</tr>";
+        html += "<tr>";
+        html += "<td style='background-color:#E8E8D0;color:red;font-weight:bold' colspan='3'>";
+        html += "全团队成员总共入手上洞" + totalTreasureCount + "件（含祭奠）。";
+        html += "</td>";
+        html += "</tr>";
+        let index = 0;
+        roleReports.forEach(report => {
+            html += "<tr>";
+            html += "<th style='background-color:black;color:white;white-space:nowrap'>";
+            html += report.member.name;
+            html += "</th>";
+            html += "<td style='background-color:#E8E8D0;white-space:nowrap;text-align:right'>";
+            html += report.treasureCount;
+            html += "</td>";
+            if (index++ === 0) {
+                html += "<td style='background-color:#E8E8D0;width:100%;height:300px' " +
+                    "rowspan='" + roleReports.size + "' id='_role_treasure_canvas'>";
+                html += "</td>";
+            }
+            html += "</tr>";
+        });
+        html += "</tbody>";
+        html += "</table>";
+        html += "</td></tr>";
 
         // --------------------------------------------------------------------
         // 上 洞 怪 物 入 手 总 览
@@ -88,7 +127,7 @@ class TreasureReportGenerator {
             const profile = MonsterProfileLoader.load(i);
             if (!profile) continue;
             const name = profile.name!;
-            const report = reports.get(name);
+            const report = monsterReports.get(name);
             if (!report) continue;
             const treasureName = TreasureLoader.findTreasureName(report.treasureCode);
             if (!treasureName) continue;
@@ -114,11 +153,61 @@ class TreasureReportGenerator {
         html += "</table>";
 
         $("#statistics").html(html).parent().show();
+
+        this.#generateRoleTreasureChart(roleReports);
+    }
+
+    #generateRoleTreasureChart(roleReports: Map<string, RoleTreasureReport>) {
+        const pieData: {}[] = [];
+        roleReports.forEach(it => {
+            const name = it.member.name!;
+            const value = it.treasureCount!;
+            const data = {name: name, value: value};
+            pieData.push(data);
+        });
+
+        const option: EChartsOption = {
+            tooltip: {
+                trigger: 'item'
+            },
+            legend: {
+                top: '5%',
+                left: 'center'
+            },
+            series: [
+                {
+                    name: '入手次数',
+                    type: 'pie',
+                    radius: '50%',
+                    data: pieData,
+                    emphasis: {
+                        itemStyle: {
+                            shadowBlur: 10,
+                            shadowOffsetX: 0,
+                            shadowColor: 'rgba(0, 0, 0, 0.5)'
+                        }
+                    }
+                }
+            ]
+        };
+        const element = document.getElementById("_role_treasure_canvas")!;
+        const chart = echarts.init(element);
+        chart.setOption(option);
     }
 
 }
 
-class Report {
+class RoleTreasureReport {
+
+    readonly member: TeamMember;
+    treasureCount = 0;
+
+    constructor(member: TeamMember) {
+        this.member = member;
+    }
+}
+
+class MonsterTreasureReport {
 
     battleCount = 0;
     winCount = 0;

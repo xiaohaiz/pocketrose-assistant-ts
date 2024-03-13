@@ -294,14 +294,14 @@ function doBindReport4() {
 
 function doBindReport5() {
     $("#report-5").on("click", () => {
+        $(".reportButton").prop("disabled", true);
         const includeExternal = $("#includeExternal").prop("checked") as boolean;
-        BattleResultStorage.getInstance()
-            .loads()
-            .then(dataList => {
-                new TreasureReportGenerator(dataList)
-                    .includeExternal(includeExternal)
-                    .generate();
-            })
+        new TreasureReportGenerator()
+            .includeExternal(includeExternal)
+            .generateReport()
+            .then(() => {
+                $(".reportButton").prop("disabled", false);
+            });
     });
 }
 
