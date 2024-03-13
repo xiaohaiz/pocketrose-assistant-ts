@@ -285,10 +285,14 @@ function doBindReport3() {
 
 function doBindReport4() {
     $("#report-4").on("click", () => {
+        $(".reportButton").prop("disabled", true);
         const includeExternal = $("#includeExternal").prop("checked") as boolean;
         new CareerChangeReportGenerator()
             .includeExternal(includeExternal)
-            .generate();
+            .generateReport()
+            .then(() => {
+                $(".reportButton").prop("disabled", false);
+            });
     });
 }
 
