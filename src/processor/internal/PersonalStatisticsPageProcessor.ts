@@ -1,5 +1,3 @@
-import BankRecordManager from "../../core/bank/BankRecordManager";
-import BankRecordStorage from "../../core/bank/BankRecordStorage";
 import BattleLogService from "../../core/battle/BattleLogService";
 import BattleLogStorage from "../../core/battle/BattleLogStorage";
 import BattleResultStorage from "../../core/battle/BattleResultStorage";
@@ -150,17 +148,6 @@ abstract class PersonalStatisticsPageProcessor extends PageProcessorCredentialSu
             html += "</tr>";
             html += "<tr>";
             html += "<td>";
-            html += "<button role='button' class='databaseButton reportButton' id='clearBankRecord'>清除银行记录</button>";
-            html += "</td>";
-            html += "<td>";
-            html += "<button role='button' class='databaseButton reportButton' id='exportBankRecord'>导出银行记录</button>";
-            html += "</td>";
-            html += "<td>";
-            html += "<button role='button' class='databaseButton reportButton' id='importBankRecord'>导入银行记录</button>";
-            html += "</td>";
-            html += "</tr>";
-            html += "<tr>";
-            html += "<td>";
             html += "<button role='button' class='databaseButton reportButton' id='clearCareerChange'>清除转职记录</button>";
             html += "</td>";
             html += "<td>";
@@ -236,9 +223,6 @@ abstract class PersonalStatisticsPageProcessor extends PageProcessorCredentialSu
             doBindClearBattleLog();
             doBindExportBattleLog();
             doBindImportBattleLog();
-            doBindClearBankRecord();
-            doBindExportBankRecord();
-            doBindImportBankRecord();
             doBindClearCareerChange();
             doBindExportCareerChange();
             doBindImportCareerChange();
@@ -513,97 +497,6 @@ function doBindImportBattleLog() {
 
                 BattleLogService.importBattleLog(json);
                 $(".databaseButton").prop("disabled", false);
-            }
-        }
-    });
-}
-
-function doBindClearBankRecord() {
-    $("#clearBankRecord").on("click", () => {
-        if (!confirm("银行记录一旦清除就彻底丢失了，正常玩家不需要执行此操作！")) {
-            return;
-        }
-        if (!confirm("二次确认！银行记录真的清除后就彻底丢失，有造成数据不一致的隐患。不明白数据同步含义的不要执行！")) {
-            return;
-        }
-        if (!confirm("最终确认！你要确认你在做什么！免责声明：每个人都是自己数据的唯一责任人！")) {
-            return;
-        }
-
-        $(".databaseButton").prop("disabled", true);
-        BankRecordStorage.getInstance().clear().then(() => {
-            const message: string = "<b style='font-weight:bold;font-size:300%;color:red'>所有银行记录数据已经全部清除！</b>";
-            $("#statistics").html(message).parent().show();
-            $(".databaseButton").prop("disabled", false);
-        });
-    });
-}
-
-function doBindExportBankRecord() {
-    $("#exportBankRecord").on("click", () => {
-        $(".databaseButton").prop("disabled", true);
-        BankRecordStorage.getInstance().loads().then(dataList => {
-            const documentList = dataList.map(it => it.asDocument());
-            const json = JSON.stringify(documentList);
-            const html = "<textarea id='exportBankRecordData' " +
-                "rows='15' spellcheck='false' " +
-                "style=\"height:expression((this.scrollHeight>150)?'150px':(this.scrollHeight+5)+'px');overflow:auto;width:100%;word-break;break-all;\">" +
-                "</textarea>";
-            $("#statistics").html(html).parent().show();
-            $("#exportBankRecordData").val(json);
-            $(".databaseButton").prop("disabled", false);
-        });
-    });
-}
-
-
-function doBindImportBankRecord() {
-    $("#importBankRecord").on("click", () => {
-        if ($("#bankRecordData").length === 0) {
-            let html = "";
-            html += "<table style='background-color:transparent;border-width:0;border-spacing:0;width:100%;margin:auto'>";
-            html += "<tbody>";
-            html += "<tr>";
-            html += "<th style='text-align:center;background-color:navy;color:yellow'>将待导入的银行记录数据粘贴到下方文本框，然后再次点击“导入战斗日志”按钮。</th>";
-            html += "</tr>";
-            html += "<tr>";
-            html += "<td>";
-            html += "<textarea id='bankRecordData' " +
-                "rows='15' spellcheck='false' " +
-                "style=\"height:expression((this.scrollHeight>150)?'150px':(this.scrollHeight+5)+'px');overflow:auto;width:100%;word-break;break-all;\">" +
-                "</textarea>";
-            html += "</td>";
-            html += "</tr>";
-            html += "</tbody>";
-            html += "</table>";
-            $("#statistics").html(html).parent().show();
-        } else {
-            const json = $("#bankRecordData").val() as string;
-            if (json !== "") {
-                $(".databaseButton").prop("disabled", true);
-
-                let html = "";
-                html += "<table style='background-color:#888888;text-align:center;margin:auto;'>";
-                html += "<tbody>";
-                html += "<tr>";
-                html += "<th style='background-color:#F8F0E0'>银行记录条目</th>";
-                html += "<td style='background-color:#F8F0E0' id='bankRecordCount'>0</td>";
-                html += "</tr>";
-                html += "<tr>";
-                html += "<th style='background-color:#F8F0E0'>重复银行记录条目</th>";
-                html += "<td style='background-color:#F8F0E0;color:red' id='duplicatedBankRecordCount'>0</td>";
-                html += "</tr>";
-                html += "<tr>";
-                html += "<th style='background-color:#F8F0E0'>导入银行记录条目</th>";
-                html += "<td style='background-color:#F8F0E0;color:blue' id='importedBankRecordCount'>0</td>";
-                html += "</tr>";
-                html += "</tbody>";
-                html += "</table>";
-                $("#statistics").html(html).parent().show();
-
-                BankRecordManager.importFromJson(json).then(() => {
-                    $(".databaseButton").prop("disabled", false);
-                });
             }
         }
     });
