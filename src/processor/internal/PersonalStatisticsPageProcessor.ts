@@ -16,9 +16,9 @@ import NpcLoader from "../../core/role/NpcLoader";
 import TeamMemberLoader from "../../core/team/TeamMemberLoader";
 import Credential from "../../util/Credential";
 import DayRange from "../../util/DayRange";
+import KeyboardShortcutBuilder from "../../util/KeyboardShortcutBuilder";
 import MessageBoard from "../../util/MessageBoard";
 import MonthRange from "../../util/MonthRange";
-import PageUtils from "../../util/PageUtils";
 import WeekRange from "../../util/WeekRange";
 import PageProcessorContext from "../PageProcessorContext";
 import PageProcessorCredentialSupport from "../PageProcessorCredentialSupport";
@@ -231,7 +231,10 @@ abstract class PersonalStatisticsPageProcessor extends PageProcessorCredentialSu
             doBindImportConsecrateLog();
         }
 
-        PageUtils.onEscapePressed(() => $("#returnButton").trigger("click"));
+        new KeyboardShortcutBuilder()
+            .onEscapePressed(() => $("#returnButton").trigger("click"))
+            .withPredicate(() => $("textarea:focus").length === 0)
+            .bind();
     }
 
     #welcomeMessageHtml() {
