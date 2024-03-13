@@ -18,6 +18,19 @@ class BattleFieldConfig {
         return count;
     }
 
+    asDocument(): {} {
+        const document = {};
+        // @ts-ignore
+        document["primary"] = this.primary;
+        // @ts-ignore
+        document["junior"] = this.junior;
+        // @ts-ignore
+        document["senior"] = this.senior;
+        // @ts-ignore
+        document["zodiac"] = this.zodiac;
+        return document;
+    }
+
 }
 
 export = BattleFieldConfig;
