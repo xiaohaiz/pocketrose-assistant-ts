@@ -326,7 +326,7 @@ function doBindReport6() {
         const includeExternal = $("#includeExternal").prop("checked") as boolean;
         new ConsecrateReportGenerator()
             .includeExternal(includeExternal)
-            .generate()
+            .generateReport()
             .then();
     });
 }
