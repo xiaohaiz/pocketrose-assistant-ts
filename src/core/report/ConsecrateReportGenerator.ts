@@ -2,6 +2,8 @@ import _ from "lodash";
 import EquipmentConsecrateLog from "../equipment/EquipmentConsecrateLog";
 import EquipmentConsecrateLogStorage from "../equipment/EquipmentConsecrateLogStorage";
 import TeamMemberLoader from "../team/TeamMemberLoader";
+import TeamMember from "../team/TeamMember";
+import StringUtils from "../../util/StringUtils";
 
 class ConsecrateReportGenerator {
 
@@ -12,12 +14,43 @@ class ConsecrateReportGenerator {
         return this;
     }
 
-    async generateReportHTML(): Promise<string> {
-        return await (() => {
-            return new Promise<string>(resolve => {
-                resolve("");
+    async generateReportHTML(): Promise<void> {
+        const roleReports = new Map<string, RoleConsecrateReport>();
+        TeamMemberLoader.loadTeamMembersAsMap(this.#includeExternal)
+            .forEach(it => {
+                const report = new RoleConsecrateReport(it);
+                roleReports.set(it.id!, report);
             });
-        })();
+
+        const equipmentReports = new Map<string, EquipmentConsecrateReport>();
+
+        (await EquipmentConsecrateLogStorage.getInstance().loads())
+            .filter(it => roleReports.has(it.roleId!))
+            .forEach(it => {
+                // 基于角色的统计
+                const roleId = it.roleId!;
+                const roleReport = roleReports.get(roleId)!;
+                roleReport.consecrateCount++;
+
+                // 基于装备的统计
+                // 修正祭奠的上洞装备的名称
+                let equipmentName = it.equipments!;
+                if (_.includes(equipmentName, "好人卡")) {
+                    equipmentName = "好人卡";
+                } else if (_.startsWith(equipmentName, "齐心★")) {
+                    equipmentName = StringUtils.substringAfterLast(equipmentName, "齐心★");
+                }
+                if (!equipmentReports.has(equipmentName)) {
+                    equipmentReports.set(equipmentName, new EquipmentConsecrateReport(equipmentName));
+                }
+                const equipmentReport = equipmentReports.get(equipmentName)!;
+                if (equipmentName === "好人卡") {
+                    // 好人卡祭奠每次3张
+                    equipmentReport.consecrateCount += 3;
+                } else {
+                    equipmentReport.consecrateCount++;
+                }
+            });
     }
 
     async generate() {
@@ -78,6 +111,26 @@ class ConsecrateReportGenerator {
         html += "</table>";
 
         $("#statistics").html(html).parent().show();
+    }
+}
+
+class RoleConsecrateReport {
+
+    readonly member: TeamMember;
+    consecrateCount = 0;
+
+    constructor(member: TeamMember) {
+        this.member = member;
+    }
+}
+
+class EquipmentConsecrateReport {
+
+    readonly equipmentName: string;
+    consecrateCount = 0;
+
+    constructor(equipmentName: string) {
+        this.equipmentName = equipmentName;
     }
 }
 
