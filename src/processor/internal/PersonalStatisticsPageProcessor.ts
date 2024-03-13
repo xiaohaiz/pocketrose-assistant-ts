@@ -1,5 +1,3 @@
-import BankRecordManager from "../../core/bank/BankRecordManager";
-import BankRecordStorage from "../../core/bank/BankRecordStorage";
 import BattleLogService from "../../core/battle/BattleLogService";
 import BattleLogStorage from "../../core/battle/BattleLogStorage";
 import BattleResultStorage from "../../core/battle/BattleResultStorage";
@@ -78,49 +76,51 @@ abstract class PersonalStatisticsPageProcessor extends PageProcessorCredentialSu
         html += "<td id='hidden-5'></td>";
         html += "</tr>";
         html += "<tr>";
-        html += "<td id='operation' style='text-align:center;background-color:#F8F0E0'></td>";
+        html += "<td id='operation' style='text-align:center;background-color:#F8F0E0'>";
+        html += "<input type='checkbox' id='includeExternal' checked>是否包含编外队员";
+        html += "</td>";
         html += "<tr>";
         html += "<td style='text-align:center;background-color:#F8F0E0'>";
         html += "<table style='background-color:transparent;border-spacing:0;border-width:0;margin:auto'>";
         html += "<tbody>";
         html += "<tr>";
         html += "<td>";
-        html += "<button role='button' id='report-1' style='width:100%'>战斗统计报告</button>";
+        html += "<button role='button' id='report-1' style='width:100%' class='reportButton'>战斗统计报告</button>";
         html += "</td>";
         html += "<td>";
-        html += "<button role='button' id='report-2' style='width:100%'>怪物统计报告</button>";
+        html += "<button role='button' id='report-2' style='width:100%' class='reportButton'>怪物统计报告</button>";
         html += "</td>";
         html += "<td>";
-        html += "<button role='button' id='report-3' style='width:100%'>十二宫统计报告</button>";
+        html += "<button role='button' id='report-3' style='width:100%' class='reportButton'>十二宫统计报告</button>";
         html += "</td>";
         html += "<td>";
-        html += "<button role='button' id='report-4' style='width:100%'>转职统计报告</button>";
+        html += "<button role='button' id='report-4' style='width:100%' class='reportButton'>转职统计报告</button>";
         html += "</td>";
         html += "<td>";
-        html += "<button role='button' id='report-5' style='width:100%'>上洞入手报告</button>";
+        html += "<button role='button' id='report-5' style='width:100%' class='reportButton'>上洞入手报告</button>";
         html += "</td>";
         html += "<td>";
-        html += "<button role='button' id='report-6' style='width:100%'>祭奠统计报告</button>";
+        html += "<button role='button' id='report-6' style='width:100%' class='reportButton'>祭奠统计报告</button>";
         html += "<td>";
         html += "</tr>";
         html += "<tr>";
         html += "<td>";
-        html += "<button role='button' id='log-1' style='width:100%'>当日战报</button>";
+        html += "<button role='button' id='log-1' style='width:100%' class='reportButton'>当日战报</button>";
         html += "</td>";
         html += "<td>";
-        html += "<button role='button' id='log-2' style='width:100%'>昨日战报</button>";
+        html += "<button role='button' id='log-2' style='width:100%' class='reportButton'>昨日战报</button>";
         html += "</td>";
         html += "<td>";
-        html += "<button role='button' id='log-3' style='width:100%'>本周战报</button>";
+        html += "<button role='button' id='log-3' style='width:100%' class='reportButton'>本周战报</button>";
         html += "</td>";
         html += "<td>";
-        html += "<button role='button' id='log-4' style='width:100%'>上周战报</button>";
+        html += "<button role='button' id='log-4' style='width:100%' class='reportButton'>上周战报</button>";
         html += "</td>";
         html += "<td>";
-        html += "<button role='button' id='log-5' style='width:100%'>本月战报</button>";
+        html += "<button role='button' id='log-5' style='width:100%' class='reportButton'>本月战报</button>";
         html += "</td>";
         html += "<td>";
-        html += "<button role='button' id='log-6' style='width:100%'>上月战报</button>";
+        html += "<button role='button' id='log-6' style='width:100%' class='reportButton'>上月战报</button>";
         html += "</td>";
         html += "</tr>";
         html += "</tbody>";
@@ -137,46 +137,35 @@ abstract class PersonalStatisticsPageProcessor extends PageProcessorCredentialSu
             html += "<tbody>";
             html += "<tr>";
             html += "<td>";
-            html += "<button role='button' class='databaseButton' id='clearBattleLog'>清除战斗记录</button>";
+            html += "<button role='button' class='databaseButton reportButton' id='clearBattleLog'>清除战斗记录</button>";
             html += "</td>";
             html += "<td>";
-            html += "<button role='button' class='databaseButton' id='exportBattleLog'>导出战斗日志</button>";
+            html += "<button role='button' class='databaseButton reportButton' id='exportBattleLog'>导出战斗日志</button>";
             html += "</td>";
             html += "<td>";
-            html += "<button role='button' class='databaseButton' id='importBattleLog'>导入战斗日志</button>";
-            html += "</td>";
-            html += "</tr>";
-            html += "<tr>";
-            html += "<td>";
-            html += "<button role='button' class='databaseButton' id='clearBankRecord'>清除银行记录</button>";
-            html += "</td>";
-            html += "<td>";
-            html += "<button role='button' class='databaseButton' id='exportBankRecord'>导出银行记录</button>";
-            html += "</td>";
-            html += "<td>";
-            html += "<button role='button' class='databaseButton' id='importBankRecord'>导入银行记录</button>";
+            html += "<button role='button' class='databaseButton reportButton' id='importBattleLog'>导入战斗日志</button>";
             html += "</td>";
             html += "</tr>";
             html += "<tr>";
             html += "<td>";
-            html += "<button role='button' class='databaseButton' id='clearCareerChange'>清除转职记录</button>";
+            html += "<button role='button' class='databaseButton reportButton' id='clearCareerChange'>清除转职记录</button>";
             html += "</td>";
             html += "<td>";
-            html += "<button role='button' class='databaseButton' id='exportCareerChange'>导出转职记录</button>";
+            html += "<button role='button' class='databaseButton reportButton' id='exportCareerChange'>导出转职记录</button>";
             html += "</td>";
             html += "<td>";
-            html += "<button role='button' class='databaseButton' id='importCareerChange'>导入转职记录</button>";
+            html += "<button role='button' class='databaseButton reportButton' id='importCareerChange'>导入转职记录</button>";
             html += "</td>";
             html += "</tr>";
             html += "<tr>";
             html += "<td>";
-            html += "<button role='button' class='databaseButton' id='clearConsecrateLog'>清除祭奠记录</button>";
+            html += "<button role='button' class='databaseButton reportButton' id='clearConsecrateLog'>清除祭奠记录</button>";
             html += "</td>";
             html += "<td>";
-            html += "<button role='button' class='databaseButton' id='exportConsecrateLog'>导出祭奠记录</button>";
+            html += "<button role='button' class='databaseButton reportButton' id='exportConsecrateLog'>导出祭奠记录</button>";
             html += "</td>";
             html += "<td>";
-            html += "<button role='button' class='databaseButton' id='importConsecrateLog'>导入祭奠记录</button>";
+            html += "<button role='button' class='databaseButton reportButton' id='importConsecrateLog'>导入祭奠记录</button>";
             html += "</td>";
             html += "</tr>";
             html += "</tbody>";
@@ -217,19 +206,6 @@ abstract class PersonalStatisticsPageProcessor extends PageProcessorCredentialSu
 
         this.doBindReturnButton(credential);
 
-        html = "";
-        html += "<select id='teamMemberSelect'>";
-        html += "<option value=''>全团队</option>";
-        TeamMemberLoader.loadTeamMembers()
-            .filter(it => !it.external)
-            .forEach(config => {
-                html += "<option value='" + config.id + "'>" + config.name + "</option>";
-            });
-        html += "</select>";
-        $("#operation").append($(html));
-
-        $("#operation").append($("<input type='text' id='monster' size='5'>"));
-
         doBindReport1();
         doBindReport2();
         doBindReport3();
@@ -247,9 +223,6 @@ abstract class PersonalStatisticsPageProcessor extends PageProcessorCredentialSu
             doBindClearBattleLog();
             doBindExportBattleLog();
             doBindImportBattleLog();
-            doBindClearBankRecord();
-            doBindExportBankRecord();
-            doBindImportBankRecord();
             doBindClearCareerChange();
             doBindExportCareerChange();
             doBindImportCareerChange();
@@ -271,11 +244,13 @@ abstract class PersonalStatisticsPageProcessor extends PageProcessorCredentialSu
 
 function doBindReport1() {
     $("#report-1").on("click", () => {
-        const target = $("#teamMemberSelect").val()! as string;
+        const includeExternal = $("#includeExternal").prop("checked") as boolean;
         BattleResultStorage.getInstance()
             .loads()
             .then(dataList => {
-                const html = new BattleReportGenerator(dataList, target).generate();
+                const html = new BattleReportGenerator(dataList)
+                    .includeExternal(includeExternal)
+                    .generate();
                 $("#statistics").html(html).parent().show();
             });
     });
@@ -283,11 +258,13 @@ function doBindReport1() {
 
 function doBindReport2() {
     $("#report-2").on("click", () => {
-        const target = $("#teamMemberSelect").val()! as string;
+        const includeExternal = $("#includeExternal").prop("checked") as boolean;
         BattleResultStorage.getInstance()
             .loads()
             .then(dataList => {
-                const html = new MonsterReportGenerator(dataList, target).generate();
+                const html = new MonsterReportGenerator(dataList)
+                    .includeExternal(includeExternal)
+                    .generate();
                 $("#statistics").html(html).parent().show();
             });
     });
@@ -295,47 +272,61 @@ function doBindReport2() {
 
 function doBindReport3() {
     $("#report-3").on("click", () => {
-        const target = $("#teamMemberSelect").val()! as string;
+        const includeExternal = $("#includeExternal").prop("checked") as boolean;
         BattleResultStorage.getInstance()
             .loads()
             .then(dataList => {
-                new ZodiacReportGenerator(dataList, target).generate();
+                new ZodiacReportGenerator(dataList)
+                    .includeExternal(includeExternal)
+                    .generate();
             });
     });
 }
 
 function doBindReport4() {
     $("#report-4").on("click", () => {
-        const target = $("#teamMemberSelect").val()! as string;
-        new CareerChangeReportGenerator(target).generate();
+        const includeExternal = $("#includeExternal").prop("checked") as boolean;
+        new CareerChangeReportGenerator()
+            .includeExternal(includeExternal)
+            .generate();
     });
 }
 
 function doBindReport5() {
     $("#report-5").on("click", () => {
-        const target = $("#teamMemberSelect").val()! as string;
-        BattleResultStorage.getInstance()
-            .loads()
-            .then(dataList => {
-                new TreasureReportGenerator(dataList, target).generate();
-            })
+        $(".reportButton").prop("disabled", true);
+        const includeExternal = $("#includeExternal").prop("checked") as boolean;
+        new TreasureReportGenerator()
+            .includeExternal(includeExternal)
+            .generateReport()
+            .then(() => {
+                $(".reportButton").prop("disabled", false);
+            });
     });
 }
 
 function doBindReport6() {
     $("#report-6").on("click", () => {
-        const target = $("#teamMemberSelect").val()! as string;
-        new ConsecrateReportGenerator(target).generate().then();
+        $(".reportButton").prop("disabled", true);
+        const includeExternal = $("#includeExternal").prop("checked") as boolean;
+        new ConsecrateReportGenerator()
+            .includeExternal(includeExternal)
+            .generateReport()
+            .then(() => {
+                $(".reportButton").prop("disabled", false);
+            });
     });
 }
 
 function doBindLog1() {
     $("#log-1").on("click", () => {
-        const target = $("#teamMemberSelect").val()! as string;
+        const includeExternal = $("#includeExternal").prop("checked") as boolean;
         BattleLogStorage.getInstance()
             .findByCreateTime(DayRange.current().start)
             .then(logList => {
-                const html = new DailyReportGenerator(logList, target).generate();
+                const html = new DailyReportGenerator(logList)
+                    .includeExternal(includeExternal)
+                    .generate();
                 $("#statistics").html(html).parent().show();
             });
     });
@@ -343,12 +334,14 @@ function doBindLog1() {
 
 function doBindLog2() {
     $("#log-2").on("click", () => {
-        const target = $("#teamMemberSelect").val()! as string;
+        const includeExternal = $("#includeExternal").prop("checked") as boolean;
         const yesterday = DayRange.current().previous();
         BattleLogStorage.getInstance()
             .findByCreateTime(yesterday.start, yesterday.end)
             .then(logList => {
-                const html = new DailyReportGenerator(logList, target).generate();
+                const html = new DailyReportGenerator(logList)
+                    .includeExternal(includeExternal)
+                    .generate();
                 $("#statistics").html(html).parent().show();
             });
     });
@@ -356,11 +349,13 @@ function doBindLog2() {
 
 function doBindLog3() {
     $("#log-3").on("click", () => {
-        const target = $("#teamMemberSelect").val()! as string;
+        const includeExternal = $("#includeExternal").prop("checked") as boolean;
         BattleLogStorage.getInstance()
             .findByCreateTime(WeekRange.current().start)
             .then(logList => {
-                const html = new WeeklyReportGenerator(logList, target).generate();
+                const html = new WeeklyReportGenerator(logList)
+                    .includeExternal(includeExternal)
+                    .generate();
                 $("#statistics").html(html).parent().show();
             });
     });
@@ -368,12 +363,14 @@ function doBindLog3() {
 
 function doBindLog4() {
     $("#log-4").on("click", () => {
-        const target = $("#teamMemberSelect").val()! as string;
+        const includeExternal = $("#includeExternal").prop("checked") as boolean;
         const lastWeek = WeekRange.current().previous();
         BattleLogStorage.getInstance()
             .findByCreateTime(lastWeek.start, lastWeek.end)
             .then(logList => {
-                const html = new WeeklyReportGenerator(logList, target).generate();
+                const html = new WeeklyReportGenerator(logList)
+                    .includeExternal(includeExternal)
+                    .generate();
                 $("#statistics").html(html).parent().show();
             });
     });
@@ -381,15 +378,19 @@ function doBindLog4() {
 
 function doBindLog5() {
     $("#log-5").on("click", () => {
-        const target = $("#teamMemberSelect").val()! as string;
-        new MonthlyReportGenerator(MonthRange.current(), target).generate();
+        const includeExternal = $("#includeExternal").prop("checked") as boolean;
+        new MonthlyReportGenerator(MonthRange.current())
+            .includeExternal(includeExternal)
+            .generate();
     });
 }
 
 function doBindLog6() {
     $("#log-6").on("click", () => {
-        const target = $("#teamMemberSelect").val()! as string;
-        new MonthlyReportGenerator(MonthRange.current().previous(), target).generate();
+        const includeExternal = $("#includeExternal").prop("checked") as boolean;
+        new MonthlyReportGenerator(MonthRange.current().previous())
+            .includeExternal(includeExternal)
+            .generate();
     });
 }
 
@@ -496,97 +497,6 @@ function doBindImportBattleLog() {
 
                 BattleLogService.importBattleLog(json);
                 $(".databaseButton").prop("disabled", false);
-            }
-        }
-    });
-}
-
-function doBindClearBankRecord() {
-    $("#clearBankRecord").on("click", () => {
-        if (!confirm("银行记录一旦清除就彻底丢失了，正常玩家不需要执行此操作！")) {
-            return;
-        }
-        if (!confirm("二次确认！银行记录真的清除后就彻底丢失，有造成数据不一致的隐患。不明白数据同步含义的不要执行！")) {
-            return;
-        }
-        if (!confirm("最终确认！你要确认你在做什么！免责声明：每个人都是自己数据的唯一责任人！")) {
-            return;
-        }
-
-        $(".databaseButton").prop("disabled", true);
-        BankRecordStorage.getInstance().clear().then(() => {
-            const message: string = "<b style='font-weight:bold;font-size:300%;color:red'>所有银行记录数据已经全部清除！</b>";
-            $("#statistics").html(message).parent().show();
-            $(".databaseButton").prop("disabled", false);
-        });
-    });
-}
-
-function doBindExportBankRecord() {
-    $("#exportBankRecord").on("click", () => {
-        $(".databaseButton").prop("disabled", true);
-        BankRecordStorage.getInstance().loads().then(dataList => {
-            const documentList = dataList.map(it => it.asDocument());
-            const json = JSON.stringify(documentList);
-            const html = "<textarea id='exportBankRecordData' " +
-                "rows='15' spellcheck='false' " +
-                "style=\"height:expression((this.scrollHeight>150)?'150px':(this.scrollHeight+5)+'px');overflow:auto;width:100%;word-break;break-all;\">" +
-                "</textarea>";
-            $("#statistics").html(html).parent().show();
-            $("#exportBankRecordData").val(json);
-            $(".databaseButton").prop("disabled", false);
-        });
-    });
-}
-
-
-function doBindImportBankRecord() {
-    $("#importBankRecord").on("click", () => {
-        if ($("#bankRecordData").length === 0) {
-            let html = "";
-            html += "<table style='background-color:transparent;border-width:0;border-spacing:0;width:100%;margin:auto'>";
-            html += "<tbody>";
-            html += "<tr>";
-            html += "<th style='text-align:center;background-color:navy;color:yellow'>将待导入的银行记录数据粘贴到下方文本框，然后再次点击“导入战斗日志”按钮。</th>";
-            html += "</tr>";
-            html += "<tr>";
-            html += "<td>";
-            html += "<textarea id='bankRecordData' " +
-                "rows='15' spellcheck='false' " +
-                "style=\"height:expression((this.scrollHeight>150)?'150px':(this.scrollHeight+5)+'px');overflow:auto;width:100%;word-break;break-all;\">" +
-                "</textarea>";
-            html += "</td>";
-            html += "</tr>";
-            html += "</tbody>";
-            html += "</table>";
-            $("#statistics").html(html).parent().show();
-        } else {
-            const json = $("#bankRecordData").val() as string;
-            if (json !== "") {
-                $(".databaseButton").prop("disabled", true);
-
-                let html = "";
-                html += "<table style='background-color:#888888;text-align:center;margin:auto;'>";
-                html += "<tbody>";
-                html += "<tr>";
-                html += "<th style='background-color:#F8F0E0'>银行记录条目</th>";
-                html += "<td style='background-color:#F8F0E0' id='bankRecordCount'>0</td>";
-                html += "</tr>";
-                html += "<tr>";
-                html += "<th style='background-color:#F8F0E0'>重复银行记录条目</th>";
-                html += "<td style='background-color:#F8F0E0;color:red' id='duplicatedBankRecordCount'>0</td>";
-                html += "</tr>";
-                html += "<tr>";
-                html += "<th style='background-color:#F8F0E0'>导入银行记录条目</th>";
-                html += "<td style='background-color:#F8F0E0;color:blue' id='importedBankRecordCount'>0</td>";
-                html += "</tr>";
-                html += "</tbody>";
-                html += "</table>";
-                $("#statistics").html(html).parent().show();
-
-                BankRecordManager.importFromJson(json).then(() => {
-                    $(".databaseButton").prop("disabled", false);
-                });
             }
         }
     });

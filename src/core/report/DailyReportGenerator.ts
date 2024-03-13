@@ -9,32 +9,29 @@ import TeamMemberLoader from "../team/TeamMemberLoader";
 class DailyReportGenerator {
 
     readonly #logList: BattleLog[];
-    readonly #target?: string;
+    #includeExternal = true;
 
-
-    constructor(logList: BattleLog[], target?: string) {
+    constructor(logList: BattleLog[]) {
         this.#logList = logList;
-        this.#target = target;
+    }
+
+    includeExternal(includeExternal: boolean): DailyReportGenerator {
+        this.#includeExternal = includeExternal;
+        return this;
     }
 
     generate() {
-        const internalIds = TeamMemberLoader.loadInternalIds();
+        const memberIds = TeamMemberLoader.loadTeamMembers()
+            .filter(it => this.#includeExternal || !it.external)
+            .map(it => it.id!);
         const candidates = this.#logList
-            .filter(it => _.includes(internalIds, it.roleId))
-            .filter(it =>
-                this.#target === undefined ||
-                this.#target === "" ||
-                it.roleId === this.#target);
+            .filter(it => _.includes(memberIds, it.roleId));
 
         const roles = new Map<string, RoleDailyReport>();
         TeamMemberLoader.loadTeamMembers()
-            .filter(it => !it.external)
+            .filter(it => _.includes(memberIds, it.id))
             .forEach(config => {
-                if (this.#target === undefined || this.#target === "") {
-                    roles.set(config.id!, new RoleDailyReport(config.name!));
-                } else if (this.#target === config.id) {
-                    roles.set(config.id!, new RoleDailyReport(config.name!));
-                }
+                roles.set(config.id!, new RoleDailyReport(config.name!));
             });
 
         const allTreasures = new Map<string, number>();

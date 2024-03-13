@@ -7,21 +7,23 @@ import TeamMemberLoader from "../team/TeamMemberLoader";
 class BattleReportGenerator {
 
     readonly #dataList: BattleResult[];
-    readonly #target?: string;
+    #includeExternal = true;
 
-    constructor(dataList: BattleResult[], target?: string) {
+    constructor(dataList: BattleResult[]) {
         this.#dataList = dataList;
-        this.#target = target;
+    }
+
+    includeExternal(includeExternal: boolean): BattleReportGenerator {
+        this.#includeExternal = includeExternal;
+        return this;
     }
 
     generate() {
-        const internalIds = TeamMemberLoader.loadInternalIds();
+        const memberIds = TeamMemberLoader.loadTeamMembers()
+            .filter(it => this.#includeExternal || !it.external)
+            .map(it => it.id!);
         const candidates = this.#dataList
-            .filter(it => _.includes(internalIds, it.roleId))
-            .filter(it =>
-                this.#target === undefined ||
-                this.#target === "" ||
-                it.roleId === this.#target);
+            .filter(it => _.includes(memberIds, it.roleId));
 
         let totalWinCount = 0;
         let totalCount = 0;
@@ -54,13 +56,9 @@ class BattleReportGenerator {
 
         const roles = new Map<string, RoleBattle>();
         TeamMemberLoader.loadTeamMembers()
-            .filter(it => !it.external)
+            .filter(it => _.includes(memberIds, it.id))
             .forEach(config => {
-                if (this.#target === undefined || this.#target === "") {
-                    roles.set(config.id!, new RoleBattle(config.name!));
-                } else if (this.#target === config.id) {
-                    roles.set(config.id!, new RoleBattle(config.name!));
-                }
+                roles.set(config.id!, new RoleBattle(config.name!));
             });
 
         for (const data of candidates) {
@@ -192,26 +190,24 @@ class BattleReportGenerator {
         html += "<th style='background-color:green;color:white'>占比(%)</th>"
         html += "</tr>";
 
-        if (this.#target === undefined || this.#target === "") {
-            html += "<tr>";
-            html += "<th style='background-color:black;color:white'>全团队</th>"
-            html += "<td style='background-color:wheat;color:blue'>" + totalWinCount + "</td>"
-            html += "<td style='background-color:wheat'>" + totalCount + "</td>"
-            html += "<td style='background-color:wheat'>" + ReportUtils.percentage(totalWinCount, totalCount) + "</td>"
-            html += "<td style='background-color:wheat'>" + totalPrimaryCount + "</td>"
-            html += "<td style='background-color:wheat'>" + ReportUtils.percentage(totalPrimaryCount, totalCount) + "</td>"
-            html += "<td style='background-color:wheat'>" + totalJuniorCount + "</td>"
-            html += "<td style='background-color:wheat'>" + ReportUtils.percentage(totalJuniorCount, totalCount) + "</td>"
-            html += "<td style='background-color:wheat;color:blue'>" + totalSeniorWinCount + "</td>"
-            html += "<td style='background-color:wheat'>" + totalSeniorCount + "</td>"
-            html += "<td style='background-color:wheat'>" + ReportUtils.percentage(totalSeniorWinCount, totalSeniorCount) + "</td>"
-            html += "<td style='background-color:wheat'>" + ReportUtils.percentage(totalSeniorCount, totalCount) + "</td>"
-            html += "<td style='background-color:wheat;color:blue'>" + totalZodiacWinCount + "</td>"
-            html += "<td style='background-color:wheat'>" + totalZodiacCount + "</td>"
-            html += "<td style='background-color:wheat'>" + ReportUtils.percentage(totalZodiacWinCount, totalZodiacCount) + "</td>"
-            html += "<td style='background-color:wheat'>" + ReportUtils.percentage(totalZodiacCount, totalCount) + "</td>"
-            html += "</tr>";
-        }
+        html += "<tr>";
+        html += "<th style='background-color:black;color:white'>全团队</th>"
+        html += "<td style='background-color:wheat;color:blue'>" + totalWinCount + "</td>"
+        html += "<td style='background-color:wheat'>" + totalCount + "</td>"
+        html += "<td style='background-color:wheat'>" + ReportUtils.percentage(totalWinCount, totalCount) + "</td>"
+        html += "<td style='background-color:wheat'>" + totalPrimaryCount + "</td>"
+        html += "<td style='background-color:wheat'>" + ReportUtils.percentage(totalPrimaryCount, totalCount) + "</td>"
+        html += "<td style='background-color:wheat'>" + totalJuniorCount + "</td>"
+        html += "<td style='background-color:wheat'>" + ReportUtils.percentage(totalJuniorCount, totalCount) + "</td>"
+        html += "<td style='background-color:wheat;color:blue'>" + totalSeniorWinCount + "</td>"
+        html += "<td style='background-color:wheat'>" + totalSeniorCount + "</td>"
+        html += "<td style='background-color:wheat'>" + ReportUtils.percentage(totalSeniorWinCount, totalSeniorCount) + "</td>"
+        html += "<td style='background-color:wheat'>" + ReportUtils.percentage(totalSeniorCount, totalCount) + "</td>"
+        html += "<td style='background-color:wheat;color:blue'>" + totalZodiacWinCount + "</td>"
+        html += "<td style='background-color:wheat'>" + totalZodiacCount + "</td>"
+        html += "<td style='background-color:wheat'>" + ReportUtils.percentage(totalZodiacWinCount, totalZodiacCount) + "</td>"
+        html += "<td style='background-color:wheat'>" + ReportUtils.percentage(totalZodiacCount, totalCount) + "</td>"
+        html += "</tr>";
 
         roles.forEach(it => {
             html += "<tr>";
@@ -268,23 +264,21 @@ class BattleReportGenerator {
         html += "<th style='background-color:green;color:white'>入手率(‱)</th>"
         html += "</tr>";
 
-        if (this.#target === undefined || this.#target === "") {
-            html += "<tr>";
-            html += "<th style='background-color:black;color:white'>全团队</th>"
-            html += "<td style='background-color:wheat'>" + totalPhotoCount + "</td>"
-            html += "<td style='background-color:wheat'>" + totalCount + "</td>"
-            html += "<td style='background-color:wheat'>" + ReportUtils.permyriad(totalPhotoCount, totalCount) + "</td>"
-            html += "<td style='background-color:wheat'>" + totalPrimaryPhotoCount + "</td>"
-            html += "<td style='background-color:wheat'>" + totalPrimaryCount + "</td>"
-            html += "<td style='background-color:wheat'>" + ReportUtils.permyriad(totalPrimaryPhotoCount, totalPrimaryCount) + "</td>"
-            html += "<td style='background-color:wheat'>" + totalJuniorPhotoCount + "</td>"
-            html += "<td style='background-color:wheat'>" + totalJuniorCount + "</td>"
-            html += "<td style='background-color:wheat'>" + ReportUtils.permyriad(totalJuniorPhotoCount, totalJuniorCount) + "</td>"
-            html += "<td style='background-color:wheat'>" + totalSeniorPhotoCount + "</td>"
-            html += "<td style='background-color:wheat'>" + totalSeniorCount + "</td>"
-            html += "<td style='background-color:wheat'>" + ReportUtils.permyriad(totalSeniorPhotoCount, totalSeniorCount) + "</td>"
-            html += "</tr>";
-        }
+        html += "<tr>";
+        html += "<th style='background-color:black;color:white'>全团队</th>"
+        html += "<td style='background-color:wheat'>" + totalPhotoCount + "</td>"
+        html += "<td style='background-color:wheat'>" + totalCount + "</td>"
+        html += "<td style='background-color:wheat'>" + ReportUtils.permyriad(totalPhotoCount, totalCount) + "</td>"
+        html += "<td style='background-color:wheat'>" + totalPrimaryPhotoCount + "</td>"
+        html += "<td style='background-color:wheat'>" + totalPrimaryCount + "</td>"
+        html += "<td style='background-color:wheat'>" + ReportUtils.permyriad(totalPrimaryPhotoCount, totalPrimaryCount) + "</td>"
+        html += "<td style='background-color:wheat'>" + totalJuniorPhotoCount + "</td>"
+        html += "<td style='background-color:wheat'>" + totalJuniorCount + "</td>"
+        html += "<td style='background-color:wheat'>" + ReportUtils.permyriad(totalJuniorPhotoCount, totalJuniorCount) + "</td>"
+        html += "<td style='background-color:wheat'>" + totalSeniorPhotoCount + "</td>"
+        html += "<td style='background-color:wheat'>" + totalSeniorCount + "</td>"
+        html += "<td style='background-color:wheat'>" + ReportUtils.permyriad(totalSeniorPhotoCount, totalSeniorCount) + "</td>"
+        html += "</tr>";
 
         roles.forEach(it => {
             html += "<tr>";
@@ -338,23 +332,21 @@ class BattleReportGenerator {
         html += "<th style='background-color:green;color:white'>入手率(‱)</th>"
         html += "</tr>";
 
-        if (this.#target === undefined || this.#target === "") {
-            html += "<tr>";
-            html += "<th style='background-color:black;color:white'>全团队</th>"
-            html += "<td style='background-color:wheat'>" + totalCatchCount + "</td>"
-            html += "<td style='background-color:wheat'>" + totalCount + "</td>"
-            html += "<td style='background-color:wheat'>" + ReportUtils.permyriad(totalCatchCount, totalCount) + "</td>"
-            html += "<td style='background-color:wheat'>" + totalPrimaryCatchCount + "</td>"
-            html += "<td style='background-color:wheat'>" + totalPrimaryCount + "</td>"
-            html += "<td style='background-color:wheat'>" + ReportUtils.permyriad(totalPrimaryCatchCount, totalPrimaryCount) + "</td>"
-            html += "<td style='background-color:wheat'>" + totalJuniorCatchCount + "</td>"
-            html += "<td style='background-color:wheat'>" + totalJuniorCount + "</td>"
-            html += "<td style='background-color:wheat'>" + ReportUtils.permyriad(totalJuniorCatchCount, totalJuniorCount) + "</td>"
-            html += "<td style='background-color:wheat'>" + totalSeniorCatchCount + "</td>"
-            html += "<td style='background-color:wheat'>" + totalSeniorCount + "</td>"
-            html += "<td style='background-color:wheat'>" + ReportUtils.permyriad(totalSeniorCatchCount, totalSeniorCount) + "</td>"
-            html += "</tr>";
-        }
+        html += "<tr>";
+        html += "<th style='background-color:black;color:white'>全团队</th>"
+        html += "<td style='background-color:wheat'>" + totalCatchCount + "</td>"
+        html += "<td style='background-color:wheat'>" + totalCount + "</td>"
+        html += "<td style='background-color:wheat'>" + ReportUtils.permyriad(totalCatchCount, totalCount) + "</td>"
+        html += "<td style='background-color:wheat'>" + totalPrimaryCatchCount + "</td>"
+        html += "<td style='background-color:wheat'>" + totalPrimaryCount + "</td>"
+        html += "<td style='background-color:wheat'>" + ReportUtils.permyriad(totalPrimaryCatchCount, totalPrimaryCount) + "</td>"
+        html += "<td style='background-color:wheat'>" + totalJuniorCatchCount + "</td>"
+        html += "<td style='background-color:wheat'>" + totalJuniorCount + "</td>"
+        html += "<td style='background-color:wheat'>" + ReportUtils.permyriad(totalJuniorCatchCount, totalJuniorCount) + "</td>"
+        html += "<td style='background-color:wheat'>" + totalSeniorCatchCount + "</td>"
+        html += "<td style='background-color:wheat'>" + totalSeniorCount + "</td>"
+        html += "<td style='background-color:wheat'>" + ReportUtils.permyriad(totalSeniorCatchCount, totalSeniorCount) + "</td>"
+        html += "</tr>";
 
         roles.forEach(it => {
             html += "<tr>";
@@ -408,23 +400,21 @@ class BattleReportGenerator {
         html += "<th style='background-color:green;color:white'>入手率(‱)</th>"
         html += "</tr>";
 
-        if (this.#target === undefined || this.#target === "") {
-            html += "<tr>";
-            html += "<th style='background-color:black;color:white'>全团队</th>"
-            html += "<td style='background-color:wheat'>" + totalHintCount + "</td>"
-            html += "<td style='background-color:wheat'>" + totalCount + "</td>"
-            html += "<td style='background-color:wheat'>" + ReportUtils.permyriad(totalHintCount, totalCount) + "</td>"
-            html += "<td style='background-color:wheat'>" + totalPrimaryHintCount + "</td>"
-            html += "<td style='background-color:wheat'>" + totalPrimaryCount + "</td>"
-            html += "<td style='background-color:wheat'>" + ReportUtils.permyriad(totalPrimaryHintCount, totalPrimaryCount) + "</td>"
-            html += "<td style='background-color:wheat'>" + totalJuniorHintCount + "</td>"
-            html += "<td style='background-color:wheat'>" + totalJuniorCount + "</td>"
-            html += "<td style='background-color:wheat'>" + ReportUtils.permyriad(totalJuniorHintCount, totalJuniorCount) + "</td>"
-            html += "<td style='background-color:wheat'>" + totalSeniorHintCount + "</td>"
-            html += "<td style='background-color:wheat'>" + totalSeniorCount + "</td>"
-            html += "<td style='background-color:wheat'>" + ReportUtils.permyriad(totalSeniorHintCount, totalSeniorCount) + "</td>"
-            html += "</tr>";
-        }
+        html += "<tr>";
+        html += "<th style='background-color:black;color:white'>全团队</th>"
+        html += "<td style='background-color:wheat'>" + totalHintCount + "</td>"
+        html += "<td style='background-color:wheat'>" + totalCount + "</td>"
+        html += "<td style='background-color:wheat'>" + ReportUtils.permyriad(totalHintCount, totalCount) + "</td>"
+        html += "<td style='background-color:wheat'>" + totalPrimaryHintCount + "</td>"
+        html += "<td style='background-color:wheat'>" + totalPrimaryCount + "</td>"
+        html += "<td style='background-color:wheat'>" + ReportUtils.permyriad(totalPrimaryHintCount, totalPrimaryCount) + "</td>"
+        html += "<td style='background-color:wheat'>" + totalJuniorHintCount + "</td>"
+        html += "<td style='background-color:wheat'>" + totalJuniorCount + "</td>"
+        html += "<td style='background-color:wheat'>" + ReportUtils.permyriad(totalJuniorHintCount, totalJuniorCount) + "</td>"
+        html += "<td style='background-color:wheat'>" + totalSeniorHintCount + "</td>"
+        html += "<td style='background-color:wheat'>" + totalSeniorCount + "</td>"
+        html += "<td style='background-color:wheat'>" + ReportUtils.permyriad(totalSeniorHintCount, totalSeniorCount) + "</td>"
+        html += "</tr>";
 
         roles.forEach(it => {
             html += "<tr>";
@@ -473,19 +463,17 @@ class BattleReportGenerator {
         html += "<th style='background-color:green;color:white'>好人卡占比(%)</th>"
         html += "</tr>";
 
-        if (this.#target === undefined || this.#target === "") {
-            html += "<tr>";
-            html += "<th style='background-color:black;color:white'>全团队</th>"
-            html += "<td style='background-color:wheat'>" + totalTreasureCount + "</td>"
-            html += "<td style='background-color:wheat'>" + ReportUtils.permyriad(totalTreasureCount, totalCount) + "</td>"
-            html += "<td style='background-color:wheat'>" + totalUsefulTreasureCount + "</td>"
-            html += "<td style='background-color:wheat'>" + ReportUtils.percentage(totalUsefulTreasureCount, totalTreasureCount) + "</td>"
-            html += "<td style='background-color:wheat'>" + totalUselessTreasureCount + "</td>"
-            html += "<td style='background-color:wheat'>" + ReportUtils.percentage(totalUselessTreasureCount, totalTreasureCount) + "</td>"
-            html += "<td style='background-color:wheat'>" + totalGoodPersonCardCount + "</td>"
-            html += "<td style='background-color:wheat'>" + ReportUtils.percentage(totalGoodPersonCardCount, totalTreasureCount) + "</td>"
-            html += "</tr>";
-        }
+        html += "<tr>";
+        html += "<th style='background-color:black;color:white'>全团队</th>"
+        html += "<td style='background-color:wheat'>" + totalTreasureCount + "</td>"
+        html += "<td style='background-color:wheat'>" + ReportUtils.permyriad(totalTreasureCount, totalCount) + "</td>"
+        html += "<td style='background-color:wheat'>" + totalUsefulTreasureCount + "</td>"
+        html += "<td style='background-color:wheat'>" + ReportUtils.percentage(totalUsefulTreasureCount, totalTreasureCount) + "</td>"
+        html += "<td style='background-color:wheat'>" + totalUselessTreasureCount + "</td>"
+        html += "<td style='background-color:wheat'>" + ReportUtils.percentage(totalUselessTreasureCount, totalTreasureCount) + "</td>"
+        html += "<td style='background-color:wheat'>" + totalGoodPersonCardCount + "</td>"
+        html += "<td style='background-color:wheat'>" + ReportUtils.percentage(totalGoodPersonCardCount, totalTreasureCount) + "</td>"
+        html += "</tr>";
 
         roles.forEach(it => {
             html += "<tr>";

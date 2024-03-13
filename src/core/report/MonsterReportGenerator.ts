@@ -9,21 +9,23 @@ import TeamMemberLoader from "../team/TeamMemberLoader";
 class MonsterReportGenerator {
 
     readonly #dataList: BattleResult[];
-    readonly #target?: string;
+    #includeExternal = true;
 
-    constructor(dataList: BattleResult[], target?: string) {
+    constructor(dataList: BattleResult[]) {
         this.#dataList = dataList;
-        this.#target = target;
+    }
+
+    includeExternal(includeExternal: boolean): MonsterReportGenerator {
+        this.#includeExternal = includeExternal;
+        return this;
     }
 
     generate() {
-        const internalIds = TeamMemberLoader.loadInternalIds();
+        const memberIds = TeamMemberLoader.loadTeamMembers()
+            .filter(it => this.#includeExternal || !it.external)
+            .map(it => it.id!);
         const candidates = this.#dataList
-            .filter(it => _.includes(internalIds, it.roleId))
-            .filter(it =>
-                this.#target === undefined ||
-                this.#target === "" ||
-                it.roleId === this.#target);
+            .filter(it => _.includes(memberIds, it.roleId));
 
         let totalSeniorBattleCount = 0;
         let totalBattleCount_012 = 0;       // 巴大蝴(012)
@@ -36,13 +38,9 @@ class MonsterReportGenerator {
 
         const roles = new Map<string, RoleMonster>();
         TeamMemberLoader.loadTeamMembers()
-            .filter(it => !it.external)
+            .filter(it => _.includes(memberIds, it.id))
             .forEach(config => {
-                if (this.#target === undefined || this.#target === "") {
-                    roles.set(config.id!, new RoleMonster(config.name!));
-                } else if (this.#target === config.id) {
-                    roles.set(config.id!, new RoleMonster(config.name!));
-                }
+                roles.set(config.id!, new RoleMonster(config.name!));
             });
 
         for (const data of candidates) {
@@ -119,7 +117,7 @@ class MonsterReportGenerator {
         html += "<th style='background-color:green;color:white' colspan='10'>怪物</th>"
         html += "</tr>";
 
-        if (this.#target === undefined || this.#target === "") {
+        {
             const list = sortByBattleCount(monsterCount);
             html += "<tr>";
             html += "<th style='background-color:black;color:white' rowspan='2'>全团队</th>"
@@ -199,7 +197,7 @@ class MonsterReportGenerator {
         html += "<th style='background-color:green;color:white' colspan='10'>怪物</th>"
         html += "</tr>";
 
-        if (this.#target === undefined || this.#target === "") {
+        {
             const list = sortByWinRatio(monsterCount);
             html += "<tr>";
             html += "<th style='background-color:black;color:white' rowspan='2'>全团队</th>"
@@ -301,7 +299,7 @@ class MonsterReportGenerator {
         html += "<th style='background-color:skyblue'>占比(%)</th>"
         html += "</tr>";
 
-        if (this.#target === undefined || this.#target === "") {
+        {
             const t = totalBattleCount_012 + totalBattleCount_136 + totalBattleCount_224 + totalBattleCount_257;
             html += "<tr>";
             html += "<th style='background-color:black;color:white'>全团队</th>"

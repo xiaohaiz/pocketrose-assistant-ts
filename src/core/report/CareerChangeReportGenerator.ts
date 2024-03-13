@@ -8,36 +8,35 @@ import TeamMemberLoader from "../team/TeamMemberLoader";
 
 class CareerChangeReportGenerator {
 
-    readonly #target?: string;
+    #includeExternal = true;
 
-    constructor(target?: string) {
-        this.#target = target;
+    includeExternal(includeExternal: boolean): CareerChangeReportGenerator {
+        this.#includeExternal = includeExternal;
+        return this;
     }
 
     generate() {
         CareerChangeLogStorage.getInstance()
             .loads()
             .then(dataList => {
-                const internalIds = TeamMemberLoader.loadInternalIds();
+                const memberIds = TeamMemberLoader.loadTeamMembers()
+                    .filter(it => this.#includeExternal || !it.external)
+                    .map(it => it.id!);
                 const candidates = dataList
-                    .filter(it => _.includes(internalIds, it.roleId))
-                    .filter(it => !this.hasTarget || this.#target === it.roleId);
+                    .filter(it => _.includes(memberIds, it.roleId));
                 this.#generate(candidates);
             });
     }
 
-    get hasTarget() {
-        return this.#target && this.#target !== "";
-    }
-
     #generate(candidates: CareerChangeLog[]) {
         const roles = new Map<string, RoleReportData>();
+        const memberIds = TeamMemberLoader.loadTeamMembers()
+            .filter(it => this.#includeExternal || !it.external)
+            .map(it => it.id!);
         TeamMemberLoader.loadTeamMembers()
-            .filter(it => !it.external)
+            .filter(it => _.includes(memberIds, it.id))
             .forEach(config => {
-                if (!this.hasTarget || this.#target === config.id) {
-                    roles.set(config.id!, new RoleReportData(config.name!));
-                }
+                roles.set(config.id!, new RoleReportData(config.name!));
             });
 
         const manaInherit: number[] = [0, 0, 0, 0, 0, 0, 0];

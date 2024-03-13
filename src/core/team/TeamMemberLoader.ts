@@ -42,6 +42,13 @@ class TeamMemberLoader {
         return member.master !== undefined && member.master;
     }
 
+    static loadTeamMembersAsMap(includeExternal?: boolean): Map<string, TeamMember> {
+        const members = new Map<string, TeamMember>();
+        TeamMemberLoader.loadTeamMembers()
+            .filter(it => includeExternal || !it.external)
+            .forEach(it => members.set(it.id!, it));
+        return members;
+    }
 }
 
 function _load(index: number | null | undefined): {} {
