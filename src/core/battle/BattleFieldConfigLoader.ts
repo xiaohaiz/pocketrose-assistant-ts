@@ -1,5 +1,6 @@
 import Credential from "../../util/Credential";
 import StorageUtils from "../../util/StorageUtils";
+import SetupLoader from "../config/SetupLoader";
 import BattleFieldConfig from "./BattleFieldConfig";
 
 class BattleFieldConfigLoader {
@@ -40,6 +41,18 @@ class BattleFieldConfigLoader {
         return config;
     }
 
+    /**
+     * 判断自动设置战斗场所功能是否允许
+     */
+    static isAutoSetEnabled(): boolean {
+        // 1. 必须启用设置：智能选择战斗场
+        if (!SetupLoader.isAutoSetBattleFieldEnabled()) {
+            return false;
+        }
+        // 2. 没有设置全局战斗场所
+        const config = BattleFieldConfigLoader.loadGlobalConfig();
+        return !config.configured;
+    }
 }
 
 export = BattleFieldConfigLoader;
