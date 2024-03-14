@@ -1,5 +1,6 @@
 import Credential from "../../util/Credential";
 import BattleFieldConfigWriter from "../battle/BattleFieldConfigWriter";
+import BattlePage from "../battle/BattlePage";
 import SetupLoader from "../config/SetupLoader";
 import PersonalPetManagement from "../monster/PersonalPetManagement";
 import PersonalStatus from "../role/PersonalStatus";
@@ -95,6 +96,38 @@ class BattleFieldManager {
     #c6(role: Role): boolean {
         const value = role.additionalRP;
         return value !== undefined && value < 500;
+    }
+
+
+    /**
+     * 战斗时如果获取了额外RP
+     */
+    async triggerBattleFieldChanged(battlePage: BattlePage) {
+        if (this.#c1()) {
+            // 当前允许转职，忽略根据RP判断
+            return;
+        }
+
+        const additionalRP = battlePage.additionalRP;
+        if (additionalRP === undefined) {
+            // 本次战斗没有入手RP，忽略
+            return;
+        }
+
+        const role = await new PersonalStatus(this.#credential).load();
+        if (role.consecrateRP !== undefined && role.consecrateRP > 0) {
+            // 当前有祭奠，忽略
+            return;
+        }
+
+        const writer = new BattleFieldConfigWriter(this.#credential);
+        if (additionalRP === 100) {
+            await writer.writeCustomizedConfig(true, false, false, false);
+        } else if (additionalRP === 300) {
+            await writer.writeCustomizedConfig(false, true, false, false);
+        } else if (additionalRP === 500) {
+            await writer.writeCustomizedConfig(false, false, true, false);
+        }
     }
 }
 
