@@ -1,4 +1,5 @@
 import Credential from "../../util/Credential";
+import BattleFieldConfigLoader from "../battle/BattleFieldConfigLoader";
 import BattleFieldConfigWriter from "../battle/BattleFieldConfigWriter";
 import BattlePage from "../battle/BattlePage";
 import SetupLoader from "../config/SetupLoader";
@@ -63,6 +64,9 @@ class BattleFieldManager {
 
     // 当前位于枫丹并且自身和宠物都满级时，战斗场所切换到十二宫
     async #c3(role: Role): Promise<boolean> {
+        if (role.level === undefined || role.level !== 150) {
+            return false;
+        }
         const town = role.town;
         if (!town || town.name !== "枫丹") {
             return false;
@@ -103,9 +107,26 @@ class BattleFieldManager {
      * 战斗时如果获取了额外RP
      */
     async triggerBattleFieldChanged(battlePage: BattlePage) {
+        if (!BattleFieldConfigLoader.isAutoSetEnabled()) {
+            return;
+        }
         if (this.#c1()) {
             // 当前允许转职，忽略根据RP判断
             return;
+        }
+
+        const writer = new BattleFieldConfigWriter(this.#credential);
+        let role: Role | undefined = undefined;
+
+        const harvestList = battlePage.harvestList;
+        if (harvestList !== undefined && harvestList.length > 0) {
+            // 有入手了，检查下当前的RP
+            role = await new PersonalStatus(this.#credential).load();
+            if (role.additionalRP !== undefined && role.additionalRP === 0) {
+                // 额外RP清空了，大概率是干拔了，切到上洞
+                await writer.writeCustomizedConfig(false, false, true, false);
+                return;
+            }
         }
 
         const additionalRP = battlePage.additionalRP;
@@ -114,13 +135,14 @@ class BattleFieldManager {
             return;
         }
 
-        const role = await new PersonalStatus(this.#credential).load();
+        if (role === undefined) {
+            role = await new PersonalStatus(this.#credential).load();
+        }
         if (role.consecrateRP !== undefined && role.consecrateRP > 0) {
             // 当前有祭奠，忽略
             return;
         }
 
-        const writer = new BattleFieldConfigWriter(this.#credential);
         if (additionalRP === 100) {
             await writer.writeCustomizedConfig(true, false, false, false);
         } else if (additionalRP === 300) {

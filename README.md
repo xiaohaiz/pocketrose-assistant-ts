@@ -1,5 +1,7 @@
 # pocketrose-assistant-ts
 
+### 版本 4.3.1-SNAPSHOT
+
 ### 版本 4.3.0
 
 1. 新增设置：智能选择战斗场
