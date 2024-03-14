@@ -10,7 +10,7 @@ class BattleFieldConfigWriter {
         this.#credential = credential;
     }
 
-    writeCustomizedConfig(primary: boolean,
+    async writeCustomizedConfig(primary: boolean,
                           junior: boolean,
                           senior: boolean,
                           zodiac: boolean) {
