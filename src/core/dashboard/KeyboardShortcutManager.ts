@@ -1,4 +1,6 @@
 import Credential from "../../util/Credential";
+import BattleFieldConfigLoader from "../battle/BattleFieldConfigLoader";
+import BattleFieldManager from "./BattleFieldManager";
 import TownDashboardPage from "./TownDashboardPage";
 
 class KeyboardShortcutManager {
@@ -80,7 +82,13 @@ function doBind(credential: Credential, bindBattle?: boolean, page?: TownDashboa
         }
 
         if (key === "r") {
-            $("#refreshButton").trigger("click");
+            if (BattleFieldConfigLoader.isAutoSetEnabled()) {
+                new BattleFieldManager(credential)
+                    .autoSetBattleField()
+                    .then(() => $("#refreshButton").trigger("click"));
+            } else {
+                $("#refreshButton").trigger("click");
+            }
             return;
         }
 

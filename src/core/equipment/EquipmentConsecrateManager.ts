@@ -45,12 +45,11 @@ class EquipmentConsecrateManager {
     }
 
     async #autoSetBattleField() {
-        if (!BattleFieldConfigLoader.isAutoSetEnabled()) {
-            return;
+        if (BattleFieldConfigLoader.isAutoSetEnabled()) {
+            const writer = new BattleFieldConfigWriter(this.#credential);
+            await writer.writeCustomizedConfig(false, false, true, false);
+            MessageBoard.processResponseMessage("战斗场所自动切换为【上级之洞窟】！");
         }
-        const writer = new BattleFieldConfigWriter(this.#credential);
-        await writer.writeCustomizedConfig(false, false, true, false);
-        MessageBoard.processResponseMessage("战斗场所自动切换为【上级之洞窟】！");
     }
 }
 
