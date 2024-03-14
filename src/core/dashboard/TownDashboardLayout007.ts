@@ -315,7 +315,7 @@ async function doProcessBattle(credential: Credential, html: string, currentBatt
 
     $("#battleReturn").on("click", () => {
         $("#battleReturn").prop("disabled", true);
-        new BattleReturnInterceptor(credential, currentBattleCount)
+        new BattleReturnInterceptor(credential, currentBattleCount, processor.obtainPage)
             .doBeforeReturn()
             .then(() => {
                 const request = credential.asRequestMap();
@@ -328,7 +328,7 @@ async function doProcessBattle(credential: Credential, html: string, currentBatt
     });
     $("#battleDeposit").on("click", () => {
         $("#battleDeposit").prop("disabled", true);
-        new BattleReturnInterceptor(credential, currentBattleCount)
+        new BattleReturnInterceptor(credential, currentBattleCount, processor.obtainPage)
             .doBeforeReturn()
             .then(() => {
                 const request = credential.asRequestMap();
@@ -348,7 +348,7 @@ async function doProcessBattle(credential: Credential, html: string, currentBatt
     });
     $("#battleRepair").on("click", () => {
         $("#battleRepair").prop("disabled", true);
-        new BattleReturnInterceptor(credential, currentBattleCount)
+        new BattleReturnInterceptor(credential, currentBattleCount, processor.obtainPage)
             .doBeforeReturn()
             .then(() => {
                 new TownForge(credential).repairAll().then(m => {
@@ -358,7 +358,7 @@ async function doProcessBattle(credential: Credential, html: string, currentBatt
     });
     $("#battleLodge").on("click", () => {
         $("#battleLodge").prop("disabled", true);
-        new BattleReturnInterceptor(credential, currentBattleCount)
+        new BattleReturnInterceptor(credential, currentBattleCount, processor.obtainPage)
             .doBeforeReturn()
             .then(() => {
                 new TownInn(credential).recovery().then(m => {

@@ -2,6 +2,8 @@ import _ from "lodash";
 import Credential from "../../util/Credential";
 import MessageBoard from "../../util/MessageBoard";
 import NetworkUtils from "../../util/NetworkUtils";
+import BattleFieldConfigLoader from "../battle/BattleFieldConfigLoader";
+import BattleFieldConfigWriter from "../battle/BattleFieldConfigWriter";
 import EquipmentConsecrateLog from "./EquipmentConsecrateLog";
 import EquipmentConsecrateLogStorage from "./EquipmentConsecrateLogStorage";
 
@@ -31,11 +33,23 @@ class EquipmentConsecrateManager {
                     (nameList) && (log.equipments = _.join(nameList));
                     EquipmentConsecrateLogStorage.getInstance()
                         .insert(log)
-                        .then(() => resolve())
-                        .catch(() => resolve());
+                        .then(() => {
+                            this.#autoSetBattleField().then(() => resolve());
+                        })
+                        .catch(() => {
+                            this.#autoSetBattleField().then(() => resolve());
+                        });
                 }
             });
         });
+    }
+
+    async #autoSetBattleField() {
+        if (BattleFieldConfigLoader.isAutoSetEnabled()) {
+            const writer = new BattleFieldConfigWriter(this.#credential);
+            await writer.writeCustomizedConfig(false, false, true, false);
+            MessageBoard.processResponseMessage("战斗场所自动切换为【上级之洞窟】！");
+        }
     }
 }
 

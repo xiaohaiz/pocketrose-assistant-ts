@@ -12,6 +12,7 @@ import TownEntrance from "../../core/town/TownEntrance";
 import TownLoader from "../../core/town/TownLoader";
 import Coordinate from "../../util/Coordinate";
 import Credential from "../../util/Credential";
+import KeyboardShortcutBuilder from "../../util/KeyboardShortcutBuilder";
 import MessageBoard from "../../util/MessageBoard";
 import PageUtils from "../../util/PageUtils";
 import StringUtils from "../../util/StringUtils";
@@ -23,7 +24,9 @@ class TownInnPageProcessor extends PageProcessorCredentialSupport {
     async doProcess(credential: Credential, context?: PageProcessorContext): Promise<void> {
         const page = await new TownInnPageParser().parse(PageUtils.currentPageHtml());
         doProcess(credential);
-        PageUtils.onEscapePressed(() => $("#returnButton").trigger("click"));
+        new KeyboardShortcutBuilder()
+            .onEscapePressed(() => $("#returnButton").trigger("click"))
+            .bind()
     }
 
 }

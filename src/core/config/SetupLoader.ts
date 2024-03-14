@@ -198,6 +198,9 @@ class SetupLoader {
         return StorageUtils.getBoolean("_pa_058");
     }
 
+    static isAutoSetBattleFieldEnabled(): boolean {
+        return StorageUtils.getBoolean("_pa_059");
+    }
 }
 
 export = SetupLoader;

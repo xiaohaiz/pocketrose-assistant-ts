@@ -78,7 +78,7 @@ function processBattle(credential: Credential,
     // 重新定义按钮的行为
     $("#returnButton").on("click", () => {
         $("#returnButton").prop("disabled", true);
-        new BattleReturnInterceptor(credential, processor.obtainBattleCount)
+        new BattleReturnInterceptor(credential, processor.obtainBattleCount, processor.obtainPage)
             .doBeforeReturn()
             .then(() => {
                 $("#returnTown").trigger("click");
@@ -86,7 +86,7 @@ function processBattle(credential: Credential,
     });
     $("#depositButton").on("click", () => {
         $("#depositButton").prop("disabled", true);
-        new BattleReturnInterceptor(credential, processor.obtainBattleCount)
+        new BattleReturnInterceptor(credential, processor.obtainBattleCount, processor.obtainPage)
             .doBeforeReturn()
             .then(() => {
                 $("#deposit").trigger("click");
@@ -94,7 +94,7 @@ function processBattle(credential: Credential,
     });
     $("#repairButton").on("click", () => {
         $("#repairButton").prop("disabled", true);
-        new BattleReturnInterceptor(credential, processor.obtainBattleCount)
+        new BattleReturnInterceptor(credential, processor.obtainBattleCount, processor.obtainPage)
             .doBeforeReturn()
             .then(() => {
                 $("#repair").trigger("click");
@@ -102,7 +102,7 @@ function processBattle(credential: Credential,
     });
     $("#lodgeButton").on("click", () => {
         $("#lodgeButton").prop("disabled", true);
-        new BattleReturnInterceptor(credential, processor.obtainBattleCount)
+        new BattleReturnInterceptor(credential, processor.obtainBattleCount, processor.obtainPage)
             .doBeforeReturn()
             .then(() => {
                 $("#lodge").trigger("click");
