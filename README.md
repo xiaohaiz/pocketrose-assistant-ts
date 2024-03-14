@@ -1,5 +1,7 @@
 # pocketrose-assistant-ts
 
+### 版本 4.3.2-SNAPSHOT
+
 ### 版本 4.3.1
 
 1. 祭奠后自动切到上洞功能无需单独设置。
