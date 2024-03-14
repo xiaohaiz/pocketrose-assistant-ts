@@ -373,7 +373,7 @@ function generateBattleReport(battleTable: JQuery, page: BattlePage) {
     if (!SetupLoader.isQuietBattleModeEnabled()) {
         if (loseBattle && SetupLoader.isWinnerLeftEnabled()) {
             report = "<p>" + page.monsterImageHtml +
-                "&nbsp;&nbsp;&nbsp;<b style='font-size:300%;color:red'>VS</b>&nbsp;&nbsp;&nbsp;" +
+                "&nbsp;&nbsp;&nbsp;<b style='font-size:300%;color:blue'>VS</b>&nbsp;&nbsp;&nbsp;" +
                 page.roleImageHtml +
                 (page.petImageHtml === undefined ? "" : page.petImageHtml) + "</p>" + report;
         } else {
