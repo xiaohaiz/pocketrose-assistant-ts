@@ -1,5 +1,7 @@
 # pocketrose-assistant-ts
 
+### 版本 4.3.3-SNAPSHOT
+
 ### 版本 4.3.2
 
 1. 十二宫战斗不触发自动战斗场所切换。
