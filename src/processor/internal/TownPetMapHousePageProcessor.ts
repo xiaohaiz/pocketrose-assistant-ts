@@ -191,6 +191,12 @@ class TownPetMapHousePageProcessor extends PageProcessorCredentialSupport {
                 html += "<br>" + petMapText;
                 $("#messageBoard").html(html);
             }
+        } else {
+            let html = $("#messageBoard").html();
+            html += "<br>宠物编号<span style='background-color:wheat;color:green'>绿色</span>初森，" +
+                "<span style='background-color:wheat;color:blue'>蓝色</span>中塔，" +
+                "<span style='background-color:wheat;color:red'>红色</span>上洞。";
+            $("#messageBoard").html(html);
         }
 
         $("table:eq(2)")
