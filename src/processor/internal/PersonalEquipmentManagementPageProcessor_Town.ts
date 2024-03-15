@@ -1,6 +1,7 @@
 import {escape, parseInt, unescape} from "lodash";
 import TownBank from "../../core/bank/TownBank";
 import SetupLoader from "../../core/config/SetupLoader";
+import BattleFieldManager from "../../core/dashboard/BattleFieldManager";
 import CastleInformation from "../../core/dashboard/CastleInformation";
 import TownDashboard from "../../core/dashboard/TownDashboard";
 import CastleEquipmentExpressHouse from "../../core/equipment/CastleEquipmentExpressHouse";
@@ -29,10 +30,15 @@ import PersonalEquipmentManagementPageProcessor from "./PersonalEquipmentManagem
 
 class PersonalEquipmentManagementPageProcessor_Town extends PersonalEquipmentManagementPageProcessor {
 
-    doBindKeyboardShortcut() {
+    doBindKeyboardShortcut(credential: Credential) {
         new KeyboardShortcutBuilder()
             .onEscapePressed(() => $("#returnButton").trigger("click"))
-            .onKeyPressed("r", () => $("#refreshButton").trigger("click"))
+            .onKeyPressed("r", () => {
+                new BattleFieldManager(credential)
+                    .publishMessageBoard(true)
+                    .autoSetBattleField()
+                    .then(() => $("#refreshButton").trigger("click"));
+            })
             .onKeyPressed("s", () => $("#openItemShop").trigger("click"))
             .withDefaultPredicate()
             .bind();
