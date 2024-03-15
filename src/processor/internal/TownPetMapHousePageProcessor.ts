@@ -90,47 +90,63 @@ class TownPetMapHousePageProcessor extends PageProcessorCredentialSupport {
             let mh = "";
             mh += "<table style='background-color:#888888;text-align:center;margin:auto'>";
             mh += "<tbody>";
-            if (page.petMapList!.length > 0) {
-                let row = 0;
-                while (true) {
-                    const currentRowPetMaps: (PetMap | undefined)[] = [];
-                    let notFound = false;
-                    for (let i = 0; i < 10; i++) {
-                        const index = i + row * 10;
-                        if (index >= page.petMapList!.length) {
-                            notFound = true;
-                            currentRowPetMaps.push(undefined);
-                        } else {
-                            const pm = page.petMapList![index];
-                            currentRowPetMaps.push(pm);
-                        }
-                    }
 
-                    mh += "<tr>";
-                    for (const pm of currentRowPetMaps) {
+            const mm = new Map<string, PetMap>();
+            page.petMapList!.forEach(it => {
+                mm.set(it.code!, it);
+            });
+
+            let row = 0;
+            while (true) {
+                const currentRowPetMaps: PetMap[] = [];
+                let notFound = false;
+                for (let i = 0; i < 10; i++) {
+                    const index = i + row * 10;
+                    if (index >= 493) {
+                        notFound = true;
+                        const placeHolder = new PetMap();
+                        currentRowPetMaps.push(placeHolder);
+                    } else {
+                        const m = MonsterProfileLoader.load(index + 1)!;
+                        const pm = mm.get(m.code!);
                         if (pm) {
-                            const monster = MonsterProfileLoader.load(pm.code)!;
-                            mh += "<td style='background-color:#E8E8D0;width:64px'>" + monster.imageHtml + "</td>"
+                            currentRowPetMaps.push(pm);
                         } else {
-                            mh += "<td style='background-color:#E8E8D0;width:64px'></td>"
+                            const placeHolder = new PetMap();
+                            placeHolder.code = m.code;
+                            currentRowPetMaps.push(placeHolder);
                         }
                     }
-                    mh += "</tr>";
-                    mh += "<tr>";
-                    for (const pm of currentRowPetMaps) {
-                        if (pm) {
-                            mh += "<td style='background-color:wheat;width:64px'>" + pm.code + " / " + pm.count + "</td>"
+                }
+
+                mh += "<tr>";
+                for (const pm of currentRowPetMaps) {
+                    if (pm.count !== undefined) {
+                        const monster = MonsterProfileLoader.load(pm.code)!;
+                        mh += "<td style='background-color:#E8E8D0;width:64px;height:64px'>" + monster.imageHtml + "</td>"
+                    } else {
+                        mh += "<td style='background-color:#E8E8D0;width:64px;height:64px'></td>"
+                    }
+                }
+                mh += "</tr>";
+                mh += "<tr>";
+                for (const pm of currentRowPetMaps) {
+                    if (pm.count !== undefined) {
+                        mh += "<td style='background-color:wheat;width:64px'>" + pm.code + " / " + pm.count + "</td>"
+                    } else {
+                        if (pm.code !== undefined) {
+                            mh += "<td style='background-color:wheat;width:64px'>" + pm.code + "</td>"
                         } else {
                             mh += "<td style='background-color:wheat;width:64px'></td>"
                         }
                     }
-                    mh += "</tr>";
-
-                    if (notFound) {
-                        break;
-                    }
-                    row++;
                 }
+                mh += "</tr>";
+
+                if (notFound) {
+                    break;
+                }
+                row++;
             }
             mh += "</tbody>";
             mh += "</table>";
