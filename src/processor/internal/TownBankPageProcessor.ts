@@ -6,6 +6,7 @@ import NpcLoader from "../../core/role/NpcLoader";
 import Town from "../../core/town/Town";
 import TownLoader from "../../core/town/TownLoader";
 import Credential from "../../util/Credential";
+import KeyboardShortcutBuilder from "../../util/KeyboardShortcutBuilder";
 import MessageBoard from "../../util/MessageBoard";
 import NetworkUtils from "../../util/NetworkUtils";
 import PageUtils from "../../util/PageUtils";
@@ -24,7 +25,10 @@ class TownBankPageProcessor extends PageProcessorCredentialSupport {
         this.#renderImmutablePage(credential, town);
         this.#renderMutablePage(credential, page, town);
 
-        PageUtils.onEscapePressed(() => $("#returnButton").trigger("click"));
+        new KeyboardShortcutBuilder()
+            .onEscapePressed(() => $("#returnButton").trigger("click"))
+            .withDefaultPredicate()
+            .bind();
     }
 
     #renderImmutablePage(credential: Credential, town: Town) {
