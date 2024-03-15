@@ -1,5 +1,7 @@
 # pocketrose-assistant-ts
 
+### 版本 4.3.4-SNAPSHOT
+
 ### 版本 4.3.3
 
 1. 增强版宠物图鉴上线。
