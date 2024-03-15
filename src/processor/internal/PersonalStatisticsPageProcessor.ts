@@ -233,7 +233,7 @@ abstract class PersonalStatisticsPageProcessor extends PageProcessorCredentialSu
 
         new KeyboardShortcutBuilder()
             .onEscapePressed(() => $("#returnButton").trigger("click"))
-            .withPredicate(() => $("textarea:focus").length === 0)
+            .withDefaultPredicate()
             .bind();
     }
 
