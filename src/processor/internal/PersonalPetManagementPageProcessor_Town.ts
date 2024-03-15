@@ -24,6 +24,8 @@ import PageUtils from "../../util/PageUtils";
 import StringUtils from "../../util/StringUtils";
 import PageProcessorContext from "../PageProcessorContext";
 import PersonalPetManagementPageProcessor from "./PersonalPetManagementPageProcessor";
+import KeyboardShortcutBuilder from "../../util/KeyboardShortcutBuilder";
+import PetLocalStorage from "../../core/monster/PetLocalStorage";
 
 class PersonalPetManagementPageProcessor_Town extends PersonalPetManagementPageProcessor {
 
@@ -31,6 +33,25 @@ class PersonalPetManagementPageProcessor_Town extends PersonalPetManagementPageP
         doProcess(credential, page.petList!, page.petStudyStatus!);
     }
 
+
+    doBindKeyboardShortcut(credential: Credential) {
+        new KeyboardShortcutBuilder()
+            .onKeyPressed("r", () => {
+                const storage = new PetLocalStorage(credential);
+                storage.updatePetStatus()
+                    .then(() => {
+                        storage.updatePetMap()
+                            .then(() => {
+                                $("#refreshButton").trigger("click");
+                                MessageBoard.publishMessage("宠物数据更新完成。");
+                                MessageBoard.publishMessage("宠物图鉴更新完成。");
+                            });
+                    });
+            })
+            .onEscapePressed(() => $("#returnButton").trigger("click"))
+            .withDefaultPredicate()
+            .bind();
+    }
 }
 
 function doProcess(credential: Credential, petList: Pet[], studyStatus: number[]) {
