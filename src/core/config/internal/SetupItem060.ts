@@ -6,7 +6,7 @@ import SetupLoader from "../SetupLoader";
 class SetupItem060 implements SetupItem {
 
     readonly #code: string = "060";
-    readonly #name: string = "简洁版宠物图鉴";
+    readonly #name: string = "增强版宠物图鉴";
     readonly #key: string = "_pa_060";
 
     code(): string {
@@ -33,7 +33,7 @@ class SetupItem060 implements SetupItem {
     }
 
     #doProcessButton() {
-        const value = SetupLoader.isBriefPetMapEnabled();
+        const value = SetupLoader.isEnhancedPetMapEnabled();
         $("._060_button[value='" + (value ? "启用" : "禁用") + "']")
             .css("color", "blue")
             .prop("disabled", true);

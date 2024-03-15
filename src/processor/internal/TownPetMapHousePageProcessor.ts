@@ -86,7 +86,7 @@ class TownPetMapHousePageProcessor extends PageProcessorCredentialSupport {
         html += "<button role='button' id='returnButton'>" + returnTitle + "</button>";
         $("#pageMenuContainer").html(html);
 
-        if (SetupLoader.isBriefPetMapEnabled()) {
+        if (SetupLoader.isEnhancedPetMapEnabled()) {
             let mh = "";
             mh += "<table style='background-color:#888888;text-align:center;margin:auto'>";
             mh += "<tbody>";
@@ -166,7 +166,7 @@ class TownPetMapHousePageProcessor extends PageProcessorCredentialSupport {
             $("#returnTown").trigger("click");
         });
 
-        if (!SetupLoader.isBriefPetMapEnabled()) {
+        if (!SetupLoader.isEnhancedPetMapEnabled()) {
             const petMapText = page.asText();
             if (petMapText !== "") {
                 let html = $("#messageBoard").html();

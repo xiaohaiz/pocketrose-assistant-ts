@@ -202,7 +202,7 @@ class SetupLoader {
         return StorageUtils.getBoolean("_pa_059");
     }
 
-    static isBriefPetMapEnabled(): boolean {
+    static isEnhancedPetMapEnabled(): boolean {
         return StorageUtils.getBoolean("_pa_060");
     }
 }
