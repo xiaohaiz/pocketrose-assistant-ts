@@ -1,4 +1,6 @@
 import _ from "lodash";
+import SetupLoader from "../../core/config/SetupLoader";
+import MonsterProfileLoader from "../../core/monster/MonsterProfileLoader";
 import PetLocalStorage from "../../core/monster/PetLocalStorage";
 import PetMap from "../../core/monster/PetMap";
 import RolePetMapStorage from "../../core/monster/RolePetMapStorage";
@@ -84,17 +86,77 @@ class TownPetMapHousePageProcessor extends PageProcessorCredentialSupport {
         html += "<button role='button' id='returnButton'>" + returnTitle + "</button>";
         $("#pageMenuContainer").html(html);
 
+        if (SetupLoader.isBriefPetMapEnabled()) {
+            let mh = "";
+            mh += "<table style='background-color:#888888;text-align:center;margin:auto'>";
+            mh += "<tbody>";
+            if (page.petMapList!.length > 0) {
+                let row = 0;
+                while (true) {
+                    const currentRowPetMaps: (PetMap | undefined)[] = [];
+                    let notFound = false;
+                    for (let i = 0; i < 10; i++) {
+                        const index = i + row * 10;
+                        if (index >= page.petMapList!.length) {
+                            notFound = true;
+                            currentRowPetMaps.push(undefined);
+                        } else {
+                            const pm = page.petMapList![index];
+                            currentRowPetMaps.push(pm);
+                        }
+                    }
+
+                    mh += "<tr>";
+                    for (const pm of currentRowPetMaps) {
+                        if (pm) {
+                            const monster = MonsterProfileLoader.load(pm.code)!;
+                            mh += "<td style='background-color:#E8E8D0;width:64px'>" + monster.imageHtml + "</td>"
+                        } else {
+                            mh += "<td style='background-color:#E8E8D0;width:64px'></td>"
+                        }
+                    }
+                    mh += "</tr>";
+                    mh += "<tr>";
+                    for (const pm of currentRowPetMaps) {
+                        if (pm) {
+                            mh += "<td style='background-color:wheat;width:64px'>" + pm.code + " / " + pm.count + "</td>"
+                        } else {
+                            mh += "<td style='background-color:wheat;width:64px'></td>"
+                        }
+                    }
+                    mh += "</tr>";
+
+                    if (notFound) {
+                        break;
+                    }
+                    row++;
+                }
+            }
+            mh += "</tbody>";
+            mh += "</table>";
+
+            $("#tr3")
+                .parent()
+                .parent()
+                .next()
+                .find("> tbody:first")
+                .attr("id", "petMapTableBody")
+                .html("<tr><td>" + mh + "</td></tr>");
+        }
+
         this.#bindUpdateButton(credential);
         this.#bindSearchButton(credential);
         $("#returnButton").on("click", () => {
             $("#returnTown").trigger("click");
         });
 
-        const petMapText = page.asText();
-        if (petMapText !== "") {
-            let html = $("#messageBoard").html();
-            html += "<br>" + petMapText;
-            $("#messageBoard").html(html);
+        if (!SetupLoader.isBriefPetMapEnabled()) {
+            const petMapText = page.asText();
+            if (petMapText !== "") {
+                let html = $("#messageBoard").html();
+                html += "<br>" + petMapText;
+                $("#messageBoard").html(html);
+            }
         }
 
         $("table:eq(2)")
