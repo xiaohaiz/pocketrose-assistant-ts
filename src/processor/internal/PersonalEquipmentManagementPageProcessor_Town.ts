@@ -35,9 +35,13 @@ class PersonalEquipmentManagementPageProcessor_Town extends PersonalEquipmentMan
             .onEscapePressed(() => $("#returnButton").trigger("click"))
             .onKeyPressed("r", () => {
                 new BattleFieldManager(credential)
-                    .publishMessageBoard(true)
                     .autoSetBattleField()
-                    .then(() => $("#refreshButton").trigger("click"));
+                    .then(field => {
+                        $("#refreshButton").trigger("click");
+                        if (field) {
+                            MessageBoard.publishMessage("战斗场所切换到【" + field + "】。");
+                        }
+                    });
             })
             .onKeyPressed("s", () => $("#openItemShop").trigger("click"))
             .withDefaultPredicate()

@@ -1,5 +1,4 @@
 import Credential from "../../util/Credential";
-import MessageBoard from "../../util/MessageBoard";
 import BattleFieldConfigLoader from "../battle/BattleFieldConfigLoader";
 import BattleFieldConfigWriter from "../battle/BattleFieldConfigWriter";
 import BattlePage from "../battle/BattlePage";
@@ -11,73 +10,49 @@ import Role from "../role/Role";
 class BattleFieldManager {
 
     readonly #credential: Credential;
-    #publishMessageBoard = false;
 
     constructor(credential: Credential) {
         this.#credential = credential;
     }
 
-
-    publishMessageBoard(value: boolean): BattleFieldManager {
-        this.#publishMessageBoard = value;
-        return this;
-    }
-
-    async autoSetBattleField() {
+    async autoSetBattleField(): Promise<string | undefined> {
+        if (!SetupLoader.isAutoSetBattleFieldEnabled()) {
+            return undefined;
+        }
         const writer = new BattleFieldConfigWriter(this.#credential);
         if (this.#c1()) {
             await writer.writeCustomizedConfig(false, false, true, false);
-            if (this.#publishMessageBoard) {
-                MessageBoard.publishMessage("战斗场所切换到【上级之洞】。");
-            }
-            return;
+            return "上洞";
         }
 
         const role = await new PersonalStatus(this.#credential).load();
         if (this.#c2(role)) {
             await writer.writeCustomizedConfig(false, false, true, false);
-            if (this.#publishMessageBoard) {
-                MessageBoard.publishMessage("战斗场所切换到【上级之洞】。");
-            }
-            return;
+            return "上洞";
         }
 
         if (await this.#c3(role)) {
             await writer.writeCustomizedConfig(false, false, false, true);
-            if (this.#publishMessageBoard) {
-                MessageBoard.publishMessage("战斗场所切换到【十二宫】。");
-            }
-            return;
+            return "十二宫";
         }
 
         if (this.#c4(role)) {
             await writer.writeCustomizedConfig(false, false, true, false);
-            if (this.#publishMessageBoard) {
-                MessageBoard.publishMessage("战斗场所切换到【上级之洞】。");
-            }
-            return;
+            return "上洞";
         }
 
         if (this.#c5(role)) {
             await writer.writeCustomizedConfig(true, false, false, false);
-            if (this.#publishMessageBoard) {
-                MessageBoard.publishMessage("战斗场所切换到【初级之森】。");
-            }
-            return;
+            return "初森";
         }
 
         if (this.#c6(role)) {
             await writer.writeCustomizedConfig(false, true, false, false);
-            if (this.#publishMessageBoard) {
-                MessageBoard.publishMessage("战斗场所切换到【中级之塔】。");
-            }
-            return;
+            return "中塔";
         }
 
         await writer.writeCustomizedConfig(false, false, true, false);
-        if (this.#publishMessageBoard) {
-            MessageBoard.publishMessage("战斗场所切换到【上级之洞】。");
-        }
+        return "上洞";
     }
 
     // 当锁死上洞时，战斗场所切换到上洞
