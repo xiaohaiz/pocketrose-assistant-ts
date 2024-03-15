@@ -5,53 +5,53 @@ import SetupLoader from "../SetupLoader";
 
 class SetupItem014 implements SetupItem {
 
+    readonly #code: string = "014";
+    readonly #name: string = "关闭转职的入口";
+    readonly #key: string = "_pa_" + this.#code;
+
     code(): string {
-        return code;
+        return this.#code;
     }
 
     render(id?: string): void {
-        doRender(id!);
+        this.#doRender(id!);
     }
 
-}
+    #doRender(id: string) {
+        let html = "";
+        html += "<tr>";
+        html += "<th style='background-color:#E8E8D0'>" + this.#name + "</th>";
+        html += "<td style='background-color:#E8E8D0'>★</td>";
+        html += "<td style='background-color:#EFE0C0'></td>";
+        html += "<td style='background-color:#E0D0B0;text-align:left' colspan='2'>";
+        html += "<input type='button' class='dynamic_button _014_button' id='_014_button_1' value='启用'>";
+        html += "<input type='button' class='dynamic_button _014_button' id='_014_button_2' value='禁用'>";
+        html += "</td>";
+        html += "</tr>";
+        $("#setup_item_table").append($(html));
+        this.#doProcessButton(id);
+    }
 
-const code: string = "014";
-const name: string = "关闭转职的入口";
-const key: string = "_pa_" + code;
+    #doProcessButton(id: string) {
+        const value = SetupLoader.isCareerTransferEntranceDisabled(id);
+        $("._014_button[value='" + (value ? "启用" : "禁用") + "']")
+            .css("color", "blue")
+            .prop("disabled", true);
 
-function doRender(id: string) {
-    let html = "";
-    html += "<tr>";
-    html += "<th style='background-color:#E8E8D0'>" + name + "</th>";
-    html += "<td style='background-color:#E8E8D0'>★</td>";
-    html += "<td style='background-color:#EFE0C0'><input type='button' class='dynamic_button' id='setup_" + code + "' value='设置'></td>";
-    html += "<td style='background-color:#E0D0B0;text-align:left' colspan='2'>" + doGenerateSetupItem() + "</td>";
-    html += "</tr>";
+        $("._014_button").on("click", event => {
+            $("._014_button").off("click");
+            const buttonId = $(event.target).attr("id")!;
+            if (buttonId === "_014_button_1") {
+                StorageUtils.set(this.#key + "_" + id, "1");
+                MessageBoard.publishMessage("<b style='color:red'>" + this.#name + "</b>已启用!");
+            } else if (buttonId === "_014_button_2") {
+                StorageUtils.set(this.#key + "_" + id, "0");
+                MessageBoard.publishMessage("<b style='color:red'>" + this.#name + "</b>已禁用！");
+            }
+            $("#refreshButton").trigger("click");
+        });
+    }
 
-    $("#setup_item_table").append($(html));
-
-    const value = SetupLoader.isCareerTransferEntranceDisabled(id);
-    $(".option_class_" + code + "[value='" + Number(value) + "']").prop("selected", true);
-
-    $("#setup_" + code).on("click", function () {
-        doSaveSetupItem(id);
-    });
-}
-
-function doGenerateSetupItem() {
-    let html = "";
-    html += "<select id='select_" + code + "'>";
-    html += "<option class='option_class_" + code + "' value='1'>启用</option>";
-    html += "<option class='option_class_" + code + "' value='0'>禁用</option>";
-    html += "</select>";
-    return html;
-}
-
-function doSaveSetupItem(id: string) {
-    const value = $("#select_" + code).val();
-    StorageUtils.set(key + "_" + id, value!.toString());
-    MessageBoard.publishMessage("<b style='color:red'>" + name + "</b>已经设置。");
-    $("#refreshButton").trigger("click");
 }
 
 export = SetupItem014;

@@ -63,7 +63,7 @@ abstract class PersonalStatusPageProcessor extends PageProcessorCredentialSuppor
     doBindKeyboardShortcut() {
         new KeyboardShortcutBuilder()
             .onEscapePressed(() => $("#returnButton").trigger("click"))
-            .withPredicate(() => $("input:text:focus").length === 0)
+            .withDefaultPredicate()
             .bind();
     }
 

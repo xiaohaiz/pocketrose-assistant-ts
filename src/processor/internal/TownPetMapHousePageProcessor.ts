@@ -1,4 +1,6 @@
 import _ from "lodash";
+import SetupLoader from "../../core/config/SetupLoader";
+import MonsterProfileLoader from "../../core/monster/MonsterProfileLoader";
 import PetLocalStorage from "../../core/monster/PetLocalStorage";
 import PetMap from "../../core/monster/PetMap";
 import RolePetMapStorage from "../../core/monster/RolePetMapStorage";
@@ -9,6 +11,7 @@ import TeamMember from "../../core/team/TeamMember";
 import TeamMemberLoader from "../../core/team/TeamMemberLoader";
 import TownLoader from "../../core/town/TownLoader";
 import Credential from "../../util/Credential";
+import KeyboardShortcutBuilder from "../../util/KeyboardShortcutBuilder";
 import MessageBoard from "../../util/MessageBoard";
 import PageUtils from "../../util/PageUtils";
 import PageProcessorContext from "../PageProcessorContext";
@@ -19,7 +22,12 @@ class TownPetMapHousePageProcessor extends PageProcessorCredentialSupport {
     async doProcess(credential: Credential, context?: PageProcessorContext): Promise<void> {
         const page = TownPetMapHouse.parsePage(PageUtils.currentPageHtml());
         this.#renderImmutablePage(credential, page, context);
-        PageUtils.onEscapePressed(() => $("#returnButton").trigger("click"));
+        new KeyboardShortcutBuilder()
+            .onKeyPressed("r", () => $("#updateButton").trigger("click"))
+            .onKeyPressed("u", () => $("#openPetManagement").trigger("click"))
+            .onEscapePressed(() => $("#returnButton").trigger("click"))
+            .withDefaultPredicate()
+            .bind();
     }
 
     #renderImmutablePage(credential: Credential, page: TownPetMapHousePage, context?: PageProcessorContext) {
@@ -60,7 +68,8 @@ class TownPetMapHousePageProcessor extends PageProcessorCredentialSupport {
             .attr("id", "tr2")
             .css("display", "none")
             .html("<td id='returnFormContainer'></td>");
-        $("#returnFormContainer").html(PageUtils.generateReturnTownForm(credential));
+        $("#returnFormContainer").html(PageUtils.generateReturnTownForm(credential)
+            + PageUtils.generatePetManagementForm(credential));
 
         $("#tr2")
             .after("<tr id='tr3'><td id='pageMenuContainer' style='text-align:center'></td></tr>");
@@ -77,17 +86,93 @@ class TownPetMapHousePageProcessor extends PageProcessorCredentialSupport {
         html += "<button role='button' id='returnButton'>" + returnTitle + "</button>";
         $("#pageMenuContainer").html(html);
 
+        if (SetupLoader.isEnhancedPetMapEnabled()) {
+            let mh = "";
+            mh += "<table style='background-color:#888888;text-align:center;margin:auto'>";
+            mh += "<tbody>";
+
+            const mm = new Map<string, PetMap>();
+            page.petMapList!.forEach(it => {
+                mm.set(it.code!, it);
+            });
+
+            let row = 0;
+            while (true) {
+                const currentRowPetMaps: PetMap[] = [];
+                let notFound = false;
+                for (let i = 0; i < 10; i++) {
+                    const index = i + row * 10;
+                    if (index >= 493) {
+                        notFound = true;
+                        const placeHolder = new PetMap();
+                        currentRowPetMaps.push(placeHolder);
+                    } else {
+                        const m = MonsterProfileLoader.load(index + 1)!;
+                        const pm = mm.get(m.code!);
+                        if (pm) {
+                            currentRowPetMaps.push(pm);
+                        } else {
+                            const placeHolder = new PetMap();
+                            placeHolder.code = m.code;
+                            currentRowPetMaps.push(placeHolder);
+                        }
+                    }
+                }
+
+                mh += "<tr>";
+                for (const pm of currentRowPetMaps) {
+                    if (pm.count !== undefined) {
+                        const monster = MonsterProfileLoader.load(pm.code)!;
+                        mh += "<td style='background-color:#E8E8D0;width:64px;height:64px'>" + monster.imageHtml + "</td>"
+                    } else {
+                        mh += "<td style='background-color:#E8E8D0;width:64px;height:64px'></td>"
+                    }
+                }
+                mh += "</tr>";
+                mh += "<tr>";
+                for (const pm of currentRowPetMaps) {
+                    if (pm.count !== undefined) {
+                        mh += "<td style='background-color:wheat;width:64px'>" + pm.code + " / " + pm.count + "</td>"
+                    } else {
+                        if (pm.code !== undefined) {
+                            mh += "<td style='background-color:wheat;width:64px'>" + pm.code + "</td>"
+                        } else {
+                            mh += "<td style='background-color:wheat;width:64px'></td>"
+                        }
+                    }
+                }
+                mh += "</tr>";
+
+                if (notFound) {
+                    break;
+                }
+                row++;
+            }
+            mh += "</tbody>";
+            mh += "</table>";
+
+            $("#tr3")
+                .parent()
+                .parent()
+                .next()
+                .find("> tbody:first")
+                .attr("id", "petMapTableBody")
+                .html("<tr><td>" + mh + "</td></tr>");
+        }
+
         this.#bindUpdateButton(credential);
         this.#bindSearchButton(credential);
         $("#returnButton").on("click", () => {
             $("#returnTown").trigger("click");
         });
 
-        const petMapText = page.asText();
-        if (petMapText !== "") {
-            let html = $("#messageBoard").html();
-            html += "<br>" + petMapText;
-            $("#messageBoard").html(html);
+        if (!SetupLoader.isEnhancedPetMapEnabled()) {
+            const petMapText = page.asText();
+            if (petMapText !== "") {
+                let html = $("#messageBoard").html();
+                html += "<br>" + petMapText;
+                $("#messageBoard").html(html);
+            }
         }
 
         $("table:eq(2)")

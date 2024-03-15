@@ -18,14 +18,10 @@ class PersonalStatusPageProcessor_Town extends PersonalStatusPageProcessor {
 
     doBindKeyboardShortcut() {
         new KeyboardShortcutBuilder()
-            .onKeyPressed("e", () =>
-                $("#openEquipmentManagement").trigger("click"))
-            .onKeyPressed("u", () =>
-                $("#openPetManagement").trigger("click"))
-            .onEscapePressed(() =>
-                $("#returnButton").trigger("click"))
-            .withPredicate(() =>
-                $("input:text:focus").length === 0)
+            .onKeyPressed("e", () => $("#openEquipmentManagement").trigger("click"))
+            .onKeyPressed("u", () => $("#openPetManagement").trigger("click"))
+            .onEscapePressed(() => $("#returnButton").trigger("click"))
+            .withDefaultPredicate()
             .bind();
     }
 

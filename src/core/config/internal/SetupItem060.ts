@@ -3,11 +3,11 @@ import StorageUtils from "../../../util/StorageUtils";
 import SetupItem from "../SetupItem";
 import SetupLoader from "../SetupLoader";
 
-class SetupItem059 implements SetupItem {
+class SetupItem060 implements SetupItem {
 
-    readonly #code: string = "059";
-    readonly #name: string = "智能选择战斗场";
-    readonly #key: string = "_pa_059";
+    readonly #code: string = "060";
+    readonly #name: string = "增强版宠物图鉴";
+    readonly #key: string = "_pa_060";
 
     code(): string {
         return this.#code;
@@ -24,8 +24,8 @@ class SetupItem059 implements SetupItem {
         html += "<td style='background-color:#E8E8D0'></td>";
         html += "<td style='background-color:#EFE0C0'></td>";
         html += "<td style='background-color:#E0D0B0;text-align:left' colspan='2'>";
-        html += "<input type='button' class='dynamic_button _059_button' id='_059_button_1' value='启用'>";
-        html += "<input type='button' class='dynamic_button _059_button' id='_059_button_2' value='禁用'>";
+        html += "<input type='button' class='dynamic_button _060_button' id='_060_button_1' value='启用'>";
+        html += "<input type='button' class='dynamic_button _060_button' id='_060_button_2' value='禁用'>";
         html += "</td>";
         html += "</tr>";
         $("#setup_item_table").append($(html));
@@ -33,18 +33,18 @@ class SetupItem059 implements SetupItem {
     }
 
     #doProcessButton() {
-        const value = SetupLoader.isAutoSetBattleFieldEnabled();
-        $("._059_button[value='" + (value ? "启用" : "禁用") + "']")
+        const value = SetupLoader.isEnhancedPetMapEnabled();
+        $("._060_button[value='" + (value ? "启用" : "禁用") + "']")
             .css("color", "blue")
             .prop("disabled", true);
 
-        $("._059_button").on("click", event => {
-            $("._059_button").off("click");
+        $("._060_button").on("click", event => {
+            $("._060_button").off("click");
             const buttonId = $(event.target).attr("id")!;
-            if (buttonId === "_059_button_1") {
+            if (buttonId === "_060_button_1") {
                 StorageUtils.set(this.#key, "1");
                 MessageBoard.publishMessage("<b style='color:red'>" + this.#name + "</b>已启用!");
-            } else if (buttonId === "_059_button_2") {
+            } else if (buttonId === "_060_button_2") {
                 StorageUtils.set(this.#key, "0");
                 MessageBoard.publishMessage("<b style='color:red'>" + this.#name + "</b>已禁用!");
             }
@@ -53,4 +53,4 @@ class SetupItem059 implements SetupItem {
     }
 }
 
-export = SetupItem059;
+export = SetupItem060;

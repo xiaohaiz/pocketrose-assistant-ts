@@ -9,6 +9,7 @@ import PersonalStatus from "../../core/role/PersonalStatus";
 import Role from "../../core/role/Role";
 import CommentBoard from "../../util/CommentBoard";
 import Credential from "../../util/Credential";
+import KeyboardShortcutBuilder from "../../util/KeyboardShortcutBuilder";
 import MessageBoard from "../../util/MessageBoard";
 import NetworkUtils from "../../util/NetworkUtils";
 import PageProcessorContext from "../PageProcessorContext";
@@ -21,6 +22,14 @@ class PersonalCareerManagementPageProcessor_Town extends PersonalCareerManagemen
         doProcess(credential, candidateList);
     }
 
+
+    doBindKeyboardShortcut() {
+        new KeyboardShortcutBuilder()
+            .onKeyPressed("e", () => $("#itemManagementButton").trigger("click"))
+            .onEscapePressed(() => $("#returnButton").trigger("click"))
+            .withDefaultPredicate()
+            .bind();
+    }
 }
 
 function doProcess(credential: Credential, candidateList: string[]) {
@@ -333,9 +342,8 @@ function doRenderSpell(credential: Credential, role: Role, spellList: Spell[]) {
     html += "<th style='background-color:#E0D0B0'>设置</th>";
     html += "</tr>";
     for (const spell of spellList) {
-        const using = spell.name === role.spell;
         html += "<tr>";
-        html += "<td style='background-color:#E8E8D0'>" + (using ? "★" : "") + "</td>";
+        html += "<td style='background-color:#E8E8D0'>" + ((spell.name === role.spell) ? "★" : "") + "</td>";
         html += "<td style='background-color:#EFE0C0'>" + spell.name + "</td>";
         html += "<td style='background-color:#E0D0B0'>" + spell.power + "</td>";
         html += "<td style='background-color:#EFE0C0'>" + spell.accuracy + "</td>";
@@ -352,8 +360,7 @@ function doRenderSpell(credential: Credential, role: Role, spellList: Spell[]) {
     $("#spellCell").html(html);
 
     for (const spell of spellList) {
-        const using = spell.name === role.spell;
-        if (using) {
+        if (spell.name === role.spell) {
             const buttonId = "set_spell_" + spell.id;
             $("#" + buttonId).prop("disabled", true);
         }

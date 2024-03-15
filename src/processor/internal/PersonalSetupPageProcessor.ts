@@ -131,10 +131,8 @@ abstract class PersonalSetupPageProcessor extends PageProcessorCredentialSupport
                 MessageBoard.resetMessageBoard("口袋助手设置已经重新加载。");
                 $("#refreshButton").trigger("click");
             })
-            .onEscapePressed(() =>
-                $("#returnButton").trigger("click"))
-            .withPredicate(() =>
-                $("input:text:focus").length === 0 && $("textarea:focus").length === 0)
+            .onEscapePressed(() => $("#returnButton").trigger("click"))
+            .withDefaultPredicate()
             .bind();
     }
 

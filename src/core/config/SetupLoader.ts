@@ -201,6 +201,10 @@ class SetupLoader {
     static isAutoSetBattleFieldEnabled(): boolean {
         return StorageUtils.getBoolean("_pa_059");
     }
+
+    static isEnhancedPetMapEnabled(): boolean {
+        return StorageUtils.getBoolean("_pa_060");
+    }
 }
 
 export = SetupLoader;

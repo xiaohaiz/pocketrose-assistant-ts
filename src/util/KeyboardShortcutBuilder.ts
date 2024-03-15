@@ -24,6 +24,12 @@ class KeyboardShortcutBuilder {
         return this;
     }
 
+    withDefaultPredicate(): KeyboardShortcutBuilder {
+        return this.withPredicate(() =>
+            $("input:text:focus").length === 0 && $("textarea:focus").length === 0
+        );
+    }
+
     bind() {
         $(document).off("keydown.city").on("keydown.city", event => {
             const key = event.key;
