@@ -32,7 +32,13 @@ class PersonalEquipmentManagementPageProcessor_Town extends PersonalEquipmentMan
 
     doBindKeyboardShortcut(credential: Credential) {
         new KeyboardShortcutBuilder()
-            .onEscapePressed(() => $("#returnButton").trigger("click"))
+            .onEscapePressed(() => {
+                new BattleFieldManager(credential)
+                    .autoSetBattleField()
+                    .then(() => {
+                        $("#returnButton").trigger("click");
+                    });
+            })
             .onKeyPressed("r", () => {
                 new BattleFieldManager(credential)
                     .autoSetBattleField()
