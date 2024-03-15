@@ -333,9 +333,8 @@ function doRenderSpell(credential: Credential, role: Role, spellList: Spell[]) {
     html += "<th style='background-color:#E0D0B0'>设置</th>";
     html += "</tr>";
     for (const spell of spellList) {
-        const using = spell.name === role.spell;
         html += "<tr>";
-        html += "<td style='background-color:#E8E8D0'>" + (using ? "★" : "") + "</td>";
+        html += "<td style='background-color:#E8E8D0'>" + ((spell.name === role.spell) ? "★" : "") + "</td>";
         html += "<td style='background-color:#EFE0C0'>" + spell.name + "</td>";
         html += "<td style='background-color:#E0D0B0'>" + spell.power + "</td>";
         html += "<td style='background-color:#EFE0C0'>" + spell.accuracy + "</td>";
@@ -352,8 +351,7 @@ function doRenderSpell(credential: Credential, role: Role, spellList: Spell[]) {
     $("#spellCell").html(html);
 
     for (const spell of spellList) {
-        const using = spell.name === role.spell;
-        if (using) {
+        if (spell.name === role.spell) {
             const buttonId = "set_spell_" + spell.id;
             $("#" + buttonId).prop("disabled", true);
         }
