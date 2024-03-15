@@ -27,6 +27,7 @@ import PageUtils from "../../util/PageUtils";
 import StringUtils from "../../util/StringUtils";
 import PageProcessorContext from "../PageProcessorContext";
 import PersonalEquipmentManagementPageProcessor from "./PersonalEquipmentManagementPageProcessor";
+import EquipmentLocalStorage from "../../core/equipment/EquipmentLocalStorage";
 
 class PersonalEquipmentManagementPageProcessor_Town extends PersonalEquipmentManagementPageProcessor {
 
@@ -40,13 +41,18 @@ class PersonalEquipmentManagementPageProcessor_Town extends PersonalEquipmentMan
                     });
             })
             .onKeyPressed("r", () => {
-                new BattleFieldManager(credential)
-                    .autoSetBattleField()
-                    .then(field => {
-                        $("#refreshButton").trigger("click");
-                        if (field) {
-                            MessageBoard.publishMessage("战斗场所切换到【" + field + "】。");
-                        }
+                new EquipmentLocalStorage(credential)
+                    .updateEquipmentStatus()
+                    .then(() => {
+                        new BattleFieldManager(credential)
+                            .autoSetBattleField()
+                            .then(field => {
+                                $("#refreshButton").trigger("click");
+                                MessageBoard.publishMessage("装备数据更新完成。");
+                                if (field) {
+                                    MessageBoard.publishMessage("战斗场所切换到【" + field + "】。");
+                                }
+                            });
                     });
             })
             .onKeyPressed("s", () => $("#openItemShop").trigger("click"))
