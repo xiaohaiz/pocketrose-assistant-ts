@@ -132,10 +132,28 @@ class TownPetMapHousePageProcessor extends PageProcessorCredentialSupport {
                 mh += "<tr>";
                 for (const pm of currentRowPetMaps) {
                     if (pm.count !== undefined) {
-                        mh += "<td style='background-color:wheat;width:64px'>" + pm.code + " / " + pm.count + "</td>"
+                        const monster = MonsterProfileLoader.load(pm.code)!;
+                        if (monster.location === 1) {
+                            mh += "<td style='background-color:wheat;width:64px;color:green'>" + pm.code + " / " + pm.count + "</td>"
+                        } else if (monster.location === 2) {
+                            mh += "<td style='background-color:wheat;width:64px;color:blue'>" + pm.code + " / " + pm.count + "</td>"
+                        } else if (monster.location === 3) {
+                            mh += "<td style='background-color:wheat;width:64px;color:red'>" + pm.code + " / " + pm.count + "</td>"
+                        } else {
+                            mh += "<td style='background-color:wheat;width:64px'>" + pm.code + " / " + pm.count + "</td>"
+                        }
                     } else {
                         if (pm.code !== undefined) {
-                            mh += "<td style='background-color:wheat;width:64px'>" + pm.code + "</td>"
+                            const monster = MonsterProfileLoader.load(pm.code)!;
+                            if (monster.location === 1) {
+                                mh += "<td style='background-color:wheat;width:64px;color:green'>" + pm.code + "</td>"
+                            } else if (monster.location === 2) {
+                                mh += "<td style='background-color:wheat;width:64px;color:blue'>" + pm.code + "</td>"
+                            } else if (monster.location === 3) {
+                                mh += "<td style='background-color:wheat;width:64px;color:red'>" + pm.code + "</td>"
+                            } else {
+                                mh += "<td style='background-color:wheat;width:64px'>" + pm.code + "</td>"
+                            }
                         } else {
                             mh += "<td style='background-color:wheat;width:64px'></td>"
                         }
