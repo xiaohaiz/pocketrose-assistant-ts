@@ -51,9 +51,9 @@ class BattleFieldManager {
         await writer.writeCustomizedConfig(false, false, true, false);
     }
 
-    // 当转职设置为允许时，战斗场所切换到上洞
+    // 当锁死上洞时，战斗场所切换到上洞
     #c1(): boolean {
-        return !SetupLoader.isCareerTransferEntranceDisabled(this.#credential.id);
+        return SetupLoader.isForceSeniorBattleEnabled(this.#credential.id);
     }
 
     // 当祭奠RP大于0时，战斗场所切换到上洞

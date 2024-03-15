@@ -205,6 +205,10 @@ class SetupLoader {
     static isEnhancedPetMapEnabled(): boolean {
         return StorageUtils.getBoolean("_pa_060");
     }
+
+    static isForceSeniorBattleEnabled(id: string): boolean {
+        return StorageUtils.getBoolean("_pa_061_" + id);
+    }
 }
 
 export = SetupLoader;
