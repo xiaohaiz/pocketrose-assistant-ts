@@ -21,6 +21,8 @@ class TownPetMapHousePageProcessor extends PageProcessorCredentialSupport {
         const page = TownPetMapHouse.parsePage(PageUtils.currentPageHtml());
         this.#renderImmutablePage(credential, page, context);
         new KeyboardShortcutBuilder()
+            .onKeyPressed("r", () => $("#updateButton").trigger("click"))
+            .onKeyPressed("u", () => $("#openPetManagement").trigger("click"))
             .onEscapePressed(() => $("#returnButton").trigger("click"))
             .withDefaultPredicate()
             .bind();
@@ -64,7 +66,8 @@ class TownPetMapHousePageProcessor extends PageProcessorCredentialSupport {
             .attr("id", "tr2")
             .css("display", "none")
             .html("<td id='returnFormContainer'></td>");
-        $("#returnFormContainer").html(PageUtils.generateReturnTownForm(credential));
+        $("#returnFormContainer").html(PageUtils.generateReturnTownForm(credential)
+            + PageUtils.generatePetManagementForm(credential));
 
         $("#tr2")
             .after("<tr id='tr3'><td id='pageMenuContainer' style='text-align:center'></td></tr>");
