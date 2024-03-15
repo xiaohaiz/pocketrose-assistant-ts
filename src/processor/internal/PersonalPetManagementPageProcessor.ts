@@ -7,13 +7,21 @@ import PageUtils from "../../util/PageUtils";
 import StringUtils from "../../util/StringUtils";
 import PageProcessorContext from "../PageProcessorContext";
 import PageProcessorCredentialSupport from "../PageProcessorCredentialSupport";
+import KeyboardShortcutBuilder from "../../util/KeyboardShortcutBuilder";
 
 abstract class PersonalPetManagementPageProcessor extends PageProcessorCredentialSupport {
 
     async doProcess(credential: Credential, context?: PageProcessorContext): Promise<void> {
         const page = PersonalPetManagement.parsePage(PageUtils.currentPageHtml());
         this.#renderImmutablePage(credential, page, context);
-        PageUtils.onEscapePressed(() => $("#returnButton").trigger("click"));
+        this.doBindKeyboardShortcut(credential);
+    }
+
+    doBindKeyboardShortcut(credential: Credential) {
+        new KeyboardShortcutBuilder()
+            .onEscapePressed(() => $("#returnButton").trigger("click"))
+            .withDefaultPredicate()
+            .bind();
     }
 
     #renderImmutablePage(credential: Credential, page: PersonalPetManagementPage, context?: PageProcessorContext) {
