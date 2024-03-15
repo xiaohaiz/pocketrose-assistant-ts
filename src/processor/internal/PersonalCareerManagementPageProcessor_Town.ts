@@ -9,6 +9,7 @@ import PersonalStatus from "../../core/role/PersonalStatus";
 import Role from "../../core/role/Role";
 import CommentBoard from "../../util/CommentBoard";
 import Credential from "../../util/Credential";
+import KeyboardShortcutBuilder from "../../util/KeyboardShortcutBuilder";
 import MessageBoard from "../../util/MessageBoard";
 import NetworkUtils from "../../util/NetworkUtils";
 import PageProcessorContext from "../PageProcessorContext";
@@ -21,6 +22,14 @@ class PersonalCareerManagementPageProcessor_Town extends PersonalCareerManagemen
         doProcess(credential, candidateList);
     }
 
+
+    doBindKeyboardShortcut() {
+        new KeyboardShortcutBuilder()
+            .onKeyPressed("e", () => $("#itemManagementButton").trigger("click"))
+            .onEscapePressed(() => $("#returnButton").trigger("click"))
+            .withDefaultPredicate()
+            .bind();
+    }
 }
 
 function doProcess(credential: Credential, candidateList: string[]) {
