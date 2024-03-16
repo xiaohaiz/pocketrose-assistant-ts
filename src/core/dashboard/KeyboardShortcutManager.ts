@@ -128,6 +128,12 @@ function doBind(credential: Credential, bindBattle?: boolean, page?: TownDashboa
             $("#personalButton").trigger("click");
             return;
         }
+
+        if (key === "Escape") {
+            $("option[value='INN']").prop("selected", true);
+            $("#townButton").trigger("click");
+            return;
+        }
     });
 }
 
