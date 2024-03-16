@@ -25,7 +25,9 @@ class TownInnPageProcessor extends PageProcessorCredentialSupport {
         const page = await new TownInnPageParser().parse(PageUtils.currentPageHtml());
         doProcess(credential);
         new KeyboardShortcutBuilder()
+            .onKeyPressed("r", () => $("#lodgeButton").trigger("click"))
             .onEscapePressed(() => $("#returnButton").trigger("click"))
+            .withDefaultPredicate()
             .bind()
     }
 
