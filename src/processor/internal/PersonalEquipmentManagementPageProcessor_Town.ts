@@ -1,6 +1,7 @@
-import {escape, parseInt, unescape} from "lodash";
+import _, {escape, parseInt, unescape} from "lodash";
 import TownBank from "../../core/bank/TownBank";
 import SetupLoader from "../../core/config/SetupLoader";
+import BattleFieldManager from "../../core/dashboard/BattleFieldManager";
 import CastleInformation from "../../core/dashboard/CastleInformation";
 import TownDashboard from "../../core/dashboard/TownDashboard";
 import CastleEquipmentExpressHouse from "../../core/equipment/CastleEquipmentExpressHouse";
@@ -26,13 +27,34 @@ import PageUtils from "../../util/PageUtils";
 import StringUtils from "../../util/StringUtils";
 import PageProcessorContext from "../PageProcessorContext";
 import PersonalEquipmentManagementPageProcessor from "./PersonalEquipmentManagementPageProcessor";
+import EquipmentLocalStorage from "../../core/equipment/EquipmentLocalStorage";
 
 class PersonalEquipmentManagementPageProcessor_Town extends PersonalEquipmentManagementPageProcessor {
 
-    doBindKeyboardShortcut() {
+    doBindKeyboardShortcut(credential: Credential) {
         new KeyboardShortcutBuilder()
-            .onEscapePressed(() => $("#returnButton").trigger("click"))
-            .onKeyPressed("r", () => $("#refreshButton").trigger("click"))
+            .onEscapePressed(() => {
+                new BattleFieldManager(credential)
+                    .autoSetBattleField()
+                    .then(() => {
+                        $("#returnButton").trigger("click");
+                    });
+            })
+            .onKeyPressed("r", () => {
+                new EquipmentLocalStorage(credential)
+                    .updateEquipmentStatus()
+                    .then(() => {
+                        new BattleFieldManager(credential)
+                            .autoSetBattleField()
+                            .then(field => {
+                                $("#refreshButton").trigger("click");
+                                MessageBoard.publishMessage("装备数据更新完成。");
+                                if (field) {
+                                    MessageBoard.publishMessage("战斗场所切换到【" + field + "】。");
+                                }
+                            });
+                    });
+            })
             .onKeyPressed("s", () => $("#openItemShop").trigger("click"))
             .withDefaultPredicate()
             .bind();
@@ -287,6 +309,7 @@ class PersonalEquipmentManagementPageProcessor_Town extends PersonalEquipmentMan
         html += "<td style='text-align:left'>";
         html += "<input type='button' id='useButton' class='mutableButton-1' value='使用装备'>";
         html += "<input type='button' id='storeButton' class='mutableButton-1' value='放入百宝袋' disabled style='display:none'>";
+        html += "<input type='button' id='speedButton' class='mutableButton-1' value='选择装备计算速度'>";
         html += "</td>";
         html += "<td style='text-align:right'>";
         html += "<input type='button' id='openBagButton' class='mutableButton-1' value='打开百宝袋' disabled style='display:none'>";
@@ -530,6 +553,51 @@ class PersonalEquipmentManagementPageProcessor_Town extends PersonalEquipmentMan
                 });
             });
         }
+
+        // --------------------------------------------------------------------
+        // 计算速度
+        // --------------------------------------------------------------------
+        $("#speedButton").on("click", () => {
+            const indexList: number[] = [];
+            $(".selectButton-1").each((idx, button) => {
+                const buttonId = $(button).attr("id") as string;
+                if (PageUtils.isColorBlue(buttonId)) {
+                    const index = parseInt(StringUtils.substringAfterLast(buttonId, "_"));
+                    indexList.push(index);
+                }
+            });
+            if (indexList.length === 0) {
+                return;
+            }
+            const selectedEquipmentNames: string[] = [];
+            let totalWeight = 0;
+            let totalAdditionalWeight = 0;
+            for (const index of indexList) {
+                const equipment = page.findEquipment(index);
+                if (equipment) {
+                    selectedEquipmentNames.push(equipment.fullName);
+                    totalWeight += equipment.weight!;
+                    if (equipment.additionalWeight) {
+                        totalAdditionalWeight += equipment.additionalWeight;
+                    }
+                }
+            }
+            MessageBoard.publishMessage("评估所选的装备：" + _.join(selectedEquipmentNames, "，"));
+            MessageBoard.publishMessage("总原始重量：" + totalWeight);
+            MessageBoard.publishMessage("总附加重量：" + totalAdditionalWeight);
+            new PersonalStatus(credential).load().then(role => {
+                const roleSpeed = role.speed!;
+                MessageBoard.publishMessage("当前角色速度：" + roleSpeed);
+                const delta = roleSpeed - (totalWeight + totalAdditionalWeight);
+                let hit: number;
+                if (delta < 50) {
+                    hit = 1;
+                } else {
+                    hit = _.floor(delta / 50)
+                }
+                MessageBoard.publishMessage("评估角色HIT数：" + hit);
+            });
+        });
 
         // --------------------------------------------------------------------
         // 发送

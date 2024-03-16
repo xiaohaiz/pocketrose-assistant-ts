@@ -15,40 +15,44 @@ class BattleFieldManager {
         this.#credential = credential;
     }
 
-    async autoSetBattleField() {
+    async autoSetBattleField(): Promise<string | undefined> {
+        if (!SetupLoader.isAutoSetBattleFieldEnabled()) {
+            return undefined;
+        }
         const writer = new BattleFieldConfigWriter(this.#credential);
         if (this.#c1()) {
             await writer.writeCustomizedConfig(false, false, true, false);
-            return;
+            return "上洞";
         }
 
         const role = await new PersonalStatus(this.#credential).load();
         if (this.#c2(role)) {
             await writer.writeCustomizedConfig(false, false, true, false);
-            return;
+            return "上洞";
         }
 
         if (await this.#c3(role)) {
             await writer.writeCustomizedConfig(false, false, false, true);
-            return;
+            return "十二宫";
         }
 
         if (this.#c4(role)) {
             await writer.writeCustomizedConfig(false, false, true, false);
-            return;
+            return "上洞";
         }
 
         if (this.#c5(role)) {
             await writer.writeCustomizedConfig(true, false, false, false);
-            return;
+            return "初森";
         }
 
         if (this.#c6(role)) {
             await writer.writeCustomizedConfig(false, true, false, false);
-            return;
+            return "中塔";
         }
 
         await writer.writeCustomizedConfig(false, false, true, false);
+        return "上洞";
     }
 
     // 当锁死上洞时，战斗场所切换到上洞

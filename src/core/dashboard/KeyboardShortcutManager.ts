@@ -1,5 +1,4 @@
 import Credential from "../../util/Credential";
-import BattleFieldConfigLoader from "../battle/BattleFieldConfigLoader";
 import BattleFieldManager from "./BattleFieldManager";
 import TownDashboardPage from "./TownDashboardPage";
 
@@ -82,13 +81,9 @@ function doBind(credential: Credential, bindBattle?: boolean, page?: TownDashboa
         }
 
         if (key === "r") {
-            if (BattleFieldConfigLoader.isAutoSetEnabled()) {
-                new BattleFieldManager(credential)
-                    .autoSetBattleField()
-                    .then(() => $("#refreshButton").trigger("click"));
-            } else {
-                $("#refreshButton").trigger("click");
-            }
+            new BattleFieldManager(credential)
+                .autoSetBattleField()
+                .then(() => $("#refreshButton").trigger("click"));
             return;
         }
 
@@ -131,6 +126,12 @@ function doBind(credential: Credential, bindBattle?: boolean, page?: TownDashboa
         if (key === "i") {
             $("option[value='STATUS_PRINT']").prop("selected", true);
             $("#personalButton").trigger("click");
+            return;
+        }
+
+        if (key === "Escape") {
+            $("option[value='INN']").prop("selected", true);
+            $("#townButton").trigger("click");
             return;
         }
     });
