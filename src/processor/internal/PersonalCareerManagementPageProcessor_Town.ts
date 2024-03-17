@@ -66,8 +66,8 @@ function doProcess(credential: Credential, candidateList: string[]) {
     $("table:first tr:first")
         .next().next().next()
         .after($("<tr><td style='background-color:#F8F0E0;text-align:center'>" +
-            "<input type='button' value='返回城市' id='returnButton'>" +
-            "<input type='button' value='装备管理' id='itemManagementButton'>" +
+            "<input type='button' value='返回城市(Esc)' id='returnButton'>" +
+            "<input type='button' value='装备管理(e)' id='itemManagementButton'>" +
             "</td></tr>"));
 
     $("#returnButton").on("click", function () {
