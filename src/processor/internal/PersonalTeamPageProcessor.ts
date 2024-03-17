@@ -288,32 +288,35 @@ abstract class PersonalTeamPageProcessor extends PageProcessorCredentialSupport 
                         const pets: string[] = JSON.parse(data.json!);
                         let html = "";
                         let row = 0;
-                        pets.map(it => Pet.parse(it))
-                            .sort(Pet.sorter)
-                            .forEach(it => {
-                                it.index = petIndex++;
-                                allPetList.push(it);
 
-                                html += "<tr>";
-                                if (row === 0) {
-                                    html += "<td style='background-color:#F8F0E0;vertical-align:center' rowspan='" + (pets.length) + "'>" + config.name + "</td>";
-                                }
-                                html += "<td style='background-color:#E8E8D0;text-align:left'>" + it.nameHtml + "</td>";
-                                html += "<td style='background-color:#E8E8B0'>" + it.gender + "</td>";
-                                html += "<td style='background-color:#E8E8D0'>" + it.levelHtml + "</td>";
-                                html += "<td style='background-color:#E8E8B0'>" + it.maxHealth + "</td>";
-                                html += "<td style='background-color:#E8E8D0'>" + it.attackHtml + "</td>";
-                                html += "<td style='background-color:#E8E8B0'>" + it.defenseHtml + "</td>";
-                                html += "<td style='background-color:#E8E8D0'>" + it.specialAttackHtml + "</td>";
-                                html += "<td style='background-color:#E8E8B0'>" + it.specialDefenseHtml + "</td>";
-                                html += "<td style='background-color:#E8E8D0'>" + it.speedHtml + "</td>";
-                                html += "<td style='background-color:#E8E8B0'>" + it.location + "</td>";
-                                html += "<td style='background-color:#E8E8D0'>";
-                                html += "<button role='button' class='simulationButton' id='simulate-" + it.index + "'>模拟</button>";
-                                html += "</td>";
-                                html += "</tr>";
-                                row++;
-                            });
+                        const petList = pets.map(it => Pet.parse(it))
+                            .sort(Pet.sorter)
+                            .filter(it => !(config.warehouse !== undefined && config.warehouse && it.location === "R"));
+
+                        petList.forEach(it => {
+                            it.index = petIndex++;
+                            allPetList.push(it);
+
+                            html += "<tr>";
+                            if (row === 0) {
+                                html += "<td style='background-color:#F8F0E0;vertical-align:center' rowspan='" + (petList.length) + "'>" + config.name + "</td>";
+                            }
+                            html += "<td style='background-color:#E8E8D0;text-align:left'>" + it.nameHtml + "</td>";
+                            html += "<td style='background-color:#E8E8B0'>" + it.gender + "</td>";
+                            html += "<td style='background-color:#E8E8D0'>" + it.levelHtml + "</td>";
+                            html += "<td style='background-color:#E8E8B0'>" + it.maxHealth + "</td>";
+                            html += "<td style='background-color:#E8E8D0'>" + it.attackHtml + "</td>";
+                            html += "<td style='background-color:#E8E8B0'>" + it.defenseHtml + "</td>";
+                            html += "<td style='background-color:#E8E8D0'>" + it.specialAttackHtml + "</td>";
+                            html += "<td style='background-color:#E8E8B0'>" + it.specialDefenseHtml + "</td>";
+                            html += "<td style='background-color:#E8E8D0'>" + it.speedHtml + "</td>";
+                            html += "<td style='background-color:#E8E8B0'>" + it.location + "</td>";
+                            html += "<td style='background-color:#E8E8D0'>";
+                            html += "<button role='button' class='simulationButton' id='simulate-" + it.index + "'>模拟</button>";
+                            html += "</td>";
+                            html += "</tr>";
+                            row++;
+                        });
 
                         $("#petStatusList").append($(html));
                     }
@@ -415,6 +418,7 @@ abstract class PersonalTeamPageProcessor extends PageProcessorCredentialSupport 
                         let row = 0;
                         const petList = pets.map(it => Pet.parse(it))
                             .sort(Pet.sorter)
+                            .filter(it => !(config.warehouse !== undefined && config.warehouse && it.location === "R"))
                             .filter(it => it.name?.includes(searchName));
                         petList.forEach(it => {
                             it.index = petIndex++;
