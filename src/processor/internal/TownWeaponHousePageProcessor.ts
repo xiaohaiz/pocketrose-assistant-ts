@@ -10,12 +10,18 @@ import PageUtils from "../../util/PageUtils";
 import PocketUtils from "../../util/PocketUtils";
 import PageProcessorContext from "../PageProcessorContext";
 import PageProcessorCredentialSupport from "../PageProcessorCredentialSupport";
+import KeyboardShortcutBuilder from "../../util/KeyboardShortcutBuilder";
 
 class TownWeaponHousePageProcessor extends PageProcessorCredentialSupport {
 
     async doProcess(credential: Credential, context?: PageProcessorContext): Promise<void> {
         await processPage(credential);
-        PageUtils.onEscapePressed(() => $("#return_button").trigger("click"));
+        new KeyboardShortcutBuilder()
+            .onKeyPressed("r", () => $("#refresh_button").trigger("click"))
+            .onKeyPressed("e", () => $("#equipmentManagementButton").trigger("click"))
+            .onEscapePressed(() => $("#return_button").trigger("click"))
+            .withDefaultPredicate()
+            .bind();
     }
 
 }
@@ -81,8 +87,9 @@ async function processPage(credential: Credential): Promise<void> {
     // ------------------------------------------------------------------------
     html += "<tr>";
     html += "<td style='background-color:#F8F0E0;text-align:center'>";
-    html += "<input type='button' id='refresh_button' value='刷新武器屋'>";
-    html += "<input type='button' id='return_button' value='离开武器屋'>";
+    html += "<input type='button' id='refresh_button' value='刷新武器屋(r)'>";
+    html += "<input type='button' id='return_button' value='离开武器屋(Esc)'>";
+    html += "<input type='button' id='equipmentManagementButton' value='装备管理(e)'>";
     html += "</td>";
     // ------------------------------------------------------------------------
     // 个人物品栏
@@ -104,6 +111,9 @@ async function processPage(credential: Credential): Promise<void> {
     doGenerateHiddenForm(credential);
     doBindReturnButton();
     doBindRefreshButton(credential, page);
+    $("#equipmentManagementButton").on("click", () => {
+        $("#openEquipmentManagement").trigger("click");
+    });
 
     doRender(credential, page);
 }
@@ -117,6 +127,7 @@ function doGenerateHiddenForm(credential: Credential) {
     html += "<input type='hidden' name='mode' value='STATUS'>";
     html += "<input type='submit' id='return_submit'>";
     html += "</form>";
+    html += PageUtils.generateEquipmentManagementForm(credential);
     $("#hidden_form_cell").html(html);
 }
 
