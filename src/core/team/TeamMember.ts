@@ -6,6 +6,7 @@ class TeamMember {
     pass?: string;
     external?: boolean;     // 团队编制外，不纳入统计
     master?: boolean;       // 队长标记
+    warehouse?: boolean;    // 仓储号，其城堡仓库/牧场不纳入统计
 
     get available(): boolean {
         return this.name !== undefined && this.id !== undefined && this.pass !== undefined;
