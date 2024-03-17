@@ -8,12 +8,16 @@ import StorageUtils from "../../util/StorageUtils";
 import StringUtils from "../../util/StringUtils";
 import PageProcessorContext from "../PageProcessorContext";
 import PageProcessorCredentialSupport from "../PageProcessorCredentialSupport";
+import KeyboardShortcutBuilder from "../../util/KeyboardShortcutBuilder";
 
 class PersonalTeamManagementPageProcessor extends PageProcessorCredentialSupport {
 
     async doProcess(credential: Credential, context?: PageProcessorContext): Promise<void> {
         doProcess(credential);
-        PageUtils.onEscapePressed(() => $("#returnButton").trigger("click"));
+        new KeyboardShortcutBuilder()
+            .onEscapePressed(() => $("#returnButton").trigger("click"))
+            .withDefaultPredicate()
+            .bind();
     }
 
 }
@@ -99,6 +103,7 @@ function doRender() {
     html += "<th style='background-color:skyblue'>序号</th>";
     html += "<th style='background-color:skyblue'>队长</th>";
     html += "<th style='background-color:skyblue'>编制</th>";
+    html += "<th style='background-color:skyblue'>仓储</th>";
     html += "<th style='background-color:skyblue'>角色名字</th>";
     html += "<th style='background-color:skyblue'>登陆名</th>";
     html += "<th style='background-color:skyblue'>密码</th>";
@@ -116,6 +121,9 @@ function doRender() {
         html += "</td>";
         html += "<td style='background-color:#E8E8D0'>";
         html += "<button role='button' id='external_" + i + "' class='external-button' style='color:grey'>编外</button>";
+        html += "</td>";
+        html += "<td style='background-color:#E8E8D0'>";
+        html += "<button role='button' id='warehouse_" + i + "' class='warehouse-button' style='color:grey'>仓储</button>";
         html += "</td>";
         html += "<td style='background-color:#EFE0C0;text-align:left'>";
         html += "<input type='text' id='name_" + i + "' size='10' maxlength='10' spellcheck='false'>";
@@ -164,12 +172,14 @@ function doRender() {
                 .css("background-color", "yellow");
         }
         if (config.external) $("#external_" + i).css("color", "blue");
+        if (config.warehouse) $("#warehouse_" + i).css("color", "blue");
     }
 
     doBindFastLoginButton();
     doBindClearButton();
     doBindMasterButton();
     doBindExternalButton();
+    doBindWarehouseButton();
 }
 
 function doBindFastLoginButton() {
@@ -281,6 +291,27 @@ function doBindExternalButton() {
             member.master = false;
             StorageUtils.set("_fl_" + index, JSON.stringify(member.asDocument()));
             MessageBoard.publishMessage("<b style='color:yellow'>" + member.name + "</b>被踢出编制，如果有队长身份也同时被取消。");
+        }
+
+        doRefresh();
+    });
+}
+
+function doBindWarehouseButton() {
+    $(".warehouse-button").on("click", event => {
+        const buttonId = $(event.target).attr("id")!;
+        const index = _.parseInt(_.split(buttonId, "_")[1]);
+        const member = TeamMemberLoader.loadTeamMember(index);
+        if (!member) return;
+
+        if (PageUtils.isColorBlue(buttonId)) {
+            member.warehouse = false;
+            StorageUtils.set("_fl_" + index, JSON.stringify(member.asDocument()));
+            MessageBoard.publishMessage("<b style='color:yellow'>" + member.name + "</b>取消仓储账号。");
+        } else if (PageUtils.isColorGrey(buttonId)) {
+            member.warehouse = true;
+            StorageUtils.set("_fl_" + index, JSON.stringify(member.asDocument()));
+            MessageBoard.publishMessage("<b style='color:yellow'>" + member.name + "</b>设置为仓储账号。");
         }
 
         doRefresh();
