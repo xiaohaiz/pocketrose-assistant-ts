@@ -245,19 +245,19 @@ function doBindMasterButton() {
 
         if (PageUtils.isColorBlue(buttonId)) {
             member.master = false;
-            StorageUtils.set("_fl_" + index, JSON.stringify(member.asObject()));
+            StorageUtils.set("_fl_" + index, JSON.stringify(member.asDocument()));
             MessageBoard.publishMessage("<b style='color:yellow'>" + member.name + "</b>已经被取消队长身份。");
         } else if (PageUtils.isColorGrey(buttonId)) {
             TeamMemberLoader.loadTeamMembers()
                 .filter(it => it.master)
                 .forEach(it => {
                     it.master = false;
-                    StorageUtils.set("_fl_" + it.index, JSON.stringify(it.asObject()));
+                    StorageUtils.set("_fl_" + it.index, JSON.stringify(it.asDocument()));
                     MessageBoard.publishMessage("<b style='color:yellow'>" + it.name + "</b>已经被取消队长身份。");
                 });
 
             member.master = true;
-            StorageUtils.set("_fl_" + index, JSON.stringify(member.asObject()));
+            StorageUtils.set("_fl_" + index, JSON.stringify(member.asDocument()));
             MessageBoard.publishMessage("<b style='color:yellow'>" + member.name + "</b>被设置为队长。");
         }
 
@@ -274,12 +274,12 @@ function doBindExternalButton() {
 
         if (PageUtils.isColorBlue(buttonId)) {
             member.external = false;
-            StorageUtils.set("_fl_" + index, JSON.stringify(member.asObject()));
+            StorageUtils.set("_fl_" + index, JSON.stringify(member.asDocument()));
             MessageBoard.publishMessage("<b style='color:yellow'>" + member.name + "</b>被纳入编制内。");
         } else if (PageUtils.isColorGrey(buttonId)) {
             member.external = true;
             member.master = false;
-            StorageUtils.set("_fl_" + index, JSON.stringify(member.asObject()));
+            StorageUtils.set("_fl_" + index, JSON.stringify(member.asDocument()));
             MessageBoard.publishMessage("<b style='color:yellow'>" + member.name + "</b>被踢出编制，如果有队长身份也同时被取消。");
         }
 
