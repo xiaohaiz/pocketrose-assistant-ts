@@ -22,6 +22,7 @@ class TownDashboardKeyboardManager {
             .onKeyPressed("a", () => this.#processKeyPressed_a())
             .onKeyPressed("b", () => this.#processKeyPressed_b())
             .onKeyPressed("e", () => this.#processKeyPressed_e())
+            .onKeyPressed("f", () => this.#processKeyPressed_f())
             .onKeyPressed("g", () => this.#processKeyPressed_g())
             .onKeyPressed("i", () => this.#processKeyPressed_i())
             .onKeyPressed("j", () => this.#processKeyPressed_j())
@@ -52,6 +53,11 @@ class TownDashboardKeyboardManager {
     #processKeyPressed_e() {
         $("option[value='USE_ITEM']").prop("selected", true);
         $("#personalButton").trigger("click");
+    }
+
+    #processKeyPressed_f() {
+        $("option[value='BAOSHI_SHOP']").prop("selected", true);
+        $("#townButton").trigger("click");
     }
 
     #processKeyPressed_g() {
