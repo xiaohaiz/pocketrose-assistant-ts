@@ -1,5 +1,7 @@
 # pocketrose-assistant-ts
 
+### 版本 4.3.8-SNAPSHOT
+
 ### 版本 4.3.7
 
 1. 可自行配置是否隐藏主页按钮上的快捷键提示。
