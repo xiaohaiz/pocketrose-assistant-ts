@@ -19,6 +19,8 @@ class TownDashboardKeyboardManager {
 
     bind() {
         new KeyboardShortcutBuilder()
+            .onKeyPressed("k", () => this.#processKeyPressed_k())
+            .onKeyPressed("m", () => this.#processKeyPressed_m())
             .onKeyPressed("p", () => this.#processKeyPressed_p())
             .onKeyPressed("q", () => this.#processKeyPressed_q())
             .onKeyPressed("r", () => this.#processKeyPressed_r())
@@ -26,6 +28,16 @@ class TownDashboardKeyboardManager {
             .onEscapePressed(() => this.#processKeyPressed_Escape())
             .withDefaultPredicate()
             .bind();
+    }
+
+    #processKeyPressed_k() {
+        $("option[value='SINGLE_BATTLE']").prop("selected", true);
+        $("#townButton").trigger("click");
+    }
+
+    #processKeyPressed_m() {
+        $("option[value='CHANGEMAP']").prop("selected", true);
+        $("#townButton").trigger("click");
     }
 
     #processKeyPressed_p() {
