@@ -19,6 +19,7 @@ class TownDashboardKeyboardManager {
 
     bind() {
         new KeyboardShortcutBuilder()
+            .onKeyPressed("b", () => this.#processKeyPressed_b())
             .onKeyPressed("e", () => this.#processKeyPressed_e())
             .onKeyPressed("g", () => this.#processKeyPressed_g())
             .onKeyPressed("i", () => this.#processKeyPressed_i())
@@ -30,10 +31,16 @@ class TownDashboardKeyboardManager {
             .onKeyPressed("s", () => this.#processKeyPressed_s())
             .onKeyPressed("t", () => this.#processKeyPressed_t())
             .onKeyPressed("u", () => this.#processKeyPressed_u())
+            .onKeyPressed("x", () => this.#processKeyPressed_x())
             .onKeyPressed("z", () => this.#processKeyPressed_z())
             .onEscapePressed(() => this.#processKeyPressed_Escape())
             .withDefaultPredicate()
             .bind();
+    }
+
+    #processKeyPressed_b() {
+        $("option[value='BANK']").prop("selected", true);
+        $("#townButton").trigger("click");
     }
 
     #processKeyPressed_e() {
@@ -132,6 +139,11 @@ class TownDashboardKeyboardManager {
 
     #processKeyPressed_u() {
         $("option[value='PETSTATUS']").prop("selected", true);
+        $("#personalButton").trigger("click");
+    }
+
+    #processKeyPressed_x() {
+        $("option[value='LETTER']").prop("selected", true);
         $("#personalButton").trigger("click");
     }
 
