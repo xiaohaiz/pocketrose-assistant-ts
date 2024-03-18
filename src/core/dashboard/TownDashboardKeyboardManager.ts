@@ -19,6 +19,8 @@ class TownDashboardKeyboardManager {
 
     bind() {
         new KeyboardShortcutBuilder()
+            .onKeyPressed("e", () => this.#processKeyPressed_e())
+            .onKeyPressed("g", () => this.#processKeyPressed_g())
             .onKeyPressed("k", () => this.#processKeyPressed_k())
             .onKeyPressed("m", () => this.#processKeyPressed_m())
             .onKeyPressed("p", () => this.#processKeyPressed_p())
@@ -28,6 +30,20 @@ class TownDashboardKeyboardManager {
             .onEscapePressed(() => this.#processKeyPressed_Escape())
             .withDefaultPredicate()
             .bind();
+    }
+
+    #processKeyPressed_e() {
+        if ($("#shortcut2").length > 0) {
+            $("#shortcut2").trigger("click");
+        } else {
+            $("option[value='USE_ITEM']").prop("selected", true);
+            $("#personalButton").trigger("click");
+        }
+    }
+
+    #processKeyPressed_g() {
+        $("option[value='PETMAP']").prop("selected", true);
+        $("#townButton").trigger("click");
     }
 
     #processKeyPressed_k() {
