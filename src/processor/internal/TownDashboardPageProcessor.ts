@@ -318,15 +318,17 @@ function doRenderMenu(credential: Credential, page: TownDashboardPage) {
             .next()
             .find("> th:first")
             .each((idx, th) => {
+                const shortcut1Value = SetupLoader.isShortcutPromptHidden() ? "&nbsp;图鉴&nbsp;" : "图鉴(g)";
+                const shortcut5Value = SetupLoader.isShortcutPromptHidden() ? "&nbsp;个人&nbsp;" : "个人(i)";
                 let html = "";
                 html += "<table style='background-color:transparent;border-spacing:0;border-width:0;margin:auto;text-align:center;width:100%'>";
                 html += "<tbody>";
                 html += "<tr>";
                 html += "<td>";
-                html += "<button role='button' class='" + buttonClass + "' id='shortcut1' style='white-space:nowrap;width:100%'>图鉴(g)</button>";
+                html += "<button role='button' class='" + buttonClass + "' id='shortcut1' style='white-space:nowrap;width:100%'>" + shortcut1Value + "</button>";
                 html += "</td>";
                 html += "<td>";
-                html += "<button role='button' class='" + buttonClass + "' id='shortcut5' style='white-space:nowrap;width:100%'>个人(i)</button>";
+                html += "<button role='button' class='" + buttonClass + "' id='shortcut5' style='white-space:nowrap;width:100%'>" + shortcut5Value + "</button>";
                 html += "</td>";
                 html += "</tr>";
                 html += "</tbody>";
@@ -339,15 +341,17 @@ function doRenderMenu(credential: Credential, page: TownDashboardPage) {
             .next()
             .find("> th:first")
             .each((idx, th) => {
+                const shortcut2Value = SetupLoader.isShortcutPromptHidden() ? "&nbsp;装备&nbsp;" : "装备(e)";
+                const shortcut6Value = SetupLoader.isShortcutPromptHidden() ? "&nbsp;团队&nbsp;" : "团队(t)";
                 let html = "";
                 html += "<table style='background-color:transparent;border-spacing:0;border-width:0;margin:auto;text-align:center;width:100%'>";
                 html += "<tbody>";
                 html += "<tr>";
                 html += "<td>";
-                html += "<button role='button' class='" + buttonClass + "' id='shortcut2' style='white-space:nowrap;width:100%'>装备(e)</button>";
+                html += "<button role='button' class='" + buttonClass + "' id='shortcut2' style='white-space:nowrap;width:100%'>" + shortcut2Value + "</button>";
                 html += "</td>";
                 html += "<td>";
-                html += "<button role='button' class='" + buttonClass + "' id='shortcut6' style='white-space:nowrap;width:100%'>团队(t)</button>";
+                html += "<button role='button' class='" + buttonClass + "' id='shortcut6' style='white-space:nowrap;width:100%'>" + shortcut6Value + "</button>";
                 html += "</td>";
                 html += "</tr>";
                 html += "</tbody>";
@@ -360,15 +364,17 @@ function doRenderMenu(credential: Credential, page: TownDashboardPage) {
             .next()
             .find("> th:first")
             .each((idx, th) => {
+                const shortcut3Value = SetupLoader.isShortcutPromptHidden() ? "&nbsp;宠物&nbsp;" : "宠物(u)";
+                const shortcut7Value = SetupLoader.isShortcutPromptHidden() ? "&nbsp;银行&nbsp;" : "银行(b)";
                 let html = "";
                 html += "<table style='background-color:transparent;border-spacing:0;border-width:0;margin:auto;text-align:center;width:100%'>";
                 html += "<tbody>";
                 html += "<tr>";
                 html += "<td>";
-                html += "<button role='button' class='" + buttonClass + "' id='shortcut3' style='white-space:nowrap;width:100%'>宠物(u)</button>";
+                html += "<button role='button' class='" + buttonClass + "' id='shortcut3' style='white-space:nowrap;width:100%'>" + shortcut3Value + "</button>";
                 html += "</td>";
                 html += "<td>";
-                html += "<button role='button' class='" + buttonClass + "' id='shortcut7' style='white-space:nowrap;width:100%'>银行(b)</button>";
+                html += "<button role='button' class='" + buttonClass + "' id='shortcut7' style='white-space:nowrap;width:100%'>" + shortcut7Value + "</button>";
                 html += "</td>";
                 html += "</tr>";
                 html += "</tbody>";
@@ -381,15 +387,17 @@ function doRenderMenu(credential: Credential, page: TownDashboardPage) {
             .next()
             .find("> th:first")
             .each((idx, th) => {
+                const shortcut4Value = SetupLoader.isShortcutPromptHidden() ? "&nbsp;职业&nbsp;" : "职业(z)";
+                const shortcut8Value = SetupLoader.isShortcutPromptHidden() ? "&nbsp;设置&nbsp;" : "设置(x)";
                 let html = "";
                 html += "<table style='background-color:transparent;border-spacing:0;border-width:0;margin:auto;text-align:center;width:100%'>";
                 html += "<tbody>";
                 html += "<tr>";
                 html += "<td>";
-                html += "<button role='button' class='" + buttonClass + "' id='shortcut4' style='white-space:nowrap;width:100%'>职业(z)</button>";
+                html += "<button role='button' class='" + buttonClass + "' id='shortcut4' style='white-space:nowrap;width:100%'>" + shortcut4Value + "</button>";
                 html += "</td>";
                 html += "<td>";
-                html += "<button role='button' class='" + buttonClass + "' id='shortcut8' style='white-space:nowrap;width:100%'>设置(x)</button>";
+                html += "<button role='button' class='" + buttonClass + "' id='shortcut8' style='white-space:nowrap;width:100%'>" + shortcut8Value + "</button>";
                 html += "</td>";
                 html += "</tr>";
                 html += "</tbody>";

@@ -16,7 +16,7 @@ import PersonalStatus from "../role/PersonalStatus";
 import PalaceTaskManager from "../task/PalaceTaskManager";
 import TownDashboardTaxManager from "../town/TownDashboardTaxManager";
 import DashboardPageUtils from "./DashboardPageUtils";
-import KeyboardShortcutManager from "./KeyboardShortcutManager";
+import TownDashboardKeyboardManager from "./TownDashboardKeyboardManager";
 import TownDashboardLayout from "./TownDashboardLayout";
 import TownDashboardPage from "./TownDashboardPage";
 import TownDashboardPageParser from "./TownDashboardPageParser";
@@ -146,7 +146,7 @@ class TownDashboardLayout007 extends TownDashboardLayout {
             $("#battlePanel").html(lastBattle);
         });
 
-        new KeyboardShortcutManager(credential, page.battleLevelShortcut, page).bind();
+        new TownDashboardKeyboardManager(credential, page.battleLevelShortcut, page).bind();
 
         $("#battleButton")
             .attr("type", "button")
@@ -480,7 +480,7 @@ function doProcessBattleReturn(credential: Credential,
             });
     }
 
-    new KeyboardShortcutManager(credential, page.battleLevelShortcut, page).bind();
+    new TownDashboardKeyboardManager(credential, page.battleLevelShortcut, page).bind();
 
     new BattleButtonManager().createSafeBattleButton().then();
 }

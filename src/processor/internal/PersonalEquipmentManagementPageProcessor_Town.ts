@@ -8,6 +8,7 @@ import CastleEquipmentExpressHouse from "../../core/equipment/CastleEquipmentExp
 import CastleWarehouse from "../../core/equipment/CastleWarehouse";
 import Equipment from "../../core/equipment/Equipment";
 import EquipmentConsecrateManager from "../../core/equipment/EquipmentConsecrateManager";
+import EquipmentLocalStorage from "../../core/equipment/EquipmentLocalStorage";
 import EquipmentSet from "../../core/equipment/EquipmentSet";
 import EquipmentSetLoader from "../../core/equipment/EquipmentSetLoader";
 import PersonalEquipmentManagement from "../../core/equipment/PersonalEquipmentManagement";
@@ -27,37 +28,24 @@ import PageUtils from "../../util/PageUtils";
 import StringUtils from "../../util/StringUtils";
 import PageProcessorContext from "../PageProcessorContext";
 import PersonalEquipmentManagementPageProcessor from "./PersonalEquipmentManagementPageProcessor";
-import EquipmentLocalStorage from "../../core/equipment/EquipmentLocalStorage";
 
 class PersonalEquipmentManagementPageProcessor_Town extends PersonalEquipmentManagementPageProcessor {
 
     doBindKeyboardShortcut(credential: Credential) {
         new KeyboardShortcutBuilder()
-            .onEscapePressed(() => {
-                new BattleFieldManager(credential)
-                    .autoSetBattleField()
-                    .then(() => {
-                        $("#returnButton").trigger("click");
-                    });
-            })
-            .onKeyPressed("r", () => {
-                new EquipmentLocalStorage(credential)
-                    .updateEquipmentStatus()
-                    .then(() => {
-                        new BattleFieldManager(credential)
-                            .autoSetBattleField()
-                            .then(field => {
-                                $("#refreshButton").trigger("click");
-                                MessageBoard.publishMessage("装备数据更新完成。");
-                                if (field) {
-                                    MessageBoard.publishMessage("战斗场所切换到【" + field + "】。");
-                                }
-                            });
-                    });
-            })
-            .onKeyPressed("s", () => $("#openItemShop").trigger("click"))
+            .onEscapePressed(() => $("#returnButton").trigger("click"))
+            .onKeyPressed("r", () => $("#refreshButton").trigger("click"))
+            .onKeyPressed("s", () => $("#itemShopButton").trigger("click"))
+            .onKeyPressed("f", () => $("#gemHouseButton").trigger("click"))
             .withDefaultPredicate()
             .bind();
+    }
+
+    doGenerateImmutableButtons(): string {
+        let html = super.doGenerateImmutableButtons();
+        html += "<input type='button' id='itemShopButton' value='物品商店(s)'>";
+        html += "<input type='button' id='gemHouseButton' value='宝石镶嵌(f)'>";
+        return html;
     }
 
     doGeneratePageTitleHtml(context?: PageProcessorContext): string {
@@ -85,19 +73,50 @@ class PersonalEquipmentManagementPageProcessor_Town extends PersonalEquipmentMan
     }
 
     doBindImmutableButtons(credential: Credential, context?: PageProcessorContext) {
-        super.doBindImmutableButtons(credential, context);
+        this.doBindReturnButton(credential);
+        $("#refreshButton").on("click", () => {
+            new EquipmentLocalStorage(credential)
+                .updateEquipmentStatus()
+                .then(() => {
+                    new BattleFieldManager(credential)
+                        .autoSetBattleField()
+                        .then(field => {
+                            this.doScrollToPageTitle();
+                            $("#messageBoardManager").html(NpcLoader.randomNpcImageHtml());
+                            MessageBoard.resetMessageBoard(this.doGenerateWelcomeMessageHtml());
+                            this.doRefreshMutablePage(credential, context);
+                            MessageBoard.publishMessage("装备数据更新完成。");
+                            if (field) {
+                                MessageBoard.publishMessage("战斗场所切换到【" + field + "】。");
+                            }
+                        });
+                });
+        });
+        let townId: string | undefined = undefined;
         if (context) {
-            const townId = context.get("townId")!;
-            const html = PageUtils.generateItemShopForm(credential, townId);
-            $("#hiddenFormContainer1").html(html);
+            townId = context.get("townId");
+            if (townId) {
+                const html = PageUtils.generateItemShopForm(credential, townId);
+                $("#hiddenFormContainer1").html(html);
+            }
         }
+        const html = PageUtils.generateGemHouseForm(credential, townId);
+        $("#hiddenFormContainer2").html(html);
+        $("#itemShopButton").on("click", () => {
+            $("#openItemShop").trigger("click");
+        });
+        $("#gemHouseButton").on("click", () => {
+            $("#openGemHouse").trigger("click");
+        });
     }
 
     doBindReturnButton(credential: Credential): void {
         const html = PageUtils.generateReturnTownForm(credential);
         $("#hiddenFormContainer").html(html);
         $("#returnButton").on("click", () => {
-            $("#returnTown").trigger("click");
+            new BattleFieldManager(credential)
+                .autoSetBattleField()
+                .then(() => $("#returnTown").trigger("click"));
         });
     }
 

@@ -118,8 +118,7 @@ abstract class PersonalEquipmentManagementPageProcessor extends PageProcessorCre
         html = "";
         html += "<tr id='tr4'>";
         html += "<td style='background-color:#F8F0E0;text-align:center'>";
-        html += "<input type='button' id='refreshButton' value='刷新装备管理'>&nbsp;&nbsp;&nbsp;";
-        html += "<input type='button' id='returnButton' value='退出装备管理'>";
+        html += this.doGenerateImmutableButtons();
         html += "</td>";
         html += "</tr>"
         $("#tr3").after($(html));
@@ -175,6 +174,13 @@ abstract class PersonalEquipmentManagementPageProcessor extends PageProcessorCre
         this.doBeforeRenderMutablePage(credential, context);
 
         this.doRenderMutablePage(credential, page, context);
+    }
+
+    doGenerateImmutableButtons() {
+        let html = "";
+        html += "<input type='button' id='refreshButton' value='刷新装备管理(r)'>";
+        html += "<input type='button' id='returnButton' value='退出装备管理(Esc)'>";
+        return html;
     }
 
     doBindImmutableButtons(credential: Credential, context?: PageProcessorContext) {
