@@ -19,10 +19,12 @@ class TownDashboardKeyboardManager {
 
     bind() {
         new KeyboardShortcutBuilder()
+            .onKeyPressed("a", () => this.#processKeyPressed_a())
             .onKeyPressed("b", () => this.#processKeyPressed_b())
             .onKeyPressed("e", () => this.#processKeyPressed_e())
             .onKeyPressed("g", () => this.#processKeyPressed_g())
             .onKeyPressed("i", () => this.#processKeyPressed_i())
+            .onKeyPressed("j", () => this.#processKeyPressed_j())
             .onKeyPressed("k", () => this.#processKeyPressed_k())
             .onKeyPressed("m", () => this.#processKeyPressed_m())
             .onKeyPressed("p", () => this.#processKeyPressed_p())
@@ -36,6 +38,10 @@ class TownDashboardKeyboardManager {
             .onEscapePressed(() => this.#processKeyPressed_Escape())
             .withDefaultPredicate()
             .bind();
+    }
+
+    #processKeyPressed_a() {
+
     }
 
     #processKeyPressed_b() {
@@ -55,6 +61,11 @@ class TownDashboardKeyboardManager {
 
     #processKeyPressed_i() {
         $("option[value='RANK_REMAKE']").prop("selected", true);
+        $("#personalButton").trigger("click");
+    }
+
+    #processKeyPressed_j() {
+        $("option[value='DIANMING']").prop("selected", true);
         $("#personalButton").trigger("click");
     }
 
