@@ -9,7 +9,7 @@ import EquipmentLocalStorage from "../equipment/EquipmentLocalStorage";
 import TownInn from "../inn/TownInn";
 import PetLocalStorage from "../monster/PetLocalStorage";
 import TownDashboardTaxManager from "../town/TownDashboardTaxManager";
-import KeyboardShortcutManager from "./KeyboardShortcutManager";
+import TownDashboardKeyboardManager from "./TownDashboardKeyboardManager";
 import TownDashboardLayout from "./TownDashboardLayout";
 import TownDashboardPage from "./TownDashboardPage";
 
@@ -204,7 +204,7 @@ class TownDashboardLayout006 extends TownDashboardLayout {
         });
 
 
-        new KeyboardShortcutManager(credential, page.battleLevelShortcut, page).bind();
+        new TownDashboardKeyboardManager(credential, page.battleLevelShortcut, page).bind();
 
         $("#battleButton")
             .attr("type", "button")

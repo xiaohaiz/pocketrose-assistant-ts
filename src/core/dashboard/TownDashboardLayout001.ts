@@ -1,6 +1,6 @@
 import Credential from "../../util/Credential";
 import TownDashboardTaxManager from "../town/TownDashboardTaxManager";
-import KeyboardShortcutManager from "./KeyboardShortcutManager";
+import TownDashboardKeyboardManager from "./TownDashboardKeyboardManager";
 import TownDashboardLayout from "./TownDashboardLayout";
 import TownDashboardPage from "./TownDashboardPage";
 
@@ -38,7 +38,7 @@ class TownDashboardLayout001 extends TownDashboardLayout {
                 new TownDashboardTaxManager(credential, page).processTownTax($(td));
             });
 
-        new KeyboardShortcutManager(credential, page.battleLevelShortcut, page).bind();
+        new TownDashboardKeyboardManager(credential, page.battleLevelShortcut, page).bind();
     }
 
 }

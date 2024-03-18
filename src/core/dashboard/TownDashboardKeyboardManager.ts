@@ -2,7 +2,7 @@ import Credential from "../../util/Credential";
 import BattleFieldManager from "./BattleFieldManager";
 import TownDashboardPage from "./TownDashboardPage";
 
-class KeyboardShortcutManager {
+class TownDashboardKeyboardManager {
 
     readonly #credential: Credential;
     readonly #bindBattle?: boolean;
@@ -168,4 +168,4 @@ function doBind(credential: Credential, bindBattle?: boolean, page?: TownDashboa
     });
 }
 
-export = KeyboardShortcutManager;
+export = TownDashboardKeyboardManager;

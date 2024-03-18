@@ -2,7 +2,7 @@ import Credential from "../../util/Credential";
 import StorageUtils from "../../util/StorageUtils";
 import TownDashboardTaxManager from "../town/TownDashboardTaxManager";
 import Conversation from "./Conversation";
-import KeyboardShortcutManager from "./KeyboardShortcutManager";
+import TownDashboardKeyboardManager from "./TownDashboardKeyboardManager";
 import TownDashboardLayout from "./TownDashboardLayout";
 import TownDashboardPage from "./TownDashboardPage";
 
@@ -153,7 +153,7 @@ class TownDashboardLayout004 extends TownDashboardLayout {
                 });
             });
 
-        new KeyboardShortcutManager(credential, page.battleLevelShortcut, page).bind();
+        new TownDashboardKeyboardManager(credential, page.battleLevelShortcut, page).bind();
 
         // 启动自动刷新
         // globalMessageContainer
