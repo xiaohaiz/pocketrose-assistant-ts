@@ -209,6 +209,10 @@ class SetupLoader {
     static isForceSeniorBattleEnabled(id: string): boolean {
         return StorageUtils.getBoolean("_pa_061_" + id);
     }
+
+    static isShortcutPromptHidden(id: string): boolean {
+        return StorageUtils.getBoolean("_pa_062_" + id);
+    }
 }
 
 export = SetupLoader;
