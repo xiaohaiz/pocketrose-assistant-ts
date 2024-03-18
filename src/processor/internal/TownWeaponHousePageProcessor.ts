@@ -3,7 +3,6 @@ import NpcLoader from "../../core/role/NpcLoader";
 import TownWeaponHouse from "../../core/store/TownWeaponHouse";
 import TownWeaponHousePage from "../../core/store/TownWeaponHousePage";
 import TownWeaponHousePageParser from "../../core/store/TownWeaponHousePageParser";
-import Constants from "../../util/Constants";
 import Credential from "../../util/Credential";
 import KeyboardShortcutBuilder from "../../util/KeyboardShortcutBuilder";
 import MessageBoard from "../../util/MessageBoard";
@@ -260,9 +259,8 @@ function doRender(credential: Credential, page: TownWeaponHousePage) {
             html += "</td>";
             html += "<td style='background-color:#E8E8D0'>";
             if (page.spaceCount! > 0) {
-                html += "<img alt='购买' id='buy_" + merchandise.index + "' " +
-                    "class='dynamic_button_class' title='购买' " +
-                    "src='" + (Constants.POCKET_DOMAIN + "/image/country/6.gif") + "'>";
+                html += "<input type='button' value='购买' " +
+                    "id='buy_" + merchandise.index + "' class='dynamic_button_class'>";
                 indexList.push(merchandise.index);
             }
             html += "</td>";
