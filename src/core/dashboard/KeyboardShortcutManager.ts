@@ -137,7 +137,7 @@ function doBind(credential: Credential, bindBattle?: boolean, page?: TownDashboa
         }
 
         if (key === "i") {
-            $("option[value='RANK_REMARK']").prop("selected", true);
+            $("option[value='RANK_REMAKE']").prop("selected", true);
             $("#personalButton").trigger("click");
             return;
         }
