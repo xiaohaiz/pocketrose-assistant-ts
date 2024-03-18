@@ -1,5 +1,7 @@
 # pocketrose-assistant-ts
 
+### 版本 4.3.7-SNAPSHOT
+
 ### 版本 4.3.6
 
 1. 主页面便捷按钮快捷键提示。
