@@ -1,5 +1,6 @@
 import Credential from "../../util/Credential";
 import KeyboardShortcutBuilder from "../../util/KeyboardShortcutBuilder";
+import BattleFieldManager from "./BattleFieldManager";
 import TownDashboardPage from "./TownDashboardPage";
 
 class TownDashboardKeyboardManager {
@@ -18,10 +19,18 @@ class TownDashboardKeyboardManager {
 
     bind() {
         new KeyboardShortcutBuilder()
+            .onKeyPressed("p", () => this.#processKeyPressed_p())
             .onKeyPressed("q", () => this.#processKeyPressed_q())
+            .onKeyPressed("r", () => this.#processKeyPressed_r())
+            .onKeyPressed("s", () => this.#processKeyPressed_s())
             .onEscapePressed(() => this.#processKeyPressed_Escape())
             .withDefaultPredicate()
             .bind();
+    }
+
+    #processKeyPressed_p() {
+        $("option[value='PET_TZ']").prop("selected", true);
+        $("#townButton").trigger("click");
     }
 
     #processKeyPressed_q() {
@@ -70,6 +79,17 @@ class TownDashboardKeyboardManager {
                 }
             }
         }
+    }
+
+    #processKeyPressed_r() {
+        new BattleFieldManager(this.#credential)
+            .autoSetBattleField()
+            .then(() => $("#refreshButton").trigger("click"));
+    }
+
+    #processKeyPressed_s() {
+        $("option[value='ITEM_SHOP']").prop("selected", true);
+        $("#townButton").trigger("click");
     }
 
     #processKeyPressed_Escape() {
