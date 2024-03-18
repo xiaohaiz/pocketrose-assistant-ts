@@ -21,12 +21,14 @@ class TownDashboardKeyboardManager {
         new KeyboardShortcutBuilder()
             .onKeyPressed("e", () => this.#processKeyPressed_e())
             .onKeyPressed("g", () => this.#processKeyPressed_g())
+            .onKeyPressed("i", () => this.#processKeyPressed_i())
             .onKeyPressed("k", () => this.#processKeyPressed_k())
             .onKeyPressed("m", () => this.#processKeyPressed_m())
             .onKeyPressed("p", () => this.#processKeyPressed_p())
             .onKeyPressed("q", () => this.#processKeyPressed_q())
             .onKeyPressed("r", () => this.#processKeyPressed_r())
             .onKeyPressed("s", () => this.#processKeyPressed_s())
+            .onKeyPressed("t", () => this.#processKeyPressed_t())
             .onKeyPressed("u", () => this.#processKeyPressed_u())
             .onKeyPressed("z", () => this.#processKeyPressed_z())
             .onEscapePressed(() => this.#processKeyPressed_Escape())
@@ -42,6 +44,11 @@ class TownDashboardKeyboardManager {
     #processKeyPressed_g() {
         $("option[value='PETMAP']").prop("selected", true);
         $("#townButton").trigger("click");
+    }
+
+    #processKeyPressed_i() {
+        $("option[value='RANK_REMAKE']").prop("selected", true);
+        $("#personalButton").trigger("click");
     }
 
     #processKeyPressed_k() {
@@ -116,6 +123,11 @@ class TownDashboardKeyboardManager {
     #processKeyPressed_s() {
         $("option[value='ITEM_SHOP']").prop("selected", true);
         $("#townButton").trigger("click");
+    }
+
+    #processKeyPressed_t() {
+        $("option[value='BATTLE_MES']").prop("selected", true);
+        $("#personalButton").trigger("click");
     }
 
     #processKeyPressed_u() {
