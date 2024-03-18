@@ -210,8 +210,8 @@ class SetupLoader {
         return StorageUtils.getBoolean("_pa_061_" + id);
     }
 
-    static isShortcutPromptHidden(id: string): boolean {
-        return StorageUtils.getBoolean("_pa_062_" + id);
+    static isShortcutPromptHidden(): boolean {
+        return StorageUtils.getBoolean("_pa_062");
     }
 }
 

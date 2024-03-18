@@ -14,10 +14,10 @@ class SetupItem062 implements SetupItem {
     }
 
     render(id?: string): void {
-        this.#doRender(id!);
+        this.#doRender();
     }
 
-    #doRender(id: string) {
+    #doRender() {
         let html = "";
         html += "<tr>";
         html += "<th style='background-color:#E8E8D0'>" + this.#name + "</th>";
@@ -32,11 +32,11 @@ class SetupItem062 implements SetupItem {
         html += "</td>";
         html += "</tr>";
         $("#setup_item_table").append($(html));
-        this.#doProcessButton(id);
+        this.#doProcessButton();
     }
 
-    #doProcessButton(id: string) {
-        const value = SetupLoader.isShortcutPromptHidden(id);
+    #doProcessButton() {
+        const value = SetupLoader.isShortcutPromptHidden();
         $("._062_button[value='" + (value ? "启用" : "禁用") + "']")
             .css("color", "blue")
             .prop("disabled", true);
@@ -45,10 +45,10 @@ class SetupItem062 implements SetupItem {
             $("._062_button").off("click");
             const buttonId = $(event.target).attr("id")!;
             if (buttonId === "_062_button_1") {
-                StorageUtils.set(this.#key + "_" + id, "1");
+                StorageUtils.set(this.#key, "1");
                 MessageBoard.publishMessage("<b style='color:red'>" + this.#name + "</b>已启用!");
             } else if (buttonId === "_062_button_2") {
-                StorageUtils.set(this.#key + "_" + id, "0");
+                StorageUtils.set(this.#key, "0");
                 MessageBoard.publishMessage("<b style='color:red'>" + this.#name + "</b>已禁用！");
             }
             $("#refreshButton").trigger("click");
