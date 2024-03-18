@@ -27,18 +27,16 @@ class TownDashboardKeyboardManager {
             .onKeyPressed("q", () => this.#processKeyPressed_q())
             .onKeyPressed("r", () => this.#processKeyPressed_r())
             .onKeyPressed("s", () => this.#processKeyPressed_s())
+            .onKeyPressed("u", () => this.#processKeyPressed_u())
+            .onKeyPressed("z", () => this.#processKeyPressed_z())
             .onEscapePressed(() => this.#processKeyPressed_Escape())
             .withDefaultPredicate()
             .bind();
     }
 
     #processKeyPressed_e() {
-        if ($("#shortcut2").length > 0) {
-            $("#shortcut2").trigger("click");
-        } else {
-            $("option[value='USE_ITEM']").prop("selected", true);
-            $("#personalButton").trigger("click");
-        }
+        $("option[value='USE_ITEM']").prop("selected", true);
+        $("#personalButton").trigger("click");
     }
 
     #processKeyPressed_g() {
@@ -118,6 +116,16 @@ class TownDashboardKeyboardManager {
     #processKeyPressed_s() {
         $("option[value='ITEM_SHOP']").prop("selected", true);
         $("#townButton").trigger("click");
+    }
+
+    #processKeyPressed_u() {
+        $("option[value='PETSTATUS']").prop("selected", true);
+        $("#personalButton").trigger("click");
+    }
+
+    #processKeyPressed_z() {
+        $("option[value='CHANGE_OCCUPATION']").prop("selected", true);
+        $("#personalButton").trigger("click");
     }
 
     #processKeyPressed_Escape() {
