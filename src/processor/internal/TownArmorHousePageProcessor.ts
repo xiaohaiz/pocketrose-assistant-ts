@@ -9,19 +9,21 @@ import PageUtils from "../../util/PageUtils";
 import PocketUtils from "../../util/PocketUtils";
 import PageProcessorContext from "../PageProcessorContext";
 import PageProcessorCredentialSupport from "../PageProcessorCredentialSupport";
+import KeyboardShortcutBuilder from "../../util/KeyboardShortcutBuilder";
 
 class TownArmorHousePageProcessor extends PageProcessorCredentialSupport {
-
-    doLoadButtonStyles(): number[] {
-        return [10007, 10008];
-    }
 
     async doProcess(credential: Credential, context?: PageProcessorContext): Promise<void> {
         const page = await new TownArmorHousePageParser().parse(PageUtils.currentPageHtml());
         this.#renderImmutablePage(credential, page);
         this.#renderMutablePage(credential, page);
 
-        PageUtils.onEscapePressed(() => $("#return_button").trigger("click"));
+        new KeyboardShortcutBuilder()
+            .onKeyPressed("e", () => $("#equipment_button").trigger("click"))
+            .onKeyPressed("r", () => $("#refresh_button").trigger("click"))
+            .onEscapePressed(() => $("#return_button").trigger("click"))
+            .withDefaultPredicate()
+            .bind();
     }
 
     #renderImmutablePage(credential: Credential, page: TownArmorHousePage) {
@@ -95,9 +97,9 @@ class TownArmorHousePageProcessor extends PageProcessorCredentialSupport {
         // ------------------------------------------------------------------------
         html += "<tr>";
         html += "<td style='background-color:#F8F0E0;text-align:center'>";
-        html += "<input type='button' id='refresh_button' value='刷新" + page.town.name + "防具屋'>&nbsp;";
-        html += "<input type='button' id='return_button' value='离开" + page.town.name + "防具屋'>&nbsp;";
-        html += "<input type='button' id='equipment_button' value='转到装备管理'>";
+        html += "<input type='button' id='refresh_button' value='刷新" + page.town.name + "防具屋(r)'>&nbsp;";
+        html += "<input type='button' id='return_button' value='离开" + page.town.name + "防具屋(Esc)'>&nbsp;";
+        html += "<input type='button' id='equipment_button' value='转到装备管理(e)'>";
         html += "</td>";
         // ------------------------------------------------------------------------
         // 个人物品栏
@@ -163,7 +165,7 @@ class TownArmorHousePageProcessor extends PageProcessorCredentialSupport {
                 html += "<td style='background-color:#E8E8D0'>";
                 if (equipment.isSellable) {
                     html += "<input type='button' value='出售' " +
-                        "id='sell_" + equipment.index! + "' class='dynamic_button_class button-10007'>";
+                        "id='sell_" + equipment.index! + "' class='dynamic_button_class'>";
                 } else {
                     html += PageUtils.generateInvisibleButton("#E8E8D0");
                 }
@@ -233,7 +235,7 @@ class TownArmorHousePageProcessor extends PageProcessorCredentialSupport {
                 html += "<td style='background-color:#E8E8D0'>";
                 if (spaceCount > 0) {
                     html += "<input type='button' value='购买' " +
-                        "id='buy_" + merchandise.index! + "' class='dynamic_button_class button-10008'>";
+                        "id='buy_" + merchandise.index! + "' class='dynamic_button_class'>";
                 } else {
                     html += PageUtils.generateInvisibleButton("#E8E8D0");
                 }

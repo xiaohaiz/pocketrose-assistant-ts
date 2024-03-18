@@ -111,6 +111,13 @@ function doBind(credential: Credential, bindBattle?: boolean, page?: TownDashboa
             return;
         }
 
+
+        if (key === "g") {
+            $("option[value='PETMAP']").prop("selected", true);
+            $("#townButton").trigger("click");
+            return;
+        }
+
         if (key === "e") {
             $("option[value='USE_ITEM']").prop("selected", true);
             $("#personalButton").trigger("click");
@@ -123,8 +130,32 @@ function doBind(credential: Credential, bindBattle?: boolean, page?: TownDashboa
             return;
         }
 
+        if (key === "z") {
+            $("option[value='CHANGE_OCCUPATION']").prop("selected", true);
+            $("#personalButton").trigger("click");
+            return;
+        }
+
         if (key === "i") {
-            $("option[value='STATUS_PRINT']").prop("selected", true);
+            $("option[value='RANK_REMAKE']").prop("selected", true);
+            $("#personalButton").trigger("click");
+            return;
+        }
+
+        if (key === "t") {
+            $("option[value='BATTLE_MES']").prop("selected", true);
+            $("#personalButton").trigger("click");
+            return;
+        }
+
+        if (key === "b") {
+            $("option[value='BANK']").prop("selected", true);
+            $("#townButton").trigger("click");
+            return;
+        }
+
+        if (key === "x") {
+            $("option[value='LETTER']").prop("selected", true);
             $("#personalButton").trigger("click");
             return;
         }

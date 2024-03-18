@@ -54,8 +54,8 @@ abstract class PersonalSetupPageProcessor extends PageProcessorCredentialSupport
         html += "<tr>";
         html += "<td style='text-align:center'>" +
             "<input type='button' id='loadButton' value='加载自己装备'>" +
-            "<input type='button' id='refreshButton' value='刷新助手设置'>" +
-            "<input type='button' id='returnButton' value='退出助手设置'>" +
+            "<input type='button' id='refreshButton' value='刷新助手设置(r)'>" +
+            "<input type='button' id='returnButton' value='退出助手设置(Esc)'>" +
             "</td>";
         html += "</tr>";
 

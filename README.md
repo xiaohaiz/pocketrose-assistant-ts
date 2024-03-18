@@ -1,5 +1,7 @@
 # pocketrose-assistant-ts
 
+### 版本 4.3.6-SNAPSHOT
+
 ### 版本 4.3.5
 
 1. 城市装备管理界面可评估选择装备的重量及对应当前角色的HIT数。

@@ -58,6 +58,7 @@ class TeamEquipmentReportGenerator {
                     const equipmentList = equipments
                         .map(it => Equipment.parse(it))
                         .sort(Equipment.sorter)
+                        .filter(it => !(config.warehouse !== undefined && config.warehouse && it.location === "W"))
                         .filter(it => this.#searchName === undefined || this.#searchName === "" || it.fullName.includes(this.#searchName))
                         .filter(it => this.#equipmentFilter === undefined || this.#equipmentFilter(it));
                     equipmentList.forEach(it => {
@@ -103,6 +104,7 @@ class TeamEquipmentReportGenerator {
                 $("#information").parent().show();
             });
     }
+
 }
 
 export = TeamEquipmentReportGenerator;

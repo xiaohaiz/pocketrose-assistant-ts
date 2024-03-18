@@ -6,34 +6,39 @@ class TeamMember {
     pass?: string;
     external?: boolean;     // 团队编制外，不纳入统计
     master?: boolean;       // 队长标记
+    warehouse?: boolean;    // 仓储号，其城堡仓库/牧场不纳入统计
 
     get available(): boolean {
         return this.name !== undefined && this.id !== undefined && this.pass !== undefined;
     }
 
-    asObject(): {} {
-        const obj = {};
+    asDocument(): {} {
+        const doc = {};
         if (this.name) {
             // @ts-ignore
-            obj.name = this.name;
+            doc.name = this.name;
         }
         if (this.id) {
             // @ts-ignore
-            obj.id = this.id;
+            doc.id = this.id;
         }
         if (this.pass) {
             // @ts-ignore
-            obj.pass = this.pass;
+            doc.pass = this.pass;
         }
         if (this.external) {
             // @ts-ignore
-            obj.external = this.external;
+            doc.external = this.external;
         }
         if (this.master) {
             // @ts-ignore
-            obj.master = this.master;
+            doc.master = this.master;
         }
-        return obj;
+        if (this.warehouse) {
+            // @ts-ignore
+            doc.warehouse = this.warehouse;
+        }
+        return doc;
     }
 }
 

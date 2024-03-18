@@ -73,14 +73,14 @@ class TownPetMapHousePageProcessor extends PageProcessorCredentialSupport {
 
         $("#tr2")
             .after("<tr id='tr3'><td id='pageMenuContainer' style='text-align:center'></td></tr>");
-        let returnTitle = "返回城市";
+        let returnTitle = "返回城市(Esc)";
         const townId = context?.get("townId");
         if (townId !== undefined) {
             const town = TownLoader.load(townId);
-            returnTitle = "返回" + town?.name;
+            returnTitle = "返回" + town?.name + "(Esc)";
         }
         html = "";
-        html += "<button role='button' id='updateButton'>更新宠物信息</button>";
+        html += "<button role='button' id='updateButton'>更新宠物信息(r)</button>";
         html += "<input type='text' id='petCode' size='10' maxlength='10'>";
         html += "<button role='button' id='searchButton'>查找图鉴</button>";
         html += "<button role='button' id='returnButton'>" + returnTitle + "</button>";
