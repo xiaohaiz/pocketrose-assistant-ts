@@ -26,6 +26,10 @@ class TownBankPageProcessor extends PageProcessorCredentialSupport {
         this.#renderMutablePage(credential, page, town);
 
         new KeyboardShortcutBuilder()
+            .onKeyPressed("r", () => $("#refreshButton").trigger("click"))
+            .onKeyPressed("u", () => $("#updateButton").trigger("click"))
+            .onKeyPressed("a", () => $("#depositAllButton").trigger("click"))
+            .onKeyPressed("s", () => $("#salaryButton").trigger("click"))
             .onEscapePressed(() => $("#returnButton").trigger("click"))
             .withDefaultPredicate()
             .bind();
@@ -92,9 +96,9 @@ class TownBankPageProcessor extends PageProcessorCredentialSupport {
         html += "</tr>";
         html += "<tr id='tr4'>";
         html += "<td style='background-color:#F8F0E0;text-align:center;width:100%'>";
-        html += "<input type='button' id='refreshButton' value='刷新" + town.name + "银行'>";
-        html += "<input type='button' id='returnButton' value='离开" + town.name + "银行'>";
-        html += "<button role='button' id='updateButton'>更新银行资产</button>";
+        html += "<input type='button' id='refreshButton' value='刷新" + town.name + "银行(r)'>";
+        html += "<input type='button' id='returnButton' value='离开" + town.name + "银行(Esc)'>";
+        html += "<button role='button' id='updateButton'>更新银行资产(u)</button>";
         html += "</td>";
         html += "</tr>";
         $("#tr2").after($(html));
@@ -102,7 +106,7 @@ class TownBankPageProcessor extends PageProcessorCredentialSupport {
 
         html = "";
         html += "<p id='p1'>";
-        html += "<input type='button' id='depositAllButton' value='全部存入' class='dynamicButton'>";
+        html += "<input type='button' id='depositAllButton' value='全部存入(a)' class='dynamicButton'>";
         html += "</p>";
         html += "<p id='p2'>";
         html += "<input type='text' id='depositAmount' value='' size='3' style='text-align:right'>0000 Gold&nbsp;&nbsp;&nbsp;";
@@ -152,7 +156,7 @@ class TownBankPageProcessor extends PageProcessorCredentialSupport {
         html += "</tr>";
         html += "<tr id='tr9'>";
         html += "<td style='background-color:#F8F0E0;width:100%;text-align:center'>";
-        html += "<input type='button' id='salaryButton' value='发薪' class='dynamicButton'>";
+        html += "<input type='button' id='salaryButton' value='发薪(s)' class='dynamicButton'>";
         html += "</td>";
         html += "</tr>";
         $("#tr7").after($(html));
