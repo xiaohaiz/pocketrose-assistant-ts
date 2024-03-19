@@ -1,6 +1,7 @@
 import RoleStateMachineManager from "../../core/state/RoleStateMachineManager";
 import TownPetRankHousePageProcessor from "../../processor/internal/TownPetRankHousePageProcessor";
 import PageProcessor from "../../processor/PageProcessor";
+import PageProcessorContext from "../../processor/PageProcessorContext";
 import PageInterceptor from "../PageInterceptor";
 
 class TownPetRankHousePageInterceptor implements PageInterceptor {
@@ -19,8 +20,10 @@ class TownPetRankHousePageInterceptor implements PageInterceptor {
             .load()
             .then(machine => {
                 machine.start()
-                    .whenInTown(() => {
-                        this.#processor.process();
+                    .whenInTown(state => {
+                        const context = new PageProcessorContext();
+                        context.withTownId(state?.townId);
+                        this.#processor.process(context);
                     })
                     .process();
             });
