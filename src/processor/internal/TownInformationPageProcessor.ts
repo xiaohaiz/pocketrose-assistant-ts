@@ -110,6 +110,34 @@ class TownInformationPageProcessor implements PageProcessor {
         html += c;
         html += "</td>";
         html += "</tr>";
+        // --------------------------------------------------------------------
+        html += "<tr>";
+        html += "<th style='text-align:left;white-space:nowrap'>";
+        html += "武器"
+        html += "</th>";
+        html += "<td style='width:100%'>";
+        html += town.specialWeaponsList;
+        html += "</td>";
+        html += "</tr>";
+        // --------------------------------------------------------------------
+        html += "<tr>";
+        html += "<th style='text-align:left;white-space:nowrap'>";
+        html += "防具"
+        html += "</th>";
+        html += "<td style='width:100%'>";
+        html += town.specialArmorsList;
+        html += "</td>";
+        html += "</tr>";
+        // --------------------------------------------------------------------
+        html += "<tr>";
+        html += "<th style='text-align:left;white-space:nowrap'>";
+        html += "饰品"
+        html += "</th>";
+        html += "<td style='width:100%'>";
+        html += town.specialAccessoriesList;
+        html += "</td>";
+        html += "</tr>";
+        // --------------------------------------------------------------------
         html += "</tbody>";
         html += "</table>";
         return html;

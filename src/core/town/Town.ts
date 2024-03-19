@@ -43,6 +43,30 @@ class Town {
         }
         return title;
     }
+
+    get specialWeaponsList(): string {
+        let s = "";
+        for (const it of this.specialWeapons) {
+            s += "【" + it + "】";
+        }
+        return s;
+    }
+
+    get specialArmorsList(): string {
+        let s = "";
+        for (const it of this.specialArmors) {
+            s += "【" + it + "】";
+        }
+        return s;
+    }
+
+    get specialAccessoriesList(): string {
+        let s = "";
+        for (const it of this.specialAccessories) {
+            s += "【" + it + "】";
+        }
+        return s;
+    }
 }
 
 export = Town;
