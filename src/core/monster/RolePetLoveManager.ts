@@ -2,6 +2,7 @@ import Credential from "../../util/Credential";
 import NetworkUtils from "../../util/NetworkUtils";
 import TownBank from "../bank/TownBank";
 import BattlePage from "../battle/BattlePage";
+import SetupLoader from "../config/SetupLoader";
 import PersonalPetManagement from "./PersonalPetManagement";
 import Pet from "./Pet";
 
@@ -21,13 +22,16 @@ class RolePetLoveManager {
             // 不是十二宫的战斗，忽略
             return;
         }
-
         if (!battlePage.petLove) {
             // 没有宠物亲密度数据，大概率是忘记带宠物了，糊涂蛋也不是没有，忽略
             return;
         }
         if (battlePage.petLove >= 95) {
             // 宠物的亲密度还够，忽略
+            return;
+        }
+        if (!SetupLoader.isZodiacBattlePetLoveAutoFixEnabled()) {
+            // 没有开启配置，忽略
             return;
         }
         await this.#fixPetLove();
@@ -49,7 +53,7 @@ class RolePetLoveManager {
             // 不是满级宠物，凑什么乱呀，忽略
             return;
         }
-        if (usingPet.level === 100) {
+        if (usingPet.love === 100) {
             // 宠物亲密度已经满了，忽略
             return;
         }
