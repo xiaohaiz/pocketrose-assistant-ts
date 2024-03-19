@@ -3,6 +3,7 @@ import BankRecordManager from "../bank/BankRecordManager";
 import BattleFieldManager from "../dashboard/BattleFieldManager";
 import EquipmentLocalStorage from "../equipment/EquipmentLocalStorage";
 import PetLocalStorage from "../monster/PetLocalStorage";
+import RolePetLoveManager from "../monster/RolePetLoveManager";
 import BattlePage from "./BattlePage";
 
 class BattleReturnInterceptor {
@@ -24,6 +25,7 @@ class BattleReturnInterceptor {
             new PetLocalStorage(this.#credential).triggerUpdatePetStatus(this.#battleCount),
             new EquipmentLocalStorage(this.#credential).triggerUpdateEquipmentStatus(this.#battleCount),
             new BattleFieldManager(this.#credential).triggerBattleFieldChanged(this.#battlePage),
+            new RolePetLoveManager(this.#credential).triggerPetLoveFixed(this.#battlePage),
         ]);
         return await (() => {
             return new Promise<void>(resolve => {
