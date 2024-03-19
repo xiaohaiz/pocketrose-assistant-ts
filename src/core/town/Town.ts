@@ -6,12 +6,24 @@ class Town {
     readonly name: string;
     readonly description: string;
     readonly coordinate: Coordinate;
+    readonly specialWeapons: string[];
+    readonly specialArmors: string[];
+    readonly specialAccessories: string[];
 
-    constructor(id: string, name: string, description: string, coordinate: Coordinate) {
+    constructor(id: string,
+                name: string,
+                description: string,
+                coordinate: Coordinate,
+                specialWeapons: string[],
+                specialArmors: string[],
+                specialAccessories: string[]) {
         this.id = id;
         this.name = name;
         this.description = description;
         this.coordinate = coordinate;
+        this.specialWeapons = specialWeapons;
+        this.specialArmors = specialArmors;
+        this.specialAccessories = specialAccessories;
     }
 
     asText(): string {
