@@ -22,6 +22,9 @@ class TownInformationPageProcessor implements PageProcessor {
         html += "<td id='map' style='background-color:#F8F0E0'></td>";
         html += "<td id='status' style='background-color:#F8F0E0;width:100%'></td>";
         html += "</tr>";
+        html += "<tr>";
+        html += "<td id='list' style='background-color:#F8F0E0;text-align:center' colspan='2'></td>";
+        html += "</tr>";
         $("table:first")
             .attr("id", "t0")
             .find("> tbody:first")
