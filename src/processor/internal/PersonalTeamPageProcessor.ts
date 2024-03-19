@@ -1,5 +1,6 @@
 import _ from "lodash";
 import BankRecordReportGenerator from "../../core/bank/BankRecordReportGenerator";
+import LocalSettingManager from "../../core/config/LocalSettingManager";
 import EquipmentConstants from "../../core/equipment/EquipmentConstants";
 import EquipmentLocalStorage from "../../core/equipment/EquipmentLocalStorage";
 import TeamEquipmentReportGenerator from "../../core/equipment/TeamEquipmentReportGenerator";
@@ -14,7 +15,6 @@ import TeamMemberLoader from "../../core/team/TeamMemberLoader";
 import Credential from "../../util/Credential";
 import MessageBoard from "../../util/MessageBoard";
 import PageUtils from "../../util/PageUtils";
-import StorageUtils from "../../util/StorageUtils";
 import StringUtils from "../../util/StringUtils";
 import PageProcessorContext from "../PageProcessorContext";
 import PageProcessorCredentialSupport from "../PageProcessorCredentialSupport";
@@ -159,12 +159,12 @@ abstract class PersonalTeamPageProcessor extends PageProcessorCredentialSupport 
                 .toggle();
         });
 
-        if (StorageUtils.getBoolean("_ts_001")) {
+        if (LocalSettingManager.isIncludeExternal()) {
             $("#includeExternal").prop("checked", true);
         }
         $("#includeExternal").on("change", event => {
             const checked = $(event.target).prop("checked") as boolean;
-            StorageUtils.set("_ts_001", Number(checked).toString());
+            LocalSettingManager.setIncludeExternal(checked);
         });
 
         this.#bindRefreshButton();

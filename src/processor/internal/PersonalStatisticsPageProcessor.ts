@@ -2,6 +2,7 @@ import BattleLogService from "../../core/battle/BattleLogService";
 import BattleLogStorage from "../../core/battle/BattleLogStorage";
 import BattleResultStorage from "../../core/battle/BattleResultStorage";
 import CareerChangeLogStorage from "../../core/career/CareerChangeLogStorage";
+import LocalSettingManager from "../../core/config/LocalSettingManager";
 import EquipmentConsecrateLogStorage from "../../core/equipment/EquipmentConsecrateLogStorage";
 import BattleReportGenerator from "../../core/report/BattleReportGenerator";
 import CareerChangeReportGenerator from "../../core/report/CareerChangeReportGenerator";
@@ -19,7 +20,6 @@ import DayRange from "../../util/DayRange";
 import KeyboardShortcutBuilder from "../../util/KeyboardShortcutBuilder";
 import MessageBoard from "../../util/MessageBoard";
 import MonthRange from "../../util/MonthRange";
-import StorageUtils from "../../util/StorageUtils";
 import WeekRange from "../../util/WeekRange";
 import PageProcessorContext from "../PageProcessorContext";
 import PageProcessorCredentialSupport from "../PageProcessorCredentialSupport";
@@ -207,12 +207,12 @@ abstract class PersonalStatisticsPageProcessor extends PageProcessorCredentialSu
 
         this.doBindReturnButton(credential);
 
-        if (StorageUtils.getBoolean("_ts_001")) {
+        if (LocalSettingManager.isIncludeExternal()) {
             $("#includeExternal").prop("checked", true);
         }
         $("#includeExternal").on("change", event => {
             const checked = $(event.target).prop("checked") as boolean;
-            StorageUtils.set("_ts_001", Number(checked).toString());
+            LocalSettingManager.setIncludeExternal(checked);
         });
 
         doBindReport1();
