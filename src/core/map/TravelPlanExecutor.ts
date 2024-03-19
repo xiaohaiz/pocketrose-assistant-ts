@@ -59,7 +59,7 @@ function doMoveOnPath(credential: Credential, pathList: Coordinate[], index: num
         callback();
     } else {
         MessageBoard.publishMessage("等待移动冷却中......(约55秒)");
-        TimeoutUtils.execute(55000, function () {
+        TimeoutUtils.execute(52000, function () {
             const from = pathList[index];
             const to = pathList[index + 1];
 

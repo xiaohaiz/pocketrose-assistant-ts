@@ -18,7 +18,7 @@ class TownEntrance {
         const action = (credential: Credential, townId: string) => {
             return new Promise<void>(resolve => {
                 MessageBoard.publishMessage("等待进城冷却中......(约55秒)");
-                TimeoutUtils.execute(55000, function () {
+                TimeoutUtils.execute(52000, function () {
                     const request = credential.asRequest();
                     // @ts-ignore
                     request["townid"] = townId;
