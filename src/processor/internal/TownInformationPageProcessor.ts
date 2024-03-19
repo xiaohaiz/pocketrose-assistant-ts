@@ -1,3 +1,4 @@
+import TownInformation from "../../core/dashboard/TownInformation";
 import PageUtils from "../../util/PageUtils";
 import PageProcessor from "../PageProcessor";
 
@@ -8,8 +9,13 @@ class TownInformationPageProcessor implements PageProcessor {
         PageUtils.removeUnusedHyperLinks();
         PageUtils.removeGoogleAnalyticsScript();
         doProcess();
+        this.#processPage().then();
     }
 
+    async #processPage() {
+        const html = PageUtils.currentPageHtml();
+        const page = TownInformation.parsePage(html);
+    }
 }
 
 function doProcess() {

@@ -52,6 +52,7 @@ class TownInformation {
 
         const page = new TownInformationPage();
         page.statusList = statusList;
+        page.initialize();
         return page;
     }
 }
