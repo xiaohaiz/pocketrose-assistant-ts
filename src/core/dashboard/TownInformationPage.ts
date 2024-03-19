@@ -30,6 +30,21 @@ class TownInformationPage {
         return cs.sort();
     }
 
+    getTownList(c: string): TownStatus[] {
+        if (!this.groupByCountries) {
+            return [];
+        }
+        const ck = c === "在野" ? "" : c;
+        if (!this.groupByCountries.has(ck)) {
+            return [];
+        }
+        return this.groupByCountries.get(ck)!
+            .sort((a, b) => {
+                if (a.capital) return -1;
+                if (b.capital) return 1;
+                return a.name!.localeCompare(b.name!);
+            });
+    }
 }
 
 export = TownInformationPage;
