@@ -14,6 +14,7 @@ import TeamMemberLoader from "../../core/team/TeamMemberLoader";
 import Credential from "../../util/Credential";
 import MessageBoard from "../../util/MessageBoard";
 import PageUtils from "../../util/PageUtils";
+import StorageUtils from "../../util/StorageUtils";
 import StringUtils from "../../util/StringUtils";
 import PageProcessorContext from "../PageProcessorContext";
 import PageProcessorCredentialSupport from "../PageProcessorCredentialSupport";
@@ -65,7 +66,7 @@ abstract class PersonalTeamPageProcessor extends PageProcessorCredentialSupport 
         html += "<tbody>";
         html += "<tr>";
         html += "<td colspan='6' style='text-align:center'>";
-        html += "<input type='checkbox' id='includeExternal' checked>是否包含编外队员";
+        html += "<input type='checkbox' id='includeExternal'>是否包含编外队员";
         html += "</td>";
         html += "</tr>";
         html += "<tr>";
@@ -156,6 +157,14 @@ abstract class PersonalTeamPageProcessor extends PageProcessorCredentialSupport 
                 .parent()
                 .next()
                 .toggle();
+        });
+
+        if (StorageUtils.getBoolean("_ts_001")) {
+            $("#includeExternal").prop("checked", true);
+        }
+        $("#includeExternal").on("change", event => {
+            const checked = $(event.target).prop("checked") as boolean;
+            StorageUtils.set("_ts_001", Number(checked).toString());
         });
 
         this.#bindRefreshButton();

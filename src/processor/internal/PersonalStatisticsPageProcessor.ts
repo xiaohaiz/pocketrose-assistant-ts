@@ -19,6 +19,7 @@ import DayRange from "../../util/DayRange";
 import KeyboardShortcutBuilder from "../../util/KeyboardShortcutBuilder";
 import MessageBoard from "../../util/MessageBoard";
 import MonthRange from "../../util/MonthRange";
+import StorageUtils from "../../util/StorageUtils";
 import WeekRange from "../../util/WeekRange";
 import PageProcessorContext from "../PageProcessorContext";
 import PageProcessorCredentialSupport from "../PageProcessorCredentialSupport";
@@ -77,7 +78,7 @@ abstract class PersonalStatisticsPageProcessor extends PageProcessorCredentialSu
         html += "</tr>";
         html += "<tr>";
         html += "<td id='operation' style='text-align:center;background-color:#F8F0E0'>";
-        html += "<input type='checkbox' id='includeExternal' checked>是否包含编外队员";
+        html += "<input type='checkbox' id='includeExternal'>是否包含编外队员";
         html += "</td>";
         html += "<tr>";
         html += "<td style='text-align:center;background-color:#F8F0E0'>";
@@ -205,6 +206,14 @@ abstract class PersonalStatisticsPageProcessor extends PageProcessorCredentialSu
         });
 
         this.doBindReturnButton(credential);
+
+        if (StorageUtils.getBoolean("_ts_001")) {
+            $("#includeExternal").prop("checked", true);
+        }
+        $("#includeExternal").on("change", event => {
+            const checked = $(event.target).prop("checked") as boolean;
+            StorageUtils.set("_ts_001", Number(checked).toString());
+        });
 
         doBindReport1();
         doBindReport2();
