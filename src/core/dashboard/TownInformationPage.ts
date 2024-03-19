@@ -19,6 +19,21 @@ class TownInformationPage {
         }
     }
 
+    findByName(name: string | undefined | null): TownStatus | null {
+        if (!name) {
+            return null;
+        }
+        if (!this.statusList) {
+            return null;
+        }
+        for (const town of this.statusList) {
+            if (town.name === name) {
+                return town;
+            }
+        }
+        return null;
+    }
+
     get countries(): string[] {
         if (!this.groupByCountries) {
             return [];
