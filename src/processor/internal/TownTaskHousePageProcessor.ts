@@ -1,10 +1,11 @@
 import NpcLoader from "../../core/role/NpcLoader";
 import TaskGuideManager from "../../core/task/TaskGuideManager";
-import TownLoader from "../../core/town/TownLoader";
 import Credential from "../../util/Credential";
+import KeyboardShortcutBuilder from "../../util/KeyboardShortcutBuilder";
 import PageUtils from "../../util/PageUtils";
 import PageProcessorContext from "../PageProcessorContext";
 import PageProcessorCredentialSupport from "../PageProcessorCredentialSupport";
+import PageProcessorUtils from "../PageProcessorUtils";
 
 class TownTaskHousePageProcessor extends PageProcessorCredentialSupport {
 
@@ -86,8 +87,8 @@ class TownTaskHousePageProcessor extends PageProcessorCredentialSupport {
         html += "</tr>"
         html += "<tr>";
         html += "<td style='background-color:#F8F0E0;text-align:center'>";
-        html += "<button role='button' id='refreshButton'>刷新任务</button>";
-        html += "<button role='button' id='returnButton'>返回" + TownLoader.load(context?.get("townId"))?.name + "</button>";
+        html += "<button role='button' id='refreshButton'>刷新任务(r)</button>";
+        html += "<button role='button' id='returnButton'>" + PageProcessorUtils.generateReturnTownButtonTitle(context) + "(Esc)</button>";
         html += "</td>";
         html += "</tr>"
 
@@ -109,7 +110,11 @@ class TownTaskHousePageProcessor extends PageProcessorCredentialSupport {
 
         renderTask(credential, roleTask);
 
-        PageUtils.onEscapePressed(() => $("#returnButton").trigger("click"));
+        new KeyboardShortcutBuilder()
+            .onKeyPressed("r", () => $("#refreshButton").trigger("click"))
+            .onEscapePressed(() => $("#returnButton").trigger("click"))
+            .withDefaultPredicate()
+            .bind();
     }
 
 }
