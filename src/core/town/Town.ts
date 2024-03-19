@@ -6,6 +6,7 @@ class Town {
     readonly name: string;
     readonly description: string;
     readonly coordinate: Coordinate;
+    readonly image: string;
     readonly specialWeapons: string[];
     readonly specialArmors: string[];
     readonly specialAccessories: string[];
@@ -14,6 +15,7 @@ class Town {
                 name: string,
                 description: string,
                 coordinate: Coordinate,
+                image: string,
                 specialWeapons: string[],
                 specialArmors: string[],
                 specialAccessories: string[]) {
@@ -21,6 +23,7 @@ class Town {
         this.name = name;
         this.description = description;
         this.coordinate = coordinate;
+        this.image = image;
         this.specialWeapons = specialWeapons;
         this.specialArmors = specialArmors;
         this.specialAccessories = specialAccessories;
