@@ -248,6 +248,14 @@ class BattlePageParser {
         page.monsterTask = html.includes("完成杀怪任务");
         page.petLearnSpell = html.includes("遗忘了技能") || html.includes("学会了新技能");
 
+        // 解析宠物的亲密度
+        $(html).find("font:contains('亲密度成为')")
+            .filter((_idx, it) => _.startsWith($(it).text(), "亲密度成为"))
+            .each((idx, it) => {
+                let petLoveText = $(it).html();
+                petLoveText = StringUtils.substringBetween(petLoveText, "亲密度成为", "！");
+                page.petLove = parseFloat(petLoveText);
+            });
 
         generateBattleReport(battleTable, page);
 

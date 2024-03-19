@@ -213,6 +213,10 @@ class SetupLoader {
     static isShortcutPromptHidden(): boolean {
         return StorageUtils.getBoolean("_pa_062");
     }
+
+    static isZodiacBattlePetLoveAutoFixEnabled(): boolean {
+        return StorageUtils.getBoolean("_pa_063");
+    }
 }
 
 export = SetupLoader;

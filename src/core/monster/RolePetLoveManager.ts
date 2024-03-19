@@ -1,0 +1,79 @@
+import Credential from "../../util/Credential";
+import NetworkUtils from "../../util/NetworkUtils";
+import TownBank from "../bank/TownBank";
+import BattlePage from "../battle/BattlePage";
+import SetupLoader from "../config/SetupLoader";
+import PersonalPetManagement from "./PersonalPetManagement";
+import Pet from "./Pet";
+
+/**
+ * 十二宫战斗后，如果宠物亲密度低于指定的阈值，自动补满。
+ */
+class RolePetLoveManager {
+
+    readonly #credential: Credential;
+
+    constructor(credential: Credential) {
+        this.#credential = credential;
+    }
+
+    async triggerPetLoveFixed(battlePage: BattlePage) {
+        if (!battlePage.zodiacBattle) {
+            // 不是十二宫的战斗，忽略
+            return;
+        }
+        if (!battlePage.petLove) {
+            // 没有宠物亲密度数据，大概率是忘记带宠物了，糊涂蛋也不是没有，忽略
+            return;
+        }
+        if (battlePage.petLove >= 95) {
+            // 宠物的亲密度还够，忽略
+            return;
+        }
+        if (!SetupLoader.isZodiacBattlePetLoveAutoFixEnabled()) {
+            // 没有开启配置，忽略
+            return;
+        }
+        await this.#fixPetLove();
+    }
+
+    async #fixPetLove() {
+        const petPage = await new PersonalPetManagement(this.#credential).open();
+        if (!petPage.petList || petPage.petList.length === 0) {
+            return;
+        }
+        let usingPet: Pet | null = null;
+        for (const pet of petPage.petList) {
+            if (pet.using) {
+                usingPet = pet;
+                break;
+            }
+        }
+        if (!usingPet || usingPet.level !== 100) {
+            // 不是满级宠物，凑什么乱呀，忽略
+            return;
+        }
+        if (usingPet.love === 100) {
+            // 宠物亲密度已经满了，忽略
+            return;
+        }
+
+        // 取钱，补满宠物亲密度
+        const amount = Math.ceil(100 - usingPet.love!);
+        await new TownBank(this.#credential).withdraw(amount);
+        await this.#addLove(usingPet.index!);
+    }
+
+    async #addLove(index: number): Promise<void> {
+        return await (() => {
+            return new Promise<void>(resolve => {
+                const request = this.#credential.asRequestMap();
+                request.set("select", index.toString());
+                request.set("mode", "PETADDLOVE");
+                NetworkUtils.post("mydata.cgi", request).then(() => resolve());
+            });
+        })();
+    }
+}
+
+export = RolePetLoveManager;

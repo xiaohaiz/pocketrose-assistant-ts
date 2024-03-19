@@ -1,153 +1,156 @@
 import MonsterProfile from "../../core/monster/MonsterProfile";
 import MonsterProfileLoader from "../../core/monster/MonsterProfileLoader";
 import Credential from "../../util/Credential";
-import PageUtils from "../../util/PageUtils";
+import KeyboardShortcutBuilder from "../../util/KeyboardShortcutBuilder";
 import PageProcessorContext from "../PageProcessorContext";
 import PageProcessorCredentialSupport from "../PageProcessorCredentialSupport";
+import PageProcessorUtils from "../PageProcessorUtils";
 
 class TownPetRankHousePageProcessor extends PageProcessorCredentialSupport {
 
     async doProcess(credential: Credential, context?: PageProcessorContext): Promise<void> {
-        doProcess(credential);
-        PageUtils.onEscapePressed(() => $("#return_button").trigger("click"));
+        await this.#processPage(credential, context);
+        new KeyboardShortcutBuilder()
+            .onEscapePressed(() => $("#return_button").trigger("click"))
+            .withDefaultPredicate()
+            .bind();
     }
 
-}
+    async #processPage(credential: Credential, context?: PageProcessorContext) {
+        const t0 = $("table:first");
+        const t1 = $("table:eq(1)");
+        t1.find("td:first")
+            .attr("id", "title_cell")
+            .removeAttr("width")
+            .removeAttr("height")
+            .removeAttr("bgcolor")
+            .css("text-align", "center")
+            .css("font-size", "150%")
+            .css("font-weight", "bold")
+            .css("background-color", "navy")
+            .css("color", "yellowgreen")
+            .text("＜＜  宠 物 排 行 榜  ＞＞");
 
-function doProcess(credential: Credential) {
-    const t0 = $("table:first");
-    const t1 = $("table:eq(1)");
-    t1.find("td:first")
-        .attr("id", "title_cell")
-        .removeAttr("width")
-        .removeAttr("height")
-        .removeAttr("bgcolor")
-        .css("text-align", "center")
-        .css("font-size", "150%")
-        .css("font-weight", "bold")
-        .css("background-color", "navy")
-        .css("color", "yellowgreen")
-        .text("＜＜  宠 物 排 行 榜  ＞＞");
+        t0.find("tr:first")
+            .next()
+            .find("table:first")
+            .find("tr:first")
+            .find("td:first")
+            .attr("id", "messageBoard")
+            .removeAttr("width")
+            .removeAttr("bgcolor")
+            .css("width", "100%")
+            .css("background-color", "black")
+            .css("color", "white")
+            .html("全新宠物排行榜，帮助您更好了解口袋的宠物。<br>" +
+                "目前宠物初始值和族值的关系是我们推测的，不一定准确。等白猫如果有反馈再修正。")
+            .next()
+            .attr("id", "messageBoardManager");
 
-    t0.find("tr:first")
-        .next()
-        .find("table:first")
-        .find("tr:first")
-        .find("td:first")
-        .attr("id", "messageBoard")
-        .removeAttr("width")
-        .removeAttr("bgcolor")
-        .css("width", "100%")
-        .css("background-color", "black")
-        .css("color", "white")
-        .html("全新宠物排行榜，帮助您更好了解口袋的宠物。<br>" +
-            "目前宠物初始值和族值的关系是我们推测的，不一定准确。等白猫如果有反馈再修正。")
-        .next()
-        .attr("id", "messageBoardManager");
+        // 删除老页面的内容
+        t0.next().remove();
+        $("form").remove();
 
-    // 删除老页面的内容
-    t0.next().remove();
-    $("form").remove();
+        // 绘制新的页面架构
+        let html = "";
+        html += "<tr style='display:none'>";
+        html += "<td id='hidden_form_cell'></td>";
+        html += "</tr>";
+        html += "<tr>";
+        html += "<td style='background-color:#F8F0E0;text-align:center'>";
+        html += "<input type='button' id='return_button' value='" + PageProcessorUtils.generateReturnTownButtonTitle(context) + "(Esc)'>";
+        html += "</td>";
+        html += "</tr>";
+        html += "<tr>";
+        html += "<td style='background-color:#F8F0E0;text-align:center'>";
+        html += "<table style='margin:auto;border-width:0;text-align:center'>";
+        html += "<tbody>";
+        html += "<tr>";
+        html += "<td>";
+        html += "<input type='button' id='total_base_stats_rank' value='族值ＴＯＰ３０'>";
+        html += "</td>";
+        html += "<td>";
+        html += "<input type='button' id='health_rank' value='生命ＴＯＰ３０'>";
+        html += "</td>";
+        html += "<td>";
+        html += "<input type='button' id='attack_rank' value='攻击ＴＯＰ３０'>";
+        html += "</td>";
+        html += "<td>";
+        html += "<input type='button' id='defense_rank' value='防御ＴＯＰ３０'>";
+        html += "</td>";
+        html += "</tr>";
+        html += "<tr>";
+        html += "<td>";
+        html += "<input type='button' id='special_attack_rank' value='智力ＴＯＰ３０'>";
+        html += "</td>";
+        html += "<td>";
+        html += "<input type='button' id='special_defense_rank' value='精神ＴＯＰ３０'>";
+        html += "</td>";
+        html += "<td>";
+        html += "<input type='button' id='speed_rank' value='速度ＴＯＰ３０'>";
+        html += "</td>";
+        html += "<td>";
+        html += "<input type='button' id='capacity_rank' value='能力ＴＯＰ３０'>";
+        html += "</td>";
+        html += "</tr>";
+        html += "</tbody>";
+        html += "</table>";
+        html += "</td>";
+        html += "</tr>";
+        html += "<tr>";
+        html += "<td style='background-color:#F8F0E0;text-align:center'>";
+        html += "<table style='margin:auto;border-width:0;text-align:center'>";
+        html += "<tbody>";
+        html += "<tr>";
+        html += "<td>";
+        html += "<input type='button' id='r_total_base_stats_rank' value='族值垫底的３０'>";
+        html += "</td>";
+        html += "<td>";
+        html += "<input type='button' id='r_health_rank' value='生命垫底的３０'>";
+        html += "</td>";
+        html += "<td>";
+        html += "<input type='button' id='r_attack_rank' value='攻击垫底的３０'>";
+        html += "</td>";
+        html += "<td>";
+        html += "<input type='button' id='r_defense_rank' value='防御垫底的３０'>";
+        html += "</td>";
+        html += "</tr>";
+        html += "<tr>";
+        html += "<td>";
+        html += "<input type='button' id='r_special_attack_rank' value='智力垫底的３０'>";
+        html += "</td>";
+        html += "<td>";
+        html += "<input type='button' id='r_special_defense_rank' value='精神垫底的３０'>";
+        html += "</td>";
+        html += "<td>";
+        html += "<input type='button' id='r_speed_rank' value='速度垫底的３０'>";
+        html += "</td>";
+        html += "<td>";
+        html += "<input type='button' id='r_capacity_rank' value='能力垫底的３０'>";
+        html += "</td>";
+        html += "</tr>";
+        html += "</tbody>";
+        html += "</table>";
+        html += "</td>";
+        html += "</tr>";
+        html += "<tr>";
+        html += "<td style='background-color:#F8F0E0;text-align:center'>";
+        html += "<input type='text' id='spellName' value='' size='20' spellcheck='false'>";
+        html += "<input type='button' id='searchSpellButton' value='根据技能查询宠物'>";
+        html += "<input type='button' id='petDetailButton' value='查询宠物详情'>";
+        html += "</td>";
+        html += "</tr>";
+        html += "<tr style='display:none'>";
+        html += "<td id='pet_rank_cell'></td>";
+        html += "</tr>";
+        t0.find("tr:first").next().after($(html));
 
-    // 绘制新的页面架构
-    let html = "";
-    html += "<tr style='display:none'>";
-    html += "<td id='hidden_form_cell'></td>";
-    html += "</tr>";
-    html += "<tr>";
-    html += "<td style='background-color:#F8F0E0;text-align:center'>";
-    html += "<input type='button' id='return_button' value='离开宠物排行榜'>";
-    html += "</td>";
-    html += "</tr>";
-    html += "<tr>";
-    html += "<td style='background-color:#F8F0E0;text-align:center'>";
-    html += "<table style='margin:auto;border-width:0;text-align:center'>";
-    html += "<tbody>";
-    html += "<tr>";
-    html += "<td>";
-    html += "<input type='button' id='total_base_stats_rank' value='族值ＴＯＰ３０'>";
-    html += "</td>";
-    html += "<td>";
-    html += "<input type='button' id='health_rank' value='生命ＴＯＰ３０'>";
-    html += "</td>";
-    html += "<td>";
-    html += "<input type='button' id='attack_rank' value='攻击ＴＯＰ３０'>";
-    html += "</td>";
-    html += "<td>";
-    html += "<input type='button' id='defense_rank' value='防御ＴＯＰ３０'>";
-    html += "</td>";
-    html += "</tr>";
-    html += "<tr>";
-    html += "<td>";
-    html += "<input type='button' id='special_attack_rank' value='智力ＴＯＰ３０'>";
-    html += "</td>";
-    html += "<td>";
-    html += "<input type='button' id='special_defense_rank' value='精神ＴＯＰ３０'>";
-    html += "</td>";
-    html += "<td>";
-    html += "<input type='button' id='speed_rank' value='速度ＴＯＰ３０'>";
-    html += "</td>";
-    html += "<td>";
-    html += "<input type='button' id='capacity_rank' value='能力ＴＯＰ３０'>";
-    html += "</td>";
-    html += "</tr>";
-    html += "</tbody>";
-    html += "</table>";
-    html += "</td>";
-    html += "</tr>";
-    html += "<tr>";
-    html += "<td style='background-color:#F8F0E0;text-align:center'>";
-    html += "<table style='margin:auto;border-width:0;text-align:center'>";
-    html += "<tbody>";
-    html += "<tr>";
-    html += "<td>";
-    html += "<input type='button' id='r_total_base_stats_rank' value='族值垫底的３０'>";
-    html += "</td>";
-    html += "<td>";
-    html += "<input type='button' id='r_health_rank' value='生命垫底的３０'>";
-    html += "</td>";
-    html += "<td>";
-    html += "<input type='button' id='r_attack_rank' value='攻击垫底的３０'>";
-    html += "</td>";
-    html += "<td>";
-    html += "<input type='button' id='r_defense_rank' value='防御垫底的３０'>";
-    html += "</td>";
-    html += "</tr>";
-    html += "<tr>";
-    html += "<td>";
-    html += "<input type='button' id='r_special_attack_rank' value='智力垫底的３０'>";
-    html += "</td>";
-    html += "<td>";
-    html += "<input type='button' id='r_special_defense_rank' value='精神垫底的３０'>";
-    html += "</td>";
-    html += "<td>";
-    html += "<input type='button' id='r_speed_rank' value='速度垫底的３０'>";
-    html += "</td>";
-    html += "<td>";
-    html += "<input type='button' id='r_capacity_rank' value='能力垫底的３０'>";
-    html += "</td>";
-    html += "</tr>";
-    html += "</tbody>";
-    html += "</table>";
-    html += "</td>";
-    html += "</tr>";
-    html += "<tr>";
-    html += "<td style='background-color:#F8F0E0;text-align:center'>";
-    html += "<input type='text' id='spellName' value='' size='20' spellcheck='false'>";
-    html += "<input type='button' id='searchSpellButton' value='根据技能查询宠物'>";
-    html += "<input type='button' id='petDetailButton' value='查询宠物详情'>";
-    html += "</td>";
-    html += "</tr>";
-    html += "<tr style='display:none'>";
-    html += "<td id='pet_rank_cell'></td>";
-    html += "</tr>";
-    t0.find("tr:first").next().after($(html));
-
-    doGenerateHiddenForm(credential);
-    doBindReturnButton();
-    doBindRankButton();
-    doBindSearchButton();
-    doBindPetDetailButton();
+        doGenerateHiddenForm(credential);
+        doBindReturnButton();
+        doBindRankButton();
+        doBindSearchButton();
+        doBindPetDetailButton();
+    }
 }
 
 function doGenerateHiddenForm(credential: Credential) {

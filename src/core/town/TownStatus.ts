@@ -5,6 +5,7 @@ class TownStatus {
     country?: string;
     tax?: number;
     attribute?: string;
+    capital?: boolean;
 
 }
 

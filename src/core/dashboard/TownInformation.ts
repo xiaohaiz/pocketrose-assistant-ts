@@ -35,8 +35,10 @@ class TownInformation {
 
                     if (s.endsWith(" 首都")) {
                         status.name = StringUtils.substringBefore(s, " 首都");
+                        status.capital = true;
                     } else {
                         status.name = s;
+                        status.capital = false;
                     }
                     status.color = c0.find("font:first").attr("color");
                     status.country = c1.text();
