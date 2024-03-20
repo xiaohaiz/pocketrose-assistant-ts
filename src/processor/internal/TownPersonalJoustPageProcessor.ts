@@ -1,5 +1,5 @@
 import Credential from "../../util/Credential";
-import PageUtils from "../../util/PageUtils";
+import KeyboardShortcutBuilder from "../../util/KeyboardShortcutBuilder";
 import PageProcessorContext from "../PageProcessorContext";
 import PageProcessorCredentialSupport from "../PageProcessorCredentialSupport";
 
@@ -7,7 +7,10 @@ class TownPersonalJoustPageProcessor extends PageProcessorCredentialSupport {
 
     async doProcess(credential: Credential, context?: PageProcessorContext): Promise<void> {
         processPersonalJoustPage();
-        PageUtils.onEscapePressed(() => $("#returnButton").trigger("click"));
+        KeyboardShortcutBuilder.newInstance()
+            .onEscapePressed(() => $("#returnButton").trigger("click"))
+            .withDefaultPredicate()
+            .bind();
     }
 
 }
