@@ -1,14 +1,14 @@
+import _ from "lodash";
 import TownInformation from "../../core/dashboard/TownInformation";
 import MapBuilder from "../../core/map/MapBuilder";
-import PageUtils from "../../util/PageUtils";
-import PageProcessor from "../PageProcessor";
-import TownLoader from "../../core/town/TownLoader";
-import StringUtils from "../../util/StringUtils";
-import _ from "lodash";
-import Coordinate from "../../util/Coordinate";
 import Town from "../../core/town/Town";
+import TownLoader from "../../core/town/TownLoader";
 import TownStatus from "../../core/town/TownStatus";
 import Constants from "../../util/Constants";
+import Coordinate from "../../util/Coordinate";
+import PageUtils from "../../util/PageUtils";
+import StringUtils from "../../util/StringUtils";
+import PageProcessor from "../PageProcessor";
 
 class TownInformationPageProcessor implements PageProcessor {
 
@@ -108,6 +108,28 @@ class TownInformationPageProcessor implements PageProcessor {
             c += " （首都）";
         }
         html += c;
+        html += "</td>";
+        html += "</tr>";
+        // --------------------------------------------------------------------
+        html += "<tr>";
+        html += "<th style='text-align:left;white-space:nowrap'>";
+        html += "属性"
+        html += "</th>";
+        html += "<td style='width:100%'>";
+        html += status.attribute;
+        html += "</td>";
+        html += "</tr>";
+        // --------------------------------------------------------------------
+        html += "<tr>";
+        html += "<th style='text-align:left;white-space:nowrap'>";
+        html += "收益"
+        html += "</th>";
+        html += "<td style='width:100%'>";
+        if (status.country === "") {
+            html += "PRIVACY";
+        } else {
+            html += (status.tax + " GOLD");
+        }
         html += "</td>";
         html += "</tr>";
         // --------------------------------------------------------------------
