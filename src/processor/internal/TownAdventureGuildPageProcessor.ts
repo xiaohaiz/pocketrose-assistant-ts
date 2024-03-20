@@ -11,9 +11,9 @@ import Town from "../../core/town/Town";
 import TownEntrance from "../../core/town/TownEntrance";
 import Coordinate from "../../util/Coordinate";
 import Credential from "../../util/Credential";
+import KeyboardShortcutBuilder from "../../util/KeyboardShortcutBuilder";
 import MessageBoard from "../../util/MessageBoard";
 import NetworkUtils from "../../util/NetworkUtils";
-import PageUtils from "../../util/PageUtils";
 import StringUtils from "../../util/StringUtils";
 import PageProcessorContext from "../PageProcessorContext";
 import PageProcessorCredentialSupport from "../PageProcessorCredentialSupport";
@@ -24,7 +24,10 @@ class TownAdventureGuildPageProcessor extends PageProcessorCredentialSupport {
         const pageHtml = document.documentElement.outerHTML;
         const treasureHintList = TreasureHintParser.parseTreasureHintList(pageHtml);
         doProcess(credential, treasureHintList);
-        PageUtils.onEscapePressed(() => $("#returnButton").trigger("click"));
+        KeyboardShortcutBuilder.newInstance()
+            .onEscapePressed(() => $("#returnButton").trigger("click"))
+            .withDefaultPredicate()
+            .bind();
     }
 
 }
