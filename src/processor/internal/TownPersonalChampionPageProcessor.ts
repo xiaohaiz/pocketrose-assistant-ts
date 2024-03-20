@@ -111,7 +111,13 @@ class TownPersonalChampionPageProcessor extends PageProcessorCredentialSupport {
 
         $("#candidates")
             .find("> tbody:first")
-            .html("<tr><td>" + html + "</td></tr>");
+            .find("> tr")
+            .each((_idx, tr) => {
+                $(tr).hide();
+            });
+        $("#candidates")
+            .find("> tbody:first")
+            .append($("<tr><td>" + html + "</td></tr>"));
     }
 
     async #renderWinners(page: TownPersonalChampionPage) {
@@ -136,7 +142,13 @@ class TownPersonalChampionPageProcessor extends PageProcessorCredentialSupport {
 
         $("#winners")
             .find("> tbody:first")
-            .html("<tr><td>" + html + "</td></tr>");
+            .find("> tr")
+            .each((_idx, tr) => {
+                $(tr).hide();
+            });
+        $("#winners")
+            .find("> tbody:first")
+            .append($("<tr><td>" + html + "</td></tr>"));
     }
 
     #generateCandidate(status: TownStatus | undefined, roles: Map<string, PersonalChampionRole>): string {
