@@ -1,3 +1,4 @@
+import _ from "lodash";
 import Coordinate from "../../util/Coordinate";
 
 class Town {
@@ -66,6 +67,25 @@ class Town {
             s += "【" + it + "】";
         }
         return s;
+    }
+
+    hasSpecial(s: string): boolean {
+        for (const it of this.specialWeapons) {
+            if (_.includes(it, s)) {
+                return true;
+            }
+        }
+        for (const it of this.specialArmors) {
+            if (_.includes(it, s)) {
+                return true;
+            }
+        }
+        for (const it of this.specialAccessories) {
+            if (_.includes(it, s)) {
+                return true;
+            }
+        }
+        return false;
     }
 }
 

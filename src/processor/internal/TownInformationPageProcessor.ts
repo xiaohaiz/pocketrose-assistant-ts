@@ -66,6 +66,26 @@ class TownInformationPageProcessor implements PageProcessor {
                 .on("mouseleave", () => $("#town").html(""));
         }
 
+        // command
+        let c = "";
+        c += "<input type='text' id='searchName' size='15' maxlength='20' spellcheck='false'>";
+        c += "<input type='button' id='searchButton' value='根据特产品查找'>";
+        $("#command").html(c);
+        $("#searchButton").on("click", () => {
+            const s = $("#searchName").val() as string;
+            const candidate: TownStatus[] = [];
+            for (const status of page.statusList!) {
+                const town = TownLoader.load(status.name)!;
+                if (town.hasSpecial(s)) {
+                    candidate.push(status);
+                }
+            }
+            const p = new TownInformationPage();
+            p.statusList = candidate;
+            p.initialize();
+            this.#renderTownList(p);
+        });
+
         this.#renderTownList(page);
     }
 
