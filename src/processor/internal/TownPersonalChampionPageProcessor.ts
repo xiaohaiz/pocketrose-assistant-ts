@@ -93,7 +93,7 @@ class TownPersonalChampionPageProcessor extends PageProcessorCredentialSupport {
             const list = townInformationPage.getTownList(c);
             html += "<tr>";
             html += "<th style='background-color:black;color:white;white-space:nowrap'>";
-            html += (c === "") ? "在野" : c;
+            html += (c === "") ? "★" : c;
             html += "</th>";
             for (let i = 0; i < maxSize; i++) {
                 let status: TownStatus | undefined = undefined;
