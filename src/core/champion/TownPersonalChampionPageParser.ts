@@ -74,6 +74,31 @@ class TownPersonalChampionPageParser {
                 page.candidates!.push(pcr);
             });
 
+        // Parse winner
+        page.winners = [];
+        $(html).find("th:contains('-- 历 代 优 胜 者 --')")
+            .filter((_idx, th) => {
+                const s = $(th).text();
+                return _.startsWith(s, "-- 历 代 优 胜 者 --");
+            })
+            .closest("tbody")
+            .find("img")
+            .each((_idx, img) => {
+                const src = $(img).attr("src")!;
+                let s = $(img).parent().html();
+                s = StringUtils.substringAfter(s, "<br>");
+                const name = StringUtils.substringBefore(s, "(");
+                let townName = StringUtils.substringBetween(s, "(", ")");
+                if (_.endsWith(townName, " 首都")) {
+                    townName = StringUtils.substringBefore(townName, " 首都");
+                }
+                const pcr = new PersonalChampionRole();
+                pcr.image = StringUtils.substringAfterLast(src, "/");
+                pcr.name = name;
+                pcr.townName = townName;
+                page.winners!.push(pcr);
+            });
+
         return page;
     }
 }
