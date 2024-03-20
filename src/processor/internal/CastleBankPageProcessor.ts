@@ -3,6 +3,7 @@ import CastleBank from "../../core/bank/CastleBank";
 import CastleBankPage from "../../core/bank/CastleBankPage";
 import NpcLoader from "../../core/role/NpcLoader";
 import Credential from "../../util/Credential";
+import KeyboardShortcutBuilder from "../../util/KeyboardShortcutBuilder";
 import MessageBoard from "../../util/MessageBoard";
 import NetworkUtils from "../../util/NetworkUtils";
 import PageUtils from "../../util/PageUtils";
@@ -18,7 +19,10 @@ class CastleBankPageProcessor extends PageProcessorCredentialSupport {
         const castleName = context!.get("castleName")!;
         this.#createImmutablePage(credential, castleName);
         this.#renderMutablePage(credential, page);
-        PageUtils.onEscapePressed(() => $("#returnButton").trigger("click"));
+        KeyboardShortcutBuilder.newInstance()
+            .onEscapePressed(() => $("#returnButton").trigger("click"))
+            .withDefaultPredicate()
+            .bind();
     }
 
     #createImmutablePage(credential: Credential, castleName: string) {
