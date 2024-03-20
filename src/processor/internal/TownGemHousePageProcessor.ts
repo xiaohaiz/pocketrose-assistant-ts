@@ -10,6 +10,7 @@ import Town from "../../core/town/Town";
 import TownLoader from "../../core/town/TownLoader";
 import CommentBoard from "../../util/CommentBoard";
 import Credential from "../../util/Credential";
+import KeyboardShortcutBuilder from "../../util/KeyboardShortcutBuilder";
 import MessageBoard from "../../util/MessageBoard";
 import PageUtils from "../../util/PageUtils";
 import PocketUtils from "../../util/PocketUtils";
@@ -25,7 +26,10 @@ class TownGemHousePageProcessor extends PageProcessorCredentialSupport {
         const page = await new TownGemHouseParser(credential, town.id).parse(PageUtils.currentPageHtml())
         this.#renderImmutablePage(credential, town);
         this.#renderMutablePage(credential, page, town);
-        PageUtils.onEscapePressed(() => $("#return_button").trigger("click"));
+        KeyboardShortcutBuilder.newInstance()
+            .onEscapePressed(() => $("#return_button").trigger("click"))
+            .withDefaultPredicate()
+            .bind();
     }
 
     #renderImmutablePage(credential: Credential, town: Town) {
