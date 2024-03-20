@@ -86,16 +86,10 @@ class TownPersonalChampionPageParser {
             .each((_idx, img) => {
                 const src = $(img).attr("src")!;
                 let s = $(img).parent().html();
-                s = StringUtils.substringAfter(s, "<br>");
-                const name = StringUtils.substringBefore(s, "(");
-                let townName = StringUtils.substringBetween(s, "(", ")");
-                if (_.endsWith(townName, " 首都")) {
-                    townName = StringUtils.substringBefore(townName, " 首都");
-                }
+                const name = StringUtils.substringAfter(s, "<br>");
                 const pcr = new PersonalChampionRole();
                 pcr.image = StringUtils.substringAfterLast(src, "/");
                 pcr.name = name;
-                pcr.townName = townName;
                 page.winners!.push(pcr);
             });
 
