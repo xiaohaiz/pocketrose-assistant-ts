@@ -24,7 +24,7 @@ class PersonalCareerManagementPageProcessor_Town extends PersonalCareerManagemen
 
 
     doBindKeyboardShortcut() {
-        new KeyboardShortcutBuilder()
+        KeyboardShortcutBuilder.newInstance()
             .onKeyPressed("e", () => $("#itemManagementButton").trigger("click"))
             .onEscapePressed(() => $("#returnButton").trigger("click"))
             .withDefaultPredicate()

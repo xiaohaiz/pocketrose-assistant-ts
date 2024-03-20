@@ -30,9 +30,10 @@ abstract class PersonalProfilePageProcessor extends PageProcessorCredentialSuppo
         this.#renderPetStatus(credential, context);
         this.#renderMirrorStatus(credential, context);
 
-        new KeyboardShortcutBuilder()
+        KeyboardShortcutBuilder.newInstance()
             .onEscapePressed(() => $("#returnButton").trigger("click"))
             .onKeyPressed("e", () => $("#equipmentManagementButton").trigger("click"))
+            .withDefaultPredicate()
             .bind();
     }
 

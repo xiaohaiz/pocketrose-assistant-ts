@@ -126,7 +126,7 @@ abstract class PersonalSetupPageProcessor extends PageProcessorCredentialSupport
 
         this.#render(credential);
 
-        new KeyboardShortcutBuilder()
+        KeyboardShortcutBuilder.newInstance()
             .onKeyPressed("r", () => {
                 MessageBoard.resetMessageBoard("口袋助手设置已经重新加载。");
                 $("#refreshButton").trigger("click");

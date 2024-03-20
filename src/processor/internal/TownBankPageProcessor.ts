@@ -25,7 +25,7 @@ class TownBankPageProcessor extends PageProcessorCredentialSupport {
         this.#renderImmutablePage(credential, town);
         this.#renderMutablePage(credential, page, town);
 
-        new KeyboardShortcutBuilder()
+        KeyboardShortcutBuilder.newInstance()
             .onKeyPressed("r", () => $("#refreshButton").trigger("click"))
             .onKeyPressed("u", () => $("#updateButton").trigger("click"))
             .onKeyPressed("a", () => $("#depositAllButton").trigger("click"))

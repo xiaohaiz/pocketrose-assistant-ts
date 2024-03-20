@@ -24,7 +24,7 @@ class TownInnPageProcessor extends PageProcessorCredentialSupport {
     async doProcess(credential: Credential, context?: PageProcessorContext): Promise<void> {
         const page = await new TownInnPageParser().parse(PageUtils.currentPageHtml());
         doProcess(credential);
-        new KeyboardShortcutBuilder()
+        KeyboardShortcutBuilder.newInstance()
             .onKeyPressed("r", () => $("#lodgeButton").trigger("click"))
             .onEscapePressed(() => $("#returnButton").trigger("click"))
             .withDefaultPredicate()

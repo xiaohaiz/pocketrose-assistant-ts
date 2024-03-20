@@ -14,7 +14,7 @@ class PersonalTeamManagementPageProcessor extends PageProcessorCredentialSupport
 
     async doProcess(credential: Credential, context?: PageProcessorContext): Promise<void> {
         doProcess(credential);
-        new KeyboardShortcutBuilder()
+        KeyboardShortcutBuilder.newInstance()
             .onEscapePressed(() => $("#returnButton").trigger("click"))
             .withDefaultPredicate()
             .bind();

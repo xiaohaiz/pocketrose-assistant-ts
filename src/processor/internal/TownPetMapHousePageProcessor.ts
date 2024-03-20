@@ -22,7 +22,7 @@ class TownPetMapHousePageProcessor extends PageProcessorCredentialSupport {
     async doProcess(credential: Credential, context?: PageProcessorContext): Promise<void> {
         const page = TownPetMapHouse.parsePage(PageUtils.currentPageHtml());
         this.#renderImmutablePage(credential, page, context);
-        new KeyboardShortcutBuilder()
+        KeyboardShortcutBuilder.newInstance()
             .onKeyPressed("r", () => $("#updateButton").trigger("click"))
             .onKeyPressed("u", () => $("#openPetManagement").trigger("click"))
             .onEscapePressed(() => $("#returnButton").trigger("click"))

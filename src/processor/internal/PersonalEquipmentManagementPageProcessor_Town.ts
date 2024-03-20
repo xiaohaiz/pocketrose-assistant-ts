@@ -32,7 +32,7 @@ import PersonalEquipmentManagementPageProcessor from "./PersonalEquipmentManagem
 class PersonalEquipmentManagementPageProcessor_Town extends PersonalEquipmentManagementPageProcessor {
 
     doBindKeyboardShortcut(credential: Credential) {
-        new KeyboardShortcutBuilder()
+        KeyboardShortcutBuilder.newInstance()
             .onEscapePressed(() => $("#returnButton").trigger("click"))
             .onKeyPressed("r", () => $("#refreshButton").trigger("click"))
             .onKeyPressed("s", () => $("#itemShopButton").trigger("click"))
