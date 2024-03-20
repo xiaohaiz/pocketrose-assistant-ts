@@ -273,6 +273,12 @@ class PageUtils {
         }
     }
 
+    static triggerClick(elementId: string) {
+        const element = $("#" + elementId);
+        if (element.length > 0) {
+            element.trigger("click");
+        }
+    }
 }
 
 export = PageUtils;
