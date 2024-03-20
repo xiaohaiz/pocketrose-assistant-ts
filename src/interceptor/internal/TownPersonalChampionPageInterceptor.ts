@@ -1,13 +1,13 @@
 import RoleStateMachineManager from "../../core/state/RoleStateMachineManager";
-import TownPersonalJoustPageProcessor from "../../processor/internal/TownPersonalJoustPageProcessor";
+import TownPersonalChampionPageProcessor from "../../processor/internal/TownPersonalChampionPageProcessor";
 import PageProcessor from "../../processor/PageProcessor";
 import PageProcessorContext from "../../processor/PageProcessorContext";
 import PageInterceptor from "../PageInterceptor";
 
 
-class TownPersonalJoustPageInterceptor implements PageInterceptor {
+class TownPersonalChampionPageInterceptor implements PageInterceptor {
 
-    readonly #processor: PageProcessor = new TownPersonalJoustPageProcessor();
+    readonly #processor: PageProcessor = new TownPersonalChampionPageProcessor();
 
     accept(cgi: string, pageText: string): boolean {
         if (cgi === "town.cgi") {
@@ -32,4 +32,4 @@ class TownPersonalJoustPageInterceptor implements PageInterceptor {
 
 }
 
-export = TownPersonalJoustPageInterceptor;
+export = TownPersonalChampionPageInterceptor;

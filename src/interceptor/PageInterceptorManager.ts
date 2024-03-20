@@ -32,7 +32,7 @@ import TownGemHousePageInterceptor from "./internal/TownGemHousePageInterceptor"
 import TownInformationPageInterceptor from "./internal/TownInformationPageInterceptor";
 import TownInnPageInterceptor from "./internal/TownInnPageInterceptor";
 import TownItemHousePageInterceptor from "./internal/TownItemHousePageInterceptor";
-import TownPersonalJoustPageInterceptor from "./internal/TownPersonalJoustPageInterceptor";
+import TownPersonalChampionPageInterceptor from "./internal/TownPersonalChampionPageInterceptor";
 import TownPetLeaguePageInterceptor from "./internal/TownPetLeaguePageInterceptor";
 import TownPetMapHousePageInterceptor from "./internal/TownPetMapHousePageInterceptor";
 import TownPetRankHousePageInterceptor from "./internal/TownPetRankHousePageInterceptor";
@@ -79,7 +79,7 @@ class PageInterceptorManager {
             new TownGemHousePageInterceptor(),
             new TownInformationPageInterceptor(),
             new TownItemHousePageInterceptor(),
-            new TownPersonalJoustPageInterceptor(),
+            new TownPersonalChampionPageInterceptor(),
             new TownPetLeaguePageInterceptor(),
             new TownPetMapHousePageInterceptor(),
             new TownPetRankHousePageInterceptor(),

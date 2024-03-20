@@ -1,12 +1,16 @@
+import TownPersonalChampionPageParser from "../../core/champion/TownPersonalChampionPageParser";
 import Credential from "../../util/Credential";
 import KeyboardShortcutBuilder from "../../util/KeyboardShortcutBuilder";
+import PageUtils from "../../util/PageUtils";
 import PageProcessorContext from "../PageProcessorContext";
 import PageProcessorCredentialSupport from "../PageProcessorCredentialSupport";
 
-class TownPersonalJoustPageProcessor extends PageProcessorCredentialSupport {
+class TownPersonalChampionPageProcessor extends PageProcessorCredentialSupport {
 
     async doProcess(credential: Credential, context?: PageProcessorContext): Promise<void> {
-        processPersonalJoustPage();
+        const page = await new TownPersonalChampionPageParser().parse(PageUtils.currentPageHtml());
+
+        processPersonalChampionPage();
         KeyboardShortcutBuilder.newInstance()
             .onEscapePressed(() => $("#returnButton").trigger("click"))
             .withDefaultPredicate()
@@ -15,7 +19,7 @@ class TownPersonalJoustPageProcessor extends PageProcessorCredentialSupport {
 
 }
 
-function processPersonalJoustPage() {
+function processPersonalChampionPage() {
     $("table:eq(1)")
         .find("td:first")
         .attr("id", "title_cell")
@@ -33,4 +37,4 @@ function processPersonalJoustPage() {
         .attr("id", "returnButton");
 }
 
-export = TownPersonalJoustPageProcessor;
+export = TownPersonalChampionPageProcessor;
