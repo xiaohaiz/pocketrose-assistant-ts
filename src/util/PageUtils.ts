@@ -273,16 +273,6 @@ class PageUtils {
         }
     }
 
-    static onEscapePressed(handler?: () => void) {
-        if (!handler) return;
-        $(document).off("keydown.city").on("keydown.city", event => {
-            const key = event.key;
-            if (!key) return;
-            if (key === "Escape") {
-                handler();
-            }
-        });
-    }
 }
 
 export = PageUtils;
