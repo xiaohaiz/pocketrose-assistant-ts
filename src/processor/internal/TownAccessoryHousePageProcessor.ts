@@ -4,6 +4,7 @@ import TownAccessoryHouse from "../../core/store/TownAccessoryHouse";
 import TownAccessoryHousePage from "../../core/store/TownAccessoryHousePage";
 import TownAccessoryHousePageParser from "../../core/store/TownAccessoryHousePageParser";
 import Credential from "../../util/Credential";
+import KeyboardShortcutBuilder from "../../util/KeyboardShortcutBuilder";
 import MessageBoard from "../../util/MessageBoard";
 import PageUtils from "../../util/PageUtils";
 import PocketUtils from "../../util/PocketUtils";
@@ -16,7 +17,10 @@ class TownAccessoryHousePageProcessor extends PageProcessorCredentialSupport {
         const page = await new TownAccessoryHousePageParser().parse(PageUtils.currentPageHtml());
         this.#renderImmutablePage(credential, page);
         this.#renderMutablePage(credential, page);
-        PageUtils.onEscapePressed(() => $("#returnButton").trigger("click"));
+        KeyboardShortcutBuilder.newInstance()
+            .onEscapePressed(() => $("#returnButton").trigger("click"))
+            .withDefaultPredicate()
+            .bind();
     }
 
     #renderImmutablePage(credential: Credential, page: TownAccessoryHousePage) {
