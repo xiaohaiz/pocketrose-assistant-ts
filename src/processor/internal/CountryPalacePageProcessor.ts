@@ -237,7 +237,7 @@ function bindTaskButton(credential: Credential, context: PageProcessorContext) {
         let timeout = 0;
         if (!noWait) {
             MessageBoard.publishMessage("请耐心等待计时器冷却...");
-            timeout = 55000;
+            timeout = 52000;
         }
         $(".palaceButton").prop("disabled", true);
         TimeoutUtils.execute(timeout, () => {
@@ -290,7 +290,7 @@ function bindTaskButton(credential: Credential, context: PageProcessorContext) {
         let timeout = 0;
         if (!noWait) {
             MessageBoard.publishMessage("请耐心等待计时器冷却...");
-            timeout = 55000;
+            timeout = 52000;
         }
         $(".palaceButton").prop("disabled", true);
         TimeoutUtils.execute(timeout, () => {
@@ -343,7 +343,7 @@ function bindTaskButton(credential: Credential, context: PageProcessorContext) {
                 $("#roleCash").text(account.cash + " GOLD");
             });
             MessageBoard.publishMessage("请耐心等待计时器冷却...");
-            TimeoutUtils.execute(55000, () => {
+            TimeoutUtils.execute(52000, () => {
                 const request = credential.asRequestMap();
                 request.set("mode", "CANCELTASK");
                 NetworkUtils.post("country.cgi", request).then(html => {

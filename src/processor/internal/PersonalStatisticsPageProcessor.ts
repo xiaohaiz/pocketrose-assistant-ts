@@ -2,6 +2,7 @@ import BattleLogService from "../../core/battle/BattleLogService";
 import BattleLogStorage from "../../core/battle/BattleLogStorage";
 import BattleResultStorage from "../../core/battle/BattleResultStorage";
 import CareerChangeLogStorage from "../../core/career/CareerChangeLogStorage";
+import LocalSettingManager from "../../core/config/LocalSettingManager";
 import EquipmentConsecrateLogStorage from "../../core/equipment/EquipmentConsecrateLogStorage";
 import BattleReportGenerator from "../../core/report/BattleReportGenerator";
 import CareerChangeReportGenerator from "../../core/report/CareerChangeReportGenerator";
@@ -77,7 +78,7 @@ abstract class PersonalStatisticsPageProcessor extends PageProcessorCredentialSu
         html += "</tr>";
         html += "<tr>";
         html += "<td id='operation' style='text-align:center;background-color:#F8F0E0'>";
-        html += "<input type='checkbox' id='includeExternal' checked>是否包含编外队员";
+        html += "<input type='checkbox' id='includeExternal'>是否包含编外队员";
         html += "</td>";
         html += "<tr>";
         html += "<td style='text-align:center;background-color:#F8F0E0'>";
@@ -205,6 +206,14 @@ abstract class PersonalStatisticsPageProcessor extends PageProcessorCredentialSu
         });
 
         this.doBindReturnButton(credential);
+
+        if (LocalSettingManager.isIncludeExternal()) {
+            $("#includeExternal").prop("checked", true);
+        }
+        $("#includeExternal").on("change", event => {
+            const checked = $(event.target).prop("checked") as boolean;
+            LocalSettingManager.setIncludeExternal(checked);
+        });
 
         doBindReport1();
         doBindReport2();

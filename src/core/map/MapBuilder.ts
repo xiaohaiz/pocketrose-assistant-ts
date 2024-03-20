@@ -1,5 +1,6 @@
 import Coordinate from "../../util/Coordinate";
 import TownInformation from "../dashboard/TownInformation";
+import TownInformationPage from "../dashboard/TownInformationPage";
 import TownLoader from "../town/TownLoader";
 
 class MapBuilder {
@@ -114,19 +115,21 @@ class MapBuilder {
     }
 
     static updateTownBackgroundColor() {
-        new TownInformation().open().then(page => {
-            for (const status of page.statusList!) {
-                const town = TownLoader.load(status.name!)!;
-                const x = town.coordinate!.x;
-                const y = town.coordinate!.y;
-                const buttonId = "location_" + x + "_" + y;
-                $("#" + buttonId)
-                    .css("background-color", status.color!)
-                    .css("color", "white")
-                    .parent()
-                    .attr("class", "color_" + status.color);
-            }
-        });
+        new TownInformation().open().then(page => MapBuilder.renderTownBackgroundColor(page));
+    }
+
+    static renderTownBackgroundColor(page: TownInformationPage) {
+        for (const status of page.statusList!) {
+            const town = TownLoader.load(status.name!)!;
+            const x = town.coordinate!.x;
+            const y = town.coordinate!.y;
+            const buttonId = "location_" + x + "_" + y;
+            $("#" + buttonId)
+                .css("background-color", status.color!)
+                .css("color", "white")
+                .parent()
+                .attr("class", "color_" + status.color);
+        }
     }
 }
 

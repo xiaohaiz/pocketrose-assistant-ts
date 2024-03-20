@@ -1,6 +1,8 @@
 import _ from "lodash";
 import Credential from "../../util/Credential";
 import NetworkUtils from "../../util/NetworkUtils";
+import BankRecordManager from "../bank/BankRecordManager";
+import BattlePage from "../battle/BattlePage";
 import BattleProcessor from "../battle/BattleProcessor";
 import BattleRecord from "../battle/BattleRecord";
 import BattleRecordStorage from "../battle/BattleRecordStorage";
@@ -8,7 +10,9 @@ import SetupLoader from "../config/SetupLoader";
 import EquipmentLocalStorage from "../equipment/EquipmentLocalStorage";
 import TownInn from "../inn/TownInn";
 import PetLocalStorage from "../monster/PetLocalStorage";
+import RolePetLoveManager from "../monster/RolePetLoveManager";
 import TownDashboardTaxManager from "../town/TownDashboardTaxManager";
+import BattleFieldManager from "./BattleFieldManager";
 import TownDashboardKeyboardManager from "./TownDashboardKeyboardManager";
 import TownDashboardLayout from "./TownDashboardLayout";
 import TownDashboardPage from "./TownDashboardPage";
@@ -300,13 +304,13 @@ class TownDashboardLayout006 extends TownDashboardLayout {
 
                         $("#battleReturn").on("click", () => {
                             $("#battleReturn").prop("disabled", true);
-                            doBeforeReturn(credential, currentBattleCount).then(() => {
+                            doBeforeReturn(credential, currentBattleCount, processor.obtainPage).then(() => {
                                 $("#refreshButton").trigger("click");
                             });
                         });
                         $("#battleDeposit").on("click", () => {
                             $("#battleDeposit").prop("disabled", true);
-                            doBeforeReturn(credential, currentBattleCount)
+                            doBeforeReturn(credential, currentBattleCount, processor.obtainPage)
                                 .then(() => {
                                     if (processor.obtainPage.zodiacBattle) {
                                         new TownInn(credential).recovery()
@@ -320,13 +324,13 @@ class TownDashboardLayout006 extends TownDashboardLayout {
                         });
                         $("#battleRepair").on("click", () => {
                             $("#battleRepair").prop("disabled", true);
-                            doBeforeReturn(credential, currentBattleCount).then(() => {
+                            doBeforeReturn(credential, currentBattleCount, processor.obtainPage).then(() => {
                                 $("#repair").trigger("click");
                             });
                         });
                         $("#battleLodge").on("click", () => {
                             $("#battleLodge").prop("disabled", true);
-                            doBeforeReturn(credential, currentBattleCount).then(() => {
+                            doBeforeReturn(credential, currentBattleCount, processor.obtainPage).then(() => {
                                 $("#lodge").trigger("click");
                             });
                         });
@@ -378,23 +382,21 @@ function generateLodgeForm(credential: Credential) {
     $("#hidden-4").html(form);
 }
 
-async function doBeforeReturn(credential: Credential, battleCount: number): Promise<void> {
+/**
+ * Duplicated coded, for more information, see BattleReturnInterceptor.
+ */
+async function doBeforeReturn(credential: Credential, battleCount: number, battlePage: BattlePage): Promise<void> {
+    await Promise.all([
+        new BankRecordManager(credential).triggerUpdateBankRecord(battleCount),
+        new PetLocalStorage(credential).triggerUpdatePetMap(battleCount),
+        new PetLocalStorage(credential).triggerUpdatePetStatus(battleCount),
+        new EquipmentLocalStorage(credential).triggerUpdateEquipmentStatus(battleCount),
+        new BattleFieldManager(credential).triggerBattleFieldChanged(battlePage),
+        new RolePetLoveManager(credential).triggerPetLoveFixed(battlePage),
+    ]);
     return await (() => {
         return new Promise<void>(resolve => {
-            const petLocalStorage = new PetLocalStorage(credential);
-            petLocalStorage
-                .triggerUpdatePetMap(battleCount)
-                .then(() => {
-                    petLocalStorage
-                        .triggerUpdatePetStatus(battleCount)
-                        .then(() => {
-                            new EquipmentLocalStorage(credential)
-                                .triggerUpdateEquipmentStatus(battleCount)
-                                .then(() => {
-                                    resolve();
-                                });
-                        });
-                });
+            resolve();
         });
     })();
 }

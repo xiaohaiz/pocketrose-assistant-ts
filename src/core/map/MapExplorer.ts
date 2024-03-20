@@ -15,8 +15,8 @@ class MapExplorer {
     async explore() {
         const action = (credential: Credential) => {
             return new Promise<string>((resolve) => {
-                MessageBoard.publishMessage("等待探险冷却中......(约55秒)");
-                TimeoutUtils.execute(55000, function () {
+                MessageBoard.publishMessage("等待探险冷却中......(约52秒)");
+                TimeoutUtils.execute(52000, function () {
                     const request = credential.asRequest();
                     // @ts-ignore
                     request["mode"] = "MAP_SEARCH";

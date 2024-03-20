@@ -1,5 +1,6 @@
 import _ from "lodash";
 import BankRecordReportGenerator from "../../core/bank/BankRecordReportGenerator";
+import LocalSettingManager from "../../core/config/LocalSettingManager";
 import EquipmentConstants from "../../core/equipment/EquipmentConstants";
 import EquipmentLocalStorage from "../../core/equipment/EquipmentLocalStorage";
 import TeamEquipmentReportGenerator from "../../core/equipment/TeamEquipmentReportGenerator";
@@ -65,7 +66,7 @@ abstract class PersonalTeamPageProcessor extends PageProcessorCredentialSupport 
         html += "<tbody>";
         html += "<tr>";
         html += "<td colspan='6' style='text-align:center'>";
-        html += "<input type='checkbox' id='includeExternal' checked>是否包含编外队员";
+        html += "<input type='checkbox' id='includeExternal'>是否包含编外队员";
         html += "</td>";
         html += "</tr>";
         html += "<tr>";
@@ -156,6 +157,14 @@ abstract class PersonalTeamPageProcessor extends PageProcessorCredentialSupport 
                 .parent()
                 .next()
                 .toggle();
+        });
+
+        if (LocalSettingManager.isIncludeExternal()) {
+            $("#includeExternal").prop("checked", true);
+        }
+        $("#includeExternal").on("change", event => {
+            const checked = $(event.target).prop("checked") as boolean;
+            LocalSettingManager.setIncludeExternal(checked);
         });
 
         this.#bindRefreshButton();

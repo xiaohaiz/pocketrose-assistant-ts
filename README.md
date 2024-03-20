@@ -1,5 +1,7 @@
 # pocketrose-assistant-ts
 
+### 版本 4.3.9-SNAPSHOT
+
 ### 版本 4.3.8
 
 1. 增加“十二宫宠物亲密”设置。

@@ -41,6 +41,7 @@ class TownInformation {
                         status.capital = false;
                     }
                     status.color = c0.find("font:first").attr("color");
+                    status.bgcolor = c0.attr("bgcolor");
                     status.country = c1.text();
                     s = c2.text();
                     status.tax = parseInt(StringUtils.substringBefore(s, " GOLD"));
@@ -52,6 +53,7 @@ class TownInformation {
 
         const page = new TownInformationPage();
         page.statusList = statusList;
+        page.initialize();
         return page;
     }
 }
