@@ -65,13 +65,6 @@ class TownPersonalChampionPageProcessor extends PageProcessorCredentialSupport {
             html += "</td>";
         }
         html += "</tr>";
-        html += "<tr>";
-        for (const winner of page.winners!) {
-            html += "<th style='background-color:#F8F0E0;width:64px;text-align:center'>";
-            html += winner.name;
-            html += "</th>";
-        }
-        html += "</tr>";
         html += "</tbody>";
         html += "</table>";
 
