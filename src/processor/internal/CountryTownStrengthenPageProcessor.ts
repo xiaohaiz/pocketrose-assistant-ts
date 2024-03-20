@@ -3,6 +3,7 @@ import NpcLoader from "../../core/role/NpcLoader";
 import PersonalStatus from "../../core/role/PersonalStatus";
 import TownLoader from "../../core/town/TownLoader";
 import Credential from "../../util/Credential";
+import KeyboardShortcutBuilder from "../../util/KeyboardShortcutBuilder";
 import MessageBoard from "../../util/MessageBoard";
 import NetworkUtils from "../../util/NetworkUtils";
 import PageUtils from "../../util/PageUtils";
@@ -138,7 +139,10 @@ class CountryTownStrengthenPageProcessor extends PageProcessorCredentialSupport 
 
         doBindPublishButton(credential);
 
-        PageUtils.onEscapePressed(() => $("#returnButton").trigger("click"));
+        KeyboardShortcutBuilder.newInstance()
+            .onEscapePressed(() => $("#returnButton").trigger("click"))
+            .withDefaultPredicate()
+            .bind();
     }
 
     #welcomeMessageHtml() {
