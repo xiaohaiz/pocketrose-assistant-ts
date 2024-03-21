@@ -30,7 +30,7 @@ class CastleInformationPageProcessor implements PageProcessor {
         html += "<td id='castle' style='background-color:#F8F0E0;width:100%;text-align:center;vertical-align:center'></td>";
         html += "</tr>";
         html += "<tr>";
-        html += "<td id='command' style='background-color:#F8F0E0;text-align:center' colspan='2'></td>";
+        html += "<td id='command' style='display:none;background-color:#F8F0E0;text-align:center' colspan='2'></td>";
         html += "</tr>";
         html += "<tr>";
         html += "<td id='castleList' style='background-color:#F8F0E0;text-align:center' colspan='2'></td>";
@@ -43,6 +43,8 @@ class CastleInformationPageProcessor implements PageProcessor {
         $("#map").html(MapBuilder.buildMapTable());
 
         await this.#renderMap(page);
+
+        this.#renderCastleList(page);
     }
 
     async #renderMap(page: CastleInformationPage) {
@@ -100,6 +102,59 @@ class CastleInformationPageProcessor implements PageProcessor {
         html += "</tbody>";
         html += "</table>";
         return html;
+    }
+
+    #renderCastleList(page: CastleInformationPage) {
+        let html = "";
+        html += "<table style='background-color:#888888;margin:auto;border-width:0;width:240px'>";
+        html += "<tbody style='background-color:#F8F0E0;white-space:nowrap'>";
+        html += "<tr style='background-color:skyblue;text-align:center'>";
+        html += "<th>城堡</th>"
+        html += "<th>主人</th>"
+        html += "<th>坐标</th>"
+        html += "<th>属性</th>"
+        html += "<th>开发</th>"
+        html += "<th>商业</th>"
+        html += "<th>工业</th>"
+        html += "<th>矿产</th>"
+        html += "<th>防御</th>"
+        html += "</tr>";
+        const castles = page.castleList!;
+        for (let i = 0; i < castles.length; i++) {
+            const castle = castles[i];
+            html += "<tr>";
+            html += "<td>";
+            html += castle.name;
+            html += "</td>";
+            html += "<td>";
+            html += castle.owner;
+            html += "</td>";
+            html += "<td>";
+            html += castle.coordinate!.asText();
+            html += "</td>";
+            html += "<td>";
+            html += castle.attribute;
+            html += "</td>";
+            html += "<td>";
+            html += castle.development;
+            html += "</td>";
+            html += "<td>";
+            html += castle.commerce;
+            html += "</td>";
+            html += "<td>";
+            html += castle.industry;
+            html += "</td>";
+            html += "<td>";
+            html += castle.mineral;
+            html += "</td>";
+            html += "<td>";
+            html += castle.defense;
+            html += "</td>";
+            html += "</tr>";
+        }
+        html += "</tbody>";
+        html += "</table>";
+        $("#castleList").html(html);
     }
 }
 
