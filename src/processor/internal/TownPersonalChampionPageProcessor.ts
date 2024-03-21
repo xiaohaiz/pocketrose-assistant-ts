@@ -89,6 +89,12 @@ class TownPersonalChampionPageProcessor extends PageProcessorCredentialSupport {
         let html = "";
         html += "<table style='border-width:0;margin:auto'>";
         html += "<tbody>";
+        html += "<tr>";
+        html += "<th colspan='" + (maxSize + 1) + "' " +
+            "style='background-color:#E0D0B0;color:red;font-size:120%'>";
+        html += "-- 报 名 者 一 览 --";
+        html += "</th>";
+        html += "</tr>";
         for (const c of countries) {
             const list = townInformationPage.getTownList(c);
             html += "<tr>";
@@ -132,7 +138,7 @@ class TownPersonalChampionPageProcessor extends PageProcessorCredentialSupport {
         html += "</tr>";
         html += "<tr>";
         for (const winner of page.winners!) {
-            html += "<td style='background-color:#F8F0E0;width:64px'>";
+            html += "<td style='background-color:#F8F0E0;width:65px'>";
             html += winner.imageHtml;
             html += "</td>";
         }
@@ -160,16 +166,18 @@ class TownPersonalChampionPageProcessor extends PageProcessorCredentialSupport {
         html += "<table style='border-width:0;background-color:#F8F0E0;text-align:center'>";
         html += "<tbody>";
         html += "<tr>";
-        html += "<th style='width:80px;background-color:skyblue;white-space:nowrap'>";
         if (status) {
+            html += "<th style='width:80px;background-color:skyblue;white-space:nowrap'>";
             html += status.name;
+            html += "</th>";
         } else {
+            html += "<th style='width:80px;background-color:#F8F0E0;white-space:nowrap'>";
             html += "&nbsp;";
+            html += "</th>";
         }
-        html += "</th>";
         html += "</tr>";
         html += "<tr>";
-        html += "<td style='width:80px;height:64px'>";
+        html += "<td style='width:80px;height:65px'>";
         if (role) {
             html += role.imageHtml;
         }
