@@ -1,6 +1,7 @@
 import BattlePageInterceptor from "./internal/BattlePageInterceptor";
 import CastleBankPageInterceptor from "./internal/CastleBankPageInterceptor";
 import CastleDashboardPageInterceptor from "./internal/CastleDashboardPageInterceptor";
+import CastleInformationPageInterceptor from "./internal/CastleInformationPageInterceptor";
 import CastlePostHousePageInterceptor from "./internal/CastlePostHousePageInterceptor";
 import ConversationPageInterceptor from "./internal/ConversationPageInterceptor";
 import CountryChangePageInterceptor from "./internal/CountryChangePageInterceptor";
@@ -49,6 +50,7 @@ class PageInterceptorManager {
             new BattlePageInterceptor(),
             new CastleBankPageInterceptor(),
             new CastleDashboardPageInterceptor(),
+            new CastleInformationPageInterceptor(),
             new CastlePostHousePageInterceptor(),
             new ConversationPageInterceptor(),
             new CountryChangePageInterceptor(),
