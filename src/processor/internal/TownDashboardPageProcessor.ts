@@ -1,4 +1,5 @@
 import BattleButtonManager from "../../core/battle/BattleButtonManager";
+import LocalSettingManager from "../../core/config/LocalSettingManager";
 import SetupLoader from "../../core/config/SetupLoader";
 import ExtensionShortcutLoader from "../../core/dashboard/ExtensionShortcutLoader";
 import TownDashboardLayoutManager from "../../core/dashboard/TownDashboardLayoutManager";
@@ -510,6 +511,19 @@ function doRenderEventBoard(page: TownDashboardPage) {
 }
 
 function doRenderRoleStatus(credential: Credential, page: TownDashboardPage) {
+    // ------------------------------------------
+    // 练装备相关的展示
+    // ------------------------------------------
+    if (LocalSettingManager.isWeaponExperienceMax(credential.id)) {
+        $("#personalCell").css("background-color", "#FFC0C0");
+    }
+    if (LocalSettingManager.isArmorExperienceMax(credential.id)) {
+        $("#countryNormalCell").css("background-color", "lightgreen");
+    }
+    if (LocalSettingManager.isAccessoryExperienceMax(credential.id)) {
+        $("#countryAdvancedCell").css("background-color", "lightblue");
+    }
+
     // 如果满级并且没有关闭转职入口，则战斗标签红底显示
     if (page.careerTransferNotification) {
         $("#battleCell").css("background-color", "red");
