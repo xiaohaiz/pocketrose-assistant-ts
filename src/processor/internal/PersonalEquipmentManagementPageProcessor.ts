@@ -127,8 +127,8 @@ abstract class PersonalEquipmentManagementPageProcessor extends PageProcessorCre
         // 设置栏目
         // ------------------------------------------------------------------------
         html = "";
-        html += "<tr id='tr4_0'>";
-        html += "<td style='background-color:#F8F0E0;text-align:center;display:none'>";
+        html += "<tr id='tr4_0' style='display:none'>";
+        html += "<td style='background-color:#F8F0E0;text-align:center'>";
         html += "</td>";
         html += "</tr>"
         $("#tr4").after($(html));
@@ -179,6 +179,8 @@ abstract class PersonalEquipmentManagementPageProcessor extends PageProcessorCre
         html += "</tr>"
         $("#tr8").after($(html));
 
+        this.doGenerateSetupButtons(credential);
+
         this.doBindImmutableButtons(credential, context);
 
         this.doBeforeRenderMutablePage(credential, context);
@@ -191,6 +193,9 @@ abstract class PersonalEquipmentManagementPageProcessor extends PageProcessorCre
         html += "<input type='button' id='refreshButton' value='刷新装备管理(r)'>";
         html += "<input type='button' id='returnButton' value='退出装备管理(Esc)'>";
         return html;
+    }
+
+    doGenerateSetupButtons(credential: Credential) {
     }
 
     doBindImmutableButtons(credential: Credential, context?: PageProcessorContext) {
