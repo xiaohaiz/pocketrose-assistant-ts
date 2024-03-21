@@ -124,6 +124,16 @@ abstract class PersonalEquipmentManagementPageProcessor extends PageProcessorCre
         $("#tr3").after($(html));
 
         // ------------------------------------------------------------------------
+        // 设置栏目
+        // ------------------------------------------------------------------------
+        html = "";
+        html += "<tr id='tr4_0'>";
+        html += "<td style='background-color:#F8F0E0;text-align:center;display:none'>";
+        html += "</td>";
+        html += "</tr>"
+        $("#tr4").after($(html));
+
+        // ------------------------------------------------------------------------
         // 用于保存百宝袋和仓库的状态
         // ------------------------------------------------------------------------
         html = "";
@@ -134,7 +144,7 @@ abstract class PersonalEquipmentManagementPageProcessor extends PageProcessorCre
         html += "<div id='warehouseState'>off</div>";       // 仅限城堡
         html += "</td>"
         html += "</tr>"
-        $("#tr4").after($(html));
+        $("#tr4_0").after($(html));
 
         // ------------------------------------------------------------------------
         // 装备栏目
