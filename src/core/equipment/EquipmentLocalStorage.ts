@@ -5,6 +5,7 @@ import Castle from "../castle/Castle";
 import CastleInformation from "../dashboard/CastleInformation";
 import CastleWarehouse from "./CastleWarehouse";
 import Equipment from "./Equipment";
+import EquipmentExperienceManager from "./EquipmentExperienceManager";
 import PersonalEquipmentManagement from "./PersonalEquipmentManagement";
 import PersonalEquipmentManagementPage from "./PersonalEquipmentManagementPage";
 import RoleEquipmentStatusStorage from "./RoleEquipmentStatusStorage";
@@ -92,6 +93,9 @@ async function findAllEquipments(credential: Credential): Promise<Equipment[]> {
             const allEquipments: Equipment[] = [];
 
             new PersonalEquipmentManagement(credential).open().then(equipmentPage => {
+
+                new EquipmentExperienceManager(credential).triggerEquipmentExperienceWithPage(equipmentPage);
+
                 const roleName = equipmentPage.role!.name!;
                 new CastleInformation().load(roleName)
                     .then(castle => {

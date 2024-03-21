@@ -29,6 +29,20 @@ class EquipmentExperienceManager {
         this.#processAccessory(config, page);
     }
 
+    triggerEquipmentExperienceWithPage(page: PersonalEquipmentManagementPage) {
+        const config = SetupLoader.loadEquipmentExperienceConfig(this.#credential.id);
+        if (!config.configured) {
+            // 用户压根就没有配置，忽略吧，关闭显示的开关。
+            LocalSettingManager.setWeaponExperienceMax(this.#credential.id, false);
+            LocalSettingManager.setArmorExperienceMax(this.#credential.id, false);
+            LocalSettingManager.setAccessoryExperienceMax(this.#credential.id, false);
+            return;
+        }
+        this.#processWeapon(config, page);
+        this.#processArmor(config, page);
+        this.#processAccessory(config, page);
+    }
+
     #processWeapon(config: EquipmentExperienceConfig, page: PersonalEquipmentManagementPage) {
         if (!config.weapon!) {
             LocalSettingManager.setWeaponExperienceMax(this.#credential.id, false);
