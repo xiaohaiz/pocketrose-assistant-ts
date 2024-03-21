@@ -1,5 +1,7 @@
 # pocketrose-assistant-ts
 
+### 版本 4.4.2-SNAPSHOT
+
 ### 版本 4.4.1
 
 1. 个人天真新体验版。

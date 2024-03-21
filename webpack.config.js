@@ -3,7 +3,7 @@ const path = require('path');
 const webpack = require('webpack');
 
 const now = new Date();
-const buildVersion = '4.4.1'
+const buildVersion = '4.4.2-SNAPSHOT'
 const buildDate = `${now.toLocaleString()}`;
 
 // noinspection JSUnresolvedReference
@@ -13,7 +13,7 @@ module.exports = {
         filename: 'pocketrose.js',
         path: path.resolve(__dirname, 'dist'),
     },
-    mode: "production",
+    mode: "none",
     module: {
         rules: [
             {

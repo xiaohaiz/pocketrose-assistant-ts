@@ -9,6 +9,7 @@ import BattleRecordStorage from "../battle/BattleRecordStorage";
 import BattleReturnInterceptor from "../battle/BattleReturnInterceptor";
 import BattleScene from "../battle/BattleScene";
 import BattleSceneStorage from "../battle/BattleSceneStorage";
+import LocalSettingManager from "../config/LocalSettingManager";
 import SetupLoader from "../config/SetupLoader";
 import TownForge from "../forge/TownForge";
 import TownInn from "../inn/TownInn";
@@ -451,6 +452,19 @@ function doProcessBattleReturn(credential: Credential,
     _renderPalaceTask(credential);
     _renderEventBoard(page);
     _renderConversation(page);
+
+    // ------------------------------------------
+    // 练装备相关的展示
+    // ------------------------------------------
+    if (LocalSettingManager.isWeaponExperienceMax(credential.id)) {
+        $("#personalCell").css("background-color", "#FFC0C0");
+    }
+    if (LocalSettingManager.isArmorExperienceMax(credential.id)) {
+        $("#countryNormalCell").css("background-color", "lightgreen");
+    }
+    if (LocalSettingManager.isAccessoryExperienceMax(credential.id)) {
+        $("#countryAdvancedCell").css("background-color", "lightblue");
+    }
 
     if (page.careerTransferNotification) {
         $("#battleCell").css("background-color", "red");

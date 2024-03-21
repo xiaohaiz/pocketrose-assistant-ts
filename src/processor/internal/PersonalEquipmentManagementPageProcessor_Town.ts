@@ -8,6 +8,8 @@ import CastleEquipmentExpressHouse from "../../core/equipment/CastleEquipmentExp
 import CastleWarehouse from "../../core/equipment/CastleWarehouse";
 import Equipment from "../../core/equipment/Equipment";
 import EquipmentConsecrateManager from "../../core/equipment/EquipmentConsecrateManager";
+import EquipmentExperienceConfig from "../../core/equipment/EquipmentExperienceConfig";
+import EquipmentExperienceManager from "../../core/equipment/EquipmentExperienceManager";
 import EquipmentLocalStorage from "../../core/equipment/EquipmentLocalStorage";
 import EquipmentSet from "../../core/equipment/EquipmentSet";
 import EquipmentSetLoader from "../../core/equipment/EquipmentSetLoader";
@@ -25,6 +27,7 @@ import Credential from "../../util/Credential";
 import KeyboardShortcutBuilder from "../../util/KeyboardShortcutBuilder";
 import MessageBoard from "../../util/MessageBoard";
 import PageUtils from "../../util/PageUtils";
+import StorageUtils from "../../util/StorageUtils";
 import StringUtils from "../../util/StringUtils";
 import PageProcessorContext from "../PageProcessorContext";
 import PersonalEquipmentManagementPageProcessor from "./PersonalEquipmentManagementPageProcessor";
@@ -39,6 +42,39 @@ class PersonalEquipmentManagementPageProcessor_Town extends PersonalEquipmentMan
             .onKeyPressed("f", () => $("#gemHouseButton").trigger("click"))
             .withDefaultPredicate()
             .bind();
+    }
+
+    doGenerateSetupButtons(credential: Credential) {
+        let html = "";
+        html += "<input type='button' class='_em_button' id='_em_a' value='正在练武器' style='color:grey'>";
+        html += "<input type='button' class='_em_button' id='_em_b' value='正在练防具' style='color:grey'>";
+        html += "<input type='button' class='_em_button' id='_em_c' value='正在练饰品' style='color:grey'>";
+        $("#tr4_0").find("> td:first").html(html);
+
+        const config = SetupLoader.loadEquipmentExperienceConfig(credential.id);
+        if (config.weapon!) $("#_em_a").css("color", "blue");
+        if (config.armor!) $("#_em_b").css("color", "blue");
+        if (config.accessory!) $("#_em_c").css("color", "blue");
+
+        $("._em_button").on("click", event => {
+            const buttonId = $(event.target).attr("id") as string;
+            let config: EquipmentExperienceConfig | undefined = undefined;
+            if (PageUtils.isColorGrey(buttonId)) {
+                // Enable current setting
+                config = this.#enable(credential.id, buttonId);
+                $(event.target).css("color", "blue");
+            } else if (PageUtils.isColorBlue(buttonId)) {
+                // Disable current setting
+                config = this.#disable(credential.id, buttonId);
+                $(event.target).css("color", "grey");
+            }
+            if (config) {
+                const document = config.asDocument();
+                StorageUtils.set("_pa_065_" + credential.id, JSON.stringify(document));
+            }
+        });
+
+        $("#tr4_0").show();
     }
 
     doGenerateImmutableButtons(): string {
@@ -116,7 +152,13 @@ class PersonalEquipmentManagementPageProcessor_Town extends PersonalEquipmentMan
         $("#returnButton").on("click", () => {
             new BattleFieldManager(credential)
                 .autoSetBattleField()
-                .then(() => $("#returnTown").trigger("click"));
+                .then(() => {
+                    new EquipmentExperienceManager(credential)
+                        .triggerEquipmentExperience()
+                        .then(() => {
+                            PageUtils.triggerClick("returnTown");
+                        });
+                });
         });
     }
 
@@ -1050,6 +1092,34 @@ class PersonalEquipmentManagementPageProcessor_Town extends PersonalEquipmentMan
                 $("#warehouseList").html("").parent().hide();
             });
         });
+    }
+
+    #enable(id: string, buttonId: string): EquipmentExperienceConfig | undefined {
+        const config = SetupLoader.loadEquipmentExperienceConfig(id!);
+        if (_.endsWith(buttonId, "_a")) {
+            config.weapon = true;
+        } else if (_.endsWith(buttonId, "_b")) {
+            config.armor = true;
+        } else if (_.endsWith(buttonId, "_c")) {
+            config.accessory = true;
+        } else {
+            return undefined;
+        }
+        return config;
+    }
+
+    #disable(id: string, buttonId: string): EquipmentExperienceConfig | undefined {
+        const config = SetupLoader.loadEquipmentExperienceConfig(id!);
+        if (_.endsWith(buttonId, "_a")) {
+            config.weapon = false;
+        } else if (_.endsWith(buttonId, "_b")) {
+            config.armor = false;
+        } else if (_.endsWith(buttonId, "_c")) {
+            config.accessory = false;
+        } else {
+            return undefined;
+        }
+        return config;
     }
 }
 

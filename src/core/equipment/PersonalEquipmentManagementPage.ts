@@ -10,6 +10,33 @@ class PersonalEquipmentManagementPage {
         return 20 - this.equipmentList!.length;
     }
 
+    get usingWeapon(): Equipment | null {
+        for (const equipment of this.equipmentList!) {
+            if (equipment.using && equipment.isWeapon) {
+                return equipment;
+            }
+        }
+        return null;
+    }
+
+    get usingArmor(): Equipment | null {
+        for (const equipment of this.equipmentList!) {
+            if (equipment.using && equipment.isArmor) {
+                return equipment;
+            }
+        }
+        return null;
+    }
+
+    get usingAccessory(): Equipment | null {
+        for (const equipment of this.equipmentList!) {
+            if (equipment.using && equipment.isAccessory) {
+                return equipment;
+            }
+        }
+        return null;
+    }
+
     findEquipment(index: number) {
         for (const equipment of this.equipmentList!) {
             if (equipment.index === index) {
