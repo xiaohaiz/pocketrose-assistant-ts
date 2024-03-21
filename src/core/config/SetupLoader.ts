@@ -1,4 +1,6 @@
+import _ from "lodash";
 import StorageUtils from "../../util/StorageUtils";
+import BattleFieldThreshold from "../battle/BattleFieldThreshold";
 
 class SetupLoader {
 
@@ -216,6 +218,22 @@ class SetupLoader {
 
     static isZodiacBattlePetLoveAutoFixEnabled(): boolean {
         return StorageUtils.getBoolean("_pa_063");
+    }
+
+    static loadBattleFieldThreshold(): BattleFieldThreshold {
+        const s = StorageUtils.getString("_pa_064");
+        if (s === "") {
+            return BattleFieldThreshold.defaultInstance();
+        }
+        const value = JSON.parse(s);
+        if (!value.a || !value.b || !value.c) {
+            return BattleFieldThreshold.defaultInstance();
+        }
+        const config = new BattleFieldThreshold();
+        config.a = _.parseInt(value.a);
+        config.b = _.parseInt(value.b);
+        config.c = _.parseInt(value.c);
+        return config;
     }
 }
 
