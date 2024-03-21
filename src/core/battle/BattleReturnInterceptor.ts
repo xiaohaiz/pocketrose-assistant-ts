@@ -1,9 +1,9 @@
 import Credential from "../../util/Credential";
 import BankRecordManager from "../bank/BankRecordManager";
-import BattleFieldManager from "../dashboard/BattleFieldManager";
 import EquipmentLocalStorage from "../equipment/EquipmentLocalStorage";
 import PetLocalStorage from "../monster/PetLocalStorage";
 import RolePetLoveManager from "../monster/RolePetLoveManager";
+import BattleFieldManager from "./BattleFieldManager";
 import BattlePage from "./BattlePage";
 
 class BattleReturnInterceptor {

@@ -1,6 +1,6 @@
 import Credential from "../../util/Credential";
 import KeyboardShortcutBuilder from "../../util/KeyboardShortcutBuilder";
-import BattleFieldManager from "./BattleFieldManager";
+import BattleFieldManager from "../battle/BattleFieldManager";
 import TownDashboardPage from "./TownDashboardPage";
 
 class TownDashboardKeyboardManager {

@@ -1,11 +1,11 @@
 import Credential from "../../util/Credential";
-import BattleFieldConfigLoader from "../battle/BattleFieldConfigLoader";
-import BattleFieldConfigWriter from "../battle/BattleFieldConfigWriter";
-import BattlePage from "../battle/BattlePage";
 import SetupLoader from "../config/SetupLoader";
 import PersonalPetManagement from "../monster/PersonalPetManagement";
 import PersonalStatus from "../role/PersonalStatus";
 import Role from "../role/Role";
+import BattleFieldConfigLoader from "./BattleFieldConfigLoader";
+import BattleFieldConfigWriter from "./BattleFieldConfigWriter";
+import BattlePage from "./BattlePage";
 
 class BattleFieldManager {
 
