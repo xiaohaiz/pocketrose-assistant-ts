@@ -8,6 +8,7 @@ import CastleEquipmentExpressHouse from "../../core/equipment/CastleEquipmentExp
 import CastleWarehouse from "../../core/equipment/CastleWarehouse";
 import Equipment from "../../core/equipment/Equipment";
 import EquipmentConsecrateManager from "../../core/equipment/EquipmentConsecrateManager";
+import EquipmentExperienceManager from "../../core/equipment/EquipmentExperienceManager";
 import EquipmentLocalStorage from "../../core/equipment/EquipmentLocalStorage";
 import EquipmentSet from "../../core/equipment/EquipmentSet";
 import EquipmentSetLoader from "../../core/equipment/EquipmentSetLoader";
@@ -116,7 +117,13 @@ class PersonalEquipmentManagementPageProcessor_Town extends PersonalEquipmentMan
         $("#returnButton").on("click", () => {
             new BattleFieldManager(credential)
                 .autoSetBattleField()
-                .then(() => $("#returnTown").trigger("click"));
+                .then(() => {
+                    new EquipmentExperienceManager(credential)
+                        .triggerEquipmentExperience()
+                        .then(() => {
+                            PageUtils.triggerClick("returnTown");
+                        });
+                });
         });
     }
 
