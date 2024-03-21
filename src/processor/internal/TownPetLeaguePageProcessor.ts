@@ -8,7 +8,7 @@ class TownPetLeaguePageProcessor extends PageProcessorCredentialSupport {
 
     async doProcess(credential: Credential, context?: PageProcessorContext): Promise<void> {
         await this.#processPage(credential, context);
-        new KeyboardShortcutBuilder()
+        KeyboardShortcutBuilder.newInstance()
             .onEscapePressed(() => $("#returnButton").trigger("click"))
             .withDefaultPredicate()
             .bind();

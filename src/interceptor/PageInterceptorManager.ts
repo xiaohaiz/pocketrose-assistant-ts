@@ -1,6 +1,7 @@
 import BattlePageInterceptor from "./internal/BattlePageInterceptor";
 import CastleBankPageInterceptor from "./internal/CastleBankPageInterceptor";
 import CastleDashboardPageInterceptor from "./internal/CastleDashboardPageInterceptor";
+import CastleInformationPageInterceptor from "./internal/CastleInformationPageInterceptor";
 import CastlePostHousePageInterceptor from "./internal/CastlePostHousePageInterceptor";
 import ConversationPageInterceptor from "./internal/ConversationPageInterceptor";
 import CountryChangePageInterceptor from "./internal/CountryChangePageInterceptor";
@@ -32,7 +33,7 @@ import TownGemHousePageInterceptor from "./internal/TownGemHousePageInterceptor"
 import TownInformationPageInterceptor from "./internal/TownInformationPageInterceptor";
 import TownInnPageInterceptor from "./internal/TownInnPageInterceptor";
 import TownItemHousePageInterceptor from "./internal/TownItemHousePageInterceptor";
-import TownPersonalJoustPageInterceptor from "./internal/TownPersonalJoustPageInterceptor";
+import TownPersonalChampionPageInterceptor from "./internal/TownPersonalChampionPageInterceptor";
 import TownPetLeaguePageInterceptor from "./internal/TownPetLeaguePageInterceptor";
 import TownPetMapHousePageInterceptor from "./internal/TownPetMapHousePageInterceptor";
 import TownPetRankHousePageInterceptor from "./internal/TownPetRankHousePageInterceptor";
@@ -49,6 +50,7 @@ class PageInterceptorManager {
             new BattlePageInterceptor(),
             new CastleBankPageInterceptor(),
             new CastleDashboardPageInterceptor(),
+            new CastleInformationPageInterceptor(),
             new CastlePostHousePageInterceptor(),
             new ConversationPageInterceptor(),
             new CountryChangePageInterceptor(),
@@ -79,7 +81,7 @@ class PageInterceptorManager {
             new TownGemHousePageInterceptor(),
             new TownInformationPageInterceptor(),
             new TownItemHousePageInterceptor(),
-            new TownPersonalJoustPageInterceptor(),
+            new TownPersonalChampionPageInterceptor(),
             new TownPetLeaguePageInterceptor(),
             new TownPetMapHousePageInterceptor(),
             new TownPetRankHousePageInterceptor(),

@@ -18,7 +18,7 @@ abstract class PersonalPetManagementPageProcessor extends PageProcessorCredentia
     }
 
     doBindKeyboardShortcut(credential: Credential) {
-        new KeyboardShortcutBuilder()
+        KeyboardShortcutBuilder.newInstance()
             .onEscapePressed(() => $("#returnButton").trigger("click"))
             .withDefaultPredicate()
             .bind();

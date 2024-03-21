@@ -110,7 +110,7 @@ class TownTaskHousePageProcessor extends PageProcessorCredentialSupport {
 
         renderTask(credential, roleTask);
 
-        new KeyboardShortcutBuilder()
+        KeyboardShortcutBuilder.newInstance()
             .onKeyPressed("r", () => $("#refreshButton").trigger("click"))
             .onEscapePressed(() => $("#returnButton").trigger("click"))
             .withDefaultPredicate()

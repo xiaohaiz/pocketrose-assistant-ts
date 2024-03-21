@@ -1,3 +1,4 @@
+import _ from "lodash";
 import Coordinate from "../../util/Coordinate";
 import NetworkUtils from "../../util/NetworkUtils";
 import StringUtils from "../../util/StringUtils";
@@ -44,10 +45,17 @@ class CastleInformation {
                 let x = StringUtils.substringBefore(location, ",");
                 let y = StringUtils.substringAfter(location, ",");
                 const coordinate = new Coordinate(parseInt(x), parseInt(y));
+
                 const castle = new Castle();
                 castle.name = name;
                 castle.owner = owner;
                 castle.coordinate = coordinate;
+                castle.attribute = $(td).next().next().text();
+                castle.development = CastleInformation.#parseCastleNumber($(td).next().next().next().text());
+                castle.commerce = CastleInformation.#parseCastleNumber($(td).next().next().next().next().text());
+                castle.industry = CastleInformation.#parseCastleNumber($(td).next().next().next().next().next().text());
+                castle.mineral = CastleInformation.#parseCastleNumber($(td).next().next().next().next().next().next().text());
+                castle.defense = CastleInformation.#parseCastleNumber($(td).next().next().next().next().next().next().next().text());
                 castleList.push(castle);
             }
         });
@@ -56,6 +64,13 @@ class CastleInformation {
         return page;
     }
 
+    static #parseCastleNumber(s: string) {
+        if (_.startsWith(s, "/")) {
+            return 0;
+        }
+        const n = StringUtils.substringBefore(s, "/");
+        return _.parseInt(n);
+    }
 }
 
 export = CastleInformation;

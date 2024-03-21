@@ -31,7 +31,7 @@ class TownInformationPageProcessor implements PageProcessor {
         html += "</th>";
         html += "</tr>";
         html += "<tr>";
-        html += "<td id='map' style='background-color:#F8F0E0'></td>";
+        html += "<td id='map' style='background-color:#F8F0E0;vertical-align:top'></td>";
         html += "<td id='town' style='background-color:#F8F0E0;width:100%;text-align:center;vertical-align:center'></td>";
         html += "</tr>";
         html += "<tr>";

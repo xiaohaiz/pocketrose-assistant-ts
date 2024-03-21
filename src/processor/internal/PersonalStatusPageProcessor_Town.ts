@@ -17,7 +17,7 @@ class PersonalStatusPageProcessor_Town extends PersonalStatusPageProcessor {
 
 
     doBindKeyboardShortcut() {
-        new KeyboardShortcutBuilder()
+        KeyboardShortcutBuilder.newInstance()
             .onKeyPressed("e", () => $("#openEquipmentManagement").trigger("click"))
             .onKeyPressed("u", () => $("#openPetManagement").trigger("click"))
             .onEscapePressed(() => $("#returnButton").trigger("click"))

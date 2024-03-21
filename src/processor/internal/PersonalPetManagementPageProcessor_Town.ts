@@ -35,7 +35,7 @@ class PersonalPetManagementPageProcessor_Town extends PersonalPetManagementPageP
 
 
     doBindKeyboardShortcut(credential: Credential) {
-        new KeyboardShortcutBuilder()
+        KeyboardShortcutBuilder.newInstance()
             .onKeyPressed("r", () => {
                 const storage = new PetLocalStorage(credential);
                 storage.updatePetStatus()

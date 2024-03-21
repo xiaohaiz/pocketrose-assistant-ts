@@ -1,6 +1,7 @@
 import SetupLoader from "../../core/config/SetupLoader";
 import EventHandler from "../../core/event/EventHandler";
 import RankTitleLoader from "../../core/role/RankTitleLoader";
+import KeyboardShortcutBuilder from "../../util/KeyboardShortcutBuilder";
 import PageUtils from "../../util/PageUtils";
 import StringUtils from "../../util/StringUtils";
 import PageProcessor from "../PageProcessor";
@@ -16,6 +17,38 @@ class CastleDashboardPageProcessor implements PageProcessor {
         this.#renderRankTitle();
         this.#renderExperience();
         this.#renderEventBoard();
+
+        KeyboardShortcutBuilder.newInstance()
+            .onKeyPressed("b", () => {
+                $("option[value='CASTLE_BANK']").prop("selected", true);
+                PageUtils.triggerClick("castleButton");
+            })
+            .onKeyPressed("e", () => {
+                $("option[value='USE_ITEM']").prop("selected", true);
+                PageUtils.triggerClick("personalButton");
+            })
+            .onKeyPressed("j", () => {
+                $("option[value='DIANMING']").prop("selected", true);
+                PageUtils.triggerClick("personalButton");
+            })
+            .onKeyPressed("u", () => {
+                $("option[value='PETSTATUS']").prop("selected", true);
+                PageUtils.triggerClick("personalButton");
+            })
+            .onKeyPressed("x", () => {
+                $("option[value='LETTER']").prop("selected", true);
+                PageUtils.triggerClick("personalButton");
+            })
+            .onKeyPressed("z", () => {
+                $("option[value='CHANGE_OCCUPATION']").prop("selected", true);
+                PageUtils.triggerClick("personalButton");
+            })
+            .onEscapePressed(() => {
+                $("option[value='CASTLE_BUILDMACHINE']").prop("selected", true);
+                PageUtils.triggerClick("castleButton");
+            })
+            .withDefaultPredicate()
+            .bind();
     }
 
     #renderMenu() {
@@ -42,6 +75,17 @@ class CastleDashboardPageProcessor implements PageProcessor {
         $("option[value='MAGIC']").remove();
 
         $("option[value='DIANMING']").text("统计报告");
+
+        $("option[value='CASTLE_BUILDMACHINE']")
+            .closest("td")
+            .next()
+            .find("> input:submit")
+            .attr("id", "castleButton");
+        $("option[value='USE_ITEM']")
+            .closest("td")
+            .next()
+            .find("> input:submit")
+            .attr("id", "personalButton");
     }
 
     #renderRankTitle() {

@@ -6,6 +6,7 @@ import NpcLoader from "../../core/role/NpcLoader";
 import Town from "../../core/town/Town";
 import TownLoader from "../../core/town/TownLoader";
 import Credential from "../../util/Credential";
+import KeyboardShortcutBuilder from "../../util/KeyboardShortcutBuilder";
 import MessageBoard from "../../util/MessageBoard";
 import PageUtils from "../../util/PageUtils";
 import PageProcessorContext from "../PageProcessorContext";
@@ -18,7 +19,10 @@ class TownForgePageProcessor extends PageProcessorCredentialSupport {
         const town = TownLoader.load(context?.get("townId"));
         await renderPage(credential, page, town!);
         await renderEquipmentList(credential, page, town!);
-        PageUtils.onEscapePressed(() => $("#returnButton").trigger("click"));
+        KeyboardShortcutBuilder.newInstance()
+            .onEscapePressed(() => $("#returnButton").trigger("click"))
+            .withDefaultPredicate()
+            .bind();
     }
 
 }

@@ -1,6 +1,6 @@
 import Credential from "../../util/Credential";
 import KeyboardShortcutBuilder from "../../util/KeyboardShortcutBuilder";
-import BattleFieldManager from "./BattleFieldManager";
+import BattleFieldManager from "../battle/BattleFieldManager";
 import TownDashboardPage from "./TownDashboardPage";
 
 class TownDashboardKeyboardManager {
@@ -18,7 +18,7 @@ class TownDashboardKeyboardManager {
     }
 
     bind() {
-        new KeyboardShortcutBuilder()
+        KeyboardShortcutBuilder.newInstance()
             .onKeyPressed("a", () => this.#processKeyPressed_a())
             .onKeyPressed("b", () => this.#processKeyPressed_b())
             .onKeyPressed("e", () => this.#processKeyPressed_e())

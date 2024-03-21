@@ -1,11 +1,12 @@
 import Credential from "../../util/Credential";
-import BattleFieldConfigLoader from "../battle/BattleFieldConfigLoader";
-import BattleFieldConfigWriter from "../battle/BattleFieldConfigWriter";
-import BattlePage from "../battle/BattlePage";
 import SetupLoader from "../config/SetupLoader";
 import PersonalPetManagement from "../monster/PersonalPetManagement";
 import PersonalStatus from "../role/PersonalStatus";
 import Role from "../role/Role";
+import BattleFieldConfigLoader from "./BattleFieldConfigLoader";
+import BattleFieldConfigWriter from "./BattleFieldConfigWriter";
+import BattleFieldThreshold from "./BattleFieldThreshold";
+import BattlePage from "./BattlePage";
 
 class BattleFieldManager {
 
@@ -36,17 +37,19 @@ class BattleFieldManager {
             return "十二宫";
         }
 
-        if (this.#c4(role)) {
+        const config = SetupLoader.loadBattleFieldThreshold();
+
+        if (this.#c4(role, config)) {
             await writer.writeCustomizedConfig(false, false, true, false);
             return "上洞";
         }
 
-        if (this.#c5(role)) {
+        if (this.#c5(role, config)) {
             await writer.writeCustomizedConfig(true, false, false, false);
             return "初森";
         }
 
-        if (this.#c6(role)) {
+        if (this.#c6(role, config)) {
             await writer.writeCustomizedConfig(false, true, false, false);
             return "中塔";
         }
@@ -89,21 +92,21 @@ class BattleFieldManager {
     }
 
     // 额外RP小于100时，战斗场所切换到上洞
-    #c4(role: Role): boolean {
+    #c4(role: Role, config: BattleFieldThreshold): boolean {
         const value = role.additionalRP;
-        return value !== undefined && value < 100;
+        return value !== undefined && value < config.a!;
     }
 
     // 额外RP小于300时，战斗场所切换到初森
-    #c5(role: Role): boolean {
+    #c5(role: Role, config: BattleFieldThreshold): boolean {
         const value = role.additionalRP;
-        return value !== undefined && value < 300;
+        return value !== undefined && value < config.b!;
     }
 
     // 额外RP小于500时，战斗场所切换到中塔
-    #c6(role: Role): boolean {
+    #c6(role: Role, config: BattleFieldThreshold): boolean {
         const value = role.additionalRP;
-        return value !== undefined && value < 500;
+        return value !== undefined && value < config.c!;
     }
 
 
@@ -136,12 +139,13 @@ class BattleFieldManager {
             return;
         }
 
+        const config = SetupLoader.loadBattleFieldThreshold();
         const writer = new BattleFieldConfigWriter(this.#credential);
-        if (additionalRP === 100) {
+        if (additionalRP === config.a!) {
             await writer.writeCustomizedConfig(true, false, false, false);
-        } else if (additionalRP === 300) {
+        } else if (additionalRP === config.b!) {
             await writer.writeCustomizedConfig(false, true, false, false);
-        } else if (additionalRP === 500) {
+        } else if (additionalRP === config.c!) {
             await writer.writeCustomizedConfig(false, false, true, false);
         }
     }

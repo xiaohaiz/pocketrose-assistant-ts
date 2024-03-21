@@ -18,7 +18,7 @@ class TownArmorHousePageProcessor extends PageProcessorCredentialSupport {
         this.#renderImmutablePage(credential, page);
         this.#renderMutablePage(credential, page);
 
-        new KeyboardShortcutBuilder()
+        KeyboardShortcutBuilder.newInstance()
             .onKeyPressed("e", () => $("#equipment_button").trigger("click"))
             .onKeyPressed("r", () => $("#refresh_button").trigger("click"))
             .onEscapePressed(() => $("#return_button").trigger("click"))

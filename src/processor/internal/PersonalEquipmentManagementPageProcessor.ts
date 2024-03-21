@@ -18,7 +18,7 @@ abstract class PersonalEquipmentManagementPageProcessor extends PageProcessorCre
     }
 
     doBindKeyboardShortcut(credential: Credential) {
-        new KeyboardShortcutBuilder()
+        KeyboardShortcutBuilder.newInstance()
             .onEscapePressed(() => $("#returnButton").trigger("click"))
             .onKeyPressed("r", () => $("#refreshButton").trigger("click"))
             .withDefaultPredicate()

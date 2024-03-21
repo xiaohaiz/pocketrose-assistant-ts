@@ -1,6 +1,7 @@
 import NpcLoader from "../../core/role/NpcLoader";
 import TownLoader from "../../core/town/TownLoader";
 import Credential from "../../util/Credential";
+import KeyboardShortcutBuilder from "../../util/KeyboardShortcutBuilder";
 import MessageBoard from "../../util/MessageBoard";
 import PageUtils from "../../util/PageUtils";
 import StringUtils from "../../util/StringUtils";
@@ -121,7 +122,10 @@ class PersonalManualPageProcessor extends PageProcessorCredentialSupport {
 
         this.#renderManual();
 
-        PageUtils.onEscapePressed(() => $("#returnButton").trigger("click"));
+        KeyboardShortcutBuilder.newInstance()
+            .onEscapePressed(() => $("#returnButton").trigger("click"))
+            .withDefaultPredicate()
+            .bind();
     }
 
     #welcomeMessageHtml() {

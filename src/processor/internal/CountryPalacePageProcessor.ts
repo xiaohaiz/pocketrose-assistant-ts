@@ -5,6 +5,7 @@ import PersonalStatus from "../../core/role/PersonalStatus";
 import PalaceTaskManager from "../../core/task/PalaceTaskManager";
 import TownLoader from "../../core/town/TownLoader";
 import Credential from "../../util/Credential";
+import KeyboardShortcutBuilder from "../../util/KeyboardShortcutBuilder";
 import MessageBoard from "../../util/MessageBoard";
 import NetworkUtils from "../../util/NetworkUtils";
 import PageUtils from "../../util/PageUtils";
@@ -118,7 +119,10 @@ class CountryPalacePageProcessor extends PageProcessorCredentialSupport {
         renderTask(credential, context!);
         renderPrompt(credential);
 
-        PageUtils.onEscapePressed(() => $("#returnButton").trigger("click"));
+        KeyboardShortcutBuilder.newInstance()
+            .onEscapePressed(() => $("#returnButton").trigger("click"))
+            .withDefaultPredicate()
+            .bind();
     }
 
     #welcomeMessageHtml() {

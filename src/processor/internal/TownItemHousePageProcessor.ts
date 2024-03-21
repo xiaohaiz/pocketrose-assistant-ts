@@ -18,10 +18,11 @@ class TownItemHousePageProcessor extends PageProcessorCredentialSupport {
         const page = await new TownItemHousePageParser().parse(PageUtils.currentPageHtml());
         this.#renderImmutablePage(credential, page);
         this.#renderMutablePage(credential, page);
-        new KeyboardShortcutBuilder()
+        KeyboardShortcutBuilder.newInstance()
             .onKeyPressed("r", () => $("#refreshButton").trigger("click"))
             .onKeyPressed("e", () => $("#equipmentButton").trigger("click"))
             .onEscapePressed(() => $("#returnButton").trigger("click"))
+            .withDefaultPredicate()
             .bind();
     }
 

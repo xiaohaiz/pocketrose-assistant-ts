@@ -15,7 +15,7 @@ class TownWeaponHousePageProcessor extends PageProcessorCredentialSupport {
 
     async doProcess(credential: Credential, context?: PageProcessorContext): Promise<void> {
         await processPage(credential);
-        new KeyboardShortcutBuilder()
+        KeyboardShortcutBuilder.newInstance()
             .onKeyPressed("r", () => $("#refresh_button").trigger("click"))
             .onKeyPressed("e", () => $("#equipmentManagementButton").trigger("click"))
             .onEscapePressed(() => $("#return_button").trigger("click"))

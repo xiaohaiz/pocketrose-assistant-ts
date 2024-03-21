@@ -8,6 +8,10 @@ class KeyboardShortcutBuilder {
     readonly #handlerBuffer = new Map<string, () => void>;
     #predicate?: (key: string) => boolean;
 
+    static newInstance(): KeyboardShortcutBuilder {
+        return new KeyboardShortcutBuilder();
+    }
+
     onKeyPressed(key: string, handler?: () => void): KeyboardShortcutBuilder {
         if (handler) {
             this.#handlerBuffer.set(key, handler);
