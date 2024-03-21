@@ -1,6 +1,7 @@
 import _ from "lodash";
 import StorageUtils from "../../util/StorageUtils";
 import BattleFieldThreshold from "../battle/BattleFieldThreshold";
+import EquipmentExperienceConfig from "../equipment/EquipmentExperienceConfig";
 
 class SetupLoader {
 
@@ -233,6 +234,19 @@ class SetupLoader {
         config.a = _.parseInt(value.a);
         config.b = _.parseInt(value.b);
         config.c = _.parseInt(value.c);
+        return config;
+    }
+
+    static loadEquipmentExperienceConfig(id: string): EquipmentExperienceConfig {
+        const s = StorageUtils.getString("_pa_065_" + id);
+        if (s === "") {
+            return EquipmentExperienceConfig.defaultInstance();
+        }
+        const value = JSON.parse(s);
+        const config = new EquipmentExperienceConfig();
+        config.weapon = (value.weapon !== undefined && value.weapon);
+        config.armor = (value.armor !== undefined && value.armor);
+        config.accessory = (value.accessory !== undefined && value.accessory);
         return config;
     }
 }
