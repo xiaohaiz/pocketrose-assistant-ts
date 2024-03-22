@@ -5,6 +5,10 @@ import PetLocalStorage from "../monster/PetLocalStorage";
 import RolePetLoveManager from "../monster/RolePetLoveManager";
 import BattleFieldManager from "./BattleFieldManager";
 import BattlePage from "./BattlePage";
+import Role from "../role/Role";
+import PersonalStatus from "../role/PersonalStatus";
+import PersonalEquipmentManagementPage from "../equipment/PersonalEquipmentManagementPage";
+import PersonalEquipmentManagement from "../equipment/PersonalEquipmentManagement";
 
 class BattleReturnInterceptor {
 
@@ -16,6 +20,21 @@ class BattleReturnInterceptor {
         this.#credential = credential;
         this.#battleCount = battleCount;
         this.#battlePage = battlePage;
+    }
+
+    #role?: Role;
+    #equipmentPage?: PersonalEquipmentManagementPage;
+
+    async #initializeRole() {
+        if (!this.#role) {
+            this.#role = await new PersonalStatus(this.#credential).load();
+        }
+    }
+
+    async #initializeEquipmentPage() {
+        if (!this.#equipmentPage) {
+            this.#equipmentPage = await new PersonalEquipmentManagement(this.#credential).open();
+        }
     }
 
     async doBeforeReturn(): Promise<void> {
