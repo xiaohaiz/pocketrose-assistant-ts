@@ -22,7 +22,9 @@ class PersonalPetManagementInterceptor {
         let usingMaxLevelPet = false;
         const usingPet = page.usingPet;
         if (usingPet && usingPet.level === 100) usingMaxLevelPet = true;
-        await new BattleFieldManager(this.#credential).autoSetBattleField(usingMaxLevelPet);
+        await new BattleFieldManager(this.#credential)
+            .withPetPage(page)
+            .autoSetBattleField(usingMaxLevelPet);
     }
 }
 

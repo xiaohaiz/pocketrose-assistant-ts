@@ -7,16 +7,23 @@ import BattleFieldConfigLoader from "./BattleFieldConfigLoader";
 import BattleFieldConfigWriter from "./BattleFieldConfigWriter";
 import BattleFieldThreshold from "./BattleFieldThreshold";
 import BattlePage from "./BattlePage";
+import PersonalPetManagementPage from "../monster/PersonalPetManagementPage";
 
 class BattleFieldManager {
 
     readonly #credential: Credential;
 
+    #petPage?: PersonalPetManagementPage;
+
     constructor(credential: Credential) {
         this.#credential = credential;
     }
 
-    // maxLevelPet : 当前是否使用满级宠物，undefined时需要自己获取数据。
+    withPetPage(value: PersonalPetManagementPage | undefined): BattleFieldManager {
+        this.#petPage = value;
+        return this;
+    }
+
     async autoSetBattleField(usingMaxLevelPet?: boolean): Promise<string | undefined> {
         if (!SetupLoader.isAutoSetBattleFieldEnabled()) {
             return undefined;
