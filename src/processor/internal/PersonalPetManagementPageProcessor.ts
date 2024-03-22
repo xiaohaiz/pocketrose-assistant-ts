@@ -19,7 +19,7 @@ abstract class PersonalPetManagementPageProcessor extends PageProcessorCredentia
 
     doBindKeyboardShortcut(credential: Credential) {
         KeyboardShortcutBuilder.newInstance()
-            .onEscapePressed(() => $("#returnButton").trigger("click"))
+            .onEscapePressed(() => PageUtils.triggerClick("exitButton"))
             .withDefaultPredicate()
             .bind();
     }
@@ -99,9 +99,30 @@ abstract class PersonalPetManagementPageProcessor extends PageProcessorCredentia
         html += "</tody>";
         html += "</table>";
 
-        $("#returnButton")
-            .parent()
-            .before($(html));
+        $("#returnButton").parent().before($(html));
+
+        html = "";
+        html += "<table style='background-color:#888888;width:100%;text-align:center'>";
+        html += "<tbody style='background-color:#F8F0E0'>";
+        html += "<tr>";
+        html += "<td id='commandCell'>";
+        html += "<button role='button' id='exitButton'>退出宠物管理(Esc)</button>"
+        html += "</td>";
+        html += "</tr>";
+        html += "<tr style='display:none'>";
+        html += "<td id='extensionCell_1'></td>";
+        html += "</tr>";
+        html += "</tody>";
+        html += "</table>";
+
+        $("#returnButton").parent().after($(html));
+
+        $("#returnButton").parent().hide();
+
+        $("#exitButton").on("click", () => {
+            PageUtils.disableButtons();
+            PageUtils.triggerClick("returnButton");
+        });
 
         this.doProcessWithPageParsed(credential, page, context);
     }

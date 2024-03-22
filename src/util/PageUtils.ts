@@ -273,6 +273,11 @@ class PageUtils {
         }
     }
 
+    static disableButtons() {
+        $("input:button").prop("disabled", true);
+        $("button").prop("disabled", true);
+    }
+
     static triggerClick(elementId: string) {
         const element = $("#" + elementId);
         if (element.length > 0) {

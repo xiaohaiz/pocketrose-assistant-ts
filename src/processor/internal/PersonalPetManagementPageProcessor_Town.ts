@@ -52,7 +52,7 @@ class PersonalPetManagementPageProcessor_Town extends PersonalPetManagementPageP
             .onKeyPressed("2", () => $("#pet_spell_study_2").trigger("click"))
             .onKeyPressed("3", () => $("#pet_spell_study_3").trigger("click"))
             .onKeyPressed("4", () => $("#pet_spell_study_4").trigger("click"))
-            .onEscapePressed(() => $("#returnButton").trigger("click"))
+            .onEscapePressed(() => PageUtils.triggerClick("exitButton"))
             .withDefaultPredicate()
             .bind();
     }
