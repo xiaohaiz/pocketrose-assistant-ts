@@ -317,7 +317,7 @@ async function doProcessBattle(credential: Credential, html: string, currentBatt
     $("#battleReturn").on("click", () => {
         $("#battleReturn").prop("disabled", true);
         new BattleReturnInterceptor(credential, currentBattleCount, processor.obtainPage)
-            .doBeforeReturn()
+            .beforeExitBattle()
             .then(() => {
                 const request = credential.asRequestMap();
                 request.set("mode", "STATUS");
@@ -330,7 +330,7 @@ async function doProcessBattle(credential: Credential, html: string, currentBatt
     $("#battleDeposit").on("click", () => {
         $("#battleDeposit").prop("disabled", true);
         new BattleReturnInterceptor(credential, currentBattleCount, processor.obtainPage)
-            .doBeforeReturn()
+            .beforeExitBattle()
             .then(() => {
                 const request = credential.asRequestMap();
                 request.set("azukeru", "all");
@@ -350,7 +350,7 @@ async function doProcessBattle(credential: Credential, html: string, currentBatt
     $("#battleRepair").on("click", () => {
         $("#battleRepair").prop("disabled", true);
         new BattleReturnInterceptor(credential, currentBattleCount, processor.obtainPage)
-            .doBeforeReturn()
+            .beforeExitBattle()
             .then(() => {
                 new TownForge(credential).repairAll().then(m => {
                     doProcessBattleReturn(credential, m, processor.obtainPage.additionalRP, processor.obtainPage.harvestList);
@@ -360,7 +360,7 @@ async function doProcessBattle(credential: Credential, html: string, currentBatt
     $("#battleLodge").on("click", () => {
         $("#battleLodge").prop("disabled", true);
         new BattleReturnInterceptor(credential, currentBattleCount, processor.obtainPage)
-            .doBeforeReturn()
+            .beforeExitBattle()
             .then(() => {
                 new TownInn(credential).recovery().then(m => {
                     doProcessBattleReturn(credential, m, processor.obtainPage.additionalRP, processor.obtainPage.harvestList);
