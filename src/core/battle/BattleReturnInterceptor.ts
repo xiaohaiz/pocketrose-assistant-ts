@@ -13,6 +13,7 @@ import PersonalPetManagementPage from "../monster/PersonalPetManagementPage";
 import PersonalPetManagement from "../monster/PersonalPetManagement";
 import PetMapStatusManager from "../monster/PetMapStatusManager";
 import _ from "lodash";
+import PetStatusManager from "../monster/PetStatusManager";
 
 class BattleReturnInterceptor {
 
@@ -51,10 +52,22 @@ class BattleReturnInterceptor {
     async beforeExitBattle() {
         const mod = this.#battleCount & 100;
         if (mod === 73) {
-            await new BankRecordManager(this.#credential).updateBankRecord();
+            await new BankRecordManager(this.#credential)
+                .updateBankRecord();
         }
         if (mod === 83 || this.#hasHarvestIncludesPetMap()) {
-            await new PetMapStatusManager(this.#credential).updatePetMapStatus();
+            await new PetMapStatusManager(this.#credential)
+                .updatePetMapStatus();
+        }
+        if (mod === 89 || this.#hasHarvest()) {
+            await Promise.all([
+                this.#initializeEquipmentPage(),
+                this.#initializePetPage()
+            ]);
+            await new PetStatusManager(this.#credential)
+                .withEquipmentPage(this.#equipmentPage)
+                .withPetPage(this.#petPage)
+                .updatePetStatus();
         }
     }
 
