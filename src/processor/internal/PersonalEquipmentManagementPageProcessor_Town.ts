@@ -9,7 +9,6 @@ import CastleWarehouse from "../../core/equipment/CastleWarehouse";
 import Equipment from "../../core/equipment/Equipment";
 import EquipmentConsecrateManager from "../../core/equipment/EquipmentConsecrateManager";
 import EquipmentExperienceConfig from "../../core/equipment/EquipmentExperienceConfig";
-import EquipmentExperienceManager from "../../core/equipment/EquipmentExperienceManager";
 import EquipmentLocalStorage from "../../core/equipment/EquipmentLocalStorage";
 import EquipmentSet from "../../core/equipment/EquipmentSet";
 import EquipmentSetLoader from "../../core/equipment/EquipmentSetLoader";
@@ -31,6 +30,7 @@ import StorageUtils from "../../util/StorageUtils";
 import StringUtils from "../../util/StringUtils";
 import PageProcessorContext from "../PageProcessorContext";
 import PersonalEquipmentManagementPageProcessor from "./PersonalEquipmentManagementPageProcessor";
+import PersonalEquipmentManagementInterceptor from "../../core/equipment/PersonalEquipmentManagementInterceptor";
 
 class PersonalEquipmentManagementPageProcessor_Town extends PersonalEquipmentManagementPageProcessor {
 
@@ -150,15 +150,10 @@ class PersonalEquipmentManagementPageProcessor_Town extends PersonalEquipmentMan
         const html = PageUtils.generateReturnTownForm(credential);
         $("#hiddenFormContainer").html(html);
         $("#returnButton").on("click", () => {
-            new BattleFieldManager(credential)
-                .autoSetBattleField()
-                .then(() => {
-                    new EquipmentExperienceManager(credential)
-                        .triggerEquipmentExperience()
-                        .then(() => {
-                            PageUtils.triggerClick("returnTown");
-                        });
-                });
+            PageUtils.disableButtons();
+            new PersonalEquipmentManagementInterceptor(credential)
+                .beforeExitEquipmentManagement()
+                .then(() => PageUtils.triggerClick("returnTown"));
         });
     }
 

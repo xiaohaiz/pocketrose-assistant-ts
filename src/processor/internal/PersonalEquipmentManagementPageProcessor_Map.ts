@@ -11,6 +11,7 @@ import PageUtils from "../../util/PageUtils";
 import StringUtils from "../../util/StringUtils";
 import PageProcessorContext from "../PageProcessorContext";
 import PersonalEquipmentManagementPageProcessor from "./PersonalEquipmentManagementPageProcessor";
+import PersonalEquipmentManagementInterceptor from "../../core/equipment/PersonalEquipmentManagementInterceptor";
 
 class PersonalEquipmentManagementPageProcessor_Map extends PersonalEquipmentManagementPageProcessor {
 
@@ -34,7 +35,10 @@ class PersonalEquipmentManagementPageProcessor_Map extends PersonalEquipmentMana
         const html = PageUtils.generateReturnMapForm(credential);
         $("#hiddenFormContainer").html(html);
         $("#returnButton").on("click", () => {
-            $("#returnMap").trigger("click");
+            PageUtils.disableButtons();
+            new PersonalEquipmentManagementInterceptor(credential)
+                .beforeExitEquipmentManagement()
+                .then(() => PageUtils.triggerClick("returnMap"));
         });
     }
 
