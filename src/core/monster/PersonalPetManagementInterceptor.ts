@@ -19,12 +19,7 @@ class PersonalPetManagementInterceptor {
         LocalSettingManager.setPetCapacityMax(this.#credential.id, (petCount === 3));
 
         // 宠物状态有可能发生改变，有可能触发智能战斗场所切换
-        let usingMaxLevelPet = false;
-        const usingPet = page.usingPet;
-        if (usingPet && usingPet.level === 100) usingMaxLevelPet = true;
-        await new BattleFieldManager(this.#credential)
-            .withPetPage(page)
-            .autoSetBattleField(usingMaxLevelPet);
+        await new BattleFieldManager(this.#credential).withPetPage(page).autoSetBattleField();
     }
 }
 
