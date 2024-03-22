@@ -13,10 +13,16 @@ class BattleFieldManager {
 
     readonly #credential: Credential;
 
+    #role?: Role;
     #petPage?: PersonalPetManagementPage;
 
     constructor(credential: Credential) {
         this.#credential = credential;
+    }
+
+    withRole(value: Role | undefined): BattleFieldManager {
+        this.#role = value;
+        return this;
     }
 
     withPetPage(value: PersonalPetManagementPage | undefined): BattleFieldManager {
@@ -34,7 +40,10 @@ class BattleFieldManager {
             return "上洞";
         }
 
-        const role = await new PersonalStatus(this.#credential).load();
+        let role: Role | undefined = this.#role;
+        if (!role) {
+            role = await new PersonalStatus(this.#credential).load();
+        }
         if (this.#c2(role)) {
             await writer.writeCustomizedConfig(false, false, true, false);
             return "上洞";
