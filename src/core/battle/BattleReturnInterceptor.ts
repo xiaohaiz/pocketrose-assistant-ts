@@ -9,6 +9,8 @@ import Role from "../role/Role";
 import PersonalStatus from "../role/PersonalStatus";
 import PersonalEquipmentManagementPage from "../equipment/PersonalEquipmentManagementPage";
 import PersonalEquipmentManagement from "../equipment/PersonalEquipmentManagement";
+import PersonalPetManagementPage from "../monster/PersonalPetManagementPage";
+import PersonalPetManagement from "../monster/PersonalPetManagement";
 
 class BattleReturnInterceptor {
 
@@ -24,6 +26,7 @@ class BattleReturnInterceptor {
 
     #role?: Role;
     #equipmentPage?: PersonalEquipmentManagementPage;
+    #petPage?: PersonalPetManagementPage;
 
     async #initializeRole() {
         if (!this.#role) {
@@ -34,6 +37,12 @@ class BattleReturnInterceptor {
     async #initializeEquipmentPage() {
         if (!this.#equipmentPage) {
             this.#equipmentPage = await new PersonalEquipmentManagement(this.#credential).open();
+        }
+    }
+
+    async #initializePetPage() {
+        if (!this.#petPage) {
+            this.#petPage = await new PersonalPetManagement(this.#credential).open();
         }
     }
 
