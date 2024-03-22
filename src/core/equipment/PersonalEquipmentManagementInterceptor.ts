@@ -1,6 +1,6 @@
 import Credential from "../../util/Credential";
 
-class PersonalEquipmentManagementPageInterceptor {
+class PersonalEquipmentManagementInterceptor {
 
     readonly #credential: Credential;
 
@@ -9,4 +9,4 @@ class PersonalEquipmentManagementPageInterceptor {
     }
 }
 
-export = PersonalEquipmentManagementPageInterceptor;
+export = PersonalEquipmentManagementInterceptor;
