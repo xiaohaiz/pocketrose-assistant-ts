@@ -73,7 +73,7 @@ class BattleReturnInterceptor {
                 .withPetPage(this.#petPage)
                 .updatePetStatus();
         }
-        if (mod === 19 || mod === 37 || mod === 59 || mod === 79 || mod === 97 || this.#hasHarvest()) {
+        if (mod === 19 || mod === 37 || mod === 59 || mod === 79 || mod === 97 || this.#hasHarvestExcludesPetMap()) {
             await this.#initializeEquipmentPage();
             await new EquipmentStatusManager(this.#credential)
                 .withEquipmentPage(this.#equipmentPage)
