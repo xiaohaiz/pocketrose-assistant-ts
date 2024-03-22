@@ -20,6 +20,7 @@ abstract class PersonalPetManagementPageProcessor extends PageProcessorCredentia
 
     doBindKeyboardShortcut(credential: Credential) {
         KeyboardShortcutBuilder.newInstance()
+            .onKeyPressed("e", () => PageUtils.triggerClick("equipmentButton"))
             .onEscapePressed(() => PageUtils.triggerClick("exitButton"))
             .withDefaultPredicate()
             .bind();
@@ -107,7 +108,8 @@ abstract class PersonalPetManagementPageProcessor extends PageProcessorCredentia
         html += "<tbody style='background-color:#F8F0E0'>";
         html += "<tr>";
         html += "<td id='commandCell'>";
-        html += "<button role='button' id='exitButton'>退出宠物管理(Esc)</button>"
+        html += "<button role='button' id='exitButton'>退出宠物管理(Esc)</button>";
+        html += "<button role='button' id='equipmentButton'>转入装备管理(e)</button>";
         html += "</td>";
         html += "</tr>";
         html += "<tr style='display:none'>";
@@ -117,8 +119,9 @@ abstract class PersonalPetManagementPageProcessor extends PageProcessorCredentia
         html += "</table>";
 
         $("#returnButton").parent().after($(html));
-
         $("#returnButton").parent().hide();
+
+        $("#extensionCell_1").html(PageUtils.generateEquipmentManagementForm(credential));
 
         $("#exitButton").on("click", () => {
             PageUtils.disableButtons();
@@ -126,6 +129,13 @@ abstract class PersonalPetManagementPageProcessor extends PageProcessorCredentia
                 .beforeExitPersonalPetManagement()
                 .then(() => PageUtils.triggerClick("returnButton"));
         });
+        $("#equipmentButton").on("click", () => {
+            PageUtils.disableButtons();
+            new PersonalPetManagementInterceptor(credential)
+                .beforeExitPersonalPetManagement()
+                .then(() => PageUtils.triggerClick("openEquipmentManagement"));
+        });
+
 
         this.doProcessWithPageParsed(credential, page, context);
     }
