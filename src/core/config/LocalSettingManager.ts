@@ -9,6 +9,7 @@ import StorageUtils from "../../util/StorageUtils";
  * _ts_003_${id} : 是否提醒防具满级
  * _ts_004_${id} : 是否提醒饰品满级
  * _ts_005_${id} : 身上装备位是否已满
+ * _ts_006_${id} : 身上宠物位是否已满
  * ----------------------------------------------------------------------------
  */
 class LocalSettingManager {
@@ -61,6 +62,16 @@ class LocalSettingManager {
 
     static setEquipmentCapacityMax(id: string, value: boolean) {
         StorageUtils.set("_ts_005_" + id, Number(value).toString());
+    }
+
+    // ------------------------------------------------------------------------
+
+    static isPetCapacityMax(id: string) {
+        return StorageUtils.getBoolean("_ts_006_" + id);
+    }
+
+    static setPetCapacityMax(id: string, value: boolean) {
+        StorageUtils.set("_ts_006_" + id, Number(value).toString());
     }
 
     // ------------------------------------------------------------------------
