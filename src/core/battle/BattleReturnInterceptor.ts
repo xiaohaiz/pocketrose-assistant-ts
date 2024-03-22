@@ -16,6 +16,7 @@ import _ from "lodash";
 import PetStatusManager from "../monster/PetStatusManager";
 import EquipmentStatusManager from "../equipment/EquipmentStatusManager";
 import EquipmentExperienceManager from "../equipment/EquipmentExperienceManager";
+import SetupLoader from "../config/SetupLoader";
 
 class BattleReturnInterceptor {
 
@@ -82,6 +83,17 @@ class BattleReturnInterceptor {
             await new EquipmentExperienceManager(this.#credential)
                 .withEquipmentPage(this.#equipmentPage)
                 .triggerEquipmentExperience();
+        }
+        if (SetupLoader.isAutoSetBattleFieldEnabled()) {
+            await Promise.all([
+                this.#initializeRole(),
+                this.#initializePetPage()
+            ]);
+            await new BattleFieldManager(this.#credential)
+                .withRole(this.#role)
+                .withPetPage(this.#petPage)
+                .triggerBattleFieldChanged(this.#battlePage);
+
         }
     }
 
