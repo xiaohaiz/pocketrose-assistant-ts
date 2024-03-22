@@ -14,6 +14,8 @@ import PersonalPetManagement from "../monster/PersonalPetManagement";
 import PetMapStatusManager from "../monster/PetMapStatusManager";
 import _ from "lodash";
 import PetStatusManager from "../monster/PetStatusManager";
+import EquipmentStatusManager from "../equipment/EquipmentStatusManager";
+import EquipmentExperienceManager from "../equipment/EquipmentExperienceManager";
 
 class BattleReturnInterceptor {
 
@@ -70,7 +72,16 @@ class BattleReturnInterceptor {
                 .updatePetStatus();
         }
         if (mod === 19 || mod === 37 || mod === 59 || mod === 79 || mod === 97 || this.#hasHarvest()) {
-
+            await this.#initializeEquipmentPage();
+            await new EquipmentStatusManager(this.#credential)
+                .withEquipmentPage(this.#equipmentPage)
+                .updateEquipmentStatus();
+        }
+        if (mod === 19 || mod === 37 || mod === 59 || mod === 79 || mod === 97) {
+            await this.#initializeEquipmentPage();
+            await new EquipmentExperienceManager(this.#credential)
+                .withEquipmentPage(this.#equipmentPage)
+                .triggerEquipmentExperience();
         }
     }
 
