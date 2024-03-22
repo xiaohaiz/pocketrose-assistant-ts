@@ -16,7 +16,8 @@ class BattleFieldManager {
         this.#credential = credential;
     }
 
-    async autoSetBattleField(): Promise<string | undefined> {
+    // maxLevelPet : 当前是否使用满级宠物，undefined时需要自己获取数据。
+    async autoSetBattleField(usingMaxLevelPet?: boolean): Promise<string | undefined> {
         if (!SetupLoader.isAutoSetBattleFieldEnabled()) {
             return undefined;
         }
@@ -32,7 +33,7 @@ class BattleFieldManager {
             return "上洞";
         }
 
-        if (await this.#c3(role)) {
+        if (await this.#c3(role, usingMaxLevelPet)) {
             await writer.writeCustomizedConfig(false, false, false, true);
             return "十二宫";
         }
@@ -70,7 +71,7 @@ class BattleFieldManager {
     }
 
     // 当前位于枫丹并且自身和宠物都满级时，战斗场所切换到十二宫
-    async #c3(role: Role): Promise<boolean> {
+    async #c3(role: Role, usingMaxLevelPet?: boolean): Promise<boolean> {
         if (role.level === undefined || role.level !== 150) {
             return false;
         }
@@ -78,17 +79,21 @@ class BattleFieldManager {
         if (!town || town.name !== "枫丹") {
             return false;
         }
+        if (usingMaxLevelPet !== undefined) {
+            // 外部已经传入了是否正在使用满级宠物的信息，无需额外获取了
+            return usingMaxLevelPet;
+        }
         const petList = (await new PersonalPetManagement(this.#credential).open()).petList;
         if (petList === undefined || petList.length === 0) {
             return false;
         }
-        let usingMaxLevelPet = false;
+        let value = false;
         for (const pet of petList) {
             if (pet.using && pet.level !== undefined && pet.level === 100) {
-                usingMaxLevelPet = true;
+                value = true;
             }
         }
-        return usingMaxLevelPet;
+        return value;
     }
 
     // 额外RP小于100时，战斗场所切换到上洞
