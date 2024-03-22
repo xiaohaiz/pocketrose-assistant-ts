@@ -1,7 +1,6 @@
 import _ from "lodash";
 import SetupLoader from "../../core/config/SetupLoader";
 import MonsterProfileLoader from "../../core/monster/MonsterProfileLoader";
-import PetLocalStorage from "../../core/monster/PetLocalStorage";
 import PetMap from "../../core/monster/PetMap";
 import RolePetMapStorage from "../../core/monster/RolePetMapStorage";
 import TownPetMapHouse from "../../core/monster/TownPetMapHouse";
@@ -16,6 +15,8 @@ import MessageBoard from "../../util/MessageBoard";
 import PageUtils from "../../util/PageUtils";
 import PageProcessorContext from "../PageProcessorContext";
 import PageProcessorCredentialSupport from "../PageProcessorCredentialSupport";
+import PetMapStatusManager from "../../core/monster/PetMapStatusManager";
+import PetStatusManager from "../../core/monster/PetStatusManager";
 
 class TownPetMapHousePageProcessor extends PageProcessorCredentialSupport {
 
@@ -208,15 +209,19 @@ class TownPetMapHousePageProcessor extends PageProcessorCredentialSupport {
         $("#updateButton").on("click", () => {
             $("input:text").prop("disabled", true);
             $("button").prop("disabled", true);
-            const petLocalStorage = new PetLocalStorage(credential);
-            petLocalStorage.updatePetMap().then(() => {
-                MessageBoard.publishMessage("宠物图鉴信息已存储。");
-                petLocalStorage.updatePetStatus().then(() => {
-                    MessageBoard.publishMessage("宠物信息已存储。");
-                    $("input:text").prop("disabled", false);
-                    $("button").prop("disabled", false);
+
+            new PetMapStatusManager(credential)
+                .updatePetMapStatus()
+                .then(() => {
+                    MessageBoard.publishMessage("宠物图鉴信息已存储。");
+                    new PetStatusManager(credential)
+                        .updatePetStatus()
+                        .then(() => {
+                            MessageBoard.publishMessage("宠物信息已存储。");
+                            $("input:text").prop("disabled", false);
+                            $("button").prop("disabled", false);
+                        });
                 });
-            });
         });
     }
 

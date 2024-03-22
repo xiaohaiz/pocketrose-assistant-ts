@@ -25,7 +25,8 @@ import StringUtils from "../../util/StringUtils";
 import PageProcessorContext from "../PageProcessorContext";
 import PersonalPetManagementPageProcessor from "./PersonalPetManagementPageProcessor";
 import KeyboardShortcutBuilder from "../../util/KeyboardShortcutBuilder";
-import PetLocalStorage from "../../core/monster/PetLocalStorage";
+import PetMapStatusManager from "../../core/monster/PetMapStatusManager";
+import PetStatusManager from "../../core/monster/PetStatusManager";
 
 class PersonalPetManagementPageProcessor_Town extends PersonalPetManagementPageProcessor {
 
@@ -38,10 +39,11 @@ class PersonalPetManagementPageProcessor_Town extends PersonalPetManagementPageP
         KeyboardShortcutBuilder.newInstance()
             .onKeyPressed("e", () => PageUtils.triggerClick("equipmentButton"))
             .onKeyPressed("r", () => {
-                const storage = new PetLocalStorage(credential);
-                storage.updatePetStatus()
+                new PetMapStatusManager(credential)
+                    .updatePetMapStatus()
                     .then(() => {
-                        storage.updatePetMap()
+                        new PetStatusManager(credential)
+                            .updatePetStatus()
                             .then(() => {
                                 $("#refreshButton").trigger("click");
                                 MessageBoard.publishMessage("宠物数据更新完成。");

@@ -8,7 +8,6 @@ import PowerGemFuseReportGenerator from "../../core/forge/PowerGemFuseReportGene
 import MonsterPageUtils from "../../core/monster/MonsterPageUtils";
 import MonsterProfileLoader from "../../core/monster/MonsterProfileLoader";
 import Pet from "../../core/monster/Pet";
-import PetLocalStorage from "../../core/monster/PetLocalStorage";
 import RolePetStatusStorage from "../../core/monster/RolePetStatusStorage";
 import NpcLoader from "../../core/role/NpcLoader";
 import TeamMemberLoader from "../../core/team/TeamMemberLoader";
@@ -19,6 +18,8 @@ import PageUtils from "../../util/PageUtils";
 import StringUtils from "../../util/StringUtils";
 import PageProcessorContext from "../PageProcessorContext";
 import PageProcessorCredentialSupport from "../PageProcessorCredentialSupport";
+import PetMapStatusManager from "../../core/monster/PetMapStatusManager";
+import PetStatusManager from "../../core/monster/PetStatusManager";
 
 abstract class PersonalTeamPageProcessor extends PageProcessorCredentialSupport {
 
@@ -236,14 +237,17 @@ abstract class PersonalTeamPageProcessor extends PageProcessorCredentialSupport 
             $("button").prop("disabled", true);
             $("input").prop("disabled", true);
             MessageBoard.publishMessage("开始更新宠物数据......");
-            const petLocalStorage = new PetLocalStorage(credential);
-            petLocalStorage.updatePetMap().then(() => {
-                petLocalStorage.updatePetStatus().then(() => {
-                    MessageBoard.publishMessage("宠物数据更新完成。");
-                    $("button").prop("disabled", false);
-                    $("input").prop("disabled", false);
+            new PetMapStatusManager(credential)
+                .updatePetMapStatus()
+                .then(() => {
+                    new PetStatusManager(credential)
+                        .updatePetStatus()
+                        .then(() => {
+                            MessageBoard.publishMessage("宠物数据更新完成。");
+                            $("button").prop("disabled", false);
+                            $("input").prop("disabled", false);
+                        });
                 });
-            });
         });
     }
 
