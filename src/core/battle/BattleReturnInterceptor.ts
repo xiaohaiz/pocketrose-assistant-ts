@@ -17,6 +17,7 @@ import PetStatusManager from "../monster/PetStatusManager";
 import EquipmentStatusManager from "../equipment/EquipmentStatusManager";
 import EquipmentExperienceManager from "../equipment/EquipmentExperienceManager";
 import SetupLoader from "../config/SetupLoader";
+import LocalSettingManager from "../config/LocalSettingManager";
 
 class BattleReturnInterceptor {
 
@@ -95,6 +96,22 @@ class BattleReturnInterceptor {
                 .triggerBattleFieldChanged(this.#battlePage);
 
         }
+        if (this.#battlePage.zodiacBattle) {
+            await this.#initializePetPage();
+            await new RolePetLoveManager(this.#credential)
+                .withPetPage(this.#petPage)
+                .triggerPetLoveFixed(this.#battlePage);
+        }
+        if (this.#hasHarvestExcludesPetMap()) {
+            await Promise.all([
+                this.#initializeEquipmentPage(),
+                this.#initializePetPage()
+            ]);
+            const spaceCount = this.#equipmentPage!.spaceCount;
+            LocalSettingManager.setEquipmentCapacityMax(this.#credential.id, spaceCount <= 1);
+            const petCount = this.#petPage!.petList!.length;
+            LocalSettingManager.setPetCapacityMax(this.#credential.id, (petCount === 3));
+        }
     }
 
     #hasHarvest() {
@@ -107,6 +124,17 @@ class BattleReturnInterceptor {
         if (!harvestList || harvestList.length === 0) return false;
         for (const s of harvestList) {
             if (_.includes(s, "图鉴")) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    #hasHarvestExcludesPetMap() {
+        const harvestList = this.#battlePage.harvestList;
+        if (!harvestList || harvestList.length === 0) return false;
+        for (const s of harvestList) {
+            if (!_.includes(s, "图鉴")) {
                 return true;
             }
         }

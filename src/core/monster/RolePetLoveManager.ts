@@ -5,6 +5,7 @@ import BattlePage from "../battle/BattlePage";
 import SetupLoader from "../config/SetupLoader";
 import PersonalPetManagement from "./PersonalPetManagement";
 import Pet from "./Pet";
+import PersonalPetManagementPage from "./PersonalPetManagementPage";
 
 /**
  * 十二宫战斗后，如果宠物亲密度低于指定的阈值，自动补满。
@@ -15,6 +16,19 @@ class RolePetLoveManager {
 
     constructor(credential: Credential) {
         this.#credential = credential;
+    }
+
+    #petPage?: PersonalPetManagementPage;
+
+    withPetPage(value: PersonalPetManagementPage | undefined): RolePetLoveManager {
+        this.#petPage = value;
+        return this;
+    }
+
+    async #initializePetPage() {
+        if (!this.#petPage) {
+            this.#petPage = await new PersonalPetManagement(this.#credential).open();
+        }
     }
 
     async triggerPetLoveFixed(battlePage: BattlePage) {
@@ -38,12 +52,12 @@ class RolePetLoveManager {
     }
 
     async #fixPetLove() {
-        const petPage = await new PersonalPetManagement(this.#credential).open();
-        if (!petPage.petList || petPage.petList.length === 0) {
+        await this.#initializePetPage();
+        if (!this.#petPage!.petList || this.#petPage!.petList.length === 0) {
             return;
         }
         let usingPet: Pet | null = null;
-        for (const pet of petPage.petList) {
+        for (const pet of this.#petPage!.petList) {
             if (pet.using) {
                 usingPet = pet;
                 break;
