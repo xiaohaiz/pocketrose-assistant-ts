@@ -11,6 +11,8 @@ import PersonalEquipmentManagementPage from "../equipment/PersonalEquipmentManag
 import PersonalEquipmentManagement from "../equipment/PersonalEquipmentManagement";
 import PersonalPetManagementPage from "../monster/PersonalPetManagementPage";
 import PersonalPetManagement from "../monster/PersonalPetManagement";
+import PetMapStatusManager from "../monster/PetMapStatusManager";
+import _ from "lodash";
 
 class BattleReturnInterceptor {
 
@@ -44,6 +46,32 @@ class BattleReturnInterceptor {
         if (!this.#petPage) {
             this.#petPage = await new PersonalPetManagement(this.#credential).open();
         }
+    }
+
+    async beforeExitBattle() {
+        const mod = this.#battleCount & 100;
+        if (mod === 73) {
+            await new BankRecordManager(this.#credential).updateBankRecord();
+        }
+        if (mod === 83 || this.#hasHarvestIncludesPetMap()) {
+            await new PetMapStatusManager(this.#credential).updatePetMapStatus();
+        }
+    }
+
+    #hasHarvest() {
+        const harvestList = this.#battlePage.harvestList;
+        return harvestList && harvestList.length > 0;
+    }
+
+    #hasHarvestIncludesPetMap() {
+        const harvestList = this.#battlePage.harvestList;
+        if (!harvestList || harvestList.length === 0) return false;
+        for (const s of harvestList) {
+            if (_.includes(s, "图鉴")) {
+                return true;
+            }
+        }
+        return false;
     }
 
     async doBeforeReturn(): Promise<void> {
