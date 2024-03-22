@@ -8,9 +8,15 @@ import PersonalEquipmentManagementPage from "./PersonalEquipmentManagementPage";
 class EquipmentExperienceManager {
 
     readonly #credential: Credential;
+    #equipmentPage?: PersonalEquipmentManagementPage;
 
     constructor(credential: Credential) {
         this.#credential = credential;
+    }
+
+    withEquipmentPage(value: PersonalEquipmentManagementPage | undefined): EquipmentExperienceManager {
+        this.#equipmentPage = value;
+        return this;
     }
 
     async triggerEquipmentExperience() {
@@ -23,7 +29,10 @@ class EquipmentExperienceManager {
             return;
         }
 
-        const page = await new PersonalEquipmentManagement(this.#credential).open();
+        let page: PersonalEquipmentManagementPage | undefined = this.#equipmentPage;
+        if (!page) {
+            page = await new PersonalEquipmentManagement(this.#credential).open();
+        }
         this.#processWeapon(config, page);
         this.#processArmor(config, page);
         this.#processAccessory(config, page);
