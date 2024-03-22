@@ -512,6 +512,19 @@ function doRenderEventBoard(page: TownDashboardPage) {
 
 function doRenderRoleStatus(credential: Credential, page: TownDashboardPage) {
     // ------------------------------------------
+    // 判断装备或者宠物是否满格了
+    // ------------------------------------------
+    const fullEquipment = LocalSettingManager.isEquipmentCapacityMax(credential.id);
+    const fullPet = LocalSettingManager.isPetCapacityMax(credential.id);
+    if (fullEquipment && fullPet) {
+        $("#townCell").css("background-color", "orange");
+    } else if (fullEquipment) {
+        $("#townCell").css("background-color", "yellow");
+    } else if (fullPet) {
+        $("#townCell").css("background-color", "red");
+    }
+
+    // ------------------------------------------
     // 练装备相关的展示
     // ------------------------------------------
     if (LocalSettingManager.isWeaponExperienceMax(credential.id)) {
