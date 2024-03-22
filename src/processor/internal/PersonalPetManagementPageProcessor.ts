@@ -8,6 +8,7 @@ import StringUtils from "../../util/StringUtils";
 import PageProcessorContext from "../PageProcessorContext";
 import PageProcessorCredentialSupport from "../PageProcessorCredentialSupport";
 import KeyboardShortcutBuilder from "../../util/KeyboardShortcutBuilder";
+import PersonalPetManagementInterceptor from "../../core/monster/PersonalPetManagementInterceptor";
 
 abstract class PersonalPetManagementPageProcessor extends PageProcessorCredentialSupport {
 
@@ -121,7 +122,9 @@ abstract class PersonalPetManagementPageProcessor extends PageProcessorCredentia
 
         $("#exitButton").on("click", () => {
             PageUtils.disableButtons();
-            PageUtils.triggerClick("returnButton");
+            new PersonalPetManagementInterceptor(credential)
+                .beforeExitPersonalPetManagement()
+                .then(() => PageUtils.triggerClick("returnButton"));
         });
 
         this.doProcessWithPageParsed(credential, page, context);
