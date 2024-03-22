@@ -94,17 +94,20 @@ async function findAllEquipments(credential: Credential): Promise<Equipment[]> {
 
             new PersonalEquipmentManagement(credential).open().then(equipmentPage => {
 
-                new EquipmentExperienceManager(credential).triggerEquipmentExperienceWithPage(equipmentPage);
-
-                const roleName = equipmentPage.role!.name!;
-                new CastleInformation().load(roleName)
-                    .then(castle => {
-                        // Castle found
-                        parseEquipments(credential, allEquipments, equipmentPage, castle, () => resolve(allEquipments));
-                    })
-                    .catch(() => {
-                        // No castle found
-                        parseEquipments(credential, allEquipments, equipmentPage, null, () => resolve(allEquipments));
+                new EquipmentExperienceManager(credential)
+                    .withEquipmentPage(equipmentPage)
+                    .triggerEquipmentExperience()
+                    .then(() => {
+                        const roleName = equipmentPage.role!.name!;
+                        new CastleInformation().load(roleName)
+                            .then(castle => {
+                                // Castle found
+                                parseEquipments(credential, allEquipments, equipmentPage, castle, () => resolve(allEquipments));
+                            })
+                            .catch(() => {
+                                // No castle found
+                                parseEquipments(credential, allEquipments, equipmentPage, null, () => resolve(allEquipments));
+                            });
                     });
             });
         });
