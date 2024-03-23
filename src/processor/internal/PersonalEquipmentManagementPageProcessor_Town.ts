@@ -112,7 +112,7 @@ class PersonalEquipmentManagementPageProcessor_Town extends PersonalEquipmentMan
         this.doBindReturnButton(credential);
         $("#refreshButton").on("click", () => {
             new EquipmentStatusTrigger(credential)
-                .updateEquipmentStatus()
+                .triggerUpdate()
                 .then(() => {
                     new BattleFieldTrigger(credential)
                         .triggerUpdate()

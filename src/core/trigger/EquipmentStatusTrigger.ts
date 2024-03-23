@@ -8,6 +8,15 @@ import CastleInformation from "../dashboard/CastleInformation";
 import CastleWarehouse from "../equipment/CastleWarehouse";
 import RoleEquipmentStatusStorage from "../equipment/RoleEquipmentStatusStorage";
 
+/**
+ * ============================================================================
+ * 装 备 状 态 触 发 器
+ * ----------------------------------------------------------------------------
+ * 1. 战斗定期触发，尾数19/37/59/79/97。
+ * 2. 战斗入手（非图鉴）触发。
+ * 3. 退出装备管理触发。
+ * ============================================================================
+ */
 class EquipmentStatusTrigger {
 
     readonly #credential: Credential;
@@ -29,7 +38,7 @@ class EquipmentStatusTrigger {
         }
     }
 
-    async updateEquipmentStatus() {
+    async triggerUpdate() {
         const allEquipments: Equipment[] = [];
 
         // 解析身上的装备

@@ -225,7 +225,7 @@ abstract class PersonalTeamPageProcessor extends PageProcessorCredentialSupport 
             $("input").prop("disabled", true);
             MessageBoard.publishMessage("开始更新装备数据......");
             new EquipmentStatusTrigger(credential)
-                .updateEquipmentStatus()
+                .triggerUpdate()
                 .then(() => {
                     MessageBoard.publishMessage("装备数据更新完成。");
                     $("button").prop("disabled", false);

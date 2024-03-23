@@ -74,7 +74,7 @@ class BattleReturnInterceptor {
             await this.#initializeEquipmentPage();
             await new EquipmentStatusTrigger(this.#credential)
                 .withEquipmentPage(this.#equipmentPage)
-                .updateEquipmentStatus();
+                .triggerUpdate();
         }
         if (mod === 19 || mod === 37 || mod === 59 || mod === 79 || mod === 97) {
             await this.#initializeEquipmentPage();
