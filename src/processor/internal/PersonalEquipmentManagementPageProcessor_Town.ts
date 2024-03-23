@@ -29,7 +29,7 @@ import StorageUtils from "../../util/StorageUtils";
 import StringUtils from "../../util/StringUtils";
 import PageProcessorContext from "../PageProcessorContext";
 import PersonalEquipmentManagementPageProcessor from "./PersonalEquipmentManagementPageProcessor";
-import PersonalEquipmentManagementInterceptor from "../../core/equipment/PersonalEquipmentManagementInterceptor";
+import EquipmentManagementReturnInterceptor from "../../core/equipment/EquipmentManagementReturnInterceptor";
 import EquipmentStatusTrigger from "../../core/trigger/EquipmentStatusTrigger";
 
 class PersonalEquipmentManagementPageProcessor_Town extends PersonalEquipmentManagementPageProcessor {
@@ -151,7 +151,7 @@ class PersonalEquipmentManagementPageProcessor_Town extends PersonalEquipmentMan
         $("#hiddenFormContainer").html(html);
         $("#returnButton").on("click", () => {
             PageUtils.disableButtons();
-            new PersonalEquipmentManagementInterceptor(credential)
+            new EquipmentManagementReturnInterceptor(credential)
                 .beforeExitEquipmentManagement()
                 .then(() => PageUtils.triggerClick("returnTown"));
         });

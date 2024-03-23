@@ -11,7 +11,7 @@ import PageUtils from "../../util/PageUtils";
 import StringUtils from "../../util/StringUtils";
 import PageProcessorContext from "../PageProcessorContext";
 import PersonalEquipmentManagementPageProcessor from "./PersonalEquipmentManagementPageProcessor";
-import PersonalEquipmentManagementInterceptor from "../../core/equipment/PersonalEquipmentManagementInterceptor";
+import EquipmentManagementReturnInterceptor from "../../core/equipment/EquipmentManagementReturnInterceptor";
 
 class PersonalEquipmentManagementPageProcessor_Map extends PersonalEquipmentManagementPageProcessor {
 
@@ -36,7 +36,7 @@ class PersonalEquipmentManagementPageProcessor_Map extends PersonalEquipmentMana
         $("#hiddenFormContainer").html(html);
         $("#returnButton").on("click", () => {
             PageUtils.disableButtons();
-            new PersonalEquipmentManagementInterceptor(credential)
+            new EquipmentManagementReturnInterceptor(credential)
                 .beforeExitEquipmentManagement()
                 .then(() => PageUtils.triggerClick("returnMap"));
         });

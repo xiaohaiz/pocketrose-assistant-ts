@@ -103,7 +103,7 @@ class BattleReturnInterceptor {
             await this.#initializeEquipmentPage();
             await new EquipmentSpaceTrigger(this.#credential)
                 .withEquipmentPage(this.#equipmentPage)
-                .updateEquipmentSpace();
+                .triggerUpdate();
         }
         if (this.#hasHarvestExcludesPetMap() && !this.#battlePage.zodiacBattle) {
             await this.#initializePetPage();

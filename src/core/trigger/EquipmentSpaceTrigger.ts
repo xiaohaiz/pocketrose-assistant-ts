@@ -3,6 +3,14 @@ import PersonalEquipmentManagementPage from "../equipment/PersonalEquipmentManag
 import PersonalEquipmentManagement from "../equipment/PersonalEquipmentManagement";
 import LocalSettingManager from "../config/LocalSettingManager";
 
+/**
+ * ============================================================================
+ * 装 备 空 位 触 发 器
+ * ----------------------------------------------------------------------------
+ * 1. 战斗入手（非图鉴）触发。
+ * 2. 退出装备管理触发。
+ * ============================================================================
+ */
 class EquipmentSpaceTrigger {
 
     readonly #credential: Credential;
@@ -28,7 +36,7 @@ class EquipmentSpaceTrigger {
         }
     }
 
-    async updateEquipmentSpace() {
+    async triggerUpdate() {
         await this.#initializeEquipmentPage();
         const spaceCount = this.equipmentPage!.spaceCount;
         LocalSettingManager.setEquipmentCapacityMax(this.#credential.id, spaceCount <= 1);
