@@ -5,6 +5,7 @@ import Role from "../role/Role";
 import PersonalPetManagementPage from "./PersonalPetManagementPage";
 import PetMapStatusTrigger from "../trigger/PetMapStatusTrigger";
 import PetSpaceTrigger from "../trigger/PetSpaceTrigger";
+import PetStatusTrigger from "../trigger/PetStatusTrigger";
 
 class PetManagementReturnInterceptor {
 
@@ -36,6 +37,7 @@ class PetManagementReturnInterceptor {
         await this.#initializePetPage();
         await Promise.all([
             new PetMapStatusTrigger(this.#credential).triggerUpdate(),
+            new PetStatusTrigger(this.#credential).withPetPage(this.#petPage).triggerUpdate(),
             new PetSpaceTrigger(this.#credential).withPetPage(this.#petPage).triggerUpdate(),
             new BattleFieldTrigger(this.#credential).withRole(this.#role).withPetPage(this.#petPage).triggerUpdate()
         ]);
