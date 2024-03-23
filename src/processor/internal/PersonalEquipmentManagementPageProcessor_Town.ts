@@ -1,6 +1,5 @@
 import _, {escape, parseInt, unescape} from "lodash";
 import TownBank from "../../core/bank/TownBank";
-import BattleFieldTrigger from "../../core/trigger/BattleFieldTrigger";
 import SetupLoader from "../../core/config/SetupLoader";
 import CastleInformation from "../../core/dashboard/CastleInformation";
 import TownDashboard from "../../core/dashboard/TownDashboard";
@@ -30,7 +29,6 @@ import StringUtils from "../../util/StringUtils";
 import PageProcessorContext from "../PageProcessorContext";
 import PersonalEquipmentManagementPageProcessor from "./PersonalEquipmentManagementPageProcessor";
 import EquipmentManagementReturnInterceptor from "../../core/equipment/EquipmentManagementReturnInterceptor";
-import EquipmentStatusTrigger from "../../core/trigger/EquipmentStatusTrigger";
 
 class PersonalEquipmentManagementPageProcessor_Town extends PersonalEquipmentManagementPageProcessor {
 
@@ -111,22 +109,10 @@ class PersonalEquipmentManagementPageProcessor_Town extends PersonalEquipmentMan
     doBindImmutableButtons(credential: Credential, context?: PageProcessorContext) {
         this.doBindReturnButton(credential);
         $("#refreshButton").on("click", () => {
-            new EquipmentStatusTrigger(credential)
-                .triggerUpdate()
-                .then(() => {
-                    new BattleFieldTrigger(credential)
-                        .triggerUpdate()
-                        .then(field => {
-                            this.doScrollToPageTitle();
-                            $("#messageBoardManager").html(NpcLoader.randomNpcImageHtml());
-                            MessageBoard.resetMessageBoard(this.doGenerateWelcomeMessageHtml());
-                            this.doRefreshMutablePage(credential, context);
-                            MessageBoard.publishMessage("装备数据更新完成。");
-                            if (field) {
-                                MessageBoard.publishMessage("战斗场所切换到【" + field + "】。");
-                            }
-                        });
-                });
+            this.doScrollToPageTitle();
+            $("#messageBoardManager").html(NpcLoader.randomNpcImageHtml());
+            MessageBoard.resetMessageBoard(this.doGenerateWelcomeMessageHtml());
+            this.doRefreshMutablePage(credential, context);
         });
         let townId: string | undefined = undefined;
         if (context) {
