@@ -60,7 +60,7 @@ class BattleReturnInterceptor {
         if (mod === 83 || this.#hasHarvestIncludesPetMap()) {
             await new PetMapStatusTrigger(this.#credential).triggerUpdate();
         }
-        if (mod === 89 || this.#hasHarvest()) {
+        if (mod === 7 || mod === 29 || mod === 47 || mod === 67 || mod === 89 || this.#hasHarvest()) {
             await Promise.all([
                 this.#initializeEquipmentPage(),
                 this.#initializePetPage()
