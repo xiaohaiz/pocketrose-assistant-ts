@@ -5,6 +5,14 @@ import EquipmentExperienceConfig from "../equipment/EquipmentExperienceConfig";
 import PersonalEquipmentManagement from "../equipment/PersonalEquipmentManagement";
 import PersonalEquipmentManagementPage from "../equipment/PersonalEquipmentManagementPage";
 
+/**
+ * ============================================================================
+ * 智 能 战 斗 场 所 触 发 器
+ * ----------------------------------------------------------------------------
+ * 1. 战斗定期触发，战数尾数：19/37/59/79/97。
+ * 2. 退出装备管理触发。
+ * ============================================================================
+ */
 class EquipmentGrowthTrigger {
 
     readonly #credential: Credential;
@@ -19,7 +27,7 @@ class EquipmentGrowthTrigger {
         return this;
     }
 
-    async triggerEquipmentExperience() {
+    async triggerUpdate() {
         const config = SetupLoader.loadEquipmentExperienceConfig(this.#credential.id);
         if (!config.configured) {
             // 用户压根就没有配置，忽略吧，关闭显示的开关。

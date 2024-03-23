@@ -80,7 +80,7 @@ class BattleReturnInterceptor {
             await this.#initializeEquipmentPage();
             await new EquipmentGrowthTrigger(this.#credential)
                 .withEquipmentPage(this.#equipmentPage)
-                .triggerEquipmentExperience();
+                .triggerUpdate();
         }
         if (SetupLoader.isAutoSetBattleFieldEnabled()) {
             await Promise.all([

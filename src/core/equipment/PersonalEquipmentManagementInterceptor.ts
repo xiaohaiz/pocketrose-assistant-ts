@@ -22,7 +22,7 @@ class PersonalEquipmentManagementInterceptor {
 
         await new EquipmentGrowthTrigger(this.#credential)
             .withEquipmentPage(equipmentPage)
-            .triggerEquipmentExperience();
+            .triggerUpdate();
     }
 }
 
