@@ -9,6 +9,16 @@ import BattleFieldThreshold from "../battle/BattleFieldThreshold";
 import BattlePage from "../battle/BattlePage";
 import PersonalPetManagementPage from "../monster/PersonalPetManagementPage";
 
+/**
+ * ============================================================================
+ * 智 能 战 斗 场 所 触 发 器
+ * ----------------------------------------------------------------------------
+ * 1. 战斗触发。
+ * 2. 退出装备管理触发。
+ * 3. 退出宠物管理触发。
+ * 4. 城市页面刷新触发。
+ * ============================================================================
+ */
 class BattleFieldTrigger {
 
     readonly #credential: Credential;
@@ -30,7 +40,7 @@ class BattleFieldTrigger {
         return this;
     }
 
-    async autoSetBattleField(): Promise<string | undefined> {
+    async triggerUpdate(): Promise<string | undefined> {
         if (!SetupLoader.isAutoSetBattleFieldEnabled()) {
             return undefined;
         }
@@ -135,7 +145,7 @@ class BattleFieldTrigger {
     /**
      * 战斗时如果获取了额外RP
      */
-    async triggerBattleFieldChanged(battlePage: BattlePage) {
+    async triggerUpdateWhenBattle(battlePage: BattlePage) {
         if (battlePage.zodiacBattle) {
             // 当前在十二宫战斗，忽略
             return;

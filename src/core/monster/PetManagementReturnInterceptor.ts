@@ -37,7 +37,7 @@ class PetManagementReturnInterceptor {
         await Promise.all([
             new PetMapStatusTrigger(this.#credential).triggerUpdate(),
             new PetSpaceTrigger(this.#credential).withPetPage(this.#petPage).triggerUpdate(),
-            new BattleFieldTrigger(this.#credential).withRole(this.#role).withPetPage(this.#petPage).autoSetBattleField()
+            new BattleFieldTrigger(this.#credential).withRole(this.#role).withPetPage(this.#petPage).triggerUpdate()
         ]);
     }
 }

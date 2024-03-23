@@ -115,7 +115,7 @@ class PersonalEquipmentManagementPageProcessor_Town extends PersonalEquipmentMan
                 .updateEquipmentStatus()
                 .then(() => {
                     new BattleFieldTrigger(credential)
-                        .autoSetBattleField()
+                        .triggerUpdate()
                         .then(field => {
                             this.doScrollToPageTitle();
                             $("#messageBoardManager").html(NpcLoader.randomNpcImageHtml());

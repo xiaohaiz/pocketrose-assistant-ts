@@ -140,7 +140,7 @@ class TownDashboardKeyboardManager {
 
     #processKeyPressed_r() {
         new BattleFieldTrigger(this.#credential)
-            .autoSetBattleField()
+            .triggerUpdate()
             .then(() => $("#refreshButton").trigger("click"));
     }
 

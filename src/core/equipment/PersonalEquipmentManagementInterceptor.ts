@@ -18,7 +18,7 @@ class PersonalEquipmentManagementInterceptor {
         LocalSettingManager.setEquipmentCapacityMax(this.#credential.id, spaceCount <= 1);
 
         await new BattleFieldTrigger(this.#credential)
-            .autoSetBattleField();
+            .triggerUpdate();
 
         await new EquipmentGrowthTrigger(this.#credential)
             .withEquipmentPage(equipmentPage)

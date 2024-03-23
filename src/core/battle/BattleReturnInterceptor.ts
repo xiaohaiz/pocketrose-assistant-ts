@@ -90,7 +90,7 @@ class BattleReturnInterceptor {
             await new BattleFieldTrigger(this.#credential)
                 .withRole(this.#role)
                 .withPetPage(this.#petPage)
-                .triggerBattleFieldChanged(this.#battlePage);
+                .triggerUpdateWhenBattle(this.#battlePage);
 
         }
         if (this.#battlePage.zodiacBattle) {
