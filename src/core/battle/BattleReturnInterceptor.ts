@@ -1,5 +1,5 @@
 import Credential from "../../util/Credential";
-import BankRecordManager from "../bank/BankRecordManager";
+import BankAccountTrigger from "../trigger/BankAccountTrigger";
 import EquipmentLocalStorage from "../equipment/EquipmentLocalStorage";
 import PetLocalStorage from "../monster/PetLocalStorage";
 import PetLoveTrigger from "../trigger/PetLoveTrigger";
@@ -56,7 +56,7 @@ class BattleReturnInterceptor {
     async beforeExitBattle() {
         const mod = this.#battleCount & 100;
         if (mod === 73) {
-            await new BankRecordManager(this.#credential)
+            await new BankAccountTrigger(this.#credential)
                 .updateBankRecord();
         }
         if (mod === 83 || this.#hasHarvestIncludesPetMap()) {
@@ -143,7 +143,6 @@ class BattleReturnInterceptor {
 
     async doBeforeReturn(): Promise<void> {
         await Promise.all([
-            new BankRecordManager(this.#credential).triggerUpdateBankRecord(this.#battleCount),
             new PetLocalStorage(this.#credential).triggerUpdatePetMap(this.#battleCount),
             new PetLocalStorage(this.#credential).triggerUpdatePetStatus(this.#battleCount),
             new EquipmentLocalStorage(this.#credential).triggerUpdateEquipmentStatus(this.#battleCount),

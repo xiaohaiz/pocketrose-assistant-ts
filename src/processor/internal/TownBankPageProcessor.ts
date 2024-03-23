@@ -1,4 +1,4 @@
-import BankRecordManager from "../../core/bank/BankRecordManager";
+import BankAccountTrigger from "../../core/trigger/BankAccountTrigger";
 import TownBank from "../../core/bank/TownBank";
 import TownBankPage from "../../core/bank/TownBankPage";
 import TownBankPageParser from "../../core/bank/TownBankPageParser";
@@ -176,7 +176,7 @@ class TownBankPageProcessor extends PageProcessorCredentialSupport {
         });
         $("#updateButton").on("click", () => {
             $("#updateButton").prop("disabled", true);
-            new BankRecordManager(credential)
+            new BankAccountTrigger(credential)
                 .updateBankRecord()
                 .then(() => {
                     MessageBoard.publishMessage("银行资产已经更新。");
