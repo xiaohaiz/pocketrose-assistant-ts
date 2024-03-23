@@ -240,7 +240,7 @@ abstract class PersonalTeamPageProcessor extends PageProcessorCredentialSupport 
             $("input").prop("disabled", true);
             MessageBoard.publishMessage("开始更新宠物数据......");
             new PetMapStatusTrigger(credential)
-                .updatePetMapStatus()
+                .triggerUpdate()
                 .then(() => {
                     new PetStatusTrigger(credential)
                         .updatePetStatus()

@@ -27,6 +27,7 @@ import PersonalPetManagementPageProcessor from "./PersonalPetManagementPageProce
 import KeyboardShortcutBuilder from "../../util/KeyboardShortcutBuilder";
 import PetMapStatusTrigger from "../../core/trigger/PetMapStatusTrigger";
 import PetStatusTrigger from "../../core/trigger/PetStatusTrigger";
+import PetManagementReturnInterceptor from "../../core/monster/PetManagementReturnInterceptor";
 
 class PersonalPetManagementPageProcessor_Town extends PersonalPetManagementPageProcessor {
 
@@ -35,12 +36,17 @@ class PersonalPetManagementPageProcessor_Town extends PersonalPetManagementPageP
     }
 
 
+    async doBeforeExit(credential: Credential): Promise<void> {
+        PageUtils.disableButtons();
+        await new PetManagementReturnInterceptor(credential).beforeExitPetManagement();
+    }
+
     doBindKeyboardShortcut(credential: Credential) {
         KeyboardShortcutBuilder.newInstance()
             .onKeyPressed("e", () => PageUtils.triggerClick("equipmentButton"))
             .onKeyPressed("r", () => {
                 new PetMapStatusTrigger(credential)
-                    .updatePetMapStatus()
+                    .triggerUpdate()
                     .then(() => {
                         new PetStatusTrigger(credential)
                             .updatePetStatus()

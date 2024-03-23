@@ -8,7 +8,6 @@ import StringUtils from "../../util/StringUtils";
 import PageProcessorContext from "../PageProcessorContext";
 import PageProcessorCredentialSupport from "../PageProcessorCredentialSupport";
 import KeyboardShortcutBuilder from "../../util/KeyboardShortcutBuilder";
-import PersonalPetManagementInterceptor from "../../core/monster/PersonalPetManagementInterceptor";
 
 abstract class PersonalPetManagementPageProcessor extends PageProcessorCredentialSupport {
 
@@ -124,20 +123,17 @@ abstract class PersonalPetManagementPageProcessor extends PageProcessorCredentia
         $("#extensionCell_1").html(PageUtils.generateEquipmentManagementForm(credential));
 
         $("#exitButton").on("click", () => {
-            PageUtils.disableButtons();
-            new PersonalPetManagementInterceptor(credential)
-                .beforeExitPersonalPetManagement()
-                .then(() => PageUtils.triggerClick("returnButton"));
+            this.doBeforeExit(credential).then(() => PageUtils.triggerClick("returnButton"));
         });
         $("#equipmentButton").on("click", () => {
-            PageUtils.disableButtons();
-            new PersonalPetManagementInterceptor(credential)
-                .beforeExitPersonalPetManagement()
-                .then(() => PageUtils.triggerClick("openEquipmentManagement"));
+            this.doBeforeExit(credential).then(() => PageUtils.triggerClick("openEquipmentManagement"));
         });
 
-
         this.doProcessWithPageParsed(credential, page, context);
+    }
+
+    async doBeforeExit(credential: Credential) {
+        PageUtils.disableButtons();
     }
 
     abstract doProcessWithPageParsed(credential: Credential, page: PersonalPetManagementPage, context?: PageProcessorContext): void;

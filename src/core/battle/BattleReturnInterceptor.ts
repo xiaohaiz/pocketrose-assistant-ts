@@ -58,8 +58,7 @@ class BattleReturnInterceptor {
             await new BankAccountTrigger(this.#credential).triggerUpdate();
         }
         if (mod === 83 || this.#hasHarvestIncludesPetMap()) {
-            await new PetMapStatusTrigger(this.#credential)
-                .updatePetMapStatus();
+            await new PetMapStatusTrigger(this.#credential).triggerUpdate();
         }
         if (mod === 89 || this.#hasHarvest()) {
             await Promise.all([

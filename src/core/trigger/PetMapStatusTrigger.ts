@@ -5,6 +5,10 @@ import RolePetMapStorage from "../monster/RolePetMapStorage";
 /**
  * ============================================================================
  * 宠 物 图 鉴 状 态 触 发 器
+ * ----------------------------------------------------------------------------
+ * 1. 定期战斗后触发，战数尾数83。
+ * 2. 战斗中图鉴入手触发。
+ * 3. 退出城市宠物管理时触发。
  * ============================================================================
  */
 class PetMapStatusTrigger {
@@ -18,7 +22,7 @@ class PetMapStatusTrigger {
     /**
      * 更新宠物图鉴状态。
      */
-    async updatePetMapStatus() {
+    async triggerUpdate() {
         const page = await new TownPetMapHouse(this.#credential).open();
         const json = page.asJson();
         await RolePetMapStorage.getInstance().write(this.#credential.id, json);

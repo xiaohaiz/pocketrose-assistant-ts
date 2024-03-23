@@ -211,7 +211,7 @@ class TownPetMapHousePageProcessor extends PageProcessorCredentialSupport {
             $("button").prop("disabled", true);
 
             new PetMapStatusTrigger(credential)
-                .updatePetMapStatus()
+                .triggerUpdate()
                 .then(() => {
                     MessageBoard.publishMessage("宠物图鉴信息已存储。");
                     new PetStatusTrigger(credential)
