@@ -81,7 +81,7 @@ class PersonalEquipmentManagementPageProcessor_Town extends PersonalEquipmentMan
         let html = super.doGenerateImmutableButtons();
         html += "<input type='button' id='itemShopButton' class='COMMAND_BUTTON' value='物品商店(s)'>";
         html += "<input type='button' id='gemHouseButton' class='COMMAND_BUTTON' value='宝石镶嵌(f)'>";
-        html += "<input type='button' id='updateButton' class='COMMAND_BUTTON' value='更新装备数据(u)'>";
+        html += "<input type='button' id='updateButton' class='COMMAND_BUTTON' value='更新装备数据(u)' style='color:red'>";
         return html;
     }
 

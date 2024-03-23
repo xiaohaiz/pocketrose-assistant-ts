@@ -33,7 +33,7 @@ class PersonalPetManagementPageProcessor_Town extends PersonalPetManagementPageP
 
     doGenerateCommandButtons(): string {
         let html = super.doGenerateCommandButtons();
-        html += "<button role='button' id='updateButton' class='COMMAND_BUTTON'>更新统计数据(u)</button>";
+        html += "<button role='button' id='updateButton' class='COMMAND_BUTTON' style='color:red'>更新统计数据(u)</button>";
         return html;
     }
 
