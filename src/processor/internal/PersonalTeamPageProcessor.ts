@@ -19,7 +19,6 @@ import PageProcessorContext from "../PageProcessorContext";
 import PageProcessorCredentialSupport from "../PageProcessorCredentialSupport";
 import PetMapStatusTrigger from "../../core/trigger/PetMapStatusTrigger";
 import PetStatusTrigger from "../../core/trigger/PetStatusTrigger";
-import EquipmentStatusTrigger from "../../core/trigger/EquipmentStatusTrigger";
 
 abstract class PersonalTeamPageProcessor extends PageProcessorCredentialSupport {
 
@@ -67,14 +66,11 @@ abstract class PersonalTeamPageProcessor extends PageProcessorCredentialSupport 
         html += "<table style='background-color:transparent;margin:auto;border-spacing:0;border-width:0'>";
         html += "<tbody>";
         html += "<tr>";
-        html += "<td colspan='6' style='text-align:center'>";
+        html += "<td colspan='5' style='text-align:center'>";
         html += "<input type='checkbox' id='includeExternal'>是否包含编外队员";
         html += "</td>";
         html += "</tr>";
         html += "<tr>";
-        html += "<td>";
-        html += "<button role='button' id='updateEquipmentButton'>更新装备数据</button>";
-        html += "</td>";
         html += "<td>";
         html += "<button role='button' id='updatePetButton'>更新宠物数据</button>";
         html += "</td>";
@@ -92,14 +88,14 @@ abstract class PersonalTeamPageProcessor extends PageProcessorCredentialSupport 
         html += "</td>";
         html += "</tr>";
         html += "<tr>";
-        html += "<td colspan='6' style='text-align:center'>";
+        html += "<td colspan='5' style='text-align:center'>";
         html += "<input type='text' id='searchName' size='15' maxlength='40' spellcheck='false'>";
         html += "<input type='button' id='searchTeamEquipmentButton' value='查找团队装备'>";
         html += "<input type='button' id='searchTeamPetButton' value='查找团队宠物'>";
         html += "</td>";
         html += "</tr>";
         html += "<tr>";
-        html += "<td colspan='6' style='text-align:center'>";
+        html += "<td colspan='5' style='text-align:center'>";
         html += "<input type='button' id='searchTeamSpecialEquipmentButton_A' value='神枪' style='color:red'>";
         html += "<input type='button' id='searchTeamSpecialEquipmentButton_B' value='斧头' style='color:green'>";
         html += "<input type='button' id='searchTeamSpecialEquipmentButton_C' value='神器' style='color:blue'>";
@@ -114,7 +110,7 @@ abstract class PersonalTeamPageProcessor extends PageProcessorCredentialSupport 
         html += "</td>";
         html += "</tr>";
         html += "<tr>";
-        html += "<td colspan='6' style='text-align:center'>";
+        html += "<td colspan='5' style='text-align:center'>";
         html += "<input type='button' id='searchTeamNonFullExperienceEquipmentButton' value='经验未满装备'>";
         html += "<input type='button' id='searchTeamUsingEquipmentButton' value='使用中的装备'>";
         html += "<input type='button' id='searchTeamStarEquipmentButton' value='有齐心的装备'>";
@@ -171,7 +167,6 @@ abstract class PersonalTeamPageProcessor extends PageProcessorCredentialSupport 
 
         this.#bindRefreshButton();
         this.bindReturnButton(credential);
-        this.#bindUpdateEquipmentButton(credential);
         this.#bindUpdatePetButton(credential);
         this.#bindListEquipmentButton();
         this.#bindListPetButton();
@@ -218,21 +213,6 @@ abstract class PersonalTeamPageProcessor extends PageProcessorCredentialSupport 
     }
 
     abstract bindReturnButton(credential: Credential): void;
-
-    #bindUpdateEquipmentButton(credential: Credential) {
-        $("#updateEquipmentButton").on("click", () => {
-            $("button").prop("disabled", true);
-            $("input").prop("disabled", true);
-            MessageBoard.publishMessage("开始更新装备数据......");
-            new EquipmentStatusTrigger(credential)
-                .triggerUpdate()
-                .then(() => {
-                    MessageBoard.publishMessage("装备数据更新完成。");
-                    $("button").prop("disabled", false);
-                    $("input").prop("disabled", false);
-                });
-        });
-    }
 
     #bindUpdatePetButton(credential: Credential) {
         $("#updatePetButton").on("click", () => {

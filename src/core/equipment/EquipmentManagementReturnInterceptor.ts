@@ -4,6 +4,7 @@ import BattleFieldTrigger from "../trigger/BattleFieldTrigger";
 import EquipmentGrowthTrigger from "../trigger/EquipmentGrowthTrigger";
 import PersonalEquipmentManagementPage from "./PersonalEquipmentManagementPage";
 import EquipmentSpaceTrigger from "../trigger/EquipmentSpaceTrigger";
+import EquipmentStatusTrigger from "../trigger/EquipmentStatusTrigger";
 
 class EquipmentManagementReturnInterceptor {
 
@@ -35,6 +36,9 @@ class EquipmentManagementReturnInterceptor {
             new BattleFieldTrigger(this.#credential)
                 .triggerUpdate(),
             new EquipmentGrowthTrigger(this.#credential)
+                .withEquipmentPage(this.#equipmentPage)
+                .triggerUpdate(),
+            new EquipmentStatusTrigger(this.#credential)
                 .withEquipmentPage(this.#equipmentPage)
                 .triggerUpdate()
         ]);
