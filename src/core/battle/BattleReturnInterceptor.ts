@@ -55,8 +55,7 @@ class BattleReturnInterceptor {
     async beforeExitBattle() {
         const mod = this.#battleCount & 100;
         if (mod === 73 || this.#battlePage.treasureBattle) {
-            await new BankAccountTrigger(this.#credential)
-                .updateBankRecord();
+            await new BankAccountTrigger(this.#credential).triggerUpdate();
         }
         if (mod === 83 || this.#hasHarvestIncludesPetMap()) {
             await new PetMapStatusTrigger(this.#credential)

@@ -177,7 +177,7 @@ class TownBankPageProcessor extends PageProcessorCredentialSupport {
         $("#updateButton").on("click", () => {
             $("#updateButton").prop("disabled", true);
             new BankAccountTrigger(credential)
-                .updateBankRecord()
+                .triggerUpdate()
                 .then(() => {
                     MessageBoard.publishMessage("银行资产已经更新。");
                     $("#updateButton").prop("disabled", false);

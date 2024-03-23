@@ -12,7 +12,6 @@ import TownBank from "../bank/TownBank";
  * 1. 定期战斗后更新，尾数73。
  * 2. 秘宝之岛战斗后更新。
  * 3. 退出城市银行时更新。
- * 4. 退出城堡银行时更新。
  * ============================================================================
  */
 class BankAccountTrigger {
@@ -23,26 +22,17 @@ class BankAccountTrigger {
         this.#credential = credential;
     }
 
-    async updateBankRecord(): Promise<void> {
-        return await (() => {
-            return new Promise<void>(resolve => {
-
-                new TownBank(this.#credential).load().then(account => {
-                    if (_.isNaN(account.cash) || _.isNaN(account.saving)) {
-                        // Do nothing and return
-                        resolve();
-                    } else {
-                        const data = new BankRecord();
-                        data.roleId = this.#credential.id;
-                        data.recordDate = DayRange.current().asText();
-                        data.cash = account.cash;
-                        data.saving = account.saving;
-                        BankRecordStorage.getInstance().upsert(data).then(() => resolve());
-                    }
-                });
-
-            });
-        })();
+    async triggerUpdate() {
+        const account = await new TownBank(this.#credential).load();
+        if (_.isNaN(account.cash) || _.isNaN(account.saving)) {
+            return;
+        }
+        const data = new BankRecord();
+        data.roleId = this.#credential.id;
+        data.recordDate = DayRange.current().asText();
+        data.cash = account.cash;
+        data.saving = account.saving;
+        await BankRecordStorage.getInstance().upsert(data);
     }
 
     static async importFromJson(json: string) {
