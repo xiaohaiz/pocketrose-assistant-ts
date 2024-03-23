@@ -16,6 +16,7 @@ import EquipmentStatusTrigger from "../trigger/EquipmentStatusTrigger";
 import EquipmentGrowthTrigger from "../trigger/EquipmentGrowthTrigger";
 import SetupLoader from "../config/SetupLoader";
 import LocalSettingManager from "../config/LocalSettingManager";
+import EquipmentSpaceTrigger from "../trigger/EquipmentSpaceTrigger";
 
 class BattleReturnInterceptor {
 
@@ -105,8 +106,13 @@ class BattleReturnInterceptor {
                 this.#initializeEquipmentPage(),
                 this.#initializePetPage()
             ]);
-            const spaceCount = this.#equipmentPage!.spaceCount;
-            LocalSettingManager.setEquipmentCapacityMax(this.#credential.id, spaceCount <= 1);
+
+            await Promise.all([
+                new EquipmentSpaceTrigger(this.#credential)
+                    .withEquipmentPage(this.#equipmentPage)
+                    .updateEquipmentSpace()
+            ]);
+
             const petCount = this.#petPage!.petList!.length;
             LocalSettingManager.setPetCapacityMax(this.#credential.id, (petCount === 3));
         }
