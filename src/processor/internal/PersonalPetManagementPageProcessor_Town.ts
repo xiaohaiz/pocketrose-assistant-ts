@@ -25,8 +25,6 @@ import StringUtils from "../../util/StringUtils";
 import PageProcessorContext from "../PageProcessorContext";
 import PersonalPetManagementPageProcessor from "./PersonalPetManagementPageProcessor";
 import KeyboardShortcutBuilder from "../../util/KeyboardShortcutBuilder";
-import PetMapStatusTrigger from "../../core/trigger/PetMapStatusTrigger";
-import PetStatusTrigger from "../../core/trigger/PetStatusTrigger";
 import PetManagementReturnInterceptor from "../../core/monster/PetManagementReturnInterceptor";
 
 class PersonalPetManagementPageProcessor_Town extends PersonalPetManagementPageProcessor {
@@ -44,19 +42,7 @@ class PersonalPetManagementPageProcessor_Town extends PersonalPetManagementPageP
     doBindKeyboardShortcut(credential: Credential) {
         KeyboardShortcutBuilder.newInstance()
             .onKeyPressed("e", () => PageUtils.triggerClick("equipmentButton"))
-            .onKeyPressed("r", () => {
-                new PetMapStatusTrigger(credential)
-                    .triggerUpdate()
-                    .then(() => {
-                        new PetStatusTrigger(credential)
-                            .triggerUpdate()
-                            .then(() => {
-                                $("#refreshButton").trigger("click");
-                                MessageBoard.publishMessage("宠物数据更新完成。");
-                                MessageBoard.publishMessage("宠物图鉴更新完成。");
-                            });
-                    });
-            })
+            .onKeyPressed("r", () => PageUtils.triggerClick("refreshButton"))
             .onKeyPressed("1", () => $("#pet_spell_study_1").trigger("click"))
             .onKeyPressed("2", () => $("#pet_spell_study_2").trigger("click"))
             .onKeyPressed("3", () => $("#pet_spell_study_3").trigger("click"))

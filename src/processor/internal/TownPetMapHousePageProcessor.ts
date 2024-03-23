@@ -15,8 +15,6 @@ import MessageBoard from "../../util/MessageBoard";
 import PageUtils from "../../util/PageUtils";
 import PageProcessorContext from "../PageProcessorContext";
 import PageProcessorCredentialSupport from "../PageProcessorCredentialSupport";
-import PetMapStatusTrigger from "../../core/trigger/PetMapStatusTrigger";
-import PetStatusTrigger from "../../core/trigger/PetStatusTrigger";
 
 class TownPetMapHousePageProcessor extends PageProcessorCredentialSupport {
 
@@ -24,7 +22,6 @@ class TownPetMapHousePageProcessor extends PageProcessorCredentialSupport {
         const page = TownPetMapHouse.parsePage(PageUtils.currentPageHtml());
         this.#renderImmutablePage(credential, page, context);
         KeyboardShortcutBuilder.newInstance()
-            .onKeyPressed("r", () => $("#updateButton").trigger("click"))
             .onKeyPressed("u", () => $("#openPetManagement").trigger("click"))
             .onEscapePressed(() => $("#returnButton").trigger("click"))
             .withDefaultPredicate()
@@ -81,7 +78,6 @@ class TownPetMapHousePageProcessor extends PageProcessorCredentialSupport {
             returnTitle = "返回" + town?.name + "(Esc)";
         }
         html = "";
-        html += "<button role='button' id='updateButton'>更新宠物信息(r)</button>";
         html += "<input type='text' id='petCode' size='10' maxlength='10'>";
         html += "<button role='button' id='searchButton'>查找图鉴</button>";
         html += "<button role='button' id='returnButton'>" + returnTitle + "</button>";
@@ -179,7 +175,6 @@ class TownPetMapHousePageProcessor extends PageProcessorCredentialSupport {
                 .html("<tr><td>" + mh + "</td></tr>");
         }
 
-        this.#bindUpdateButton(credential);
         this.#bindSearchButton(credential);
         $("#returnButton").on("click", () => {
             $("#returnTown").trigger("click");
@@ -203,26 +198,6 @@ class TownPetMapHousePageProcessor extends PageProcessorCredentialSupport {
         $("table:eq(2)")
             .attr("id", "t1")
             .css("width", "100%");
-    }
-
-    #bindUpdateButton(credential: Credential) {
-        $("#updateButton").on("click", () => {
-            $("input:text").prop("disabled", true);
-            $("button").prop("disabled", true);
-
-            new PetMapStatusTrigger(credential)
-                .triggerUpdate()
-                .then(() => {
-                    MessageBoard.publishMessage("宠物图鉴信息已存储。");
-                    new PetStatusTrigger(credential)
-                        .triggerUpdate()
-                        .then(() => {
-                            MessageBoard.publishMessage("宠物信息已存储。");
-                            $("input:text").prop("disabled", false);
-                            $("button").prop("disabled", false);
-                        });
-                });
-        });
     }
 
     #bindSearchButton(credential: Credential) {
