@@ -19,7 +19,7 @@ import StringUtils from "../../util/StringUtils";
 import PageProcessorContext from "../PageProcessorContext";
 import PageProcessorCredentialSupport from "../PageProcessorCredentialSupport";
 import PetMapStatusTrigger from "../../core/trigger/PetMapStatusTrigger";
-import PetStatusManager from "../../core/monster/PetStatusManager";
+import PetStatusTrigger from "../../core/trigger/PetStatusTrigger";
 
 abstract class PersonalTeamPageProcessor extends PageProcessorCredentialSupport {
 
@@ -240,7 +240,7 @@ abstract class PersonalTeamPageProcessor extends PageProcessorCredentialSupport 
             new PetMapStatusTrigger(credential)
                 .updatePetMapStatus()
                 .then(() => {
-                    new PetStatusManager(credential)
+                    new PetStatusTrigger(credential)
                         .updatePetStatus()
                         .then(() => {
                             MessageBoard.publishMessage("宠物数据更新完成。");

@@ -16,7 +16,7 @@ import PageUtils from "../../util/PageUtils";
 import PageProcessorContext from "../PageProcessorContext";
 import PageProcessorCredentialSupport from "../PageProcessorCredentialSupport";
 import PetMapStatusTrigger from "../../core/trigger/PetMapStatusTrigger";
-import PetStatusManager from "../../core/monster/PetStatusManager";
+import PetStatusTrigger from "../../core/trigger/PetStatusTrigger";
 
 class TownPetMapHousePageProcessor extends PageProcessorCredentialSupport {
 
@@ -214,7 +214,7 @@ class TownPetMapHousePageProcessor extends PageProcessorCredentialSupport {
                 .updatePetMapStatus()
                 .then(() => {
                     MessageBoard.publishMessage("宠物图鉴信息已存储。");
-                    new PetStatusManager(credential)
+                    new PetStatusTrigger(credential)
                         .updatePetStatus()
                         .then(() => {
                             MessageBoard.publishMessage("宠物信息已存储。");

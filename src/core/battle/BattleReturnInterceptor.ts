@@ -13,7 +13,7 @@ import PersonalPetManagementPage from "../monster/PersonalPetManagementPage";
 import PersonalPetManagement from "../monster/PersonalPetManagement";
 import PetMapStatusTrigger from "../trigger/PetMapStatusTrigger";
 import _ from "lodash";
-import PetStatusManager from "../monster/PetStatusManager";
+import PetStatusTrigger from "../trigger/PetStatusTrigger";
 import EquipmentStatusManager from "../equipment/EquipmentStatusManager";
 import EquipmentExperienceManager from "../equipment/EquipmentExperienceManager";
 import SetupLoader from "../config/SetupLoader";
@@ -68,7 +68,7 @@ class BattleReturnInterceptor {
                 this.#initializeEquipmentPage(),
                 this.#initializePetPage()
             ]);
-            await new PetStatusManager(this.#credential)
+            await new PetStatusTrigger(this.#credential)
                 .withEquipmentPage(this.#equipmentPage)
                 .withPetPage(this.#petPage)
                 .updatePetStatus();

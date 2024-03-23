@@ -1,21 +1,21 @@
 import Credential from "../../util/Credential";
-import PersonalPetManagementPage from "./PersonalPetManagementPage";
-import PersonalPetManagement from "./PersonalPetManagement";
+import PersonalPetManagementPage from "../monster/PersonalPetManagementPage";
+import PersonalPetManagement from "../monster/PersonalPetManagement";
 import PersonalEquipmentManagementPage from "../equipment/PersonalEquipmentManagementPage";
 import PersonalEquipmentManagement from "../equipment/PersonalEquipmentManagement";
-import Pet from "./Pet";
-import GoldenCage from "./GoldenCage";
+import Pet from "../monster/Pet";
+import GoldenCage from "../monster/GoldenCage";
 import CastleInformation from "../dashboard/CastleInformation";
-import CastleRanch from "./CastleRanch";
+import CastleRanch from "../monster/CastleRanch";
 import _ from "lodash";
-import RolePetStatusStorage from "./RolePetStatusStorage";
+import RolePetStatusStorage from "../monster/RolePetStatusStorage";
 
 /**
  * ============================================================================
- * 宠物状态更新管理器。
+ * 宠 物 状 态 触 发 器
  * ============================================================================
  */
-class PetStatusManager {
+class PetStatusTrigger {
 
     readonly #credential: Credential;
 
@@ -27,12 +27,12 @@ class PetStatusManager {
     #petPage?: PersonalPetManagementPage;
 
 
-    withEquipmentPage(value: PersonalEquipmentManagementPage | undefined): PetStatusManager {
+    withEquipmentPage(value: PersonalEquipmentManagementPage | undefined): PetStatusTrigger {
         this.#equipmentPage = value;
         return this;
     }
 
-    withPetPage(value: PersonalPetManagementPage | undefined): PetStatusManager {
+    withPetPage(value: PersonalPetManagementPage | undefined): PetStatusTrigger {
         this.#petPage = value;
         return this;
     }
@@ -114,4 +114,4 @@ class PetStatusManager {
     }
 }
 
-export = PetStatusManager;
+export = PetStatusTrigger;

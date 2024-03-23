@@ -26,7 +26,7 @@ import PageProcessorContext from "../PageProcessorContext";
 import PersonalPetManagementPageProcessor from "./PersonalPetManagementPageProcessor";
 import KeyboardShortcutBuilder from "../../util/KeyboardShortcutBuilder";
 import PetMapStatusTrigger from "../../core/trigger/PetMapStatusTrigger";
-import PetStatusManager from "../../core/monster/PetStatusManager";
+import PetStatusTrigger from "../../core/trigger/PetStatusTrigger";
 
 class PersonalPetManagementPageProcessor_Town extends PersonalPetManagementPageProcessor {
 
@@ -42,7 +42,7 @@ class PersonalPetManagementPageProcessor_Town extends PersonalPetManagementPageP
                 new PetMapStatusTrigger(credential)
                     .updatePetMapStatus()
                     .then(() => {
-                        new PetStatusManager(credential)
+                        new PetStatusTrigger(credential)
                             .updatePetStatus()
                             .then(() => {
                                 $("#refreshButton").trigger("click");
