@@ -125,10 +125,16 @@ class PersonalEquipmentManagementPageProcessor_Town extends PersonalEquipmentMan
         const html = PageUtils.generateGemHouseForm(credential, townId);
         $("#hiddenFormContainer2").html(html);
         $("#itemShopButton").on("click", () => {
-            $("#openItemShop").trigger("click");
+            PageUtils.disableButtons();
+            new EquipmentManagementReturnInterceptor(credential)
+                .beforeExitEquipmentManagement()
+                .then(() => PageUtils.triggerClick("openItemShop"));
         });
         $("#gemHouseButton").on("click", () => {
-            $("#openGemHouse").trigger("click");
+            PageUtils.disableButtons();
+            new EquipmentManagementReturnInterceptor(credential)
+                .beforeExitEquipmentManagement()
+                .then(() => PageUtils.triggerClick("openGemHouse"));
         });
     }
 
