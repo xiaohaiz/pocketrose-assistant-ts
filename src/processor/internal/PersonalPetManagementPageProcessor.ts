@@ -1,4 +1,3 @@
-import PersonalPetManagement from "../../core/monster/PersonalPetManagement";
 import PersonalPetManagementPage from "../../core/monster/PersonalPetManagementPage";
 import NpcLoader from "../../core/role/NpcLoader";
 import Credential from "../../util/Credential";
@@ -8,13 +7,19 @@ import StringUtils from "../../util/StringUtils";
 import PageProcessorContext from "../PageProcessorContext";
 import PageProcessorCredentialSupport from "../PageProcessorCredentialSupport";
 import KeyboardShortcutBuilder from "../../util/KeyboardShortcutBuilder";
+import PersonalPetManagementPageParser from "../../core/monster/PersonalPetManagementPageParser";
 
 abstract class PersonalPetManagementPageProcessor extends PageProcessorCredentialSupport {
 
     async doProcess(credential: Credential, context?: PageProcessorContext): Promise<void> {
-        const page = PersonalPetManagement.parsePage(PageUtils.currentPageHtml());
-        this.#renderImmutablePage(credential, page, context);
+        const petPage = PersonalPetManagementPageParser.parsePage(PageUtils.currentPageHtml());
+        this.#renderImmutablePage(credential, petPage, context);
         this.doBindKeyboardShortcut(credential);
+    }
+
+    async #reformatPage(credential: Credential,
+                        petPage: PersonalPetManagementPage,
+                        context?: PageProcessorContext) {
     }
 
     doBindKeyboardShortcut(credential: Credential) {
