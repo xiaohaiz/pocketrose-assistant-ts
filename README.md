@@ -1,5 +1,7 @@
 # pocketrose-assistant-ts
 
+### 版本 4.4.4-SNAPSHOT
+
 ### 版本 4.4.3
 
 1. 先发个周末福利，宠物位和装备位增加空位警告标志。

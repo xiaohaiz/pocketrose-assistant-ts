@@ -1,4 +1,3 @@
-import PersonalPetManagement from "../../core/monster/PersonalPetManagement";
 import PersonalPetManagementPage from "../../core/monster/PersonalPetManagementPage";
 import NpcLoader from "../../core/role/NpcLoader";
 import Credential from "../../util/Credential";
@@ -8,24 +7,24 @@ import StringUtils from "../../util/StringUtils";
 import PageProcessorContext from "../PageProcessorContext";
 import PageProcessorCredentialSupport from "../PageProcessorCredentialSupport";
 import KeyboardShortcutBuilder from "../../util/KeyboardShortcutBuilder";
+import PersonalPetManagementPageParser from "../../core/monster/PersonalPetManagementPageParser";
 
 abstract class PersonalPetManagementPageProcessor extends PageProcessorCredentialSupport {
 
     async doProcess(credential: Credential, context?: PageProcessorContext): Promise<void> {
-        const page = PersonalPetManagement.parsePage(PageUtils.currentPageHtml());
-        this.#renderImmutablePage(credential, page, context);
+        const petPage = PersonalPetManagementPageParser.parsePage(PageUtils.currentPageHtml());
+
+        await this.#reformatPage(credential, petPage, context);
+        await this.doBindCommandButtons(credential);
+
+        this.doProcessWithPageParsed(credential, petPage, context);
         this.doBindKeyboardShortcut(credential);
     }
 
-    doBindKeyboardShortcut(credential: Credential) {
-        KeyboardShortcutBuilder.newInstance()
-            .onKeyPressed("e", () => PageUtils.triggerClick("equipmentButton"))
-            .onEscapePressed(() => PageUtils.triggerClick("exitButton"))
-            .withDefaultPredicate()
-            .bind();
-    }
+    async #reformatPage(credential: Credential,
+                        petPage: PersonalPetManagementPage,
+                        context?: PageProcessorContext) {
 
-    #renderImmutablePage(credential: Credential, page: PersonalPetManagementPage, context?: PageProcessorContext) {
         $("input:submit[value='返回城市']").attr("id", "returnButton");
 
         // noinspection HtmlDeprecatedTag,XmlDeprecatedElement
@@ -33,9 +32,9 @@ abstract class PersonalPetManagementPageProcessor extends PageProcessorCredentia
         html += "<table style='background-color:#888888;width:100%;text-align:center'>";
         html += "<tbody style='background-color:#F8F0E0'>";
         html += "<tr>";
-        html += "<td style='background-color:navy;color:yellowgreen;font-size:150%;font-weight:bold' id='pageTitle'>" +
-            "＜＜  宠 物 管 理  ＞＞" +
-            "</td>";
+        html += "<td style='background-color:navy;color:yellowgreen;font-size:150%;font-weight:bold' id='pageTitle'>";
+        html += "＜＜  宠 物 管 理  ＞＞";
+        html += "</td>";
         html += "</tr>";
         html += "<tr style='display:none'>";
         html += "<td id='eden'></td>";
@@ -107,8 +106,7 @@ abstract class PersonalPetManagementPageProcessor extends PageProcessorCredentia
         html += "<tbody style='background-color:#F8F0E0'>";
         html += "<tr>";
         html += "<td id='commandCell'>";
-        html += "<button role='button' id='exitButton'>退出宠物管理(Esc)</button>";
-        html += "<button role='button' id='equipmentButton'>转入装备管理(e)</button>";
+        html += this.doGenerateCommandButtons();
         html += "</td>";
         html += "</tr>";
         html += "<tr style='display:none'>";
@@ -121,19 +119,40 @@ abstract class PersonalPetManagementPageProcessor extends PageProcessorCredentia
         $("#returnButton").parent().hide();
 
         $("#extensionCell_1").html(PageUtils.generateEquipmentManagementForm(credential));
-
-        $("#exitButton").on("click", () => {
-            this.doBeforeExit(credential).then(() => PageUtils.triggerClick("returnButton"));
-        });
-        $("#equipmentButton").on("click", () => {
-            this.doBeforeExit(credential).then(() => PageUtils.triggerClick("openEquipmentManagement"));
-        });
-
-        this.doProcessWithPageParsed(credential, page, context);
     }
 
-    async doBeforeExit(credential: Credential) {
-        PageUtils.disableButtons();
+    doGenerateCommandButtons(): string {
+        let html = "";
+        html += "<button role='button' id='exitButton' class='COMMAND_BUTTON'>退出宠物管理(Esc)</button>";
+        html += "<button role='button' id='equipmentButton' class='COMMAND_BUTTON'>转入装备管理(e)</button>";
+        return html;
+    }
+
+    async doBindCommandButtons(credential: Credential) {
+        $("#exitButton").on("click", () => {
+            PageUtils.disableButtons();
+            this.doReturnButtonClicked(credential)
+                .then(() => PageUtils.triggerClick("returnButton"));
+        });
+        $("#equipmentButton").on("click", () => {
+            PageUtils.disableButtons();
+            this.doEquipmentButtonClicked(credential)
+                .then(() => PageUtils.triggerClick("openEquipmentManagement"));
+        });
+    }
+
+    async doReturnButtonClicked(credential: Credential) {
+    }
+
+    async doEquipmentButtonClicked(credential: Credential) {
+    }
+
+    doBindKeyboardShortcut(credential: Credential) {
+        KeyboardShortcutBuilder.newInstance()
+            .onKeyPressed("e", () => PageUtils.triggerClick("equipmentButton"))
+            .onEscapePressed(() => PageUtils.triggerClick("exitButton"))
+            .withDefaultPredicate()
+            .bind();
     }
 
     abstract doProcessWithPageParsed(credential: Credential, page: PersonalPetManagementPage, context?: PageProcessorContext): void;
