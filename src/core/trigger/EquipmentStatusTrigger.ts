@@ -1,14 +1,14 @@
 import Credential from "../../util/Credential";
-import PersonalEquipmentManagementPage from "./PersonalEquipmentManagementPage";
-import PersonalEquipmentManagement from "./PersonalEquipmentManagement";
-import Equipment from "./Equipment";
+import PersonalEquipmentManagementPage from "../equipment/PersonalEquipmentManagementPage";
+import PersonalEquipmentManagement from "../equipment/PersonalEquipmentManagement";
+import Equipment from "../equipment/Equipment";
 import _ from "lodash";
-import TreasureBag from "./TreasureBag";
+import TreasureBag from "../equipment/TreasureBag";
 import CastleInformation from "../dashboard/CastleInformation";
-import CastleWarehouse from "./CastleWarehouse";
-import RoleEquipmentStatusStorage from "./RoleEquipmentStatusStorage";
+import CastleWarehouse from "../equipment/CastleWarehouse";
+import RoleEquipmentStatusStorage from "../equipment/RoleEquipmentStatusStorage";
 
-class EquipmentStatusManager {
+class EquipmentStatusTrigger {
 
     readonly #credential: Credential;
 
@@ -18,7 +18,7 @@ class EquipmentStatusManager {
 
     #equipmentPage?: PersonalEquipmentManagementPage;
 
-    withEquipmentPage(value: PersonalEquipmentManagementPage | undefined): EquipmentStatusManager {
+    withEquipmentPage(value: PersonalEquipmentManagementPage | undefined): EquipmentStatusTrigger {
         this.#equipmentPage = value;
         return this;
     }
@@ -102,4 +102,4 @@ class EquipmentStatusManager {
     }
 }
 
-export = EquipmentStatusManager;
+export = EquipmentStatusTrigger;
