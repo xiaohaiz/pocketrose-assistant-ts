@@ -14,7 +14,7 @@ import PetMapStatusTrigger from "../trigger/PetMapStatusTrigger";
 import _ from "lodash";
 import PetStatusTrigger from "../trigger/PetStatusTrigger";
 import EquipmentStatusManager from "../equipment/EquipmentStatusManager";
-import EquipmentExperienceManager from "../equipment/EquipmentExperienceManager";
+import EquipmentGrowthTrigger from "../trigger/EquipmentGrowthTrigger";
 import SetupLoader from "../config/SetupLoader";
 import LocalSettingManager from "../config/LocalSettingManager";
 
@@ -80,7 +80,7 @@ class BattleReturnInterceptor {
         }
         if (mod === 19 || mod === 37 || mod === 59 || mod === 79 || mod === 97) {
             await this.#initializeEquipmentPage();
-            await new EquipmentExperienceManager(this.#credential)
+            await new EquipmentGrowthTrigger(this.#credential)
                 .withEquipmentPage(this.#equipmentPage)
                 .triggerEquipmentExperience();
         }

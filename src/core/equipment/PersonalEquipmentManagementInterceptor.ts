@@ -2,7 +2,7 @@ import Credential from "../../util/Credential";
 import PersonalEquipmentManagement from "./PersonalEquipmentManagement";
 import LocalSettingManager from "../config/LocalSettingManager";
 import BattleFieldManager from "../battle/BattleFieldManager";
-import EquipmentExperienceManager from "./EquipmentExperienceManager";
+import EquipmentGrowthTrigger from "../trigger/EquipmentGrowthTrigger";
 
 class PersonalEquipmentManagementInterceptor {
 
@@ -20,7 +20,7 @@ class PersonalEquipmentManagementInterceptor {
         await new BattleFieldManager(this.#credential)
             .autoSetBattleField();
 
-        await new EquipmentExperienceManager(this.#credential)
+        await new EquipmentGrowthTrigger(this.#credential)
             .withEquipmentPage(equipmentPage)
             .triggerEquipmentExperience();
     }

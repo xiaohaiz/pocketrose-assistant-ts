@@ -1,11 +1,11 @@
 import Credential from "../../util/Credential";
 import LocalSettingManager from "../config/LocalSettingManager";
 import SetupLoader from "../config/SetupLoader";
-import EquipmentExperienceConfig from "./EquipmentExperienceConfig";
-import PersonalEquipmentManagement from "./PersonalEquipmentManagement";
-import PersonalEquipmentManagementPage from "./PersonalEquipmentManagementPage";
+import EquipmentExperienceConfig from "../equipment/EquipmentExperienceConfig";
+import PersonalEquipmentManagement from "../equipment/PersonalEquipmentManagement";
+import PersonalEquipmentManagementPage from "../equipment/PersonalEquipmentManagementPage";
 
-class EquipmentExperienceManager {
+class EquipmentGrowthTrigger {
 
     readonly #credential: Credential;
     #equipmentPage?: PersonalEquipmentManagementPage;
@@ -14,7 +14,7 @@ class EquipmentExperienceManager {
         this.#credential = credential;
     }
 
-    withEquipmentPage(value: PersonalEquipmentManagementPage | undefined): EquipmentExperienceManager {
+    withEquipmentPage(value: PersonalEquipmentManagementPage | undefined): EquipmentGrowthTrigger {
         this.#equipmentPage = value;
         return this;
     }
@@ -94,4 +94,4 @@ class EquipmentExperienceManager {
 
 }
 
-export = EquipmentExperienceManager;
+export = EquipmentGrowthTrigger;

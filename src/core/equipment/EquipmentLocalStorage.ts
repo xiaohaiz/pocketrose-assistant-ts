@@ -5,7 +5,7 @@ import Castle from "../castle/Castle";
 import CastleInformation from "../dashboard/CastleInformation";
 import CastleWarehouse from "./CastleWarehouse";
 import Equipment from "./Equipment";
-import EquipmentExperienceManager from "./EquipmentExperienceManager";
+import EquipmentGrowthTrigger from "../trigger/EquipmentGrowthTrigger";
 import PersonalEquipmentManagement from "./PersonalEquipmentManagement";
 import PersonalEquipmentManagementPage from "./PersonalEquipmentManagementPage";
 import RoleEquipmentStatusStorage from "./RoleEquipmentStatusStorage";
@@ -94,7 +94,7 @@ async function findAllEquipments(credential: Credential): Promise<Equipment[]> {
 
             new PersonalEquipmentManagement(credential).open().then(equipmentPage => {
 
-                new EquipmentExperienceManager(credential)
+                new EquipmentGrowthTrigger(credential)
                     .withEquipmentPage(equipmentPage)
                     .triggerEquipmentExperience()
                     .then(() => {
