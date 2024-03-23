@@ -1,21 +1,17 @@
 import _ from "lodash";
 import Credential from "../../util/Credential";
 import NetworkUtils from "../../util/NetworkUtils";
-import BankRecordManager from "../bank/BankRecordManager";
-import BattleFieldManager from "../battle/BattleFieldManager";
 import BattlePage from "../battle/BattlePage";
 import BattleProcessor from "../battle/BattleProcessor";
 import BattleRecord from "../battle/BattleRecord";
 import BattleRecordStorage from "../battle/BattleRecordStorage";
 import SetupLoader from "../config/SetupLoader";
-import EquipmentLocalStorage from "../equipment/EquipmentLocalStorage";
 import TownInn from "../inn/TownInn";
-import PetLocalStorage from "../monster/PetLocalStorage";
-import RolePetLoveManager from "../monster/RolePetLoveManager";
 import TownDashboardTaxManager from "../town/TownDashboardTaxManager";
 import TownDashboardKeyboardManager from "./TownDashboardKeyboardManager";
 import TownDashboardLayout from "./TownDashboardLayout";
 import TownDashboardPage from "./TownDashboardPage";
+import BattleReturnInterceptor from "../battle/BattleReturnInterceptor";
 
 class TownDashboardLayout006 extends TownDashboardLayout {
 
@@ -382,23 +378,8 @@ function generateLodgeForm(credential: Credential) {
     $("#hidden-4").html(form);
 }
 
-/**
- * Duplicated coded, for more information, see BattleReturnInterceptor.
- */
 async function doBeforeReturn(credential: Credential, battleCount: number, battlePage: BattlePage): Promise<void> {
-    await Promise.all([
-        new BankRecordManager(credential).triggerUpdateBankRecord(battleCount),
-        new PetLocalStorage(credential).triggerUpdatePetMap(battleCount),
-        new PetLocalStorage(credential).triggerUpdatePetStatus(battleCount),
-        new EquipmentLocalStorage(credential).triggerUpdateEquipmentStatus(battleCount),
-        new BattleFieldManager(credential).triggerBattleFieldChanged(battlePage),
-        new RolePetLoveManager(credential).triggerPetLoveFixed(battlePage),
-    ]);
-    return await (() => {
-        return new Promise<void>(resolve => {
-            resolve();
-        });
-    })();
+    await new BattleReturnInterceptor(credential, battleCount, battlePage).beforeExitBattle();
 }
 
 export = TownDashboardLayout006;

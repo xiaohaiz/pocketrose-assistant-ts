@@ -1,6 +1,5 @@
 import _, {escape, parseInt, unescape} from "lodash";
 import TownBank from "../../core/bank/TownBank";
-import BattleFieldManager from "../../core/battle/BattleFieldManager";
 import SetupLoader from "../../core/config/SetupLoader";
 import CastleInformation from "../../core/dashboard/CastleInformation";
 import TownDashboard from "../../core/dashboard/TownDashboard";
@@ -9,8 +8,6 @@ import CastleWarehouse from "../../core/equipment/CastleWarehouse";
 import Equipment from "../../core/equipment/Equipment";
 import EquipmentConsecrateManager from "../../core/equipment/EquipmentConsecrateManager";
 import EquipmentExperienceConfig from "../../core/equipment/EquipmentExperienceConfig";
-import EquipmentExperienceManager from "../../core/equipment/EquipmentExperienceManager";
-import EquipmentLocalStorage from "../../core/equipment/EquipmentLocalStorage";
 import EquipmentSet from "../../core/equipment/EquipmentSet";
 import EquipmentSetLoader from "../../core/equipment/EquipmentSetLoader";
 import PersonalEquipmentManagement from "../../core/equipment/PersonalEquipmentManagement";
@@ -31,6 +28,7 @@ import StorageUtils from "../../util/StorageUtils";
 import StringUtils from "../../util/StringUtils";
 import PageProcessorContext from "../PageProcessorContext";
 import PersonalEquipmentManagementPageProcessor from "./PersonalEquipmentManagementPageProcessor";
+import EquipmentManagementReturnInterceptor from "../../core/equipment/EquipmentManagementReturnInterceptor";
 
 class PersonalEquipmentManagementPageProcessor_Town extends PersonalEquipmentManagementPageProcessor {
 
@@ -111,22 +109,10 @@ class PersonalEquipmentManagementPageProcessor_Town extends PersonalEquipmentMan
     doBindImmutableButtons(credential: Credential, context?: PageProcessorContext) {
         this.doBindReturnButton(credential);
         $("#refreshButton").on("click", () => {
-            new EquipmentLocalStorage(credential)
-                .updateEquipmentStatus()
-                .then(() => {
-                    new BattleFieldManager(credential)
-                        .autoSetBattleField()
-                        .then(field => {
-                            this.doScrollToPageTitle();
-                            $("#messageBoardManager").html(NpcLoader.randomNpcImageHtml());
-                            MessageBoard.resetMessageBoard(this.doGenerateWelcomeMessageHtml());
-                            this.doRefreshMutablePage(credential, context);
-                            MessageBoard.publishMessage("装备数据更新完成。");
-                            if (field) {
-                                MessageBoard.publishMessage("战斗场所切换到【" + field + "】。");
-                            }
-                        });
-                });
+            this.doScrollToPageTitle();
+            $("#messageBoardManager").html(NpcLoader.randomNpcImageHtml());
+            MessageBoard.resetMessageBoard(this.doGenerateWelcomeMessageHtml());
+            this.doRefreshMutablePage(credential, context);
         });
         let townId: string | undefined = undefined;
         if (context) {
@@ -139,10 +125,16 @@ class PersonalEquipmentManagementPageProcessor_Town extends PersonalEquipmentMan
         const html = PageUtils.generateGemHouseForm(credential, townId);
         $("#hiddenFormContainer2").html(html);
         $("#itemShopButton").on("click", () => {
-            $("#openItemShop").trigger("click");
+            PageUtils.disableButtons();
+            new EquipmentManagementReturnInterceptor(credential)
+                .beforeExitEquipmentManagement()
+                .then(() => PageUtils.triggerClick("openItemShop"));
         });
         $("#gemHouseButton").on("click", () => {
-            $("#openGemHouse").trigger("click");
+            PageUtils.disableButtons();
+            new EquipmentManagementReturnInterceptor(credential)
+                .beforeExitEquipmentManagement()
+                .then(() => PageUtils.triggerClick("openGemHouse"));
         });
     }
 
@@ -150,15 +142,10 @@ class PersonalEquipmentManagementPageProcessor_Town extends PersonalEquipmentMan
         const html = PageUtils.generateReturnTownForm(credential);
         $("#hiddenFormContainer").html(html);
         $("#returnButton").on("click", () => {
-            new BattleFieldManager(credential)
-                .autoSetBattleField()
-                .then(() => {
-                    new EquipmentExperienceManager(credential)
-                        .triggerEquipmentExperience()
-                        .then(() => {
-                            PageUtils.triggerClick("returnTown");
-                        });
-                });
+            PageUtils.disableButtons();
+            new EquipmentManagementReturnInterceptor(credential)
+                .beforeExitEquipmentManagement()
+                .then(() => PageUtils.triggerClick("returnTown"));
         });
     }
 

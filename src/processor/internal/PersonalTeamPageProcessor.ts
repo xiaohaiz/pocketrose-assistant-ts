@@ -2,13 +2,11 @@ import _ from "lodash";
 import BankRecordReportGenerator from "../../core/bank/BankRecordReportGenerator";
 import LocalSettingManager from "../../core/config/LocalSettingManager";
 import EquipmentConstants from "../../core/equipment/EquipmentConstants";
-import EquipmentLocalStorage from "../../core/equipment/EquipmentLocalStorage";
 import TeamEquipmentReportGenerator from "../../core/equipment/TeamEquipmentReportGenerator";
 import PowerGemFuseReportGenerator from "../../core/forge/PowerGemFuseReportGenerator";
 import MonsterPageUtils from "../../core/monster/MonsterPageUtils";
 import MonsterProfileLoader from "../../core/monster/MonsterProfileLoader";
 import Pet from "../../core/monster/Pet";
-import PetLocalStorage from "../../core/monster/PetLocalStorage";
 import RolePetStatusStorage from "../../core/monster/RolePetStatusStorage";
 import NpcLoader from "../../core/role/NpcLoader";
 import TeamMemberLoader from "../../core/team/TeamMemberLoader";
@@ -66,17 +64,11 @@ abstract class PersonalTeamPageProcessor extends PageProcessorCredentialSupport 
         html += "<table style='background-color:transparent;margin:auto;border-spacing:0;border-width:0'>";
         html += "<tbody>";
         html += "<tr>";
-        html += "<td colspan='6' style='text-align:center'>";
+        html += "<td colspan='4' style='text-align:center'>";
         html += "<input type='checkbox' id='includeExternal'>是否包含编外队员";
         html += "</td>";
         html += "</tr>";
         html += "<tr>";
-        html += "<td>";
-        html += "<button role='button' id='updateEquipmentButton'>更新装备数据</button>";
-        html += "</td>";
-        html += "<td>";
-        html += "<button role='button' id='updatePetButton'>更新宠物数据</button>";
-        html += "</td>";
         html += "<td>";
         html += "<button role='button' id='listEquipmentButton'>团队装备列表</button>";
         html += "</td>";
@@ -91,14 +83,14 @@ abstract class PersonalTeamPageProcessor extends PageProcessorCredentialSupport 
         html += "</td>";
         html += "</tr>";
         html += "<tr>";
-        html += "<td colspan='6' style='text-align:center'>";
+        html += "<td colspan='4' style='text-align:center'>";
         html += "<input type='text' id='searchName' size='15' maxlength='40' spellcheck='false'>";
         html += "<input type='button' id='searchTeamEquipmentButton' value='查找团队装备'>";
         html += "<input type='button' id='searchTeamPetButton' value='查找团队宠物'>";
         html += "</td>";
         html += "</tr>";
         html += "<tr>";
-        html += "<td colspan='6' style='text-align:center'>";
+        html += "<td colspan='4' style='text-align:center'>";
         html += "<input type='button' id='searchTeamSpecialEquipmentButton_A' value='神枪' style='color:red'>";
         html += "<input type='button' id='searchTeamSpecialEquipmentButton_B' value='斧头' style='color:green'>";
         html += "<input type='button' id='searchTeamSpecialEquipmentButton_C' value='神器' style='color:blue'>";
@@ -113,7 +105,7 @@ abstract class PersonalTeamPageProcessor extends PageProcessorCredentialSupport 
         html += "</td>";
         html += "</tr>";
         html += "<tr>";
-        html += "<td colspan='6' style='text-align:center'>";
+        html += "<td colspan='4' style='text-align:center'>";
         html += "<input type='button' id='searchTeamNonFullExperienceEquipmentButton' value='经验未满装备'>";
         html += "<input type='button' id='searchTeamUsingEquipmentButton' value='使用中的装备'>";
         html += "<input type='button' id='searchTeamStarEquipmentButton' value='有齐心的装备'>";
@@ -170,8 +162,6 @@ abstract class PersonalTeamPageProcessor extends PageProcessorCredentialSupport 
 
         this.#bindRefreshButton();
         this.bindReturnButton(credential);
-        this.#bindUpdateEquipmentButton(credential);
-        this.#bindUpdatePetButton(credential);
         this.#bindListEquipmentButton();
         this.#bindListPetButton();
         this.#bindBankRecordButton();
@@ -217,35 +207,6 @@ abstract class PersonalTeamPageProcessor extends PageProcessorCredentialSupport 
     }
 
     abstract bindReturnButton(credential: Credential): void;
-
-    #bindUpdateEquipmentButton(credential: Credential) {
-        $("#updateEquipmentButton").on("click", () => {
-            $("button").prop("disabled", true);
-            $("input").prop("disabled", true);
-            MessageBoard.publishMessage("开始更新装备数据......");
-            new EquipmentLocalStorage(credential).updateEquipmentStatus().then(() => {
-                MessageBoard.publishMessage("装备数据更新完成。");
-                $("button").prop("disabled", false);
-                $("input").prop("disabled", false);
-            });
-        });
-    }
-
-    #bindUpdatePetButton(credential: Credential) {
-        $("#updatePetButton").on("click", () => {
-            $("button").prop("disabled", true);
-            $("input").prop("disabled", true);
-            MessageBoard.publishMessage("开始更新宠物数据......");
-            const petLocalStorage = new PetLocalStorage(credential);
-            petLocalStorage.updatePetMap().then(() => {
-                petLocalStorage.updatePetStatus().then(() => {
-                    MessageBoard.publishMessage("宠物数据更新完成。");
-                    $("button").prop("disabled", false);
-                    $("input").prop("disabled", false);
-                });
-            });
-        });
-    }
 
     #bindListEquipmentButton() {
         $("#listEquipmentButton").on("click", () => {

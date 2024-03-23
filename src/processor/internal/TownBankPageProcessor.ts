@@ -1,4 +1,4 @@
-import BankRecordManager from "../../core/bank/BankRecordManager";
+import BankAccountTrigger from "../../core/trigger/BankAccountTrigger";
 import TownBank from "../../core/bank/TownBank";
 import TownBankPage from "../../core/bank/TownBankPage";
 import TownBankPageParser from "../../core/bank/TownBankPageParser";
@@ -27,7 +27,6 @@ class TownBankPageProcessor extends PageProcessorCredentialSupport {
 
         KeyboardShortcutBuilder.newInstance()
             .onKeyPressed("r", () => $("#refreshButton").trigger("click"))
-            .onKeyPressed("u", () => $("#updateButton").trigger("click"))
             .onKeyPressed("a", () => $("#depositAllButton").trigger("click"))
             .onKeyPressed("s", () => $("#salaryButton").trigger("click"))
             .onEscapePressed(() => $("#returnButton").trigger("click"))
@@ -98,7 +97,6 @@ class TownBankPageProcessor extends PageProcessorCredentialSupport {
         html += "<td style='background-color:#F8F0E0;text-align:center;width:100%'>";
         html += "<input type='button' id='refreshButton' value='刷新" + town.name + "银行(r)'>";
         html += "<input type='button' id='returnButton' value='离开" + town.name + "银行(Esc)'>";
-        html += "<button role='button' id='updateButton'>更新银行资产(u)</button>";
         html += "</td>";
         html += "</tr>";
         $("#tr2").after($(html));
@@ -172,17 +170,10 @@ class TownBankPageProcessor extends PageProcessorCredentialSupport {
             this.#refreshMutablePage(credential, town);
         });
         $("#returnButton").on("click", () => {
-            $("#returnTown").trigger("click");
-        });
-        $("#updateButton").on("click", () => {
-            $("#updateButton").prop("disabled", true);
-            new BankRecordManager(credential)
-                .updateBankRecord()
-                .then(() => {
-                    MessageBoard.publishMessage("银行资产已经更新。");
-                    $("#updateButton").prop("disabled", false);
-                    this.#refreshMutablePage(credential, town);
-                });
+            PageUtils.disableButtons();
+            new BankAccountTrigger(credential)
+                .triggerUpdate()
+                .then(() => PageUtils.triggerClick("returnTown"));
         });
         $("#searchButton").on("click", () => {
             const s = $("#searchName").val();

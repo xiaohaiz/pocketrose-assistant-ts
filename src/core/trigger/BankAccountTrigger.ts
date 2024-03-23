@@ -1,11 +1,20 @@
 import _ from "lodash";
 import Credential from "../../util/Credential";
 import DayRange from "../../util/DayRange";
-import BankRecord from "./BankRecord";
-import BankRecordStorage from "./BankRecordStorage";
-import TownBank from "./TownBank";
+import BankRecord from "../bank/BankRecord";
+import BankRecordStorage from "../bank/BankRecordStorage";
+import TownBank from "../bank/TownBank";
 
-class BankRecordManager {
+/**
+ * ============================================================================
+ * 银 行 账 户 触 发 器
+ * ----------------------------------------------------------------------------
+ * 1. 战斗定期触发，战数尾数73。
+ * 2. 秘宝之岛战斗后触发。
+ * 3. 退出城市银行时触发。
+ * ============================================================================
+ */
+class BankAccountTrigger {
 
     readonly #credential: Credential;
 
@@ -13,40 +22,17 @@ class BankRecordManager {
         this.#credential = credential;
     }
 
-    async triggerUpdateBankRecord(battleCount: number): Promise<void> {
-        return await (() => {
-            return new Promise<void>(resolve => {
-                // 战数尾数为73时，触发资产更新
-                const doUpdate = (battleCount % 100 === 73);
-                if (doUpdate) {
-                    this.updateBankRecord().then(() => resolve());
-                } else {
-                    resolve();
-                }
-            });
-        })();
-    }
-
-    async updateBankRecord(): Promise<void> {
-        return await (() => {
-            return new Promise<void>(resolve => {
-
-                new TownBank(this.#credential).load().then(account => {
-                    if (_.isNaN(account.cash) || _.isNaN(account.saving)) {
-                        // Do nothing and return
-                        resolve();
-                    } else {
-                        const data = new BankRecord();
-                        data.roleId = this.#credential.id;
-                        data.recordDate = DayRange.current().asText();
-                        data.cash = account.cash;
-                        data.saving = account.saving;
-                        BankRecordStorage.getInstance().upsert(data).then(() => resolve());
-                    }
-                });
-
-            });
-        })();
+    async triggerUpdate() {
+        const account = await new TownBank(this.#credential).load();
+        if (_.isNaN(account.cash) || _.isNaN(account.saving)) {
+            return;
+        }
+        const data = new BankRecord();
+        data.roleId = this.#credential.id;
+        data.recordDate = DayRange.current().asText();
+        data.cash = account.cash;
+        data.saving = account.saving;
+        await BankRecordStorage.getInstance().upsert(data);
     }
 
     static async importFromJson(json: string) {
@@ -94,4 +80,4 @@ function doImport(index: number, documentList: {}[]) {
         });
 }
 
-export = BankRecordManager;
+export = BankAccountTrigger;

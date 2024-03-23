@@ -19,7 +19,8 @@ abstract class PersonalPetManagementPageProcessor extends PageProcessorCredentia
 
     doBindKeyboardShortcut(credential: Credential) {
         KeyboardShortcutBuilder.newInstance()
-            .onEscapePressed(() => $("#returnButton").trigger("click"))
+            .onKeyPressed("e", () => PageUtils.triggerClick("equipmentButton"))
+            .onEscapePressed(() => PageUtils.triggerClick("exitButton"))
             .withDefaultPredicate()
             .bind();
     }
@@ -99,11 +100,40 @@ abstract class PersonalPetManagementPageProcessor extends PageProcessorCredentia
         html += "</tody>";
         html += "</table>";
 
-        $("#returnButton")
-            .parent()
-            .before($(html));
+        $("#returnButton").parent().before($(html));
+
+        html = "";
+        html += "<table style='background-color:#888888;width:100%;text-align:center'>";
+        html += "<tbody style='background-color:#F8F0E0'>";
+        html += "<tr>";
+        html += "<td id='commandCell'>";
+        html += "<button role='button' id='exitButton'>退出宠物管理(Esc)</button>";
+        html += "<button role='button' id='equipmentButton'>转入装备管理(e)</button>";
+        html += "</td>";
+        html += "</tr>";
+        html += "<tr style='display:none'>";
+        html += "<td id='extensionCell_1'></td>";
+        html += "</tr>";
+        html += "</tody>";
+        html += "</table>";
+
+        $("#returnButton").parent().after($(html));
+        $("#returnButton").parent().hide();
+
+        $("#extensionCell_1").html(PageUtils.generateEquipmentManagementForm(credential));
+
+        $("#exitButton").on("click", () => {
+            this.doBeforeExit(credential).then(() => PageUtils.triggerClick("returnButton"));
+        });
+        $("#equipmentButton").on("click", () => {
+            this.doBeforeExit(credential).then(() => PageUtils.triggerClick("openEquipmentManagement"));
+        });
 
         this.doProcessWithPageParsed(credential, page, context);
+    }
+
+    async doBeforeExit(credential: Credential) {
+        PageUtils.disableButtons();
     }
 
     abstract doProcessWithPageParsed(credential: Credential, page: PersonalPetManagementPage, context?: PageProcessorContext): void;

@@ -1,11 +1,19 @@
 import Credential from "../../util/Credential";
 import LocalSettingManager from "../config/LocalSettingManager";
 import SetupLoader from "../config/SetupLoader";
-import EquipmentExperienceConfig from "./EquipmentExperienceConfig";
-import PersonalEquipmentManagement from "./PersonalEquipmentManagement";
-import PersonalEquipmentManagementPage from "./PersonalEquipmentManagementPage";
+import EquipmentExperienceConfig from "../equipment/EquipmentExperienceConfig";
+import PersonalEquipmentManagement from "../equipment/PersonalEquipmentManagement";
+import PersonalEquipmentManagementPage from "../equipment/PersonalEquipmentManagementPage";
 
-class EquipmentExperienceManager {
+/**
+ * ============================================================================
+ * 装 备 满 级 触 发 器
+ * ----------------------------------------------------------------------------
+ * 1. 战斗定期触发，战数尾数：19/37/59/79/97。
+ * 2. 退出装备管理触发。
+ * ============================================================================
+ */
+class EquipmentGrowthTrigger {
 
     readonly #credential: Credential;
 
@@ -13,23 +21,27 @@ class EquipmentExperienceManager {
         this.#credential = credential;
     }
 
-    async triggerEquipmentExperience() {
-        const config = SetupLoader.loadEquipmentExperienceConfig(this.#credential.id);
-        if (!config.configured) {
-            // 用户压根就没有配置，忽略吧，关闭显示的开关。
-            LocalSettingManager.setWeaponExperienceMax(this.#credential.id, false);
-            LocalSettingManager.setArmorExperienceMax(this.#credential.id, false);
-            LocalSettingManager.setAccessoryExperienceMax(this.#credential.id, false);
-            return;
-        }
+    #equipmentPage?: PersonalEquipmentManagementPage;
 
-        const page = await new PersonalEquipmentManagement(this.#credential).open();
-        this.#processWeapon(config, page);
-        this.#processArmor(config, page);
-        this.#processAccessory(config, page);
+    get equipmentPage(): PersonalEquipmentManagementPage | undefined {
+        return this.#equipmentPage;
     }
 
-    triggerEquipmentExperienceWithPage(page: PersonalEquipmentManagementPage) {
+    withEquipmentPage(value: PersonalEquipmentManagementPage | undefined): EquipmentGrowthTrigger {
+        this.#equipmentPage = value;
+        return this;
+    }
+
+    async #initializeEquipmentPage() {
+        if (!this.#equipmentPage) {
+            this.#equipmentPage = await new PersonalEquipmentManagement(this.#credential).open();
+        }
+    }
+
+    /**
+     * equipmentPage is optional
+     */
+    async triggerUpdate() {
         const config = SetupLoader.loadEquipmentExperienceConfig(this.#credential.id);
         if (!config.configured) {
             // 用户压根就没有配置，忽略吧，关闭显示的开关。
@@ -38,9 +50,11 @@ class EquipmentExperienceManager {
             LocalSettingManager.setAccessoryExperienceMax(this.#credential.id, false);
             return;
         }
-        this.#processWeapon(config, page);
-        this.#processArmor(config, page);
-        this.#processAccessory(config, page);
+
+        await this.#initializeEquipmentPage();
+        this.#processWeapon(config, this.#equipmentPage!);
+        this.#processArmor(config, this.#equipmentPage!);
+        this.#processAccessory(config, this.#equipmentPage!);
     }
 
     #processWeapon(config: EquipmentExperienceConfig, page: PersonalEquipmentManagementPage) {
@@ -99,4 +113,4 @@ class EquipmentExperienceManager {
 
 }
 
-export = EquipmentExperienceManager;
+export = EquipmentGrowthTrigger;

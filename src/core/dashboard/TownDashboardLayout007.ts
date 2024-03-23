@@ -317,7 +317,7 @@ async function doProcessBattle(credential: Credential, html: string, currentBatt
     $("#battleReturn").on("click", () => {
         $("#battleReturn").prop("disabled", true);
         new BattleReturnInterceptor(credential, currentBattleCount, processor.obtainPage)
-            .doBeforeReturn()
+            .beforeExitBattle()
             .then(() => {
                 const request = credential.asRequestMap();
                 request.set("mode", "STATUS");
@@ -330,7 +330,7 @@ async function doProcessBattle(credential: Credential, html: string, currentBatt
     $("#battleDeposit").on("click", () => {
         $("#battleDeposit").prop("disabled", true);
         new BattleReturnInterceptor(credential, currentBattleCount, processor.obtainPage)
-            .doBeforeReturn()
+            .beforeExitBattle()
             .then(() => {
                 const request = credential.asRequestMap();
                 request.set("azukeru", "all");
@@ -350,7 +350,7 @@ async function doProcessBattle(credential: Credential, html: string, currentBatt
     $("#battleRepair").on("click", () => {
         $("#battleRepair").prop("disabled", true);
         new BattleReturnInterceptor(credential, currentBattleCount, processor.obtainPage)
-            .doBeforeReturn()
+            .beforeExitBattle()
             .then(() => {
                 new TownForge(credential).repairAll().then(m => {
                     doProcessBattleReturn(credential, m, processor.obtainPage.additionalRP, processor.obtainPage.harvestList);
@@ -360,7 +360,7 @@ async function doProcessBattle(credential: Credential, html: string, currentBatt
     $("#battleLodge").on("click", () => {
         $("#battleLodge").prop("disabled", true);
         new BattleReturnInterceptor(credential, currentBattleCount, processor.obtainPage)
-            .doBeforeReturn()
+            .beforeExitBattle()
             .then(() => {
                 new TownInn(credential).recovery().then(m => {
                     doProcessBattleReturn(credential, m, processor.obtainPage.additionalRP, processor.obtainPage.harvestList);
@@ -452,6 +452,19 @@ function doProcessBattleReturn(credential: Credential,
     _renderPalaceTask(credential);
     _renderEventBoard(page);
     _renderConversation(page);
+
+    // ------------------------------------------
+    // 判断装备或者宠物是否满格了
+    // ------------------------------------------
+    const fullEquipment = LocalSettingManager.isEquipmentCapacityMax(credential.id);
+    const fullPet = LocalSettingManager.isPetCapacityMax(credential.id);
+    if (fullEquipment && fullPet) {
+        $("#townCell").css("background-color", "orange");
+    } else if (fullEquipment) {
+        $("#townCell").css("background-color", "yellow");
+    } else if (fullPet) {
+        $("#townCell").css("background-color", "red");
+    }
 
     // ------------------------------------------
     // 练装备相关的展示

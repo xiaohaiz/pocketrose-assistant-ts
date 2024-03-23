@@ -3,12 +3,23 @@ import SetupLoader from "../config/SetupLoader";
 import PersonalPetManagement from "../monster/PersonalPetManagement";
 import PersonalStatus from "../role/PersonalStatus";
 import Role from "../role/Role";
-import BattleFieldConfigLoader from "./BattleFieldConfigLoader";
-import BattleFieldConfigWriter from "./BattleFieldConfigWriter";
-import BattleFieldThreshold from "./BattleFieldThreshold";
-import BattlePage from "./BattlePage";
+import BattleFieldConfigLoader from "../battle/BattleFieldConfigLoader";
+import BattleFieldConfigWriter from "../battle/BattleFieldConfigWriter";
+import BattleFieldThreshold from "../battle/BattleFieldThreshold";
+import BattlePage from "../battle/BattlePage";
+import PersonalPetManagementPage from "../monster/PersonalPetManagementPage";
 
-class BattleFieldManager {
+/**
+ * ============================================================================
+ * 智 能 战 斗 场 所 触 发 器
+ * ----------------------------------------------------------------------------
+ * 1. 战斗触发。
+ * 2. 退出装备管理触发。
+ * 3. 退出宠物管理触发。
+ * 4. 城市页面刷新触发。
+ * ============================================================================
+ */
+class BattleFieldTrigger {
 
     readonly #credential: Credential;
 
@@ -16,7 +27,36 @@ class BattleFieldManager {
         this.#credential = credential;
     }
 
-    async autoSetBattleField(): Promise<string | undefined> {
+    #role?: Role;
+    #petPage?: PersonalPetManagementPage;
+
+    withRole(value: Role | undefined): BattleFieldTrigger {
+        this.#role = value;
+        return this;
+    }
+
+    async #initializeRole() {
+        if (!this.#role) {
+            this.#role = await new PersonalStatus(this.#credential).load();
+        }
+    }
+
+    withPetPage(value: PersonalPetManagementPage | undefined): BattleFieldTrigger {
+        this.#petPage = value;
+        return this;
+    }
+
+    async #initializePetPage() {
+        if (!this.#petPage) {
+            this.#petPage = await new PersonalPetManagement(this.#credential).open();
+        }
+    }
+
+    /**
+     * role is optional.
+     * petPage is optional.
+     */
+    async triggerUpdate(): Promise<string | undefined> {
         if (!SetupLoader.isAutoSetBattleFieldEnabled()) {
             return undefined;
         }
@@ -26,30 +66,29 @@ class BattleFieldManager {
             return "上洞";
         }
 
-        const role = await new PersonalStatus(this.#credential).load();
-        if (this.#c2(role)) {
+        await this.#initializeRole();
+        if (this.#c2(this.#role!)) {
             await writer.writeCustomizedConfig(false, false, true, false);
             return "上洞";
         }
 
-        if (await this.#c3(role)) {
+        if (await this.#c3(this.#role!)) {
             await writer.writeCustomizedConfig(false, false, false, true);
             return "十二宫";
         }
 
         const config = SetupLoader.loadBattleFieldThreshold();
-
-        if (this.#c4(role, config)) {
+        if (this.#c4(this.#role!, config)) {
             await writer.writeCustomizedConfig(false, false, true, false);
             return "上洞";
         }
 
-        if (this.#c5(role, config)) {
+        if (this.#c5(this.#role!, config)) {
             await writer.writeCustomizedConfig(true, false, false, false);
             return "初森";
         }
 
-        if (this.#c6(role, config)) {
+        if (this.#c6(this.#role!, config)) {
             await writer.writeCustomizedConfig(false, true, false, false);
             return "中塔";
         }
@@ -78,17 +117,19 @@ class BattleFieldManager {
         if (!town || town.name !== "枫丹") {
             return false;
         }
-        const petList = (await new PersonalPetManagement(this.#credential).open()).petList;
+
+        await this.#initializePetPage();
+        const petList = this.#petPage!.petList;
         if (petList === undefined || petList.length === 0) {
             return false;
         }
-        let usingMaxLevelPet = false;
+        let value = false;
         for (const pet of petList) {
             if (pet.using && pet.level !== undefined && pet.level === 100) {
-                usingMaxLevelPet = true;
+                value = true;
             }
         }
-        return usingMaxLevelPet;
+        return value;
     }
 
     // 额外RP小于100时，战斗场所切换到上洞
@@ -112,8 +153,10 @@ class BattleFieldManager {
 
     /**
      * 战斗时如果获取了额外RP
+     * role is optional.
+     * petPage is unnecessary.
      */
-    async triggerBattleFieldChanged(battlePage: BattlePage) {
+    async triggerUpdateWhenBattle(battlePage: BattlePage) {
         if (battlePage.zodiacBattle) {
             // 当前在十二宫战斗，忽略
             return;
@@ -133,8 +176,8 @@ class BattleFieldManager {
             return;
         }
 
-        const role = await new PersonalStatus(this.#credential).load();
-        if (role.consecrateRP !== undefined && role.consecrateRP > 0) {
+        await this.#initializeRole();
+        if (this.#role!.consecrateRP !== undefined && this.#role!.consecrateRP > 0) {
             // 当前有祭奠，忽略
             return;
         }
@@ -151,4 +194,4 @@ class BattleFieldManager {
     }
 }
 
-export = BattleFieldManager;
+export = BattleFieldTrigger;

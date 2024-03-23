@@ -30,7 +30,8 @@ class PersonalEquipmentManagementPageProcessor_Metro extends PersonalEquipmentMa
         const html = PageUtils.generateReturnMapForm(credential);
         $("#hiddenFormContainer").html(html);
         $("#returnButton").on("click", () => {
-            $("#returnMap").trigger("click");
+            PageUtils.disableButtons();
+            PageUtils.triggerClick("returnMap");
         });
     }
 

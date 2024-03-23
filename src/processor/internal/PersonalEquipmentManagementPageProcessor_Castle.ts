@@ -40,7 +40,8 @@ class PersonalEquipmentManagementPageProcessor_Castle extends PersonalEquipmentM
         const html = PageUtils.generateReturnCastleForm(credential);
         $("#hiddenFormContainer").html(html);
         $("#returnButton").on("click", () => {
-            $("#returnCastle").trigger("click");
+            PageUtils.disableButtons();
+            PageUtils.triggerClick("returnCastle");
         });
     }
 

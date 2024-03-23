@@ -13,6 +13,16 @@ class PersonalPetManagementPage {
         }
         return null;
     }
+
+    get usingPet(): Pet | null {
+        if (!this.petList) return null;
+        for (const pet of this.petList) {
+            if (pet.using) {
+                return pet;
+            }
+        }
+        return null;
+    }
 }
 
 export = PersonalPetManagementPage;

@@ -3,13 +3,18 @@ import NetworkUtils from "../../util/NetworkUtils";
 import TownBank from "../bank/TownBank";
 import BattlePage from "../battle/BattlePage";
 import SetupLoader from "../config/SetupLoader";
-import PersonalPetManagement from "./PersonalPetManagement";
-import Pet from "./Pet";
+import PersonalPetManagement from "../monster/PersonalPetManagement";
+import Pet from "../monster/Pet";
+import PersonalPetManagementPage from "../monster/PersonalPetManagementPage";
 
 /**
- * 十二宫战斗后，如果宠物亲密度低于指定的阈值，自动补满。
+ * ============================================================================
+ * 十 二 宫 战 斗 宠 物 亲 密 度 触 发 器
+ * ----------------------------------------------------------------------------
+ * 1. 十二宫战斗触发。
+ * ============================================================================
  */
-class RolePetLoveManager {
+class ZodiacBattlePetLoveTrigger {
 
     readonly #credential: Credential;
 
@@ -17,7 +22,27 @@ class RolePetLoveManager {
         this.#credential = credential;
     }
 
-    async triggerPetLoveFixed(battlePage: BattlePage) {
+    #petPage?: PersonalPetManagementPage;
+
+    get petPage(): PersonalPetManagementPage | undefined {
+        return this.#petPage;
+    }
+
+    withPetPage(value: PersonalPetManagementPage | undefined): ZodiacBattlePetLoveTrigger {
+        this.#petPage = value;
+        return this;
+    }
+
+    async #initializePetPage() {
+        if (!this.#petPage) {
+            this.#petPage = await new PersonalPetManagement(this.#credential).open();
+        }
+    }
+
+    /**
+     * petPage is optionals
+     */
+    async triggerUpdateWhenBattle(battlePage: BattlePage) {
         if (!battlePage.zodiacBattle) {
             // 不是十二宫的战斗，忽略
             return;
@@ -38,12 +63,12 @@ class RolePetLoveManager {
     }
 
     async #fixPetLove() {
-        const petPage = await new PersonalPetManagement(this.#credential).open();
-        if (!petPage.petList || petPage.petList.length === 0) {
+        await this.#initializePetPage();
+        if (!this.#petPage!.petList || this.#petPage!.petList.length === 0) {
             return;
         }
         let usingPet: Pet | null = null;
-        for (const pet of petPage.petList) {
+        for (const pet of this.#petPage!.petList) {
             if (pet.using) {
                 usingPet = pet;
                 break;
@@ -76,4 +101,4 @@ class RolePetLoveManager {
     }
 }
 
-export = RolePetLoveManager;
+export = ZodiacBattlePetLoveTrigger;
