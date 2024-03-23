@@ -11,7 +11,7 @@ import PersonalPetManagementPage from "../monster/PersonalPetManagementPage";
  * ============================================================================
  * 十 二 宫 战 斗 宠 物 亲 密 度 触 发 器
  * ----------------------------------------------------------------------------
- * 1. 十二宫战斗后触发。
+ * 1. 十二宫战斗触发。
  * ============================================================================
  */
 class ZodiacBattlePetLoveTrigger {
@@ -35,7 +35,7 @@ class ZodiacBattlePetLoveTrigger {
         }
     }
 
-    async triggerPetLoveFixed(battlePage: BattlePage) {
+    async triggerUpdateWhenBattle(battlePage: BattlePage) {
         if (!battlePage.zodiacBattle) {
             // 不是十二宫的战斗，忽略
             return;

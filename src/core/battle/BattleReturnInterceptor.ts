@@ -97,7 +97,7 @@ class BattleReturnInterceptor {
             await this.#initializePetPage();
             await new ZodiacBattlePetLoveTrigger(this.#credential)
                 .withPetPage(this.#petPage)
-                .triggerPetLoveFixed(this.#battlePage);
+                .triggerUpdateWhenBattle(this.#battlePage);
         }
         if (this.#hasHarvestExcludesPetMap()) {
             await this.#initializeEquipmentPage();
