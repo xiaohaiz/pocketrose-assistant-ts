@@ -3,14 +3,18 @@ import NetworkUtils from "../../util/NetworkUtils";
 import TownBank from "../bank/TownBank";
 import BattlePage from "../battle/BattlePage";
 import SetupLoader from "../config/SetupLoader";
-import PersonalPetManagement from "./PersonalPetManagement";
-import Pet from "./Pet";
-import PersonalPetManagementPage from "./PersonalPetManagementPage";
+import PersonalPetManagement from "../monster/PersonalPetManagement";
+import Pet from "../monster/Pet";
+import PersonalPetManagementPage from "../monster/PersonalPetManagementPage";
 
 /**
- * 十二宫战斗后，如果宠物亲密度低于指定的阈值，自动补满。
+ * ============================================================================
+ * 宠 物 亲 密 度 触 发 器
+ * ----------------------------------------------------------------------------
+ * 十二宫战斗后自动触发，如果宠物亲密度低于指定的阈值，自动补满。
+ * ============================================================================
  */
-class RolePetLoveManager {
+class PetLoveTrigger {
 
     readonly #credential: Credential;
 
@@ -20,7 +24,7 @@ class RolePetLoveManager {
 
     #petPage?: PersonalPetManagementPage;
 
-    withPetPage(value: PersonalPetManagementPage | undefined): RolePetLoveManager {
+    withPetPage(value: PersonalPetManagementPage | undefined): PetLoveTrigger {
         this.#petPage = value;
         return this;
     }
@@ -90,4 +94,4 @@ class RolePetLoveManager {
     }
 }
 
-export = RolePetLoveManager;
+export = PetLoveTrigger;

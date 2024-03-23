@@ -2,7 +2,7 @@ import Credential from "../../util/Credential";
 import BankRecordManager from "../bank/BankRecordManager";
 import EquipmentLocalStorage from "../equipment/EquipmentLocalStorage";
 import PetLocalStorage from "../monster/PetLocalStorage";
-import RolePetLoveManager from "../monster/RolePetLoveManager";
+import PetLoveTrigger from "../trigger/PetLoveTrigger";
 import BattleFieldManager from "./BattleFieldManager";
 import BattlePage from "./BattlePage";
 import Role from "../role/Role";
@@ -98,7 +98,7 @@ class BattleReturnInterceptor {
         }
         if (this.#battlePage.zodiacBattle) {
             await this.#initializePetPage();
-            await new RolePetLoveManager(this.#credential)
+            await new PetLoveTrigger(this.#credential)
                 .withPetPage(this.#petPage)
                 .triggerPetLoveFixed(this.#battlePage);
         }
@@ -148,7 +148,6 @@ class BattleReturnInterceptor {
             new PetLocalStorage(this.#credential).triggerUpdatePetStatus(this.#battleCount),
             new EquipmentLocalStorage(this.#credential).triggerUpdateEquipmentStatus(this.#battleCount),
             new BattleFieldManager(this.#credential).triggerBattleFieldChanged(this.#battlePage),
-            new RolePetLoveManager(this.#credential).triggerPetLoveFixed(this.#battlePage),
         ]);
         return await (() => {
             return new Promise<void>(resolve => {
