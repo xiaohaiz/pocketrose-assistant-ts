@@ -15,7 +15,7 @@ abstract class PersonalPetManagementPageProcessor extends PageProcessorCredentia
         const petPage = PersonalPetManagementPageParser.parsePage(PageUtils.currentPageHtml());
 
         await this.#reformatPage(credential, petPage, context);
-        await this.#bindCommandButtons(credential);
+        await this.doBindCommandButtons(credential);
 
         this.doProcessWithPageParsed(credential, petPage, context);
         this.doBindKeyboardShortcut(credential);
@@ -123,12 +123,12 @@ abstract class PersonalPetManagementPageProcessor extends PageProcessorCredentia
 
     doGenerateCommandButtons(): string {
         let html = "";
-        html += "<button role='button' id='exitButton'>退出宠物管理(Esc)</button>";
-        html += "<button role='button' id='equipmentButton'>转入装备管理(e)</button>";
+        html += "<button role='button' id='exitButton' class='COMMAND_BUTTON'>退出宠物管理(Esc)</button>";
+        html += "<button role='button' id='equipmentButton' class='COMMAND_BUTTON'>转入装备管理(e)</button>";
         return html;
     }
 
-    async #bindCommandButtons(credential: Credential) {
+    async doBindCommandButtons(credential: Credential) {
         $("#exitButton").on("click", () => {
             PageUtils.disableButtons();
             this.doReturnButtonClicked(credential)

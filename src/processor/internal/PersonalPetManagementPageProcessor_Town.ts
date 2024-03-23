@@ -26,8 +26,36 @@ import PageProcessorContext from "../PageProcessorContext";
 import PersonalPetManagementPageProcessor from "./PersonalPetManagementPageProcessor";
 import KeyboardShortcutBuilder from "../../util/KeyboardShortcutBuilder";
 import PetManagementReturnInterceptor from "../../core/monster/PetManagementReturnInterceptor";
+import PetMapStatusTrigger from "../../core/trigger/PetMapStatusTrigger";
+import PetStatusTrigger from "../../core/trigger/PetStatusTrigger";
 
 class PersonalPetManagementPageProcessor_Town extends PersonalPetManagementPageProcessor {
+
+    doGenerateCommandButtons(): string {
+        let html = super.doGenerateCommandButtons();
+        html += "<button role='button' id='updateButton' class='COMMAND_BUTTON'>更新统计数据(u)</button>";
+        return html;
+    }
+
+    async doBindCommandButtons(credential: Credential): Promise<void> {
+        await super.doBindCommandButtons(credential);
+        $("#updateButton").on("click", () => {
+            PageUtils.scrollIntoView("pageTitle");
+            $(".COMMAND_BUTTON").prop("disabled", true);
+            MessageBoard.publishMessage("开始更新宠物数据......");
+            new PetMapStatusTrigger(credential)
+                .triggerUpdate()
+                .then(() => {
+                    MessageBoard.publishMessage("宠物图鉴数据更新完成。")
+                    new PetStatusTrigger(credential)
+                        .triggerUpdate()
+                        .then(() => {
+                            MessageBoard.publishMessage("宠物数据（黄金笼子&城堡牧场）更新完成。")
+                            $(".COMMAND_BUTTON").prop("disabled", false);
+                        });
+                });
+        });
+    }
 
     async doReturnButtonClicked(credential: Credential): Promise<void> {
         await new PetManagementReturnInterceptor(credential).beforeExitPetManagement();
@@ -46,6 +74,7 @@ class PersonalPetManagementPageProcessor_Town extends PersonalPetManagementPageP
         KeyboardShortcutBuilder.newInstance()
             .onKeyPressed("e", () => PageUtils.triggerClick("equipmentButton"))
             .onKeyPressed("r", () => PageUtils.triggerClick("refreshButton"))
+            .onKeyPressed("u", () => PageUtils.triggerClick("updateButton"))
             .onKeyPressed("1", () => $("#pet_spell_study_1").trigger("click"))
             .onKeyPressed("2", () => $("#pet_spell_study_2").trigger("click"))
             .onKeyPressed("3", () => $("#pet_spell_study_3").trigger("click"))
