@@ -29,6 +29,7 @@ import StringUtils from "../../util/StringUtils";
 import PageProcessorContext from "../PageProcessorContext";
 import PersonalEquipmentManagementPageProcessor from "./PersonalEquipmentManagementPageProcessor";
 import EquipmentManagementReturnInterceptor from "../../core/equipment/EquipmentManagementReturnInterceptor";
+import EquipmentStatusTrigger from "../../core/trigger/EquipmentStatusTrigger";
 
 class PersonalEquipmentManagementPageProcessor_Town extends PersonalEquipmentManagementPageProcessor {
 
@@ -38,6 +39,7 @@ class PersonalEquipmentManagementPageProcessor_Town extends PersonalEquipmentMan
             .onKeyPressed("r", () => $("#refreshButton").trigger("click"))
             .onKeyPressed("s", () => $("#itemShopButton").trigger("click"))
             .onKeyPressed("f", () => $("#gemHouseButton").trigger("click"))
+            .onKeyPressed("u", () => $("#updateButton").trigger("click"))
             .withDefaultPredicate()
             .bind();
     }
@@ -77,8 +79,9 @@ class PersonalEquipmentManagementPageProcessor_Town extends PersonalEquipmentMan
 
     doGenerateImmutableButtons(): string {
         let html = super.doGenerateImmutableButtons();
-        html += "<input type='button' id='itemShopButton' value='物品商店(s)'>";
-        html += "<input type='button' id='gemHouseButton' value='宝石镶嵌(f)'>";
+        html += "<input type='button' id='itemShopButton' class='COMMAND_BUTTON' value='物品商店(s)'>";
+        html += "<input type='button' id='gemHouseButton' class='COMMAND_BUTTON' value='宝石镶嵌(f)'>";
+        html += "<input type='button' id='updateButton' class='COMMAND_BUTTON' value='更新装备数据(u)'>";
         return html;
     }
 
@@ -135,6 +138,17 @@ class PersonalEquipmentManagementPageProcessor_Town extends PersonalEquipmentMan
             new EquipmentManagementReturnInterceptor(credential)
                 .beforeExitEquipmentManagement()
                 .then(() => PageUtils.triggerClick("openGemHouse"));
+        });
+        $("#updateButton").on("click", () => {
+            $(".COMMAND_BUTTON").prop("disabled", true);
+            this.doScrollToPageTitle();
+            MessageBoard.publishMessage("开始更新装备数据......");
+            new EquipmentStatusTrigger(credential)
+                .triggerUpdate()
+                .then(() => {
+                    MessageBoard.publishMessage("装备数据（百宝袋|城堡仓库）更新完成。");
+                    $(".COMMAND_BUTTON").prop("disabled", false);
+                });
         });
     }
 

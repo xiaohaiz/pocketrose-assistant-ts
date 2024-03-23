@@ -190,8 +190,8 @@ abstract class PersonalEquipmentManagementPageProcessor extends PageProcessorCre
 
     doGenerateImmutableButtons() {
         let html = "";
-        html += "<input type='button' id='refreshButton' value='刷新装备管理(r)'>";
-        html += "<input type='button' id='returnButton' value='退出装备管理(Esc)'>";
+        html += "<input type='button' id='refreshButton' class='COMMAND_BUTTON' value='刷新装备管理(r)'>";
+        html += "<input type='button' id='returnButton' class='COMMAND_BUTTON' value='退出装备管理(Esc)'>";
         return html;
     }
 
