@@ -9,12 +9,12 @@ import PersonalPetManagementPage from "../monster/PersonalPetManagementPage";
 
 /**
  * ============================================================================
- * 宠 物 亲 密 度 触 发 器
+ * 十 二 宫 战 斗 宠 物 亲 密 度 触 发 器
  * ----------------------------------------------------------------------------
  * 十二宫战斗后自动触发，如果宠物亲密度低于指定的阈值，自动补满。
  * ============================================================================
  */
-class PetLoveTrigger {
+class ZodiacBattlePetLoveTrigger {
 
     readonly #credential: Credential;
 
@@ -24,7 +24,7 @@ class PetLoveTrigger {
 
     #petPage?: PersonalPetManagementPage;
 
-    withPetPage(value: PersonalPetManagementPage | undefined): PetLoveTrigger {
+    withPetPage(value: PersonalPetManagementPage | undefined): ZodiacBattlePetLoveTrigger {
         this.#petPage = value;
         return this;
     }
@@ -94,4 +94,4 @@ class PetLoveTrigger {
     }
 }
 
-export = PetLoveTrigger;
+export = ZodiacBattlePetLoveTrigger;

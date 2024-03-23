@@ -15,7 +15,7 @@ import MessageBoard from "../../util/MessageBoard";
 import PageUtils from "../../util/PageUtils";
 import PageProcessorContext from "../PageProcessorContext";
 import PageProcessorCredentialSupport from "../PageProcessorCredentialSupport";
-import PetMapStatusManager from "../../core/monster/PetMapStatusManager";
+import PetMapStatusTrigger from "../../core/trigger/PetMapStatusTrigger";
 import PetStatusManager from "../../core/monster/PetStatusManager";
 
 class TownPetMapHousePageProcessor extends PageProcessorCredentialSupport {
@@ -210,7 +210,7 @@ class TownPetMapHousePageProcessor extends PageProcessorCredentialSupport {
             $("input:text").prop("disabled", true);
             $("button").prop("disabled", true);
 
-            new PetMapStatusManager(credential)
+            new PetMapStatusTrigger(credential)
                 .updatePetMapStatus()
                 .then(() => {
                     MessageBoard.publishMessage("宠物图鉴信息已存储。");

@@ -18,7 +18,7 @@ import PageUtils from "../../util/PageUtils";
 import StringUtils from "../../util/StringUtils";
 import PageProcessorContext from "../PageProcessorContext";
 import PageProcessorCredentialSupport from "../PageProcessorCredentialSupport";
-import PetMapStatusManager from "../../core/monster/PetMapStatusManager";
+import PetMapStatusTrigger from "../../core/trigger/PetMapStatusTrigger";
 import PetStatusManager from "../../core/monster/PetStatusManager";
 
 abstract class PersonalTeamPageProcessor extends PageProcessorCredentialSupport {
@@ -237,7 +237,7 @@ abstract class PersonalTeamPageProcessor extends PageProcessorCredentialSupport 
             $("button").prop("disabled", true);
             $("input").prop("disabled", true);
             MessageBoard.publishMessage("开始更新宠物数据......");
-            new PetMapStatusManager(credential)
+            new PetMapStatusTrigger(credential)
                 .updatePetMapStatus()
                 .then(() => {
                     new PetStatusManager(credential)

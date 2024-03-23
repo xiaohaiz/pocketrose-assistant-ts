@@ -2,7 +2,7 @@ import Credential from "../../util/Credential";
 import BankAccountTrigger from "../trigger/BankAccountTrigger";
 import EquipmentLocalStorage from "../equipment/EquipmentLocalStorage";
 import PetLocalStorage from "../monster/PetLocalStorage";
-import PetLoveTrigger from "../trigger/PetLoveTrigger";
+import ZodiacBattlePetLoveTrigger from "../trigger/ZodiacBattlePetLoveTrigger";
 import BattleFieldManager from "./BattleFieldManager";
 import BattlePage from "./BattlePage";
 import Role from "../role/Role";
@@ -11,7 +11,7 @@ import PersonalEquipmentManagementPage from "../equipment/PersonalEquipmentManag
 import PersonalEquipmentManagement from "../equipment/PersonalEquipmentManagement";
 import PersonalPetManagementPage from "../monster/PersonalPetManagementPage";
 import PersonalPetManagement from "../monster/PersonalPetManagement";
-import PetMapStatusManager from "../monster/PetMapStatusManager";
+import PetMapStatusTrigger from "../trigger/PetMapStatusTrigger";
 import _ from "lodash";
 import PetStatusManager from "../monster/PetStatusManager";
 import EquipmentStatusManager from "../equipment/EquipmentStatusManager";
@@ -60,7 +60,7 @@ class BattleReturnInterceptor {
                 .updateBankRecord();
         }
         if (mod === 83 || this.#hasHarvestIncludesPetMap()) {
-            await new PetMapStatusManager(this.#credential)
+            await new PetMapStatusTrigger(this.#credential)
                 .updatePetMapStatus();
         }
         if (mod === 89 || this.#hasHarvest()) {
@@ -98,7 +98,7 @@ class BattleReturnInterceptor {
         }
         if (this.#battlePage.zodiacBattle) {
             await this.#initializePetPage();
-            await new PetLoveTrigger(this.#credential)
+            await new ZodiacBattlePetLoveTrigger(this.#credential)
                 .withPetPage(this.#petPage)
                 .triggerPetLoveFixed(this.#battlePage);
         }
@@ -143,7 +143,6 @@ class BattleReturnInterceptor {
 
     async doBeforeReturn(): Promise<void> {
         await Promise.all([
-            new PetLocalStorage(this.#credential).triggerUpdatePetMap(this.#battleCount),
             new PetLocalStorage(this.#credential).triggerUpdatePetStatus(this.#battleCount),
             new EquipmentLocalStorage(this.#credential).triggerUpdateEquipmentStatus(this.#battleCount),
             new BattleFieldManager(this.#credential).triggerBattleFieldChanged(this.#battlePage),

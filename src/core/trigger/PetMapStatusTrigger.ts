@@ -1,13 +1,13 @@
 import Credential from "../../util/Credential";
-import TownPetMapHouse from "./TownPetMapHouse";
-import RolePetMapStorage from "./RolePetMapStorage";
+import TownPetMapHouse from "../monster/TownPetMapHouse";
+import RolePetMapStorage from "../monster/RolePetMapStorage";
 
 /**
  * ============================================================================
- * 宠物图鉴状态更新管理器。
+ * 宠 物 图 鉴 状 态 触 发 器
  * ============================================================================
  */
-class PetMapStatusManager {
+class PetMapStatusTrigger {
 
     readonly #credential: Credential;
 
@@ -25,4 +25,4 @@ class PetMapStatusManager {
     }
 }
 
-export = PetMapStatusManager;
+export = PetMapStatusTrigger;
