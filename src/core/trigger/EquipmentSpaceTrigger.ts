@@ -36,6 +36,9 @@ class EquipmentSpaceTrigger {
         }
     }
 
+    /**
+     * equipmentPage is required.
+     */
     async triggerUpdate() {
         await this.#initializeEquipmentPage();
         const spaceCount = this.equipmentPage!.spaceCount;

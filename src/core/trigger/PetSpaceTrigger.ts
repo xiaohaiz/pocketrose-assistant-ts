@@ -36,6 +36,9 @@ class PetSpaceTrigger {
         }
     }
 
+    /**
+     * petPage is required.
+     */
     async triggerUpdate() {
         await this.#initializePetPage();
         const petCount = this.petPage!.petList!.length;
