@@ -80,10 +80,12 @@ class BattleReturnInterceptor {
                 .triggerUpdateWhenBattle(this.#battlePage);
         }
         if (this.#battlePage.zodiacBattle) {
-            await this.#initializePetPage();
-            await new ZodiacBattlePetLoveTrigger(this.#credential)
-                .withPetPage(this.#petPage)
-                .triggerUpdateWhenBattle(this.#battlePage);
+            const trigger = new ZodiacBattlePetLoveTrigger(this.#credential)
+                .withPetPage(this.#petPage);
+            await trigger.triggerUpdateWhenBattle(this.#battlePage);
+            if (!this.#petPage && trigger.petPage) {
+                this.#petPage = trigger.petPage;
+            }
         }
         if (this.#hasHarvestExcludesPetMap()) {
             await this.#initializeEquipmentPage();

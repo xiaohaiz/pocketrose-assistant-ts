@@ -24,6 +24,10 @@ class ZodiacBattlePetLoveTrigger {
 
     #petPage?: PersonalPetManagementPage;
 
+    get petPage(): PersonalPetManagementPage | undefined {
+        return this.#petPage;
+    }
+
     withPetPage(value: PersonalPetManagementPage | undefined): ZodiacBattlePetLoveTrigger {
         this.#petPage = value;
         return this;
@@ -35,6 +39,9 @@ class ZodiacBattlePetLoveTrigger {
         }
     }
 
+    /**
+     * petPage is optionals
+     */
     async triggerUpdateWhenBattle(battlePage: BattlePage) {
         if (!battlePage.zodiacBattle) {
             // 不是十二宫的战斗，忽略
