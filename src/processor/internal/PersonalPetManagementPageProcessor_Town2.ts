@@ -27,11 +27,14 @@ import PersonalPetEvolution from "../../core/monster/PersonalPetEvolution";
 import SetupLoader from "../../core/config/SetupLoader";
 import PersonalPetEvolutionPage from "../../core/monster/PersonalPetEvolutionPage";
 import PetManagementReturnInterceptor from "../../core/monster/PetManagementReturnInterceptor";
+import PersonalPetManagementPageLoader from "../../core/monster/PersonalPetManagementPageLoader";
 
 abstract class PersonalPetManagementPageProcessor_Town2 extends PageProcessorCredentialSupport {
 
     async doProcess(credential: Credential, context?: PageProcessorContext): Promise<void> {
+        const petPageLoader = new PersonalPetManagementPageLoader(credential);
         const page = PersonalPetManagement.parsePage(PageUtils.currentPageHtml());
+        petPageLoader.petPage = page;
         this.#renderImmutablePage(credential, page, context);
         this.doBindKeyboardShortcut(credential);
     }
