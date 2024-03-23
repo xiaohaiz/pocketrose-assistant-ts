@@ -9,7 +9,6 @@ import CastleWarehouse from "../../core/equipment/CastleWarehouse";
 import Equipment from "../../core/equipment/Equipment";
 import EquipmentConsecrateManager from "../../core/equipment/EquipmentConsecrateManager";
 import EquipmentExperienceConfig from "../../core/equipment/EquipmentExperienceConfig";
-import EquipmentLocalStorage from "../../core/equipment/EquipmentLocalStorage";
 import EquipmentSet from "../../core/equipment/EquipmentSet";
 import EquipmentSetLoader from "../../core/equipment/EquipmentSetLoader";
 import PersonalEquipmentManagement from "../../core/equipment/PersonalEquipmentManagement";
@@ -31,6 +30,7 @@ import StringUtils from "../../util/StringUtils";
 import PageProcessorContext from "../PageProcessorContext";
 import PersonalEquipmentManagementPageProcessor from "./PersonalEquipmentManagementPageProcessor";
 import PersonalEquipmentManagementInterceptor from "../../core/equipment/PersonalEquipmentManagementInterceptor";
+import EquipmentStatusTrigger from "../../core/trigger/EquipmentStatusTrigger";
 
 class PersonalEquipmentManagementPageProcessor_Town extends PersonalEquipmentManagementPageProcessor {
 
@@ -111,7 +111,7 @@ class PersonalEquipmentManagementPageProcessor_Town extends PersonalEquipmentMan
     doBindImmutableButtons(credential: Credential, context?: PageProcessorContext) {
         this.doBindReturnButton(credential);
         $("#refreshButton").on("click", () => {
-            new EquipmentLocalStorage(credential)
+            new EquipmentStatusTrigger(credential)
                 .updateEquipmentStatus()
                 .then(() => {
                     new BattleFieldManager(credential)

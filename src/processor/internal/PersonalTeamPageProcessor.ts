@@ -2,7 +2,6 @@ import _ from "lodash";
 import BankRecordReportGenerator from "../../core/bank/BankRecordReportGenerator";
 import LocalSettingManager from "../../core/config/LocalSettingManager";
 import EquipmentConstants from "../../core/equipment/EquipmentConstants";
-import EquipmentLocalStorage from "../../core/equipment/EquipmentLocalStorage";
 import TeamEquipmentReportGenerator from "../../core/equipment/TeamEquipmentReportGenerator";
 import PowerGemFuseReportGenerator from "../../core/forge/PowerGemFuseReportGenerator";
 import MonsterPageUtils from "../../core/monster/MonsterPageUtils";
@@ -20,6 +19,7 @@ import PageProcessorContext from "../PageProcessorContext";
 import PageProcessorCredentialSupport from "../PageProcessorCredentialSupport";
 import PetMapStatusTrigger from "../../core/trigger/PetMapStatusTrigger";
 import PetStatusTrigger from "../../core/trigger/PetStatusTrigger";
+import EquipmentStatusTrigger from "../../core/trigger/EquipmentStatusTrigger";
 
 abstract class PersonalTeamPageProcessor extends PageProcessorCredentialSupport {
 
@@ -224,11 +224,13 @@ abstract class PersonalTeamPageProcessor extends PageProcessorCredentialSupport 
             $("button").prop("disabled", true);
             $("input").prop("disabled", true);
             MessageBoard.publishMessage("开始更新装备数据......");
-            new EquipmentLocalStorage(credential).updateEquipmentStatus().then(() => {
-                MessageBoard.publishMessage("装备数据更新完成。");
-                $("button").prop("disabled", false);
-                $("input").prop("disabled", false);
-            });
+            new EquipmentStatusTrigger(credential)
+                .updateEquipmentStatus()
+                .then(() => {
+                    MessageBoard.publishMessage("装备数据更新完成。");
+                    $("button").prop("disabled", false);
+                    $("input").prop("disabled", false);
+                });
         });
     }
 
