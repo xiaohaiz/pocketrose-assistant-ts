@@ -1,7 +1,6 @@
 import Credential from "../../util/Credential";
 import BankAccountTrigger from "../trigger/BankAccountTrigger";
 import EquipmentLocalStorage from "../equipment/EquipmentLocalStorage";
-import PetLocalStorage from "../monster/PetLocalStorage";
 import ZodiacBattlePetLoveTrigger from "../trigger/ZodiacBattlePetLoveTrigger";
 import BattleFieldManager from "./BattleFieldManager";
 import BattlePage from "./BattlePage";
@@ -143,7 +142,6 @@ class BattleReturnInterceptor {
 
     async doBeforeReturn(): Promise<void> {
         await Promise.all([
-            new PetLocalStorage(this.#credential).triggerUpdatePetStatus(this.#battleCount),
             new EquipmentLocalStorage(this.#credential).triggerUpdateEquipmentStatus(this.#battleCount),
             new BattleFieldManager(this.#credential).triggerBattleFieldChanged(this.#battlePage),
         ]);
