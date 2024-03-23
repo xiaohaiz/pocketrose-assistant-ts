@@ -1,7 +1,7 @@
 import Credential from "../../util/Credential";
 import PersonalPetManagement from "./PersonalPetManagement";
 import LocalSettingManager from "../config/LocalSettingManager";
-import BattleFieldManager from "../battle/BattleFieldManager";
+import BattleFieldTrigger from "../trigger/BattleFieldTrigger";
 import Role from "../role/Role";
 
 class PersonalPetManagementInterceptor {
@@ -26,7 +26,7 @@ class PersonalPetManagementInterceptor {
         LocalSettingManager.setPetCapacityMax(this.#credential.id, (petCount === 3));
 
         // 宠物状态有可能发生改变，有可能触发智能战斗场所切换
-        await new BattleFieldManager(this.#credential)
+        await new BattleFieldTrigger(this.#credential)
             .withRole(this.#role)
             .withPetPage(page)
             .autoSetBattleField();

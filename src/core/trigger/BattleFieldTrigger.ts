@@ -3,13 +3,13 @@ import SetupLoader from "../config/SetupLoader";
 import PersonalPetManagement from "../monster/PersonalPetManagement";
 import PersonalStatus from "../role/PersonalStatus";
 import Role from "../role/Role";
-import BattleFieldConfigLoader from "./BattleFieldConfigLoader";
-import BattleFieldConfigWriter from "./BattleFieldConfigWriter";
-import BattleFieldThreshold from "./BattleFieldThreshold";
-import BattlePage from "./BattlePage";
+import BattleFieldConfigLoader from "../battle/BattleFieldConfigLoader";
+import BattleFieldConfigWriter from "../battle/BattleFieldConfigWriter";
+import BattleFieldThreshold from "../battle/BattleFieldThreshold";
+import BattlePage from "../battle/BattlePage";
 import PersonalPetManagementPage from "../monster/PersonalPetManagementPage";
 
-class BattleFieldManager {
+class BattleFieldTrigger {
 
     readonly #credential: Credential;
 
@@ -20,12 +20,12 @@ class BattleFieldManager {
         this.#credential = credential;
     }
 
-    withRole(value: Role | undefined): BattleFieldManager {
+    withRole(value: Role | undefined): BattleFieldTrigger {
         this.#role = value;
         return this;
     }
 
-    withPetPage(value: PersonalPetManagementPage | undefined): BattleFieldManager {
+    withPetPage(value: PersonalPetManagementPage | undefined): BattleFieldTrigger {
         this.#petPage = value;
         return this;
     }
@@ -173,4 +173,4 @@ class BattleFieldManager {
     }
 }
 
-export = BattleFieldManager;
+export = BattleFieldTrigger;

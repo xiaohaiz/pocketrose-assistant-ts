@@ -1,7 +1,7 @@
 import Credential from "../../util/Credential";
 import BankAccountTrigger from "../trigger/BankAccountTrigger";
 import ZodiacBattlePetLoveTrigger from "../trigger/ZodiacBattlePetLoveTrigger";
-import BattleFieldManager from "./BattleFieldManager";
+import BattleFieldTrigger from "../trigger/BattleFieldTrigger";
 import BattlePage from "./BattlePage";
 import Role from "../role/Role";
 import PersonalStatus from "../role/PersonalStatus";
@@ -88,7 +88,7 @@ class BattleReturnInterceptor {
                 this.#initializeRole(),
                 this.#initializePetPage()
             ]);
-            await new BattleFieldManager(this.#credential)
+            await new BattleFieldTrigger(this.#credential)
                 .withRole(this.#role)
                 .withPetPage(this.#petPage)
                 .triggerBattleFieldChanged(this.#battlePage);
@@ -137,17 +137,6 @@ class BattleReturnInterceptor {
             }
         }
         return false;
-    }
-
-    async doBeforeReturn(): Promise<void> {
-        await Promise.all([
-            new BattleFieldManager(this.#credential).triggerBattleFieldChanged(this.#battlePage),
-        ]);
-        return await (() => {
-            return new Promise<void>(resolve => {
-                resolve();
-            });
-        })();
     }
 
 }

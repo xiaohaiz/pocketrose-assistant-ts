@@ -1,6 +1,6 @@
 import _, {escape, parseInt, unescape} from "lodash";
 import TownBank from "../../core/bank/TownBank";
-import BattleFieldManager from "../../core/battle/BattleFieldManager";
+import BattleFieldTrigger from "../../core/trigger/BattleFieldTrigger";
 import SetupLoader from "../../core/config/SetupLoader";
 import CastleInformation from "../../core/dashboard/CastleInformation";
 import TownDashboard from "../../core/dashboard/TownDashboard";
@@ -114,7 +114,7 @@ class PersonalEquipmentManagementPageProcessor_Town extends PersonalEquipmentMan
             new EquipmentStatusTrigger(credential)
                 .updateEquipmentStatus()
                 .then(() => {
-                    new BattleFieldManager(credential)
+                    new BattleFieldTrigger(credential)
                         .autoSetBattleField()
                         .then(field => {
                             this.doScrollToPageTitle();
