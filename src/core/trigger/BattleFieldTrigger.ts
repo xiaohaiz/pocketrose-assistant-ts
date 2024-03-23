@@ -46,6 +46,16 @@ class BattleFieldTrigger {
         return this;
     }
 
+    async #initializePetPage() {
+        if (!this.#petPage) {
+            this.#petPage = await new PersonalPetManagement(this.#credential).open();
+        }
+    }
+
+    /**
+     * role is optional.
+     * petPage is optional.
+     */
     async triggerUpdate(): Promise<string | undefined> {
         if (!SetupLoader.isAutoSetBattleFieldEnabled()) {
             return undefined;
@@ -56,33 +66,29 @@ class BattleFieldTrigger {
             return "上洞";
         }
 
-        let role: Role | undefined = this.#role;
-        if (!role) {
-            role = await new PersonalStatus(this.#credential).load();
-        }
-        if (this.#c2(role)) {
+        await this.#initializeRole();
+        if (this.#c2(this.#role!)) {
             await writer.writeCustomizedConfig(false, false, true, false);
             return "上洞";
         }
 
-        if (await this.#c3(role)) {
+        if (await this.#c3(this.#role!)) {
             await writer.writeCustomizedConfig(false, false, false, true);
             return "十二宫";
         }
 
         const config = SetupLoader.loadBattleFieldThreshold();
-
-        if (this.#c4(role, config)) {
+        if (this.#c4(this.#role!, config)) {
             await writer.writeCustomizedConfig(false, false, true, false);
             return "上洞";
         }
 
-        if (this.#c5(role, config)) {
+        if (this.#c5(this.#role!, config)) {
             await writer.writeCustomizedConfig(true, false, false, false);
             return "初森";
         }
 
-        if (this.#c6(role, config)) {
+        if (this.#c6(this.#role!, config)) {
             await writer.writeCustomizedConfig(false, true, false, false);
             return "中塔";
         }
@@ -112,11 +118,8 @@ class BattleFieldTrigger {
             return false;
         }
 
-        let page: PersonalPetManagementPage | undefined = this.#petPage;
-        if (!page) {
-            page = await new PersonalPetManagement(this.#credential).open();
-        }
-        const petList = page.petList;
+        await this.#initializePetPage();
+        const petList = this.#petPage!.petList;
         if (petList === undefined || petList.length === 0) {
             return false;
         }
