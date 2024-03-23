@@ -23,16 +23,22 @@ class BattleFieldTrigger {
 
     readonly #credential: Credential;
 
-    #role?: Role;
-    #petPage?: PersonalPetManagementPage;
-
     constructor(credential: Credential) {
         this.#credential = credential;
     }
 
+    #role?: Role;
+    #petPage?: PersonalPetManagementPage;
+
     withRole(value: Role | undefined): BattleFieldTrigger {
         this.#role = value;
         return this;
+    }
+
+    async #initializeRole() {
+        if (!this.#role) {
+            this.#role = await new PersonalStatus(this.#credential).load();
+        }
     }
 
     withPetPage(value: PersonalPetManagementPage | undefined): BattleFieldTrigger {
@@ -144,6 +150,8 @@ class BattleFieldTrigger {
 
     /**
      * 战斗时如果获取了额外RP
+     * role is optional.
+     * petPage is unnecessary.
      */
     async triggerUpdateWhenBattle(battlePage: BattlePage) {
         if (battlePage.zodiacBattle) {
@@ -165,8 +173,8 @@ class BattleFieldTrigger {
             return;
         }
 
-        const role = await new PersonalStatus(this.#credential).load();
-        if (role.consecrateRP !== undefined && role.consecrateRP > 0) {
+        await this.#initializeRole();
+        if (this.#role!.consecrateRP !== undefined && this.#role!.consecrateRP > 0) {
             // 当前有祭奠，忽略
             return;
         }

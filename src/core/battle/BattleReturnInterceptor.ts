@@ -77,7 +77,6 @@ class BattleReturnInterceptor {
         }
         if (SetupLoader.isAutoSetBattleFieldEnabled()) {
             await new BattleFieldTrigger(this.#credential)
-                .withPetPage(this.#petPage)
                 .triggerUpdateWhenBattle(this.#battlePage);
         }
         if (this.#battlePage.zodiacBattle) {
