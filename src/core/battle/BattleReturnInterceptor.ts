@@ -100,18 +100,16 @@ class BattleReturnInterceptor {
                 .triggerPetLoveFixed(this.#battlePage);
         }
         if (this.#hasHarvestExcludesPetMap()) {
-            await Promise.all([
-                this.#initializeEquipmentPage(),
-                this.#initializePetPage()
-            ]);
-            await Promise.all([
-                new EquipmentSpaceTrigger(this.#credential)
-                    .withEquipmentPage(this.#equipmentPage)
-                    .updateEquipmentSpace(),
-                new PetSpaceTrigger(this.#credential)
-                    .withPetPage(this.#petPage)
-                    .updatePetSpace()
-            ]);
+            await this.#initializeEquipmentPage();
+            await new EquipmentSpaceTrigger(this.#credential)
+                .withEquipmentPage(this.#equipmentPage)
+                .updateEquipmentSpace();
+        }
+        if (this.#hasHarvestExcludesPetMap() && !this.#battlePage.zodiacBattle) {
+            await this.#initializePetPage();
+            await new PetSpaceTrigger(this.#credential)
+                .withPetPage(this.#petPage)
+                .triggerUpdate();
         }
     }
 
