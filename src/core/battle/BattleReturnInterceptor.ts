@@ -3,8 +3,6 @@ import BankAccountTrigger from "../trigger/BankAccountTrigger";
 import ZodiacBattlePetLoveTrigger from "../trigger/ZodiacBattlePetLoveTrigger";
 import BattleFieldTrigger from "../trigger/BattleFieldTrigger";
 import BattlePage from "./BattlePage";
-import Role from "../role/Role";
-import PersonalStatus from "../role/PersonalStatus";
 import PersonalEquipmentManagementPage from "../equipment/PersonalEquipmentManagementPage";
 import PersonalEquipmentManagement from "../equipment/PersonalEquipmentManagement";
 import PersonalPetManagementPage from "../monster/PersonalPetManagementPage";
@@ -30,15 +28,8 @@ class BattleReturnInterceptor {
         this.#battlePage = battlePage;
     }
 
-    #role?: Role;
     #equipmentPage?: PersonalEquipmentManagementPage;
     #petPage?: PersonalPetManagementPage;
-
-    async #initializeRole() {
-        if (!this.#role) {
-            this.#role = await new PersonalStatus(this.#credential).load();
-        }
-    }
 
     async #initializeEquipmentPage() {
         if (!this.#equipmentPage) {
@@ -83,15 +74,9 @@ class BattleReturnInterceptor {
                 .triggerUpdate();
         }
         if (SetupLoader.isAutoSetBattleFieldEnabled()) {
-            await Promise.all([
-                this.#initializeRole(),
-                this.#initializePetPage()
-            ]);
             await new BattleFieldTrigger(this.#credential)
-                .withRole(this.#role)
                 .withPetPage(this.#petPage)
                 .triggerUpdateWhenBattle(this.#battlePage);
-
         }
         if (this.#battlePage.zodiacBattle) {
             await this.#initializePetPage();
