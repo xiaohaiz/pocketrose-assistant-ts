@@ -29,15 +29,18 @@ import PetManagementReturnInterceptor from "../../core/monster/PetManagementRetu
 
 class PersonalPetManagementPageProcessor_Town extends PersonalPetManagementPageProcessor {
 
+    async doReturnButtonClicked(credential: Credential): Promise<void> {
+        await new PetManagementReturnInterceptor(credential).beforeExitPetManagement();
+    }
+
+    async doEquipmentButtonClicked(credential: Credential): Promise<void> {
+        await new PetManagementReturnInterceptor(credential).beforeExitPetManagement();
+    }
+
     doProcessWithPageParsed(credential: Credential, page: PersonalPetManagementPage, context?: PageProcessorContext): void {
         doProcess(credential, page.petList!, page.petStudyStatus!);
     }
 
-
-    async doBeforeExit(credential: Credential): Promise<void> {
-        PageUtils.disableButtons();
-        await new PetManagementReturnInterceptor(credential).beforeExitPetManagement();
-    }
 
     doBindKeyboardShortcut(credential: Credential) {
         KeyboardShortcutBuilder.newInstance()
