@@ -49,7 +49,7 @@ class PersonalPetManagementPageProcessor_Town extends PersonalPetManagementPageP
                     .triggerUpdate()
                     .then(() => {
                         new PetStatusTrigger(credential)
-                            .updatePetStatus()
+                            .triggerUpdate()
                             .then(() => {
                                 $("#refreshButton").trigger("click");
                                 MessageBoard.publishMessage("宠物数据更新完成。");

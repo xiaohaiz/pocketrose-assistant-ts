@@ -13,6 +13,8 @@ import RolePetStatusStorage from "../monster/RolePetStatusStorage";
 /**
  * ============================================================================
  * 宠 物 状 态 触 发 器
+ * ----------------------------------------------------------------------------
+ * 1.
  * ============================================================================
  */
 class PetStatusTrigger {
@@ -49,7 +51,7 @@ class PetStatusTrigger {
         }
     }
 
-    async updatePetStatus() {
+    async triggerUpdate() {
         const allPetList: Pet[] = [];
 
         // 解析身上的宠物
