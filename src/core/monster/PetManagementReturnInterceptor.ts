@@ -4,7 +4,6 @@ import BattleFieldTrigger from "../trigger/BattleFieldTrigger";
 import Role from "../role/Role";
 import PersonalPetManagementPage from "./PersonalPetManagementPage";
 import PetSpaceTrigger from "../trigger/PetSpaceTrigger";
-import PetStatusTrigger from "../trigger/PetStatusTrigger";
 
 class PetManagementReturnInterceptor {
 
@@ -35,7 +34,6 @@ class PetManagementReturnInterceptor {
     async beforeExitPetManagement() {
         await this.#initializePetPage();
         await Promise.all([
-            new PetStatusTrigger(this.#credential).withPetPage(this.#petPage).triggerUpdate(),
             new PetSpaceTrigger(this.#credential).withPetPage(this.#petPage).triggerUpdate(),
             new BattleFieldTrigger(this.#credential).withRole(this.#role).withPetPage(this.#petPage).triggerUpdate()
         ]);
