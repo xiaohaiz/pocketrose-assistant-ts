@@ -38,6 +38,9 @@ class EquipmentStatusTrigger {
         }
     }
 
+    /**
+     * equipmentPage is required.
+     */
     async triggerUpdate() {
         const allEquipments: Equipment[] = [];
 

@@ -29,7 +29,6 @@ class PetStatusTrigger {
     #equipmentPage?: PersonalEquipmentManagementPage;
     #petPage?: PersonalPetManagementPage;
 
-
     withEquipmentPage(value: PersonalEquipmentManagementPage | undefined): PetStatusTrigger {
         this.#equipmentPage = value;
         return this;
@@ -52,6 +51,10 @@ class PetStatusTrigger {
         }
     }
 
+    /**
+     * pagePage is required.
+     * equipmentPage is required.
+     */
     async triggerUpdate() {
         const allPetList: Pet[] = [];
 

@@ -16,10 +16,15 @@ import PersonalEquipmentManagementPage from "../equipment/PersonalEquipmentManag
 class EquipmentGrowthTrigger {
 
     readonly #credential: Credential;
-    #equipmentPage?: PersonalEquipmentManagementPage;
 
     constructor(credential: Credential) {
         this.#credential = credential;
+    }
+
+    #equipmentPage?: PersonalEquipmentManagementPage;
+
+    get equipmentPage(): PersonalEquipmentManagementPage | undefined {
+        return this.#equipmentPage;
     }
 
     withEquipmentPage(value: PersonalEquipmentManagementPage | undefined): EquipmentGrowthTrigger {
@@ -27,6 +32,15 @@ class EquipmentGrowthTrigger {
         return this;
     }
 
+    async #initializeEquipmentPage() {
+        if (!this.#equipmentPage) {
+            this.#equipmentPage = await new PersonalEquipmentManagement(this.#credential).open();
+        }
+    }
+
+    /**
+     * equipmentPage is optional
+     */
     async triggerUpdate() {
         const config = SetupLoader.loadEquipmentExperienceConfig(this.#credential.id);
         if (!config.configured) {
@@ -37,13 +51,10 @@ class EquipmentGrowthTrigger {
             return;
         }
 
-        let page: PersonalEquipmentManagementPage | undefined = this.#equipmentPage;
-        if (!page) {
-            page = await new PersonalEquipmentManagement(this.#credential).open();
-        }
-        this.#processWeapon(config, page);
-        this.#processArmor(config, page);
-        this.#processAccessory(config, page);
+        await this.#initializeEquipmentPage();
+        this.#processWeapon(config, this.#equipmentPage!);
+        this.#processArmor(config, this.#equipmentPage!);
+        this.#processAccessory(config, this.#equipmentPage!);
     }
 
     #processWeapon(config: EquipmentExperienceConfig, page: PersonalEquipmentManagementPage) {
