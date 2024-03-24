@@ -1,5 +1,7 @@
 # pocketrose-assistant-ts
 
+### 版本 4.5.2-SNAPSHOT
+
 ### 版本 4.5.1
 
 1. 改进键盘快捷键的支持，忽略Ctrl先导的按键，尽量避免与浏览器快捷键的冲突。
