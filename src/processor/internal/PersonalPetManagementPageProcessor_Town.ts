@@ -37,7 +37,7 @@ class PersonalPetManagementPageProcessor_Town extends PersonalPetManagementPageP
 
     doGenerateCommandButtons(): string {
         let html = super.doGenerateCommandButtons();
-        html += "<button role='button' id='gemHouseButton' class='COMMAND_BUTTON'>宝石镶嵌(f)</button>";
+        html += "<button role='button' id='gemHouseButton' class='COMMAND_BUTTON'>宝石镶嵌(y)</button>";
         html += "<button role='button' id='updateButton' class='COMMAND_BUTTON' style='color:red'>更新统计数据(u)</button>";
         return html;
     }
@@ -90,7 +90,7 @@ class PersonalPetManagementPageProcessor_Town extends PersonalPetManagementPageP
     doBindKeyboardShortcut(credential: Credential) {
         KeyboardShortcutBuilder.newInstance()
             .onKeyPressed("e", () => PageUtils.triggerClick("equipmentButton"))
-            .onKeyPressed("f", () => PageUtils.triggerClick("gemHouseButton"))
+            .onKeyPressed("y", () => PageUtils.triggerClick("gemHouseButton"))
             .onKeyPressed("r", () => PageUtils.triggerClick("refreshButton"))
             .onKeyPressed("u", () => PageUtils.triggerClick("updateButton"))
             .onKeyPressed("z", () => PageUtils.triggerClick("autoLoadZodiacPartner"))

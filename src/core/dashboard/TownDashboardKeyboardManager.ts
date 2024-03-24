@@ -22,7 +22,7 @@ class TownDashboardKeyboardManager {
             .onKeyPressed("a", () => this.#processKeyPressed_a())
             .onKeyPressed("b", () => this.#processKeyPressed_b())
             .onKeyPressed("e", () => this.#processKeyPressed_e())
-            .onKeyPressed("f", () => this.#processKeyPressed_f())
+            .onKeyPressed("y", () => this.#processKeyPressed_f())
             .onKeyPressed("g", () => this.#processKeyPressed_g())
             .onKeyPressed("i", () => this.#processKeyPressed_i())
             .onKeyPressed("j", () => this.#processKeyPressed_j())
