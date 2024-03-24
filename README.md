@@ -1,5 +1,7 @@
 # pocketrose-assistant-ts
 
+### 版本 4.5.3-SNAPSHOT
+
 ### 版本 4.5.2
 
 1. 宝石镶嵌的快捷键由f改到y，尽量避免与浏览器快捷键的冲突。
