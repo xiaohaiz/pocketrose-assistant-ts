@@ -138,7 +138,7 @@ class TownDashboardLayout007 extends TownDashboardLayout {
                 "<div style='display:none' id='hidden-5'></div>" +
                 "");
 
-        if (SetupLoader.isGemCountVisible()) {
+        if (SetupLoader.isGemCountVisible(credential.id)) {
             let gemHtml = "";
             gemHtml += "<tr>";
             gemHtml += "<td>";
@@ -170,7 +170,7 @@ class TownDashboardLayout007 extends TownDashboardLayout {
                 .parent()
                 .after($(gemHtml));
 
-            _renderGemCount();
+            setInterval(() => _renderGemCount(), 3000);
         }
 
         BattleRecordStorage.getInstance().load(credential.id).then(record => {
@@ -415,8 +415,6 @@ function doProcessBattleReturn(credential: Credential,
                                mainPage: string,
                                additionalRP?: number,
                                harvestList?: string[]) {
-    _renderGemCount();
-
     $("#systemAnnouncement").removeAttr("style");
     $(".battleButton").off("click");
     $("#battleMenu").html("").parent().hide();
@@ -601,10 +599,6 @@ function _renderConversation(page: TownDashboardPage) {
 }
 
 function _renderGemCount() {
-    if (!SetupLoader.isGemCountVisible()) {
-        return;
-    }
-
     const roleIdList: string[] = [];
     const includeExternal = LocalSettingManager.isIncludeExternal();
     for (const roleId of TeamMemberLoader.loadTeamMembersAsMap(includeExternal).keys()) {
