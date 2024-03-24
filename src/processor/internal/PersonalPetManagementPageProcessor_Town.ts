@@ -28,6 +28,10 @@ import KeyboardShortcutBuilder from "../../util/KeyboardShortcutBuilder";
 import PetManagementReturnInterceptor from "../../core/monster/PetManagementReturnInterceptor";
 import PetMapStatusTrigger from "../../core/trigger/PetMapStatusTrigger";
 import PetStatusTrigger from "../../core/trigger/PetStatusTrigger";
+import ZodiacPartnerLoader from "../../core/monster/ZodiacPartnerLoader";
+import _ from "lodash";
+import ZodiacPartner from "../../core/monster/ZodiacPartner";
+import StorageUtils from "../../util/StorageUtils";
 
 class PersonalPetManagementPageProcessor_Town extends PersonalPetManagementPageProcessor {
 
@@ -577,6 +581,7 @@ function doRenderPetProfile(code: string) {
 }
 
 function doRenderGoldenCage(credential: Credential) {
+    $(".PARTNER_BUTTON").off("click");
     const s = $("#goldenCageIndex").text();
     if (s === "none") {
         return;
@@ -584,6 +589,8 @@ function doRenderGoldenCage(credential: Credential) {
     const index = parseInt(s);
     new GoldenCage(credential).open(index).then(cagePage => {
         const cagePetList = cagePage.sortedPetList;
+
+        const partnerLoader = new ZodiacPartnerLoader(credential);
 
         let html = "";
         html += "<table style='border-width:0;background-color:#888888;text-align:center;width:100%'>";
@@ -621,6 +628,13 @@ function doRenderGoldenCage(credential: Credential) {
             html += "<input type='button' class='PetUIButton' id='takeOutButton_" + pet.index + "' value='取出'>";
             html += "</td>";
             html += "<td style='background-color:#E8E8D0'>";
+            if (pet.level === 100) {
+                if (partnerLoader.isZodiacPartner(pet)) {
+                    html += "<button role='button' class='PetUIButton' disabled>十二宫</button>";
+                } else {
+                    html += "<button role='button' class='PARTNER_BUTTON PetUIButton' id='partner_button_" + pet.index + "'>十二宫</button>";
+                }
+            }
             html += "</td>";
             html += "</tr>";
         }
@@ -641,6 +655,32 @@ function doRenderGoldenCage(credential: Credential) {
         for (const pet of cagePetList) {
             doBindTakeOutButton(credential, pet.index!);
         }
+
+        $(".PARTNER_BUTTON").on("click", event => {
+            const buttonId = $(event.target).attr("id") as string;
+            const index = _.parseInt(StringUtils.substringAfterLast(buttonId, "_"));
+            let target: Pet | null = null;
+            for (const pet of cagePetList) {
+                if (pet.index === index) {
+                    target = pet;
+                    break;
+                }
+            }
+            if (target) {
+                const partner = new ZodiacPartner();
+                partner.name = target.name;
+                partner.level = target.level;
+                partner.maxHealth = target.maxHealth;
+                partner.attack = target.attack;
+                partner.defense = target.defense;
+                partner.specialAttack = target.specialAttack;
+                partner.specialDefense = target.specialDefense;
+                partner.speed = target.speed;
+                StorageUtils.set("_pa_066_" + credential.id, JSON.stringify(partner));
+                MessageBoard.publishMessage("十二宫战斗伴侣已经设置。");
+                doRefresh(credential);
+            }
+        });
     });
 }
 
