@@ -38,7 +38,7 @@ class PersonalEquipmentManagementPageProcessor_Town extends PersonalEquipmentMan
             .onEscapePressed(() => $("#returnButton").trigger("click"))
             .onKeyPressed("r", () => $("#refreshButton").trigger("click"))
             .onKeyPressed("s", () => $("#itemShopButton").trigger("click"))
-            .onKeyPressed("f", () => $("#gemHouseButton").trigger("click"))
+            .onKeyPressed("y", () => $("#gemHouseButton").trigger("click"))
             .onKeyPressed("u", () => $("#updateButton").trigger("click"))
             .withDefaultPredicate()
             .bind();
@@ -80,7 +80,7 @@ class PersonalEquipmentManagementPageProcessor_Town extends PersonalEquipmentMan
     doGenerateImmutableButtons(): string {
         let html = super.doGenerateImmutableButtons();
         html += "<input type='button' id='itemShopButton' class='COMMAND_BUTTON' value='物品商店(s)'>";
-        html += "<input type='button' id='gemHouseButton' class='COMMAND_BUTTON' value='宝石镶嵌(f)'>";
+        html += "<input type='button' id='gemHouseButton' class='COMMAND_BUTTON' value='宝石镶嵌(y)'>";
         html += "<input type='button' id='updateButton' class='COMMAND_BUTTON' value='更新装备数据(u)' style='color:red'>";
         return html;
     }
