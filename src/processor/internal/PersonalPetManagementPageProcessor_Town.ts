@@ -79,6 +79,7 @@ class PersonalPetManagementPageProcessor_Town extends PersonalPetManagementPageP
             .onKeyPressed("e", () => PageUtils.triggerClick("equipmentButton"))
             .onKeyPressed("r", () => PageUtils.triggerClick("refreshButton"))
             .onKeyPressed("u", () => PageUtils.triggerClick("updateButton"))
+            .onKeyPressed("z", () => PageUtils.triggerClick("autoLoadZodiacPartner"))
             .onKeyPressed("1", () => $("#pet_spell_study_1").trigger("click"))
             .onKeyPressed("2", () => $("#pet_spell_study_2").trigger("click"))
             .onKeyPressed("3", () => $("#pet_spell_study_3").trigger("click"))
@@ -296,21 +297,26 @@ function doRender(credential: Credential, petList: Pet[], studyStatus: number[],
     html += "</td></tr>";
     // LINE
     html += "<tr><td style='background-color:#E8E8D0;text-align:center'>";
-    html += "<input type='button' class='PetUIButton' value='第１技能位' id='pet_spell_study_1'>";
-    html += "<input type='button' class='PetUIButton' value='第２技能位' id='pet_spell_study_2'>";
-    html += "<input type='button' class='PetUIButton' value='第３技能位' id='pet_spell_study_3'>";
-    html += "<input type='button' class='PetUIButton' value='第４技能位' id='pet_spell_study_4'>";
+    html += "<input type='button' class='PetUIButton' value='第１技能位(1)' id='pet_spell_study_1'>";
+    html += "<input type='button' class='PetUIButton' value='第２技能位(2)' id='pet_spell_study_2'>";
+    html += "<input type='button' class='PetUIButton' value='第３技能位(3)' id='pet_spell_study_3'>";
+    html += "<input type='button' class='PetUIButton' value='第４技能位(4)' id='pet_spell_study_4'>";
     html += "</td></tr>";
     // LINE
     html += "<tr><td style='background-color:#E8E8D0;text-align:center'>";
     html += "<input type='button' class='PetUIButton' value='刷新宠物管理' id='refreshButton'>";
+    html += "</td></tr>";
+    // LINE
+    html += "<tr><td style='background-color:#E8E8D0;text-align:center'>";
     html += "<input type='button' class='PetUIButton' value='打开黄金笼子' id='openCageButton'>";
     html += "<input type='button' class='PetUIButton' value='关闭黄金笼子' id='closeCageButton'>";
     html += "<input type='button' class='PetUIButton' value='从黄金笼子盲取' id='takeOutFirstFromCageButton' disabled style='display:none'>";
-    if (partnerLoader.available()) {
-        html += "<button role='button' class='PetUIButton' id='autoLoadZodiacPartner'>十二宫战斗伴侣</button>";
-    }
     html += "</td></tr>";
+    if (partnerLoader.available()) {
+        html += "<tr><td style='background-color:#E8E8D0;text-align:center'>";
+        html += "<button role='button' class='PetUIButton' id='autoLoadZodiacPartner'>十二宫战斗伴侣(z)</button>";
+        html += "</td></tr>";
+    }
     // LINE
     html += "<tr><td style='background-color:#E8E8D0;text-align:center;height:100%'></td></tr>";
     html += "</tbody>";
