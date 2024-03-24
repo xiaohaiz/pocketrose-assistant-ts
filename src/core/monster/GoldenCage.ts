@@ -32,6 +32,13 @@ class GoldenCage {
         })();
     }
 
+    async takeOut(index: number) {
+        const request = this.#credential.asRequestMap();
+        request.set("select", index.toString());
+        request.set("mode", "GETOUTLONGZI");
+        await NetworkUtils.post("mydata.cgi", request);
+    }
+
     static parsePage(pageHtml: string) {
         const petList: Pet[] = [];
         $(pageHtml)

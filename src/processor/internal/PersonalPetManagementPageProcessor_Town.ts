@@ -28,6 +28,10 @@ import KeyboardShortcutBuilder from "../../util/KeyboardShortcutBuilder";
 import PetManagementReturnInterceptor from "../../core/monster/PetManagementReturnInterceptor";
 import PetMapStatusTrigger from "../../core/trigger/PetMapStatusTrigger";
 import PetStatusTrigger from "../../core/trigger/PetStatusTrigger";
+import ZodiacPartnerLoader from "../../core/monster/ZodiacPartnerLoader";
+import _ from "lodash";
+import ZodiacPartner from "../../core/monster/ZodiacPartner";
+import StorageUtils from "../../util/StorageUtils";
 
 class PersonalPetManagementPageProcessor_Town extends PersonalPetManagementPageProcessor {
 
@@ -75,6 +79,7 @@ class PersonalPetManagementPageProcessor_Town extends PersonalPetManagementPageP
             .onKeyPressed("e", () => PageUtils.triggerClick("equipmentButton"))
             .onKeyPressed("r", () => PageUtils.triggerClick("refreshButton"))
             .onKeyPressed("u", () => PageUtils.triggerClick("updateButton"))
+            .onKeyPressed("z", () => PageUtils.triggerClick("autoLoadZodiacPartner"))
             .onKeyPressed("1", () => $("#pet_spell_study_1").trigger("click"))
             .onKeyPressed("2", () => $("#pet_spell_study_2").trigger("click"))
             .onKeyPressed("3", () => $("#pet_spell_study_3").trigger("click"))
@@ -110,6 +115,7 @@ function doProcess(credential: Credential, petList: Pet[], studyStatus: number[]
 }
 
 function doRender(credential: Credential, petList: Pet[], studyStatus: number[], role?: Role) {
+    const partnerLoader = new ZodiacPartnerLoader(credential);
     let html = "";
     html += "<table style='border-width:0;background-color:#888888;text-align:center;width:100%'>";
     html += "<tbody style='background-color:#F8F0E0'>";
@@ -149,27 +155,51 @@ function doRender(credential: Credential, petList: Pet[], studyStatus: number[],
         html += "<td style='background-color:#E8E8D0'>" +
             pet.gender +
             "</td>";
-        html += "<td style='background-color:#E8E8D0'>" +
-            pet.level +
-            "</td>";
-        html += "<td style='background-color:#E8E8D0'>" +
-            pet.health + "/" + pet.maxHealth +
-            "</td>";
-        html += "<td style='background-color:#E8E8D0'>" +
-            (pet.attack! >= 375 ? "<b style='color:red'>" + pet.attack + "</b>" : pet.attack) +
-            "</td>";
-        html += "<td style='background-color:#E8E8D0'>" +
-            (pet.defense! >= 375 ? "<b style='color:red'>" + pet.defense + "</b>" : pet.defense) +
-            "</td>";
-        html += "<td style='background-color:#E8E8D0'>" +
-            (pet.specialAttack! >= 375 ? "<b style='color:red'>" + pet.specialAttack + "</b>" : pet.specialAttack) +
-            "</td>";
-        html += "<td style='background-color:#E8E8D0'>" +
-            (pet.specialDefense! >= 375 ? "<b style='color:red'>" + pet.specialDefense + "</b>" : pet.specialDefense) +
-            "</td>";
-        html += "<td style='background-color:#E8E8D0'>" +
-            (pet.speed! >= 375 ? "<b style='color:red'>" + pet.speed + "</b>" : pet.speed) +
-            "</td>";
+        if (partnerLoader.isZodiacPartner(pet)) {
+            html += "<td style='background-color:black;color:white'>" +
+                pet.level +
+                "</td>";
+            html += "<td style='background-color:black;color:white'>" +
+                pet.health + "/" + pet.maxHealth +
+                "</td>";
+            html += "<td style='background-color:black;color:white'>" +
+                (pet.attack! >= 375 ? "<b style='color:red'>" + pet.attack + "</b>" : pet.attack) +
+                "</td>";
+            html += "<td style='background-color:black;color:white'>" +
+                (pet.defense! >= 375 ? "<b style='color:red'>" + pet.defense + "</b>" : pet.defense) +
+                "</td>";
+            html += "<td style='background-color:black;color:white'>" +
+                (pet.specialAttack! >= 375 ? "<b style='color:red'>" + pet.specialAttack + "</b>" : pet.specialAttack) +
+                "</td>";
+            html += "<td style='background-color:black;color:white'>" +
+                (pet.specialDefense! >= 375 ? "<b style='color:red'>" + pet.specialDefense + "</b>" : pet.specialDefense) +
+                "</td>";
+            html += "<td style='background-color:black;color:white'>" +
+                (pet.speed! >= 375 ? "<b style='color:red'>" + pet.speed + "</b>" : pet.speed) +
+                "</td>";
+        } else {
+            html += "<td style='background-color:#E8E8D0'>" +
+                pet.level +
+                "</td>";
+            html += "<td style='background-color:#E8E8D0'>" +
+                pet.health + "/" + pet.maxHealth +
+                "</td>";
+            html += "<td style='background-color:#E8E8D0'>" +
+                (pet.attack! >= 375 ? "<b style='color:red'>" + pet.attack + "</b>" : pet.attack) +
+                "</td>";
+            html += "<td style='background-color:#E8E8D0'>" +
+                (pet.defense! >= 375 ? "<b style='color:red'>" + pet.defense + "</b>" : pet.defense) +
+                "</td>";
+            html += "<td style='background-color:#E8E8D0'>" +
+                (pet.specialAttack! >= 375 ? "<b style='color:red'>" + pet.specialAttack + "</b>" : pet.specialAttack) +
+                "</td>";
+            html += "<td style='background-color:#E8E8D0'>" +
+                (pet.specialDefense! >= 375 ? "<b style='color:red'>" + pet.specialDefense + "</b>" : pet.specialDefense) +
+                "</td>";
+            html += "<td style='background-color:#E8E8D0'>" +
+                (pet.speed! >= 375 ? "<b style='color:red'>" + pet.speed + "</b>" : pet.speed) +
+                "</td>";
+        }
         html += "<td style='background-color:#E8E8D0'>" +
             "<input type='button' class='PetUIButton' id='pet_" + pet.index + "_spell_1' value='" + pet.spell1 + "' title='" + pet.spell1Description + "'>" +
             "</td>";
@@ -216,6 +246,11 @@ function doRender(credential: Credential, petList: Pet[], studyStatus: number[],
         html += "<input type='button' class='PetUIButton' value='发送' id='pet_" + pet.index + "_send'>";
         html += "<input type='button' class='PetUIButton' value='改名' id='pet_" + pet.index + "_rename'>&nbsp;";
         html += "<input type='text' id='pet_" + pet.index + "_name_text' size='15' maxlength='20' spellcheck='false'>";
+        if (pet.level === 100) {
+            if (!partnerLoader.isZodiacPartner(pet)) {
+                html += "<button role='button' class='PetUIButton P_BUTTON' id='set_pet_partner_" + pet.index + "'>十二宫</button>";
+            }
+        }
         html += "</td>";
         html += "<td style='text-align:right'>";
         html += new MonsterSimulator(pet).doSimulate().doGenerateHtml();
@@ -262,18 +297,26 @@ function doRender(credential: Credential, petList: Pet[], studyStatus: number[],
     html += "</td></tr>";
     // LINE
     html += "<tr><td style='background-color:#E8E8D0;text-align:center'>";
-    html += "<input type='button' class='PetUIButton' value='第１技能位' id='pet_spell_study_1'>";
-    html += "<input type='button' class='PetUIButton' value='第２技能位' id='pet_spell_study_2'>";
-    html += "<input type='button' class='PetUIButton' value='第３技能位' id='pet_spell_study_3'>";
-    html += "<input type='button' class='PetUIButton' value='第４技能位' id='pet_spell_study_4'>";
+    html += "<input type='button' class='PetUIButton' value='第１技能位(1)' id='pet_spell_study_1'>";
+    html += "<input type='button' class='PetUIButton' value='第２技能位(2)' id='pet_spell_study_2'>";
+    html += "<input type='button' class='PetUIButton' value='第３技能位(3)' id='pet_spell_study_3'>";
+    html += "<input type='button' class='PetUIButton' value='第４技能位(4)' id='pet_spell_study_4'>";
     html += "</td></tr>";
     // LINE
     html += "<tr><td style='background-color:#E8E8D0;text-align:center'>";
     html += "<input type='button' class='PetUIButton' value='刷新宠物管理' id='refreshButton'>";
+    html += "</td></tr>";
+    // LINE
+    html += "<tr><td style='background-color:#E8E8D0;text-align:center'>";
     html += "<input type='button' class='PetUIButton' value='打开黄金笼子' id='openCageButton'>";
     html += "<input type='button' class='PetUIButton' value='关闭黄金笼子' id='closeCageButton'>";
     html += "<input type='button' class='PetUIButton' value='从黄金笼子盲取' id='takeOutFirstFromCageButton' disabled style='display:none'>";
     html += "</td></tr>";
+    if (partnerLoader.available()) {
+        html += "<tr><td style='background-color:#E8E8D0;text-align:center'>";
+        html += "<button role='button' class='PetUIButton' id='autoLoadZodiacPartner'>十二宫战斗伴侣(z)</button>";
+        html += "</td></tr>";
+    }
     // LINE
     html += "<tr><td style='background-color:#E8E8D0;text-align:center;height:100%'></td></tr>";
     html += "</tbody>";
@@ -424,6 +467,42 @@ function doRender(credential: Credential, petList: Pet[], studyStatus: number[],
     doBindPetProfile(petList);
     // 绑定按钮点击事件处理
     doBind(credential, petList);
+
+    $(".P_BUTTON").on("click", event => {
+        const buttonId = $(event.target).attr("id") as string;
+        const index = _.parseInt(StringUtils.substringAfterLast(buttonId, "_"));
+        let target: Pet | null = null;
+        for (const pet of petList) {
+            if (pet.index === index) {
+                target = pet;
+                break;
+            }
+        }
+        if (target) {
+            const partner = new ZodiacPartner();
+            partner.name = target.name;
+            partner.level = target.level;
+            partner.maxHealth = target.maxHealth;
+            partner.attack = target.attack;
+            partner.defense = target.defense;
+            partner.specialAttack = target.specialAttack;
+            partner.specialDefense = target.specialDefense;
+            partner.speed = target.speed;
+            StorageUtils.set("_pa_066_" + credential.id, JSON.stringify(partner));
+            MessageBoard.publishMessage("十二宫战斗伴侣已经设置。");
+            doRefresh(credential);
+        }
+    });
+
+    if ($("#autoLoadZodiacPartner").length > 0) {
+        $("#autoLoadZodiacPartner").on("click", () => {
+            partnerLoader.load().then(message => {
+                if (message.success && message.doRefresh) {
+                    doRefresh(credential);
+                }
+            });
+        });
+    }
 
     if (role) {
         new CastleInformation().load(role.name!).then(() => {
@@ -577,6 +656,7 @@ function doRenderPetProfile(code: string) {
 }
 
 function doRenderGoldenCage(credential: Credential) {
+    $(".PARTNER_BUTTON").off("click");
     const s = $("#goldenCageIndex").text();
     if (s === "none") {
         return;
@@ -585,44 +665,66 @@ function doRenderGoldenCage(credential: Credential) {
     new GoldenCage(credential).open(index).then(cagePage => {
         const cagePetList = cagePage.sortedPetList;
 
+        const partnerLoader = new ZodiacPartnerLoader(credential);
+
         let html = "";
         html += "<table style='border-width:0;background-color:#888888;text-align:center;width:100%'>";
         html += "<tbody style='background-color:#F8F0E0'>";
         html += "<tr>";
-        html += "<td style='background-color:#E8E8D0'>序号</td>";
-        html += "<td style='background-color:#E8E8D0'>宠物名</td>";
-        html += "<td style='background-color:#E8E8D0'>Ｌｖ</td>";
-        html += "<td style='background-color:#E8E8D0'>ＨＰ</td>";
-        html += "<td style='background-color:#E8E8D0'>攻击力</td>";
-        html += "<td style='background-color:#E8E8D0'>防御力</td>";
-        html += "<td style='background-color:#E8E8D0'>智力</td>";
-        html += "<td style='background-color:#E8E8D0'>精神力</td>";
-        html += "<td style='background-color:#E8E8D0'>速度</td>";
-        html += "<td style='background-color:#E8E8D0'>经验</td>";
-        html += "<td style='background-color:#E8E8D0'>性别</td>";
-        html += "<td style='background-color:#E8E8D0'>取出</td>";
+        html += "<td style='background-color:skyblue;color:white'>序号</td>";
+        html += "<td style='background-color:skyblue;color:white'>宠物名</td>";
+        html += "<td style='background-color:skyblue;color:white'>Ｌｖ</td>";
+        html += "<td style='background-color:skyblue;color:white'>ＨＰ</td>";
+        html += "<td style='background-color:skyblue;color:white'>攻击力</td>";
+        html += "<td style='background-color:skyblue;color:white'>防御力</td>";
+        html += "<td style='background-color:skyblue;color:white'>智力</td>";
+        html += "<td style='background-color:skyblue;color:white'>精神力</td>";
+        html += "<td style='background-color:skyblue;color:white'>速度</td>";
+        html += "<td style='background-color:skyblue;color:white'>经验</td>";
+        html += "<td style='background-color:skyblue;color:white'>性别</td>";
+        html += "<td style='background-color:skyblue;color:white'>取出</td>";
+        html += "<td style='background-color:skyblue;color:white'>十二宫</td>";
         html += "</tr>";
         let sequence = 1;
         for (const pet of cagePetList) {
             html += "<tr>";
             html += "<th style='background-color:#E8E8D0'>" + (sequence++) + "</th>";
             html += "<td style='background-color:#E8E8D0'>" + pet.nameHtml + "</td>";
-            html += "<td style='background-color:#E8E8D0'>" + pet.level + "</td>";
-            html += "<td style='background-color:#E8E8D0'>" + pet.health + "/" + pet.maxHealth + "</td>";
-            html += "<td style='background-color:#E8E8D0'>" + pet.attack + "</td>";
-            html += "<td style='background-color:#E8E8D0'>" + pet.defense + "</td>";
-            html += "<td style='background-color:#E8E8D0'>" + pet.specialAttack + "</td>";
-            html += "<td style='background-color:#E8E8D0'>" + pet.specialDefense + "</td>";
-            html += "<td style='background-color:#E8E8D0'>" + pet.speed + "</td>";
+            if (partnerLoader.isZodiacPartner(pet)) {
+                html += "<td style='background-color:black;color:white'>" + pet.level + "</td>";
+                html += "<td style='background-color:black;color:white'>" + pet.health + "/" + pet.maxHealth + "</td>";
+                html += "<td style='background-color:black;color:white'>" + pet.attack + "</td>";
+                html += "<td style='background-color:black;color:white'>" + pet.defense + "</td>";
+                html += "<td style='background-color:black;color:white'>" + pet.specialAttack + "</td>";
+                html += "<td style='background-color:black;color:white'>" + pet.specialDefense + "</td>";
+                html += "<td style='background-color:black;color:white'>" + pet.speed + "</td>";
+            } else {
+                html += "<td style='background-color:#E8E8D0'>" + pet.level + "</td>";
+                html += "<td style='background-color:#E8E8D0'>" + pet.health + "/" + pet.maxHealth + "</td>";
+                html += "<td style='background-color:#E8E8D0'>" + pet.attack + "</td>";
+                html += "<td style='background-color:#E8E8D0'>" + pet.defense + "</td>";
+                html += "<td style='background-color:#E8E8D0'>" + pet.specialAttack + "</td>";
+                html += "<td style='background-color:#E8E8D0'>" + pet.specialDefense + "</td>";
+                html += "<td style='background-color:#E8E8D0'>" + pet.speed + "</td>";
+            }
             html += "<td style='background-color:#E8E8D0'>" + pet.experience + "</td>";
             html += "<td style='background-color:#E8E8D0'>" + pet.gender + "</td>";
             html += "<td style='background-color:#E8E8D0'>";
             html += "<input type='button' class='PetUIButton' id='takeOutButton_" + pet.index + "' value='取出'>";
             html += "</td>";
+            html += "<td style='background-color:#E8E8D0'>";
+            if (pet.level === 100) {
+                if (partnerLoader.isZodiacPartner(pet)) {
+                    html += "<button role='button' class='PetUIButton' disabled>十二宫</button>";
+                } else {
+                    html += "<button role='button' class='PARTNER_BUTTON PetUIButton' id='partner_button_" + pet.index + "'>十二宫</button>";
+                }
+            }
+            html += "</td>";
             html += "</tr>";
         }
         html += "<tr>";
-        html += "<td style='background-color:#E8E8D0' colspan='12'>";
+        html += "<td style='background-color:#E8E8D0' colspan='13'>";
         html += "<b style='color:navy'>剩余空位数：</b><b style='color:red'>" + cagePage.spaceCount + "</b>";
         html += "</td>";
         html += "</tr>";
@@ -638,6 +740,32 @@ function doRenderGoldenCage(credential: Credential) {
         for (const pet of cagePetList) {
             doBindTakeOutButton(credential, pet.index!);
         }
+
+        $(".PARTNER_BUTTON").on("click", event => {
+            const buttonId = $(event.target).attr("id") as string;
+            const index = _.parseInt(StringUtils.substringAfterLast(buttonId, "_"));
+            let target: Pet | null = null;
+            for (const pet of cagePetList) {
+                if (pet.index === index) {
+                    target = pet;
+                    break;
+                }
+            }
+            if (target) {
+                const partner = new ZodiacPartner();
+                partner.name = target.name;
+                partner.level = target.level;
+                partner.maxHealth = target.maxHealth;
+                partner.attack = target.attack;
+                partner.defense = target.defense;
+                partner.specialAttack = target.specialAttack;
+                partner.specialDefense = target.specialDefense;
+                partner.speed = target.speed;
+                StorageUtils.set("_pa_066_" + credential.id, JSON.stringify(partner));
+                MessageBoard.publishMessage("十二宫战斗伴侣已经设置。");
+                doRefresh(credential);
+            }
+        });
     });
 }
 
