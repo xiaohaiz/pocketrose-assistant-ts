@@ -307,6 +307,9 @@ function doRender(credential: Credential, petList: Pet[], studyStatus: number[],
     html += "<input type='button' class='PetUIButton' value='打开黄金笼子' id='openCageButton'>";
     html += "<input type='button' class='PetUIButton' value='关闭黄金笼子' id='closeCageButton'>";
     html += "<input type='button' class='PetUIButton' value='从黄金笼子盲取' id='takeOutFirstFromCageButton' disabled style='display:none'>";
+    if (partnerLoader.available()) {
+        html += "<button role='button' class='PetUIButton' id='autoLoadZodiacPartner'>十二宫战斗伴侣</button>";
+    }
     html += "</td></tr>";
     // LINE
     html += "<tr><td style='background-color:#E8E8D0;text-align:center;height:100%'></td></tr>";
@@ -484,6 +487,16 @@ function doRender(credential: Credential, petList: Pet[], studyStatus: number[],
             doRefresh(credential);
         }
     });
+
+    if ($("#autoLoadZodiacPartner").length > 0) {
+        $("#autoLoadZodiacPartner").on("click", () => {
+            partnerLoader.load().then(message => {
+                if (message.success && message.doRefresh) {
+                    doRefresh(credential);
+                }
+            });
+        });
+    }
 
     if (role) {
         new CastleInformation().load(role.name!).then(() => {
