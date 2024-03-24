@@ -1,5 +1,7 @@
 # pocketrose-assistant-ts
 
+### 版本 4.5.1-SNAPSHOT
+
 ### 版本 4.5.0
 
 1. 全新的宠物十二宫战斗伴侣功能。
