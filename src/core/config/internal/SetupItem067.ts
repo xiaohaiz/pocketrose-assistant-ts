@@ -6,7 +6,7 @@ import SetupLoader from "../SetupLoader";
 class SetupItem067 implements SetupItem {
 
     readonly #code = "067";
-    readonly #name = "各类宝石数量控";
+    readonly #name = "团队宝石数量控";
     readonly #key = "_pa_" + this.#code;
 
     code(): string {
