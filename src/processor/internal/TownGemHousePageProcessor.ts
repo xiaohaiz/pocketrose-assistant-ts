@@ -27,6 +27,8 @@ class TownGemHousePageProcessor extends PageProcessorCredentialSupport {
         this.#renderImmutablePage(credential, town);
         this.#renderMutablePage(credential, page, town);
         KeyboardShortcutBuilder.newInstance()
+            .onKeyPressed("e", () => PageUtils.triggerClick("equipmentButton"))
+            .onKeyPressed("r", () => PageUtils.triggerClick("refresh_button"))
             .onEscapePressed(() => $("#return_button").trigger("click"))
             .withDefaultPredicate()
             .bind();
@@ -92,6 +94,7 @@ class TownGemHousePageProcessor extends PageProcessorCredentialSupport {
         html += "<tr style='display:none'>";
         html += "<td id='hidden_form_cell'>";
         html += PageUtils.generateReturnTownForm(credential);
+        html += PageUtils.generateEquipmentManagementForm(credential);
         html += "</td>";
         html += "</tr>";
         // ------------------------------------------------------------------------
@@ -107,8 +110,9 @@ class TownGemHousePageProcessor extends PageProcessorCredentialSupport {
         // ------------------------------------------------------------------------
         html += "<tr>";
         html += "<td style='background-color:#F8F0E0;text-align:center'>";
-        html += "<input type='button' id='refresh_button' value='刷新" + town.name + "宝石屋'>";
-        html += "<input type='button' id='return_button' value='离开" + town.name + "宝石屋'>";
+        html += "<input type='button' id='refresh_button' value='刷新" + town.name + "宝石屋(r)'>";
+        html += "<input type='button' id='return_button' value='离开" + town.name + "宝石屋(Esc)'>";
+        html += "<button role='button' id='equipmentButton'>装备管理(e)</button>";
         html += "</td>";
         // ------------------------------------------------------------------------
         // 个人物品栏
@@ -139,7 +143,12 @@ class TownGemHousePageProcessor extends PageProcessorCredentialSupport {
     }
 
     #bindImmutableButtons(credential: Credential, town: Town) {
+        $("#equipmentButton").on("click", () => {
+            PageUtils.disableButtons();
+            PageUtils.triggerClick("openEquipmentManagement");
+        });
         $("#return_button").on("click", () => {
+            PageUtils.disableButtons();
             $("#returnTown").trigger("click");
         });
         $("#refresh_button").on("click", () => {
