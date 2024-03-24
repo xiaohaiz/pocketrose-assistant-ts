@@ -25,6 +25,9 @@ class RoleEquipmentStatusStorage {
                             data.id = it.id;
                             data.json = it.json;
                             data.updateTime = it.updateTime;
+                            data.powerGemCount = it.powerGemCount;
+                            data.luckGemCount = it.luckGemCount;
+                            data.weightGemCount = it.weightGemCount;
                             if (idList.includes(data.id!)) {
                                 dataMap.set(data.id!, data);
                             }
@@ -38,18 +41,22 @@ class RoleEquipmentStatusStorage {
         })();
     }
 
-    async write(id: string, json: string): Promise<void> {
+    async write(id: string,
+                json: string,
+                powerGemCount: number,
+                luckGemCount: number,
+                weightGemCount: number): Promise<void> {
         const db = await PocketDatabase.connectDatabase();
         return await (() => {
             return new Promise<void>((resolve, reject) => {
-                const document = {};
-                // @ts-ignore
-                document.id = id;
-                // @ts-ignore
-                document.json = json;
-                // @ts-ignore
-                document.updateTime = new Date().getTime();
+                const status = new RoleEquipmentStatus();
+                status.id = id;
+                status.json = json;
+                status.powerGemCount = powerGemCount;
+                status.luckGemCount = luckGemCount;
+                status.weightGemCount = weightGemCount;
 
+                const document = status.asDocument();
                 const request = db.transaction(["RoleEquipmentStatus"], "readwrite")
                     .objectStore("RoleEquipmentStatus")
                     .put(document);

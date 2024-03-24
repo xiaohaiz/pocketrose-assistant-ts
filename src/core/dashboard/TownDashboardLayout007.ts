@@ -21,6 +21,9 @@ import TownDashboardKeyboardManager from "./TownDashboardKeyboardManager";
 import TownDashboardLayout from "./TownDashboardLayout";
 import TownDashboardPage from "./TownDashboardPage";
 import TownDashboardPageParser from "./TownDashboardPageParser";
+import Constants from "../../util/Constants";
+import RoleEquipmentStatusStorage from "../equipment/RoleEquipmentStatusStorage";
+import TeamMemberLoader from "../team/TeamMemberLoader";
 
 class TownDashboardLayout007 extends TownDashboardLayout {
 
@@ -116,7 +119,7 @@ class TownDashboardLayout007 extends TownDashboardLayout {
             .parent()
             .next()
             .removeAttr("bgcolor")
-            .html("<td style='text-align:center' id='battlePanel'></td>")
+            .html("<td style='text-align:center;vertical-align:center' id='battlePanel'></td>")
             .next().hide()
             .find("> td:first")
             .removeAttr("bgcolor")
@@ -134,6 +137,24 @@ class TownDashboardLayout007 extends TownDashboardLayout {
                 "<div style='display:none' id='hidden-4'></div>" +
                 "<div style='display:none' id='hidden-5'></div>" +
                 "");
+
+        if (SetupLoader.isGemCountVisible()) {
+            const fontColor = $("#battlePanelTitle").attr("color") as string;
+            let gc = "";
+            gc += "<span>&nbsp;&nbsp;&nbsp;</span>";
+            gc += "<img src='" + Constants.POCKET_DOMAIN + "/image/item/PowerStone.gif' " +
+                "alt='威力宝石' title='威力宝石' height='14' width='14'>";
+            gc += "<span id='powerGemCount' style='color:" + fontColor + "'>-</span>";
+            gc += "<img src='" + Constants.POCKET_DOMAIN + "/image/item/LuckStone.gif' " +
+                "alt='幸运宝石' title='幸运宝石' height='14' width='14'>";
+            gc += "<span id='luckGemCount' style='color:" + fontColor + "'>-</span>";
+            gc += "<img src='" + Constants.POCKET_DOMAIN + "/image/item/WeightStone.gif' " +
+                "alt='重量宝石' title='重量宝石' height='14' width='14'>";
+            gc += "<span id='weightGemCount' style='color:" + fontColor + "'>-</span>";
+            $("#battlePanelTitle").after($(gc));
+
+            _renderGemCount();
+        }
 
         BattleRecordStorage.getInstance().load(credential.id).then(record => {
             const lastBattle = record.html!;
@@ -377,6 +398,8 @@ function doProcessBattleReturn(credential: Credential,
                                mainPage: string,
                                additionalRP?: number,
                                harvestList?: string[]) {
+    _renderGemCount();
+
     $("#systemAnnouncement").removeAttr("style");
     $(".battleButton").off("click");
     $("#battleMenu").html("").parent().hide();
@@ -558,6 +581,32 @@ function _renderConversation(page: TownDashboardPage) {
         .next()     // conversation table
         .html(page.t1Html!);
     $("input:text[name='message']").attr("id", "messageInputText");
+}
+
+function _renderGemCount() {
+    if (!SetupLoader.isGemCountVisible()) {
+        return;
+    }
+
+    const roleIdList: string[] = [];
+    const includeExternal = LocalSettingManager.isIncludeExternal();
+    for (const roleId of TeamMemberLoader.loadTeamMembersAsMap(includeExternal).keys()) {
+        roleIdList.push(roleId);
+    }
+    const storage = RoleEquipmentStatusStorage.getInstance();
+    storage.loads(roleIdList).then(data => {
+        let powerGemCount = 0;
+        let luckGemCount: number = 0;
+        let weightGemCount = 0;
+        data.forEach(it => {
+            (it.powerGemCount !== undefined) && (powerGemCount += it.powerGemCount);
+            (it.luckGemCount !== undefined) && (luckGemCount += it.luckGemCount);
+            (it.weightGemCount !== undefined) && (weightGemCount += it.weightGemCount);
+        });
+        $("#powerGemCount").text(powerGemCount);
+        $("#luckGemCount").text(luckGemCount);
+        $("#weightGemCount").text(weightGemCount);
+    });
 }
 
 export = TownDashboardLayout007;
