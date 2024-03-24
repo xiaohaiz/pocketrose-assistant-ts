@@ -78,6 +78,20 @@ class EquipmentStatusTrigger {
     }
 
     async #persistEquipmentList(equipmentList: Equipment[]) {
+        // Count all gems
+        let powerGemCount = 0;
+        let luckGemCount = 0;
+        let weightGemCount = 0;
+        _.forEach(equipmentList, it => {
+            if (it.name === "威力宝石") {
+                powerGemCount++;
+            } else if (it.name === "幸运宝石") {
+                luckGemCount++;
+            } else if (it.name === "重量宝石") {
+                weightGemCount++;
+            }
+        });
+
         const equipmentStatusList: string[] = [];
         for (const equipment of equipmentList) {
             if (equipment.isItem && (equipment.name !== "宠物蛋" && equipment.name !== "藏宝图" && equipment.name !== "威力宝石")) {
@@ -111,7 +125,13 @@ class EquipmentStatusTrigger {
         }
 
         const storage = RoleEquipmentStatusStorage.getInstance();
-        await storage.write(this.#credential.id, JSON.stringify(equipmentStatusList));
+        await storage.write(
+            this.#credential.id,
+            JSON.stringify(equipmentStatusList),
+            powerGemCount,
+            luckGemCount,
+            weightGemCount
+        );
     }
 }
 

@@ -41,13 +41,20 @@ class RoleEquipmentStatusStorage {
         })();
     }
 
-    async write(id: string, json: string): Promise<void> {
+    async write(id: string,
+                json: string,
+                powerGemCount: number,
+                luckGemCount: number,
+                weightGemCount: number): Promise<void> {
         const db = await PocketDatabase.connectDatabase();
         return await (() => {
             return new Promise<void>((resolve, reject) => {
                 const status = new RoleEquipmentStatus();
                 status.id = id;
                 status.json = json;
+                status.powerGemCount = powerGemCount;
+                status.luckGemCount = luckGemCount;
+                status.weightGemCount = weightGemCount;
 
                 const document = status.asDocument();
                 const request = db.transaction(["RoleEquipmentStatus"], "readwrite")
