@@ -2,7 +2,7 @@ import _ from "lodash";
 import StorageUtils from "../../util/StorageUtils";
 import BattleFieldThreshold from "../battle/BattleFieldThreshold";
 import EquipmentExperienceConfig from "../equipment/EquipmentExperienceConfig";
-import Pet from "../monster/Pet";
+import ZodiacPartner from "../monster/ZodiacPartner";
 
 class SetupLoader {
 
@@ -251,13 +251,13 @@ class SetupLoader {
         return config;
     }
 
-    static loadZodiacPartner(id: string): Pet | undefined {
+    static loadZodiacPartner(id: string): ZodiacPartner | undefined {
         const s = StorageUtils.getString("_pa_066_" + id);
         if (s === "") {
             return undefined;
         }
         const value = JSON.parse(s);
-        const partner = new Pet();
+        const partner = new ZodiacPartner();
         partner.name = value.name;
         partner.level = value.level;
         partner.maxHealth = value.maxHealth;
