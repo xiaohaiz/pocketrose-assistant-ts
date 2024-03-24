@@ -268,6 +268,10 @@ class SetupLoader {
         partner.speed = value.speed;
         return partner;
     }
+
+    static isGemCountVisible() {
+        return StorageUtils.getBoolean("_pa_067");
+    }
 }
 
 export = SetupLoader;
