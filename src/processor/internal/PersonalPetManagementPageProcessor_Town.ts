@@ -114,6 +114,7 @@ function doProcess(credential: Credential, petList: Pet[], studyStatus: number[]
 }
 
 function doRender(credential: Credential, petList: Pet[], studyStatus: number[], role?: Role) {
+    const partnerLoader = new ZodiacPartnerLoader(credential);
     let html = "";
     html += "<table style='border-width:0;background-color:#888888;text-align:center;width:100%'>";
     html += "<tbody style='background-color:#F8F0E0'>";
@@ -220,6 +221,11 @@ function doRender(credential: Credential, petList: Pet[], studyStatus: number[],
         html += "<input type='button' class='PetUIButton' value='发送' id='pet_" + pet.index + "_send'>";
         html += "<input type='button' class='PetUIButton' value='改名' id='pet_" + pet.index + "_rename'>&nbsp;";
         html += "<input type='text' id='pet_" + pet.index + "_name_text' size='15' maxlength='20' spellcheck='false'>";
+        if (pet.level === 100) {
+            if (!partnerLoader.isZodiacPartner(pet)) {
+                html += "<button role='button' class='PetUIButton P_BUTTON' id='set_pet_partner_" + pet.index + "'>十二宫</button>";
+            }
+        }
         html += "</td>";
         html += "<td style='text-align:right'>";
         html += new MonsterSimulator(pet).doSimulate().doGenerateHtml();
@@ -428,6 +434,32 @@ function doRender(credential: Credential, petList: Pet[], studyStatus: number[],
     doBindPetProfile(petList);
     // 绑定按钮点击事件处理
     doBind(credential, petList);
+
+    $(".P_BUTTON").on("click", event => {
+        const buttonId = $(event.target).attr("id") as string;
+        const index = _.parseInt(StringUtils.substringAfterLast(buttonId, "_"));
+        let target: Pet | null = null;
+        for (const pet of petList) {
+            if (pet.index === index) {
+                target = pet;
+                break;
+            }
+        }
+        if (target) {
+            const partner = new ZodiacPartner();
+            partner.name = target.name;
+            partner.level = target.level;
+            partner.maxHealth = target.maxHealth;
+            partner.attack = target.attack;
+            partner.defense = target.defense;
+            partner.specialAttack = target.specialAttack;
+            partner.specialDefense = target.specialDefense;
+            partner.speed = target.speed;
+            StorageUtils.set("_pa_066_" + credential.id, JSON.stringify(partner));
+            MessageBoard.publishMessage("十二宫战斗伴侣已经设置。");
+            doRefresh(credential);
+        }
+    });
 
     if (role) {
         new CastleInformation().load(role.name!).then(() => {
