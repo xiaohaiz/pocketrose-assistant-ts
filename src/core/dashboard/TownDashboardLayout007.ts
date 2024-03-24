@@ -119,7 +119,7 @@ class TownDashboardLayout007 extends TownDashboardLayout {
             .parent()
             .next()
             .removeAttr("bgcolor")
-            .html("<td style='text-align:center;vertical-align:center' id='battlePanel'></td>")
+            .html("<td style='text-align:center' id='battlePanel'></td>")
             .next().hide()
             .find("> td:first")
             .removeAttr("bgcolor")
@@ -139,19 +139,36 @@ class TownDashboardLayout007 extends TownDashboardLayout {
                 "");
 
         if (SetupLoader.isGemCountVisible()) {
-            const fontColor = $("#battlePanelTitle").attr("color") as string;
-            let gc = "";
-            gc += "<span>&nbsp;&nbsp;&nbsp;</span>";
-            gc += "<img src='" + Constants.POCKET_DOMAIN + "/image/item/PowerStone.gif' " +
-                "alt='威力宝石' title='威力宝石' height='14' width='14'>";
-            gc += "<span id='powerGemCount' style='color:" + fontColor + "'>-</span>";
-            gc += "<img src='" + Constants.POCKET_DOMAIN + "/image/item/LuckStone.gif' " +
-                "alt='幸运宝石' title='幸运宝石' height='14' width='14'>";
-            gc += "<span id='luckGemCount' style='color:" + fontColor + "'>-</span>";
-            gc += "<img src='" + Constants.POCKET_DOMAIN + "/image/item/WeightStone.gif' " +
-                "alt='重量宝石' title='重量宝石' height='14' width='14'>";
-            gc += "<span id='weightGemCount' style='color:" + fontColor + "'>-</span>";
-            $("#battlePanelTitle").after($(gc));
+            let gemHtml = "";
+            gemHtml += "<tr>";
+            gemHtml += "<td>";
+            gemHtml += "<table style='background-color:transparent;width:100%;margin:0;border-width:0'>";
+            gemHtml += "<tbody>";
+            gemHtml += "<tr>";
+            gemHtml += "<td style='text-align:right'>";
+            gemHtml += "<img src='" + Constants.POCKET_DOMAIN + "/image/item/PowerStone.gif' " +
+                "alt='威力宝石' title='威力宝石'>&nbsp;";
+            gemHtml += "</td>";
+            gemHtml += "<th id='powerGemCount' style='text-align:left'>-</th>";
+            gemHtml += "<td style='text-align:right'>";
+            gemHtml += "<img src='" + Constants.POCKET_DOMAIN + "/image/item/LuckStone.gif' " +
+                "alt='幸运宝石' title='幸运宝石'>&nbsp;";
+            gemHtml += "</td>";
+            gemHtml += "<th id='luckGemCount' style='text-align:left'>-</th>";
+            gemHtml += "<td style='text-align:right'>";
+            gemHtml += "<img src='" + Constants.POCKET_DOMAIN + "/image/item/WeightStone.gif' " +
+                "alt='重量宝石' title='重量宝石'>&nbsp;";
+            gemHtml += "</td>";
+            gemHtml += "<th id='weightGemCount' style='text-align:left'>-</th>";
+            gemHtml += "</tr>";
+            gemHtml += "</tbody>";
+            gemHtml += "</table>";
+            gemHtml += "</td>";
+            gemHtml += "</tr>";
+            $("#battlePanelTitle")
+                .parent()
+                .parent()
+                .after($(gemHtml));
 
             _renderGemCount();
         }
