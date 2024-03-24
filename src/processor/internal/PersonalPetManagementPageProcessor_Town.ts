@@ -37,12 +37,25 @@ class PersonalPetManagementPageProcessor_Town extends PersonalPetManagementPageP
 
     doGenerateCommandButtons(): string {
         let html = super.doGenerateCommandButtons();
+        html += "<button role='button' id='gemHouseButton' class='COMMAND_BUTTON'>宝石镶嵌(f)</button>";
         html += "<button role='button' id='updateButton' class='COMMAND_BUTTON' style='color:red'>更新统计数据(u)</button>";
         return html;
     }
 
+    async doAfterPageReformatted(credential: Credential, context?: PageProcessorContext): Promise<void> {
+        const townId = context?.get("townId");
+        const html = PageUtils.generateGemHouseForm(credential, townId);
+        $("#extensionCell_2").html(html);
+    }
+
     async doBindCommandButtons(credential: Credential): Promise<void> {
         await super.doBindCommandButtons(credential);
+        $("#gemHouseButton").on("click", () => {
+            PageUtils.disableButtons();
+            new PetManagementReturnInterceptor(credential)
+                .beforeExitPetManagement()
+                .then(() => PageUtils.triggerClick("openGemHouse"));
+        });
         $("#updateButton").on("click", () => {
             PageUtils.scrollIntoView("pageTitle");
             $(".COMMAND_BUTTON").prop("disabled", true);
@@ -77,6 +90,7 @@ class PersonalPetManagementPageProcessor_Town extends PersonalPetManagementPageP
     doBindKeyboardShortcut(credential: Credential) {
         KeyboardShortcutBuilder.newInstance()
             .onKeyPressed("e", () => PageUtils.triggerClick("equipmentButton"))
+            .onKeyPressed("f", () => PageUtils.triggerClick("gemHouseButton"))
             .onKeyPressed("r", () => PageUtils.triggerClick("refreshButton"))
             .onKeyPressed("u", () => PageUtils.triggerClick("updateButton"))
             .onKeyPressed("z", () => PageUtils.triggerClick("autoLoadZodiacPartner"))
