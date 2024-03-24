@@ -2,6 +2,8 @@ class OperationMessage {
 
     success?: boolean;
 
+    doRefresh?: boolean;
+
     static success(): OperationMessage {
         const message = new OperationMessage();
         message.success = true;
