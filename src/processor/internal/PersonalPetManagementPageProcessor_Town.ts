@@ -589,18 +589,19 @@ function doRenderGoldenCage(credential: Credential) {
         html += "<table style='border-width:0;background-color:#888888;text-align:center;width:100%'>";
         html += "<tbody style='background-color:#F8F0E0'>";
         html += "<tr>";
-        html += "<td style='background-color:#E8E8D0'>序号</td>";
-        html += "<td style='background-color:#E8E8D0'>宠物名</td>";
-        html += "<td style='background-color:#E8E8D0'>Ｌｖ</td>";
-        html += "<td style='background-color:#E8E8D0'>ＨＰ</td>";
-        html += "<td style='background-color:#E8E8D0'>攻击力</td>";
-        html += "<td style='background-color:#E8E8D0'>防御力</td>";
-        html += "<td style='background-color:#E8E8D0'>智力</td>";
-        html += "<td style='background-color:#E8E8D0'>精神力</td>";
-        html += "<td style='background-color:#E8E8D0'>速度</td>";
-        html += "<td style='background-color:#E8E8D0'>经验</td>";
-        html += "<td style='background-color:#E8E8D0'>性别</td>";
-        html += "<td style='background-color:#E8E8D0'>取出</td>";
+        html += "<td style='background-color:skyblue;color:white'>序号</td>";
+        html += "<td style='background-color:skyblue;color:white'>宠物名</td>";
+        html += "<td style='background-color:skyblue;color:white'>Ｌｖ</td>";
+        html += "<td style='background-color:skyblue;color:white'>ＨＰ</td>";
+        html += "<td style='background-color:skyblue;color:white'>攻击力</td>";
+        html += "<td style='background-color:skyblue;color:white'>防御力</td>";
+        html += "<td style='background-color:skyblue;color:white'>智力</td>";
+        html += "<td style='background-color:skyblue;color:white'>精神力</td>";
+        html += "<td style='background-color:skyblue;color:white'>速度</td>";
+        html += "<td style='background-color:skyblue;color:white'>经验</td>";
+        html += "<td style='background-color:skyblue;color:white'>性别</td>";
+        html += "<td style='background-color:skyblue;color:white'>取出</td>";
+        html += "<td style='background-color:skyblue;color:white'>十二宫</td>";
         html += "</tr>";
         let sequence = 1;
         for (const pet of cagePetList) {
@@ -619,10 +620,12 @@ function doRenderGoldenCage(credential: Credential) {
             html += "<td style='background-color:#E8E8D0'>";
             html += "<input type='button' class='PetUIButton' id='takeOutButton_" + pet.index + "' value='取出'>";
             html += "</td>";
+            html += "<td style='background-color:#E8E8D0'>";
+            html += "</td>";
             html += "</tr>";
         }
         html += "<tr>";
-        html += "<td style='background-color:#E8E8D0' colspan='12'>";
+        html += "<td style='background-color:#E8E8D0' colspan='13'>";
         html += "<b style='color:navy'>剩余空位数：</b><b style='color:red'>" + cagePage.spaceCount + "</b>";
         html += "</td>";
         html += "</tr>";
