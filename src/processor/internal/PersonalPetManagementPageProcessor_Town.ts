@@ -154,27 +154,51 @@ function doRender(credential: Credential, petList: Pet[], studyStatus: number[],
         html += "<td style='background-color:#E8E8D0'>" +
             pet.gender +
             "</td>";
-        html += "<td style='background-color:#E8E8D0'>" +
-            pet.level +
-            "</td>";
-        html += "<td style='background-color:#E8E8D0'>" +
-            pet.health + "/" + pet.maxHealth +
-            "</td>";
-        html += "<td style='background-color:#E8E8D0'>" +
-            (pet.attack! >= 375 ? "<b style='color:red'>" + pet.attack + "</b>" : pet.attack) +
-            "</td>";
-        html += "<td style='background-color:#E8E8D0'>" +
-            (pet.defense! >= 375 ? "<b style='color:red'>" + pet.defense + "</b>" : pet.defense) +
-            "</td>";
-        html += "<td style='background-color:#E8E8D0'>" +
-            (pet.specialAttack! >= 375 ? "<b style='color:red'>" + pet.specialAttack + "</b>" : pet.specialAttack) +
-            "</td>";
-        html += "<td style='background-color:#E8E8D0'>" +
-            (pet.specialDefense! >= 375 ? "<b style='color:red'>" + pet.specialDefense + "</b>" : pet.specialDefense) +
-            "</td>";
-        html += "<td style='background-color:#E8E8D0'>" +
-            (pet.speed! >= 375 ? "<b style='color:red'>" + pet.speed + "</b>" : pet.speed) +
-            "</td>";
+        if (partnerLoader.isZodiacPartner(pet)) {
+            html += "<td style='background-color:black;color:white'>" +
+                pet.level +
+                "</td>";
+            html += "<td style='background-color:black;color:white'>" +
+                pet.health + "/" + pet.maxHealth +
+                "</td>";
+            html += "<td style='background-color:black;color:white'>" +
+                (pet.attack! >= 375 ? "<b style='color:red'>" + pet.attack + "</b>" : pet.attack) +
+                "</td>";
+            html += "<td style='background-color:black;color:white'>" +
+                (pet.defense! >= 375 ? "<b style='color:red'>" + pet.defense + "</b>" : pet.defense) +
+                "</td>";
+            html += "<td style='background-color:black;color:white'>" +
+                (pet.specialAttack! >= 375 ? "<b style='color:red'>" + pet.specialAttack + "</b>" : pet.specialAttack) +
+                "</td>";
+            html += "<td style='background-color:black;color:white'>" +
+                (pet.specialDefense! >= 375 ? "<b style='color:red'>" + pet.specialDefense + "</b>" : pet.specialDefense) +
+                "</td>";
+            html += "<td style='background-color:black;color:white'>" +
+                (pet.speed! >= 375 ? "<b style='color:red'>" + pet.speed + "</b>" : pet.speed) +
+                "</td>";
+        } else {
+            html += "<td style='background-color:#E8E8D0'>" +
+                pet.level +
+                "</td>";
+            html += "<td style='background-color:#E8E8D0'>" +
+                pet.health + "/" + pet.maxHealth +
+                "</td>";
+            html += "<td style='background-color:#E8E8D0'>" +
+                (pet.attack! >= 375 ? "<b style='color:red'>" + pet.attack + "</b>" : pet.attack) +
+                "</td>";
+            html += "<td style='background-color:#E8E8D0'>" +
+                (pet.defense! >= 375 ? "<b style='color:red'>" + pet.defense + "</b>" : pet.defense) +
+                "</td>";
+            html += "<td style='background-color:#E8E8D0'>" +
+                (pet.specialAttack! >= 375 ? "<b style='color:red'>" + pet.specialAttack + "</b>" : pet.specialAttack) +
+                "</td>";
+            html += "<td style='background-color:#E8E8D0'>" +
+                (pet.specialDefense! >= 375 ? "<b style='color:red'>" + pet.specialDefense + "</b>" : pet.specialDefense) +
+                "</td>";
+            html += "<td style='background-color:#E8E8D0'>" +
+                (pet.speed! >= 375 ? "<b style='color:red'>" + pet.speed + "</b>" : pet.speed) +
+                "</td>";
+        }
         html += "<td style='background-color:#E8E8D0'>" +
             "<input type='button' class='PetUIButton' id='pet_" + pet.index + "_spell_1' value='" + pet.spell1 + "' title='" + pet.spell1Description + "'>" +
             "</td>";
@@ -647,13 +671,23 @@ function doRenderGoldenCage(credential: Credential) {
             html += "<tr>";
             html += "<th style='background-color:#E8E8D0'>" + (sequence++) + "</th>";
             html += "<td style='background-color:#E8E8D0'>" + pet.nameHtml + "</td>";
-            html += "<td style='background-color:#E8E8D0'>" + pet.level + "</td>";
-            html += "<td style='background-color:#E8E8D0'>" + pet.health + "/" + pet.maxHealth + "</td>";
-            html += "<td style='background-color:#E8E8D0'>" + pet.attack + "</td>";
-            html += "<td style='background-color:#E8E8D0'>" + pet.defense + "</td>";
-            html += "<td style='background-color:#E8E8D0'>" + pet.specialAttack + "</td>";
-            html += "<td style='background-color:#E8E8D0'>" + pet.specialDefense + "</td>";
-            html += "<td style='background-color:#E8E8D0'>" + pet.speed + "</td>";
+            if (partnerLoader.isZodiacPartner(pet)) {
+                html += "<td style='background-color:black;color:white'>" + pet.level + "</td>";
+                html += "<td style='background-color:black;color:white'>" + pet.health + "/" + pet.maxHealth + "</td>";
+                html += "<td style='background-color:black;color:white'>" + pet.attack + "</td>";
+                html += "<td style='background-color:black;color:white'>" + pet.defense + "</td>";
+                html += "<td style='background-color:black;color:white'>" + pet.specialAttack + "</td>";
+                html += "<td style='background-color:black;color:white'>" + pet.specialDefense + "</td>";
+                html += "<td style='background-color:black;color:white'>" + pet.speed + "</td>";
+            } else {
+                html += "<td style='background-color:#E8E8D0'>" + pet.level + "</td>";
+                html += "<td style='background-color:#E8E8D0'>" + pet.health + "/" + pet.maxHealth + "</td>";
+                html += "<td style='background-color:#E8E8D0'>" + pet.attack + "</td>";
+                html += "<td style='background-color:#E8E8D0'>" + pet.defense + "</td>";
+                html += "<td style='background-color:#E8E8D0'>" + pet.specialAttack + "</td>";
+                html += "<td style='background-color:#E8E8D0'>" + pet.specialDefense + "</td>";
+                html += "<td style='background-color:#E8E8D0'>" + pet.speed + "</td>";
+            }
             html += "<td style='background-color:#E8E8D0'>" + pet.experience + "</td>";
             html += "<td style='background-color:#E8E8D0'>" + pet.gender + "</td>";
             html += "<td style='background-color:#E8E8D0'>";
