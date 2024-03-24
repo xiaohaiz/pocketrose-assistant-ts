@@ -34,13 +34,23 @@ class KeyboardShortcutBuilder {
         );
     }
 
+    #controlPressed?: boolean;
+
     bind() {
         $(document).off("keydown.city").on("keydown.city", event => {
             const key = event.key;
             if (!key) return;
-            if (this.#predicate && !this.#predicate(key)) {
-                return;
+            if (this.#predicate && !this.#predicate(key)) return;
+
+            if (key === "Control") {
+                this.#controlPressed = true;
+            } else {
+                if (this.#controlPressed) {
+                    this.#controlPressed = false;
+                    return;
+                }
             }
+
             const handler = this.#handlerBuffer.get(key);
             if (!handler) return;
             handler();
