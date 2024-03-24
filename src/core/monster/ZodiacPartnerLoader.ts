@@ -11,6 +11,10 @@ class ZodiacPartnerLoader {
         this.#partner = SetupLoader.loadZodiacPartner(credential.id);
     }
 
+    available() {
+        return this.#partner !== undefined;
+    }
+
     isZodiacPartner(pet: Pet | undefined) {
         if (!this.#partner) return false;
         if (!pet) return false;
