@@ -15,6 +15,7 @@ abstract class PersonalPetManagementPageProcessor extends PageProcessorCredentia
         const petPage = PersonalPetManagementPageParser.parsePage(PageUtils.currentPageHtml());
 
         await this.#reformatPage(credential, petPage, context);
+        await this.doAfterPageReformatted(credential, context);
         await this.doBindCommandButtons(credential);
 
         this.doProcessWithPageParsed(credential, petPage, context);
@@ -112,6 +113,9 @@ abstract class PersonalPetManagementPageProcessor extends PageProcessorCredentia
         html += "<tr style='display:none'>";
         html += "<td id='extensionCell_1'></td>";
         html += "</tr>";
+        html += "<tr style='display:none'>";
+        html += "<td id='extensionCell_2'></td>";
+        html += "</tr>";
         html += "</tody>";
         html += "</table>";
 
@@ -126,6 +130,9 @@ abstract class PersonalPetManagementPageProcessor extends PageProcessorCredentia
         html += "<button role='button' id='exitButton' class='COMMAND_BUTTON'>退出宠物管理(Esc)</button>";
         html += "<button role='button' id='equipmentButton' class='COMMAND_BUTTON'>转入装备管理(e)</button>";
         return html;
+    }
+
+    async doAfterPageReformatted(credential: Credential, context?: PageProcessorContext) {
     }
 
     async doBindCommandButtons(credential: Credential) {
