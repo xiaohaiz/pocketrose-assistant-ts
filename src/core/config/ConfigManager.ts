@@ -1,6 +1,7 @@
 import _ from "lodash";
 import Constants from "../../util/Constants";
 import SetupItemManager from "./SetupItemManager";
+import LocalSettingManager from "./LocalSettingManager";
 
 class ConfigManager {
 
@@ -39,6 +40,9 @@ class ConfigManager {
 }
 
 function isRecognizedKey(key: string) {
+    if (LocalSettingManager.isRecognizedKey(key)) {
+        return true;
+    }
     let ss: string[] = [];
     for (let i = 0; i < Constants.MAX_TEAM_MEMBER_COUNT; i++) {
         ss.push("_fl_" + i);

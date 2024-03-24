@@ -1,4 +1,5 @@
 import StorageUtils from "../../util/StorageUtils";
+import _ from "lodash";
 
 /**
  * ----------------------------------------------------------------------------
@@ -13,6 +14,10 @@ import StorageUtils from "../../util/StorageUtils";
  * ----------------------------------------------------------------------------
  */
 class LocalSettingManager {
+
+    static isRecognizedKey(key: string) {
+        return _.startsWith(key, "_ts_");
+    }
 
     // ------------------------------------------------------------------------
 
