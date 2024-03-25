@@ -2,6 +2,7 @@ import _ from "lodash";
 import StorageUtils from "../../util/StorageUtils";
 import BattleFieldThreshold from "../battle/BattleFieldThreshold";
 import EquipmentExperienceConfig from "../equipment/EquipmentExperienceConfig";
+import EquipmentSetConfig from "../equipment/EquipmentSetConfig";
 import ZodiacPartner from "../monster/ZodiacPartner";
 
 class SetupLoader {
@@ -28,6 +29,28 @@ class SetupLoader {
 
     static isCareerTransferEntranceDisabled(id: string): boolean {
         return StorageUtils.getBoolean("_pa_014_" + id);
+    }
+
+    static loadEquipmentSetConfig(id: string, index: string): EquipmentSetConfig {
+        const mapping = {
+            "A": "_pa_019_",
+            "B": "_pa_020_",
+            "C": "_pa_021_",
+            "D": "_pa_022_",
+            "E": "_pa_023_"
+        };
+        // @ts-ignore
+        const keyPrefix = mapping[index] as string;
+        const config = EquipmentSetConfig.defaultInstance(index);
+        const s = StorageUtils.getString(keyPrefix + id);
+        if (s === "") {
+            return config;
+        }
+        const value = JSON.parse(s);
+        (value.weaponName) && (config.weaponName = value.weaponName);
+        (value.armorName) && (config.armorName = value.armorName);
+        (value.accessoryName) && (config.accessoryName = value.accessoryName);
+        return config;
     }
 
     static loadEquipmentSet_A(id: string) {
