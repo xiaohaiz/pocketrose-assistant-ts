@@ -1,6 +1,5 @@
 import TownBank from "../../core/bank/TownBank";
 import NpcLoader from "../../core/role/NpcLoader";
-import TownAccessoryHouse from "../../core/store/TownAccessoryHouse";
 import TownItemHouse from "../../core/store/TownItemHouse";
 import TownItemHousePage from "../../core/store/TownItemHousePage";
 import TownItemHousePageParser from "../../core/store/TownItemHousePageParser";
@@ -257,7 +256,7 @@ class TownItemHousePageProcessor extends PageProcessorCredentialSupport {
             if (!confirm("确认要出售“" + equipment.fullName + "”？")) {
                 return;
             }
-            new TownAccessoryHouse(credential, page.townId!)
+            new TownItemHouse(credential, page.townId!)
                 .sell(index, page.discount!)
                 .then(() => {
                     new TownBank(credential, page.townId).deposit().then(() => {
