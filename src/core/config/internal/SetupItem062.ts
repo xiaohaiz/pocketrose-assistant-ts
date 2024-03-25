@@ -21,7 +21,7 @@ class SetupItem062 implements SetupItem {
         let html = "";
         html += "<tr>";
         html += "<th style='background-color:#E8E8D0'>" + this.#name + "</th>";
-        html += "<td style='background-color:#E8E8D0'>★</td>";
+        html += "<td style='background-color:#E8E8D0'></td>";
         html += "<td style='background-color:#EFE0C0'></td>";
         html += "<td style='background-color:#E0D0B0;text-align:left'>";
         html += "<input type='button' class='dynamic_button _062_button' id='_062_button_1' value='启用'>";
