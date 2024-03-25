@@ -19,19 +19,16 @@ class SetupItem068 implements SetupItem {
         html += "<th style='background-color:#E8E8D0'>" + this.#name + "</th>";
         html += "<td style='background-color:#E8E8D0'>★</td>";
         html += "<td style='background-color:#EFE0C0'></td>";
-        html += "<td style='background-color:#E0D0B0;text-align:left' colspan='2'>";
-        html += this.#doGenerateSetupItem();
+        html += "<td style='background-color:#E0D0B0;text-align:left'>";
+        html += "<input type='button' class='dynamic_button _068_button' id='_068_button_1' value='启用'>";
+        html += "<input type='button' class='dynamic_button _068_button' id='_068_button_2' value='禁用'>";
+        html += "</td>";
+        html += "<td style='background-color:#E0D0B0;text-align:left'>";
+        html += "战斗布局专属设置，建议选择任意一位队员开启即可。"
         html += "</td>";
         html += "</tr>";
         $("#setup_item_table").append($(html));
         this.#doProcessButton(id!);
-    }
-
-    #doGenerateSetupItem() {
-        let html = "";
-        html += "<input type='button' class='dynamic_button _068_button' id='_068_button_1' value='启用'>";
-        html += "<input type='button' class='dynamic_button _068_button' id='_068_button_2' value='禁用'>";
-        return html;
     }
 
     #doProcessButton(id: string) {
