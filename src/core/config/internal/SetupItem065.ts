@@ -12,6 +12,10 @@ class SetupItem065 implements SetupItem {
     readonly #name: string = "练装备的苦逼啊";
     readonly #key: string = "_pa_" + this.#code;
 
+    category(): string {
+        return "其他";
+    }
+
     code(): string {
         return this.#code;
     }

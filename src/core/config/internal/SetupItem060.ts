@@ -9,6 +9,10 @@ class SetupItem060 implements SetupItem {
     readonly #name: string = "增强版宠物图鉴";
     readonly #key: string = "_pa_060";
 
+    category(): string {
+        return "其他";
+    }
+
     code(): string {
         return this.#code;
     }

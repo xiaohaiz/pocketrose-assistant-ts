@@ -5,6 +5,10 @@ import SetupLoader from "../SetupLoader";
 
 class SetupItem026 implements SetupItem {
 
+    category(): string {
+        return "界面";
+    }
+
     code(): string {
         return code;
     }

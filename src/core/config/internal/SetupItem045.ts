@@ -4,6 +4,10 @@ import SetupItem from "../SetupItem";
 
 class SetupItem045 implements SetupItem {
 
+    category(): string {
+        return "战斗";
+    }
+
     code(): string {
         return code;
     }

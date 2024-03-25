@@ -6,6 +6,10 @@ import SetupLoader from "../SetupLoader";
 
 class SetupItem020 implements SetupItem {
 
+    category(): string {
+        return "其他";
+    }
+
     code(): string {
         return code;
     }

@@ -9,6 +9,10 @@ class SetupItem013 implements SetupItem {
     readonly #name: string = "战斗场快捷设置";
     readonly #key: string = "_pa_012";              // 实际对应存储是“战斗场偏好设置”
 
+    category(): string {
+        return "置顶";
+    }
+
     code(): string {
         return this.#code;
     }

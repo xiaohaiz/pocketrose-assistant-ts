@@ -9,6 +9,10 @@ class SetupItem062 implements SetupItem {
     readonly #name: string = "隐藏快捷键提示";
     readonly #key: string = "_pa_" + this.#code;
 
+    category(): string {
+        return "界面";
+    }
+
     code(): string {
         return this.#code;
     }

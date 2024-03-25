@@ -9,6 +9,10 @@ class SetupItem059 implements SetupItem {
     readonly #name: string = "智能选择战斗场";
     readonly #key: string = "_pa_059";
 
+    category(): string {
+        return "战斗";
+    }
+
     code(): string {
         return this.#code;
     }

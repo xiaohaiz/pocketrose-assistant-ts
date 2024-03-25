@@ -9,6 +9,10 @@ class SetupItem058 implements SetupItem {
     readonly #name = "胜利者站在左边";
     readonly #key = "_pa_" + this.#code;
 
+    category(): string {
+        return "界面";
+    }
+
     code(): string {
         return this.#code;
     }

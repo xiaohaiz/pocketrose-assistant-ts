@@ -12,6 +12,10 @@ class SetupItem064 implements SetupItem {
     readonly #name: string = "智能战斗切换点";
     readonly #key: string = "_pa_" + this.#code;
 
+    category(): string {
+        return "战斗";
+    }
+
     code(): string {
         return this.#code;
     }

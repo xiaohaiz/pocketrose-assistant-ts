@@ -9,6 +9,10 @@ class SetupItem068 implements SetupItem {
     readonly #name = "团队宝石数量控";
     readonly #key = "_pa_" + this.#code;
 
+    category(): string {
+        return "界面";
+    }
+
     code(): string {
         return this.#code;
     }
