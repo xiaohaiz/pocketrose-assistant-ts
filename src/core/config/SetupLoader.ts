@@ -110,20 +110,6 @@ class SetupLoader {
         }
     }
 
-    static getNormalBattlePrompt() {
-        const s = StorageUtils.getString("_pa_025");
-        if (s === "") {
-            const value = {};
-            // @ts-ignore
-            value["person"] = "NONE";
-            // @ts-ignore
-            value["text"] = "";
-            return value;
-        } else {
-            return JSON.parse(s);
-        }
-    }
-
     static isExperienceProgressBarEnabled(): boolean {
         return StorageUtils.getBoolean("_pa_026");
     }
