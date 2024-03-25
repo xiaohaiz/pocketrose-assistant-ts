@@ -1,5 +1,6 @@
 import _, {escape, parseInt, unescape} from "lodash";
 import TownBank from "../../core/bank/TownBank";
+import LocalSettingManager from "../../core/config/LocalSettingManager";
 import SetupLoader from "../../core/config/SetupLoader";
 import CastleInformation from "../../core/dashboard/CastleInformation";
 import TownDashboard from "../../core/dashboard/TownDashboard";
@@ -13,6 +14,7 @@ import EquipmentSet from "../../core/equipment/EquipmentSet";
 import EquipmentSetLoader from "../../core/equipment/EquipmentSetLoader";
 import PersonalEquipmentManagement from "../../core/equipment/PersonalEquipmentManagement";
 import PersonalEquipmentManagementPage from "../../core/equipment/PersonalEquipmentManagementPage";
+import RoleEquipmentStatusStorage from "../../core/equipment/RoleEquipmentStatusStorage";
 import TownEquipmentExpressHouse from "../../core/equipment/TownEquipmentExpressHouse";
 import TreasureBag from "../../core/equipment/TreasureBag";
 import TownForgeHouse from "../../core/forge/TownForgeHouse";
@@ -22,6 +24,7 @@ import TeamMemberLoader from "../../core/team/TeamMemberLoader";
 import TownLoader from "../../core/town/TownLoader";
 import EquipmentStatusTrigger from "../../core/trigger/EquipmentStatusTrigger";
 import CommentBoard from "../../util/CommentBoard";
+import Constants from "../../util/Constants";
 import Credential from "../../util/Credential";
 import KeyboardShortcutBuilder from "../../util/KeyboardShortcutBuilder";
 import MessageBoard from "../../util/MessageBoard";
@@ -106,6 +109,29 @@ class PersonalEquipmentManagementPageProcessor_Town extends PersonalEquipmentMan
     }
 
     async doGenerateWelcomeMessageHtml(credential: Credential): Promise<string | undefined> {
+        if (SetupLoader.isGemCountVisible(credential.id)) {
+            const roleIdList: string[] = [];
+            const includeExternal = LocalSettingManager.isIncludeExternal();
+            for (const roleId of TeamMemberLoader.loadTeamMembersAsMap(includeExternal).keys()) {
+                roleIdList.push(roleId);
+            }
+            const storage = RoleEquipmentStatusStorage.getInstance();
+            const data = await storage.loads(roleIdList);
+            let powerGemCount = 0;
+            let luckGemCount: number = 0;
+            let weightGemCount = 0;
+            data.forEach(it => {
+                (it.powerGemCount !== undefined) && (powerGemCount += it.powerGemCount);
+                (it.luckGemCount !== undefined) && (luckGemCount += it.luckGemCount);
+                (it.weightGemCount !== undefined) && (weightGemCount += it.weightGemCount);
+            });
+
+            const pp = "<img src='" + Constants.POCKET_DOMAIN + "/image/item/PowerStone.gif' alt='威力宝石' title='威力宝石'>";
+            const lp = "<img src='" + Constants.POCKET_DOMAIN + "/image/item/LuckStone.gif' alt='幸运宝石' title='幸运宝石'>";
+            const wp = "<img src='" + Constants.POCKET_DOMAIN + "/image/item/WeightStone.gif' alt='重量宝石' title='重量宝石'>";
+            return "<b style='font-size:120%;color:wheat'>又来管理您的装备来啦？就这点破烂折腾来折腾去的，您累不累啊。" +
+                "您当前的宝石库存情况：" + pp + powerGemCount + " " + lp + luckGemCount + " " + wp + weightGemCount + "</b>";
+        }
         return "<b style='font-size:120%;color:wheat'>又来管理您的装备来啦？就这点破烂折腾来折腾去的，您累不累啊。</b>";
     }
 
