@@ -1,4 +1,5 @@
 import CastleBank from "../../core/bank/CastleBank";
+import CastlePetAutoGraze from "../../core/castle/CastlePetAutoGraze";
 import SetupLoader from "../../core/config/SetupLoader";
 import PersonalEquipmentManagement from "../../core/equipment/PersonalEquipmentManagement";
 import CastlePetExpressHouse from "../../core/monster/CastlePetExpressHouse";
@@ -21,6 +22,40 @@ import PageProcessorContext from "../PageProcessorContext";
 import PersonalPetManagementPageProcessor from "./PersonalPetManagementPageProcessor";
 
 class PersonalPetManagementPageProcessor_Castle extends PersonalPetManagementPageProcessor {
+
+    #petAutoGraze?: CastlePetAutoGraze;
+
+    async doInitialize(credential: Credential, context?: PageProcessorContext): Promise<void> {
+        this.#petAutoGraze = new CastlePetAutoGraze(credential);
+        this.#petAutoGraze.success = () => {
+            doRefresh(credential);
+        };
+    }
+
+    doGenerateCommandButtons(): string {
+        let html = super.doGenerateCommandButtons();
+        html += "<button role='button' id='petAutoGrazeButton' class='COMMAND_BUTTON' " +
+            "style='color:grey'>自动扫描身上宠物并放牧</button>";
+        return html;
+    }
+
+
+    async doBindCommandButtons(credential: Credential): Promise<void> {
+        await super.doBindCommandButtons(credential);
+        $("#petAutoGrazeButton").on("click", () => {
+            if (PageUtils.isColorGrey("petAutoGrazeButton")) {
+                if (this.#petAutoGraze) {
+                    this.#petAutoGraze.start();
+                }
+                $("#petAutoGrazeButton").css("color", "blue");
+            } else if (PageUtils.isColorBlue("petAutoGrazeButton")) {
+                if (this.#petAutoGraze) {
+                    this.#petAutoGraze.shutdown();
+                }
+                $("#petAutoGrazeButton").css("color", "grey");
+            }
+        });
+    }
 
     doProcessWithPageParsed(credential: Credential, page: PersonalPetManagementPage, context?: PageProcessorContext): void {
 
