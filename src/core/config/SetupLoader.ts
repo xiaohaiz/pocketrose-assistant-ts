@@ -269,8 +269,8 @@ class SetupLoader {
         return partner;
     }
 
-    static isGemCountVisible() {
-        return StorageUtils.getBoolean("_pa_067");
+    static isGemCountVisible(id: string) {
+        return StorageUtils.getBoolean("_pa_068_" + id);
     }
 }
 
