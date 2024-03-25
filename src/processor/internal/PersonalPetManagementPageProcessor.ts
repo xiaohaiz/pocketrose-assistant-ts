@@ -115,12 +115,11 @@ abstract class PersonalPetManagementPageProcessor extends PageProcessorCredentia
         html += this.doGenerateCommandButtons();
         html += "</td>";
         html += "</tr>";
-        html += "<tr style='display:none'>";
-        html += "<td id='extensionCell_1'></td>";
-        html += "</tr>";
-        html += "<tr style='display:none'>";
-        html += "<td id='extensionCell_2'></td>";
-        html += "</tr>";
+        html += "<tr style='display:none'><td id='extensionCell_1'></td></tr>";
+        html += "<tr style='display:none'><td id='extensionCell_2'></td></tr>";
+        html += "<tr style='display:none'><td id='extensionCell_3'></td></tr>";
+        html += "<tr style='display:none'><td id='extensionCell_4'></td></tr>";
+        html += "<tr style='display:none'><td id='extensionCell_5'></td></tr>";
         html += "</tody>";
         html += "</table>";
 
