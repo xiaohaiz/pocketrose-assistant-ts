@@ -23,6 +23,7 @@ import PersonalPetManagementPageProcessor from "./PersonalPetManagementPageProce
 import TeamMemberLoader from "../../core/team/TeamMemberLoader";
 import _ from "lodash";
 import CastlePetAutoTransfer from "../../core/castle/CastlePetAutoTransfer";
+import OperationMessage from "../../util/OperationMessage";
 
 class PersonalPetManagementPageProcessor_Castle extends PersonalPetManagementPageProcessor {
 
@@ -76,6 +77,7 @@ class PersonalPetManagementPageProcessor_Castle extends PersonalPetManagementPag
                 });
             html += "</select>";
             html += "<button role='button' id='_auto_transfer_pet' style='color:grey'>自动传输身上宠物给队友</button>";
+            html += "<button role='button' id='_summon_pet_from_ranch'>从牧场召唤准备传输的宠物</button>";
 
             $("#extensionCell_2").html(html).parent().show();
 
@@ -101,7 +103,31 @@ class PersonalPetManagementPageProcessor_Castle extends PersonalPetManagementPag
                     $("#_auto_transfer_pet").css("color", "grey");
                 }
             });
+
+            $("#_summon_pet_from_ranch").on("click", () => {
+                $("#_summon_pet_from_ranch").prop("disabled", true);
+                this.#summonPetFromRanch(credential).then(message => {
+                    if (message.success && message.doRefresh) {
+                        doRefresh(credential);
+                    }
+                    $("#_summon_pet_from_ranch").prop("disabled", false);
+                });
+            });
         });
+    }
+
+    async #summonPetFromRanch(credential: Credential): Promise<OperationMessage> {
+        const ranchPage = await new CastleRanch(credential).enter();
+        if (ranchPage.ranchPetList === undefined || ranchPage.ranchPetList.length === 0) {
+            return OperationMessage.failure();
+        }
+        await new CastleRanch(credential).summon(0);
+        const message = OperationMessage.success();
+        message.doRefresh = true;
+        if (this.#petAutoTransfer !== undefined && this.#petAutoTransfer.running) {
+            message.doRefresh = false;
+        }
+        return message;
     }
 
     doProcessWithPageParsed(credential: Credential, page: PersonalPetManagementPage, context?: PageProcessorContext): void {
