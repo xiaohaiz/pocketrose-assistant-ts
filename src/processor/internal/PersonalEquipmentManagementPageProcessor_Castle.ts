@@ -1,4 +1,4 @@
-import {parseInt} from "lodash";
+import _, {parseInt} from "lodash";
 import CastleBank from "../../core/bank/CastleBank";
 import CastleGemAutoStore from "../../core/castle/CastleGemAutoStore";
 import CastleEquipmentExpressHouse from "../../core/equipment/CastleEquipmentExpressHouse";
@@ -14,6 +14,7 @@ import PageUtils from "../../util/PageUtils";
 import StringUtils from "../../util/StringUtils";
 import PageProcessorContext from "../PageProcessorContext";
 import PersonalEquipmentManagementPageProcessor from "./PersonalEquipmentManagementPageProcessor";
+import TeamMemberLoader from "../../core/team/TeamMemberLoader";
 
 class PersonalEquipmentManagementPageProcessor_Castle extends PersonalEquipmentManagementPageProcessor {
 
@@ -51,6 +52,8 @@ class PersonalEquipmentManagementPageProcessor_Castle extends PersonalEquipmentM
         let html = super.doGenerateImmutableButtons();
         html += "<button role='button' id='gemAutoStoreButton' " +
             "style='color:grey' class='COMMAND_BUTTON'>自动扫描身上宝石并入库</button>";
+        html += "<button role='button' id='transferGemBetweenTeam' " +
+            "class='COMMAND_BUTTON' style='background-color:red;color:white'>团队内宝石传输</button>";
         return html;
     }
 
@@ -67,6 +70,30 @@ class PersonalEquipmentManagementPageProcessor_Castle extends PersonalEquipmentM
                 }
                 $("#gemAutoStoreButton").css("color", "blue");
             }
+        });
+        $("#transferGemBetweenTeam").on("click", () => {
+            $("#transferGemBetweenTeam").prop("disabled", true).hide();
+
+            let html = "";
+            html += "<select id='_team_member'>";
+            html += "<option value=''>选择队员</option>";
+            _.forEach(TeamMemberLoader.loadTeamMembers())
+                .filter(it => it.id !== credential.id)
+                .forEach(it => {
+                    const memberId = it.id;
+                    const memberName = it.name;
+                    html += "<option value='" + memberId + "'>" + memberName + "</option>";
+                });
+            html += "</select>";
+
+            html += "<select id='_target_space'>";
+            html += "<option value='0'>对方空位</option>";
+            for (let i = 1; i <= 20; i++) {
+                html += "<option value='" + i + "'>" + i + "</option>";
+            }
+            html += "</select>";
+
+            $("#tr4_0").find("> td:first").html(html).parent().show();
         });
     }
 
