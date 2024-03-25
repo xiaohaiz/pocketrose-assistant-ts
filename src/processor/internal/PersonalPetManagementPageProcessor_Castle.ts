@@ -20,6 +20,8 @@ import PageUtils from "../../util/PageUtils";
 import StringUtils from "../../util/StringUtils";
 import PageProcessorContext from "../PageProcessorContext";
 import PersonalPetManagementPageProcessor from "./PersonalPetManagementPageProcessor";
+import TeamMemberLoader from "../../core/team/TeamMemberLoader";
+import _ from "lodash";
 
 class PersonalPetManagementPageProcessor_Castle extends PersonalPetManagementPageProcessor {
 
@@ -36,6 +38,8 @@ class PersonalPetManagementPageProcessor_Castle extends PersonalPetManagementPag
         let html = super.doGenerateCommandButtons();
         html += "<button role='button' id='petAutoGrazeButton' class='COMMAND_BUTTON' " +
             "style='color:grey'>自动扫描身上宠物并放牧</button>";
+        html += "<button role='button' id='transferPetBetweenTeam' " +
+            "class='COMMAND_BUTTON' style='background-color:red;color:white'>团队内宠物传输</button>";
         return html;
     }
 
@@ -54,6 +58,38 @@ class PersonalPetManagementPageProcessor_Castle extends PersonalPetManagementPag
                 }
                 $("#petAutoGrazeButton").css("color", "grey");
             }
+        });
+        $("#transferPetBetweenTeam").on("click", () => {
+            $("#transferPetBetweenTeam").prop("disabled", true).hide();
+
+            let html = "";
+            html += "<select id='_team_member'>";
+            html += "<option value=''>选择队员</option>";
+            _.forEach(TeamMemberLoader.loadTeamMembers())
+                .filter(it => it.id !== credential.id)
+                .forEach(it => {
+                    const memberId = it.id;
+                    const memberName = it.name;
+                    html += "<option value='" + memberId + "'>" + memberName + "</option>";
+                });
+            html += "</select>";
+            html += "<button role='button' id='_auto_transfer_pet' style='color:grey'>自动传输身上宠物给队友</button>";
+
+            $("#extensionCell_2").html(html).parent().show();
+
+            $("#_auto_transfer_pet").on("click", () => {
+                if (PageUtils.isColorGrey("_auto_transfer_pet")) {
+                    const target = $("#_team_member").val() as string;
+                    if (target === "") {
+                        // No team member selected, do nothing and return
+                        MessageBoard.publishWarning("没有选择传输宠物的队友！");
+                        return;
+                    }
+                    $("#_auto_transfer_pet").css("color", "blue");
+                } else if (PageUtils.isColorBlue("_auto_transfer_pet")) {
+                    $("#_auto_transfer_pet").css("color", "grey");
+                }
+            });
         });
     }
 
