@@ -4,7 +4,6 @@ import LocalSettingManager from "../../core/config/LocalSettingManager";
 import SetupLoader from "../../core/config/SetupLoader";
 import CastleInformation from "../../core/dashboard/CastleInformation";
 import TownDashboard from "../../core/dashboard/TownDashboard";
-import CastleEquipmentExpressHouse from "../../core/equipment/CastleEquipmentExpressHouse";
 import CastleWarehouse from "../../core/equipment/CastleWarehouse";
 import Equipment from "../../core/equipment/Equipment";
 import EquipmentConsecrateManager from "../../core/equipment/EquipmentConsecrateManager";
@@ -718,7 +717,7 @@ class PersonalEquipmentManagementPageProcessor_Town extends PersonalEquipmentMan
 
             const bank = new TownBank(credential, context?.get("townId"));
             bank.withdraw(10).then(() => {
-                new CastleEquipmentExpressHouse(credential).send(s as string, indexList).then(() => {
+                new TownEquipmentExpressHouse(credential).send(s as string, indexList).then(() => {
                     bank.deposit().then(() => {
                         this.doRefreshMutablePage(credential, context);
                     });
