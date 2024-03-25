@@ -2,10 +2,9 @@ import Credential from "../../util/Credential";
 import NetworkUtils from "../../util/NetworkUtils";
 import TownBank from "../bank/TownBank";
 import BattlePage from "../battle/BattlePage";
-import SetupLoader from "../config/SetupLoader";
 import PersonalPetManagement from "../monster/PersonalPetManagement";
-import Pet from "../monster/Pet";
 import PersonalPetManagementPage from "../monster/PersonalPetManagementPage";
+import Pet from "../monster/Pet";
 
 /**
  * ============================================================================
@@ -53,10 +52,6 @@ class ZodiacBattlePetLoveTrigger {
         }
         if (battlePage.petLove >= 95) {
             // 宠物的亲密度还够，忽略
-            return;
-        }
-        if (!SetupLoader.isZodiacBattlePetLoveAutoFixEnabled()) {
-            // 没有开启配置，忽略
             return;
         }
         await this.#fixPetLove();

@@ -218,10 +218,6 @@ class SetupLoader {
         return StorageUtils.getBoolean("_pa_062");
     }
 
-    static isZodiacBattlePetLoveAutoFixEnabled(): boolean {
-        return StorageUtils.getBoolean("_pa_063");
-    }
-
     static loadBattleFieldThreshold(): BattleFieldThreshold {
         const s = StorageUtils.getString("_pa_064");
         if (s === "") {
