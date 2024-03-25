@@ -101,7 +101,11 @@ abstract class PersonalEquipmentManagementPageProcessor extends PageProcessorCre
         $("#messageBoard")
             .css("background-color", "black")
             .css("color", "wheat");
-        MessageBoard.resetMessageBoard(this.doGenerateWelcomeMessageHtml());
+        this.doGenerateWelcomeMessageHtml(credential).then(m => {
+            if (m !== undefined) {
+                MessageBoard.resetMessageBoard(m);
+            }
+        });
 
         // ------------------------------------------------------------------------
         // 隐藏表单栏
@@ -208,7 +212,11 @@ abstract class PersonalEquipmentManagementPageProcessor extends PageProcessorCre
         $("#refreshButton").on("click", () => {
             this.doScrollToPageTitle();
             $("#messageBoardManager").html(NpcLoader.randomNpcImageHtml());
-            MessageBoard.resetMessageBoard(this.doGenerateWelcomeMessageHtml());
+            this.doGenerateWelcomeMessageHtml(credential).then(m => {
+                if (m !== undefined) {
+                    MessageBoard.resetMessageBoard(m);
+                }
+            });
             this.doRefreshMutablePage(credential, context);
         });
     }
@@ -268,7 +276,9 @@ abstract class PersonalEquipmentManagementPageProcessor extends PageProcessorCre
 
     abstract doGenerateRoleLocationHtml(context?: PageProcessorContext): string;
 
-    abstract doGenerateWelcomeMessageHtml(): string;
+    async doGenerateWelcomeMessageHtml(credential: Credential): Promise<string | undefined> {
+        return undefined;
+    }
 
     abstract doBindReturnButton(credential: Credential): void;
 

@@ -43,10 +43,9 @@ class PersonalEquipmentManagementPageProcessor_Castle extends PersonalEquipmentM
         }
     }
 
-    doGenerateWelcomeMessageHtml(): string {
+    async doGenerateWelcomeMessageHtml(credential: Credential): Promise<string | undefined> {
         return "<b style='font-size:120%;color:wheat'>又来管理您的装备来啦？真是一刻不得闲啊。</b>";
     }
-
 
     doGenerateImmutableButtons(): string {
         let html = super.doGenerateImmutableButtons();

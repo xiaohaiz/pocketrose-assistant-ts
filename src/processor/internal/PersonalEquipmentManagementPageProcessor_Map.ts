@@ -26,7 +26,7 @@ class PersonalEquipmentManagementPageProcessor_Map extends PersonalEquipmentMana
         }
     }
 
-    doGenerateWelcomeMessageHtml(): string {
+    async doGenerateWelcomeMessageHtml(credential: Credential): Promise<string | undefined> {
         return "<b style='font-size:120%;color:wheat'>真是难为您了，在野外还不忘捯饬您这些破烂。</b>";
     }
 

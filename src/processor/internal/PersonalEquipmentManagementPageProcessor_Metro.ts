@@ -22,7 +22,7 @@ class PersonalEquipmentManagementPageProcessor_Metro extends PersonalEquipmentMa
         return "地铁区域";
     }
 
-    doGenerateWelcomeMessageHtml(): string {
+    async doGenerateWelcomeMessageHtml(credential: Credential): Promise<string | undefined> {
         return "<b style='font-size:120%;color:wheat'>真是难为您了，在野外还不忘捯饬您这些破烂。</b>";
     }
 

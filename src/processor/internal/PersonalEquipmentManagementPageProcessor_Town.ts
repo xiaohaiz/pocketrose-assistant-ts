@@ -105,7 +105,7 @@ class PersonalEquipmentManagementPageProcessor_Town extends PersonalEquipmentMan
         }
     }
 
-    doGenerateWelcomeMessageHtml(): string {
+    async doGenerateWelcomeMessageHtml(credential: Credential): Promise<string | undefined> {
         return "<b style='font-size:120%;color:wheat'>又来管理您的装备来啦？就这点破烂折腾来折腾去的，您累不累啊。</b>";
     }
 
@@ -114,7 +114,11 @@ class PersonalEquipmentManagementPageProcessor_Town extends PersonalEquipmentMan
         $("#refreshButton").on("click", () => {
             this.doScrollToPageTitle();
             $("#messageBoardManager").html(NpcLoader.randomNpcImageHtml());
-            MessageBoard.resetMessageBoard(this.doGenerateWelcomeMessageHtml());
+            this.doGenerateWelcomeMessageHtml(credential).then(m => {
+                if (m !== undefined) {
+                    MessageBoard.resetMessageBoard(m);
+                }
+            });
             this.doRefreshMutablePage(credential, context);
         });
         let townId: string | undefined = undefined;
