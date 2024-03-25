@@ -179,25 +179,6 @@ function renderHarvestMessage(page: BattlePage) {
                 .css("color", "greenyellow");
             CommentBoard.writeMessage(_.escape(prompt["text"]));
         }
-    } else {
-        const prompt = SetupLoader.getBattleHarvestPrompt();
-        if (prompt["person"] !== undefined && prompt["person"] !== "NONE") {
-            let person = prompt["person"];
-            let imageHtml: string;
-            if (person === "SELF") {
-                imageHtml = PageUtils.findFirstRoleImageHtml()!;
-            } else if (person === "RANDOM") {
-                imageHtml = NpcLoader.randomPlayerImageHtml()!;
-            } else {
-                imageHtml = NpcLoader.getNpcImageHtml(person)!;
-            }
-            CommentBoard.createCommentBoard(imageHtml);
-            $("#commentBoard").css("text-align", "center");
-            for (const it of page.harvestList!) {
-                CommentBoard.writeMessage("<b style='font-size:150%'>" + it + "</b><br>");
-            }
-            CommentBoard.writeMessage(_.escape(prompt["text"]));
-        }
     }
 }
 

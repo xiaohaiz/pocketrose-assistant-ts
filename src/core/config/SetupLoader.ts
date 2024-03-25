@@ -110,20 +110,6 @@ class SetupLoader {
         }
     }
 
-    static getBattleHarvestPrompt() {
-        const s = StorageUtils.getString("_pa_024");
-        if (s === "") {
-            const value = {};
-            // @ts-ignore
-            value["person"] = "NONE";
-            // @ts-ignore
-            value["text"] = "";
-            return value;
-        } else {
-            return JSON.parse(s);
-        }
-    }
-
     static getNormalBattlePrompt() {
         const s = StorageUtils.getString("_pa_025");
         if (s === "") {
