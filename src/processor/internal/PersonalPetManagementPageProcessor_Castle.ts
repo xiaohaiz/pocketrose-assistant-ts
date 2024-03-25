@@ -22,10 +22,12 @@ import PageProcessorContext from "../PageProcessorContext";
 import PersonalPetManagementPageProcessor from "./PersonalPetManagementPageProcessor";
 import TeamMemberLoader from "../../core/team/TeamMemberLoader";
 import _ from "lodash";
+import CastlePetAutoTransfer from "../../core/castle/CastlePetAutoTransfer";
 
 class PersonalPetManagementPageProcessor_Castle extends PersonalPetManagementPageProcessor {
 
     #petAutoGraze?: CastlePetAutoGraze;
+    #petAutoTransfer?: CastlePetAutoTransfer;
 
     async doInitialize(credential: Credential, context?: PageProcessorContext): Promise<void> {
         this.#petAutoGraze = new CastlePetAutoGraze(credential);
@@ -85,8 +87,17 @@ class PersonalPetManagementPageProcessor_Castle extends PersonalPetManagementPag
                         MessageBoard.publishWarning("没有选择传输宠物的队友！");
                         return;
                     }
+                    if (this.#petAutoTransfer === undefined) {
+                        this.#petAutoTransfer = new CastlePetAutoTransfer(credential, target);
+                        this.#petAutoTransfer.success = () => doRefresh(credential);
+                    }
+                    this.#petAutoTransfer.start();
                     $("#_auto_transfer_pet").css("color", "blue");
                 } else if (PageUtils.isColorBlue("_auto_transfer_pet")) {
+                    if (this.#petAutoTransfer !== undefined) {
+                        this.#petAutoTransfer.shutdown();
+                        this.#petAutoTransfer = undefined;
+                    }
                     $("#_auto_transfer_pet").css("color", "grey");
                 }
             });
