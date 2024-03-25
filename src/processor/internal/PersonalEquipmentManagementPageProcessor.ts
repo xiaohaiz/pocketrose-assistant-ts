@@ -13,9 +13,13 @@ import PageProcessorCredentialSupport from "../PageProcessorCredentialSupport";
 abstract class PersonalEquipmentManagementPageProcessor extends PageProcessorCredentialSupport {
 
     async doProcess(credential: Credential, context?: PageProcessorContext): Promise<void> {
+        await this.doInitialization(credential, context);
         const page = PersonalEquipmentManagement.parsePage(PageUtils.currentPageHtml());
         this.#renderImmutablePage(credential, page, context);
         this.doBindKeyboardShortcut(credential);
+    }
+
+    async doInitialization(credential: Credential, context?: PageProcessorContext) {
     }
 
     doBindKeyboardShortcut(credential: Credential) {

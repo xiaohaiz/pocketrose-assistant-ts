@@ -1,4 +1,6 @@
+import {parseInt} from "lodash";
 import CastleBank from "../../core/bank/CastleBank";
+import CastleGemAutoStore from "../../core/castle/CastleGemAutoStore";
 import CastleEquipmentExpressHouse from "../../core/equipment/CastleEquipmentExpressHouse";
 import CastleWarehouse from "../../core/equipment/CastleWarehouse";
 import Equipment from "../../core/equipment/Equipment";
@@ -14,6 +16,15 @@ import PageProcessorContext from "../PageProcessorContext";
 import PersonalEquipmentManagementPageProcessor from "./PersonalEquipmentManagementPageProcessor";
 
 class PersonalEquipmentManagementPageProcessor_Castle extends PersonalEquipmentManagementPageProcessor {
+
+    #gemAutoStore?: CastleGemAutoStore;
+
+    async doInitialization(credential: Credential, context?: PageProcessorContext): Promise<void> {
+        this.#gemAutoStore = new CastleGemAutoStore(credential);
+        this.#gemAutoStore.success = () => {
+            this.doRefreshMutablePage(credential, context);
+        };
+    }
 
     doGeneratePageTitleHtml(context?: PageProcessorContext): string {
         if (context === undefined) {
@@ -34,6 +45,30 @@ class PersonalEquipmentManagementPageProcessor_Castle extends PersonalEquipmentM
 
     doGenerateWelcomeMessageHtml(): string {
         return "<b style='font-size:120%;color:wheat'>又来管理您的装备来啦？真是一刻不得闲啊。</b>";
+    }
+
+
+    doGenerateImmutableButtons(): string {
+        let html = super.doGenerateImmutableButtons();
+        html += "<button role='button' id='gemAutoStoreButton' " +
+            "style='color:grey' class='COMMAND_BUTTON'>自动扫描身上宝石并入库</button>";
+        return html;
+    }
+
+    doGenerateSetupButtons(credential: Credential) {
+        $("#gemAutoStoreButton").on("click", () => {
+            if (PageUtils.isColorBlue("gemAutoStoreButton")) {
+                if (this.#gemAutoStore) {
+                    this.#gemAutoStore.shutdown();
+                }
+                $("#gemAutoStoreButton").css("color", "grey");
+            } else if (PageUtils.isColorGrey("gemAutoStoreButton")) {
+                if (this.#gemAutoStore) {
+                    this.#gemAutoStore.start();
+                }
+                $("#gemAutoStoreButton").css("color", "blue");
+            }
+        });
     }
 
     doBindReturnButton(credential: Credential): void {
