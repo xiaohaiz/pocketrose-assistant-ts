@@ -86,6 +86,10 @@ abstract class PersonalStatisticsPageProcessor extends PageProcessorCredentialSu
         html += "<tbody>";
         html += "<tr>";
         html += "<td>";
+        html += "<table style='background-color:transparent;border-spacing:0;border-width:0;margin:auto'>";
+        html += "<tbody>";
+        html += "<tr>";
+        html += "<td>";
         html += "<button role='button' id='report-1' style='width:100%' class='reportButton'>战斗统计报告</button>";
         html += "</td>";
         html += "<td>";
@@ -104,6 +108,14 @@ abstract class PersonalStatisticsPageProcessor extends PageProcessorCredentialSu
         html += "<button role='button' id='report-6' style='width:100%' class='reportButton'>祭奠统计报告</button>";
         html += "<td>";
         html += "</tr>";
+        html += "</tbody>";
+        html += "</table>";
+        html += "</td>";
+        html += "</tr>";
+        html += "<tr>";
+        html += "<td>";
+        html += "<table style='background-color:transparent;border-spacing:0;border-width:0;margin:auto'>";
+        html += "<tbody>";
         html += "<tr>";
         html += "<td>";
         html += "<button role='button' id='log-1' style='width:100%' class='reportButton'>当日战报</button>";
@@ -122,6 +134,10 @@ abstract class PersonalStatisticsPageProcessor extends PageProcessorCredentialSu
         html += "</td>";
         html += "<td>";
         html += "<button role='button' id='log-6' style='width:100%' class='reportButton'>上月战报</button>";
+        html += "</td>";
+        html += "</tr>";
+        html += "</tbody>";
+        html += "</table>";
         html += "</td>";
         html += "</tr>";
         html += "</tbody>";
