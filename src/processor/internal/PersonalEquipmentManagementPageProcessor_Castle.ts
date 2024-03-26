@@ -15,10 +15,12 @@ import StringUtils from "../../util/StringUtils";
 import PageProcessorContext from "../PageProcessorContext";
 import PersonalEquipmentManagementPageProcessor from "./PersonalEquipmentManagementPageProcessor";
 import TeamMemberLoader from "../../core/team/TeamMemberLoader";
+import CastleGemAutoTransfer from "../../core/castle/CastleGemAutoTransfer";
 
 class PersonalEquipmentManagementPageProcessor_Castle extends PersonalEquipmentManagementPageProcessor {
 
     #gemAutoStore?: CastleGemAutoStore;
+    #gemAutoTransfer?: CastleGemAutoTransfer;
 
     async doInitialization(credential: Credential, context?: PageProcessorContext): Promise<void> {
         this.#gemAutoStore = new CastleGemAutoStore(credential);
@@ -100,7 +102,37 @@ class PersonalEquipmentManagementPageProcessor_Castle extends PersonalEquipmentM
             html += "<option value='WEIGHT'>重量宝石</option>";
             html += "</select>";
 
+            html += "<button role='button' id='_auto_transfer_gem' style='color:grey'>自动传输身上宝石给队友</button>";
+
             $("#tr4_0").find("> td:first").html(html).parent().show();
+
+            $("#_auto_transfer_gem").on("click", () => {
+                if (PageUtils.isColorGrey("_auto_transfer_gem")) {
+                    const target = $("#_transfer_target").val() as string;
+                    if (target === "") {
+                        MessageBoard.publishWarning("没有选择传输宝石的队友！");
+                        return;
+                    }
+                    const space = _.parseInt($("#_space_count").val() as string);
+                    if (space === 0) {
+                        MessageBoard.publishWarning("必须选择可用的空位！");
+                        return;
+                    }
+                    const category = $("#_gem_category").val() as string;
+                    if (this.#gemAutoTransfer === undefined) {
+                        this.#gemAutoTransfer = new CastleGemAutoTransfer(credential, target, space, category);
+                        this.#gemAutoTransfer.success = () => this.doRefreshMutablePage(credential);
+                    }
+                    this.#gemAutoTransfer.start();
+                    $("#_auto_transfer_gem").css("color", "blue");
+                } else if (PageUtils.isColorBlue("_auto_transfer_gem")) {
+                    if (this.#gemAutoTransfer !== undefined) {
+                        this.#gemAutoTransfer.shutdown();
+                        this.#gemAutoTransfer = undefined;
+                    }
+                    $("#_auto_transfer_gem").css("color", "grey");
+                }
+            });
         });
     }
 
