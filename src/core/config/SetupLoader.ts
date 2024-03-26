@@ -188,6 +188,10 @@ class SetupLoader {
     static isGemCountVisible(id: string) {
         return StorageUtils.getBoolean("_pa_068_" + id);
     }
+
+    static isAutoChangePointToTown() {
+        return StorageUtils.getBoolean("_pa_069");
+    }
 }
 
 export = SetupLoader;
