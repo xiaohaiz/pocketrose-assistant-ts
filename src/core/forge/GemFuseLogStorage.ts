@@ -43,6 +43,7 @@ class GemFuseLogStorage {
                         data.createTime = it.createTime;
                         data.gem = it.gem;
                         data.effort = it.effort;
+                        data.equipment = it.equipment;
                         dataList.push(data);
                     });
                 }
