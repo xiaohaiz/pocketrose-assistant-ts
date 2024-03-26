@@ -100,10 +100,10 @@ class PersonalEquipmentManagementPageProcessor_Town extends PersonalEquipmentMan
         html += "<option value='WEIGHT'>重量宝石</option>";
         html += "</select>";
         html += "<button role='button' id='B_send_gem_to_teammate'>给队友发送宝石</button>";
-
         if (townId !== undefined) {
             html += "<button role='button' style='color:grey' id='B_auto_sell_dragon_ball'>自动卖掉身上的龙珠</button>";
         }
+        html += "<button role='button' id='B_store_idle_equipment'>闲置装备入袋</button>";
         $("#tr4_1").find("> td:first").html(html);
 
         $("#B_send_gem_to_teammate").on("click", () => {
@@ -141,6 +141,17 @@ class PersonalEquipmentManagementPageProcessor_Town extends PersonalEquipmentMan
                 $("#B_auto_sell_dragon_ball").prop("disabled", false);
             });
         }
+        $("#B_store_idle_equipment").on("click", () => {
+            $("#B_store_idle_equipment").prop("disabled", true);
+            new PersonalEquipmentManagement(credential)
+                .putIdleEquipmentIntoTreasureBag()
+                .then(message => {
+                    if (message.success && message.doRefresh) {
+                        this.doRefreshMutablePage(credential, context);
+                    }
+                    $("#B_store_idle_equipment").prop("disabled", false);
+                });
+        });
         $("#tr4_1").show();
     }
 
@@ -1219,6 +1230,7 @@ class PersonalEquipmentManagementPageProcessor_Town extends PersonalEquipmentMan
         message.doRefresh = true;
         return message;
     }
+
 }
 
 export = PersonalEquipmentManagementPageProcessor_Town;
