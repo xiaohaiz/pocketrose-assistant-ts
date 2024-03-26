@@ -1,6 +1,8 @@
+import _ from "lodash";
 import Credential from "../../util/Credential";
 import MessageBoard from "../../util/MessageBoard";
 import NetworkUtils from "../../util/NetworkUtils";
+import OperationMessage from "../../util/OperationMessage";
 import TimeoutUtils from "../../util/TimeoutUtils";
 import TravelPlan from "../map/TravelPlan";
 import TravelPlanBuilder from "../map/TravelPlanBuilder";
@@ -73,6 +75,20 @@ class TownEntrance {
         return await action(this.#credential);
     }
 
+    /**
+     * 转移据点到指定的城市。
+     * @param townId 城市ID
+     */
+    async changeAccessPoint(townId: string): Promise<OperationMessage> {
+        const request = this.#credential.asRequestMap();
+        request.set("town", townId);
+        request.set("mode", "ACCESS_POINT");
+        const response = await NetworkUtils.post("mydata.cgi", request);
+        const success = _.includes(response, "据点成功转移到");
+        const message = new OperationMessage();
+        message.success = success;
+        return message;
+    }
 }
 
 export = TownEntrance;
