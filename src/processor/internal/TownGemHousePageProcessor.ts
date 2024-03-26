@@ -417,7 +417,7 @@ class TownGemHousePageProcessor extends PageProcessorCredentialSupport {
                 }
             }
 
-            new TownGemHouse(credential, town.id).fuse(checkedIndex, index).then(() => {
+            new TownGemHouse(credential, town.id).fuse(checkedIndex, index, equipment?.name).then(() => {
                 // 合成装备之后，设置最后一次合成的信息
                 $("#last_fuse_cell").text(lastFuse);
                 this.#refreshMutablePage(credential, town);
@@ -547,7 +547,7 @@ class TownGemHousePageProcessor extends PageProcessorCredentialSupport {
                     this.#refreshMutablePage(credential, town);
                 } else {
                     const house = new TownGemHouse(credential, town.id);
-                    house.fuse(equipmentIndex, gem!.index!).then(() => {
+                    house.fuse(equipmentIndex, gem!.index!, equipment.name).then(() => {
                         house.open().then(page => {
                             this.#_fuseAllGems(credential, page, town, target, gemCode);
                         });
@@ -556,7 +556,7 @@ class TownGemHousePageProcessor extends PageProcessorCredentialSupport {
             });
         } else {
             const house = new TownGemHouse(credential, town.id);
-            house.fuse(equipmentIndex, gem!.index!).then(() => {
+            house.fuse(equipmentIndex, gem!.index!, equipment.name).then(() => {
                 house.open().then(page => {
                     this.#_fuseAllGems(credential, page, town, target, gemCode);
                 });
