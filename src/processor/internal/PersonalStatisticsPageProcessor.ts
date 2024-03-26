@@ -441,7 +441,8 @@ function doBindExportBattleLog() {
     $("#exportBattleLog").on("click", () => {
         $(".databaseButton").prop("disabled", true);
 
-        const target = $("#teamMemberSelect").val()! as string;
+        const includeExternal = $("#includeExternal").prop("checked") as boolean;
+        const members = TeamMemberLoader.loadTeamMembersAsMap(includeExternal);
 
         // 上个月的第一天00:00:00.000作为查询起始时间
         const startTime = MonthRange.current().previous().start;
@@ -449,7 +450,8 @@ function doBindExportBattleLog() {
             .findByCreateTime(startTime)
             .then(logList => {
                 const documentList = logList
-                    .filter(it => target === "" || target === it.roleId)
+                    .filter(it => it.roleId !== undefined)
+                    .filter(it => members.has(it.roleId!))
                     .map(it => it.asObject());
 
                 const json = JSON.stringify(documentList);
