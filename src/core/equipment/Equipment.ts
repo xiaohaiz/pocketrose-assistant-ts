@@ -154,6 +154,10 @@ class Equipment {
         return this.category === "物品";
     }
 
+    get isGem(): boolean {
+        return this.isItem && (this.name === "威力宝石" || this.name === "幸运宝石" || this.name === "重量宝石");
+    }
+
     get isTreasureBag(): boolean {
         return this.isItem && this.name === "百宝袋";
     }

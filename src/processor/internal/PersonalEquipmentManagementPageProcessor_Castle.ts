@@ -75,7 +75,7 @@ class PersonalEquipmentManagementPageProcessor_Castle extends PersonalEquipmentM
             $("#transferGemBetweenTeam").prop("disabled", true).hide();
 
             let html = "";
-            html += "<select id='_team_member'>";
+            html += "<select id='_transfer_target'>";
             html += "<option value=''>选择队员</option>";
             _.forEach(TeamMemberLoader.loadTeamMembers())
                 .filter(it => it.id !== credential.id)
@@ -86,11 +86,18 @@ class PersonalEquipmentManagementPageProcessor_Castle extends PersonalEquipmentM
                 });
             html += "</select>";
 
-            html += "<select id='_target_space'>";
-            html += "<option value='0'>对方空位</option>";
+            html += "<select id='_space_count'>";
+            html += "<option value='0'>可用空位</option>";
             for (let i = 1; i <= 20; i++) {
                 html += "<option value='" + i + "'>" + i + "</option>";
             }
+            html += "</select>";
+
+            html += "<select id='_gem_category'>";
+            html += "<option value='ALL'>所有宝石</option>";
+            html += "<option value='POWER'>威力宝石</option>";
+            html += "<option value='LUCK'>幸运宝石</option>";
+            html += "<option value='WEIGHT'>重量宝石</option>";
             html += "</select>";
 
             $("#tr4_0").find("> td:first").html(html).parent().show();
