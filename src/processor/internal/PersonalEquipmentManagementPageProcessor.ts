@@ -137,8 +137,13 @@ abstract class PersonalEquipmentManagementPageProcessor extends PageProcessorCre
         // ------------------------------------------------------------------------
         html = "";
         html += "<tr id='tr4_0' style='display:none'>";
-        html += "<td style='background-color:#F8F0E0;text-align:center'>";
-        html += "</td>";
+        html += "<td style='background-color:#F8F0E0;text-align:center'></td>";
+        html += "</tr>"
+        html += "<tr id='tr4_1' style='display:none'>";
+        html += "<td style='background-color:#F8F0E0;text-align:center'></td>";
+        html += "</tr>"
+        html += "<tr id='tr4_2' style='display:none'>";
+        html += "<td style='background-color:#F8F0E0;text-align:center'></td>";
         html += "</tr>"
         $("#tr4").after($(html));
 
@@ -153,7 +158,7 @@ abstract class PersonalEquipmentManagementPageProcessor extends PageProcessorCre
         html += "<div id='warehouseState'>off</div>";       // 仅限城堡
         html += "</td>"
         html += "</tr>"
-        $("#tr4_0").after($(html));
+        $("#tr4_2").after($(html));
 
         // ------------------------------------------------------------------------
         // 装备栏目
@@ -188,7 +193,7 @@ abstract class PersonalEquipmentManagementPageProcessor extends PageProcessorCre
         html += "</tr>"
         $("#tr8").after($(html));
 
-        this.doGenerateSetupButtons(credential);
+        this.doGenerateSetupButtons(credential, context);
 
         this.doBindImmutableButtons(credential, context);
 
@@ -204,7 +209,7 @@ abstract class PersonalEquipmentManagementPageProcessor extends PageProcessorCre
         return html;
     }
 
-    doGenerateSetupButtons(credential: Credential) {
+    doGenerateSetupButtons(credential: Credential, context?: PageProcessorContext) {
     }
 
     doBindImmutableButtons(credential: Credential, context?: PageProcessorContext) {

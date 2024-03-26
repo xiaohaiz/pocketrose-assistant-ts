@@ -19,6 +19,7 @@ import TreasureBag from "../../core/equipment/TreasureBag";
 import TownForgeHouse from "../../core/forge/TownForgeHouse";
 import NpcLoader from "../../core/role/NpcLoader";
 import PersonalStatus from "../../core/role/PersonalStatus";
+import DragonBallAutoSell from "../../core/store/DragonBallAutoSell";
 import TeamMemberLoader from "../../core/team/TeamMemberLoader";
 import TownLoader from "../../core/town/TownLoader";
 import EquipmentStatusTrigger from "../../core/trigger/EquipmentStatusTrigger";
@@ -35,6 +36,8 @@ import PersonalEquipmentManagementPageProcessor from "./PersonalEquipmentManagem
 
 class PersonalEquipmentManagementPageProcessor_Town extends PersonalEquipmentManagementPageProcessor {
 
+    #dragonBallAutoSell?: DragonBallAutoSell;
+
     doBindKeyboardShortcut(credential: Credential) {
         KeyboardShortcutBuilder.newInstance()
             .onEscapePressed(() => $("#returnButton").trigger("click"))
@@ -46,7 +49,7 @@ class PersonalEquipmentManagementPageProcessor_Town extends PersonalEquipmentMan
             .bind();
     }
 
-    doGenerateSetupButtons(credential: Credential) {
+    doGenerateSetupButtons(credential: Credential, context?: PageProcessorContext) {
         let html = "";
         html += "<input type='button' class='_em_button' id='_em_a' value='正在练武器' style='color:grey'>";
         html += "<input type='button' class='_em_button' id='_em_b' value='正在练防具' style='color:grey'>";
@@ -75,8 +78,33 @@ class PersonalEquipmentManagementPageProcessor_Town extends PersonalEquipmentMan
                 StorageUtils.set("_pa_065_" + credential.id, JSON.stringify(document));
             }
         });
-
         $("#tr4_0").show();
+
+        const townId = context?.get("townId");
+        if (townId !== undefined) {
+            html = "";
+            html += "<button role='button' style='color:grey' id='B_auto_sell_dragon_ball'>自动卖掉身上的龙珠</button>";
+            $("#tr4_1").find("> td:first").html(html);
+            $("#B_auto_sell_dragon_ball").on("click", () => {
+                $("#B_auto_sell_dragon_ball").prop("disabled", true);
+                if (PageUtils.isColorGrey("B_auto_sell_dragon_ball")) {
+                    if (this.#dragonBallAutoSell === undefined) {
+                        this.#dragonBallAutoSell = new DragonBallAutoSell(credential, townId);
+                        this.#dragonBallAutoSell.success = () => this.doRefreshMutablePage(credential, context);
+                    }
+                    this.#dragonBallAutoSell?.start();
+                    $("#B_auto_sell_dragon_ball").css("color", "blue");
+                } else if (PageUtils.isColorBlue("B_auto_sell_dragon_ball")) {
+                    if (this.#dragonBallAutoSell !== undefined) {
+                        this.#dragonBallAutoSell.shutdown();
+                        this.#dragonBallAutoSell = undefined;
+                    }
+                    $("#B_auto_sell_dragon_ball").css("color", "grey");
+                }
+                $("#B_auto_sell_dragon_ball").prop("disabled", false);
+            });
+            $("#tr4_1").show();
+        }
     }
 
     doGenerateImmutableButtons(): string {
