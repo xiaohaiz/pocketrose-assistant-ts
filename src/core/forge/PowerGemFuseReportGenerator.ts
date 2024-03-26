@@ -10,7 +10,7 @@ class PowerGemFuseReportGenerator {
                 let html = "<span style='font-size:200%;font-weight:bold;color:red'>" +
                     "没有镶嵌威力宝石的记录！" +
                     "</span>";
-                $("#information").html(html).parent().show();
+                $("#statistics").html(html).parent().show();
                 return;
             }
 
@@ -104,7 +104,7 @@ class PowerGemFuseReportGenerator {
             html += "</tbody>";
             html += "</table>";
 
-            $("#information").html(html).parent().show();
+            $("#statistics").html(html).parent().show();
         });
     }
 

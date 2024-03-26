@@ -23,6 +23,7 @@ import MonthRange from "../../util/MonthRange";
 import WeekRange from "../../util/WeekRange";
 import PageProcessorContext from "../PageProcessorContext";
 import PageProcessorCredentialSupport from "../PageProcessorCredentialSupport";
+import PowerGemFuseReportGenerator from "../../core/forge/PowerGemFuseReportGenerator";
 
 abstract class PersonalStatisticsPageProcessor extends PageProcessorCredentialSupport {
 
@@ -106,6 +107,9 @@ abstract class PersonalStatisticsPageProcessor extends PageProcessorCredentialSu
         html += "</td>";
         html += "<td>";
         html += "<button role='button' id='report-6' style='width:100%' class='reportButton'>祭奠统计报告</button>";
+        html += "<td>";
+        html += "<td>";
+        html += "<button role='button' id='report-7' style='width:100%' class='reportButton'>威力宝石统计</button>";
         html += "<td>";
         html += "</tr>";
         html += "</tbody>";
@@ -237,6 +241,7 @@ abstract class PersonalStatisticsPageProcessor extends PageProcessorCredentialSu
         doBindReport4();
         doBindReport5();
         doBindReport6();
+        doBindReport7();
         doBindLog1();
         doBindLog2();
         doBindLog3();
@@ -347,6 +352,15 @@ function doBindReport6() {
             .then(() => {
                 $(".reportButton").prop("disabled", false);
             });
+    });
+}
+
+function doBindReport7() {
+    $("#report-7").on("click", () => {
+        $(".reportButton").prop("disabled", true);
+        const includeExternal = $("#includeExternal").prop("checked") as boolean;
+        new PowerGemFuseReportGenerator().generate(includeExternal);
+        $(".reportButton").prop("disabled", false);
     });
 }
 

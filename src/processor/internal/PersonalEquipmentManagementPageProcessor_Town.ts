@@ -108,7 +108,7 @@ class PersonalEquipmentManagementPageProcessor_Town extends PersonalEquipmentMan
 
         $("#B_send_gem_to_teammate").on("click", () => {
             const target = $("#S_team_member").val() as string;
-            if (target === undefined) {
+            if (target === "") {
                 MessageBoard.publishWarning("没有选择发送宝石的队友，忽略！");
                 return;
             }
