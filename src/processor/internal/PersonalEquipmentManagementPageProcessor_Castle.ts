@@ -177,7 +177,13 @@ class PersonalEquipmentManagementPageProcessor_Castle extends PersonalEquipmentM
             return OperationMessage.failure();
         }
 
-        await new CastleWarehouse(credential).takeOut(indexList);
+        const len = _.min([indexList.length, space])!;
+        const list: number[] = [];
+        for (let i = 0; i < len; i++) {
+            list.push(indexList[i]);
+        }
+
+        await new CastleWarehouse(credential).takeOut(list);
         const message = OperationMessage.success();
         message.doRefresh = true;
         return message;
