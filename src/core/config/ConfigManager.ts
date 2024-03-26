@@ -39,6 +39,12 @@ class ConfigManager {
     }
 }
 
+/**
+ * _st_
+ * _ts_
+ * _fl_
+ * _pa_
+ */
 function isRecognizedKey(key: string) {
     if (_.startsWith(key, "_st_")) {
         return true;
