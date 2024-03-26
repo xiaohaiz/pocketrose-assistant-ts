@@ -24,7 +24,7 @@ class SetupItem013 implements SetupItem {
     #doRender(id: string) {
         let html = "";
         html += "<tr>";
-        html += "<th style='background-color:#E8E8D0'>" + this.#name + "</th>";
+        html += "<th style='background-color:#E8E8D0' class='C_setupItemName' id='_s_" + this.#code + "'>" + this.#name + "</th>";
         html += "<td style='background-color:#E8E8D0'>★</td>";
         html += "<td style='background-color:#EFE0C0'></td>";
         html += "<td style='background-color:#E0D0B0;text-align:left' colspan='2'>" + this.#doGenerateSetupItem() + "</td>";

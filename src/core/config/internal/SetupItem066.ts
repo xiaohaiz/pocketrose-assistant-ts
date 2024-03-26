@@ -22,7 +22,7 @@ class SetupItem066 implements SetupItem {
         $("._066_button").off("click");
         let html = "";
         html += "<tr>";
-        html += "<th style='background-color:#E8E8D0'>" + this.#name + "</th>";
+        html += "<th style='background-color:#E8E8D0' class='C_setupItemName' id='_s_" + this.#code + "'>" + this.#name + "</th>";
         html += "<td style='background-color:#E8E8D0'>★</td>";
         html += "<td style='background-color:#EFE0C0'>";
         html += "<button role='button' class='_066_button' id='_066_cancel'>取消</button>";

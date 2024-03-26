@@ -25,7 +25,7 @@ const key: string = "_pa_" + code;
 function doRender() {
     let html = "";
     html += "<tr>";
-    html += "<th style='background-color:#E8E8D0'>" + name + "</th>";
+    html += "<th style='background-color:#E8E8D0' class='C_setupItemName' id='_s_" + code + "'>" + name + "</th>";
     html += "<td style='background-color:#E8E8D0'></td>";
     html += "<td style='background-color:#EFE0C0'><input type='button' class='dynamic_button' id='setup_" + code + "' value='设置'></td>";
     html += "<td style='background-color:#E0D0B0;text-align:left'>" + doGenerateSetupItem() + "</td>";
