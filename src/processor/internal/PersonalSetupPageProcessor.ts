@@ -1,5 +1,6 @@
 import _ from "lodash";
 import ConfigManager from "../../core/config/ConfigManager";
+import SetupItem from "../../core/config/SetupItem";
 import SetupItemManager from "../../core/config/SetupItemManager";
 import Equipment from "../../core/equipment/Equipment";
 import EquipmentLoader from "../../core/equipment/EquipmentLoader";
@@ -10,6 +11,8 @@ import Credential from "../../util/Credential";
 import KeyboardShortcutBuilder from "../../util/KeyboardShortcutBuilder";
 import MessageBoard from "../../util/MessageBoard";
 import PageUtils from "../../util/PageUtils";
+import StorageUtils from "../../util/StorageUtils";
+import StringUtils from "../../util/StringUtils";
 import PageProcessorContext from "../PageProcessorContext";
 import PageProcessorCredentialSupport from "../PageProcessorCredentialSupport";
 
@@ -138,6 +141,8 @@ abstract class PersonalSetupPageProcessor extends PageProcessorCredentialSupport
     }
 
     #render(credential: Credential) {
+        $(".C_setupItemName").off("click");
+
         const categories = ["置顶", "界面", "战斗", "其他"];
         const allSetupItems = SetupItemManager.getInstance().getSetupItem();
 
@@ -150,7 +155,10 @@ abstract class PersonalSetupPageProcessor extends PageProcessorCredentialSupport
 
         for (const category of categories) {
             const itemList = _.forEach(allSetupItems)
-                .filter(it => it.category() === category);
+                .filter(it => this.#determineSetupItemCategory(it) === category);
+            if (itemList.length === 0) {
+                continue;
+            }
             html = "";
             html += "<tr style='background-color:skyblue'>";
             html += "<th rowspan='" + (itemList.length + 1) + "' style='background-color:black;color:white;vertical-align:center;white-space:nowrap'>" + category + "</th>";
@@ -162,6 +170,29 @@ abstract class PersonalSetupPageProcessor extends PageProcessorCredentialSupport
             html += "</tr>";
             $("#setup_item_table").append($(html));
             _.forEach(itemList, it => it.render(credential.id));
+        }
+
+        $(".C_setupItemName").on("click", event => {
+            const s = $(event.target).attr("id") as string;
+            const code = StringUtils.substringAfter(s, "_s_");
+            if (StorageUtils.getBoolean("_st_" + code)) {
+                StorageUtils.remove("_st_" + code);
+            } else {
+                StorageUtils.set("_st_" + code, "1");
+            }
+            PageUtils.triggerClick("refreshButton");
+        });
+    }
+
+    #determineSetupItemCategory(item: SetupItem) {
+        const c = item.category();
+        if (c === "置顶") {
+            return c;
+        }
+        if (StorageUtils.getBoolean("_st_" + item.code())) {
+            return "置顶";
+        } else {
+            return c;
         }
     }
 
