@@ -2,6 +2,7 @@ import MessageBoard from "../../../util/MessageBoard";
 import StorageUtils from "../../../util/StorageUtils";
 import BattleFieldConfigLoader from "../../battle/BattleFieldConfigLoader";
 import SetupItem from "../SetupItem";
+import PageUtils from "../../../util/PageUtils";
 
 class SetupItem013 implements SetupItem {
 
@@ -22,25 +23,32 @@ class SetupItem013 implements SetupItem {
     }
 
     #doRender(id: string) {
+        $("#B_013_reset").off("click");
+        $("._013_button").off("click");
         let html = "";
         html += "<tr>";
         html += "<th style='background-color:#E8E8D0' class='C_setupItemName' id='_s_" + this.#code + "'>" + this.#name + "</th>";
         html += "<td style='background-color:#E8E8D0'>★</td>";
-        html += "<td style='background-color:#EFE0C0'></td>";
-        html += "<td style='background-color:#E0D0B0;text-align:left' colspan='2'>" + this.#doGenerateSetupItem() + "</td>";
-        html += "</tr>";
-        $("#setup_item_table").append($(html));
-
-        this.#doProcessButtons(id);
-    }
-
-    #doGenerateSetupItem() {
-        let html = "";
+        html += "<td style='background-color:#EFE0C0'>";
+        html += "<button role='button' class='dynamic_button' id='B_013_reset'>重置</button>"
+        html += "</td>";
+        html += "<td style='background-color:#E0D0B0;text-align:left' colspan='2'>";
         html += "<input type='button' class='dynamic_button _013_button' id='_013_button_1' value='初级之森'>";
         html += "<input type='button' class='dynamic_button _013_button' id='_013_button_2' value='中级之塔'>";
         html += "<input type='button' class='dynamic_button _013_button' id='_013_button_3' value='上级之洞'>";
         html += "<input type='button' class='dynamic_button _013_button' id='_013_button_4' value='十二神殿'>";
-        return html;
+        html += "</td>";
+        html += "</tr>";
+        $("#setup_item_table").append($(html));
+
+        this.#doProcessButtons(id);
+
+        $("#B_013_reset").on("click", () => {
+            PageUtils.disableElement("B_013_reset");
+            StorageUtils.remove(this.#key + "_" + id);
+            PageUtils.enableElement("B_013_reset");
+            PageUtils.triggerClick("refreshButton");
+        });
     }
 
     #doProcessButtons(id: string) {
