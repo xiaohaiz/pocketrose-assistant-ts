@@ -35,7 +35,7 @@ class TownGemHouse {
         return await action();
     }
 
-    async fuse(equipmentIndex: number, gemIndex: number): Promise<void> {
+    async fuse(equipmentIndex: number, gemIndex: number, equipment?: string): Promise<void> {
         const action = () => {
             return new Promise<void>(resolve => {
                 const request = this.#credential.asRequestMap();
@@ -53,6 +53,7 @@ class TownGemHouse {
                         log.roleId = this.#credential.id;
                         log.gem = "威力";
                         log.effort = effort;
+                        log.equipment = equipment;
                         GemFuseLogStorage.getInstance().insert(log).then(() => {
                             resolve();
                         });
