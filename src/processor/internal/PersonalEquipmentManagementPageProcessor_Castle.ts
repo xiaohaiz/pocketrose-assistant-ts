@@ -1,6 +1,7 @@
 import _, {parseInt} from "lodash";
 import CastleBank from "../../core/bank/CastleBank";
 import CastleGemAutoStore from "../../core/castle/CastleGemAutoStore";
+import CastleGemAutoTransfer from "../../core/castle/CastleGemAutoTransfer";
 import CastleEquipmentExpressHouse from "../../core/equipment/CastleEquipmentExpressHouse";
 import CastleWarehouse from "../../core/equipment/CastleWarehouse";
 import Equipment from "../../core/equipment/Equipment";
@@ -8,14 +9,14 @@ import PersonalEquipmentManagement from "../../core/equipment/PersonalEquipmentM
 import PersonalEquipmentManagementPage from "../../core/equipment/PersonalEquipmentManagementPage";
 import TreasureBag from "../../core/equipment/TreasureBag";
 import PersonalStatus from "../../core/role/PersonalStatus";
+import TeamMemberLoader from "../../core/team/TeamMemberLoader";
 import Credential from "../../util/Credential";
 import MessageBoard from "../../util/MessageBoard";
+import OperationMessage from "../../util/OperationMessage";
 import PageUtils from "../../util/PageUtils";
 import StringUtils from "../../util/StringUtils";
 import PageProcessorContext from "../PageProcessorContext";
 import PersonalEquipmentManagementPageProcessor from "./PersonalEquipmentManagementPageProcessor";
-import TeamMemberLoader from "../../core/team/TeamMemberLoader";
-import CastleGemAutoTransfer from "../../core/castle/CastleGemAutoTransfer";
 
 class PersonalEquipmentManagementPageProcessor_Castle extends PersonalEquipmentManagementPageProcessor {
 
@@ -103,6 +104,7 @@ class PersonalEquipmentManagementPageProcessor_Castle extends PersonalEquipmentM
             html += "</select>";
 
             html += "<button role='button' id='_auto_transfer_gem' style='color:grey'>自动传输身上宝石给队友</button>";
+            html += "<button role='button' id='_take_out_gem_for_transfer'>从仓库取出宝石准备传输</button>";
 
             $("#tr4_0").find("> td:first").html(html).parent().show();
 
@@ -133,7 +135,52 @@ class PersonalEquipmentManagementPageProcessor_Castle extends PersonalEquipmentM
                     $("#_auto_transfer_gem").css("color", "grey");
                 }
             });
+
+            $("#_take_out_gem_for_transfer").on("click", () => {
+                const space = _.parseInt($("#_space_count").val() as string);
+                if (space === 0) {
+                    MessageBoard.publishWarning("必须选择可用的空位！");
+                    return;
+                }
+                const category = $("#_gem_category").val() as string;
+                $("#_take_out_gem_for_transfer").prop("disabled", true);
+                this.#takeOutGemForTransfer(credential, space, category).then(message => {
+                    if (message.success && message.doRefresh) {
+                        this.doRefreshMutablePage(credential);
+                    }
+                    $("#_take_out_gem_for_transfer").prop("disabled", false);
+                });
+            });
         });
+    }
+
+    async #takeOutGemForTransfer(credential: Credential, space: number, category: string): Promise<OperationMessage> {
+        const warehousePage = await new CastleWarehouse(credential).open();
+        if (warehousePage.storageEquipmentList === undefined || warehousePage.storageEquipmentList.length === 0) {
+            return OperationMessage.failure();
+        }
+        const indexList = _.forEach(warehousePage.storageEquipmentList)
+            .filter(it => it.isGem)
+            .filter(it => {
+                if (category === "POWER") {
+                    return it.name === "威力宝石";
+                } else if (category === "LUCK") {
+                    return it.name === "幸运宝石";
+                } else if (category === "WEIGHT") {
+                    return it.name === "重量宝石";
+                } else {
+                    return true;
+                }
+            })
+            .map(it => it.index!);
+        if (indexList.length === 0) {
+            return OperationMessage.failure();
+        }
+
+        await new CastleWarehouse(credential).takeOut(indexList);
+        const message = OperationMessage.success();
+        message.doRefresh = true;
+        return message;
     }
 
     doBindReturnButton(credential: Credential): void {
