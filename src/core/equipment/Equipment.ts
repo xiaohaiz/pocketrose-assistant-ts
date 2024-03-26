@@ -158,6 +158,10 @@ class Equipment {
         return this.isItem && (this.name === "威力宝石" || this.name === "幸运宝石" || this.name === "重量宝石");
     }
 
+    get isDragonBall(): boolean {
+        return this.isItem && _.endsWith(this.name, "星龙珠");
+    }
+
     get isTreasureBag(): boolean {
         return this.isItem && this.name === "百宝袋";
     }
