@@ -1,5 +1,7 @@
 # pocketrose-assistant-ts
 
+### 版本 4.5.6-SNAPSHOT
+
 ### 版本 4.5.5
 
 1. 简化，删除设置项“十二宫宠物亲密”，默认开启。
