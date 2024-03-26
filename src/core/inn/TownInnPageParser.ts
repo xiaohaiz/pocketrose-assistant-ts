@@ -5,7 +5,7 @@ import TownInnPage from "./TownInnPage";
 
 class TownInnPageParser {
 
-    async parse(html: string): Promise<TownInnPage> {
+    static parsePage(html: string): TownInnPage {
         const page = new TownInnPage(new Role());
         let table = $("table:first")
             .find("> tbody:first > tr:first > td:first")

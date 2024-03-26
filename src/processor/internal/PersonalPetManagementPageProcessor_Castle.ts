@@ -1,4 +1,5 @@
 import CastleBank from "../../core/bank/CastleBank";
+import CastlePetAutoGraze from "../../core/castle/CastlePetAutoGraze";
 import SetupLoader from "../../core/config/SetupLoader";
 import PersonalEquipmentManagement from "../../core/equipment/PersonalEquipmentManagement";
 import CastlePetExpressHouse from "../../core/monster/CastlePetExpressHouse";
@@ -19,8 +20,115 @@ import PageUtils from "../../util/PageUtils";
 import StringUtils from "../../util/StringUtils";
 import PageProcessorContext from "../PageProcessorContext";
 import PersonalPetManagementPageProcessor from "./PersonalPetManagementPageProcessor";
+import TeamMemberLoader from "../../core/team/TeamMemberLoader";
+import _ from "lodash";
+import CastlePetAutoTransfer from "../../core/castle/CastlePetAutoTransfer";
+import OperationMessage from "../../util/OperationMessage";
 
 class PersonalPetManagementPageProcessor_Castle extends PersonalPetManagementPageProcessor {
+
+    #petAutoGraze?: CastlePetAutoGraze;
+    #petAutoTransfer?: CastlePetAutoTransfer;
+
+    async doInitialize(credential: Credential, context?: PageProcessorContext): Promise<void> {
+        this.#petAutoGraze = new CastlePetAutoGraze(credential);
+        this.#petAutoGraze.success = () => {
+            doRefresh(credential);
+        };
+    }
+
+    doGenerateCommandButtons(): string {
+        let html = super.doGenerateCommandButtons();
+        html += "<button role='button' id='petAutoGrazeButton' class='COMMAND_BUTTON' " +
+            "style='color:grey'>自动扫描身上宠物并放牧</button>";
+        html += "<button role='button' id='transferPetBetweenTeam' " +
+            "class='COMMAND_BUTTON' style='background-color:red;color:white'>团队内宠物传输</button>";
+        return html;
+    }
+
+
+    async doBindCommandButtons(credential: Credential): Promise<void> {
+        await super.doBindCommandButtons(credential);
+        $("#petAutoGrazeButton").on("click", () => {
+            if (PageUtils.isColorGrey("petAutoGrazeButton")) {
+                if (this.#petAutoGraze) {
+                    this.#petAutoGraze.start();
+                }
+                $("#petAutoGrazeButton").css("color", "blue");
+            } else if (PageUtils.isColorBlue("petAutoGrazeButton")) {
+                if (this.#petAutoGraze) {
+                    this.#petAutoGraze.shutdown();
+                }
+                $("#petAutoGrazeButton").css("color", "grey");
+            }
+        });
+        $("#transferPetBetweenTeam").on("click", () => {
+            $("#transferPetBetweenTeam").prop("disabled", true).hide();
+
+            let html = "";
+            html += "<select id='_team_member'>";
+            html += "<option value=''>选择队员</option>";
+            _.forEach(TeamMemberLoader.loadTeamMembers())
+                .filter(it => it.id !== credential.id)
+                .forEach(it => {
+                    const memberId = it.id;
+                    const memberName = it.name;
+                    html += "<option value='" + memberId + "'>" + memberName + "</option>";
+                });
+            html += "</select>";
+            html += "<button role='button' id='_auto_transfer_pet' style='color:grey'>自动传输身上宠物给队友</button>";
+            html += "<button role='button' id='_summon_pet_from_ranch'>从牧场召唤准备传输的宠物</button>";
+
+            $("#extensionCell_2").html(html).parent().show();
+
+            $("#_auto_transfer_pet").on("click", () => {
+                if (PageUtils.isColorGrey("_auto_transfer_pet")) {
+                    const target = $("#_team_member").val() as string;
+                    if (target === "") {
+                        // No team member selected, do nothing and return
+                        MessageBoard.publishWarning("没有选择传输宠物的队友！");
+                        return;
+                    }
+                    if (this.#petAutoTransfer === undefined) {
+                        this.#petAutoTransfer = new CastlePetAutoTransfer(credential, target);
+                        this.#petAutoTransfer.success = () => doRefresh(credential);
+                    }
+                    this.#petAutoTransfer.start();
+                    $("#_auto_transfer_pet").css("color", "blue");
+                } else if (PageUtils.isColorBlue("_auto_transfer_pet")) {
+                    if (this.#petAutoTransfer !== undefined) {
+                        this.#petAutoTransfer.shutdown();
+                        this.#petAutoTransfer = undefined;
+                    }
+                    $("#_auto_transfer_pet").css("color", "grey");
+                }
+            });
+
+            $("#_summon_pet_from_ranch").on("click", () => {
+                $("#_summon_pet_from_ranch").prop("disabled", true);
+                this.#summonPetFromRanch(credential).then(message => {
+                    if (message.success && message.doRefresh) {
+                        doRefresh(credential);
+                    }
+                    $("#_summon_pet_from_ranch").prop("disabled", false);
+                });
+            });
+        });
+    }
+
+    async #summonPetFromRanch(credential: Credential): Promise<OperationMessage> {
+        const ranchPage = await new CastleRanch(credential).enter();
+        if (ranchPage.ranchPetList === undefined || ranchPage.ranchPetList.length === 0) {
+            return OperationMessage.failure();
+        }
+        await new CastleRanch(credential).summon(0);
+        const message = OperationMessage.success();
+        message.doRefresh = true;
+        if (this.#petAutoTransfer !== undefined && this.#petAutoTransfer.running) {
+            message.doRefresh = false;
+        }
+        return message;
+    }
 
     doProcessWithPageParsed(credential: Credential, page: PersonalPetManagementPage, context?: PageProcessorContext): void {
 

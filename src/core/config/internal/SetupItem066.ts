@@ -10,6 +10,10 @@ class SetupItem066 implements SetupItem {
     readonly #name: string = "十二宫战斗伴侣";
     readonly #key: string = "_pa_" + this.#code;
 
+    category(): string {
+        return "战斗";
+    }
+
     code(): string {
         return this.#code;
     }

@@ -22,7 +22,7 @@ class PersonalEquipmentManagementPageProcessor_Metro extends PersonalEquipmentMa
         return "地铁区域";
     }
 
-    doGenerateWelcomeMessageHtml(): string {
+    async doGenerateWelcomeMessageHtml(credential: Credential): Promise<string | undefined> {
         return "<b style='font-size:120%;color:wheat'>真是难为您了，在野外还不忘捯饬您这些破烂。</b>";
     }
 
@@ -447,58 +447,31 @@ class PersonalEquipmentManagementPageProcessor_Metro extends PersonalEquipmentMa
                    page: PersonalEquipmentManagementPage,
                    setId: string,
                    context?: PageProcessorContext) {
-        let setConfig: {} | null = null;
-        switch (setId) {
-            case "A":
-                setConfig = SetupLoader.loadEquipmentSet_A(credential.id);
-                break;
-            case "B":
-                setConfig = SetupLoader.loadEquipmentSet_B(credential.id);
-                break;
-            case "C":
-                setConfig = SetupLoader.loadEquipmentSet_C(credential.id);
-                break;
-            case "D":
-                setConfig = SetupLoader.loadEquipmentSet_D(credential.id);
-                break;
-            case "E":
-                setConfig = SetupLoader.loadEquipmentSet_E(credential.id);
-                break;
-            default:
-                break;
-        }
+        const setConfig = SetupLoader.loadEquipmentSetConfig(credential.id, setId);
         if (!this.doCheckSetConfiguration(setConfig)) {
             return;
         }
         const buttonId = "setButton_" + setId;
         $("#" + buttonId).prop("disabled", false);
 
-        // @ts-ignore
-        if (setConfig["alias"] !== undefined) {
-            // @ts-ignore
-            $("#" + buttonId).val(setConfig["alias"]);
+        if (setConfig.alias !== undefined) {
+            $("#" + buttonId).val(setConfig.alias);
         }
 
         $("#" + buttonId).on("click", () => {
             const set = new EquipmentSet();
             set.initialize();
 
-            // @ts-ignore
-            set.weaponName = setConfig["weaponName"];
-            // @ts-ignore
-            if (setConfig["weaponStar"] !== undefined && setConfig["weaponStar"]) {
+            set.weaponName = setConfig.weaponName;
+            if (setConfig.weaponStar) {
                 set.weaponName = "齐心★" + set.weaponName;
             }
-            // @ts-ignore
-            set.armorName = setConfig["armorName"];
-            // @ts-ignore
-            if (setConfig["armorStar"] !== undefined && setConfig["armorStar"]) {
+            set.armorName = setConfig.armorName;
+            if (setConfig.armorStar) {
                 set.armorName = "齐心★" + set.armorName;
             }
-            // @ts-ignore
-            set.accessoryName = setConfig["accessoryName"];
-            // @ts-ignore
-            if (setConfig["accessoryStar"] !== undefined && setConfig["accessoryStar"]) {
+            set.accessoryName = setConfig.accessoryName;
+            if (setConfig.accessoryStar) {
                 set.accessoryName = "齐心★" + set.accessoryName;
             }
 

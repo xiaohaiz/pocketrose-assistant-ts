@@ -9,6 +9,10 @@ class SetupItem061 implements SetupItem {
     readonly #name: string = "给我锁死在上洞";
     readonly #key: string = "_pa_" + this.#code;
 
+    category(): string {
+        return "置顶";
+    }
+
     code(): string {
         return this.#code;
     }

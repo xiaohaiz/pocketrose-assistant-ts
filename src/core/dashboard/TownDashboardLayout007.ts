@@ -170,6 +170,7 @@ class TownDashboardLayout007 extends TownDashboardLayout {
                 .parent()
                 .after($(gemHtml));
 
+            _renderGemCount();
             setInterval(() => _renderGemCount(), 3000);
         }
 

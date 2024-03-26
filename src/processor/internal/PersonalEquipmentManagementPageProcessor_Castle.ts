@@ -1,4 +1,7 @@
+import _, {parseInt} from "lodash";
 import CastleBank from "../../core/bank/CastleBank";
+import CastleGemAutoStore from "../../core/castle/CastleGemAutoStore";
+import CastleGemAutoTransfer from "../../core/castle/CastleGemAutoTransfer";
 import CastleEquipmentExpressHouse from "../../core/equipment/CastleEquipmentExpressHouse";
 import CastleWarehouse from "../../core/equipment/CastleWarehouse";
 import Equipment from "../../core/equipment/Equipment";
@@ -6,14 +9,26 @@ import PersonalEquipmentManagement from "../../core/equipment/PersonalEquipmentM
 import PersonalEquipmentManagementPage from "../../core/equipment/PersonalEquipmentManagementPage";
 import TreasureBag from "../../core/equipment/TreasureBag";
 import PersonalStatus from "../../core/role/PersonalStatus";
+import TeamMemberLoader from "../../core/team/TeamMemberLoader";
 import Credential from "../../util/Credential";
 import MessageBoard from "../../util/MessageBoard";
+import OperationMessage from "../../util/OperationMessage";
 import PageUtils from "../../util/PageUtils";
 import StringUtils from "../../util/StringUtils";
 import PageProcessorContext from "../PageProcessorContext";
 import PersonalEquipmentManagementPageProcessor from "./PersonalEquipmentManagementPageProcessor";
 
 class PersonalEquipmentManagementPageProcessor_Castle extends PersonalEquipmentManagementPageProcessor {
+
+    #gemAutoStore?: CastleGemAutoStore;
+    #gemAutoTransfer?: CastleGemAutoTransfer;
+
+    async doInitialization(credential: Credential, context?: PageProcessorContext): Promise<void> {
+        this.#gemAutoStore = new CastleGemAutoStore(credential);
+        this.#gemAutoStore.success = () => {
+            this.doRefreshMutablePage(credential, context);
+        };
+    }
 
     doGeneratePageTitleHtml(context?: PageProcessorContext): string {
         if (context === undefined) {
@@ -32,8 +47,140 @@ class PersonalEquipmentManagementPageProcessor_Castle extends PersonalEquipmentM
         }
     }
 
-    doGenerateWelcomeMessageHtml(): string {
+    async doGenerateWelcomeMessageHtml(credential: Credential): Promise<string | undefined> {
         return "<b style='font-size:120%;color:wheat'>又来管理您的装备来啦？真是一刻不得闲啊。</b>";
+    }
+
+    doGenerateImmutableButtons(): string {
+        let html = super.doGenerateImmutableButtons();
+        html += "<button role='button' id='gemAutoStoreButton' " +
+            "style='color:grey' class='COMMAND_BUTTON'>自动扫描身上宝石并入库</button>";
+        html += "<button role='button' id='transferGemBetweenTeam' " +
+            "class='COMMAND_BUTTON' style='background-color:red;color:white'>团队内宝石传输</button>";
+        return html;
+    }
+
+    doGenerateSetupButtons(credential: Credential) {
+        $("#gemAutoStoreButton").on("click", () => {
+            if (PageUtils.isColorBlue("gemAutoStoreButton")) {
+                if (this.#gemAutoStore) {
+                    this.#gemAutoStore.shutdown();
+                }
+                $("#gemAutoStoreButton").css("color", "grey");
+            } else if (PageUtils.isColorGrey("gemAutoStoreButton")) {
+                if (this.#gemAutoStore) {
+                    this.#gemAutoStore.start();
+                }
+                $("#gemAutoStoreButton").css("color", "blue");
+            }
+        });
+        $("#transferGemBetweenTeam").on("click", () => {
+            $("#transferGemBetweenTeam").prop("disabled", true).hide();
+
+            let html = "";
+            html += "<select id='_transfer_target'>";
+            html += "<option value=''>选择队员</option>";
+            _.forEach(TeamMemberLoader.loadTeamMembers())
+                .filter(it => it.id !== credential.id)
+                .forEach(it => {
+                    const memberId = it.id;
+                    const memberName = it.name;
+                    html += "<option value='" + memberId + "'>" + memberName + "</option>";
+                });
+            html += "</select>";
+
+            html += "<select id='_space_count'>";
+            html += "<option value='0'>可用空位</option>";
+            for (let i = 1; i <= 20; i++) {
+                html += "<option value='" + i + "'>" + i + "</option>";
+            }
+            html += "</select>";
+
+            html += "<select id='_gem_category'>";
+            html += "<option value='ALL'>所有宝石</option>";
+            html += "<option value='POWER'>威力宝石</option>";
+            html += "<option value='LUCK'>幸运宝石</option>";
+            html += "<option value='WEIGHT'>重量宝石</option>";
+            html += "</select>";
+
+            html += "<button role='button' id='_auto_transfer_gem' style='color:grey'>自动传输身上宝石给队友</button>";
+            html += "<button role='button' id='_take_out_gem_for_transfer'>从仓库取出宝石准备传输</button>";
+
+            $("#tr4_0").find("> td:first").html(html).parent().show();
+
+            $("#_auto_transfer_gem").on("click", () => {
+                if (PageUtils.isColorGrey("_auto_transfer_gem")) {
+                    const target = $("#_transfer_target").val() as string;
+                    if (target === "") {
+                        MessageBoard.publishWarning("没有选择传输宝石的队友！");
+                        return;
+                    }
+                    const space = _.parseInt($("#_space_count").val() as string);
+                    if (space === 0) {
+                        MessageBoard.publishWarning("必须选择可用的空位！");
+                        return;
+                    }
+                    const category = $("#_gem_category").val() as string;
+                    if (this.#gemAutoTransfer === undefined) {
+                        this.#gemAutoTransfer = new CastleGemAutoTransfer(credential, target, space, category);
+                        this.#gemAutoTransfer.success = () => this.doRefreshMutablePage(credential);
+                    }
+                    this.#gemAutoTransfer.start();
+                    $("#_auto_transfer_gem").css("color", "blue");
+                } else if (PageUtils.isColorBlue("_auto_transfer_gem")) {
+                    if (this.#gemAutoTransfer !== undefined) {
+                        this.#gemAutoTransfer.shutdown();
+                        this.#gemAutoTransfer = undefined;
+                    }
+                    $("#_auto_transfer_gem").css("color", "grey");
+                }
+            });
+
+            $("#_take_out_gem_for_transfer").on("click", () => {
+                const space = _.parseInt($("#_space_count").val() as string);
+                if (space === 0) {
+                    MessageBoard.publishWarning("必须选择可用的空位！");
+                    return;
+                }
+                const category = $("#_gem_category").val() as string;
+                $("#_take_out_gem_for_transfer").prop("disabled", true);
+                this.#takeOutGemForTransfer(credential, space, category).then(message => {
+                    if (message.success && message.doRefresh) {
+                        this.doRefreshMutablePage(credential);
+                    }
+                    $("#_take_out_gem_for_transfer").prop("disabled", false);
+                });
+            });
+        });
+    }
+
+    async #takeOutGemForTransfer(credential: Credential, space: number, category: string): Promise<OperationMessage> {
+        const warehousePage = await new CastleWarehouse(credential).open();
+        if (warehousePage.storageEquipmentList === undefined || warehousePage.storageEquipmentList.length === 0) {
+            return OperationMessage.failure();
+        }
+        const indexList = _.forEach(warehousePage.storageEquipmentList)
+            .filter(it => it.isGem)
+            .filter(it => {
+                if (category === "POWER") {
+                    return it.name === "威力宝石";
+                } else if (category === "LUCK") {
+                    return it.name === "幸运宝石";
+                } else if (category === "WEIGHT") {
+                    return it.name === "重量宝石";
+                } else {
+                    return true;
+                }
+            })
+            .map(it => it.index!);
+        if (indexList.length === 0) {
+            return OperationMessage.failure();
+        }
+
+        await new CastleWarehouse(credential).takeOut(indexList);
+        const message = OperationMessage.success();
+        message.doRefresh = true;
+        return message;
     }
 
     doBindReturnButton(credential: Credential): void {

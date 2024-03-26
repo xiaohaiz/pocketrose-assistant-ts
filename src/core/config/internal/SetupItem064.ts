@@ -12,6 +12,10 @@ class SetupItem064 implements SetupItem {
     readonly #name: string = "智能战斗切换点";
     readonly #key: string = "_pa_" + this.#code;
 
+    category(): string {
+        return "战斗";
+    }
+
     code(): string {
         return this.#code;
     }
@@ -26,13 +30,13 @@ class SetupItem064 implements SetupItem {
         html += "<input type='button' class='dynamic_button' id='_064_setup' value='设置'>";
         html += "</td>";
         html += "<td style='background-color:#E0D0B0;text-align:left' colspan='2'>";
-        html += "<span style='background-color:red;color:white;font-weight:bold'>上洞</span>";
+        html += "<button role='button' style='background-color:red;color:white'>上洞</button>";
         html += "<input type='text' id='_064_a' size='5' maxlength='5' spellcheck='false' style='text-align:center'>";
-        html += "<span style='background-color:green;color:white;font-weight:bold'>初森</span>";
+        html += "<button role='button' style='background-color:green;color:white'>初森</button>";
         html += "<input type='text' id='_064_b' size='5' maxlength='5' spellcheck='false' style='text-align:center'>";
-        html += "<span style='background-color:blue;color:white;font-weight:bold'>中塔</span>";
+        html += "<button role='button' style='background-color:blue;color:white'>中塔</button>";
         html += "<input type='text' id='_064_c' size='5' maxlength='5' spellcheck='false' style='text-align:center'>";
-        html += "<span style='background-color:red;color:white;font-weight:bold'>上洞</span>";
+        html += "<button role='button' style='background-color:red;color:white'>上洞</button>";
         html += "</td>";
         html += "</tr>";
         $("#setup_item_table").append($(html));

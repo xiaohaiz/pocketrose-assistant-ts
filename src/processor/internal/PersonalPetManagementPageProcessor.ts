@@ -1,17 +1,19 @@
 import PersonalPetManagementPage from "../../core/monster/PersonalPetManagementPage";
+import PersonalPetManagementPageParser from "../../core/monster/PersonalPetManagementPageParser";
 import NpcLoader from "../../core/role/NpcLoader";
 import Credential from "../../util/Credential";
+import KeyboardShortcutBuilder from "../../util/KeyboardShortcutBuilder";
 import MessageBoard from "../../util/MessageBoard";
 import PageUtils from "../../util/PageUtils";
 import StringUtils from "../../util/StringUtils";
 import PageProcessorContext from "../PageProcessorContext";
 import PageProcessorCredentialSupport from "../PageProcessorCredentialSupport";
-import KeyboardShortcutBuilder from "../../util/KeyboardShortcutBuilder";
-import PersonalPetManagementPageParser from "../../core/monster/PersonalPetManagementPageParser";
 
 abstract class PersonalPetManagementPageProcessor extends PageProcessorCredentialSupport {
 
     async doProcess(credential: Credential, context?: PageProcessorContext): Promise<void> {
+        await this.doInitialize(credential, context);
+
         const petPage = PersonalPetManagementPageParser.parsePage(PageUtils.currentPageHtml());
 
         await this.#reformatPage(credential, petPage, context);
@@ -20,6 +22,9 @@ abstract class PersonalPetManagementPageProcessor extends PageProcessorCredentia
 
         this.doProcessWithPageParsed(credential, petPage, context);
         this.doBindKeyboardShortcut(credential);
+    }
+
+    async doInitialize(credential: Credential, context?: PageProcessorContext) {
     }
 
     async #reformatPage(credential: Credential,
@@ -110,12 +115,11 @@ abstract class PersonalPetManagementPageProcessor extends PageProcessorCredentia
         html += this.doGenerateCommandButtons();
         html += "</td>";
         html += "</tr>";
-        html += "<tr style='display:none'>";
-        html += "<td id='extensionCell_1'></td>";
-        html += "</tr>";
-        html += "<tr style='display:none'>";
-        html += "<td id='extensionCell_2'></td>";
-        html += "</tr>";
+        html += "<tr style='display:none'><td id='extensionCell_1'></td></tr>";
+        html += "<tr style='display:none'><td id='extensionCell_2'></td></tr>";
+        html += "<tr style='display:none'><td id='extensionCell_3'></td></tr>";
+        html += "<tr style='display:none'><td id='extensionCell_4'></td></tr>";
+        html += "<tr style='display:none'><td id='extensionCell_5'></td></tr>";
         html += "</tody>";
         html += "</table>";
 

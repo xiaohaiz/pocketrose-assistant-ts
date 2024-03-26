@@ -1,3 +1,4 @@
+import _ from "lodash";
 import ConfigManager from "../../core/config/ConfigManager";
 import SetupItemManager from "../../core/config/SetupItemManager";
 import Equipment from "../../core/equipment/Equipment";
@@ -137,22 +138,30 @@ abstract class PersonalSetupPageProcessor extends PageProcessorCredentialSupport
     }
 
     #render(credential: Credential) {
+        const categories = ["置顶", "界面", "战斗", "其他"];
+        const allSetupItems = SetupItemManager.getInstance().getSetupItem();
+
         let html = "";
         html += "<table style='background-color:#888888;width:100%;text-align:center'>";
         html += "<tbody style='background-color:#F8F0E0' id='setup_item_table'>";
-        html += "<tr style='background-color:skyblue'>";
-        html += "<th>名字</th>";
-        html += "<th>专属</th>";
-        html += "<th>设置</th>";
-        html += "<th>选择</th>";
-        html += "<th>说明</th>";
-        html += "</tr>";
         html += "</tbody>";
         html += "</table>";
         $("#setup_item_container").html(html);
 
-        for (const it of SetupItemManager.getInstance().getSetupItem()) {
-            it.render(credential.id);
+        for (const category of categories) {
+            const itemList = _.forEach(allSetupItems)
+                .filter(it => it.category() === category);
+            html = "";
+            html += "<tr style='background-color:skyblue'>";
+            html += "<th rowspan='" + (itemList.length + 1) + "' style='background-color:black;color:white;vertical-align:center;white-space:nowrap'>" + category + "</th>";
+            html += "<th>名字</th>";
+            html += "<th>专属</th>";
+            html += "<th>设置</th>";
+            html += "<th>选择</th>";
+            html += "<th>说明</th>";
+            html += "</tr>";
+            $("#setup_item_table").append($(html));
+            _.forEach(itemList, it => it.render(credential.id));
         }
     }
 

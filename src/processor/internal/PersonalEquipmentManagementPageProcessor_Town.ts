@@ -1,17 +1,19 @@
 import _, {escape, parseInt, unescape} from "lodash";
 import TownBank from "../../core/bank/TownBank";
+import LocalSettingManager from "../../core/config/LocalSettingManager";
 import SetupLoader from "../../core/config/SetupLoader";
 import CastleInformation from "../../core/dashboard/CastleInformation";
 import TownDashboard from "../../core/dashboard/TownDashboard";
-import CastleEquipmentExpressHouse from "../../core/equipment/CastleEquipmentExpressHouse";
 import CastleWarehouse from "../../core/equipment/CastleWarehouse";
 import Equipment from "../../core/equipment/Equipment";
 import EquipmentConsecrateManager from "../../core/equipment/EquipmentConsecrateManager";
 import EquipmentExperienceConfig from "../../core/equipment/EquipmentExperienceConfig";
+import EquipmentManagementReturnInterceptor from "../../core/equipment/EquipmentManagementReturnInterceptor";
 import EquipmentSet from "../../core/equipment/EquipmentSet";
 import EquipmentSetLoader from "../../core/equipment/EquipmentSetLoader";
 import PersonalEquipmentManagement from "../../core/equipment/PersonalEquipmentManagement";
 import PersonalEquipmentManagementPage from "../../core/equipment/PersonalEquipmentManagementPage";
+import RoleEquipmentStatusStorage from "../../core/equipment/RoleEquipmentStatusStorage";
 import TownEquipmentExpressHouse from "../../core/equipment/TownEquipmentExpressHouse";
 import TreasureBag from "../../core/equipment/TreasureBag";
 import TownForgeHouse from "../../core/forge/TownForgeHouse";
@@ -19,7 +21,9 @@ import NpcLoader from "../../core/role/NpcLoader";
 import PersonalStatus from "../../core/role/PersonalStatus";
 import TeamMemberLoader from "../../core/team/TeamMemberLoader";
 import TownLoader from "../../core/town/TownLoader";
+import EquipmentStatusTrigger from "../../core/trigger/EquipmentStatusTrigger";
 import CommentBoard from "../../util/CommentBoard";
+import Constants from "../../util/Constants";
 import Credential from "../../util/Credential";
 import KeyboardShortcutBuilder from "../../util/KeyboardShortcutBuilder";
 import MessageBoard from "../../util/MessageBoard";
@@ -28,8 +32,6 @@ import StorageUtils from "../../util/StorageUtils";
 import StringUtils from "../../util/StringUtils";
 import PageProcessorContext from "../PageProcessorContext";
 import PersonalEquipmentManagementPageProcessor from "./PersonalEquipmentManagementPageProcessor";
-import EquipmentManagementReturnInterceptor from "../../core/equipment/EquipmentManagementReturnInterceptor";
-import EquipmentStatusTrigger from "../../core/trigger/EquipmentStatusTrigger";
 
 class PersonalEquipmentManagementPageProcessor_Town extends PersonalEquipmentManagementPageProcessor {
 
@@ -105,7 +107,30 @@ class PersonalEquipmentManagementPageProcessor_Town extends PersonalEquipmentMan
         }
     }
 
-    doGenerateWelcomeMessageHtml(): string {
+    async doGenerateWelcomeMessageHtml(credential: Credential): Promise<string | undefined> {
+        if (SetupLoader.isGemCountVisible(credential.id)) {
+            const roleIdList: string[] = [];
+            const includeExternal = LocalSettingManager.isIncludeExternal();
+            for (const roleId of TeamMemberLoader.loadTeamMembersAsMap(includeExternal).keys()) {
+                roleIdList.push(roleId);
+            }
+            const storage = RoleEquipmentStatusStorage.getInstance();
+            const data = await storage.loads(roleIdList);
+            let powerGemCount = 0;
+            let luckGemCount: number = 0;
+            let weightGemCount = 0;
+            data.forEach(it => {
+                (it.powerGemCount !== undefined) && (powerGemCount += it.powerGemCount);
+                (it.luckGemCount !== undefined) && (luckGemCount += it.luckGemCount);
+                (it.weightGemCount !== undefined) && (weightGemCount += it.weightGemCount);
+            });
+
+            const pp = "<img src='" + Constants.POCKET_DOMAIN + "/image/item/PowerStone.gif' alt='威力宝石' title='威力宝石'>";
+            const lp = "<img src='" + Constants.POCKET_DOMAIN + "/image/item/LuckStone.gif' alt='幸运宝石' title='幸运宝石'>";
+            const wp = "<img src='" + Constants.POCKET_DOMAIN + "/image/item/WeightStone.gif' alt='重量宝石' title='重量宝石'>";
+            return "<b style='font-size:120%;color:wheat'>又来管理您的装备来啦？就这点破烂折腾来折腾去的，您累不累啊。" +
+                "您当前的宝石库存情况：" + pp + powerGemCount + " " + lp + luckGemCount + " " + wp + weightGemCount + "</b>";
+        }
         return "<b style='font-size:120%;color:wheat'>又来管理您的装备来啦？就这点破烂折腾来折腾去的，您累不累啊。</b>";
     }
 
@@ -114,7 +139,11 @@ class PersonalEquipmentManagementPageProcessor_Town extends PersonalEquipmentMan
         $("#refreshButton").on("click", () => {
             this.doScrollToPageTitle();
             $("#messageBoardManager").html(NpcLoader.randomNpcImageHtml());
-            MessageBoard.resetMessageBoard(this.doGenerateWelcomeMessageHtml());
+            this.doGenerateWelcomeMessageHtml(credential).then(m => {
+                if (m !== undefined) {
+                    MessageBoard.resetMessageBoard(m);
+                }
+            });
             this.doRefreshMutablePage(credential, context);
         });
         let townId: string | undefined = undefined;
@@ -688,7 +717,7 @@ class PersonalEquipmentManagementPageProcessor_Town extends PersonalEquipmentMan
 
             const bank = new TownBank(credential, context?.get("townId"));
             bank.withdraw(10).then(() => {
-                new CastleEquipmentExpressHouse(credential).send(s as string, indexList).then(() => {
+                new TownEquipmentExpressHouse(credential).send(s as string, indexList).then(() => {
                     bank.deposit().then(() => {
                         this.doRefreshMutablePage(credential, context);
                     });
@@ -942,58 +971,31 @@ class PersonalEquipmentManagementPageProcessor_Town extends PersonalEquipmentMan
                    page: PersonalEquipmentManagementPage,
                    setId: string,
                    context?: PageProcessorContext) {
-        let setConfig: {} | null = null;
-        switch (setId) {
-            case "A":
-                setConfig = SetupLoader.loadEquipmentSet_A(credential.id);
-                break;
-            case "B":
-                setConfig = SetupLoader.loadEquipmentSet_B(credential.id);
-                break;
-            case "C":
-                setConfig = SetupLoader.loadEquipmentSet_C(credential.id);
-                break;
-            case "D":
-                setConfig = SetupLoader.loadEquipmentSet_D(credential.id);
-                break;
-            case "E":
-                setConfig = SetupLoader.loadEquipmentSet_E(credential.id);
-                break;
-            default:
-                break;
-        }
+        const setConfig = SetupLoader.loadEquipmentSetConfig(credential.id, setId);
         if (!this.doCheckSetConfiguration(setConfig)) {
             return;
         }
         const buttonId = "setButton_" + setId;
         $("#" + buttonId).prop("disabled", false);
 
-        // @ts-ignore
-        if (setConfig["alias"] !== undefined) {
-            // @ts-ignore
-            $("#" + buttonId).val(setConfig["alias"]);
+        if (setConfig.alias !== undefined) {
+            $("#" + buttonId).val(setConfig.alias);
         }
 
         $("#" + buttonId).on("click", () => {
             const set = new EquipmentSet();
             set.initialize();
 
-            // @ts-ignore
-            set.weaponName = setConfig["weaponName"];
-            // @ts-ignore
-            if (setConfig["weaponStar"] !== undefined && setConfig["weaponStar"]) {
+            set.weaponName = setConfig.weaponName;
+            if (setConfig.weaponStar) {
                 set.weaponName = "齐心★" + set.weaponName;
             }
-            // @ts-ignore
-            set.armorName = setConfig["armorName"];
-            // @ts-ignore
-            if (setConfig["armorStar"] !== undefined && setConfig["armorStar"]) {
+            set.armorName = setConfig.armorName;
+            if (setConfig.armorStar) {
                 set.armorName = "齐心★" + set.armorName;
             }
-            // @ts-ignore
-            set.accessoryName = setConfig["accessoryName"];
-            // @ts-ignore
-            if (setConfig["accessoryStar"] !== undefined && setConfig["accessoryStar"]) {
+            set.accessoryName = setConfig.accessoryName;
+            if (setConfig.accessoryStar) {
                 set.accessoryName = "齐心★" + set.accessoryName;
             }
 

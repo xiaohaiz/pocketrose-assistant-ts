@@ -9,6 +9,10 @@ class SetupItem014 implements SetupItem {
     readonly #name: string = "关闭转职的入口";
     readonly #key: string = "_pa_" + this.#code;
 
+    category(): string {
+        return "置顶";
+    }
+
     code(): string {
         return this.#code;
     }

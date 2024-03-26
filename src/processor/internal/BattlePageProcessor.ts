@@ -1,10 +1,6 @@
 import _ from "lodash";
-import BattlePage from "../../core/battle/BattlePage";
 import BattleProcessor from "../../core/battle/BattleProcessor";
 import BattleReturnInterceptor from "../../core/battle/BattleReturnInterceptor";
-import SetupLoader from "../../core/config/SetupLoader";
-import NpcLoader from "../../core/role/NpcLoader";
-import CommentBoard from "../../util/CommentBoard";
 import Credential from "../../util/Credential";
 import PageUtils from "../../util/PageUtils";
 import PageProcessorContext from "../PageProcessorContext";
@@ -141,9 +137,6 @@ function processBattle(credential: Credential,
             }
         });
 
-    // 入手情况的渲染
-    renderHarvestMessage(processor.obtainPage);
-
     // 强制推荐，则删除其余所有的按钮
     $("button").each((idx, button) => {
         const tabindex = $(button).attr("tabindex");
@@ -157,48 +150,6 @@ function processBattle(credential: Credential,
     // 战斗页自动触底
     const buttonId = $("button[tabindex='1']").attr("id")!;
     PageUtils.scrollIntoView(buttonId);
-}
-
-function renderHarvestMessage(page: BattlePage) {
-    if (page.harvestList!.length === 0) {
-        const prompt = SetupLoader.getNormalBattlePrompt();
-        if (prompt["person"] !== undefined && prompt["person"] !== "NONE") {
-            let person = prompt["person"];
-            let imageHtml: string;
-            if (person === "SELF") {
-                imageHtml = PageUtils.findFirstRoleImageHtml()!;
-            } else if (person === "RANDOM") {
-                imageHtml = NpcLoader.randomPlayerImageHtml()!;
-            } else {
-                imageHtml = NpcLoader.getNpcImageHtml(person)!;
-            }
-            CommentBoard.createCommentBoard(imageHtml);
-            $("#commentBoard")
-                .css("text-align", "center")
-                .css("background-color", "black")
-                .css("color", "greenyellow");
-            CommentBoard.writeMessage(_.escape(prompt["text"]));
-        }
-    } else {
-        const prompt = SetupLoader.getBattleHarvestPrompt();
-        if (prompt["person"] !== undefined && prompt["person"] !== "NONE") {
-            let person = prompt["person"];
-            let imageHtml: string;
-            if (person === "SELF") {
-                imageHtml = PageUtils.findFirstRoleImageHtml()!;
-            } else if (person === "RANDOM") {
-                imageHtml = NpcLoader.randomPlayerImageHtml()!;
-            } else {
-                imageHtml = NpcLoader.getNpcImageHtml(person)!;
-            }
-            CommentBoard.createCommentBoard(imageHtml);
-            $("#commentBoard").css("text-align", "center");
-            for (const it of page.harvestList!) {
-                CommentBoard.writeMessage("<b style='font-size:150%'>" + it + "</b><br>");
-            }
-            CommentBoard.writeMessage(_.escape(prompt["text"]));
-        }
-    }
 }
 
 function parseBattleCount(context?: PageProcessorContext): number | undefined {

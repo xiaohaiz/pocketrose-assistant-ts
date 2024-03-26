@@ -21,8 +21,8 @@ class TownInn {
         return new Promise<TownInnPage>(resolve => {
             NetworkUtils.post("town.cgi", request)
                 .then(html => {
-                    new TownInnPageParser().parse(html)
-                        .then(page => resolve(page));
+                    const page = TownInnPageParser.parsePage(html);
+                    resolve(page);
                 });
         });
     }

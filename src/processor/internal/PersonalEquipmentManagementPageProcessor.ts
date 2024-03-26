@@ -1,3 +1,4 @@
+import EquipmentSetConfig from "../../core/equipment/EquipmentSetConfig";
 import PersonalEquipmentManagement from "../../core/equipment/PersonalEquipmentManagement";
 import PersonalEquipmentManagementPage from "../../core/equipment/PersonalEquipmentManagementPage";
 import NpcLoader from "../../core/role/NpcLoader";
@@ -12,9 +13,13 @@ import PageProcessorCredentialSupport from "../PageProcessorCredentialSupport";
 abstract class PersonalEquipmentManagementPageProcessor extends PageProcessorCredentialSupport {
 
     async doProcess(credential: Credential, context?: PageProcessorContext): Promise<void> {
+        await this.doInitialization(credential, context);
         const page = PersonalEquipmentManagement.parsePage(PageUtils.currentPageHtml());
         this.#renderImmutablePage(credential, page, context);
         this.doBindKeyboardShortcut(credential);
+    }
+
+    async doInitialization(credential: Credential, context?: PageProcessorContext) {
     }
 
     doBindKeyboardShortcut(credential: Credential) {
@@ -96,7 +101,11 @@ abstract class PersonalEquipmentManagementPageProcessor extends PageProcessorCre
         $("#messageBoard")
             .css("background-color", "black")
             .css("color", "wheat");
-        MessageBoard.resetMessageBoard(this.doGenerateWelcomeMessageHtml());
+        this.doGenerateWelcomeMessageHtml(credential).then(m => {
+            if (m !== undefined) {
+                MessageBoard.resetMessageBoard(m);
+            }
+        });
 
         // ------------------------------------------------------------------------
         // 隐藏表单栏
@@ -203,7 +212,11 @@ abstract class PersonalEquipmentManagementPageProcessor extends PageProcessorCre
         $("#refreshButton").on("click", () => {
             this.doScrollToPageTitle();
             $("#messageBoardManager").html(NpcLoader.randomNpcImageHtml());
-            MessageBoard.resetMessageBoard(this.doGenerateWelcomeMessageHtml());
+            this.doGenerateWelcomeMessageHtml(credential).then(m => {
+                if (m !== undefined) {
+                    MessageBoard.resetMessageBoard(m);
+                }
+            });
             this.doRefreshMutablePage(credential, context);
         });
     }
@@ -250,17 +263,10 @@ abstract class PersonalEquipmentManagementPageProcessor extends PageProcessorCre
         });
     }
 
-    doCheckSetConfiguration(config: {} | null) {
-        if (config === null) {
-            return false;
-        }
-        // @ts-ignore
-        const a = config["weaponName"];
-        // @ts-ignore
-        const b = config["armorName"];
-        // @ts-ignore
-        const c = config["accessoryName"];
-        return (a !== undefined && a !== "NONE") || (b !== undefined && b !== "NONE") || (c !== undefined && c !== "NONE");
+    doCheckSetConfiguration(config: EquipmentSetConfig) {
+        return (config.weaponName !== undefined && config.weaponName !== "NONE")
+            || (config.armorName !== undefined && config.armorName !== "NONE")
+            || (config.accessoryName !== undefined && config.accessoryName !== "NONE");
     }
 
     doBeforeRenderMutablePage(credential: Credential, context?: PageProcessorContext) {
@@ -270,7 +276,9 @@ abstract class PersonalEquipmentManagementPageProcessor extends PageProcessorCre
 
     abstract doGenerateRoleLocationHtml(context?: PageProcessorContext): string;
 
-    abstract doGenerateWelcomeMessageHtml(): string;
+    async doGenerateWelcomeMessageHtml(credential: Credential): Promise<string | undefined> {
+        return undefined;
+    }
 
     abstract doBindReturnButton(credential: Credential): void;
 

@@ -2,6 +2,7 @@ import _ from "lodash";
 import StorageUtils from "../../util/StorageUtils";
 import BattleFieldThreshold from "../battle/BattleFieldThreshold";
 import EquipmentExperienceConfig from "../equipment/EquipmentExperienceConfig";
+import EquipmentSetConfig from "../equipment/EquipmentSetConfig";
 import ZodiacPartner from "../monster/ZodiacPartner";
 
 class SetupLoader {
@@ -30,112 +31,31 @@ class SetupLoader {
         return StorageUtils.getBoolean("_pa_014_" + id);
     }
 
-    static loadEquipmentSet_A(id: string) {
-        const s = StorageUtils.getString("_pa_019_" + id);
+    static loadEquipmentSetConfig(id: string, index: string): EquipmentSetConfig {
+        const mapping = {
+            "A": "_pa_019_",
+            "B": "_pa_020_",
+            "C": "_pa_021_",
+            "D": "_pa_022_",
+            "E": "_pa_023_"
+        };
+        // @ts-ignore
+        const keyPrefix = mapping[index] as string;
+        const s = StorageUtils.getString(keyPrefix + id);
         if (s === "") {
-            const value = {};
-            // @ts-ignore
-            value["weaponName"] = "NONE";
-            // @ts-ignore
-            value["armorName"] = "NONE";
-            // @ts-ignore
-            value["accessoryName"] = "NONE";
-            return value;
-        } else {
-            return JSON.parse(s);
+            return EquipmentSetConfig.defaultInstance(index);
         }
-    }
-
-    static loadEquipmentSet_B(id: string) {
-        const s = StorageUtils.getString("_pa_020_" + id);
-        if (s === "") {
-            const value = {};
-            // @ts-ignore
-            value["weaponName"] = "NONE";
-            // @ts-ignore
-            value["armorName"] = "NONE";
-            // @ts-ignore
-            value["accessoryName"] = "NONE";
-            return value;
-        } else {
-            return JSON.parse(s);
-        }
-    }
-
-    static loadEquipmentSet_C(id: string) {
-        const s = StorageUtils.getString("_pa_021_" + id);
-        if (s === "") {
-            const value = {};
-            // @ts-ignore
-            value["weaponName"] = "NONE";
-            // @ts-ignore
-            value["armorName"] = "NONE";
-            // @ts-ignore
-            value["accessoryName"] = "NONE";
-            return value;
-        } else {
-            return JSON.parse(s);
-        }
-    }
-
-    static loadEquipmentSet_D(id: string) {
-        const s = StorageUtils.getString("_pa_022_" + id);
-        if (s === "") {
-            const value = {};
-            // @ts-ignore
-            value["weaponName"] = "NONE";
-            // @ts-ignore
-            value["armorName"] = "NONE";
-            // @ts-ignore
-            value["accessoryName"] = "NONE";
-            return value;
-        } else {
-            return JSON.parse(s);
-        }
-    }
-
-    static loadEquipmentSet_E(id: string) {
-        const s = StorageUtils.getString("_pa_023_" + id);
-        if (s === "") {
-            const value = {};
-            // @ts-ignore
-            value["weaponName"] = "NONE";
-            // @ts-ignore
-            value["armorName"] = "NONE";
-            // @ts-ignore
-            value["accessoryName"] = "NONE";
-            return value;
-        } else {
-            return JSON.parse(s);
-        }
-    }
-
-    static getBattleHarvestPrompt() {
-        const s = StorageUtils.getString("_pa_024");
-        if (s === "") {
-            const value = {};
-            // @ts-ignore
-            value["person"] = "NONE";
-            // @ts-ignore
-            value["text"] = "";
-            return value;
-        } else {
-            return JSON.parse(s);
-        }
-    }
-
-    static getNormalBattlePrompt() {
-        const s = StorageUtils.getString("_pa_025");
-        if (s === "") {
-            const value = {};
-            // @ts-ignore
-            value["person"] = "NONE";
-            // @ts-ignore
-            value["text"] = "";
-            return value;
-        } else {
-            return JSON.parse(s);
-        }
+        const value = JSON.parse(s);
+        const config = new EquipmentSetConfig();
+        config.index = index;
+        (value.alias !== undefined) && (config.alias = value.alias);
+        (value.weaponName !== undefined) && (config.weaponName = value.weaponName);
+        (value.armorName !== undefined) && (config.armorName = value.armorName);
+        (value.accessoryName !== undefined) && (config.accessoryName = value.accessoryName);
+        (value.weaponStar !== undefined) && (config.weaponStar = value.weaponStar);
+        (value.armorStar !== undefined) && (config.armorStar = value.armorStar);
+        (value.accessoryStar !== undefined) && (config.accessoryStar = value.accessoryStar);
+        return config;
     }
 
     static isExperienceProgressBarEnabled(): boolean {
@@ -216,10 +136,6 @@ class SetupLoader {
 
     static isShortcutPromptHidden(): boolean {
         return StorageUtils.getBoolean("_pa_062");
-    }
-
-    static isZodiacBattlePetLoveAutoFixEnabled(): boolean {
-        return StorageUtils.getBoolean("_pa_063");
     }
 
     static loadBattleFieldThreshold(): BattleFieldThreshold {

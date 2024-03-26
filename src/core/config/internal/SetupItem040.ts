@@ -4,6 +4,10 @@ import SetupItem from "../SetupItem";
 
 class SetupItem040 implements SetupItem {
 
+    category(): string {
+        return "界面";
+    }
+
     code(): string {
         return code;
     }
