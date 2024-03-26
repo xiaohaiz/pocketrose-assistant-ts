@@ -10,7 +10,7 @@ class SetupItem061 implements SetupItem {
     readonly #key: string = "_pa_" + this.#code;
 
     category(): string {
-        return "置顶";
+        return "战斗";
     }
 
     code(): string {
