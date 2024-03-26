@@ -1,7 +1,7 @@
 import _ from "lodash";
 import Constants from "../../util/Constants";
-import SetupItemManager from "./SetupItemManager";
 import LocalSettingManager from "./LocalSettingManager";
+import SetupItemManager from "./SetupItemManager";
 
 class ConfigManager {
 
@@ -40,6 +40,9 @@ class ConfigManager {
 }
 
 function isRecognizedKey(key: string) {
+    if (_.startsWith(key, "_st_")) {
+        return true;
+    }
     if (LocalSettingManager.isRecognizedKey(key)) {
         return true;
     }

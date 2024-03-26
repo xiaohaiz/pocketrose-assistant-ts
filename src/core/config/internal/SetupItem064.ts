@@ -24,7 +24,7 @@ class SetupItem064 implements SetupItem {
         $("#_064_setup").off("click");
         let html = "";
         html += "<tr>";
-        html += "<th style='background-color:#E8E8D0'>" + this.#name + "</th>";
+        html += "<th style='background-color:#E8E8D0' class='C_setupItemName' id='_s_" + this.#code + "'>" + this.#name + "</th>";
         html += "<td style='background-color:#E8E8D0'></td>";
         html += "<td style='background-color:#EFE0C0'>";
         html += "<input type='button' class='dynamic_button' id='_064_setup' value='设置'>";

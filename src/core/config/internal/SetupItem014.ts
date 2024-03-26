@@ -10,7 +10,7 @@ class SetupItem014 implements SetupItem {
     readonly #key: string = "_pa_" + this.#code;
 
     category(): string {
-        return "置顶";
+        return "其他";
     }
 
     code(): string {
@@ -24,7 +24,7 @@ class SetupItem014 implements SetupItem {
     #doRender(id: string) {
         let html = "";
         html += "<tr>";
-        html += "<th style='background-color:#E8E8D0'>" + this.#name + "</th>";
+        html += "<th style='background-color:#E8E8D0' class='C_setupItemName' id='_s_" + this.#code + "'>" + this.#name + "</th>";
         html += "<td style='background-color:#E8E8D0'>★</td>";
         html += "<td style='background-color:#EFE0C0'></td>";
         html += "<td style='background-color:#E0D0B0;text-align:left' colspan='2'>";

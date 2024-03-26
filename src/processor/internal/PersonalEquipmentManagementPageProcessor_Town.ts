@@ -19,6 +19,7 @@ import TreasureBag from "../../core/equipment/TreasureBag";
 import TownForgeHouse from "../../core/forge/TownForgeHouse";
 import NpcLoader from "../../core/role/NpcLoader";
 import PersonalStatus from "../../core/role/PersonalStatus";
+import DragonBallAutoSell from "../../core/store/DragonBallAutoSell";
 import TeamMemberLoader from "../../core/team/TeamMemberLoader";
 import TownLoader from "../../core/town/TownLoader";
 import EquipmentStatusTrigger from "../../core/trigger/EquipmentStatusTrigger";
@@ -27,6 +28,7 @@ import Constants from "../../util/Constants";
 import Credential from "../../util/Credential";
 import KeyboardShortcutBuilder from "../../util/KeyboardShortcutBuilder";
 import MessageBoard from "../../util/MessageBoard";
+import OperationMessage from "../../util/OperationMessage";
 import PageUtils from "../../util/PageUtils";
 import StorageUtils from "../../util/StorageUtils";
 import StringUtils from "../../util/StringUtils";
@@ -34,6 +36,8 @@ import PageProcessorContext from "../PageProcessorContext";
 import PersonalEquipmentManagementPageProcessor from "./PersonalEquipmentManagementPageProcessor";
 
 class PersonalEquipmentManagementPageProcessor_Town extends PersonalEquipmentManagementPageProcessor {
+
+    #dragonBallAutoSell?: DragonBallAutoSell;
 
     doBindKeyboardShortcut(credential: Credential) {
         KeyboardShortcutBuilder.newInstance()
@@ -46,7 +50,7 @@ class PersonalEquipmentManagementPageProcessor_Town extends PersonalEquipmentMan
             .bind();
     }
 
-    doGenerateSetupButtons(credential: Credential) {
+    doGenerateSetupButtons(credential: Credential, context?: PageProcessorContext) {
         let html = "";
         html += "<input type='button' class='_em_button' id='_em_a' value='正在练武器' style='color:grey'>";
         html += "<input type='button' class='_em_button' id='_em_b' value='正在练防具' style='color:grey'>";
@@ -75,8 +79,69 @@ class PersonalEquipmentManagementPageProcessor_Town extends PersonalEquipmentMan
                 StorageUtils.set("_pa_065_" + credential.id, JSON.stringify(document));
             }
         });
-
         $("#tr4_0").show();
+
+        const townId = context?.get("townId");
+        html = "";
+        html += "<select id='S_team_member'>";
+        html += "<option value=''>选择队员</option>";
+        _.forEach(TeamMemberLoader.loadTeamMembers())
+            .filter(it => it.id !== credential.id)
+            .forEach(it => {
+                const memberId = it.id;
+                const memberName = it.name;
+                html += "<option value='" + memberId + "'>" + memberName + "</option>";
+            });
+        html += "</select>";
+        html += "<select id='S_gem_category'>";
+        html += "<option value='ALL'>所有宝石</option>";
+        html += "<option value='POWER'>威力宝石</option>";
+        html += "<option value='LUCK'>幸运宝石</option>";
+        html += "<option value='WEIGHT'>重量宝石</option>";
+        html += "</select>";
+        html += "<button role='button' id='B_send_gem_to_teammate'>给队友发送宝石</button>";
+
+        if (townId !== undefined) {
+            html += "<button role='button' style='color:grey' id='B_auto_sell_dragon_ball'>自动卖掉身上的龙珠</button>";
+        }
+        $("#tr4_1").find("> td:first").html(html);
+
+        $("#B_send_gem_to_teammate").on("click", () => {
+            const target = $("#S_team_member").val() as string;
+            if (target === undefined) {
+                MessageBoard.publishWarning("没有选择发送宝石的队友，忽略！");
+                return;
+            }
+            const category = $("#S_gem_category").val() as string;
+            $("#B_send_gem_to_teammate").prop("disabled", true);
+            this.#sendGemToTeammate(credential, target, category).then(message => {
+                if (message.success && message.doRefresh) {
+                    this.doRefreshMutablePage(credential, context);
+                }
+                $("#B_send_gem_to_teammate").prop("disabled", false);
+            });
+        });
+        if ($("#B_auto_sell_dragon_ball").length > 0) {
+            $("#B_auto_sell_dragon_ball").on("click", () => {
+                $("#B_auto_sell_dragon_ball").prop("disabled", true);
+                if (PageUtils.isColorGrey("B_auto_sell_dragon_ball")) {
+                    if (this.#dragonBallAutoSell === undefined) {
+                        this.#dragonBallAutoSell = new DragonBallAutoSell(credential, townId!);
+                        this.#dragonBallAutoSell.success = () => this.doRefreshMutablePage(credential, context);
+                    }
+                    this.#dragonBallAutoSell?.start();
+                    $("#B_auto_sell_dragon_ball").css("color", "blue");
+                } else if (PageUtils.isColorBlue("B_auto_sell_dragon_ball")) {
+                    if (this.#dragonBallAutoSell !== undefined) {
+                        this.#dragonBallAutoSell.shutdown();
+                        this.#dragonBallAutoSell = undefined;
+                    }
+                    $("#B_auto_sell_dragon_ball").css("color", "grey");
+                }
+                $("#B_auto_sell_dragon_ball").prop("disabled", false);
+            });
+        }
+        $("#tr4_1").show();
     }
 
     doGenerateImmutableButtons(): string {
@@ -1123,6 +1188,36 @@ class PersonalEquipmentManagementPageProcessor_Town extends PersonalEquipmentMan
             return undefined;
         }
         return config;
+    }
+
+    async #sendGemToTeammate(credential: Credential, target: string, category: string): Promise<OperationMessage> {
+        const equipmentPage = await new PersonalEquipmentManagement(credential).open();
+        const indexList = _.forEach(equipmentPage.equipmentList!)
+            .filter(it => it.using === undefined || !it.using)
+            .filter(it => it.isGem)
+            .filter(it => {
+                if (category === "POWER") {
+                    return it.name === "威力宝石";
+                } else if (category === "LUCK") {
+                    return it.name === "幸运宝石";
+                } else if (category === "WEIGHT") {
+                    return it.name === "重量宝石";
+                } else {
+                    return true;
+                }
+            })
+            .map(it => it.index!);
+        if (indexList.length === 0) {
+            return OperationMessage.failure();
+        }
+
+        await new TownBank(credential).withdraw(10);
+        await new TownEquipmentExpressHouse(credential).send(target, indexList);
+        await new TownBank(credential).deposit();
+
+        const message = OperationMessage.success();
+        message.doRefresh = true;
+        return message;
     }
 }
 

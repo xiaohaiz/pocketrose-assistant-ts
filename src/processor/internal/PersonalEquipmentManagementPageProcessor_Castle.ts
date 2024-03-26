@@ -60,7 +60,7 @@ class PersonalEquipmentManagementPageProcessor_Castle extends PersonalEquipmentM
         return html;
     }
 
-    doGenerateSetupButtons(credential: Credential) {
+    doGenerateSetupButtons(credential: Credential, context?: PageProcessorContext) {
         $("#gemAutoStoreButton").on("click", () => {
             if (PageUtils.isColorBlue("gemAutoStoreButton")) {
                 if (this.#gemAutoStore) {
