@@ -81,15 +81,17 @@ class PersonalEquipmentManagementPageProcessor_Town extends PersonalEquipmentMan
         $("#tr4_0").show();
 
         const townId = context?.get("townId");
+        html = "";
         if (townId !== undefined) {
-            html = "";
             html += "<button role='button' style='color:grey' id='B_auto_sell_dragon_ball'>自动卖掉身上的龙珠</button>";
-            $("#tr4_1").find("> td:first").html(html);
+        }
+        $("#tr4_1").find("> td:first").html(html);
+        if ($("#B_auto_sell_dragon_ball").length > 0) {
             $("#B_auto_sell_dragon_ball").on("click", () => {
                 $("#B_auto_sell_dragon_ball").prop("disabled", true);
                 if (PageUtils.isColorGrey("B_auto_sell_dragon_ball")) {
                     if (this.#dragonBallAutoSell === undefined) {
-                        this.#dragonBallAutoSell = new DragonBallAutoSell(credential, townId);
+                        this.#dragonBallAutoSell = new DragonBallAutoSell(credential, townId!);
                         this.#dragonBallAutoSell.success = () => this.doRefreshMutablePage(credential, context);
                     }
                     this.#dragonBallAutoSell?.start();
@@ -103,8 +105,8 @@ class PersonalEquipmentManagementPageProcessor_Town extends PersonalEquipmentMan
                 }
                 $("#B_auto_sell_dragon_ball").prop("disabled", false);
             });
-            $("#tr4_1").show();
         }
+        $("#tr4_1").show();
     }
 
     doGenerateImmutableButtons(): string {
