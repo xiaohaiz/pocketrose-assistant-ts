@@ -63,11 +63,11 @@ class SetupItem070 implements SetupItem {
             const c: any = SetupLoader.loadMirrorCareerFixedConfig(id);
             if (PageUtils.isColorGrey(buttonId)) {
                 c["_m_" + index] = true;
-                StorageUtils.set(this.#key + id, JSON.stringify(c));
+                StorageUtils.set(this.#key + "_" + id, JSON.stringify(c));
                 PageUtils.triggerClick("refreshButton");
             } else if (PageUtils.isColorBlue(buttonId)) {
                 c["_m_" + index] = false;
-                StorageUtils.set(this.#key + id, JSON.stringify(c));
+                StorageUtils.set(this.#key + "_" + id, JSON.stringify(c));
                 PageUtils.triggerClick("refreshButton");
             }
         });

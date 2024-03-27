@@ -5,6 +5,7 @@ import ExtensionShortcutLoader from "../../core/dashboard/ExtensionShortcutLoade
 import TownDashboardLayoutManager from "../../core/dashboard/TownDashboardLayoutManager";
 import TownDashboardPage from "../../core/dashboard/TownDashboardPage";
 import TownDashboardPageParser from "../../core/dashboard/TownDashboardPageParser";
+import RoleControlPanel from "../../core/role/RoleControlPanel";
 import PalaceTaskManager from "../../core/task/PalaceTaskManager";
 import Credential from "../../util/Credential";
 import PageUtils from "../../util/PageUtils";
@@ -538,9 +539,14 @@ function doRenderRoleStatus(credential: Credential, page: TownDashboardPage) {
     }
 
     // 如果满级并且没有关闭转职入口，则战斗标签红底显示
-    if (page.careerTransferNotification) {
-        $("#battleCell").css("background-color", "red");
-    }
+    new RoleControlPanel(credential)
+        .triggerCareerTransferNotification(page.obtainRole)
+        .then(message => {
+            if (message.success) {
+                $("#battleCell").css("background-color", "red");
+            }
+        });
+
     // 如果没有满级但是有单项能力到达极限，战斗标签黄底显示
     if (page.capacityLimitationNotification) {
         $("#battleCell").css("background-color", "yellow");

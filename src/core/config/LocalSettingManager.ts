@@ -84,24 +84,24 @@ class LocalSettingManager {
     // ------------------------------------------------------------------------
 
     static getMirrorIndex(id: string): number | undefined {
-        const value = StorageUtils.getString("_ts_006_" + id);
+        const value = StorageUtils.getString("_ts_007_" + id);
         if (value === "") return undefined;
         return _.parseInt(StringUtils.substringBeforeSlash(value));
     }
 
     static getMirrorCount(id: string): number | undefined {
-        const value = StorageUtils.getString("_ts_006_" + id);
+        const value = StorageUtils.getString("_ts_007_" + id);
         if (value === "") return undefined;
         return _.parseInt(StringUtils.substringAfterSlash(value));
     }
 
     static setMirrorStatus(id: string, mirrorIndex: number, mirrorCount: number) {
         const value = mirrorIndex + "/" + mirrorCount;
-        StorageUtils.set("_ts_006_" + id, value);
+        StorageUtils.set("_ts_007_" + id, value);
     }
 
     static clearMirrorStatus(id: string) {
-        StorageUtils.remove("_ts_006_" + id);
+        StorageUtils.remove("_ts_007_" + id);
     }
 
     // ------------------------------------------------------------------------
