@@ -1,3 +1,4 @@
+import LocalSettingManager from "../../core/config/LocalSettingManager";
 import PersonalMirrorPage from "../../core/role/PersonalMirrorPage";
 import Credential from "../../util/Credential";
 import KeyboardShortcutBuilder from "../../util/KeyboardShortcutBuilder";
@@ -16,6 +17,8 @@ class PersonalMirrorPageProcessor extends PageProcessorCredentialSupport {
             .onEscapePressed(() => PageUtils.triggerClick("returnButton"))
             .withDefaultPredicate()
             .bind();
+        // Clear current role's mirror status when accessing mirror page.
+        LocalSettingManager.clearMirrorStatus(credential.id);
     }
 
     async #reformatPage(credential: Credential,
