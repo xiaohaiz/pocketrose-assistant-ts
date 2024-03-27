@@ -1,6 +1,8 @@
 # pocketrose-assistant-ts
 
-### 版本 4.5.9-SNAPSHOT
+### 版本 5.0.0-SNAPSHOT
+
+1. 删除聊天布局。
 
 ### 版本 4.5.8
 
