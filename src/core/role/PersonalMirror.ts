@@ -30,21 +30,16 @@ class PersonalMirror {
         })();
     }
 
-    async change(index: number): Promise<void> {
-        return await (() => {
-            return new Promise<void>(resolve => {
-                const request = this.#credential.asRequestMap();
-                request.set("select", index.toString());
-                request.set("mode", "FENSHENCHANGE");
-                NetworkUtils.post("mydata.cgi", request).then(html => {
-                    // Clear role's mirror status after mirror changed.
-                    LocalSettingManager.clearMirrorStatus(this.#credential.id);
-                    MessageBoard.processResponseMessage(html);
-                    resolve();
-                });
-            });
-        })();
+    async change(index: number) {
+        const request = this.#credential.asRequestMap();
+        request.set("select", index.toString());
+        request.set("mode", "FENSHENCHANGE");
+        const html = await NetworkUtils.post("mydata.cgi", request);
+        // Clear role's mirror status after mirror changed.
+        LocalSettingManager.clearMirrorStatus(this.#credential.id);
+        MessageBoard.processResponseMessage(html);
     }
+
 }
 
 export = PersonalMirror;
