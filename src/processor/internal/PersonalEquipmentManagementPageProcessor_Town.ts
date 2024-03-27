@@ -405,7 +405,7 @@ class PersonalEquipmentManagementPageProcessor_Town extends PersonalEquipmentMan
             if (equipment.isGoldenCage || equipment.isTreasureBag) {
                 continue;
             }
-            html += "<tr>";
+            html += "<tr id='_equipment_index_" + equipment.index + "'>";
             html += "<td style='background-color:#E8E8D0'>"
             if (equipment.selectable!) {
                 html += "<input type='button' value='选择' " +
@@ -612,17 +612,16 @@ class PersonalEquipmentManagementPageProcessor_Town extends PersonalEquipmentMan
             });
         });
 
-        // --------------------------------------------------------------------
-        // 修理
-        // --------------------------------------------------------------------
         $(".repairButton-1").on("click", event => {
             const buttonId = $(event.target).attr("id")!;
             const index = parseInt(StringUtils.substringAfterLast(buttonId, "_"));
-            new TownForgeHouse(credential, context?.get("townId")).repair(index).then(() => {
-                const equipment = page.findEquipment(index)!;
-                MessageBoard.publishMessage("修理了" + equipment.fullName + "。");
-                this.doRefreshMutablePage(credential, context);
-            });
+            new TownForgeHouse(credential, context?.get("townId"))
+                .repair(index)
+                .then(() => {
+                    const equipment = page.findEquipment(index)!;
+                    MessageBoard.publishMessage("修理了" + equipment.fullName + "。");
+                    this.#refreshEquipmentList(credential, index).then();
+                });
         });
 
         // --------------------------------------------------------------------
@@ -1229,6 +1228,29 @@ class PersonalEquipmentManagementPageProcessor_Town extends PersonalEquipmentMan
         const message = OperationMessage.success();
         message.doRefresh = true;
         return message;
+    }
+
+    async #refreshEquipmentList(credential: Credential, index?: number) {
+        const equipmentPage = await new PersonalEquipmentManagement(credential).open();
+        let candidate: Equipment[];
+        if (index !== undefined) {
+            candidate = [];
+            const e = equipmentPage.findEquipment(index);
+            if (e !== null) candidate.push(e);
+        } else {
+            candidate = equipmentPage.equipmentList!;
+        }
+        _.forEach(candidate, it => {
+            const tr = $("#_equipment_index_" + it.index);
+            if (tr.length > 0) {
+                tr.find("> td:eq(1)").html(it.usingHTML)
+                    .next().html(it.nameHTML!)
+                    .next()
+                    .next().html(_.toString(it.power))
+                    .next().html(_.toString(it.weight))
+                    .next().html(it.endureHtml);
+            }
+        });
     }
 
 }
