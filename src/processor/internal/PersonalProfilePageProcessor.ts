@@ -562,9 +562,7 @@ abstract class PersonalProfilePageProcessor extends PageProcessorCredentialSuppo
             $(".mirrorButton").on("click", event => {
                 const buttonId = $(event.target).attr("id") as string;
                 const index = parseInt(StringUtils.substringAfter(buttonId, "mirror_"));
-                personalMirror.change(index).then(() => {
-                    this.#reload(credential, context);
-                });
+                this.doLodgeAndChangeMirror(credential, index, () => this.#reload(credential, context));
             });
         });
     }
