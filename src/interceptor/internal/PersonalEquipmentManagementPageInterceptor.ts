@@ -7,16 +7,10 @@ import PersonalEquipmentManagementPageProcessor_Metro
     from "../../processor/internal/PersonalEquipmentManagementPageProcessor_Metro";
 import PersonalEquipmentManagementPageProcessor_Town
     from "../../processor/internal/PersonalEquipmentManagementPageProcessor_Town";
-import PageProcessor from "../../processor/PageProcessor";
 import PageProcessorContext from "../../processor/PageProcessorContext";
 import PageInterceptor from "../PageInterceptor";
 
 class PersonalEquipmentManagementPageInterceptor implements PageInterceptor {
-
-    readonly #inTownProcessor: PageProcessor = new PersonalEquipmentManagementPageProcessor_Town();
-    readonly #inCastleProcessor: PageProcessor = new PersonalEquipmentManagementPageProcessor_Castle();
-    readonly #inMapProcessor: PageProcessor = new PersonalEquipmentManagementPageProcessor_Map();
-    readonly #inMetroProcessor: PageProcessor = new PersonalEquipmentManagementPageProcessor_Metro();
 
     accept(cgi: string, pageText: string): boolean {
         if (cgi === "mydata.cgi") {
@@ -33,20 +27,20 @@ class PersonalEquipmentManagementPageInterceptor implements PageInterceptor {
                     .whenInTown(state => {
                         const context = new PageProcessorContext();
                         context.withTownId(state?.townId);
-                        this.#inTownProcessor.process(context);
+                        new PersonalEquipmentManagementPageProcessor_Town().process(context);
                     })
                     .whenInCastle(state => {
                         const context = new PageProcessorContext();
                         context.withCastleName(state?.castleName)
-                        this.#inCastleProcessor.process(context);
+                        new PersonalEquipmentManagementPageProcessor_Castle().process(context);
                     })
                     .whenInMap(state => {
                         const context = new PageProcessorContext();
                         context.withCoordinate(state?.asCoordinate()?.asText());
-                        this.#inMapProcessor.process(context);
+                        new PersonalEquipmentManagementPageProcessor_Map().process(context);
                     })
                     .whenInMetro(() => {
-                        this.#inMetroProcessor.process();
+                        new PersonalEquipmentManagementPageProcessor_Metro().process();
                     })
                     .process();
             });

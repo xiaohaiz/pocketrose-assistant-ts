@@ -5,8 +5,6 @@ import PageInterceptor from "../PageInterceptor";
 
 class PersonalManualPageInterceptor implements PageInterceptor {
 
-    readonly #processor = new PersonalManualPageProcessor();
-
     accept(cgi: string, pageText: string): boolean {
         if (cgi === "mydata.cgi") {
             return pageText.includes("＜＜ * 成立新国家 *＞＞");
@@ -22,7 +20,7 @@ class PersonalManualPageInterceptor implements PageInterceptor {
                     .whenInTown(state => {
                         const context = new PageProcessorContext()
                             .withTownId(state?.townId);
-                        this.#processor.process(context);
+                        new PersonalManualPageProcessor().process(context);
                     })
                     .process();
             });

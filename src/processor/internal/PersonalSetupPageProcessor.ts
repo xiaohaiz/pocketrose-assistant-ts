@@ -6,6 +6,7 @@ import Equipment from "../../core/equipment/Equipment";
 import EquipmentLoader from "../../core/equipment/EquipmentLoader";
 import PersonalEquipmentManagement from "../../core/equipment/PersonalEquipmentManagement";
 import TreasureBag from "../../core/equipment/TreasureBag";
+import PersonalMirror from "../../core/role/PersonalMirror";
 import PersonalStatus from "../../core/role/PersonalStatus";
 import Credential from "../../util/Credential";
 import KeyboardShortcutBuilder from "../../util/KeyboardShortcutBuilder";
@@ -22,6 +23,8 @@ abstract class PersonalSetupPageProcessor extends PageProcessorCredentialSupport
         return [10005, 10007, 10008, 10016, 10024, 10028, 10032, 10033, 10035, 10062,
             10132];
     }
+
+    readonly #extensions: any = {};
 
     async doProcess(credential: Credential, context?: PageProcessorContext): Promise<void> {
         // 整个页面是放在一个大form里面，删除重组
@@ -127,6 +130,11 @@ abstract class PersonalSetupPageProcessor extends PageProcessorCredentialSupport
         new PersonalStatus(credential).load().then(role => {
             MessageBoard.createMessageBoard("message_board_container", role.imageHtml);
         });
+
+        const mirrorPage = await new PersonalMirror(credential).open();
+        if (mirrorPage.mirrorList !== undefined) {
+            this.#extensions.mirrorList = mirrorPage.mirrorList;
+        }
 
         this.#render(credential);
 

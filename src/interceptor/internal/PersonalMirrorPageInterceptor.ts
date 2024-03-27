@@ -5,8 +5,6 @@ import PageInterceptor from "../PageInterceptor";
 
 class PersonalMirrorPageInterceptor implements PageInterceptor {
 
-    readonly #processor = new PersonalMirrorPageProcessor();
-
     accept(cgi: string, pageText: string): boolean {
         if (cgi === "mydata.cgi") {
             return pageText.includes("* 分身试管 *");
@@ -22,7 +20,7 @@ class PersonalMirrorPageInterceptor implements PageInterceptor {
                     .whenInTown(state => {
                         const context = new PageProcessorContext()
                             .withTownId(state?.townId);
-                        this.#processor.process(context);
+                        new PersonalMirrorPageProcessor().process(context);
                     })
                     .process();
             });

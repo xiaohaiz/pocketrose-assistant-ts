@@ -4,7 +4,7 @@ interface SetupItem {
 
     code(): string;
 
-    render(id?: string): void
+    render(id?: string, extension?: {}): void
 
 }
 

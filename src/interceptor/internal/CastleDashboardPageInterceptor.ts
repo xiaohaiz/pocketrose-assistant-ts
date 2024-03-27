@@ -4,8 +4,6 @@ import PageInterceptor from "../PageInterceptor";
 
 class CastleDashboardPageInterceptor implements PageInterceptor {
 
-    readonly #processor = new CastleDashboardPageProcessor();
-
     accept(cgi: string, pageText: string): boolean {
         if (cgi === "castle.cgi" || cgi === "castlestatus.cgi") {
             return pageText.includes("城堡的情報");
@@ -17,7 +15,7 @@ class CastleDashboardPageInterceptor implements PageInterceptor {
         RoleStateMachineManager.create()
             .inCastle()
             .then(() => {
-                this.#processor.process();
+                new CastleDashboardPageProcessor().process();
             });
     }
 

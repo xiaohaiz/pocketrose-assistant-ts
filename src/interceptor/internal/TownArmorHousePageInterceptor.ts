@@ -1,11 +1,8 @@
 import RoleStateMachineManager from "../../core/state/RoleStateMachineManager";
 import TownArmorHousePageProcessor from "../../processor/internal/TownArmorHousePageProcessor";
-import PageProcessor from "../../processor/PageProcessor";
 import PageInterceptor from "../PageInterceptor";
 
 class TownArmorHousePageInterceptor implements PageInterceptor {
-
-    readonly #processor: PageProcessor = new TownArmorHousePageProcessor();
 
     accept(cgi: string, pageText: string): boolean {
         if (cgi === "town.cgi") {
@@ -20,7 +17,7 @@ class TownArmorHousePageInterceptor implements PageInterceptor {
             .then(machine => {
                 machine.start()
                     .whenInTown(() => {
-                        this.#processor.process();
+                        new TownArmorHousePageProcessor().process();
                     })
                     .process();
             });

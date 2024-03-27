@@ -5,8 +5,6 @@ import PageInterceptor from "../PageInterceptor";
 
 class TownForgePageInterceptor implements PageInterceptor {
 
-    readonly #processor = new TownForgePageProcessor();
-
     accept(cgi: string, pageText: string): boolean {
         if (cgi === "town.cgi") {
             return pageText.includes("＜＜ * 锻 冶 屋 *＞＞");
@@ -22,7 +20,7 @@ class TownForgePageInterceptor implements PageInterceptor {
                     .whenInTown(state => {
                         const context = new PageProcessorContext();
                         context.withTownId(state?.townId);
-                        this.#processor.process(context);
+                        new TownForgePageProcessor().process(context);
                     })
                     .process();
             });
