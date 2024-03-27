@@ -192,6 +192,14 @@ class SetupLoader {
     static isAutoChangePointToTown() {
         return StorageUtils.getBoolean("_pa_069");
     }
+
+    static loadMirrorCareerFixedConfig(id: string): {} {
+        const s = StorageUtils.getString("_pa_070_" + id);
+        if (s === "") {
+            return {};
+        }
+        return JSON.parse(s);
+    }
 }
 
 export = SetupLoader;

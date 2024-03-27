@@ -177,7 +177,7 @@ abstract class PersonalSetupPageProcessor extends PageProcessorCredentialSupport
             html += "<th>说明</th>";
             html += "</tr>";
             $("#setup_item_table").append($(html));
-            _.forEach(itemList, it => it.render(credential.id));
+            _.forEach(itemList, it => it.render(credential.id, this.#extensions));
         }
 
         $(".C_setupItemName").on("click", event => {
