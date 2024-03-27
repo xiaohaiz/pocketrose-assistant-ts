@@ -1,5 +1,6 @@
 import * as echarts from "echarts";
 import {EChartsOption} from "echarts";
+import LocalSettingManager from "../../core/config/LocalSettingManager";
 import SetupLoader from "../../core/config/SetupLoader";
 import PersonalStatus from "../../core/role/PersonalStatus";
 import PersonalStatusPage from "../../core/role/PersonalStatusPage";
@@ -15,6 +16,12 @@ abstract class PersonalStatusPageProcessor extends PageProcessorCredentialSuppor
 
     async doProcess(credential: Credential, context?: PageProcessorContext): Promise<void> {
         const page = PersonalStatus.parsePage(PageUtils.currentPageHtml());
+        // Write mirror status after role parsed.
+        if (page.role !== undefined) {
+            const mirrorIndex = page.role.mirrorIndex!;
+            const mirrorCount = page.role.mirrorCount!;
+            LocalSettingManager.setMirrorStatus(credential.id, mirrorIndex, mirrorCount);
+        }
 
         this.#renderPage(page.role!);
 

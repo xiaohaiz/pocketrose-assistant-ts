@@ -3,6 +3,7 @@ import Credential from "../../util/Credential";
 import NetworkUtils from "../../util/NetworkUtils";
 import StringUtils from "../../util/StringUtils";
 import Castle from "../castle/Castle";
+import LocalSettingManager from "../config/LocalSettingManager";
 import TownLoader from "../town/TownLoader";
 import PersonalStatusPage from "./PersonalStatusPage";
 import Role from "./Role";
@@ -32,6 +33,12 @@ class PersonalStatus {
                 NetworkUtils.post("mydata.cgi", request)
                     .then(pageHtml => {
                         const page = PersonalStatus.parsePage(pageHtml);
+                        // Write mirror status after role parsed.
+                        if (page.role !== undefined) {
+                            const mirrorIndex = page.role.mirrorIndex!;
+                            const mirrorCount = page.role.mirrorCount!;
+                            LocalSettingManager.setMirrorStatus(credential.id, mirrorIndex, mirrorCount);
+                        }
                         resolve(page);
                     });
             });
