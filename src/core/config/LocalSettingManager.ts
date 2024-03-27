@@ -1,5 +1,6 @@
-import StorageUtils from "../../util/StorageUtils";
 import _ from "lodash";
+import StorageUtils from "../../util/StorageUtils";
+import StringUtils from "../../util/StringUtils";
 
 /**
  * ----------------------------------------------------------------------------
@@ -11,6 +12,7 @@ import _ from "lodash";
  * _ts_004_${id} : 是否提醒饰品满级
  * _ts_005_${id} : 身上装备位是否已满
  * _ts_006_${id} : 身上宠物位是否已满
+ * _ts_007_${id} : 当前分身的情况：index/count
  * ----------------------------------------------------------------------------
  */
 class LocalSettingManager {
@@ -77,6 +79,29 @@ class LocalSettingManager {
 
     static setPetCapacityMax(id: string, value: boolean) {
         StorageUtils.set("_ts_006_" + id, Number(value).toString());
+    }
+
+    // ------------------------------------------------------------------------
+
+    static getMirrorIndex(id: string): number | undefined {
+        const value = StorageUtils.getString("_ts_006_" + id);
+        if (value === "") return undefined;
+        return _.parseInt(StringUtils.substringBeforeSlash(value));
+    }
+
+    static getMirrorCount(id: string): number | undefined {
+        const value = StorageUtils.getString("_ts_006_" + id);
+        if (value === "") return undefined;
+        return _.parseInt(StringUtils.substringAfterSlash(value));
+    }
+
+    static setMirrorStatus(id: string, mirrorIndex: number, mirrorCount: number) {
+        const value = mirrorIndex + "/" + mirrorCount;
+        StorageUtils.set("_ts_006_" + id, value);
+    }
+
+    static clearMirrorStatus(id: string) {
+        StorageUtils.remove("_ts_006_" + id);
     }
 
     // ------------------------------------------------------------------------
