@@ -9,6 +9,7 @@ import PageUtils from "../../util/PageUtils";
 import StringUtils from "../../util/StringUtils";
 import PageProcessorContext from "../PageProcessorContext";
 import PersonalStatusPageProcessor from "./PersonalStatusPageProcessor";
+import TownInn from "../../core/inn/TownInn";
 
 class PersonalStatusPageProcessor_Town extends PersonalStatusPageProcessor {
 
@@ -93,8 +94,10 @@ class PersonalStatusPageProcessor_Town extends PersonalStatusPageProcessor {
                     if (!confirm("确认要切换到分身\"" + target.category + "(" + target.career + ")\"吗？")) {
                         return;
                     }
-                    mirrorManager.change(index).then(() => {
-                        $("#openEquipmentManagement").trigger("click");
+                    new TownInn(credential).recovery().then(() => {
+                        mirrorManager.change(index).then(() => {
+                            $("#openEquipmentManagement").trigger("click");
+                        });
                     });
                 });
             }
