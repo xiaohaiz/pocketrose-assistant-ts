@@ -1,6 +1,7 @@
 import * as echarts from "echarts";
 import {EChartsOption} from "echarts";
 import PersonalSpell from "../../core/career/PersonalSpell";
+import SetupLoader from "../../core/config/SetupLoader";
 import PersonalEquipmentManagement from "../../core/equipment/PersonalEquipmentManagement";
 import PersonalPetManagement from "../../core/monster/PersonalPetManagement";
 import NpcLoader from "../../core/role/NpcLoader";
@@ -172,37 +173,61 @@ abstract class PersonalProfilePageProcessor extends PageProcessorCredentialSuppo
             html += "<th style='background-color:#E0D0B0;white-space:nowrap'>国家</th>";
             html += "<td style='background-color:#E8E8D0'>" + role.country + "</td>";
             html += "<th style='background-color:#E0D0B0;white-space:nowrap'>ＭＰ</th>";
-            html += "<td style='background-color:#E8E8D0'>" + role.mana + "/" + role.maxMana + "</td>";
+            if (SetupLoader.isCareerFixed(credential.id, role.mirrorIndex!)) {
+                html += "<td style='background-color:black;color:white'>" + role.mana + "/" + role.maxMana + "</td>";
+            } else {
+                html += "<td style='background-color:#E8E8D0'>" + role.mana + "/" + role.maxMana + "</td>";
+            }
             html += "</tr>";
             html += "<tr>";
             html += "<th style='background-color:#E0D0B0;white-space:nowrap'>部队</th>";
             html += "<td style='background-color:#E8E8D0'>" + role.unit + "</td>";
             html += "<th style='background-color:#E0D0B0;white-space:nowrap'>攻击</th>";
-            html += "<td style='background-color:#E8E8D0'>" + role.attack + "</td>";
+            if (SetupLoader.isCareerFixed(credential.id, role.mirrorIndex!)) {
+                html += "<td style='background-color:black;color:white'>" + role.attack + "</td>";
+            } else {
+                html += "<td style='background-color:#E8E8D0'>" + role.attack + "</td>";
+            }
             html += "</tr>";
             html += "<tr>";
             html += "<th style='background-color:#E0D0B0;white-space:nowrap'>属性</th>";
             html += "<td style='background-color:#E8E8D0'>" + role.attribute + "</td>";
             html += "<th style='background-color:#E0D0B0;white-space:nowrap'>防御</th>";
-            html += "<td style='background-color:#E8E8D0'>" + role.defense + "</td>";
+            if (SetupLoader.isCareerFixed(credential.id, role.mirrorIndex!)) {
+                html += "<td style='background-color:black;color:white'>" + role.defense + "</td>";
+            } else {
+                html += "<td style='background-color:#E8E8D0'>" + role.defense + "</td>";
+            }
             html += "</tr>";
             html += "<tr>";
             html += "<th style='background-color:#E0D0B0;white-space:nowrap'>职业</th>";
             html += "<td style='background-color:#E8E8D0'>" + role.career + "</td>";
             html += "<th style='background-color:#E0D0B0;white-space:nowrap'>智力</th>";
-            html += "<td style='background-color:#E8E8D0'>" + role.specialAttack + "</td>";
+            if (SetupLoader.isCareerFixed(credential.id, role.mirrorIndex!)) {
+                html += "<td style='background-color:black;color:white'>" + role.specialAttack + "</td>";
+            } else {
+                html += "<td style='background-color:#E8E8D0'>" + role.specialAttack + "</td>";
+            }
             html += "</tr>";
             html += "<tr>";
             html += "<th style='background-color:#E0D0B0;white-space:nowrap'>战数</th>";
             html += "<td style='background-color:#E8E8D0'>" + role.battleCount + "/" + role.battleWinCount + "</td>";
             html += "<th style='background-color:#E0D0B0;white-space:nowrap'>精神</th>";
-            html += "<td style='background-color:#E8E8D0'>" + role.specialDefense + "</td>";
+            if (SetupLoader.isCareerFixed(credential.id, role.mirrorIndex!)) {
+                html += "<td style='background-color:black;color:white'>" + role.specialDefense + "</td>";
+            } else {
+                html += "<td style='background-color:#E8E8D0'>" + role.specialDefense + "</td>";
+            }
             html += "</tr>";
             html += "<tr>";
             html += "<th style='background-color:#E0D0B0;white-space:nowrap'>经验</th>";
             html += "<td style='background-color:#E8E8D0'>" + role.experienceHtml + "</td>";
             html += "<th style='background-color:#E0D0B0;white-space:nowrap'>速度</th>";
-            html += "<td style='background-color:#E8E8D0'>" + role.speed + "</td>";
+            if (SetupLoader.isCareerFixed(credential.id, role.mirrorIndex!)) {
+                html += "<td style='background-color:black;color:white'>" + role.speed + "</td>";
+            } else {
+                html += "<td style='background-color:#E8E8D0'>" + role.speed + "</td>";
+            }
             html += "</tr>";
             html += "<tr>";
             html += "<th style='background-color:#E0D0B0;white-space:nowrap'>幸运</th>";
@@ -504,13 +529,25 @@ abstract class PersonalProfilePageProcessor extends PageProcessorCredentialSuppo
                 html += "<td style='background-color:#E8E8D0'>" + mirror.name + "</td>";
                 html += "<td style='background-color:#E8E8D0'>" + mirror.gender + "</td>";
                 html += "<td style='background-color:#E8E8D0'>" + mirror.healthHtml + "</td>";
-                html += "<td style='background-color:#E8E8D0'>" + mirror.manaHtml + "</td>";
+                if (SetupLoader.isCareerFixed(credential.id, mirror.index!)) {
+                    html += "<td style='background-color:black;color:white'>" + mirror.manaHtml + "</td>";
+                } else {
+                    html += "<td style='background-color:#E8E8D0'>" + mirror.manaHtml + "</td>";
+                }
                 html += "<td style='background-color:#E8E8D0'>" + mirror.attribute + "</td>";
-                html += "<td style='background-color:#E8E8D0'>" + mirror.attack + "</td>";
-                html += "<td style='background-color:#E8E8D0'>" + mirror.defense + "</td>";
-                html += "<td style='background-color:#E8E8D0'>" + mirror.specialAttack + "</td>";
-                html += "<td style='background-color:#E8E8D0'>" + mirror.specialDefense + "</td>";
-                html += "<td style='background-color:#E8E8D0'>" + mirror.speed + "</td>";
+                if (SetupLoader.isCareerFixed(credential.id, mirror.index!)) {
+                    html += "<td style='background-color:black;color:white'>" + mirror.attack + "</td>";
+                    html += "<td style='background-color:black;color:white'>" + mirror.defense + "</td>";
+                    html += "<td style='background-color:black;color:white'>" + mirror.specialAttack + "</td>";
+                    html += "<td style='background-color:black;color:white'>" + mirror.specialDefense + "</td>";
+                    html += "<td style='background-color:black;color:white'>" + mirror.speed + "</td>";
+                } else {
+                    html += "<td style='background-color:#E8E8D0'>" + mirror.attack + "</td>";
+                    html += "<td style='background-color:#E8E8D0'>" + mirror.defense + "</td>";
+                    html += "<td style='background-color:#E8E8D0'>" + mirror.specialAttack + "</td>";
+                    html += "<td style='background-color:#E8E8D0'>" + mirror.specialDefense + "</td>";
+                    html += "<td style='background-color:#E8E8D0'>" + mirror.speed + "</td>";
+                }
                 html += "<td style='background-color:#E8E8D0'>" + mirror.career + "</td>";
                 html += "<td style='background-color:#E8E8D0'>" + mirror.spell + "</td>";
                 html += "<td style='background-color:#E8E8D0'>" + mirror.experience + "</td>";

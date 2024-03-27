@@ -196,6 +196,11 @@ class SetupLoader {
         }
         return JSON.parse(s);
     }
+
+    static isCareerFixed(id: string, mirrorIndex: number): boolean {
+        const c: any = SetupLoader.loadMirrorCareerFixedConfig(id);
+        return c["_m_" + mirrorIndex];
+    }
 }
 
 export = SetupLoader;
