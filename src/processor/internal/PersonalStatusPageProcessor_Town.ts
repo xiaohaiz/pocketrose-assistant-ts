@@ -1,4 +1,5 @@
 import {parseInt} from "lodash";
+import SetupLoader from "../../core/config/SetupLoader";
 import PersonalMirror from "../../core/role/PersonalMirror";
 import PersonalStatusPage from "../../core/role/PersonalStatusPage";
 import Role from "../../core/role/Role";
@@ -67,6 +68,22 @@ class PersonalStatusPageProcessor_Town extends PersonalStatusPageProcessor {
                         if (mirror !== null) {
                             td.html("<button role='button' id='mirror_" + mirror.index + "' " +
                                 "class='mirror-button'>" + mirror.category + "</button>");
+
+                            if (SetupLoader.isCareerFixed(credential.id, mirror.index!)) {
+                                td.next()
+                                    .next()
+                                    .next()
+                                    .next()
+                                    .next()
+                                    .next().css("background-color", "black").css("color", "white")
+                                    .next().css("background-color", "black").css("color", "white")
+                                    .next()
+                                    .next().css("background-color", "black").css("color", "white")
+                                    .next().css("background-color", "black").css("color", "white")
+                                    .next().css("background-color", "black").css("color", "white")
+                                    .next().css("background-color", "black").css("color", "white")
+                                    .next().css("background-color", "black").css("color", "white");
+                            }
                         }
                     });
                 $(".mirror-button").on("click", event => {

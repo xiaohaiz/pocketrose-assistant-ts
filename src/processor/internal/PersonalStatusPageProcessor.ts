@@ -55,6 +55,22 @@ abstract class PersonalStatusPageProcessor extends PageProcessorCredentialSuppor
                 "colspan='4'></td>");
         _generateRoleDimension(page);
 
+        if (SetupLoader.isCareerFixed(credential.id, page.role!.mirrorIndex!)) {
+            $("#roleDimension").parent()
+                .prev()
+                .find("> td:eq(1)").css("background-color", "black").css("color", "white")
+                .parent()
+                .prev()
+                .find("> td:eq(1)").css("background-color", "black").css("color", "white")
+                .next()
+                .next().css("background-color", "black").css("color", "white")
+                .parent()
+                .prev()
+                .find("> td:eq(1)").css("background-color", "black").css("color", "white")
+                .next()
+                .next().css("background-color", "black").css("color", "white");
+        }
+
         this.doBindKeyboardShortcut();
     }
 
