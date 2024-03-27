@@ -4,6 +4,8 @@ import Credential from "../../util/Credential";
 import PageUtils from "../../util/PageUtils";
 import PageProcessorContext from "../PageProcessorContext";
 import PersonalProfilePageProcessor from "./PersonalProfilePageProcessor";
+import TownInn from "../../core/inn/TownInn";
+import PersonalMirror from "../../core/role/PersonalMirror";
 
 class PersonalProfilePageProcessor_Town extends PersonalProfilePageProcessor {
 
@@ -25,6 +27,14 @@ class PersonalProfilePageProcessor_Town extends PersonalProfilePageProcessor {
     doLoadBankAccount(credential: Credential, context?: PageProcessorContext): void {
         new TownBank(credential, context?.get("townId")).load().then(account => {
             $("#roleSaving").text(account.saving + " GOLD");
+        });
+    }
+
+    doLodgeAndChangeMirror(credential: Credential, mirrorIndex: number, handler?: () => void): void {
+        new TownInn(credential).recovery().then(() => {
+            new PersonalMirror(credential).change(mirrorIndex).then(() => {
+                handler && handler();
+            });
         });
     }
 

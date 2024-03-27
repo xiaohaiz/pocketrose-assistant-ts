@@ -586,6 +586,8 @@ abstract class PersonalProfilePageProcessor extends PageProcessorCredentialSuppo
         this.#renderPetStatus(credential, context);
         this.#renderMirrorStatus(credential, context);
     }
+
+    abstract doLodgeAndChangeMirror(credential: Credential, mirrorIndex: number, handler?: () => void): void;
 }
 
 function _generateRoleDimension(role: Role) {
