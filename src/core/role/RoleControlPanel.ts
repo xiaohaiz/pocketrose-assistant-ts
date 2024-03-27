@@ -13,6 +13,15 @@ class RoleControlPanel {
         this.#credential = credential;
     }
 
+    async isCareerTransferEnabled(): Promise<boolean> {
+        let currentMirrorIndex = LocalSettingManager.getMirrorIndex(this.#credential.id);
+        if (currentMirrorIndex === undefined) {
+            currentMirrorIndex = (await new PersonalStatus(this.#credential).load()).mirrorIndex!;
+        }
+        const config: any = SetupLoader.loadMirrorCareerFixedConfig(this.#credential.id);
+        return !config["_m_" + currentMirrorIndex];
+    }
+
     async triggerCareerTransferNotification(role: Role): Promise<OperationMessage> {
         if (role.level !== 150) {
             return OperationMessage.failure();

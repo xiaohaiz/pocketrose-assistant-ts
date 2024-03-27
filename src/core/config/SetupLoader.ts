@@ -27,10 +27,6 @@ class SetupLoader {
         return StorageUtils.getInt("_pa_005", 10);
     }
 
-    static isCareerTransferEntranceDisabled(id: string): boolean {
-        return StorageUtils.getBoolean("_pa_014_" + id);
-    }
-
     static loadEquipmentSetConfig(id: string, index: string): EquipmentSetConfig {
         const mapping = {
             "A": "_pa_019_",
