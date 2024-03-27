@@ -20,7 +20,6 @@ class LayoutConfigLoader {
 
 const LAYOUTS = {
     1: "经典布局",
-    4: "聊天布局",
     6: "手机布局",
     7: "战斗布局",
 };
