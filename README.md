@@ -1,5 +1,7 @@
 # pocketrose-assistant-ts
 
+### 版本 4.5.9-SNAPSHOT
+
 ### 版本 4.5.8
 
 1. 城市装备管理中提供“闲置装备入袋”的功能。
