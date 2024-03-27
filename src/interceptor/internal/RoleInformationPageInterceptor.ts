@@ -3,8 +3,6 @@ import PageInterceptor from "../PageInterceptor";
 
 class RoleInformationPageInterceptor implements PageInterceptor {
 
-    readonly #processor = new RoleInformationPageProcessor();
-
     accept(cgi: string, pageText: string): boolean {
         if (cgi === "ranking.cgi") {
             return pageText.includes("＜＜ 　 - 武将一览 - 　 ＞＞");
@@ -13,7 +11,7 @@ class RoleInformationPageInterceptor implements PageInterceptor {
     }
 
     intercept(): void {
-        this.#processor.process();
+        new RoleInformationPageProcessor().process();
     }
 
 }

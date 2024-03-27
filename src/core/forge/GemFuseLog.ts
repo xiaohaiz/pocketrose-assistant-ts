@@ -5,19 +5,16 @@ class GemFuseLog {
     createTime?: number;
     gem?: string;
     effort?: number;
+    equipment?: string;
 
     asDocument() {
-        const document = {};
-        // @ts-ignore
+        const document: any = {};
         (this.id) && (document.id = this.id);
-        // @ts-ignore
         (this.roleId) && (document.roleId = this.roleId);
-        // @ts-ignore
         (this.createTime !== undefined) && (document.createTime = this.createTime);
-        // @ts-ignore
         (this.gem) && (document.gem = this.gem);
-        // @ts-ignore
         (this.effort !== undefined) && (document.effort = this.effort);
+        (this.equipment) && (document.equipment = this.equipment);
         return document;
     }
 }

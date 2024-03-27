@@ -273,6 +273,20 @@ class PageUtils {
         }
     }
 
+    static disableElement(elementId: string) {
+        const element = $("#" + elementId);
+        if (element.length > 0) {
+            element.prop("disabled", true);
+        }
+    }
+
+    static enableElement(elementId: string) {
+        const element = $("#" + elementId);
+        if (element.length > 0) {
+            element.prop("disabled", false);
+        }
+    }
+
     static disableButtons() {
         $("input:button").prop("disabled", true);
         $("button").prop("disabled", true);

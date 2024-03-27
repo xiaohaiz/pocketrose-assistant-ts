@@ -1,11 +1,8 @@
 import RoleStateMachineManager from "../../core/state/RoleStateMachineManager";
 import TownDashboardPageProcessor from "../../processor/internal/TownDashboardPageProcessor";
-import PageProcessor from "../../processor/PageProcessor";
 import PageInterceptor from "../PageInterceptor";
 
 class TownDashboardPageInterceptor implements PageInterceptor {
-
-    readonly #processor: PageProcessor = new TownDashboardPageProcessor();
 
     accept(cgi: string, pageText: string): boolean {
         if (cgi === "status.cgi" || cgi === "town.cgi") {
@@ -18,7 +15,7 @@ class TownDashboardPageInterceptor implements PageInterceptor {
         RoleStateMachineManager.create()
             .inTown()
             .then(() => {
-                this.#processor.process();
+                new TownDashboardPageProcessor().process();
             });
     }
 

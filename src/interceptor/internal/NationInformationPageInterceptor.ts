@@ -1,9 +1,7 @@
-import PageInterceptor from "../PageInterceptor";
 import NationalInformationPageProcessor from "../../processor/internal/NationalInformationPageProcessor";
+import PageInterceptor from "../PageInterceptor";
 
 class NationInformationPageInterceptor implements PageInterceptor {
-
-    readonly #processor = new NationalInformationPageProcessor();
 
     accept(cgi: string, pageText: string): boolean {
         if (cgi === "map.cgi") {
@@ -13,7 +11,7 @@ class NationInformationPageInterceptor implements PageInterceptor {
     }
 
     intercept(): void {
-        this.#processor.process();
+        new NationalInformationPageProcessor().process();
     }
 
 }

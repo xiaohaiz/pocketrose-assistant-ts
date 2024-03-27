@@ -14,6 +14,7 @@ import NationInformationPageInterceptor from "./internal/NationInformationPageIn
 import PersonalCareerManagementPageInterceptor from "./internal/PersonalCareerManagementPageInterceptor";
 import PersonalEquipmentManagementPageInterceptor from "./internal/PersonalEquipmentManagementPageInterceptor";
 import PersonalManualPageInterceptor from "./internal/PersonalManualPageInterceptor";
+import PersonalMirrorPageInterceptor from "./internal/PersonalMirrorPageInterceptor";
 import PersonalPetManagementPageInterceptor from "./internal/PersonalPetManagementPageInterceptor";
 import PersonalProfilePageInterceptor from "./internal/PersonalProfilePageInterceptor";
 import PersonalSetupPageInterceptor from "./internal/PersonalSetupPageInterceptor";
@@ -64,6 +65,7 @@ class PageInterceptorManager {
             new PersonalEquipmentManagementPageInterceptor(),
             new PersonalTeamManagementPageInterceptor(),
             new PersonalManualPageInterceptor(),
+            new PersonalMirrorPageInterceptor(),
             new PersonalPetManagementPageInterceptor(),
             new PersonalProfilePageInterceptor(),
             new PersonalSetupPageInterceptor(),

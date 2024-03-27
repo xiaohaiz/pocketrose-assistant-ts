@@ -3,7 +3,6 @@ import BankRecordReportGenerator from "../../core/bank/BankRecordReportGenerator
 import LocalSettingManager from "../../core/config/LocalSettingManager";
 import EquipmentConstants from "../../core/equipment/EquipmentConstants";
 import TeamEquipmentReportGenerator from "../../core/equipment/TeamEquipmentReportGenerator";
-import PowerGemFuseReportGenerator from "../../core/forge/PowerGemFuseReportGenerator";
 import MonsterPageUtils from "../../core/monster/MonsterPageUtils";
 import MonsterProfileLoader from "../../core/monster/MonsterProfileLoader";
 import Pet from "../../core/monster/Pet";
@@ -64,10 +63,14 @@ abstract class PersonalTeamPageProcessor extends PageProcessorCredentialSupport 
         html += "<table style='background-color:transparent;margin:auto;border-spacing:0;border-width:0'>";
         html += "<tbody>";
         html += "<tr>";
-        html += "<td colspan='4' style='text-align:center'>";
+        html += "<td style='text-align:center'>";
         html += "<input type='checkbox' id='includeExternal'>是否包含编外队员";
         html += "</td>";
         html += "</tr>";
+        html += "<tr>";
+        html += "<td>";
+        html += "<table style='background-color:transparent;margin:auto;border-spacing:0;border-width:0'>";
+        html += "<tbody>";
         html += "<tr>";
         html += "<td>";
         html += "<button role='button' id='listEquipmentButton'>团队装备列表</button>";
@@ -78,19 +81,20 @@ abstract class PersonalTeamPageProcessor extends PageProcessorCredentialSupport 
         html += "<td>";
         html += "<button role='button' id='bankRecordButton'>银行资产分析</button>";
         html += "</td>";
-        html += "<td>";
-        html += "<button role='button' id='powerGemButton'>威力宝石统计</button>";
+        html += "</tr>";
+        html += "</tbody>";
+        html += "</table>";
         html += "</td>";
         html += "</tr>";
         html += "<tr>";
-        html += "<td colspan='4' style='text-align:center'>";
+        html += "<td style='text-align:center'>";
         html += "<input type='text' id='searchName' size='15' maxlength='40' spellcheck='false'>";
         html += "<input type='button' id='searchTeamEquipmentButton' value='查找团队装备'>";
         html += "<input type='button' id='searchTeamPetButton' value='查找团队宠物'>";
         html += "</td>";
         html += "</tr>";
         html += "<tr>";
-        html += "<td colspan='4' style='text-align:center'>";
+        html += "<td style='text-align:center'>";
         html += "<input type='button' id='searchTeamSpecialEquipmentButton_A' value='神枪' style='color:red'>";
         html += "<input type='button' id='searchTeamSpecialEquipmentButton_B' value='斧头' style='color:green'>";
         html += "<input type='button' id='searchTeamSpecialEquipmentButton_C' value='神器' style='color:blue'>";
@@ -105,7 +109,7 @@ abstract class PersonalTeamPageProcessor extends PageProcessorCredentialSupport 
         html += "</td>";
         html += "</tr>";
         html += "<tr>";
-        html += "<td colspan='4' style='text-align:center'>";
+        html += "<td style='text-align:center'>";
         html += "<input type='button' id='searchTeamNonFullExperienceEquipmentButton' value='经验未满装备'>";
         html += "<input type='button' id='searchTeamUsingEquipmentButton' value='使用中的装备'>";
         html += "<input type='button' id='searchTeamStarEquipmentButton' value='有齐心的装备'>";
@@ -165,7 +169,6 @@ abstract class PersonalTeamPageProcessor extends PageProcessorCredentialSupport 
         this.#bindListEquipmentButton();
         this.#bindListPetButton();
         this.#bindBankRecordButton();
-        this.#bindPowerGemButton();
         this.#bindSearchTeamEquipmentButton();
         this.#bindSearchTeamPetButton();
         this.#bindSearchTeamNonFullExperienceEquipmentButton();
@@ -316,16 +319,6 @@ abstract class PersonalTeamPageProcessor extends PageProcessorCredentialSupport 
             const includeExternal = $("#includeExternal").prop("checked") as boolean;
 
             new BankRecordReportGenerator().generate(includeExternal);
-        });
-    }
-
-    #bindPowerGemButton() {
-        $("#powerGemButton").on("click", () => {
-            $(".simulationButton").off("click");
-
-            const includeExternal = $("#includeExternal").prop("checked") as boolean;
-
-            new PowerGemFuseReportGenerator().generate(includeExternal);
         });
     }
 

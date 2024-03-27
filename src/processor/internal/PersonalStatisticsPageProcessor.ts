@@ -23,6 +23,7 @@ import MonthRange from "../../util/MonthRange";
 import WeekRange from "../../util/WeekRange";
 import PageProcessorContext from "../PageProcessorContext";
 import PageProcessorCredentialSupport from "../PageProcessorCredentialSupport";
+import PowerGemFuseReportGenerator from "../../core/forge/PowerGemFuseReportGenerator";
 
 abstract class PersonalStatisticsPageProcessor extends PageProcessorCredentialSupport {
 
@@ -86,6 +87,10 @@ abstract class PersonalStatisticsPageProcessor extends PageProcessorCredentialSu
         html += "<tbody>";
         html += "<tr>";
         html += "<td>";
+        html += "<table style='background-color:transparent;border-spacing:0;border-width:0;margin:auto'>";
+        html += "<tbody>";
+        html += "<tr>";
+        html += "<td>";
         html += "<button role='button' id='report-1' style='width:100%' class='reportButton'>战斗统计报告</button>";
         html += "</td>";
         html += "<td>";
@@ -103,7 +108,18 @@ abstract class PersonalStatisticsPageProcessor extends PageProcessorCredentialSu
         html += "<td>";
         html += "<button role='button' id='report-6' style='width:100%' class='reportButton'>祭奠统计报告</button>";
         html += "<td>";
+        html += "<td>";
+        html += "<button role='button' id='report-7' style='width:100%' class='reportButton'>威力宝石统计</button>";
+        html += "<td>";
         html += "</tr>";
+        html += "</tbody>";
+        html += "</table>";
+        html += "</td>";
+        html += "</tr>";
+        html += "<tr>";
+        html += "<td>";
+        html += "<table style='background-color:transparent;border-spacing:0;border-width:0;margin:auto'>";
+        html += "<tbody>";
         html += "<tr>";
         html += "<td>";
         html += "<button role='button' id='log-1' style='width:100%' class='reportButton'>当日战报</button>";
@@ -122,6 +138,10 @@ abstract class PersonalStatisticsPageProcessor extends PageProcessorCredentialSu
         html += "</td>";
         html += "<td>";
         html += "<button role='button' id='log-6' style='width:100%' class='reportButton'>上月战报</button>";
+        html += "</td>";
+        html += "</tr>";
+        html += "</tbody>";
+        html += "</table>";
         html += "</td>";
         html += "</tr>";
         html += "</tbody>";
@@ -221,6 +241,7 @@ abstract class PersonalStatisticsPageProcessor extends PageProcessorCredentialSu
         doBindReport4();
         doBindReport5();
         doBindReport6();
+        doBindReport7();
         doBindLog1();
         doBindLog2();
         doBindLog3();
@@ -334,6 +355,15 @@ function doBindReport6() {
     });
 }
 
+function doBindReport7() {
+    $("#report-7").on("click", () => {
+        $(".reportButton").prop("disabled", true);
+        const includeExternal = $("#includeExternal").prop("checked") as boolean;
+        new PowerGemFuseReportGenerator().generate(includeExternal);
+        $(".reportButton").prop("disabled", false);
+    });
+}
+
 function doBindLog1() {
     $("#log-1").on("click", () => {
         const includeExternal = $("#includeExternal").prop("checked") as boolean;
@@ -441,7 +471,8 @@ function doBindExportBattleLog() {
     $("#exportBattleLog").on("click", () => {
         $(".databaseButton").prop("disabled", true);
 
-        const target = $("#teamMemberSelect").val()! as string;
+        const includeExternal = $("#includeExternal").prop("checked") as boolean;
+        const members = TeamMemberLoader.loadTeamMembersAsMap(includeExternal);
 
         // 上个月的第一天00:00:00.000作为查询起始时间
         const startTime = MonthRange.current().previous().start;
@@ -449,7 +480,8 @@ function doBindExportBattleLog() {
             .findByCreateTime(startTime)
             .then(logList => {
                 const documentList = logList
-                    .filter(it => target === "" || target === it.roleId)
+                    .filter(it => it.roleId !== undefined)
+                    .filter(it => members.has(it.roleId!))
                     .map(it => it.asObject());
 
                 const json = JSON.stringify(documentList);

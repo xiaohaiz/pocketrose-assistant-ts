@@ -3,7 +3,6 @@ import PersonalCareerManagement from "../../core/career/PersonalCareerManagement
 import PersonalCareerManagementPage from "../../core/career/PersonalCareerManagementPage";
 import PersonalSpell from "../../core/career/PersonalSpell";
 import Spell from "../../core/career/Spell";
-import SetupLoader from "../../core/config/SetupLoader";
 import NpcLoader from "../../core/role/NpcLoader";
 import PersonalStatus from "../../core/role/PersonalStatus";
 import Role from "../../core/role/Role";
@@ -18,12 +17,12 @@ class PersonalCareerManagementPageProcessor_Castle extends PersonalCareerManagem
 
     doProcessPageParsed(credential: Credential, page: PersonalCareerManagementPage, context?: PageProcessorContext): void {
         const candidateList = page.careerList!;
-        doProcess(credential, candidateList);
+        doProcess(credential, candidateList, this.isCareerTransferEnabled);
     }
 
 }
 
-function doProcess(credential: Credential, candidateList: string[]) {
+function doProcess(credential: Credential, candidateList: string[], careerTransferEnabled: boolean) {
     $("table:first td:first").removeAttr("bgcolor");
     $("table:first td:first").removeAttr("height");
     $("table:first td:first").css("text-align", "center");
@@ -77,10 +76,10 @@ function doProcess(credential: Credential, candidateList: string[]) {
     CommentBoard.writeMessage("是的，你没有看错，换人了，某幕后黑手不愿意出镜。不过请放心，转职方面我是专业的，毕竟我一直制霸钉耙榜。<br>");
     CommentBoard.writeMessage("蓝色的职业代表你已经掌握了。我会把为你推荐的职业红色加深标识出来，当然，前提是如果有能推荐的。<br>");
 
-    doRender(credential, candidateList);
+    doRender(credential, candidateList, careerTransferEnabled);
 }
 
-function doRender(credential: Credential, candidateList: string[]) {
+function doRender(credential: Credential, candidateList: string[], careerTransferEnabled: boolean) {
     let html = "";
     html += "<table style='background-color:#888888;width:100%;text-align:center'>";
     html += "<tbody style='background-color:#F8F0E0'>";
@@ -104,14 +103,14 @@ function doRender(credential: Credential, candidateList: string[]) {
         doRenderRoleStatus(role);
 
         if (role.level! > 50) {
-            doRenderCareer(credential, role, candidateList);
-            doBindCareerButton(credential);
+            doRenderCareer(credential, role, candidateList, careerTransferEnabled);
+            doBindCareerButton(credential, careerTransferEnabled);
         }
 
         new PersonalSpell(credential).open().then(spellPage => {
             const spellList = spellPage.spellList!;
             doRenderSpell(credential, role, spellList);
-            doBindSpellButton(credential, spellList);
+            doBindSpellButton(credential, spellList, careerTransferEnabled);
         });
     });
 }
@@ -152,7 +151,7 @@ function doRenderRoleStatus(role: Role) {
     $("#roleStatus").html(html);
 }
 
-function doRenderCareer(credential: Credential, role: Role, careerCandidateList: string[]) {
+function doRenderCareer(credential: Credential, role: Role, careerCandidateList: string[], careerTransferEnabled: boolean) {
     let html = "";
     html += "<table style='background-color:#888888;width:100%;text-align:center'>";
     html += "<tbody style='background-color:#F8F0E0'>";
@@ -302,7 +301,7 @@ function doRenderCareer(credential: Credential, role: Role, careerCandidateList:
         }
     }
 
-    if (SetupLoader.isCareerTransferEntranceDisabled(credential.id)) {
+    if (!careerTransferEnabled) {
         // 转职入口被关闭了，那就禁止所有的转职按钮。
         for (let i = 0; i < careerNames.length; i++) {
             const careerName = careerNames[i];
@@ -358,16 +357,16 @@ function doRenderSpell(credential: Credential, role: Role, spellList: Spell[]) {
     }
 }
 
-function doRefresh(credential: Credential) {
+function doRefresh(credential: Credential, careerTransferEnabled: boolean) {
     new PersonalCareerManagement(credential).open().then(page => {
         const careerCandidateList = page.careerList!;
         $(".CareerUIButton").off("click");
         $("#CareerUI").html("");
-        doRender(credential, careerCandidateList);
+        doRender(credential, careerCandidateList, careerTransferEnabled);
     });
 }
 
-function doBindCareerButton(credential: Credential) {
+function doBindCareerButton(credential: Credential, careerTransferEnabled: boolean) {
     const careerNames = Object.keys(CareerLoader.loadCareers());
     for (let i = 0; i < careerNames.length; i++) {
         const careerName = careerNames[i];
@@ -384,14 +383,14 @@ function doBindCareerButton(credential: Credential) {
                 new PersonalCareerManagement(credential)
                     .transfer(careerId)
                     .then(() => {
-                        doRefresh(credential);
+                        doRefresh(credential, careerTransferEnabled);
                     });
             });
         }
     }
 }
 
-function doBindSpellButton(credential: Credential, spellList: Spell[]) {
+function doBindSpellButton(credential: Credential, spellList: Spell[], careerTransferEnabled: boolean) {
     for (const spell of spellList) {
         const buttonId = "set_spell_" + spell.id;
         if ($("#" + buttonId).length > 0 && !$("#" + buttonId).prop("disabled")) {
@@ -404,7 +403,7 @@ function doBindSpellButton(credential: Credential, spellList: Spell[]) {
                 request["ktec_no"] = spellId;
                 NetworkUtils.sendPostRequest("mydata.cgi", request, function (html) {
                     MessageBoard.processResponseMessage(html);
-                    doRefresh(credential);
+                    doRefresh(credential, careerTransferEnabled);
                 });
             });
         }

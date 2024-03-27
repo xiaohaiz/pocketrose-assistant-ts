@@ -1,13 +1,13 @@
 import RoleStateMachineManager from "../../core/state/RoleStateMachineManager";
-import TownTaskHousePageProcessor from "../../processor/internal/TownTaskHousePageProcessor";
+import PersonalMirrorPageProcessor from "../../processor/internal/PersonalMirrorPageProcessor";
 import PageProcessorContext from "../../processor/PageProcessorContext";
 import PageInterceptor from "../PageInterceptor";
 
-class TownTaskHousePageInterceptor implements PageInterceptor {
+class PersonalMirrorPageInterceptor implements PageInterceptor {
 
     accept(cgi: string, pageText: string): boolean {
-        if (cgi === "town.cgi") {
-            return pageText.includes("＜＜ * 网 球 场 *＞＞");
+        if (cgi === "mydata.cgi") {
+            return pageText.includes("* 分身试管 *");
         }
         return false;
     }
@@ -18,9 +18,9 @@ class TownTaskHousePageInterceptor implements PageInterceptor {
             .then(machine => {
                 machine.start()
                     .whenInTown(state => {
-                        const context = new PageProcessorContext();
-                        context.withTownId(state?.townId);
-                        new TownTaskHousePageProcessor().process(context);
+                        const context = new PageProcessorContext()
+                            .withTownId(state?.townId);
+                        new PersonalMirrorPageProcessor().process(context);
                     })
                     .process();
             });
@@ -28,4 +28,4 @@ class TownTaskHousePageInterceptor implements PageInterceptor {
 
 }
 
-export = TownTaskHousePageInterceptor;
+export = PersonalMirrorPageInterceptor;

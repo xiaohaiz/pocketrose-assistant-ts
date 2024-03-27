@@ -35,7 +35,6 @@ class TownDashboardPage {
     unitMessageHtml?: string;
     townMessageHtml?: string;
 
-    careerTransferNotification?: boolean;
     capacityLimitationNotification?: boolean;
     canCollectTownTax?: boolean;
 

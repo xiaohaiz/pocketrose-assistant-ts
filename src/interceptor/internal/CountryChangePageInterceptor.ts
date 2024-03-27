@@ -1,12 +1,9 @@
 import RoleStateMachineManager from "../../core/state/RoleStateMachineManager";
 import CountryChangePageProcessor from "../../processor/internal/CountryChangePageProcessor";
-import PageProcessor from "../../processor/PageProcessor";
 import PageProcessorContext from "../../processor/PageProcessorContext";
 import PageInterceptor from "../PageInterceptor";
 
 class CountryChangePageInterceptor implements PageInterceptor {
-
-    readonly #processor: PageProcessor = new CountryChangePageProcessor();
 
     accept(cgi: string, pageText: string): boolean {
         if (cgi === "country.cgi") {
@@ -23,7 +20,7 @@ class CountryChangePageInterceptor implements PageInterceptor {
                     .whenInTown(state => {
                         const context = new PageProcessorContext();
                         context.withTownId(state?.townId);
-                        this.#processor.process(context);
+                        new CountryChangePageProcessor().process(context);
                     })
                     .process();
             });

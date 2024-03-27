@@ -1,11 +1,8 @@
 import RoleStateMachineManager from "../../core/state/RoleStateMachineManager";
 import ConversationPageProcessor from "../../processor/internal/ConversationPageProcessor";
-import PageProcessor from "../../processor/PageProcessor";
 import PageInterceptor from "../PageInterceptor";
 
 class ConversationPageInterceptor implements PageInterceptor {
-
-    readonly #processor: PageProcessor = new ConversationPageProcessor();
 
     accept(cgi: string, pageText: string): boolean {
         if (cgi === "messe_print.cgi") {
@@ -20,7 +17,7 @@ class ConversationPageInterceptor implements PageInterceptor {
             .then(machine => {
                 machine.start()
                     .whenInTown(() => {
-                        this.#processor.process();
+                        new ConversationPageProcessor().process();
                     })
                     .process();
             });

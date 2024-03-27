@@ -1,11 +1,8 @@
 import RoleStateMachineManager from "../../core/state/RoleStateMachineManager";
 import CastlePostHousePageProcessor from "../../processor/internal/CastlePostHousePageProcessor";
-import PageProcessor from "../../processor/PageProcessor";
 import PageInterceptor from "../PageInterceptor";
 
 class CastlePostHousePageInterceptor implements PageInterceptor {
-
-    readonly #processor: PageProcessor = new CastlePostHousePageProcessor();
 
     accept(cgi: string, pageText: string): boolean {
         if (cgi === "castle.cgi") {
@@ -20,7 +17,7 @@ class CastlePostHousePageInterceptor implements PageInterceptor {
             .then(machine => {
                 machine.start()
                     .whenInCastle(state => {
-                        this.#processor.process();
+                        new CastlePostHousePageProcessor().process();
                     })
                     .process();
             });

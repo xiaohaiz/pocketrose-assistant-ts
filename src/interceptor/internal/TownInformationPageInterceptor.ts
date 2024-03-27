@@ -1,9 +1,7 @@
-import PageInterceptor from "../PageInterceptor";
 import TownInformationPageProcessor from "../../processor/internal/TownInformationPageProcessor";
+import PageInterceptor from "../PageInterceptor";
 
 class TownInformationPageInterceptor implements PageInterceptor {
-
-    readonly #processor = new TownInformationPageProcessor();
 
     accept(cgi: string, pageText: string): boolean {
         if (cgi === "town_print.cgi") {
@@ -13,7 +11,7 @@ class TownInformationPageInterceptor implements PageInterceptor {
     }
 
     intercept(): void {
-        this.#processor.process();
+        new TownInformationPageProcessor().process();
     }
 
 }

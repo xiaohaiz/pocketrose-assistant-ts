@@ -1,13 +1,9 @@
 import RoleStateMachineManager from "../../core/state/RoleStateMachineManager";
 import PersonalTeamPageProcessor_Castle from "../../processor/internal/PersonalTeamPageProcessor_Castle";
 import PersonalTeamPageProcessor_Town from "../../processor/internal/PersonalTeamPageProcessor_Town";
-import PageProcessor from "../../processor/PageProcessor";
 import PageInterceptor from "../PageInterceptor";
 
 class PersonalTeamPageInterceptor implements PageInterceptor {
-
-    readonly #inTownProcessor: PageProcessor = new PersonalTeamPageProcessor_Town();
-    readonly #inCastleProcessor: PageProcessor = new PersonalTeamPageProcessor_Castle();
 
     accept(cgi: string, pageText: string): boolean {
         if (cgi === "mydata.cgi") {
@@ -22,10 +18,10 @@ class PersonalTeamPageInterceptor implements PageInterceptor {
             .then(machine => {
                 machine.start()
                     .whenInTown(() => {
-                        this.#inTownProcessor.process();
+                        new PersonalTeamPageProcessor_Town().process();
                     })
                     .whenInCastle(() => {
-                        this.#inCastleProcessor.process();
+                        new PersonalTeamPageProcessor_Castle().process();
                     })
                     .process();
             });

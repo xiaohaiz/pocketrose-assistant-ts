@@ -1,14 +1,10 @@
 import RoleStateMachineManager from "../../core/state/RoleStateMachineManager";
 import PersonalProfilePageProcessor_Castle from "../../processor/internal/PersonalProfilePageProcessor_Castle";
 import PersonalProfilePageProcessor_Town from "../../processor/internal/PersonalProfilePageProcessor_Town";
-import PageProcessor from "../../processor/PageProcessor";
 import PageProcessorContext from "../../processor/PageProcessorContext";
 import PageInterceptor from "../PageInterceptor";
 
 class PersonalProfilePageInterceptor implements PageInterceptor {
-
-    readonly #inTownProcessor: PageProcessor = new PersonalProfilePageProcessor_Town();
-    readonly #inCastleProcessor: PageProcessor = new PersonalProfilePageProcessor_Castle();
 
     accept(cgi: string, pageText: string): boolean {
         if (cgi === "mydata.cgi") {
@@ -25,12 +21,12 @@ class PersonalProfilePageInterceptor implements PageInterceptor {
                     .whenInTown(state => {
                         const context = new PageProcessorContext()
                             .withTownId(state?.townId);
-                        this.#inTownProcessor.process(context);
+                        new PersonalProfilePageProcessor_Town().process(context);
                     })
                     .whenInCastle(state => {
                         const context = new PageProcessorContext()
                             .withCastleName(state?.castleName);
-                        this.#inCastleProcessor.process(context);
+                        new PersonalProfilePageProcessor_Castle().process(context);
                     })
                     .process();
             });

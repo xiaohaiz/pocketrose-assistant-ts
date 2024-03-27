@@ -1,4 +1,5 @@
 import _ from "lodash";
+import Constants from "../../util/Constants";
 import Credential from "../../util/Credential";
 import NetworkUtils from "../../util/NetworkUtils";
 import PageUtils from "../../util/PageUtils";
@@ -11,19 +12,19 @@ import BattleScene from "../battle/BattleScene";
 import BattleSceneStorage from "../battle/BattleSceneStorage";
 import LocalSettingManager from "../config/LocalSettingManager";
 import SetupLoader from "../config/SetupLoader";
+import RoleEquipmentStatusStorage from "../equipment/RoleEquipmentStatusStorage";
 import TownForge from "../forge/TownForge";
 import TownInn from "../inn/TownInn";
 import PersonalStatus from "../role/PersonalStatus";
+import RoleControlPanel from "../role/RoleControlPanel";
 import PalaceTaskManager from "../task/PalaceTaskManager";
+import TeamMemberLoader from "../team/TeamMemberLoader";
 import TownDashboardTaxManager from "../town/TownDashboardTaxManager";
 import DashboardPageUtils from "./DashboardPageUtils";
 import TownDashboardKeyboardManager from "./TownDashboardKeyboardManager";
 import TownDashboardLayout from "./TownDashboardLayout";
 import TownDashboardPage from "./TownDashboardPage";
 import TownDashboardPageParser from "./TownDashboardPageParser";
-import Constants from "../../util/Constants";
-import RoleEquipmentStatusStorage from "../equipment/RoleEquipmentStatusStorage";
-import TeamMemberLoader from "../team/TeamMemberLoader";
 
 class TownDashboardLayout007 extends TownDashboardLayout {
 
@@ -518,9 +519,13 @@ function doProcessBattleReturn(credential: Credential,
         $("#countryAdvancedCell").css("background-color", "lightblue");
     }
 
-    if (page.careerTransferNotification) {
-        $("#battleCell").css("background-color", "red");
-    }
+    new RoleControlPanel(credential)
+        .triggerCareerTransferNotification(page.obtainRole)
+        .then(message => {
+            if (message.success) {
+                $("#battleCell").css("background-color", "red");
+            }
+        });
     if (page.capacityLimitationNotification) {
         $("#battleCell").css("background-color", "yellow");
     }

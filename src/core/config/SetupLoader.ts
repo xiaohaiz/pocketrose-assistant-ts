@@ -27,10 +27,6 @@ class SetupLoader {
         return StorageUtils.getInt("_pa_005", 10);
     }
 
-    static isCareerTransferEntranceDisabled(id: string): boolean {
-        return StorageUtils.getBoolean("_pa_014_" + id);
-    }
-
     static loadEquipmentSetConfig(id: string, index: string): EquipmentSetConfig {
         const mapping = {
             "A": "_pa_019_",
@@ -191,6 +187,14 @@ class SetupLoader {
 
     static isAutoChangePointToTown() {
         return StorageUtils.getBoolean("_pa_069");
+    }
+
+    static loadMirrorCareerFixedConfig(id: string): {} {
+        const s = StorageUtils.getString("_pa_070_" + id);
+        if (s === "") {
+            return {};
+        }
+        return JSON.parse(s);
     }
 }
 

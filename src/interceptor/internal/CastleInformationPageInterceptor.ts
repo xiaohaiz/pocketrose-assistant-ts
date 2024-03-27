@@ -3,8 +3,6 @@ import PageInterceptor from "../PageInterceptor";
 
 class CastleInformationPageInterceptor implements PageInterceptor {
 
-    readonly #processor = new CastleInformationPageProcessor();
-
     accept(cgi: string, pageText: string): boolean {
         if (cgi === "castle_print.cgi") {
             return pageText.includes("城堡商业度");
@@ -13,7 +11,7 @@ class CastleInformationPageInterceptor implements PageInterceptor {
     }
 
     intercept(): void {
-        this.#processor.process();
+        new CastleInformationPageProcessor().process();
     }
 
 }

@@ -1,6 +1,7 @@
 import Credential from "../../util/Credential";
 import MessageBoard from "../../util/MessageBoard";
 import NetworkUtils from "../../util/NetworkUtils";
+import LocalSettingManager from "../config/LocalSettingManager";
 import PersonalMirrorPage from "./PersonalMirrorPage";
 
 class PersonalMirror {
@@ -36,6 +37,8 @@ class PersonalMirror {
                 request.set("select", index.toString());
                 request.set("mode", "FENSHENCHANGE");
                 NetworkUtils.post("mydata.cgi", request).then(html => {
+                    // Clear role's mirror status after mirror changed.
+                    LocalSettingManager.clearMirrorStatus(this.#credential.id);
                     MessageBoard.processResponseMessage(html);
                     resolve();
                 });

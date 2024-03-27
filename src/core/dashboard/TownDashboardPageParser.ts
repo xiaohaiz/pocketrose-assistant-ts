@@ -365,9 +365,6 @@ function _parseRoleStatus(page: TownDashboardPage, table: JQuery, div: JQuery, c
             page.obtainRole.name = $(td).find("> font:first").find("> b:first").text();
         });
 
-    if (page.obtainRole.level === 150 && !SetupLoader.isCareerTransferEntranceDisabled(credential.id)) {
-        page.careerTransferNotification = true;
-    }
     if (page.obtainRole.level !== 150 && (page.obtainRole.attack === 375 || page.obtainRole.defense === 375
         || page.obtainRole.specialAttack === 375 || page.obtainRole.specialDefense === 375 || page.obtainRole.speed === 375)) {
         page.capacityLimitationNotification = true;

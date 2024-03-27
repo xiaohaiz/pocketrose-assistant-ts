@@ -1,12 +1,9 @@
 import RoleStateMachineManager from "../../core/state/RoleStateMachineManager";
 import BattlePageProcessor from "../../processor/internal/BattlePageProcessor";
-import PageProcessor from "../../processor/PageProcessor";
 import PageProcessorContext from "../../processor/PageProcessorContext";
 import PageInterceptor from "../PageInterceptor";
 
 class BattlePageInterceptor implements PageInterceptor {
-
-    readonly #processor: PageProcessor = new BattlePageProcessor();
 
     accept(cgi: string, pageText: string): boolean {
         if (cgi === "battle.cgi") {
@@ -28,7 +25,7 @@ class BattlePageInterceptor implements PageInterceptor {
                         const context = new PageProcessorContext()
                             .withTownId(state?.townId)
                             .withBattleCount(state?.battleCount?.toString());
-                        this.#processor.process(context);
+                        new BattlePageProcessor().process(context);
                     })
                     .process();
             });

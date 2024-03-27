@@ -1,12 +1,9 @@
 import RoleStateMachineManager from "../../core/state/RoleStateMachineManager";
 import CastleBankPageProcessor from "../../processor/internal/CastleBankPageProcessor";
-import PageProcessor from "../../processor/PageProcessor";
 import PageProcessorContext from "../../processor/PageProcessorContext";
 import PageInterceptor from "../PageInterceptor";
 
 class CastleBankPageInterceptor implements PageInterceptor {
-
-    readonly #processor: PageProcessor = new CastleBankPageProcessor();
 
     accept(cgi: string, pageText: string): boolean {
         if (cgi === "castle.cgi") {
@@ -23,7 +20,7 @@ class CastleBankPageInterceptor implements PageInterceptor {
                     .whenInCastle(state => {
                         const context = new PageProcessorContext();
                         context.withCastleName(state?.castleName);
-                        this.#processor.process(context);
+                        new CastleBankPageProcessor().process(context);
                     })
                     .process();
             });

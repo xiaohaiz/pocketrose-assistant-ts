@@ -1,10 +1,14 @@
+import _ from "lodash";
 import Credential from "../../util/Credential";
 import MessageBoard from "../../util/MessageBoard";
 import NetworkUtils from "../../util/NetworkUtils";
+import OperationMessage from "../../util/OperationMessage";
 import StringUtils from "../../util/StringUtils";
+import PersonalStatus from "../role/PersonalStatus";
 import Role from "../role/Role";
 import Equipment from "./Equipment";
 import PersonalEquipmentManagementPage from "./PersonalEquipmentManagementPage";
+import TreasureBag from "./TreasureBag";
 
 class PersonalEquipmentManagement {
 
@@ -57,6 +61,36 @@ class PersonalEquipmentManagement {
                 });
             });
         })();
+    }
+
+    /**
+     * 将身上的闲置装备全部放入百宝袋。
+     */
+    async putIdleEquipmentIntoTreasureBag(): Promise<OperationMessage> {
+        const equipmentPage = await this.open();
+        const indexList = _.forEach(equipmentPage.equipmentList!)
+            .filter(it => it.isIdle)
+            .map(it => it.index!);
+        if (indexList.length === 0) {
+            MessageBoard.publishWarning("没有发现闲置装备！");
+            return OperationMessage.failure();
+        }
+        let hasTreasureBag = true;
+        if (equipmentPage.findTreasureBag() === null) {
+            const role = await new PersonalStatus(this.#credential).load();
+            hasTreasureBag = role.masterCareerList!.includes("剑圣") || role.hasMirror!;
+            if (hasTreasureBag) {
+                MessageBoard.publishWarning("真可怜，百宝袋丢失了吧。但是百宝袋功能还是能为你有限提供的。");
+            }
+        }
+        if (!hasTreasureBag) {
+            MessageBoard.publishWarning("对不起，你好像就没有百宝袋！");
+            return OperationMessage.failure();
+        }
+        await new TreasureBag(this.#credential).putInto(indexList);
+        const message = OperationMessage.success();
+        message.doRefresh = true;
+        return message;
     }
 }
 

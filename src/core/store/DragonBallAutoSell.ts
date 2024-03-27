@@ -31,7 +31,7 @@ class DragonBallAutoSell {
         }
         this.#timer = setInterval(() => {
             this.#autoSellDragonBall().then();
-        }, 3000);
+        }, 1500);
     }
 
     shutdown() {

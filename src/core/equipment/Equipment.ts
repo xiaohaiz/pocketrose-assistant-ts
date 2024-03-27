@@ -193,6 +193,16 @@ class Equipment {
         }
     }
 
+    /**
+     * 闲置装备的判断标准。
+     */
+    get isIdle(): boolean {
+        return (this.using === undefined || !this.using)
+            && !this.isGoldenCage
+            && !this.isTreasureBag
+            && !(this.name === "无忧之果(自动)");
+    }
+
     get isStorable(): boolean {
         if (this.using!) {
             return false;

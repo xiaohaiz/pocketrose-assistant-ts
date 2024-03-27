@@ -257,6 +257,7 @@ class TownGemHousePageProcessor extends PageProcessorCredentialSupport {
             }
         }
 
+        let gemSequence = 0;
         if (page.gemList!.length > 0) {
             let powerGemFound = false;
             let weightGemFound = false;
@@ -266,13 +267,14 @@ class TownGemHousePageProcessor extends PageProcessorCredentialSupport {
             html += "<table style='border-width:0;background-color:#888888;margin:auto'>";
             html += "<tbody style='background-color:#F8F0E0;text-align:center'>";
             html += "<tr>";
-            html += "<td style='background-color:darkgreen;color:wheat;font-weight:bold' colspan='2'>";
+            html += "<td style='background-color:darkgreen;color:wheat;font-weight:bold' colspan='3'>";
             html += "＜ 可 用 宝 石 ＞";
             html += "</td>";
             html += "</tr>";
             html += "<tr>";
-            html += "<th style='background-color:#E8E8D0'>宝石</th>";
-            html += "<th style='background-color:#EFE0C0'>镶嵌</th>";
+            html += "<th style='background-color:skyblue'>序号</th>";
+            html += "<th style='background-color:skyblue'>宝石</th>";
+            html += "<th style='background-color:skyblue'>镶嵌</th>";
             html += "</tr>";
 
             for (const gem of page.gemList!) {
@@ -286,6 +288,7 @@ class TownGemHousePageProcessor extends PageProcessorCredentialSupport {
                     luckGemFound = true;
                 }
                 html += "<tr>";
+                html += "<th style='background-color:black;color:white'>" + (++gemSequence) + "</th>";
                 html += "<td style='background-color:#E8E8D0'>" + gem.nameHTML + "</td>";
                 html += "<td style='background-color:#EFE0C0'>";
                 html += "<input type='button' value='镶嵌' " +
@@ -414,7 +417,7 @@ class TownGemHousePageProcessor extends PageProcessorCredentialSupport {
                 }
             }
 
-            new TownGemHouse(credential, town.id).fuse(checkedIndex, index).then(() => {
+            new TownGemHouse(credential, town.id).fuse(checkedIndex, index, equipment?.name).then(() => {
                 // 合成装备之后，设置最后一次合成的信息
                 $("#last_fuse_cell").text(lastFuse);
                 this.#refreshMutablePage(credential, town);
@@ -544,7 +547,7 @@ class TownGemHousePageProcessor extends PageProcessorCredentialSupport {
                     this.#refreshMutablePage(credential, town);
                 } else {
                     const house = new TownGemHouse(credential, town.id);
-                    house.fuse(equipmentIndex, gem!.index!).then(() => {
+                    house.fuse(equipmentIndex, gem!.index!, equipment.name).then(() => {
                         house.open().then(page => {
                             this.#_fuseAllGems(credential, page, town, target, gemCode);
                         });
@@ -553,7 +556,7 @@ class TownGemHousePageProcessor extends PageProcessorCredentialSupport {
             });
         } else {
             const house = new TownGemHouse(credential, town.id);
-            house.fuse(equipmentIndex, gem!.index!).then(() => {
+            house.fuse(equipmentIndex, gem!.index!, equipment.name).then(() => {
                 house.open().then(page => {
                     this.#_fuseAllGems(credential, page, town, target, gemCode);
                 });
