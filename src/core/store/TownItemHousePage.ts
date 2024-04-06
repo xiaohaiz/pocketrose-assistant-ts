@@ -15,6 +15,24 @@ class TownItemHousePage {
         return TownLoader.load(this.townId)!;
     }
 
+    get hasTreasureBag(): boolean {
+        for (const equipment of this.equipmentList!) {
+            if (equipment.isTreasureBag) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    get treasureBag(): Equipment | null {
+        for (const equipment of this.equipmentList!) {
+            if (equipment.isTreasureBag) {
+                return equipment;
+            }
+        }
+        return null;
+    }
+
     findEquipment(index: number) {
         for (const equipment of this.equipmentList!) {
             if (equipment.index === index) {

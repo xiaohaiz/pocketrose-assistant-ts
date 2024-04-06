@@ -22,10 +22,10 @@ import MessageBoard from "../../util/MessageBoard";
 import MonthRange from "../../util/MonthRange";
 import WeekRange from "../../util/WeekRange";
 import PageProcessorContext from "../PageProcessorContext";
-import PageProcessorCredentialSupport from "../PageProcessorCredentialSupport";
+import StatelessPageProcessorCredentialSupport from "../StatelessPageProcessorCredentialSupport";
 import PowerGemFuseReportGenerator from "../../core/forge/PowerGemFuseReportGenerator";
 
-abstract class PersonalStatisticsPageProcessor extends PageProcessorCredentialSupport {
+abstract class PersonalStatisticsPageProcessor extends StatelessPageProcessorCredentialSupport {
 
     async doProcess(credential: Credential, context?: PageProcessorContext): Promise<void> {
         // 点名的页面也是令人无语，全部在一个大form里面。

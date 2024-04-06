@@ -5,6 +5,7 @@ import StringUtils from "../../util/StringUtils";
 import SetupLoader from "../config/SetupLoader";
 import TownLoader from "../town/TownLoader";
 import EquipmentConstants from "./EquipmentConstants";
+import EquipmentProfileLoader from "./EquipmentProfileLoader";
 
 class Equipment {
 
@@ -99,6 +100,25 @@ class Equipment {
         this.price = parseInt(s);
     }
 
+    checkGem(category: string): boolean {
+        if (this.isDragonBall) {
+            return category === "ALL" || category === "DRAGON";
+        }
+        if (!this.isGem) return false;
+        switch (category) {
+            case "ALL":
+                return true;
+            case "POWER":
+                return this.name === "威力宝石";
+            case "LUCK":
+                return this.name === "幸运宝石";
+            case "WEIGHT":
+                return this.name === "重量宝石";
+            default:
+                return false;
+        }
+    }
+
     get locationOrder() {
         switch (this.location) {
             case "P":
@@ -170,6 +190,27 @@ class Equipment {
         return this.isItem && this.name === "黄金笼子";
     }
 
+    get canSend(): boolean {
+        if (_.includes(this.name, "魔法使的闪光弹")) return false;
+        if (_.includes(this.name, "千与千寻")) return false;
+        if (_.includes(this.name, "勿忘我")) return false;
+        if (_.includes(this.name, "降魔杖")) return false;
+        if (_.includes(this.name, "九齿钉耙")) return false;
+        if (_.includes(this.name, "1.5倍界王拳套")) return false;
+        if (_.includes(this.name, "双经斩")) return false;
+        if (_.includes(this.name, "霸者倚天玉佩")) return false;
+        if (_.includes(this.name, "王道倚天玉佩")) return false;
+        if (_.includes(this.name, "霸者磐石玉佩")) return false;
+        if (_.includes(this.name, "王道磐石玉佩")) return false;
+        if (_.includes(this.name, "霸者仙人玉佩")) return false;
+        if (_.includes(this.name, "王道仙人玉佩")) return false;
+        if (_.includes(this.name, "霸者军神玉佩")) return false;
+        if (_.includes(this.name, "王道军神玉佩")) return false;
+        if (_.includes(this.name, "霸者疾风玉佩")) return false;
+        if (_.includes(this.name, "王道疾风玉佩")) return false;
+        return true;
+    }
+
     get isSellable() {
         if (this.selectable !== undefined && !this.selectable) {
             return false;
@@ -186,11 +227,39 @@ class Equipment {
     }
 
     get isRepairable() {
-        if (this.isItem) {
-            return this.name!.includes("(自动)");
-        } else {
-            return !EquipmentConstants.NONE_REPAIRABLE_ITEM_LIST.includes(this.name!);
+        if (this.isItem && !_.includes(this.name, "(自动)")) {
+            // 非回复道具不能修理
+            return false;
         }
+        if (_.includes(EquipmentConstants.NONE_REPAIRABLE_ITEM_LIST, this.name)) {
+            // 不能修理的名单
+            return false;
+        }
+        if (this.maxEndure !== undefined && this.maxEndure! === 0) {
+            // 最大耐久为0的装备不需要修理
+            return false;
+        }
+        if (this.endure !== undefined && this.maxEndure !== undefined) {
+            const c = this.endure!;
+            const m = this.maxEndure!;
+            if (c >= m) {
+                // 当前耐久度满值，不需要修理
+                return false;
+            }
+        }
+        if (this.endure !== undefined && this.maxEndure === undefined) {
+            // 只有当前耐久度的数据，没有最大耐久度数据，尝试从装备资料中查询
+            const profile = EquipmentProfileLoader.loadEquipmentProfile(this.fullName);
+            if (profile !== null) {
+                const c = this.endure;
+                const m = profile.maxEndure;
+                if (c >= m) {
+                    // 当前耐久度满值，不需要修理
+                    return false;
+                }
+            }
+        }
+        return true;
     }
 
     /**
@@ -200,7 +269,8 @@ class Equipment {
         return (this.using === undefined || !this.using)
             && !this.isGoldenCage
             && !this.isTreasureBag
-            && !(this.name === "无忧之果(自动)");
+            && !(this.name === "无忧之果(自动)")
+            && !(this.name === "回魂丹(自动)");
     }
 
     get isStorable(): boolean {

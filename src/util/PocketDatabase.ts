@@ -196,6 +196,15 @@ class PocketDatabase {
                         unique: false
                     });
                 }
+
+                // ------------------------------------------------------------
+                // RoleUsingEquipment
+                // ------------------------------------------------------------
+                if (!db.objectStoreNames.contains("RoleUsingEquipment")) {
+                    db.createObjectStore("RoleUsingEquipment", {
+                        keyPath: "id", autoIncrement: false
+                    });
+                }
             };
         });
     };

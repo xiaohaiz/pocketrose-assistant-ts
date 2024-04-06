@@ -1,5 +1,6 @@
 import Role from "../role/Role";
 import Equipment from "./Equipment";
+import _ from "lodash";
 
 class PersonalEquipmentManagementPage {
 
@@ -62,6 +63,12 @@ class PersonalEquipmentManagementPage {
             }
         }
         return null;
+    }
+
+    findGems(c?: string) {
+        const category = c === undefined ? "ALL" : c;
+        return _.forEach(this.equipmentList!)
+            .filter(it => it.checkGem(category));
     }
 }
 

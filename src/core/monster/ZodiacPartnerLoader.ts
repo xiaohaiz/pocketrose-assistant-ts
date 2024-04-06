@@ -7,6 +7,7 @@ import PersonalPetManagement from "./PersonalPetManagement";
 import PersonalEquipmentManagement from "../equipment/PersonalEquipmentManagement";
 import GoldenCage from "./GoldenCage";
 import MessageBoard from "../../util/MessageBoard";
+import PersonalPetManagementPage from "./PersonalPetManagementPage";
 
 class ZodiacPartnerLoader {
 
@@ -36,12 +37,15 @@ class ZodiacPartnerLoader {
         return true;
     }
 
-    async load(): Promise<OperationMessage> {
+    async load(initializePetPage?: PersonalPetManagementPage): Promise<OperationMessage> {
         if (!this.available()) {
             return OperationMessage.failure();
         }
         MessageBoard.publishMessage("自动召唤【十二宫战斗伴侣】......");
-        let petPage = await new PersonalPetManagement(this.#credential).open();
+        let petPage = initializePetPage;
+        if (petPage === undefined) {
+            petPage = await new PersonalPetManagement(this.#credential).open();
+        }
         let partnerPet = this.#findZodiacPet(petPage.petList);
         if (partnerPet) {
             MessageBoard.publishMessage("找到了【十二宫战斗伴侣】。");

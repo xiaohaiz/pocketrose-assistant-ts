@@ -12,9 +12,9 @@ import NetworkUtils from "../../util/NetworkUtils";
 import PageUtils from "../../util/PageUtils";
 import PocketUtils from "../../util/PocketUtils";
 import PageProcessorContext from "../PageProcessorContext";
-import PageProcessorCredentialSupport from "../PageProcessorCredentialSupport";
+import StatelessPageProcessorCredentialSupport from "../StatelessPageProcessorCredentialSupport";
 
-class TownBankPageProcessor extends PageProcessorCredentialSupport {
+class TownBankPageProcessor extends StatelessPageProcessorCredentialSupport {
 
     readonly #townBankPageParser = new TownBankPageParser();
 

@@ -9,9 +9,9 @@ import MessageBoard from "../../util/MessageBoard";
 import PageUtils from "../../util/PageUtils";
 import PocketUtils from "../../util/PocketUtils";
 import PageProcessorContext from "../PageProcessorContext";
-import PageProcessorCredentialSupport from "../PageProcessorCredentialSupport";
+import StatelessPageProcessorCredentialSupport from "../StatelessPageProcessorCredentialSupport";
 
-class TownAccessoryHousePageProcessor extends PageProcessorCredentialSupport {
+class TownAccessoryHousePageProcessor extends StatelessPageProcessorCredentialSupport {
 
     async doProcess(credential: Credential, context?: PageProcessorContext): Promise<void> {
         const page = await new TownAccessoryHousePageParser().parse(PageUtils.currentPageHtml());

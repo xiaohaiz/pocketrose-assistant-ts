@@ -10,9 +10,9 @@ import KeyboardShortcutBuilder from "../../util/KeyboardShortcutBuilder";
 import MessageBoard from "../../util/MessageBoard";
 import PageUtils from "../../util/PageUtils";
 import PageProcessorContext from "../PageProcessorContext";
-import PageProcessorCredentialSupport from "../PageProcessorCredentialSupport";
+import StatelessPageProcessorCredentialSupport from "../StatelessPageProcessorCredentialSupport";
 
-class TownForgePageProcessor extends PageProcessorCredentialSupport {
+class TownForgePageProcessor extends StatelessPageProcessorCredentialSupport {
 
     async doProcess(credential: Credential, context?: PageProcessorContext): Promise<void> {
         const page = await TownForgePageParser.parse(PageUtils.currentPageHtml());

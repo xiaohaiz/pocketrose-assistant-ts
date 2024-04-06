@@ -16,9 +16,9 @@ import PageUtils from "../../util/PageUtils";
 import PocketUtils from "../../util/PocketUtils";
 import StringUtils from "../../util/StringUtils";
 import PageProcessorContext from "../PageProcessorContext";
-import PageProcessorCredentialSupport from "../PageProcessorCredentialSupport";
+import StatelessPageProcessorCredentialSupport from "../StatelessPageProcessorCredentialSupport";
 
-class TownGemHousePageProcessor extends PageProcessorCredentialSupport {
+class TownGemHousePageProcessor extends StatelessPageProcessorCredentialSupport {
 
     async doProcess(credential: Credential, context?: PageProcessorContext): Promise<void> {
         const townId = context!.get("townId")!;

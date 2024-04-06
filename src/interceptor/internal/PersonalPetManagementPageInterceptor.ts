@@ -1,7 +1,8 @@
 import RoleStateMachineManager from "../../core/state/RoleStateMachineManager";
-import PersonalPetManagementPageProcessor_Castle
-    from "../../processor/internal/PersonalPetManagementPageProcessor_Castle";
-import PersonalPetManagementPageProcessor_Town from "../../processor/internal/PersonalPetManagementPageProcessor_Town";
+import PersonalPetManagementPageProcessorCastleImpl
+    from "../../processor/stateless/PersonalPetManagementPageProcessorCastleImpl";
+import PersonalPetManagementPageProcessorTownImpl
+    from "../../processor/stateless/PersonalPetManagementPageProcessorTownImpl";
 import PageProcessorContext from "../../processor/PageProcessorContext";
 import PageInterceptor from "../PageInterceptor";
 
@@ -20,14 +21,12 @@ class PersonalPetManagementPageInterceptor implements PageInterceptor {
             .then(machine => {
                 machine.start()
                     .whenInTown(state => {
-                        const context = new PageProcessorContext();
-                        context.withTownId(state?.townId);
-                        new PersonalPetManagementPageProcessor_Town().process(context);
+                        const context = PageProcessorContext.whenInTown(state?.townId);
+                        new PersonalPetManagementPageProcessorTownImpl().process(context);
                     })
                     .whenInCastle(state => {
-                        const context = new PageProcessorContext();
-                        context.withCastleName(state?.castleName);
-                        new PersonalPetManagementPageProcessor_Castle().process(context);
+                        const context = PageProcessorContext.whenInCastle(state?.castleName);
+                        new PersonalPetManagementPageProcessorCastleImpl().process(context);
                     })
                     .process();
             });

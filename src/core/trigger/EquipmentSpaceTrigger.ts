@@ -2,6 +2,7 @@ import Credential from "../../util/Credential";
 import PersonalEquipmentManagementPage from "../equipment/PersonalEquipmentManagementPage";
 import PersonalEquipmentManagement from "../equipment/PersonalEquipmentManagement";
 import LocalSettingManager from "../config/LocalSettingManager";
+import TownItemHousePage from "../store/TownItemHousePage";
 
 /**
  * ============================================================================
@@ -36,12 +37,19 @@ class EquipmentSpaceTrigger {
         }
     }
 
+    itemHousePage?: TownItemHousePage;
+
     /**
      * equipmentPage is required.
      */
     async triggerUpdate() {
-        await this.#initializeEquipmentPage();
-        const spaceCount = this.equipmentPage!.spaceCount;
+        let spaceCount: number;
+        if (this.itemHousePage !== undefined) {
+            spaceCount = 20 - this.itemHousePage.equipmentList!.length;
+        } else {
+            await this.#initializeEquipmentPage();
+            spaceCount = this.equipmentPage!.spaceCount;
+        }
         LocalSettingManager.setEquipmentCapacityMax(this.#credential.id, spaceCount <= 1);
     }
 

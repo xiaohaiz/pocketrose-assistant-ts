@@ -3,6 +3,7 @@ import MessageBoard from "../../util/MessageBoard";
 import NetworkUtils from "../../util/NetworkUtils";
 import LocalSettingManager from "../config/LocalSettingManager";
 import PersonalMirrorPage from "./PersonalMirrorPage";
+import PersonalMirrorPageParser from "./PersonalMirrorPageParser";
 
 class PersonalMirror {
 
@@ -23,7 +24,7 @@ class PersonalMirror {
                 }
                 request.set("mode", "FENSHENSHIGUAN");
                 NetworkUtils.post("mydata.cgi", request).then(html => {
-                    const page = PersonalMirrorPage.parse(html);
+                    const page = PersonalMirrorPageParser.parsePage(html);
                     resolve(page);
                 });
             });

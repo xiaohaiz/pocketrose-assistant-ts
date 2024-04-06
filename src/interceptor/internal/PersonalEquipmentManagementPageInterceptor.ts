@@ -1,14 +1,15 @@
 import RoleStateMachineManager from "../../core/state/RoleStateMachineManager";
-import PersonalEquipmentManagementPageProcessor_Castle
-    from "../../processor/internal/PersonalEquipmentManagementPageProcessor_Castle";
-import PersonalEquipmentManagementPageProcessor_Map
-    from "../../processor/internal/PersonalEquipmentManagementPageProcessor_Map";
-import PersonalEquipmentManagementPageProcessor_Metro
-    from "../../processor/internal/PersonalEquipmentManagementPageProcessor_Metro";
-import PersonalEquipmentManagementPageProcessor_Town
-    from "../../processor/internal/PersonalEquipmentManagementPageProcessor_Town";
 import PageProcessorContext from "../../processor/PageProcessorContext";
 import PageInterceptor from "../PageInterceptor";
+import PersonalEquipmentManagementPageProcessorTownImpl
+    from "../../processor/stateful/PersonalEquipmentManagementPageProcessorTownImpl";
+import PersonalEquipmentManagementPageProcessorMetroImpl
+    from "../../processor/stateful/PersonalEquipmentManagementPageProcessorMetroImpl";
+import PersonalEquipmentManagementPageProcessorMapImpl
+    from "../../processor/stateful/PersonalEquipmentManagementPageProcessorMapImpl";
+import Credential from "../../util/Credential";
+import PersonalEquipmentManagementPageProcessorCastleImpl
+    from "../../processor/stateful/PersonalEquipmentManagementPageProcessorCastleImpl";
 
 class PersonalEquipmentManagementPageInterceptor implements PageInterceptor {
 
@@ -20,27 +21,29 @@ class PersonalEquipmentManagementPageInterceptor implements PageInterceptor {
     }
 
     intercept(): void {
+        const credential = Credential.newInstance();
+        if (credential === undefined) {
+            return
+        }
         RoleStateMachineManager.create()
             .load()
             .then(machine => {
                 machine.start()
                     .whenInTown(state => {
-                        const context = new PageProcessorContext();
-                        context.withTownId(state?.townId);
-                        new PersonalEquipmentManagementPageProcessor_Town().process(context);
+                        const context = PageProcessorContext.whenInTown(state?.townId)
+                        new PersonalEquipmentManagementPageProcessorTownImpl(credential, context).process();
                     })
                     .whenInCastle(state => {
-                        const context = new PageProcessorContext();
-                        context.withCastleName(state?.castleName)
-                        new PersonalEquipmentManagementPageProcessor_Castle().process(context);
+                        const context = PageProcessorContext.whenInCastle(state?.castleName);
+                        new PersonalEquipmentManagementPageProcessorCastleImpl(credential, context).process();
                     })
                     .whenInMap(state => {
-                        const context = new PageProcessorContext();
-                        context.withCoordinate(state?.asCoordinate()?.asText());
-                        new PersonalEquipmentManagementPageProcessor_Map().process(context);
+                        const context = PageProcessorContext.whenInMap(state?.asCoordinate())
+                        new PersonalEquipmentManagementPageProcessorMapImpl(credential, context).process();
                     })
                     .whenInMetro(() => {
-                        new PersonalEquipmentManagementPageProcessor_Metro().process();
+                        const context = PageProcessorContext.whenInMetro()
+                        new PersonalEquipmentManagementPageProcessorMetroImpl(credential, context).process();
                     })
                     .process();
             });

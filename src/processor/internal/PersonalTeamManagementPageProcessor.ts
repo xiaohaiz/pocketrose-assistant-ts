@@ -7,10 +7,10 @@ import PageUtils from "../../util/PageUtils";
 import StorageUtils from "../../util/StorageUtils";
 import StringUtils from "../../util/StringUtils";
 import PageProcessorContext from "../PageProcessorContext";
-import PageProcessorCredentialSupport from "../PageProcessorCredentialSupport";
+import StatelessPageProcessorCredentialSupport from "../StatelessPageProcessorCredentialSupport";
 import KeyboardShortcutBuilder from "../../util/KeyboardShortcutBuilder";
 
-class PersonalTeamManagementPageProcessor extends PageProcessorCredentialSupport {
+class PersonalTeamManagementPageProcessor extends StatelessPageProcessorCredentialSupport {
 
     async doProcess(credential: Credential, context?: PageProcessorContext): Promise<void> {
         doProcess(credential);

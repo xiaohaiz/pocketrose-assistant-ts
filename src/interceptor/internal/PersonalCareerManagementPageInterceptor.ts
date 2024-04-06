@@ -1,10 +1,11 @@
 import RoleStateMachineManager from "../../core/state/RoleStateMachineManager";
-import PersonalCareerManagementPageProcessor_Castle
-    from "../../processor/internal/PersonalCareerManagementPageProcessor_Castle";
-import PersonalCareerManagementPageProcessor_Town
-    from "../../processor/internal/PersonalCareerManagementPageProcessor_Town";
 import PageProcessorContext from "../../processor/PageProcessorContext";
 import PageInterceptor from "../PageInterceptor";
+import PersonalCareerManagementPageProcessorTownImpl
+    from "../../processor/stateful/PersonalCareerManagementPageProcessorTownImpl";
+import Credential from "../../util/Credential";
+import PersonalCareerManagementPageProcessorCastleImpl
+    from "../../processor/stateful/PersonalCareerManagementPageProcessorCastleImpl";
 
 class PersonalCareerManagementPageInterceptor implements PageInterceptor {
 
@@ -16,19 +17,19 @@ class PersonalCareerManagementPageInterceptor implements PageInterceptor {
     }
 
     intercept(): void {
+        const credential = Credential.newInstance();
+        if (credential === undefined) return;
         RoleStateMachineManager.create()
             .load()
             .then(machine => {
                 machine.start()
                     .whenInTown(state => {
-                        const context = new PageProcessorContext()
-                            .withTownId(state?.townId);
-                        new PersonalCareerManagementPageProcessor_Town().process(context);
+                        const context = PageProcessorContext.whenInTown(state?.townId);
+                        new PersonalCareerManagementPageProcessorTownImpl(credential, context).process();
                     })
                     .whenInCastle(state => {
-                        const context = new PageProcessorContext()
-                            .withCastleName(state?.castleName);
-                        new PersonalCareerManagementPageProcessor_Castle().process(context);
+                        const context = PageProcessorContext.whenInCastle(state?.castleName);
+                        new PersonalCareerManagementPageProcessorCastleImpl(credential, context).process();
                     })
                     .process();
             });

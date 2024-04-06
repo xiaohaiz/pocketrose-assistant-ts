@@ -1,6 +1,6 @@
 {
   "name": "pocketrose-assistant",
-  "version": "4.5.9",
+  "version": "4.6.5",
   "description": "",
   "main": "/src/Pocketrose.ts",
   "scripts": {
@@ -9,14 +9,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/xiaohaiz/pocketrose-assistant-ts.git"
+    "url": "git+https://gitee.com/barnabus/pocketrose-assistant.git"
   },
   "author": "xiaohaiz",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/xiaohaiz/pocketrose-assistant-ts/issues"
+    "url": "https://gitee.com/barnabus/pocketrose-assistant/issues"
   },
-  "homepage": "https://github.com/xiaohaiz/pocketrose-assistant-ts#readme",
+  "homepage": "https://gitee.com/barnabus/pocketrose-assistant#readme",
   "dependencies": {
     "@babel/core": "^7.21.4",
     "@babel/preset-env": "^7.21.4",

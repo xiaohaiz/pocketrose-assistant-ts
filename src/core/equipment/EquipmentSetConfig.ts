@@ -1,5 +1,7 @@
 import _ from "lodash";
 import PageUtils from "../../util/PageUtils";
+import Equipment from "./Equipment";
+import EquipmentLoader from "./EquipmentLoader";
 
 class EquipmentSetConfig {
 
@@ -11,6 +13,12 @@ class EquipmentSetConfig {
     weaponStar?: boolean;
     armorStar?: boolean;
     accessoryStar?: boolean;
+
+    get available(): boolean {
+        return (this.weaponName !== undefined && this.weaponName !== "NONE")
+            || (this.armorName !== undefined && this.armorName !== "NONE")
+            || (this.accessoryName !== undefined && this.accessoryName !== "NONE");
+    }
 
     static defaultInstance(index?: string): EquipmentSetConfig {
         const config = new EquipmentSetConfig();
@@ -107,6 +115,82 @@ class EquipmentSetConfig {
 
             if (handler) handler(config);
         });
+    }
+
+    static generateCandidates(mode: string, list1: Equipment[], list2?: Equipment[]) {
+        const available: string[] = [];
+        _.forEach(list1)
+            .filter(it => {
+                switch (mode) {
+                    case "WEA":
+                        return it.isWeapon;
+                    case "ARM":
+                        return it.isArmor;
+                    case "ACC":
+                        return it.isAccessory;
+                    default:
+                        return false;
+                }
+            })
+            .map(it => it.fullName)
+            .forEach(it => available.push(it));
+        if (list2 !== undefined) {
+            _.forEach(list2)
+                .filter(it => {
+                    switch (mode) {
+                        case "WEA":
+                            return it.isWeapon;
+                        case "ARM":
+                            return it.isArmor;
+                        case "ACC":
+                            return it.isAccessory;
+                        default:
+                            return false;
+                    }
+                })
+                .map(it => it.fullName)
+                .forEach(it => available.push(it));
+        }
+
+        let all: string[];
+        switch (mode) {
+            case "WEA":
+                all = EquipmentLoader.loadWeaponList();
+                break;
+            case "ARM":
+                all = EquipmentLoader.loadArmorList();
+                break;
+            case "ACC":
+                all = EquipmentLoader.loadAccessoryList();
+                break;
+            default:
+                return [];
+        }
+        const names: string[] = [];
+        for (const it of all) {
+            const s = "齐心★" + it;
+            if (_.includes(available, s) && !_.includes(names, s)) {
+                names.push(s);
+            }
+            if (_.includes(available, it) && !_.includes(names, it)) {
+                names.push(it);
+            }
+        }
+        return names;
+    }
+
+    static generateSelectHTML(candidate: string[]) {
+        let html = "<select>";
+        html += "<option value='NONE'>无</option>"
+        _.forEach(candidate, it => {
+            if (_.startsWith(it, "齐心★")) {
+                html += "<option value='" + it + "' style='background-color:yellow'>" + it + "</option>";
+            } else {
+                html += "<option value='" + it + "'>" + it + "</option>";
+            }
+        });
+        html += "</select>";
+        return html;
     }
 }
 

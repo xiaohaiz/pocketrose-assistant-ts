@@ -6,7 +6,7 @@ import TownItemHousePage from "./TownItemHousePage";
 
 class TownItemHousePageParser {
 
-    async parse(html: string): Promise<TownItemHousePage> {
+    static parsePage(html: string): TownItemHousePage {
         const townId = $(html).find("input:hidden[name='townid']:first").val() as string;
 
         let discount = 1;

@@ -11,9 +11,9 @@ import NetworkUtils from "../../util/NetworkUtils";
 import PageUtils from "../../util/PageUtils";
 import TimeoutUtils from "../../util/TimeoutUtils";
 import PageProcessorContext from "../PageProcessorContext";
-import PageProcessorCredentialSupport from "../PageProcessorCredentialSupport";
+import StatelessPageProcessorCredentialSupport from "../StatelessPageProcessorCredentialSupport";
 
-class CountryPalacePageProcessor extends PageProcessorCredentialSupport {
+class CountryPalacePageProcessor extends StatelessPageProcessorCredentialSupport {
 
     async doProcess(credential: Credential, context?: PageProcessorContext): Promise<void> {
         $("table[height='100%']").removeAttr("height");

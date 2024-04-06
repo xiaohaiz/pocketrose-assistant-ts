@@ -39,6 +39,13 @@ class GoldenCage {
         await NetworkUtils.post("mydata.cgi", request);
     }
 
+    async putInto(index: number) {
+        const request = this.#credential.asRequestMap();
+        request.set("select", index.toString());
+        request.set("mode", "PUTINLONGZI");
+        await NetworkUtils.post("mydata.cgi", request);
+    }
+
     static parsePage(pageHtml: string) {
         const petList: Pet[] = [];
         $(pageHtml)

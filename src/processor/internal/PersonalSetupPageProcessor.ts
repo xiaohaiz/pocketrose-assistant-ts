@@ -15,9 +15,9 @@ import PageUtils from "../../util/PageUtils";
 import StorageUtils from "../../util/StorageUtils";
 import StringUtils from "../../util/StringUtils";
 import PageProcessorContext from "../PageProcessorContext";
-import PageProcessorCredentialSupport from "../PageProcessorCredentialSupport";
+import StatelessPageProcessorCredentialSupport from "../StatelessPageProcessorCredentialSupport";
 
-abstract class PersonalSetupPageProcessor extends PageProcessorCredentialSupport {
+abstract class PersonalSetupPageProcessor extends StatelessPageProcessorCredentialSupport {
 
     doLoadButtonStyles(): number[] {
         return [10005, 10007, 10008, 10016, 10024, 10028, 10032, 10033, 10035, 10062,

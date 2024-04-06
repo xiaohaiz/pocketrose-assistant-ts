@@ -7,9 +7,9 @@ import Credential from "../../util/Credential";
 import MessageBoard from "../../util/MessageBoard";
 import StringUtils from "../../util/StringUtils";
 import PageProcessorContext from "../PageProcessorContext";
-import PageProcessorCredentialSupport from "../PageProcessorCredentialSupport";
+import StatelessPageProcessorCredentialSupport from "../StatelessPageProcessorCredentialSupport";
 
-class CountryChangePageProcessor extends PageProcessorCredentialSupport {
+class CountryChangePageProcessor extends StatelessPageProcessorCredentialSupport {
 
     async doProcess(credential: Credential, context?: PageProcessorContext): Promise<void> {
         $("table:first")

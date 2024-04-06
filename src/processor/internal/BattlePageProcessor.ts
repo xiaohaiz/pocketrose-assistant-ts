@@ -4,9 +4,9 @@ import BattleReturnInterceptor from "../../core/battle/BattleReturnInterceptor";
 import Credential from "../../util/Credential";
 import PageUtils from "../../util/PageUtils";
 import PageProcessorContext from "../PageProcessorContext";
-import PageProcessorCredentialSupport from "../PageProcessorCredentialSupport";
+import StatelessPageProcessorCredentialSupport from "../StatelessPageProcessorCredentialSupport";
 
-class BattlePageProcessor extends PageProcessorCredentialSupport {
+class BattlePageProcessor extends StatelessPageProcessorCredentialSupport {
 
     async doProcess(credential: Credential, context?: PageProcessorContext): Promise<void> {
         // 解析当前的战数

@@ -11,11 +11,11 @@ import Credential from "../../util/Credential";
 import PageUtils from "../../util/PageUtils";
 import StringUtils from "../../util/StringUtils";
 import PageProcessorContext from "../PageProcessorContext";
-import PageProcessorCredentialSupport from "../PageProcessorCredentialSupport";
+import StatelessPageProcessorCredentialSupport from "../StatelessPageProcessorCredentialSupport";
 
 const LAYOUT_MANAGER = new TownDashboardLayoutManager();
 
-class TownDashboardPageProcessor extends PageProcessorCredentialSupport {
+class TownDashboardPageProcessor extends StatelessPageProcessorCredentialSupport {
 
     doLoadButtonStyles(): number[] {
         return [10005, 10007, 10008, 10016, 10024, 10028, 10032, 10033, 10035, 10062,

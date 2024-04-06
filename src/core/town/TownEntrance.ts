@@ -8,6 +8,7 @@ import SetupLoader from "../config/SetupLoader";
 import TravelPlan from "../map/TravelPlan";
 import TravelPlanBuilder from "../map/TravelPlanBuilder";
 import TownLoader from "./TownLoader";
+import BattleFieldTrigger from "../trigger/BattleFieldTrigger";
 
 class TownEntrance {
 
@@ -42,12 +43,16 @@ class TownEntrance {
                                 MessageBoard.publishMessage("门卫通情达理的收取了入城费用放你入城。");
                                 const town = TownLoader.load(townId);
                                 MessageBoard.publishMessage("进入了<span style='color:greenyellow'>" + town!.name + "</span>。");
-                                instance.#changeAccessPointIfNecessary(townId).then(() => resolve());
+                                instance.#changeAccessPointIfNecessary(townId).then(() => {
+                                    instance.#changeBattleFieldIfNecessary(credential).then(() => resolve());
+                                });
                             });
                         } else {
                             const town = TownLoader.load(townId);
                             MessageBoard.publishMessage("进入了<span style='color:greenyellow'>" + town!.name + "</span>。");
-                            instance.#changeAccessPointIfNecessary(townId).then(() => resolve());
+                            instance.#changeAccessPointIfNecessary(townId).then(() => {
+                                instance.#changeBattleFieldIfNecessary(credential).then(() => resolve());
+                            });
                         }
                     });
                 });
@@ -84,6 +89,10 @@ class TownEntrance {
         if (message.success && town !== null) {
             MessageBoard.publishMessage("成功转移据点到【" + town.name + "】。");
         }
+    }
+
+    async #changeBattleFieldIfNecessary(credential: Credential) {
+        await new BattleFieldTrigger(credential).triggerUpdate();
     }
 
     /**

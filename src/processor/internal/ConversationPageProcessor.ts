@@ -2,9 +2,9 @@ import EventHandler from "../../core/event/EventHandler";
 import Credential from "../../util/Credential";
 import StringUtils from "../../util/StringUtils";
 import PageProcessorContext from "../PageProcessorContext";
-import PageProcessorCredentialSupport from "../PageProcessorCredentialSupport";
+import StatelessPageProcessorCredentialSupport from "../StatelessPageProcessorCredentialSupport";
 
-class ConversationPageProcessor extends PageProcessorCredentialSupport {
+class ConversationPageProcessor extends StatelessPageProcessorCredentialSupport {
 
     async doProcess(credential: Credential, context?: PageProcessorContext): Promise<void> {
         $("table:first")

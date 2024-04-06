@@ -7,7 +7,7 @@ class CastlePetAutoGraze {
 
     readonly #credential: Credential;
 
-    #timer?: NodeJS.Timer;
+    #timer?: any;
 
     success?: () => void;
 

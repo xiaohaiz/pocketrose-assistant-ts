@@ -6,9 +6,9 @@ import MessageBoard from "../../util/MessageBoard";
 import PageUtils from "../../util/PageUtils";
 import StringUtils from "../../util/StringUtils";
 import PageProcessorContext from "../PageProcessorContext";
-import PageProcessorCredentialSupport from "../PageProcessorCredentialSupport";
+import StatelessPageProcessorCredentialSupport from "../StatelessPageProcessorCredentialSupport";
 
-class PersonalManualPageProcessor extends PageProcessorCredentialSupport {
+class PersonalManualPageProcessor extends StatelessPageProcessorCredentialSupport {
 
     async doProcess(credential: Credential, context?: PageProcessorContext): Promise<void> {
         $("table[height='100%']").removeAttr("height");

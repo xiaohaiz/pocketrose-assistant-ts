@@ -1,3 +1,6 @@
+import PageUtils from "./PageUtils";
+import SetupLoader from "../core/config/SetupLoader";
+
 class ButtonUtils {
 
     static loadButtonStyle(code: number) {
@@ -13,6 +16,31 @@ class ButtonUtils {
         }
     }
 
+    static clickBlueButtons(buttons: JQuery, exclude?: string) {
+        buttons
+            .filter((_idx, btn) => {
+                const btnId = $(btn).attr("id") as string;
+                return exclude === undefined || exclude !== btnId;
+            })
+            .filter((_idx, btn) => {
+                const btnId = $(btn).attr("id") as string;
+                return PageUtils.isColorBlue(btnId);
+            })
+            .each((_idx, btn) => {
+                const btnId = $(btn).attr("id") as string;
+                PageUtils.triggerClick(btnId);
+            });
+    }
+
+    static createTitle(title: string, key?: string): string {
+        if (key === undefined || key === "") {
+            return title;
+        }
+        if (SetupLoader.isShortcutPromptHidden()) {
+            return title;
+        }
+        return title + "(" + key + ")";
+    }
 }
 
 const BUTTON_STYLES: {} = {

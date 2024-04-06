@@ -4,10 +4,10 @@ import Credential from "../../util/Credential";
 import KeyboardShortcutBuilder from "../../util/KeyboardShortcutBuilder";
 import PageUtils from "../../util/PageUtils";
 import PageProcessorContext from "../PageProcessorContext";
-import PageProcessorCredentialSupport from "../PageProcessorCredentialSupport";
+import StatelessPageProcessorCredentialSupport from "../StatelessPageProcessorCredentialSupport";
 import PageProcessorUtils from "../PageProcessorUtils";
 
-class TownTaskHousePageProcessor extends PageProcessorCredentialSupport {
+class TownTaskHousePageProcessor extends StatelessPageProcessorCredentialSupport {
 
     async doProcess(credential: Credential, context?: PageProcessorContext): Promise<void> {
         const roleTask = await new TaskGuideManager(credential).currentTask();

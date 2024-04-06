@@ -22,7 +22,8 @@ class TownItemHouse {
                 request.set("con_str", "50");
                 request.set("mode", "ITEM_SHOP");
                 NetworkUtils.post("town.cgi", request).then(html => {
-                    new TownItemHousePageParser().parse(html).then(page => resolve(page));
+                    const page = TownItemHousePageParser.parsePage(html);
+                    resolve(page);
                 });
             });
         };

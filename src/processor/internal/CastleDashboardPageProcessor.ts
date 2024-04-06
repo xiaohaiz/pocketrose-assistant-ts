@@ -27,6 +27,10 @@ class CastleDashboardPageProcessor implements PageProcessor {
                 $("option[value='USE_ITEM']").prop("selected", true);
                 PageUtils.triggerClick("personalButton");
             })
+            .onKeyPressed("i", () => {
+                $("option[value='RANK_REMAKE']").prop("selected", true);
+                PageUtils.triggerClick("personalButton");
+            })
             .onKeyPressed("j", () => {
                 $("option[value='DIANMING']").prop("selected", true);
                 PageUtils.triggerClick("personalButton");
@@ -75,6 +79,8 @@ class CastleDashboardPageProcessor implements PageProcessor {
         $("option[value='MAGIC']").remove();
 
         $("option[value='DIANMING']").text("统计报告");
+
+        $("option[value='RANK_REMAKE']").text("个人面板");
 
         $("option[value='CASTLE_BUILDMACHINE']")
             .closest("td")

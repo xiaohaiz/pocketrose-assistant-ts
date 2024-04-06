@@ -1,4 +1,5 @@
 import Equipment from "./Equipment";
+import _ from "lodash";
 
 class TreasureBagPage {
 
@@ -12,6 +13,12 @@ class TreasureBagPage {
         return 50 - this.equipmentList!.length;
     }
 
+    findGems(c?: string) {
+        const category = c === undefined ? "ALL" : c;
+        if (this.equipmentList === undefined) return [];
+        return _.forEach(this.equipmentList!)
+            .filter(it => it.checkGem(category));
+    }
 }
 
 export = TreasureBagPage;

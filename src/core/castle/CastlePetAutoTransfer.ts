@@ -9,7 +9,7 @@ class CastlePetAutoTransfer {
     readonly #credential: Credential;
     readonly #target: string;
 
-    #timer?: NodeJS.Timer;
+    #timer?: any;
     success?: () => void;
 
     constructor(credential: Credential, target: string) {

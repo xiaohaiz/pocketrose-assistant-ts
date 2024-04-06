@@ -89,6 +89,34 @@ class PageUtils {
         }
     }
 
+    static toggleBlueOrGrey(id: string) {
+        if (PageUtils.isColorGrey(id)) {
+            PageUtils.changeColorBlue(id)
+        } else if (PageUtils.isColorBlue(id)) {
+            PageUtils.changeColorGrey(id)
+        }
+    }
+
+    static toggleColor(id: string,
+                       g2b: (() => void) | undefined,
+                       b2g: (() => void) | undefined) {
+        if (PageUtils.isColorGrey(id)) {
+            PageUtils.changeColorBlue(id)
+            if (g2b !== undefined) g2b()
+        } else if (PageUtils.isColorBlue(id)) {
+            PageUtils.changeColorGrey(id)
+            if (b2g !== undefined) b2g()
+        }
+    }
+
+    static changeColorBlue(id: string) {
+        $("#" + id).css("color", "blue");
+    }
+
+    static changeColorGrey(id: string) {
+        $("#" + id).css("color", "grey");
+    }
+
     static isColorBlue(id: string) {
         const color = $("#" + id).css("color");
         return color.toString() === "rgb(0, 0, 255)"
@@ -285,6 +313,26 @@ class PageUtils {
         if (element.length > 0) {
             element.prop("disabled", false);
         }
+    }
+
+    static disablePageInteractiveElements(includeSubmit?: boolean) {
+        $("input")
+            .filter((_idx, e) => {
+                const t = $(e).attr("type");
+                if (t === undefined) return true;
+                const s = t.toLowerCase();
+                return s === "button" ||
+                    s === "text" ||
+                    s === "radio" ||
+                    s === "checkbox" ||
+                    (s === "submit" && includeSubmit !== undefined && includeSubmit);
+            })
+            .each((_idx, e) => {
+                $(e).prop("disabled", true);
+            });
+        $("button").prop("disabled", true);
+        $("select").prop("disabled", true);
+        $("textarea").prop("disabled", true);
     }
 
     static disableButtons() {

@@ -17,9 +17,9 @@ import MessageBoard from "../../util/MessageBoard";
 import PageUtils from "../../util/PageUtils";
 import StringUtils from "../../util/StringUtils";
 import PageProcessorContext from "../PageProcessorContext";
-import PageProcessorCredentialSupport from "../PageProcessorCredentialSupport";
+import StatelessPageProcessorCredentialSupport from "../StatelessPageProcessorCredentialSupport";
 
-class TownInnPageProcessor extends PageProcessorCredentialSupport {
+class TownInnPageProcessor extends StatelessPageProcessorCredentialSupport {
 
     async doProcess(credential: Credential, context?: PageProcessorContext): Promise<void> {
         const page = TownInnPageParser.parsePage(PageUtils.currentPageHtml());

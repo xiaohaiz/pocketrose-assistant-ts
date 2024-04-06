@@ -10,9 +10,9 @@ import KeyboardShortcutBuilder from "../../util/KeyboardShortcutBuilder";
 import PageUtils from "../../util/PageUtils";
 import StringUtils from "../../util/StringUtils";
 import PageProcessorContext from "../PageProcessorContext";
-import PageProcessorCredentialSupport from "../PageProcessorCredentialSupport";
+import StatelessPageProcessorCredentialSupport from "../StatelessPageProcessorCredentialSupport";
 
-abstract class PersonalStatusPageProcessor extends PageProcessorCredentialSupport {
+abstract class PersonalStatusPageProcessor extends StatelessPageProcessorCredentialSupport {
 
     async doProcess(credential: Credential, context?: PageProcessorContext): Promise<void> {
         const page = PersonalStatus.parsePage(PageUtils.currentPageHtml());
@@ -54,22 +54,6 @@ abstract class PersonalStatusPageProcessor extends PageProcessorCredentialSuppor
                 "style='background-color:#EFE0C0;text-align:center;height:300px' " +
                 "colspan='4'></td>");
         _generateRoleDimension(page);
-
-        if (SetupLoader.isCareerFixed(credential.id, page.role!.mirrorIndex!)) {
-            $("#roleDimension").parent()
-                .prev()
-                .find("> td:eq(1)").css("background-color", "black").css("color", "white")
-                .parent()
-                .prev()
-                .find("> td:eq(1)").css("background-color", "black").css("color", "white")
-                .next()
-                .next().css("background-color", "black").css("color", "white")
-                .parent()
-                .prev()
-                .find("> td:eq(1)").css("background-color", "black").css("color", "white")
-                .next()
-                .next().css("background-color", "black").css("color", "white");
-        }
 
         this.doBindKeyboardShortcut();
     }

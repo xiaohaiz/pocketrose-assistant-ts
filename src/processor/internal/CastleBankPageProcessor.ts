@@ -10,9 +10,9 @@ import PageUtils from "../../util/PageUtils";
 import PocketUtils from "../../util/PocketUtils";
 import StringUtils from "../../util/StringUtils";
 import PageProcessorContext from "../PageProcessorContext";
-import PageProcessorCredentialSupport from "../PageProcessorCredentialSupport";
+import StatelessPageProcessorCredentialSupport from "../StatelessPageProcessorCredentialSupport";
 
-class CastleBankPageProcessor extends PageProcessorCredentialSupport {
+class CastleBankPageProcessor extends StatelessPageProcessorCredentialSupport {
 
     async doProcess(credential: Credential, context?: PageProcessorContext): Promise<void> {
         const page = CastleBank.parsePage(PageUtils.currentPageHtml());

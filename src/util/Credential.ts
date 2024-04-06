@@ -18,6 +18,15 @@ class Credential {
         request.set("pass", this.pass);
         return request;
     }
+
+    static newInstance(): Credential | undefined {
+        const id = $("input:hidden[name='id']:last").val();
+        const pass = $("input:hidden[name='pass']:last").val();
+        if (id === undefined || pass === undefined) {
+            return undefined;
+        }
+        return new Credential(id.toString(), pass.toString());
+    }
 }
 
 export = Credential;

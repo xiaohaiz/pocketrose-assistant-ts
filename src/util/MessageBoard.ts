@@ -38,31 +38,39 @@ class MessageBoard {
         $("#" + containerId).html(html);
     }
 
-    static resetMessageBoard(message: string) {
-        if ($("#messageBoard").length === 0) {
-            return;
+    static resetMessageBoard(message: string, elementId?: string) {
+        let id = "messageBoard"
+        if (elementId !== undefined) id = elementId
+        const element = $("#" + id)
+        if (element.length > 0) {
+            element.html(message)
         }
-        $("#messageBoard").html(message);
     }
 
-    static publishMessage(message: string) {
-        if ($("#messageBoard").length > 0) {
-            let html = $("#messageBoard").html();
+    static publishMessage(message: string, elementId?: string) {
+        let id = "messageBoard"
+        if (elementId !== undefined) id = elementId
+        const element = $("#" + id)
+        if (element.length > 0) {
+            let html = element.html();
             const now = new Date();
             const timeHtml = "<span style='color:forestgreen'>(" + now.toLocaleString() + ")</span>";
             html = html + "<li>" + timeHtml + " " + message + "</li>";
-            $("#messageBoard").html(html);
+            element.html(html);
         }
     }
 
-    static publishWarning(message: string) {
-        if ($("#messageBoard").length > 0) {
-            let html = $("#messageBoard").html();
+    static publishWarning(message: string, elementId?: string) {
+        let id = "messageBoard"
+        if (elementId !== undefined) id = elementId
+        const element = $("#" + id)
+        if (element.length > 0) {
+            let html = element.html();
             const now = new Date();
             const timeHtml = "<span style='color:forestgreen'>(" + now.toLocaleString() + ")</span>";
             const messageHtml = "<span style='color:red'>" + message + "</span>";
             html = html + "<li>" + timeHtml + " " + messageHtml + "</li>";
-            $("#messageBoard").html(html);
+            element.html(html);
         }
     }
 

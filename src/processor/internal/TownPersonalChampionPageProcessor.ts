@@ -8,19 +8,24 @@ import Credential from "../../util/Credential";
 import KeyboardShortcutBuilder from "../../util/KeyboardShortcutBuilder";
 import PageUtils from "../../util/PageUtils";
 import PageProcessorContext from "../PageProcessorContext";
-import PageProcessorCredentialSupport from "../PageProcessorCredentialSupport";
+import StatelessPageProcessorCredentialSupport from "../StatelessPageProcessorCredentialSupport";
 
-class TownPersonalChampionPageProcessor extends PageProcessorCredentialSupport {
+class TownPersonalChampionPageProcessor extends StatelessPageProcessorCredentialSupport {
 
     async doProcess(credential: Credential, context?: PageProcessorContext): Promise<void> {
         const page = await new TownPersonalChampionPageParser().parse(PageUtils.currentPageHtml());
-        await this.#processPage(page)
-            .then(() => {
-                KeyboardShortcutBuilder.newInstance()
-                    .onEscapePressed(() => $("#returnButton").trigger("click"))
-                    .withDefaultPredicate()
-                    .bind();
-            });
+        const nextButton = $("input[value='继续下一场']");
+        if (nextButton.length > 0) {
+            nextButton.trigger("click");
+        } else {
+            await this.#processPage(page)
+                .then(() => {
+                    KeyboardShortcutBuilder.newInstance()
+                        .onEscapePressed(() => $("#returnButton").trigger("click"))
+                        .withDefaultPredicate()
+                        .bind();
+                });
+        }
     }
 
     async #processPage(page: TownPersonalChampionPage) {

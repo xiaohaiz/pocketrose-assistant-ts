@@ -1,10 +1,10 @@
 import Credential from "../../util/Credential";
 import KeyboardShortcutBuilder from "../../util/KeyboardShortcutBuilder";
 import PageProcessorContext from "../PageProcessorContext";
-import PageProcessorCredentialSupport from "../PageProcessorCredentialSupport";
+import StatelessPageProcessorCredentialSupport from "../StatelessPageProcessorCredentialSupport";
 import PageProcessorUtils from "../PageProcessorUtils";
 
-class TownPetLeaguePageProcessor extends PageProcessorCredentialSupport {
+class TownPetLeaguePageProcessor extends StatelessPageProcessorCredentialSupport {
 
     async doProcess(credential: Credential, context?: PageProcessorContext): Promise<void> {
         await this.#processPage(credential, context);

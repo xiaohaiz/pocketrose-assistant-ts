@@ -8,10 +8,10 @@ import MessageBoard from "../../util/MessageBoard";
 import PageUtils from "../../util/PageUtils";
 import PocketUtils from "../../util/PocketUtils";
 import PageProcessorContext from "../PageProcessorContext";
-import PageProcessorCredentialSupport from "../PageProcessorCredentialSupport";
+import StatelessPageProcessorCredentialSupport from "../StatelessPageProcessorCredentialSupport";
 import KeyboardShortcutBuilder from "../../util/KeyboardShortcutBuilder";
 
-class TownArmorHousePageProcessor extends PageProcessorCredentialSupport {
+class TownArmorHousePageProcessor extends StatelessPageProcessorCredentialSupport {
 
     async doProcess(credential: Credential, context?: PageProcessorContext): Promise<void> {
         const page = await new TownArmorHousePageParser().parse(PageUtils.currentPageHtml());
