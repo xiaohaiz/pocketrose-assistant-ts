@@ -1,5 +1,5 @@
 import RoleStateMachineManager from "../../core/state/RoleStateMachineManager";
-import CountryChangePageProcessor from "../../processor/internal/CountryChangePageProcessor";
+import CountryChangePageProcessor from "../../processor/stateless/CountryChangePageProcessor";
 import PageProcessorContext from "../../processor/PageProcessorContext";
 import PageInterceptor from "../PageInterceptor";
 

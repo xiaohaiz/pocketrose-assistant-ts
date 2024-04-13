@@ -12,7 +12,6 @@ import BattleScene from "../battle/BattleScene";
 import BattleSceneStorage from "../battle/BattleSceneStorage";
 import LocalSettingManager from "../config/LocalSettingManager";
 import SetupLoader from "../config/SetupLoader";
-import RoleEquipmentStatusStorage from "../equipment/RoleEquipmentStatusStorage";
 import TownForge from "../forge/TownForge";
 import TownInn from "../inn/TownInn";
 import PersonalStatus from "../role/PersonalStatus";
@@ -25,6 +24,8 @@ import TownDashboardKeyboardManager from "./TownDashboardKeyboardManager";
 import TownDashboardLayout from "./TownDashboardLayout";
 import TownDashboardPage from "./TownDashboardPage";
 import TownDashboardPageParser from "./TownDashboardPageParser";
+import {BattleFailureRecordManager} from "../battle/BattleFailureRecordManager";
+import {RoleEquipmentStatusManager} from "../equipment/RoleEquipmentStatusManager";
 
 class TownDashboardLayout007 extends TownDashboardLayout {
 
@@ -187,6 +188,8 @@ class TownDashboardLayout007 extends TownDashboardLayout {
             $("#battlePanel").html(lastBattle);
         });
 
+        _processValidationCodeFailure(credential);
+
         new TownDashboardKeyboardManager(credential, page.battleLevelShortcut, page).bind();
 
         $("#battleButton")
@@ -247,7 +250,7 @@ class TownDashboardLayout007 extends TownDashboardLayout {
 
 async function doProcessBattleVerificationError(credential: Credential, html: string) {
     let errMsg = $(html).find("font:first").html();
-    const validationCodeFailed = errMsg.includes("验证码");
+    const validationCodeFailed = errMsg.includes("选择验证码错误");
     errMsg = "<p style='color:red;font-size:200%'>" + errMsg + "</p>";
     $("#battlePanel").html(errMsg);
 
@@ -256,6 +259,10 @@ async function doProcessBattleVerificationError(credential: Credential, html: st
     record.html = errMsg;
     record.validationCodeFailed = validationCodeFailed;
     await BattleRecordStorage.getInstance().write(record);
+
+    if (validationCodeFailed) {
+        await new BattleFailureRecordManager(credential).onValidationCodeFailure();
+    }
 
     $("#battleMenu").html("" +
         "<button role='button' class='battleButton' " +
@@ -610,19 +617,78 @@ function _renderGemCount() {
     for (const roleId of TeamMemberLoader.loadTeamMembersAsMap(includeExternal).keys()) {
         roleIdList.push(roleId);
     }
-    const storage = RoleEquipmentStatusStorage.getInstance();
-    storage.loads(roleIdList).then(data => {
+    RoleEquipmentStatusManager.loadEquipmentStatusReports(roleIdList).then(reports => {
         let powerGemCount = 0;
-        let luckGemCount: number = 0;
         let weightGemCount = 0;
-        data.forEach(it => {
-            (it.powerGemCount !== undefined) && (powerGemCount += it.powerGemCount);
-            (it.luckGemCount !== undefined) && (luckGemCount += it.luckGemCount);
-            (it.weightGemCount !== undefined) && (weightGemCount += it.weightGemCount);
+        let luckGemCount: number = 0;
+        reports.forEach(it => {
+            powerGemCount += it.powerGemCount!;
+            weightGemCount += it.weightGemCount!;
+            luckGemCount += it.luckGemCount!;
         });
         $("#powerGemCount").text(powerGemCount);
         $("#luckGemCount").text(luckGemCount);
         $("#weightGemCount").text(weightGemCount);
+    });
+}
+
+function _processValidationCodeFailure(credential: Credential) {
+    const threshold = BattleFailureRecordManager.loadConfiguredThreshold();
+    if (threshold === 0) return;
+
+    $("a:contains('看不到图片按这里')")
+        .filter((_idx, a) => {
+            const s = $(a).text();
+            return s === "看不到图片按这里";
+        })
+        .parent()
+        .attr("colspan", "3")
+        .after($("" +
+            "<td id='ID_DANGEROUS' style='display:none'></td>" +
+            ""));
+
+    _renderValidationCodeFailure(credential);
+    setInterval(() => _renderValidationCodeFailure(credential), 2000);
+}
+
+function _renderValidationCodeFailure(credential: Credential) {
+    const manager = new BattleFailureRecordManager(credential);
+    manager.getValidationCodeFailureCount().then(count => {
+        let safe = true;
+        if (count > 0) {
+            const threshold = BattleFailureRecordManager.loadConfiguredThreshold();
+            if (count >= threshold - 1) {
+                const element = $("#battleCell").prev();
+                element.find("> span:first").remove();
+                element.find("> br").remove();
+                element.prepend($("" +
+                    "<span style='background-color:red;color:white;font-weight:bold;font-size:120%'>" +
+                    "验证错" + count + "次" +
+                    "</span>" +
+                    "<br><br><br><br>" +
+                    ""));
+            }
+
+            if (threshold > 0 && count >= threshold) {
+                safe = false;
+                $("#ID_DANGEROUS").text("DANGEROUS");
+                // 已经到了安全的阈值了
+                const battleButton = $("#battleButton");
+                battleButton.prop("disabled", true).hide();
+            }
+        } else {
+            const element = $("#battleCell").prev();
+            element.find("> span:first").remove();
+            element.find("> br:first").remove();
+        }
+        if (safe) {
+            $("#ID_DANGEROUS").text("SAFE");
+            // 如果安全按钮启用了，就不要显示了，交给安全按钮定时器去干活
+            if (!BattleButtonManager.isSafeButtonEnabled()) {
+                const battleButton = $("#battleButton");
+                battleButton.prop("disabled", false).show();
+            }
+        }
     });
 }
 

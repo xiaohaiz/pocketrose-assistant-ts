@@ -1,5 +1,5 @@
 import TeamMemberLoader from "../../core/team/TeamMemberLoader";
-import LoginDashboardPageProcessor from "../../processor/internal/LoginDashboardPageProcessor";
+import LoginDashboardPageProcessor from "../../processor/stateless/LoginDashboardPageProcessor";
 import PageInterceptor from "../PageInterceptor";
 
 class LoginDashboardPageInterceptor implements PageInterceptor {

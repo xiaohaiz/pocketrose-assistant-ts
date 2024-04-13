@@ -11,72 +11,83 @@ import _ from "lodash";
 import PersonalStatus from "../../core/role/PersonalStatus";
 import * as echarts from "echarts";
 import {EChartsOption} from "echarts";
-import StringUtils from "../../util/StringUtils";
 import ButtonUtils from "../../util/ButtonUtils";
-import PersonalPetManagementPage from "../../core/monster/PersonalPetManagementPage";
-import PersonalPetManagement from "../../core/monster/PersonalPetManagement";
-import EquipmentSpaceTrigger from "../../core/trigger/EquipmentSpaceTrigger";
-import EquipmentGrowthTrigger from "../../core/trigger/EquipmentGrowthTrigger";
-import EquipmentUsingTrigger from "../../core/trigger/EquipmentUsingTrigger";
-import PetSpaceTrigger from "../../core/trigger/PetSpaceTrigger";
-import SetupLoader from "../../core/config/SetupLoader";
-import MouseClickEventBuilder from "../../util/MouseClickEventBuilder";
-import StorageUtils from "../../util/StorageUtils";
-import ZodiacPartnerLoader from "../../core/monster/ZodiacPartnerLoader";
-import GoldenCage from "../../core/monster/GoldenCage";
-import SpellManagerComponent from "../../component/SpellManagerComponent";
+import SpellManager from "../../widget/SpellManager";
 import LocationModeTown from "../../core/location/LocationModeTown";
 import LocationModeCastle from "../../core/location/LocationModeCastle";
-import EquipmentManagerComponent from "../../component/EquipmentManagerComponent";
+import {EquipmentManager} from "../../widget/EquipmentManager";
+import {PetManager} from "../../widget/PetManager";
+import PersonalEquipmentManagementPage from "../../core/equipment/PersonalEquipmentManagementPage";
+import MirrorManager from "../../widget/MirrorManager";
 
 abstract class PersonalProfilePageProcessor extends StatefulPageProcessor {
 
-    protected readonly spellManager: SpellManagerComponent;
-    protected readonly equipmentManager: EquipmentManagerComponent;
+    protected readonly spellManager: SpellManager;
+    protected readonly equipmentManager: EquipmentManager;
+    protected readonly petManager: PetManager;
+    protected mirrorManager?: MirrorManager;
 
     protected constructor(credential: Credential, context: PageProcessorContext) {
         super(credential, context);
         const locationMode = this.createLocationMode() as LocationModeTown | LocationModeCastle;
-        this.spellManager = new SpellManagerComponent(credential, locationMode);
-        this.spellManager.onRefresh = () => {
-            this.reloadRole().then(() => {
-                this.renderRole().then(() => {
-                    this.spellManager.reload().then(() => {
-                        this.spellManager.render(this.role).then();
-                    });
-                });
+        this.spellManager = new SpellManager(credential, locationMode);
+        this.spellManager.onRefresh = (message) => {
+            this.role = message.extensions.get("role") as Role;
+            this.mirrorManager?.reload().then(() => {
+                this.mirrorManager?.render(this.role!).then();
             });
         };
-        this.equipmentManager = new EquipmentManagerComponent(credential, locationMode);
-        this.equipmentManager.onRefresh = () => {
-            this.reloadRole().then(() => {
-                this.renderRole().then(() => {
-                    this.equipmentManager.reload().then(() => {
-                        this.equipmentManager.render(this.role).then();
-                    });
-                });
+        this.equipmentManager = new EquipmentManager(credential, locationMode);
+        this.equipmentManager.feature.enableStatusTriggerOnDispose = true;
+        this.equipmentManager.feature.enableGrowthTriggerOnDispose = true;
+        this.equipmentManager.feature.enableSpaceTriggerOnDispose = true;
+        this.equipmentManager.feature.enableStatusTriggerOnDispose = true;
+        this.equipmentManager.feature.enableUsingTriggerOnDispose = true;
+        this.equipmentManager.feature.onMessage = s => MessageBoard.publishMessage(s);
+        this.equipmentManager.feature.onWarning = s => MessageBoard.publishWarning(s);
+        this.equipmentManager.feature.onRefresh = (message) => {
+            this.equipmentManager.renderHitStatus(this.role);
+            // Will trigger pet manager reloading, for golden cage index may changed.
+            this.petManager.reload().then(() => {
+                this.petManager.render(this.equipmentManager.equipmentPage!).then();
             });
+        };
+        this.petManager = new PetManager(credential, locationMode);
+        this.petManager.feature.leagueEnabled = true;
+        this.petManager.feature.enableSpaceTriggerOnDispose = true;
+        this.petManager.onRefresh = (message) => {
+            this.equipmentManager.equipmentPage = message.extensions.get("equipmentPage") as PersonalEquipmentManagementPage;
+            if (message.extensions.get("mode") === "CONSECRATE") {
+                this.equipmentManager.render().then();
+            }
+            if (message.extensions.get("mode") === "LEAGUE") {
+                PageUtils.scrollIntoView("pageTitle");
+                MessageBoard.publishMessage("<span style='color:yellow;font-weight:bold'>请转到宠物管理查看宠物联赛状态。</span>");
+            }
         };
     }
 
     protected role?: Role;
-    protected petPage?: PersonalPetManagementPage;
-
-    #roleDimensionChart?: any;
+    private roleDimensionChart?: any;
 
     protected async doProcess(): Promise<void> {
-        await this.#reformatPage();
+        await this.reformatPage();
+        await this.doPostReformatPage();
         await this.reloadRole();
         await this.renderRole();
-        await this.#renderBankAccount();
+        await this._renderBankAccount();
         await this.spellManager.reload();
-        await this.spellManager.render(this.role);
+        await this.spellManager.render(this.role!);
         await this.equipmentManager.reload();
-        await this.equipmentManager.render(this.role);
-        await this.#reloadPetPage();
-        await this.#renderPet();
-        await this.doReloadMirrorPage();
-        await this.doRenderMirror();
+        await this.equipmentManager.render();
+        this.equipmentManager.renderHitStatus(this.role);
+        await this.petManager.reload();
+        await this.petManager.render(this.equipmentManager.equipmentPage!);
+        if (this.mirrorManager !== undefined) {
+            $("#mirrorStatus").parent().show();
+            await this.mirrorManager.reload();
+            await this.mirrorManager.render(this.role!);
+        }
         KeyboardShortcutBuilder.newInstance()
             .onKeyPressed("e", () => PageUtils.triggerClick("equipmentButton"))
             .onKeyPressed("r", () => PageUtils.triggerClick("refreshButton"))
@@ -88,7 +99,10 @@ abstract class PersonalProfilePageProcessor extends StatefulPageProcessor {
             .bind();
     }
 
-    async #reformatPage() {
+    protected async doPostReformatPage() {
+    }
+
+    private async reformatPage() {
         // 删除老页面的所有元素
         const anchor = $("center:first").html("").hide();
 
@@ -97,7 +111,7 @@ abstract class PersonalProfilePageProcessor extends StatefulPageProcessor {
         html += "<table style='width:100%;border-width:0;background-color:#888888'>";
         html += "<tbody>";
         html += "<tr>";
-        html += "<td id='pageTitleCell'>";
+        html += "<td id='pageTitle'>";
         html += "<table style='background-color:navy;border-width:0;margin:auto'>";
         html += "<tbody>";
         html += "<tr>";
@@ -155,7 +169,9 @@ abstract class PersonalProfilePageProcessor extends StatefulPageProcessor {
         html += "</td>";
         html += "</tr>";
         html += "<tr>";
-        html += "<td id='petStatus'></td>";
+        html += "<td id='petStatus'>";
+        html += this.petManager.generateHTML();
+        html += "</td>";
         html += "</tr>";
         html += "<tr style='display:none'>";
         html += "<td id='mirrorStatus'></td>";
@@ -165,64 +181,47 @@ abstract class PersonalProfilePageProcessor extends StatefulPageProcessor {
         anchor.after($(html));
         await this.doBindReturnButton();
         await this.doBindItemHouseButton();
-        await this.#bindCommandButtons();
+        await this._bindCommandButtons();
 
         MessageBoard.createMessageBoardStyleB("messageBoardCell", NpcLoader.randomNpcImageHtml());
         $("#messageBoard")
             .css("background-color", "black")
             .css("color", "wheat");
-        await this.#resetMessageBoard();
+        await this._resetMessageBoard();
 
-        await this.#createRolePage();
-        await this.#createPetPage();
-        await this.doCreateMirrorPage();
+        await this._createRolePage();
 
         this.spellManager.bindButtons();
         this.equipmentManager.bindButtons();
+        this.petManager.bindButtons();
     }
 
-    async #refresh() {
-        await this.#resetMessageBoard();
+    private async _refresh() {
+        await this._resetMessageBoard();
         PageUtils.scrollIntoView("pageTitle");
         await this.reloadRole();
         await this.renderRole();
-        await this.#renderBankAccount();
+        await this._renderBankAccount();
         await this.spellManager.reload();
-        await this.spellManager.render(this.role);
+        await this.spellManager.render(this.role!);
         await this.equipmentManager.reload();
-        await this.equipmentManager.render(this.role);
-        await this.#reloadPetPage();
-        await this.#renderPet();
-        await this.doReloadMirrorPage();
-        await this.doRenderMirror();
+        await this.equipmentManager.render();
+        await this.petManager.reload();
+        await this.petManager.render(this.equipmentManager.equipmentPage!);
+        await this.mirrorManager?.reload();
+        await this.mirrorManager?.render(this.role!);
         MessageBoard.publishMessage("个人面板刷新完成。");
-
     }
 
     protected async reloadRole() {
         this.role = await new PersonalStatus(this.credential).load();
     }
 
-    async #reloadPetPage() {
-        this.petPage = await new PersonalPetManagement(this.credential).open();
-    }
-
-    protected async doReloadMirrorPage() {
-    }
-
     protected async doBeforeReturn() {
-        await new EquipmentSpaceTrigger(this.credential)
-            .withEquipmentPage(this.equipmentManager.equipmentPage)
-            .triggerUpdate();
-        await new EquipmentGrowthTrigger(this.credential)
-            .withEquipmentPage(this.equipmentManager.equipmentPage)
-            .triggerUpdate();
-        await new EquipmentUsingTrigger(this.credential)
-            .withEquipmentPage(this.equipmentManager.equipmentPage)
-            .triggerUpdate();
-        await new PetSpaceTrigger(this.credential)
-            .withPetPage(this.petPage)
-            .triggerUpdate();
+        await Promise.all([
+            this.equipmentManager.dispose(),
+            this.petManager.dispose()
+        ]);
     }
 
     protected async doBindReturnButton() {
@@ -231,7 +230,7 @@ abstract class PersonalProfilePageProcessor extends StatefulPageProcessor {
     protected async doBindItemHouseButton() {
     }
 
-    async #bindCommandButtons() {
+    private async _bindCommandButtons() {
         $("#equipmentButton").on("click", () => {
             PageUtils.disablePageInteractiveElements();
             this.doBeforeReturn().then(() => {
@@ -252,18 +251,18 @@ abstract class PersonalProfilePageProcessor extends StatefulPageProcessor {
         });
         $("#refreshButton").on("click", () => {
             $(".C_commandButton").prop("disabled", true);
-            this.#refresh().then(() => {
+            this._refresh().then(() => {
                 $(".C_commandButton").prop("disabled", false);
             });
         });
     }
 
-    async #resetMessageBoard() {
+    private async _resetMessageBoard() {
         const message: string = "<b style='font-size:120%'>见贤思齐焉，见不贤而内自省也。</b>";
         MessageBoard.resetMessageBoard(message);
     }
 
-    async #createRolePage() {
+    private async _createRolePage() {
         let html = "";
         html += "<table style='text-align:center;border-width:0;margin:auto;width:100%'>";
         html += "<tbody>";
@@ -357,48 +356,11 @@ abstract class PersonalProfilePageProcessor extends StatefulPageProcessor {
         $("#personalStatus").html(html);
     }
 
-    async #createPetPage() {
-        let html = "";
-        html += "<table style='text-align:center;border-width:0;margin:auto;width:100%'>";
-        html += "<tbody id='petTable'>";
-        html += "<tr>";
-        html += "<th style='background-color:yellowgreen;font-size:120%;font-weight:bold;color:navy' colspan='19'>宠 物 状 态</th>";
-        html += "</tr>";
-        html += "<tr style='background-color:skyblue'>";
-        html += "<th></th>";
-        html += "<th>使用</th>";
-        html += "<th>名字</th>";
-        html += "<th>性别</th>";
-        html += "<th>等级</th>";
-        html += "<th>生命</th>";
-        html += "<th>攻击</th>";
-        html += "<th>防御</th>";
-        html += "<th>智力</th>";
-        html += "<th>精神</th>";
-        html += "<th>速度</th>";
-        html += "<th>技1</th>";
-        html += "<th>技2</th>";
-        html += "<th>技3</th>";
-        html += "<th>技4</th>";
-        html += "<th>亲密</th>";
-        html += "<th>种类</th>";
-        html += "<th>属1</th>";
-        html += "<th>属2</th>";
-        html += "</tr>";
-        html += "</tbody>";
-        html += "</table>";
-
-        $("#petStatus").html(html);
-    }
-
-    protected async doCreateMirrorPage() {
-    }
-
     protected async doLoadBankAccount(): Promise<BankAccount | undefined> {
         return undefined;
     }
 
-    async #renderBankAccount() {
+    private async _renderBankAccount() {
         const account = await this.doLoadBankAccount();
         if (account !== undefined && !_.isNaN(account.saving)) {
             $("#roleSaving").html(account.saving + " GOLD");
@@ -427,159 +389,17 @@ abstract class PersonalProfilePageProcessor extends StatefulPageProcessor {
         $("#roleAdditionalRP").html(_.toString(role.additionalRP));
         $("#roleCash").html(_.toString(role.cash) + " GOLD");
 
-        await this.#_renderRoleDimension();
-        await this.#_generateRoleDimension();
+        $("#roleAttack").html(role.attackHtml);
+        $("#roleDefense").html(role.defenseHtml);
+        $("#roleSpecialAttack").html(role.specialAttackHtml);
+        $("#roleSpecialDefense").html(role.specialDefenseHtml);
+        $("#roleSpeed").html(role.speedHtml);
 
-        roleImage.find("> img:first")
-            .addClass("C_roleImage")
-            .attr("id", "roleImageButton");
-
-        new MouseClickEventBuilder(this.credential)
-            .bind($("#roleImageButton"), () => {
-                const key = "_m_" + role.mirrorIndex!;
-                const c: any = SetupLoader.loadMirrorCareerFixedConfig(this.credential.id);
-                c[key] = !c[key];
-                StorageUtils.set("_pa_070_" + this.credential.id, JSON.stringify(c));
-                this.#_renderRoleDimension().then();
-            });
+        await this._generateRoleDimension();
     }
 
-    async #_renderRoleDimension() {
-        const role = this.role!;
-        let at = role.attackHtml;
-        let df = role.defenseHtml;
-        let sa = role.specialAttackHtml;
-        let sd = role.specialDefenseHtml;
-        let sp = role.speedHtml;
-        if (SetupLoader.isCareerFixed(this.credential.id, role.mirrorIndex!)) {
-            at = "<span style='background-color:black;color:white'>" + at + "</span>";
-            df = "<span style='background-color:black;color:white'>" + df + "</span>";
-            sa = "<span style='background-color:black;color:white'>" + sa + "</span>";
-            sd = "<span style='background-color:black;color:white'>" + sd + "</span>";
-            sp = "<span style='background-color:black;color:white'>" + sp + "</span>";
-        }
-        $("#roleAttack").html(at);
-        $("#roleDefense").html(df);
-        $("#roleSpecialAttack").html(sa);
-        $("#roleSpecialDefense").html(sd);
-        $("#roleSpeed").html(sp);
-    }
-
-    async #renderPet() {
-        $(".C_petButton").off("click");
-        $(".C_pet").remove();
-        const partnerLoader = new ZodiacPartnerLoader(this.credential);
-        const table = $("#petTable");
-        for (const pet of this.petPage!.petList!) {
-            let html = "<tr class='C_pet' id='petIndex_" + pet.index + "'>";
-            html += "<td style='background-color:#E8E8D0;width:64px;height:64px' rowspan='2'>";
-            html += pet.imageHtml;
-            html += "</td>";
-            html += "<td style='background-color:#E8E8D0' rowspan='2'>" + pet.usingHtml + "</td>";
-            html += "<td style='background-color:#E8E8D0'>" + pet.nameHtml + "</td>";
-            html += "<td style='background-color:#E8E8D0'>" + pet.gender + "</td>";
-            html += "<td style='background-color:#E8E8D0'>" + pet.levelHtml + "</td>";
-            html += "<td style='background-color:#E8E8D0'>" + pet.healthHtml + "</td>";
-            html += "<td style='background-color:#E8E8D0' class='C_partnerDimension_" + pet.index + "'>" + pet.attackHtml + "</td>";
-            html += "<td style='background-color:#E8E8D0' class='C_partnerDimension_" + pet.index + "'>" + pet.defenseHtml + "</td>";
-            html += "<td style='background-color:#E8E8D0' class='C_partnerDimension_" + pet.index + "'>" + pet.specialAttackHtml + "</td>";
-            html += "<td style='background-color:#E8E8D0' class='C_partnerDimension_" + pet.index + "'>" + pet.specialDefenseHtml + "</td>";
-            html += "<td style='background-color:#E8E8D0' class='C_partnerDimension_" + pet.index + "'>" + pet.speedHtml + "</td>";
-            html += "<td style='background-color:#E8E8D0'>" + pet.spell1 + "</td>";
-            html += "<td style='background-color:#E8E8D0'>" + pet.spell2 + "</td>";
-            html += "<td style='background-color:#E8E8D0'>" + pet.spell3 + "</td>";
-            html += "<td style='background-color:#E8E8D0'>" + pet.spell4 + "</td>";
-            html += "<td style='background-color:#E8E8D0'>" + pet.love + "</td>";
-            html += "<td style='background-color:#E8E8D0'>" + pet.raceHtml + "</td>";
-            html += "<td style='background-color:#E8E8D0'>" + pet.attribute1 + "</td>";
-            html += "<td style='background-color:#E8E8D0'>" + pet.attribute2 + "</td>";
-            html += "</tr>";
-
-            html += "<tr class='C_pet'>";
-            html += "<td style='background-color:#E8E8D0;text-align:left' colspan='17'>";
-            const title = pet.using! ? "卸下" : "使用";
-            html += "<button role='button' id='pet_" + pet.index + "' class='C_petButton C_usePetButton'>" + title + "</button>";
-            if (!(pet.using!) && (this.equipmentManager.equipmentPage!.findGoldenCage() !== null || this.role!.hasGoldenCage)) {
-                html += "<button role='button' class='C_petButton C_petCageButton' " +
-                    "id='putIntoCage_" + pet.index + "'>入笼</button>";
-            }
-            html += "</td>";
-            html += "</tr>";
-            table.append($(html));
-        }
-        if (partnerLoader.available()) {
-            let html = "<tr class='C_pet'>";
-            html += "<td style='background-color:#E8E8D0;text-align:right' colspan='19'>";
-            html += "<button role='button' id='partnerButton' class='C_petButton'>十二宫战斗伴侣</button>";
-            html += "</td>";
-            html += "</tr>";
-            table.append($(html));
-
-            for (const pet of this.petPage!.petList!) {
-                if (partnerLoader.isZodiacPartner(pet)) {
-                    $(".C_partnerDimension_" + pet.index)
-                        .html((_idx, s) => {
-                            return "<span style='background-color:black;color:white'>" + s + "</span>";
-                        });
-                }
-            }
-        }
-        $(".C_usePetButton").on("click", event => {
-            const btnId = $(event.target).attr("id") as string;
-            let index = _.parseInt(StringUtils.substringAfterLast(btnId, "_"));
-            const pet = this.petPage!.findPet(index);
-            if (pet !== null && pet.using) {
-                // uninstall pet
-                index = -1;
-            }
-            this._usePet(index).then();
-        });
-        $(".C_petCageButton").on("click", event => {
-            const btnId = $(event.target).attr("id") as string;
-            let index = _.parseInt(StringUtils.substringAfterLast(btnId, "_"));
-            new GoldenCage(this.credential).putInto(index).then(() => {
-                this.#reloadPetPage().then(() => {
-                    this.#renderPet().then();
-                });
-            });
-        });
-        $("#partnerButton").on("click", () => {
-            PageUtils.disableElement("partnerButton");
-            partnerLoader.load(this.petPage).then(message => {
-                if (message.success && message.doRefresh) {
-                    this.#reloadPetPage().then(() => {
-                        this.#renderPet().then(() => {
-                            PageUtils.enableElement("partnerButton");
-                        });
-                    });
-                }
-            });
-        });
-    }
-
-    protected async doRenderMirror() {
-    }
-
-    #_calculateEquipmentSelection(): number[] {
-        const indexList: number[] = [];
-        $(".C_equipmentSelectButton").each((_idx, btn) => {
-            const btnId = $(btn).attr("id") as string;
-            if (PageUtils.isColorBlue(btnId)) {
-                const index = _.parseInt(StringUtils.substringAfterLast(btnId, "_"));
-                indexList.push(index);
-            }
-        });
-        return indexList;
-    }
-
-    async _usePet(index: number) {
-        await new PersonalPetManagement(this.credential).set(index);
-        await this.#reloadPetPage();
-        await this.#renderPet();
-    }
-
-    async #_generateRoleDimension() {
-        this.#roleDimensionChart?.dispose();
+    private async _generateRoleDimension() {
+        this.roleDimensionChart?.dispose();
         $("#roleDimension").html("");
 
         const role = this.role!;
@@ -617,7 +437,7 @@ abstract class PersonalProfilePageProcessor extends StatefulPageProcessor {
         if (element) {
             const chart = echarts.init(element);
             chart.setOption(option);
-            this.#roleDimensionChart = chart;
+            this.roleDimensionChart = chart;
         }
     }
 }

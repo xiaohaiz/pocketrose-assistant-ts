@@ -2,6 +2,7 @@ import Mirror from "./Mirror";
 
 class PersonalMirrorPage {
 
+    welcomeMessage?: string;
     currentMirror?: Mirror;
     mirrorList?: Mirror[];
 

@@ -1,6 +1,6 @@
 import _ from "lodash";
 import PageUtils from "../../util/PageUtils";
-import Equipment from "./Equipment";
+import {Equipment} from "./Equipment";
 import EquipmentLoader from "./EquipmentLoader";
 
 class EquipmentSetConfig {

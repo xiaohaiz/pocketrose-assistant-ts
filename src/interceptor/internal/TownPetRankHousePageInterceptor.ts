@@ -1,5 +1,5 @@
 import RoleStateMachineManager from "../../core/state/RoleStateMachineManager";
-import TownPetRankHousePageProcessor from "../../processor/internal/TownPetRankHousePageProcessor";
+import TownPetRankHousePageProcessor from "../../processor/stateless/TownPetRankHousePageProcessor";
 import PageProcessorContext from "../../processor/PageProcessorContext";
 import PageInterceptor from "../PageInterceptor";
 

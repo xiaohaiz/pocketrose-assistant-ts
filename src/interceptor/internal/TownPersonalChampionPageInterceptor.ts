@@ -1,5 +1,5 @@
 import RoleStateMachineManager from "../../core/state/RoleStateMachineManager";
-import TownPersonalChampionPageProcessor from "../../processor/internal/TownPersonalChampionPageProcessor";
+import TownPersonalChampionPageProcessor from "../../processor/stateless/TownPersonalChampionPageProcessor";
 import PageProcessorContext from "../../processor/PageProcessorContext";
 import PageInterceptor from "../PageInterceptor";
 

@@ -1,5 +1,5 @@
 import Role from "../role/Role";
-import Equipment from "./Equipment";
+import {Equipment} from "./Equipment";
 
 class CastleEquipmentExpressHousePage {
 

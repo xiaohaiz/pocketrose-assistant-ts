@@ -1,4 +1,4 @@
-import TownInformationPageProcessor from "../../processor/internal/TownInformationPageProcessor";
+import TownInformationPageProcessor from "../../processor/stateless/TownInformationPageProcessor";
 import PageInterceptor from "../PageInterceptor";
 
 class TownInformationPageInterceptor implements PageInterceptor {

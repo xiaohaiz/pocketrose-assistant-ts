@@ -1,6 +1,6 @@
 import RoleStateMachineManager from "../../core/state/RoleStateMachineManager";
-import PersonalStatusPageProcessor_Castle from "../../processor/internal/PersonalStatusPageProcessor_Castle";
-import PersonalStatusPageProcessor_Town from "../../processor/internal/PersonalStatusPageProcessor_Town";
+import PersonalStatusPageProcessor_Castle from "../../processor/stateless/PersonalStatusPageProcessor_Castle";
+import PersonalStatusPageProcessor_Town from "../../processor/stateless/PersonalStatusPageProcessor_Town";
 import PageProcessorContext from "../../processor/PageProcessorContext";
 import PageInterceptor from "../PageInterceptor";
 

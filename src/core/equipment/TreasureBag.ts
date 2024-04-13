@@ -1,7 +1,7 @@
 import Credential from "../../util/Credential";
 import MessageBoard from "../../util/MessageBoard";
 import NetworkUtils from "../../util/NetworkUtils";
-import Equipment from "./Equipment";
+import {Equipment} from "./Equipment";
 import TreasureBagPage from "./TreasureBagPage";
 
 class TreasureBag {

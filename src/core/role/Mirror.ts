@@ -1,4 +1,5 @@
 import Constants from "../../util/Constants";
+import _ from "lodash";
 
 class Mirror {
 
@@ -87,6 +88,10 @@ class Mirror {
         } else {
             return this.experience!.toString();
         }
+    }
+
+    get level(): number {
+        return (_.floor(this.experience! / 100)) + 1;
     }
 }
 

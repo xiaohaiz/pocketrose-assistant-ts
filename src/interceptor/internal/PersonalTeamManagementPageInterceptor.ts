@@ -1,5 +1,5 @@
 import RoleStateMachineManager from "../../core/state/RoleStateMachineManager";
-import PersonalTeamManagementPageProcessor from "../../processor/internal/PersonalTeamManagementPageProcessor";
+import PersonalTeamManagementPageProcessor from "../../processor/stateless/PersonalTeamManagementPageProcessor";
 import PageInterceptor from "../PageInterceptor";
 
 class PersonalTeamManagementPageInterceptor implements PageInterceptor {

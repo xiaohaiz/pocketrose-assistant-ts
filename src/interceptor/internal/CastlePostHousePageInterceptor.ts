@@ -1,5 +1,5 @@
 import RoleStateMachineManager from "../../core/state/RoleStateMachineManager";
-import CastlePostHousePageProcessor from "../../processor/internal/CastlePostHousePageProcessor";
+import CastlePostHousePageProcessor from "../../processor/stateless/CastlePostHousePageProcessor";
 import PageInterceptor from "../PageInterceptor";
 
 class CastlePostHousePageInterceptor implements PageInterceptor {

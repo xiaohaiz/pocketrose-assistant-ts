@@ -1,6 +1,8 @@
 import Pet from "./Pet";
 import StringUtils from "../../util/StringUtils";
 import PersonalPetManagementPage from "./PersonalPetManagementPage";
+import _ from "lodash";
+import PetLeaguePlayer from "./PetLeaguePlayer";
 
 class PersonalPetManagementPageParser {
 
@@ -21,7 +23,7 @@ class PersonalPetManagementPageParser {
                 if (usingText === "★使用") {
                     pet.using = true;
                 }
-                PersonalPetManagementPageParser.#parsePet(pet, table);
+                PersonalPetManagementPageParser._parsePet(pet, table);
                 petList.push(pet);
             }
         });
@@ -34,13 +36,50 @@ class PersonalPetManagementPageParser {
             }
         });
 
+        const petLeagueTable = $(html)
+            .find("center:contains('已登陆宠物联赛的宠物一览')")
+            .filter((_idx, center) => {
+                const text = $(center).text();
+                return _.startsWith(text, "已登陆宠物联赛的宠物一览");
+            })
+            .find("> form:first")
+            .find("> table:first")
+            .find("> tbody:first");
+        const petLeagueTableHTML = petLeagueTable.html();
+        const petLeaguePlayerList: PetLeaguePlayer[] = [];
+        petLeagueTable.find("> tr")
+            .filter((idx, _tr) => idx > 0)
+            .each((_idx, it) => {
+                const tr = $(it);
+                const player = new PetLeaguePlayer();
+
+                const c1 = tr.find("> td:first")
+                    .find("> input:checkbox");
+                player.index = _.parseInt(c1.val() as string);
+                player.online = c1.prop("checked");
+                const c2 = tr.find("> td:eq(1)")
+                    .find("> input:checkbox");
+                player.mainForce = c2.prop("checked");
+                player.name = tr.find("> td:eq(2)").text();
+                player.maxHealth = _.parseInt(tr.find("> td:eq(3)").text());
+                player.attack = _.parseInt(tr.find("> td:eq(4)").text());
+                player.defense = _.parseInt(tr.find("> td:eq(5)").text());
+                player.specialAttack = _.parseInt(tr.find("> td:eq(6)").text());
+                player.specialDefense = _.parseInt(tr.find("> td:eq(7)").text());
+                player.speed = _.parseInt(tr.find("> td:eq(8)").text());
+
+                petLeaguePlayerList.push(player);
+            });
+
         const page = new PersonalPetManagementPage();
         page.petList = petList;
         page.petStudyStatus = studyStatus;
+        page.petLeaguePlayerList = petLeaguePlayerList;
+        page.petLeagueTableHTML = petLeagueTableHTML;
         return page;
     }
 
-    static #parsePet(pet: Pet, table: JQuery<HTMLElement>) {
+    static _parsePet(pet: Pet, table: JQuery<HTMLElement>) {
         // pet name & gender
         const nameCell = table.find("td:first");
         let petNameText = nameCell.find("b").text();

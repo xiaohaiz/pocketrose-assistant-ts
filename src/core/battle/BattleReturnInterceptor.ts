@@ -10,11 +10,12 @@ import PersonalPetManagement from "../monster/PersonalPetManagement";
 import PetMapStatusTrigger from "../trigger/PetMapStatusTrigger";
 import _ from "lodash";
 import PetStatusTrigger from "../trigger/PetStatusTrigger";
-import EquipmentStatusTrigger from "../trigger/EquipmentStatusTrigger";
+import {EquipmentStatusTrigger} from "../trigger/EquipmentStatusTrigger";
 import EquipmentGrowthTrigger from "../trigger/EquipmentGrowthTrigger";
 import SetupLoader from "../config/SetupLoader";
 import EquipmentSpaceTrigger from "../trigger/EquipmentSpaceTrigger";
 import PetSpaceTrigger from "../trigger/PetSpaceTrigger";
+import {PersonalSalaryTrigger} from "../trigger/PersonalSalaryTrigger";
 
 class BattleReturnInterceptor {
 
@@ -61,7 +62,7 @@ class BattleReturnInterceptor {
                 .withPetPage(this.#petPage)
                 .triggerUpdate();
         }
-        if (mod === 19 || mod === 37 || mod === 59 || mod === 79 || mod === 97 || this.#hasHarvestExcludesPetMap()) {
+        if (mod === 97 || this.#hasHarvestExcludesPetMap()) {
             await this.#initializeEquipmentPage();
             await new EquipmentStatusTrigger(this.#credential)
                 .withEquipmentPage(this.#equipmentPage)
@@ -99,6 +100,9 @@ class BattleReturnInterceptor {
                 .withPetPage(this.#petPage)
                 .triggerUpdate();
         }
+
+        // 触发自动领取俸禄
+        await new PersonalSalaryTrigger(this.#credential).triggerReceive(this.#battleCount);
     }
 
     #hasHarvest() {

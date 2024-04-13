@@ -1,4 +1,4 @@
-import NationalInformationPageProcessor from "../../processor/internal/NationalInformationPageProcessor";
+import NationalInformationPageProcessor from "../../processor/stateless/NationalInformationPageProcessor";
 import PageInterceptor from "../PageInterceptor";
 
 class NationInformationPageInterceptor implements PageInterceptor {

@@ -1,6 +1,6 @@
 import RoleStateMachineManager from "../../core/state/RoleStateMachineManager";
-import PersonalStatisticsPageProcessor_Castle from "../../processor/internal/PersonalStatisticsPageProcessor_Castle";
-import PersonalStatisticsPageProcessor_Town from "../../processor/internal/PersonalStatisticsPageProcessor_Town";
+import PersonalStatisticsPageProcessor_Castle from "../../processor/stateless/PersonalStatisticsPageProcessor_Castle";
+import PersonalStatisticsPageProcessor_Town from "../../processor/stateless/PersonalStatisticsPageProcessor_Town";
 import PageInterceptor from "../PageInterceptor";
 
 class PersonalStatisticsPageInterceptor implements PageInterceptor {

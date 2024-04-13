@@ -1,9 +1,12 @@
 import Pet from "./Pet";
+import PetLeaguePlayer from "./PetLeaguePlayer";
 
 class PersonalPetManagementPage {
 
     petList?: Pet[];
     petStudyStatus?: number[];
+    petLeaguePlayerList?: PetLeaguePlayer[];
+    petLeagueTableHTML?: string;
 
     findPet(index: number) {
         for (const pet of this.petList!) {

@@ -1,5 +1,5 @@
 import RoleStateMachineManager from "../../core/state/RoleStateMachineManager";
-import MapDashboardPageProcessor from "../../processor/internal/MapDashboardPageProcessor";
+import MapDashboardPageProcessor from "../../processor/stateless/MapDashboardPageProcessor";
 import PageProcessorContext from "../../processor/PageProcessorContext";
 import PageInterceptor from "../PageInterceptor";
 

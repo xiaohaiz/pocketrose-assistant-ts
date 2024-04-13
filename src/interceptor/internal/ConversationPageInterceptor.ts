@@ -1,5 +1,5 @@
 import RoleStateMachineManager from "../../core/state/RoleStateMachineManager";
-import ConversationPageProcessor from "../../processor/internal/ConversationPageProcessor";
+import ConversationPageProcessor from "../../processor/stateless/ConversationPageProcessor";
 import PageInterceptor from "../PageInterceptor";
 
 class ConversationPageInterceptor implements PageInterceptor {

@@ -205,6 +205,30 @@ class PocketDatabase {
                         keyPath: "id", autoIncrement: false
                     });
                 }
+
+                // ------------------------------------------------------------
+                // BattleFailureRecord
+                // ------------------------------------------------------------
+                if (!db.objectStoreNames.contains("BattleFailureRecord")) {
+                    const store = db.createObjectStore("BattleFailureRecord", {
+                        keyPath: "id", autoIncrement: false
+                    });
+                    store.createIndex("createTime", "createTime", {
+                        unique: false
+                    });
+                    store.createIndex("roleId", "roleId", {
+                        unique: false
+                    });
+                }
+
+                // ------------------------------------------------------------
+                // PersonalSalaryRecord
+                // ------------------------------------------------------------
+                if (!db.objectStoreNames.contains("PersonalSalaryRecord")) {
+                    db.createObjectStore("PersonalSalaryRecord", {
+                        keyPath: "id", autoIncrement: false
+                    });
+                }
             };
         });
     };

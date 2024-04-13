@@ -1,5 +1,5 @@
 import RoleStateMachineManager from "../../core/state/RoleStateMachineManager";
-import PersonalManualPageProcessor from "../../processor/internal/PersonalManualPageProcessor";
+import PersonalManualPageProcessor from "../../processor/stateless/PersonalManualPageProcessor";
 import PageProcessorContext from "../../processor/PageProcessorContext";
 import PageInterceptor from "../PageInterceptor";
 

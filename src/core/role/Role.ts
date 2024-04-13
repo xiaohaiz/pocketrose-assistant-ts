@@ -90,6 +90,14 @@ class Role {
             " " + this.speed;
     }
 
+    get healthHtml(): string {
+        return this.health + "/" + this.maxHealth;
+    }
+
+    get manaHtml(): string {
+        return this.mana + "/" + this.maxMana;
+    }
+
     get attackHtml() {
         if (this.attack! >= 375) {
             return "<span title='倚天' style='color:red;font-weight:bold'>" + this.attack + "</span>"

@@ -47,6 +47,18 @@ class Pet {
 
     location?: string;  // P/C/R
 
+    get attributeList(): string[] {
+        const s: string[] = [];
+        if (this.attribute1 !== undefined && this.attribute1 !== "无") s.push(this.attribute1);
+        if (this.attribute2 !== undefined && this.attribute2 !== "无") s.push(this.attribute2);
+        return s;
+    }
+
+    get growExperience() {
+        const profile = MonsterProfileLoader.load(this.code);
+        return profile?.growExperience;
+    }
+
     get nameHtml() {
         const profile = MonsterProfileLoader.load(this.name);
         return profile ? profile.nameHtml : this.name;
@@ -70,6 +82,12 @@ class Pet {
     get imageHtml() {
         const src = Constants.POCKET_DOMAIN + "/image/pet/" + this.picture;
         return "<img src='" + src + "' width='64' height='64' alt='" + this.race + "' style='border-width:0'>";
+    }
+
+    createImageHtml(id: string, className: string) {
+        const src = Constants.POCKET_DOMAIN + "/image/pet/" + this.picture;
+        return "<img src='" + src + "' width='64' height='64' alt='" + this.race + "' " +
+            "style='border-width:0' id='" + id + "' class='" + className + "'>";
     }
 
     get usingHtml() {
@@ -174,6 +192,14 @@ class Pet {
             default:
                 return 0;
         }
+    }
+
+    get canConsecrate(): boolean {
+        if (this.using) return false;
+        if (SetupLoader.isOnlyConsecrateInitialPetEnabled()) {
+            return this.level === 1;
+        }
+        return true;
     }
 
     static parse(text: string): Pet {

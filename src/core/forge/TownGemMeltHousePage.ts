@@ -1,4 +1,4 @@
-import Equipment from "../equipment/Equipment";
+import {Equipment} from "../equipment/Equipment";
 import Role from "../role/Role";
 
 class TownGemMeltHousePage {

@@ -1,7 +1,8 @@
 import RoleStateMachineManager from "../../core/state/RoleStateMachineManager";
-import PersonalMirrorPageProcessor from "../../processor/internal/PersonalMirrorPageProcessor";
 import PageProcessorContext from "../../processor/PageProcessorContext";
 import PageInterceptor from "../PageInterceptor";
+import Credential from "../../util/Credential";
+import PersonalMirrorPageProcessor from "../../processor/stateful/PersonalMirrorPageProcessor";
 
 class PersonalMirrorPageInterceptor implements PageInterceptor {
 
@@ -13,14 +14,15 @@ class PersonalMirrorPageInterceptor implements PageInterceptor {
     }
 
     intercept(): void {
+        const credential = Credential.newInstance();
+        if (credential === undefined) return;
         RoleStateMachineManager.create()
             .load()
             .then(machine => {
                 machine.start()
                     .whenInTown(state => {
-                        const context = new PageProcessorContext()
-                            .withTownId(state?.townId);
-                        new PersonalMirrorPageProcessor().process(context);
+                        const context = PageProcessorContext.whenInTown(state?.townId);
+                        new PersonalMirrorPageProcessor(credential, context).process();
                     })
                     .process();
             });

@@ -6,7 +6,13 @@ import _ from "lodash";
 class PersonalMirrorPageParser {
 
     static parsePage(html: string) {
-        const currentMirror = PersonalMirrorPageParser.#parseCurrentMirror(html);
+        const welcomeMessage = $(html).find("img[alt='神官']")
+            .parent()
+            .prev()
+            .find("> font:first")
+            .html();
+
+        const currentMirror = PersonalMirrorPageParser._parseCurrentMirror(html);
 
         const mirrorList: Mirror[] = [];
 
@@ -55,12 +61,13 @@ class PersonalMirrorPageParser {
         });
 
         const page = new PersonalMirrorPage();
+        page.welcomeMessage = welcomeMessage;
         page.currentMirror = currentMirror;
         page.mirrorList = mirrorList;
         return page;
     }
 
-    static #parseCurrentMirror(html: string) {
+    private static _parseCurrentMirror(html: string) {
         let mirrorIndex: number;
         if (_.includes(html, "当前分身:本体")) {
             mirrorIndex = 0;

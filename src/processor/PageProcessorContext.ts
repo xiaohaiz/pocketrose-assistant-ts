@@ -1,4 +1,5 @@
 import Coordinate from "../util/Coordinate";
+import _ from "lodash";
 
 class PageProcessorContext {
 
@@ -61,6 +62,14 @@ class PageProcessorContext {
             this.set("coordinate", coordinate);
         }
         return this;
+    }
+
+    parseBattleCount(): number | undefined {
+        const s = this.get("battleCount");
+        if (s === undefined) {
+            return undefined;
+        }
+        return _.parseInt(s);
     }
 
 }

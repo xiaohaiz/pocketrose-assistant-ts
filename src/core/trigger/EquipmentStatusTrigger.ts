@@ -1,12 +1,10 @@
 import Credential from "../../util/Credential";
 import PersonalEquipmentManagementPage from "../equipment/PersonalEquipmentManagementPage";
 import PersonalEquipmentManagement from "../equipment/PersonalEquipmentManagement";
-import Equipment from "../equipment/Equipment";
-import _ from "lodash";
 import TreasureBag from "../equipment/TreasureBag";
 import CastleInformation from "../dashboard/CastleInformation";
 import CastleWarehouse from "../equipment/CastleWarehouse";
-import RoleEquipmentStatusStorage from "../equipment/RoleEquipmentStatusStorage";
+import {RoleEquipmentStatusManager} from "../equipment/RoleEquipmentStatusManager";
 
 /**
  * ============================================================================
@@ -20,22 +18,24 @@ import RoleEquipmentStatusStorage from "../equipment/RoleEquipmentStatusStorage"
  */
 class EquipmentStatusTrigger {
 
-    readonly #credential: Credential;
+    private readonly credential: Credential;
+    private readonly statusManager: RoleEquipmentStatusManager
 
     constructor(credential: Credential) {
-        this.#credential = credential;
+        this.credential = credential;
+        this.statusManager = new RoleEquipmentStatusManager(credential);
     }
 
-    #equipmentPage?: PersonalEquipmentManagementPage;
+    private equipmentPage?: PersonalEquipmentManagementPage;
 
     withEquipmentPage(value: PersonalEquipmentManagementPage | undefined): EquipmentStatusTrigger {
-        this.#equipmentPage = value;
+        this.equipmentPage = value;
         return this;
     }
 
     async #initializeEquipmentPage() {
-        if (!this.#equipmentPage) {
-            this.#equipmentPage = await new PersonalEquipmentManagement(this.#credential).open();
+        if (!this.equipmentPage) {
+            this.equipmentPage = await new PersonalEquipmentManagement(this.credential).open();
         }
     }
 
@@ -43,96 +43,27 @@ class EquipmentStatusTrigger {
      * equipmentPage is required.
      */
     async triggerUpdate() {
-        const allEquipments: Equipment[] = [];
-
         // 解析身上的装备
         await this.#initializeEquipmentPage();
-        _.forEach(this.#equipmentPage!.equipmentList!, it => {
-            it.location = "P";
-            allEquipments.push(it);
-        });
+        await this.statusManager.updatePersonalEquipmentStatus(this.equipmentPage);
 
         // 解析百宝袋中的装备
-        const bag = this.#equipmentPage!.findTreasureBag();
+        const bag = this.equipmentPage!.findTreasureBag();
         if (bag) {
-            const bagPage = await new TreasureBag(this.#credential).open(bag.index!);
-            _.forEach(bagPage.equipmentList!, it => {
-                it.location = "B";
-                allEquipments.push(it);
-            });
+            const bagPage = await new TreasureBag(this.credential).open(bag.index!);
+            await this.statusManager.updateTreasureBagEquipmentStatus(bagPage);
         }
 
         // 解析城堡仓库中的装备
-        const roleName = this.#equipmentPage!.role!.name!;
+        const roleName = this.equipmentPage!.role!.name!;
         const castlePage = await new CastleInformation().open();
         const castle = castlePage.findByRoleName(roleName);
         if (castle) {
-            const warehousePage = await new CastleWarehouse(this.#credential).open();
-            _.forEach(warehousePage.storageEquipmentList!, it => {
-                it.location = "W";
-                allEquipments.push(it);
-            });
+            const warehousePage = await new CastleWarehouse(this.credential).open();
+            await this.statusManager.updateCastleWarehouseEquipmentStatus(warehousePage);
         }
-
-        await this.#persistEquipmentList(allEquipments);
     }
 
-    async #persistEquipmentList(equipmentList: Equipment[]) {
-        // Count all gems
-        let powerGemCount = 0;
-        let luckGemCount = 0;
-        let weightGemCount = 0;
-        _.forEach(equipmentList, it => {
-            if (it.name === "威力宝石") {
-                powerGemCount++;
-            } else if (it.name === "幸运宝石") {
-                luckGemCount++;
-            } else if (it.name === "重量宝石") {
-                weightGemCount++;
-            }
-        });
-
-        const equipmentStatusList: string[] = [];
-        for (const equipment of equipmentList) {
-            if (equipment.isItem && (equipment.name !== "宠物蛋" && equipment.name !== "藏宝图" && equipment.name !== "威力宝石")) {
-                continue;
-            }
-            let s = "";
-            s += _.escape(equipment.fullName);
-            s += "/";
-            s += equipment.category;
-            s += "/";
-            s += equipment.power;
-            s += "/";
-            s += equipment.weight;
-            s += "/";
-            s += equipment.endure;
-            s += "/";
-            s += equipment.additionalPower;
-            s += "/";
-            s += equipment.additionalWeight;
-            s += "/";
-            s += equipment.additionalLuck;
-            s += "/";
-            s += equipment.experience;
-            s += "/";
-            s += equipment.location;
-            if (equipment.using !== undefined) {
-                s += "/";
-                s += equipment.using;
-            }
-            equipmentStatusList.push(s);
-        }
-
-        const storage = RoleEquipmentStatusStorage.getInstance();
-        await storage.write(
-            this.#credential.id,
-            JSON.stringify(equipmentStatusList),
-            powerGemCount,
-            luckGemCount,
-            weightGemCount
-        );
-    }
 }
 
-export = EquipmentStatusTrigger;
+export {EquipmentStatusTrigger};

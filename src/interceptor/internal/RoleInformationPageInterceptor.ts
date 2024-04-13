@@ -1,4 +1,4 @@
-import RoleInformationPageProcessor from "../../processor/internal/RoleInformationPageProcessor";
+import RoleInformationPageProcessor from "../../processor/stateless/RoleInformationPageProcessor";
 import PageInterceptor from "../PageInterceptor";
 
 class RoleInformationPageInterceptor implements PageInterceptor {

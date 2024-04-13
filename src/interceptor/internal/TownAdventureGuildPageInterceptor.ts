@@ -1,5 +1,5 @@
 import RoleStateMachineManager from "../../core/state/RoleStateMachineManager";
-import TownAdventureGuildPageProcessor from "../../processor/internal/TownAdventureGuildPageProcessor";
+import TownAdventureGuildPageProcessor from "../../processor/stateless/TownAdventureGuildPageProcessor";
 import PageInterceptor from "../PageInterceptor";
 
 class TownAdventureGuildPageInterceptor implements PageInterceptor {

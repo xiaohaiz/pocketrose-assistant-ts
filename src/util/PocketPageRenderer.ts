@@ -36,6 +36,9 @@ class PocketPageRenderer {
         return html;
     }
 
+    /**
+     * @deprecated
+     */
     static createGemCategorySelection(id?: string) {
         let idForUse = "_pocket_gemCategory";
         if (id !== undefined) idForUse = id;

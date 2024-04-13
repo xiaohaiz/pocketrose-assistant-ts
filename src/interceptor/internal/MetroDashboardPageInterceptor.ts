@@ -1,5 +1,5 @@
 import RoleStateMachineManager from "../../core/state/RoleStateMachineManager";
-import MetroDashboardPageProcessor from "../../processor/internal/MetroDashboardPageProcessor";
+import MetroDashboardPageProcessor from "../../processor/stateless/MetroDashboardPageProcessor";
 import PageInterceptor from "../PageInterceptor";
 
 class MetroDashboardPageInterceptor implements PageInterceptor {

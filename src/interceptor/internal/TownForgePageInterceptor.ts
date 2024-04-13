@@ -1,5 +1,5 @@
 import RoleStateMachineManager from "../../core/state/RoleStateMachineManager";
-import TownForgePageProcessor from "../../processor/internal/TownForgePageProcessor";
+import TownForgePageProcessor from "../../processor/stateless/TownForgePageProcessor";
 import PageProcessorContext from "../../processor/PageProcessorContext";
 import PageInterceptor from "../PageInterceptor";
 

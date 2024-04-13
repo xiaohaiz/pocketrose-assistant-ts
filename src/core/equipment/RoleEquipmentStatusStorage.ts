@@ -1,74 +1,48 @@
 import PocketDatabase from "../../util/PocketDatabase";
-import RoleEquipmentStatus from "./RoleEquipmentStatus";
+import {RoleEquipmentStatus} from "./RoleEquipmentStatus";
 
 class RoleEquipmentStatusStorage {
 
-    static getInstance() {
-        return instance;
-    }
-
-    async loads(idList: string[]): Promise<Map<string, RoleEquipmentStatus>> {
+    static async load(location: string, roleId: string): Promise<RoleEquipmentStatus | null> {
+        const id = location + "/" + roleId;
         const db = await PocketDatabase.connectDatabase();
         return await (() => {
-            return new Promise<Map<string, RoleEquipmentStatus>>((resolve, reject) => {
+            return new Promise<RoleEquipmentStatus | null>((resolve, reject) => {
                 const request = db.transaction(["RoleEquipmentStatus"], "readonly")
                     .objectStore("RoleEquipmentStatus")
-                    .getAll();  // Bad usage here
-
+                    .get(id);
                 request.onerror = reject;
-
                 request.onsuccess = () => {
                     if (request.result) {
-                        const dataMap = new Map<string, RoleEquipmentStatus>();
-                        for (const it of request.result) {
-                            const data = new RoleEquipmentStatus();
-                            data.id = it.id;
-                            data.json = it.json;
-                            data.updateTime = it.updateTime;
-                            data.powerGemCount = it.powerGemCount;
-                            data.luckGemCount = it.luckGemCount;
-                            data.weightGemCount = it.weightGemCount;
-                            if (idList.includes(data.id!)) {
-                                dataMap.set(data.id!, data);
-                            }
-                        }
-                        resolve(dataMap);
+                        const record = new RoleEquipmentStatus();
+                        record.id = request.result.id;
+                        record.updateTime = request.result.updateTime;
+                        record.json = request.result.json;
+                        record.powerGemCount = request.result.powerGemCount;
+                        record.weightGemCount = request.result.weightGemCount;
+                        record.luckGemCount = request.result.luckGemCount;
+                        resolve(record);
                     } else {
-                        reject();
+                        resolve(null);
                     }
                 };
             });
         })();
     }
 
-    async write(id: string,
-                json: string,
-                powerGemCount: number,
-                luckGemCount: number,
-                weightGemCount: number): Promise<void> {
+    static async write(record: RoleEquipmentStatus): Promise<void> {
         const db = await PocketDatabase.connectDatabase();
         return await (() => {
             return new Promise<void>((resolve, reject) => {
-                const status = new RoleEquipmentStatus();
-                status.id = id;
-                status.json = json;
-                status.powerGemCount = powerGemCount;
-                status.luckGemCount = luckGemCount;
-                status.weightGemCount = weightGemCount;
-
-                const document = status.asDocument();
+                const document = record.asDocument();
                 const request = db.transaction(["RoleEquipmentStatus"], "readwrite")
                     .objectStore("RoleEquipmentStatus")
                     .put(document);
-
                 request.onerror = reject;
-
                 request.onsuccess = () => resolve();
             });
         })();
     }
 }
 
-const instance = new RoleEquipmentStatusStorage();
-
-export = RoleEquipmentStatusStorage;
+export {RoleEquipmentStatusStorage};

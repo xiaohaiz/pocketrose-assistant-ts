@@ -4,8 +4,8 @@ import NetworkUtils from "../../util/NetworkUtils";
 import PocketUtils from "../../util/PocketUtils";
 import TownLoader from "../town/TownLoader";
 import BankAccount from "./BankAccount";
-import TownBankPage from "./TownBankPage";
-import TownBankPageParser from "./TownBankPageParser";
+import {TownBankPage} from "./BankPage";
+import {TownBankPageParser} from "./BankPageParser";
 
 class TownBank {
 
@@ -17,6 +17,9 @@ class TownBank {
         this.#townId = townId;
     }
 
+    /**
+     * @deprecated
+     */
     get bankTitle() {
         if (this.#townId === undefined) {
             return "口袋银行";
@@ -27,31 +30,25 @@ class TownBank {
     }
 
     async open(): Promise<TownBankPage> {
-        const action = () => {
-            return new Promise<TownBankPage>(resolve => {
-                const request = this.#credential.asRequestMap();
-                request.set("con_str", "50");
-                request.set("mode", "BANK");
-                if (this.#townId !== undefined) {
-                    request.set("town", this.#townId);
-                }
-                NetworkUtils.post("town.cgi", request).then(html => {
-                    new TownBankPageParser().parse(html).then(page => resolve(page));
-                });
-            });
-        };
-        return await action();
+        return await this._open();
+    }
+
+    private async _open(count: number = 0): Promise<TownBankPage> {
+        const request = this.#credential.asRequestMap();
+        request.set("con_str", "50");
+        request.set("mode", "BANK");
+        if (this.#townId !== undefined) {
+            request.set("town", this.#townId);
+        }
+        const response = await NetworkUtils.post("town.cgi", request);
+        const page = TownBankPageParser.parsePage(response);
+        if (page.available) return page;
+        if (count >= 2) return page;
+        return await this._open(count + 1);
     }
 
     async load(): Promise<BankAccount> {
-        const action = () => {
-            return new Promise<BankAccount>(resolve => {
-                this.open().then(page => {
-                    resolve(page.account!);
-                });
-            });
-        };
-        return await action();
+        return (await this.open()).account!;
     }
 
     async withdraw(amount: number): Promise<void> {
@@ -119,6 +116,15 @@ class TownBank {
             });
         };
         return await action();
+    }
+
+    async transfer(target: string, amount: number) {
+        const request = this.#credential.asRequestMap();
+        request.set("gold", (amount * 10).toString());  // 送钱的接口单位是K
+        request.set("eid", target);
+        request.set("mode", "MONEY_SEND2");
+        const response = await NetworkUtils.post("town.cgi", request);
+        MessageBoard.processResponseMessage(response);
     }
 }
 

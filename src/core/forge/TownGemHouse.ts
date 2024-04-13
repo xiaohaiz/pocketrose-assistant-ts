@@ -6,7 +6,7 @@ import StringUtils from "../../util/StringUtils";
 import GemFuseLog from "./GemFuseLog";
 import GemFuseLogStorage from "./GemFuseLogStorage";
 import TownGemHousePage from "./TownGemHousePage";
-import TownGemHouseParser from "./TownGemHouseParser";
+import {TownGemHousePageParser} from "./TownGemHousePageParser";
 
 class TownGemHouse {
 
@@ -19,20 +19,15 @@ class TownGemHouse {
     }
 
     async open(): Promise<TownGemHousePage> {
-        const action = () => {
-            return new Promise<TownGemHousePage>(resolve => {
-                const request = this.#credential.asRequestMap();
-                request.set("con_str", "50");
-                request.set("mode", "BAOSHI_SHOP");
-                if (this.#townId !== undefined) {
-                    request.set("town", this.#townId);
-                }
-                NetworkUtils.post("town.cgi", request).then(html => {
-                    new TownGemHouseParser(this.#credential, this.#townId).parse(html).then(page => resolve(page));
-                });
-            });
-        };
-        return await action();
+        const request = this.#credential.asRequestMap();
+        request.set("con_str", "50");
+        request.set("mode", "BAOSHI_SHOP");
+        if (this.#townId !== undefined) {
+            request.set("town", this.#townId);
+        }
+        const html = await NetworkUtils.post("town.cgi", request);
+        const parser = new TownGemHousePageParser(this.#credential, this.#townId);
+        return parser.parsePage(html);
     }
 
     async fuse(equipmentIndex: number, gemIndex: number, equipment?: string): Promise<void> {

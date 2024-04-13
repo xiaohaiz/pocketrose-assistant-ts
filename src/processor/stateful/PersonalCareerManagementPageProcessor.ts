@@ -16,31 +16,40 @@ import MessageBoard from "../../util/MessageBoard";
 import _ from "lodash";
 import LocationModeTown from "../../core/location/LocationModeTown";
 import LocationModeCastle from "../../core/location/LocationModeCastle";
-import SpellManagerComponent from "../../component/SpellManagerComponent";
+import SpellManager from "../../widget/SpellManager";
 import CareerLoader from "../../core/career/CareerLoader";
 import StringUtils from "../../util/StringUtils";
-import EquipmentManagerComponent from "../../component/EquipmentManagerComponent";
+import {EquipmentManager} from "../../widget/EquipmentManager";
 import MouseClickEventBuilder from "../../util/MouseClickEventBuilder";
 import StorageUtils from "../../util/StorageUtils";
-import EquipmentGrowthTrigger from "../../core/trigger/EquipmentGrowthTrigger";
-import EquipmentSpaceTrigger from "../../core/trigger/EquipmentSpaceTrigger";
-import EquipmentUsingTrigger from "../../core/trigger/EquipmentUsingTrigger";
+import MirrorManager from "../../widget/MirrorManager";
 
 abstract class PersonalCareerManagementPageProcessor extends StatefulPageProcessor {
 
-    protected spellComponent: SpellManagerComponent;
-    protected equipmentComponent: EquipmentManagerComponent;
+    protected spellManager: SpellManager;
+    protected equipmentManager: EquipmentManager;
+    protected mirrorManager?: MirrorManager;
 
     protected constructor(credential: Credential, context: PageProcessorContext) {
         super(credential, context);
         const locationMode = this.createLocationMode() as LocationModeTown | LocationModeCastle;
-        this.spellComponent = new SpellManagerComponent(this.credential, locationMode);
-        this.spellComponent.onRefresh = () => {
-            this.refreshOnSpellChange().then();
+        this.spellManager = new SpellManager(this.credential, locationMode);
+        this.spellManager.onRefresh = (message) => {
+            this.role = message.extensions.get("role") as Role;
+            $("#roleSpell").html(_.toString(this.role!.spell));
+            this.mirrorManager?.reload().then(() => {
+                this.mirrorManager?.render(this.role!).then();
+            });
         };
-        this.equipmentComponent = new EquipmentManagerComponent(this.credential, locationMode);
-        this.equipmentComponent.onRefresh = () => {
-            this.refreshOnEquipmentChange().then();
+        this.equipmentManager = new EquipmentManager(this.credential, locationMode);
+        this.equipmentManager.feature.enableGrowthTriggerOnDispose = true;
+        this.equipmentManager.feature.enableSpaceTriggerOnDispose = true;
+        this.equipmentManager.feature.enableStatusTriggerOnDispose = true;
+        this.equipmentManager.feature.enableUsingTriggerOnDispose = true;
+        this.equipmentManager.feature.onMessage = s => MessageBoard.publishMessage(s);
+        this.equipmentManager.feature.onWarning = s => MessageBoard.publishWarning(s);
+        this.equipmentManager.feature.onRefresh = () => {
+            this.equipmentManager.renderHitStatus(this.role);
         };
     }
 
@@ -60,43 +69,20 @@ abstract class PersonalCareerManagementPageProcessor extends StatefulPageProcess
         this.careerPage = await new PersonalCareerManagement(this.credential, this.townId).open();
     }
 
-    protected async refresh() {
-        PageUtils.scrollIntoView("pageTitle");
-        await this.resetMessageBoard();
+    protected async doRefresh() {
+
         await this.reloadRole();
         await this.renderRole();
-        await this.spellComponent.reload();
-        await this.spellComponent.render(this.role);
+        await this.spellManager.reload();
+        await this.spellManager.render(this.role!);
         await this.reloadCareerPage();
         await this.renderCareerPage();
-        await this.equipmentComponent.reload();
-        await this.equipmentComponent.render(this.role);
-    }
-
-    protected async refreshOnSpellChange() {
-        await this.reloadRole();
-        await this.renderRole();
-        await this.spellComponent.reload();
-        await this.spellComponent.render(this.role);
-    }
-
-    protected async refreshOnEquipmentChange() {
-        await this.reloadRole();
-        await this.renderRole();
-        await this.equipmentComponent.reload();
-        await this.equipmentComponent.render(this.role);
+        await this.equipmentManager.reload();
+        await this.equipmentManager.render();
     }
 
     protected async beforeReturn() {
-        await new EquipmentGrowthTrigger(this.credential)
-            .withEquipmentPage(this.equipmentComponent.equipmentPage)
-            .triggerUpdate();
-        await new EquipmentSpaceTrigger(this.credential)
-            .withEquipmentPage(this.equipmentComponent.equipmentPage)
-            .triggerUpdate();
-        await new EquipmentUsingTrigger(this.credential)
-            .withEquipmentPage(this.equipmentComponent.equipmentPage)
-            .triggerUpdate();
+        await this.equipmentManager.dispose();
     }
 
     protected async doProcess(): Promise<void> {
@@ -105,15 +91,18 @@ abstract class PersonalCareerManagementPageProcessor extends StatefulPageProcess
 
         // Render immutable page (static)
         await this.renderImmutablePage();
+        await this.doPostCreatePage();
 
         await this.reloadRole();
         await this.renderRole();
-        await this.spellComponent.reload();
-        await this.spellComponent.render(this.role);
+        await this.spellManager.reload();
+        await this.spellManager.render(this.role!);
         await this.reloadCareerPage();
         await this.renderCareerPage();
-        await this.equipmentComponent.reload();
-        await this.equipmentComponent.render(this.role);
+        await this.equipmentManager.reload();
+        await this.equipmentManager.render();
+        this.equipmentManager.renderHitStatus(this.role);
+        await this.doPostProcess();
 
         KeyboardShortcutBuilder.newInstance()
             .onKeyPressed("e", () => PageUtils.triggerClick("equipmentButton"))
@@ -121,6 +110,13 @@ abstract class PersonalCareerManagementPageProcessor extends StatefulPageProcess
             .onEscapePressed(() => PageUtils.triggerClick("returnButton"))
             .withDefaultPredicate()
             .bind();
+    }
+
+    protected async doPostCreatePage() {
+
+    }
+
+    protected async doPostProcess() {
     }
 
     private async renderImmutablePage() {
@@ -231,7 +227,7 @@ abstract class PersonalCareerManagementPageProcessor extends StatefulPageProcess
                 html += "<toby>";
                 html += "<tr>";
                 html += "<td style='background-color:#888888'>";
-                html += this.spellComponent.generateHTML();
+                html += this.spellManager.generateHTML();
                 html += "</td>";
                 html += "</tr>";
                 html += "<tr style='display:none'>";
@@ -241,8 +237,11 @@ abstract class PersonalCareerManagementPageProcessor extends StatefulPageProcess
                 html += "</tr>";
                 html += "<tr>";
                 html += "<td style='background-color:#888888'>";
-                html += this.equipmentComponent.generateHTML();
+                html += this.equipmentManager.generateHTML();
                 html += "</td>";
+                html += "</tr>";
+                html += "<tr style='display:none'>";
+                html += "<td style='background-color:#888888' id='ID_mirrorManagerPanel'></td>";
                 html += "</tr>";
                 html += "</toby>";
                 html += "</table>";
@@ -258,7 +257,7 @@ abstract class PersonalCareerManagementPageProcessor extends StatefulPageProcess
         await this.createRefreshButton();
         await this.createEquipmentButton();
 
-        this.equipmentComponent.bindButtons();
+        this.equipmentManager.bindButtons();
 
         new MouseClickEventBuilder(this.credential)
             .bind($("#roleImage"), () => {
@@ -279,7 +278,9 @@ abstract class PersonalCareerManagementPageProcessor extends StatefulPageProcess
     private async createRefreshButton() {
         $("#refreshButton").on("click", () => {
             $(".C_commandButton").prop("disabled", true);
-            this.refresh().then(() => {
+            PageUtils.scrollIntoView("pageTitle");
+            this.resetMessageBoard();
+            this.doRefresh().then(() => {
                 MessageBoard.publishMessage("刷新完成。");
                 $(".C_commandButton").prop("disabled", false);
             });
@@ -296,11 +297,11 @@ abstract class PersonalCareerManagementPageProcessor extends StatefulPageProcess
         });
     }
 
-    private async resetMessageBoard() {
+    private resetMessageBoard() {
         MessageBoard.resetMessageBoard(this.careerPage!.welcomeMessage!);
     }
 
-    private async renderRole() {
+    protected async renderRole() {
         $("#roleCareerFixed").html(() => {
             if (SetupLoader.isCareerFixed(this.credential.id, this.role!.mirrorIndex!)) {
                 return "★";
@@ -426,7 +427,7 @@ abstract class PersonalCareerManagementPageProcessor extends StatefulPageProcess
         return html;
     }
 
-    private async renderCareerPage() {
+    protected async renderCareerPage() {
         $(".CareerUIButton")
             .off("click")
             .prop("disabled", false)
@@ -558,12 +559,14 @@ abstract class PersonalCareerManagementPageProcessor extends StatefulPageProcess
         await new PersonalCareerManagement(this.credential).transfer(careerId);
         await this.reloadRole();
         await this.renderRole();
-        await this.spellComponent.reload();
-        await this.spellComponent.render(this.role);
+        await this.spellManager.reload();
+        await this.spellManager.render(this.role!);
         await this.reloadCareerPage();
         await this.renderCareerPage();
-        await this.equipmentComponent.reload();
-        await this.equipmentComponent.render(this.role);
+        await this.equipmentManager.reload();
+        await this.equipmentManager.render();
+        await this.mirrorManager?.reload();
+        await this.mirrorManager?.render(this.role!);
         if (careerName !== undefined) {
             MessageBoard.publishMessage("成功转职到：" + careerName);
         }

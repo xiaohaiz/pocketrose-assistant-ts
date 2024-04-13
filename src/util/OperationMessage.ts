@@ -1,5 +1,7 @@
 class OperationMessage {
 
+    readonly extensions = new Map<string, any>();
+
     success?: boolean;
 
     doRefresh?: boolean;

@@ -1,7 +1,8 @@
-import RoleStateMachineManager from "../../core/state/RoleStateMachineManager";
-import CastleBankPageProcessor from "../../processor/internal/CastleBankPageProcessor";
-import PageProcessorContext from "../../processor/PageProcessorContext";
+import Credential from "../../util/Credential";
 import PageInterceptor from "../PageInterceptor";
+import PageProcessorContext from "../../processor/PageProcessorContext";
+import RoleStateMachineManager from "../../core/state/RoleStateMachineManager";
+import {CastleBankPageProcessor} from "../../processor/stateful/CastleBankPageProcessor";
 
 class CastleBankPageInterceptor implements PageInterceptor {
 
@@ -13,14 +14,15 @@ class CastleBankPageInterceptor implements PageInterceptor {
     }
 
     intercept(): void {
+        const credential = Credential.newInstance();
+        if (credential === undefined) return;
         RoleStateMachineManager.create()
             .load()
             .then(machine => {
                 machine.start()
                     .whenInCastle(state => {
-                        const context = new PageProcessorContext();
-                        context.withCastleName(state?.castleName);
-                        new CastleBankPageProcessor().process(context);
+                        const context = PageProcessorContext.whenInCastle(state?.castleName);
+                        new CastleBankPageProcessor(credential, context).process();
                     })
                     .process();
             });

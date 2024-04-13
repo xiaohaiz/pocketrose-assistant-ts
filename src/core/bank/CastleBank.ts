@@ -1,11 +1,10 @@
+import BankAccount from "./BankAccount";
 import Credential from "../../util/Credential";
 import MessageBoard from "../../util/MessageBoard";
 import NetworkUtils from "../../util/NetworkUtils";
 import PocketUtils from "../../util/PocketUtils";
-import StringUtils from "../../util/StringUtils";
-import Role from "../role/Role";
-import BankAccount from "./BankAccount";
-import CastleBankPage from "./CastleBankPage";
+import {CastleBankPageParser} from "./BankPageParser";
+import {CastleBankPage} from "./BankPage";
 
 class CastleBank {
 
@@ -15,34 +14,22 @@ class CastleBank {
         this.#credential = credential;
     }
 
-    static parsePage(html: string): CastleBankPage {
-        return doParsePage(html);
+    async open(): Promise<CastleBankPage> {
+        return await this._open();
     }
 
-    async open(): Promise<CastleBankPage> {
-        const action = () => {
-            return new Promise<CastleBankPage>(resolve => {
-                const request = this.#credential.asRequestMap();
-                request.set("mode", "CASTLE_BANK");
-                NetworkUtils.post("castle.cgi", request)
-                    .then(html => {
-                        const page = CastleBank.parsePage(html);
-                        resolve(page);
-                    });
-            });
-        };
-        return await action();
+    private async _open(count: number = 0): Promise<CastleBankPage> {
+        const request = this.#credential.asRequestMap();
+        request.set("mode", "CASTLE_BANK");
+        const response = await NetworkUtils.post("castle.cgi", request);
+        const page = CastleBankPageParser.parsePage(response);
+        if (page.available) return page;
+        if (count >= 2) return page;
+        return await this._open(count + 1);
     }
 
     async load(): Promise<BankAccount> {
-        const action = () => {
-            return new Promise<BankAccount>(resolve => {
-                this.open().then(page => {
-                    resolve(page.account!);
-                });
-            });
-        };
-        return await action();
+        return (await this.open()).account!;
     }
 
     async deposit(amount?: number): Promise<void> {
@@ -108,64 +95,15 @@ class CastleBank {
         };
         return await action();
     }
-}
 
-function doParsePage(html: string): CastleBankPage {
-    const table = $(html).find("td:contains('姓名')")
-        .filter((_idx, td) => {
-            return $(td).text() === "姓名";
-        })
-        .closest("table");
-
-    const role = new Role();
-    table.find("tr:first")
-        .next()
-        .find("td:first")
-        .filter((_idx, td) => {
-            role.name = $(td).text();
-            return true;
-        })
-        .next()
-        .filter((_idx, td) => {
-            role.level = parseInt($(td).text());
-            return true;
-        })
-        .next()
-        .filter((_idx, td) => {
-            role.attribute = StringUtils.substringBefore($(td).text(), "属");
-            return true;
-        })
-        .next()
-        .filter((_idx, td) => {
-            role.career = $(td).text();
-            return true;
-        })
-        .parent()
-        .next()
-        .find("td:first")
-        .next()
-        .filter((_idx, td) => {
-            role.cash = parseInt(StringUtils.substringBefore($(td).text(), " GOLD"));
-            return true;
-        });
-
-    const font = $(html).find("font:contains('现在的所持金')")
-        .filter((_idx, font) => {
-            const s = $(font).text();
-            return s.startsWith(" ") && s.includes("现在的所持金");
-        });
-    let s = font.text();
-    s = StringUtils.substringBefore(s, "现在的所持金");
-
-    const account = new BankAccount();
-    account.name = s.substring(1);
-    account.cash = parseInt($(font).find("font:first").text());
-    account.saving = parseInt($(font).find("font:last").text());
-
-    const page = new CastleBankPage();
-    page.role = role;
-    page.account = account;
-    return page;
+    async transfer(target: string, amount: number) {
+        const request = this.#credential.asRequestMap();
+        request.set("gold", (amount * 10).toString());  // 送钱的接口单位是K
+        request.set("eid", target);
+        request.set("mode", "CASTLE_SENDMONEY2");
+        const response = await NetworkUtils.post("castle.cgi", request);
+        MessageBoard.processResponseMessage(response);
+    }
 }
 
 export = CastleBank;

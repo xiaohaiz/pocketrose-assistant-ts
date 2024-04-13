@@ -1,7 +1,8 @@
-import RoleStateMachineManager from "../../core/state/RoleStateMachineManager";
-import TownPetMapHousePageProcessor from "../../processor/internal/TownPetMapHousePageProcessor";
-import PageProcessorContext from "../../processor/PageProcessorContext";
+import Credential from "../../util/Credential";
 import PageInterceptor from "../PageInterceptor";
+import PageProcessorContext from "../../processor/PageProcessorContext";
+import RoleStateMachineManager from "../../core/state/RoleStateMachineManager";
+import {TownPetMapHousePageProcessor} from "../../processor/stateful/TownPetMapHousePageProcessor";
 
 class TownPetMapHousePageInterceptor implements PageInterceptor {
 
@@ -13,14 +14,15 @@ class TownPetMapHousePageInterceptor implements PageInterceptor {
     }
 
     intercept(): void {
+        const credential = Credential.newInstance();
+        if (credential === undefined) return;
         RoleStateMachineManager.create()
             .load()
             .then(machine => {
                 machine.start()
                     .whenInTown(state => {
-                        const context = new PageProcessorContext();
-                        context.withTownId(state?.townId);
-                        new TownPetMapHousePageProcessor().process(context);
+                        const context = PageProcessorContext.whenInTown(state?.townId);
+                        new TownPetMapHousePageProcessor(credential, context).process();
                     })
                     .process();
             });

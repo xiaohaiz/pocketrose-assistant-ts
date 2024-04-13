@@ -1,0 +1,122 @@
+import StatefulPageProcessor from "../StatefulPageProcessor";
+import Credential from "../../util/Credential";
+import PageProcessorContext from "../PageProcessorContext";
+import LocationModeTown from "../../core/location/LocationModeTown";
+import {BankManager} from "../../widget/BankManager";
+import {TownBankPageParser} from "../../core/bank/BankPageParser";
+import PageUtils from "../../util/PageUtils";
+import {PocketPage} from "../../util/PocketPage";
+import ButtonUtils from "../../util/ButtonUtils";
+import KeyboardShortcutBuilder from "../../util/KeyboardShortcutBuilder";
+import MessageBoard from "../../util/MessageBoard";
+
+class TownBankPageProcessor extends StatefulPageProcessor {
+
+    private readonly bankManager: BankManager;
+
+    constructor(credential: Credential, context: PageProcessorContext) {
+        super(credential, context);
+
+        const locationMode = this.createLocationMode() as LocationModeTown;
+        this.bankManager = new BankManager(credential, locationMode);
+        this.bankManager.battleCount = context.parseBattleCount();
+        this.bankManager.feature.enableWriteRecordOnDispose = true;
+        this.bankManager.feature.enableSalaryDistribution = true;
+        this.bankManager.feature.onMessage = s => {
+            MessageBoard.publishMessage(s);
+        };
+        this.bankManager.feature.onWarning = s => {
+            MessageBoard.publishWarning(s);
+        };
+        this.bankManager.feature.onRefresh = () => {
+            this.renderRole();
+        };
+    }
+
+    protected async doProcess(): Promise<void> {
+        this.bankManager.bankPage = TownBankPageParser.parsePage(PageUtils.currentPageHtml());
+        await this.createPage();
+        this.bindButtons();
+        this.bankManager.bindButtons();
+        await this.bankManager.render();
+        KeyboardShortcutBuilder.newInstance()
+            .onKeyPressed("r", () => PageUtils.triggerClick("refreshButton"))
+            .onEscapePressed(() => PageUtils.triggerClick("returnButton"))
+            .withDefaultPredicate()
+            .bind();
+    }
+
+    private async createPage() {
+        const table = $("body:first > table:first > tbody:first > tr:first > td:first > table:first");
+
+        table.find("> tbody:first > tr:first > td:first")
+            .html(() => {
+                return PocketPage.generatePageHeaderHTML("＜＜ 雷 姆 力 亚 银 行 ＞＞", this.roleLocation);
+            });
+        $("#_pocket_page_command").html(() => {
+            return "" +
+                "<span> <button role='button' class='C_pocket_StatelessElement' id='refreshButton'>" + ButtonUtils.createTitle("刷新", "r") + "</button></span>" +
+                "<span> <button role='button' class='C_pocket_StatelessElement' id='returnButton'>" + ButtonUtils.createTitle("退出", "Esc") + "</button></span>" +
+                "";
+        });
+
+        table.find("> tbody:first > tr:eq(1) > td:first")
+            .find("> table:first > tbody:first > tr:first > td:eq(3)")
+            .find("> table:first > tbody:first > tr:first > td:first")
+            .find("> table:first > tbody:first > tr:eq(2) > td:eq(1)")
+            .attr("id", "_pocket_RoleCash");
+
+        table.find("> tbody:first > tr:eq(2) > td:first")
+            .find("> table:first > tbody:first > tr:first > td:first")
+            .attr("id", "messageBoard")
+            .css("color", "wheat")
+            .next()
+            .attr("id", "messageBoardManager");
+
+        table.find("> tbody:first > tr:eq(3) > td:first")
+            .attr("id", "_pocket_BankManagerPanel")
+            .html(() => {
+                return this.bankManager.generateHTML();
+            });
+    }
+
+    private bindButtons(): void {
+        $("#_pocket_page_extension_0").html(() => {
+            return PageUtils.generateReturnTownForm(this.credential);
+        });
+        $("#returnButton").on("click", () => {
+            PageUtils.disablePageInteractiveElements();
+            this.beforeReturn().then(() => {
+                PageUtils.triggerClick("returnTown");
+            });
+        });
+        $("#refreshButton").on("click", () => {
+            PocketPage.disableStatelessElements();
+            PocketPage.scrollIntoTitle();
+            MessageBoard.resetMessageBoard(this.bankManager.bankPage!.welcomeMessage!);
+            this.refresh().then(() => {
+                MessageBoard.publishMessage("刷新操作完成。");
+                PocketPage.enableStatelessElements();
+            });
+        });
+    }
+
+    private async beforeReturn() {
+        await this.bankManager.dispose();
+    }
+
+    private async refresh() {
+        await this.bankManager.reload();
+        await this.bankManager.render();
+        this.renderRole();
+    }
+
+    private renderRole() {
+        const cash = this.bankManager.bankPage!.account!.cash;
+        $("#_pocket_RoleCash").html(() => {
+            return cash + " GOLD";
+        });
+    }
+}
+
+export {TownBankPageProcessor};

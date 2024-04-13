@@ -16,7 +16,7 @@ import PocketUtils from "../../util/PocketUtils";
 import EquipmentSpaceTrigger from "../../core/trigger/EquipmentSpaceTrigger";
 import PocketPageRenderer from "../../util/PocketPageRenderer";
 import TreasureBag from "../../core/equipment/TreasureBag";
-import Equipment from "../../core/equipment/Equipment";
+import {Equipment} from "../../core/equipment/Equipment";
 
 class TownItemHousePageProcessor extends StatefulPageProcessor {
 

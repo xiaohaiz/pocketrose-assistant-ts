@@ -1,4 +1,4 @@
-import Equipment from "../equipment/Equipment";
+import {Equipment} from "../equipment/Equipment";
 import Role from "../role/Role";
 import Town from "../town/Town";
 import TownLoader from "../town/TownLoader";

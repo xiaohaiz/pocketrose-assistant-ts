@@ -1,4 +1,4 @@
-import Equipment from "../equipment/Equipment";
+import {Equipment} from "../equipment/Equipment";
 import TownLoader from "../town/TownLoader";
 import Merchandise from "./Merchandise";
 

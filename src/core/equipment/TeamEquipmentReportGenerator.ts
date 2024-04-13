@@ -1,6 +1,6 @@
 import TeamMemberLoader from "../team/TeamMemberLoader";
-import Equipment from "./Equipment";
-import RoleEquipmentStatusStorage from "./RoleEquipmentStatusStorage";
+import {Equipment} from "./Equipment";
+import {RoleEquipmentStatusManager} from "./RoleEquipmentStatusManager";
 
 class TeamEquipmentReportGenerator {
 
@@ -42,21 +42,18 @@ class TeamEquipmentReportGenerator {
         const configs = TeamMemberLoader.loadTeamMembers()
             .filter(it => this.#includeExternal || it.external === undefined || !it.external);
         const idList = configs.map(it => it.id!);
-        RoleEquipmentStatusStorage.getInstance()
-            .loads(idList)
+        RoleEquipmentStatusManager.loadEquipmentStatusReports(idList)
             .then(dataMap => {
                 for (const config of configs) {
                     const data = dataMap.get(config.id!);
                     if (data === undefined) {
                         continue;
                     }
-                    const equipments: string[] = JSON.parse(data.json!);
 
                     let html = "";
                     let row = 0;
 
-                    const equipmentList = equipments
-                        .map(it => Equipment.parse(it))
+                    const equipmentList = data.equipmentList!
                         .sort(Equipment.sorter)
                         .filter(it => !(config.warehouse !== undefined && config.warehouse && it.location === "W"))
                         .filter(it => this.#searchName === undefined || this.#searchName === "" || it.fullName.includes(this.#searchName))

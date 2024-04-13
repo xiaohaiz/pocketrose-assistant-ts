@@ -1,4 +1,4 @@
-import CastleInformationPageProcessor from "../../processor/internal/CastleInformationPageProcessor";
+import CastleInformationPageProcessor from "../../processor/stateless/CastleInformationPageProcessor";
 import PageInterceptor from "../PageInterceptor";
 
 class CastleInformationPageInterceptor implements PageInterceptor {

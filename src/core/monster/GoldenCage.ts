@@ -4,6 +4,7 @@ import NumberUtils from "../../util/NumberUtils";
 import StringUtils from "../../util/StringUtils";
 import GoldenCagePage from "./GoldenCagePage";
 import Pet from "./Pet";
+import MessageBoard from "../../util/MessageBoard";
 
 class GoldenCage {
 
@@ -36,14 +37,16 @@ class GoldenCage {
         const request = this.#credential.asRequestMap();
         request.set("select", index.toString());
         request.set("mode", "GETOUTLONGZI");
-        await NetworkUtils.post("mydata.cgi", request);
+        const response = await NetworkUtils.post("mydata.cgi", request);
+        MessageBoard.processResponseMessage(response);
     }
 
     async putInto(index: number) {
         const request = this.#credential.asRequestMap();
         request.set("select", index.toString());
         request.set("mode", "PUTINLONGZI");
-        await NetworkUtils.post("mydata.cgi", request);
+        const response = await NetworkUtils.post("mydata.cgi", request);
+        MessageBoard.processResponseMessage(response);
     }
 
     static parsePage(pageHtml: string) {

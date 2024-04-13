@@ -3,6 +3,7 @@ import MessageBoard from "../../util/MessageBoard";
 import NetworkUtils from "../../util/NetworkUtils";
 import PersonalPetManagementPage from "./PersonalPetManagementPage";
 import PersonalPetManagementPageParser from "./PersonalPetManagementPageParser";
+import _ from "lodash";
 
 class PersonalPetManagement {
 
@@ -44,6 +45,30 @@ class PersonalPetManagement {
         })();
     }
 
+    async love(index: number) {
+        const request = this.#credential.asRequestMap();
+        request.set("mode", "PETADDLOVE");
+        request.set("select", _.toString(index));
+        const response = await NetworkUtils.post("mydata.cgi", request);
+        MessageBoard.processResponseMessage(response);
+    }
+
+    async rename(index: number, name: string): Promise<void> {
+        const request = this.#credential.asRequestMap();
+        request.set("select", _.toString(index));
+        request.set("name", escape(name));
+        request.set("mode", "PETCHANGENAME");
+        const response = await NetworkUtils.post("mydata.cgi", request);
+        MessageBoard.processResponseMessage(response);
+    }
+
+    async joinLeague(index: number) {
+        const request = this.#credential.asRequestMap();
+        request.set("select", _.toString(index));
+        request.set("mode", "PETGAME");
+        const response = await NetworkUtils.post("mydata.cgi", request);
+        MessageBoard.processResponseMessage(response);
+    }
 }
 
 export = PersonalPetManagement;

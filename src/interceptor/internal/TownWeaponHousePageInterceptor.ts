@@ -1,5 +1,5 @@
 import RoleStateMachineManager from "../../core/state/RoleStateMachineManager";
-import TownWeaponHousePageProcessor from "../../processor/internal/TownWeaponHousePageProcessor";
+import TownWeaponHousePageProcessor from "../../processor/stateless/TownWeaponHousePageProcessor";
 import PageProcessorContext from "../../processor/PageProcessorContext";
 import PageInterceptor from "../PageInterceptor";
 

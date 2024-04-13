@@ -1,5 +1,64 @@
 # pocketrose assistant
 
+### 版本 4.8.3
+
+1. [ISSUE #I9EZM4](https://gitee.com/barnabus/pocketrose-assistant/issues/I9EZM4) 宝石屋全新改版。
+
+### 版本 4.8.2
+
+1. [ISSUE #I9FNI0](https://gitee.com/barnabus/pocketrose-assistant/issues/I9FNI0) 在分身页面集成银行组件方便取那5000万。
+2. [ISSUE #I9FNHZ](https://gitee.com/barnabus/pocketrose-assistant/issues/I9FNHZ) 优化主页验证码错误的报警逻辑。
+3. [ISSUE #I9FBWZ](https://gitee.com/barnabus/pocketrose-assistant/issues/I9FBWZ) 装备统计数据分类存储以优化采集性能。
+4. [ISSUE #I9FBJ1](https://gitee.com/barnabus/pocketrose-assistant/issues/I9FBJ1) 精准判断验证码超时不算做验证错误。
+5. [ISSUE #I9EQ82](https://gitee.com/barnabus/pocketrose-assistant/issues/I9EQ82) 装备管理组件恢复宝石传输功能。
+
+### 版本 4.8.1
+
+1. [ISSUE #I9F89R](https://gitee.com/barnabus/pocketrose-assistant/issues/I9F89R) 装备管理组件百宝袋和城堡仓库按钮异常修复。
+2. [ISSUE #I9F8K4](https://gitee.com/barnabus/pocketrose-assistant/issues/I9F8K4) 解决验证码错误自动停止和按钮战斗按钮的冲突。
+3. [ISSUE #I9FBL6](https://gitee.com/barnabus/pocketrose-assistant/issues/I9FBL6) 更换技能时刷新对应分身的状态。
+4. [ISSUE #I9FBSU](https://gitee.com/barnabus/pocketrose-assistant/issues/I9FBSU) 银行组件化（城市银行和城堡银行）。
+5. [ISSUE #I9FF3I](https://gitee.com/barnabus/pocketrose-assistant/issues/I9FF3I) 满足条件时自动触发领取俸禄。
+
+### 版本 4.7.5
+
+1. [ISSUE #I9F5G8](https://gitee.com/barnabus/pocketrose-assistant/issues/I9F5G8) 修复装备管理页面错误的物品修复行为。
+2. [ISSUE #I9EQPU](https://gitee.com/barnabus/pocketrose-assistant/issues/I9EQPU) 战斗验证码错误自动休战。
+
+### 版本 4.7.4
+
+1. [ISSUE #I9EZYC](https://gitee.com/barnabus/pocketrose-assistant/issues/I9EZYC) 装备管理中回复道具处理逻辑修复。
+2. [ISSUE #I9EZ6A](https://gitee.com/barnabus/pocketrose-assistant/issues/I9EZ6A) 宠物图鉴页面改造，组件化。
+
+### 版本 4.7.3
+
+1. [ISSUE #I9EQV6](https://gitee.com/barnabus/pocketrose-assistant/issues/I9EQV6) 职业管理页面增加分身管理组件。
+2. [ISSUE #I9EQ73](https://gitee.com/barnabus/pocketrose-assistant/issues/I9EQ73) 重新恢复城堡管家功能。
+3. [ISSUE #I9EQ9X](https://gitee.com/barnabus/pocketrose-assistant/issues/I9EQ9X) 修复升级过程中能力MAX提醒机制的BUG。
+4. [ISSUE #I9EVAC](https://gitee.com/barnabus/pocketrose-assistant/issues/I9EVAC) 宠物图鉴查询组件化。
+5. [ISSUE #I9EVF4](https://gitee.com/barnabus/pocketrose-assistant/issues/I9EVF4) 删除设置中心中十二宫战斗伴侣的条目。
+
+### 版本 4.7.2
+
+1. 修复装备管理页面无法祭奠上洞的问题。
+2. 修复装备管理页面设置套装后相应按钮状态不实时更新的问题。
+3. 装备管理页面（城市模式）后台主动加载角色信息提高性能。
+4. 祭奠完成后重新加载额外RP值，避免无法正确切换战斗场所。
+
+### 版本 4.7.0
+
+1. 全新的基于组件化的构架结构。
+2. 分身管理组件化。
+3. 个人面板集成分身管理组件（仅限城市模式）。
+4. 分身试管页面完成组件化改造。
+5. 宠物管理组件化。
+6. 个人面板集成宠物管理组件。
+7. 宠物管理组件扩展，支持黄金笼子、城堡牧场（仅限城堡模式）。
+8. 装备管理组件扩展，支持百宝袋、城堡仓库（仅限城堡模式）。
+9. 宠物进化、退化、献祭管理组件化。
+10. 装备管理组件化。
+11. 没有完整的覆盖测试，如果有BUG后续修复。
+
 ### 版本 4.6.5
 
 1. 装备管理组件增加状态栏。
@@ -56,25 +115,25 @@
 6. 具体的功能性说明在下表展示，如果有BUG，后续逐步修复。
 7. 还有一个小功能，提示升级时该吃药的警告阈值从375下调到372（考虑到我有玉佩了）。
 
-| 装备管理功能         | 城市模式 | 城堡模式 | 地图模式 | 地铁区域 |
-|----------------------|----------|----------|----------|----------|
-| 装备经验设置         | YES      | YES      | YES      | YES      |
-| 装备套装设置         | YES      | YES      | YES      | YES      |
-| 跳转物品商店         | YES      |          |          |          |
-| 跳转宝石镶嵌         | YES      |          |          |          |
-| 使用装备             | YES      | YES      | YES      | YES      |
-| 修理装备             | YES      |          |          |          |
-| 发送装备             | YES      | YES      |          |          |
-| 百宝袋功能           | YES      | YES      | YES      | YES      |
-| 城堡仓库功能         |          | YES      |          |          |
-| 传输宝石功能         | YES      | YES      |          |          |
-| 百宝袋相关宝石功能   | YES      | YES      | YES      | YES      |
-| 城堡仓库相关宝石功能 |          | YES      |          |          |
-| 装备套装功能         | YES      | YES      | YES      | YES      |
-| 祭奠                 | YES      |          |          |          |
-| 装备经验更新触发     | YES      | YES      | YES      | YES      |
-| 装备空间报警触发     | YES      | YES      | YES      | YES      |
-| 智能战斗切换触发     | YES      |          |          |          |
+| 装备管理功能     | 城市模式 | 城堡模式 | 地图模式 | 地铁区域 |
+|------------|------|------|------|------|
+| 装备经验设置     | YES  | YES  | YES  | YES  |
+| 装备套装设置     | YES  | YES  | YES  | YES  |
+| 跳转物品商店     | YES  |      |      |      |
+| 跳转宝石镶嵌     | YES  |      |      |      |
+| 使用装备       | YES  | YES  | YES  | YES  |
+| 修理装备       | YES  |      |      |      |
+| 发送装备       | YES  | YES  |      |      |
+| 百宝袋功能      | YES  | YES  | YES  | YES  |
+| 城堡仓库功能     |      | YES  |      |      |
+| 传输宝石功能     | YES  | YES  |      |      |
+| 百宝袋相关宝石功能  | YES  | YES  | YES  | YES  |
+| 城堡仓库相关宝石功能 |      | YES  |      |      |
+| 装备套装功能     | YES  | YES  | YES  | YES  |
+| 祭奠         | YES  |      |      |      |
+| 装备经验更新触发   | YES  | YES  | YES  | YES  |
+| 装备空间报警触发   | YES  | YES  | YES  | YES  |
+| 智能战斗切换触发   | YES  |      |      |      |
 
 
 ### 版本 4.5.10
@@ -125,12 +184,12 @@
 9. 城堡功能“自动扫描身上宠物并放牧”，进入城堡宠物管理，点亮按钮，3秒一次自动扫描身上宠物并放牧。
 10. 设置启用宝石控的角色进入城市装备管理时，可看到当前的宝石库存情况。
 11. 城堡团队内快速传输（装备、宠物）功能支持。
-1. 本来不想废话了，但是还是简单说明几句吧。
-2. 自用的功能，本意是为了换城堡坐标。
-3. 能自动将身上的宝石传输给选择的队友。
-4. 能自动将身上的宠物传输给选择的队友。
-5. 配合接受者的自动入库功能使用。
-6. 具体操作步骤不赘述了。
+12. 本来不想废话了，但是还是简单说明几句吧。
+13. 自用的功能，本意是为了换城堡坐标。
+14. 能自动将身上的宝石传输给选择的队友。
+15. 能自动将身上的宠物传输给选择的队友。
+16. 配合接受者的自动入库功能使用。
+17. 具体操作步骤不赘述了。
 
 ### 版本 4.5.3
 

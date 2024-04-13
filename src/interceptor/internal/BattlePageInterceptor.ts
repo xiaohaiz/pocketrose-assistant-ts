@@ -1,5 +1,5 @@
 import RoleStateMachineManager from "../../core/state/RoleStateMachineManager";
-import BattlePageProcessor from "../../processor/internal/BattlePageProcessor";
+import BattlePageProcessor from "../../processor/stateless/BattlePageProcessor";
 import PageProcessorContext from "../../processor/PageProcessorContext";
 import PageInterceptor from "../PageInterceptor";
 

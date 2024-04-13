@@ -1,6 +1,6 @@
 import _ from "lodash";
 import StringUtils from "../../util/StringUtils";
-import Equipment from "../equipment/Equipment";
+import {Equipment} from "../equipment/Equipment";
 import Role from "../role/Role";
 import TownForgePage from "./TownForgePage";
 

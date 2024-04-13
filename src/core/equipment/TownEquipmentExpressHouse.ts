@@ -3,7 +3,7 @@ import MessageBoard from "../../util/MessageBoard";
 import NetworkUtils from "../../util/NetworkUtils";
 import StringUtils from "../../util/StringUtils";
 import Role from "../role/Role";
-import Equipment from "./Equipment";
+import {Equipment} from "./Equipment";
 import TownEquipmentExpressHousePage from "./TownEquipmentExpressHousePage";
 
 class TownEquipmentExpressHouse {

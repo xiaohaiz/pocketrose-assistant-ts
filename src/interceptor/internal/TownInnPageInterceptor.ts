@@ -1,5 +1,5 @@
 import RoleStateMachineManager from "../../core/state/RoleStateMachineManager";
-import TownInnPageProcessor from "../../processor/internal/TownInnPageProcessor";
+import TownInnPageProcessor from "../../processor/stateless/TownInnPageProcessor";
 import PageInterceptor from "../PageInterceptor";
 
 class TownInnPageInterceptor implements PageInterceptor {

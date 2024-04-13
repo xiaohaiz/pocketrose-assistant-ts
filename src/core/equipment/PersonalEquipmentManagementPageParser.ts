@@ -1,7 +1,7 @@
 import PersonalEquipmentManagementPage from "./PersonalEquipmentManagementPage";
 import Role from "../role/Role";
 import StringUtils from "../../util/StringUtils";
-import Equipment from "./Equipment";
+import {Equipment} from "./Equipment";
 
 class PersonalEquipmentManagementPageParser {
 

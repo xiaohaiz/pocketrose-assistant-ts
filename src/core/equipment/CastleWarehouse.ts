@@ -3,7 +3,7 @@ import MessageBoard from "../../util/MessageBoard";
 import NetworkUtils from "../../util/NetworkUtils";
 import StringUtils from "../../util/StringUtils";
 import CastleWarehousePage from "./CastleWarehousePage";
-import Equipment from "./Equipment";
+import {Equipment} from "./Equipment";
 
 class CastleWarehouse {
 

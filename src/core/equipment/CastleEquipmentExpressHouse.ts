@@ -4,7 +4,7 @@ import NetworkUtils from "../../util/NetworkUtils";
 import StringUtils from "../../util/StringUtils";
 import Role from "../role/Role";
 import CastleEquipmentExpressHousePage from "./CastleEquipmentExpressHousePage";
-import Equipment from "./Equipment";
+import {Equipment} from "./Equipment";
 
 class CastleEquipmentExpressHouse {
 

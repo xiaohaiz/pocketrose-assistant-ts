@@ -365,9 +365,19 @@ function _parseRoleStatus(page: TownDashboardPage, table: JQuery, div: JQuery, c
             page.obtainRole.name = $(td).find("> font:first").find("> b:first").text();
         });
 
-    if (page.obtainRole.level !== 150 && (page.obtainRole.attack === 372 || page.obtainRole.defense === 372
-        || page.obtainRole.specialAttack === 372 || page.obtainRole.specialDefense === 372 || page.obtainRole.speed === 372)) {
-        page.capacityLimitationNotification = true;
+    if (page.obtainRole.level !== 150) {
+        const d1 = page.obtainRole.attack;
+        const d2 = page.obtainRole.defense;
+        const d3 = page.obtainRole.specialAttack;
+        const d4 = page.obtainRole.specialDefense;
+        const d5 = page.obtainRole.speed;
+        if ((d1 !== undefined && d1 >= 372) ||
+            (d2 !== undefined && d2 >= 372) ||
+            (d3 !== undefined && d3 >= 372) ||
+            (d4 !== undefined && d4 >= 372) ||
+            (d5 !== undefined && d5 >= 372)) {
+            page.capacityLimitationNotification = true;
+        }
     }
 }
 

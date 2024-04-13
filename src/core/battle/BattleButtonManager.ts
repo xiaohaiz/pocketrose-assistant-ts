@@ -24,7 +24,7 @@ class BattleButtonManager {
                 const clock = $("input:text[name='clock']");
                 if (clock.length === 0) {
                     // clock已经消失了，表示读秒已经完成，返回
-                    $("#battleButton").show();
+                    this.showBattleButtonIfNecessary();
                     resolve();
                     return;
                 }
@@ -47,9 +47,23 @@ class BattleButtonManager {
             const remain = _.parseInt(clock.val()! as string);
             if (remain <= 0) {
                 clearInterval(timer);
-                $("#battleButton").show();
+                this.showBattleButtonIfNecessary();
             }
         }, 200);
+    }
+
+    private showBattleButtonIfNecessary() {
+        const e = $("#ID_DANGEROUS");
+        if (e.length === 0) {
+            $("#battleButton").show();
+            return;
+        }
+        const s = e.text();
+        if (s === "DANGEROUS") {
+            // Don't shou button
+            return;
+        }
+        $("#battleButton").show();
     }
 }
 

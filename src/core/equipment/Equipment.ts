@@ -104,6 +104,9 @@ class Equipment {
         if (this.isDragonBall) {
             return category === "ALL" || category === "DRAGON";
         }
+        if (this.isSevenHeart) {
+            return category === "ALL" || category === "SEVEN";
+        }
         if (!this.isGem) return false;
         switch (category) {
             case "ALL":
@@ -182,6 +185,10 @@ class Equipment {
         return this.isItem && _.endsWith(this.name, "星龙珠");
     }
 
+    get isSevenHeart(): boolean {
+        return this.isItem && this.name === "七心宝石";
+    }
+
     get isTreasureBag(): boolean {
         return this.isItem && this.name === "百宝袋";
     }
@@ -208,6 +215,7 @@ class Equipment {
         if (_.includes(this.name, "王道军神玉佩")) return false;
         if (_.includes(this.name, "霸者疾风玉佩")) return false;
         if (_.includes(this.name, "王道疾风玉佩")) return false;
+        if (_.endsWith(this.name, "星龙珠")) return false;
         return true;
     }
 
@@ -227,8 +235,10 @@ class Equipment {
     }
 
     get isRepairable() {
-        if (this.isItem && !_.includes(this.name, "(自动)")) {
-            // 非回复道具不能修理
+        if (this.isRecoverItem) {
+            return true;
+        }
+        if (this.isItem) {
             return false;
         }
         if (_.includes(EquipmentConstants.NONE_REPAIRABLE_ITEM_LIST, this.name)) {
@@ -271,6 +281,10 @@ class Equipment {
             && !this.isTreasureBag
             && !(this.name === "无忧之果(自动)")
             && !(this.name === "回魂丹(自动)");
+    }
+
+    get isRecoverItem(): boolean {
+        return this.isItem && _.includes(this.name, "(自动)");
     }
 
     get isStorable(): boolean {
@@ -533,4 +547,11 @@ function isAttributeHeavyArmor(name: string) {
     return false;
 }
 
-export = Equipment;
+class EquipmentPosition {
+
+    fullName?: string;      // 装备的全名
+    sequence?: number;      // 出现的位置是同名的第几个
+
+}
+
+export {Equipment, EquipmentPosition};

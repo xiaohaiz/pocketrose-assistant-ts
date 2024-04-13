@@ -11,6 +11,14 @@ class GoldenCagePage {
     get spaceCount() {
         return 20 - this.petList!.length;
     }
+
+    findPet(index: number): Pet | null {
+        if (this.petList === undefined) return null;
+        for (const pet of this.petList!) {
+            if (pet.index === index) return pet;
+        }
+        return null;
+    }
 }
 
 export = GoldenCagePage;

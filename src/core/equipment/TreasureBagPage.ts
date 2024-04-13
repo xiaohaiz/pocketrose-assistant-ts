@@ -1,4 +1,4 @@
-import Equipment from "./Equipment";
+import {Equipment} from "./Equipment";
 import _ from "lodash";
 
 class TreasureBagPage {

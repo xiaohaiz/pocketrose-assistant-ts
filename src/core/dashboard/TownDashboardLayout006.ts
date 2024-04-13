@@ -12,6 +12,8 @@ import TownDashboardKeyboardManager from "./TownDashboardKeyboardManager";
 import TownDashboardLayout from "./TownDashboardLayout";
 import TownDashboardPage from "./TownDashboardPage";
 import BattleReturnInterceptor from "../battle/BattleReturnInterceptor";
+import {BattleFailureRecordManager} from "../battle/BattleFailureRecordManager";
+import BattleButtonManager from "../battle/BattleButtonManager";
 
 class TownDashboardLayout006 extends TownDashboardLayout {
 
@@ -143,6 +145,8 @@ class TownDashboardLayout006 extends TownDashboardLayout {
             .find("> tbody:first")
             .prepend("<tr>" + tr1 + "</tr>");
 
+        _processValidationCodeFailure(credential);
+
         new TownDashboardTaxManager(credential, page).processTownTax($("#townTax"));
     }
 
@@ -237,7 +241,7 @@ class TownDashboardLayout006 extends TownDashboardLayout {
                 NetworkUtils.post("battle.cgi", request).then(html => {
                     if (html.includes("ERROR !")) {
                         let errMsg = $(html).find("font:first").html();
-                        const validationCodeFailed = errMsg.includes("验证码");
+                        const validationCodeFailed = errMsg.includes("选择验证码错误");
                         errMsg = "<p style='color:red;font-size:200%'>" + errMsg + "</p>";
                         $("#battlePanel").html(errMsg);
 
@@ -246,6 +250,9 @@ class TownDashboardLayout006 extends TownDashboardLayout {
                         record.html = errMsg;
                         record.validationCodeFailed = validationCodeFailed;
                         BattleRecordStorage.getInstance().write(record).then();
+                        if (validationCodeFailed) {
+                            new BattleFailureRecordManager(credential).onValidationCodeFailure().then();
+                        }
 
                         $("#battleMenu").html("" +
                             "<button role='button' class='battleButton' " +
@@ -380,6 +387,66 @@ function generateLodgeForm(credential: Credential) {
 
 async function doBeforeReturn(credential: Credential, battleCount: number, battlePage: BattlePage): Promise<void> {
     await new BattleReturnInterceptor(credential, battleCount, battlePage).beforeExitBattle();
+}
+
+function _processValidationCodeFailure(credential: Credential) {
+    const threshold = BattleFailureRecordManager.loadConfiguredThreshold();
+    if (threshold === 0) return;
+
+    $("a:contains('看不到图片按这里')")
+        .filter((_idx, a) => {
+            const s = $(a).text();
+            return s === "看不到图片按这里";
+        })
+        .parent()
+        .attr("colspan", "3")
+        .after($("" +
+            "<td id='ID_DANGEROUS' style='display:none'></td>" +
+            ""));
+
+    _renderValidationCodeFailure(credential);
+    setInterval(() => _renderValidationCodeFailure(credential), 2000);
+}
+
+function _renderValidationCodeFailure(credential: Credential) {
+    const manager = new BattleFailureRecordManager(credential);
+    manager.getValidationCodeFailureCount().then(count => {
+        let safe = true;
+        if (count > 0) {
+            const threshold = BattleFailureRecordManager.loadConfiguredThreshold();
+            if (count >= threshold - 1) {
+                const element = $("#battleCell").prev();
+                element.find("> span:first").remove();
+                element.find("> br").remove();
+                element.prepend($("" +
+                    "<span style='background-color:red;color:white;font-weight:bold;font-size:120%'>" +
+                    "验证错" + count + "次" +
+                    "</span>" +
+                    "<br><br><br><br>" +
+                    ""));
+            }
+
+            if (threshold > 0 && count >= threshold) {
+                safe = false;
+                $("#ID_DANGEROUS").text("DANGEROUS");
+                // 已经到了安全的阈值了
+                const battleButton = $("#battleButton");
+                battleButton.prop("disabled", true).hide();
+            }
+        } else {
+            const element = $("#battleCell").prev();
+            element.find("> span:first").remove();
+            element.find("> br:first").remove();
+        }
+        if (safe) {
+            $("#ID_DANGEROUS").text("SAFE");
+            // 如果安全按钮启用了，就不要显示了，交给安全按钮定时器去干活
+            if (!BattleButtonManager.isSafeButtonEnabled()) {
+                const battleButton = $("#battleButton");
+                battleButton.prop("disabled", false).show();
+            }
+        }
+    });
 }
 
 export = TownDashboardLayout006;
