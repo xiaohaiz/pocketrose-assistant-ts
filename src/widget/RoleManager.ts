@@ -1,15 +1,15 @@
-import {CommonWidgetFeature} from "./support/CommonWidgetFeature";
-import CommonWidget from "./support/CommonWidget";
+import BankAccount from "../core/bank/BankAccount";
+import CastleBank from "../core/bank/CastleBank";
 import Credential from "../util/Credential";
 import LocationModeCastle from "../core/location/LocationModeCastle";
 import LocationModeMetro from "../core/location/LocationModeMetro";
 import LocationModeTown from "../core/location/LocationModeTown";
-import BankAccount from "../core/bank/BankAccount";
+import {PersonalStatus} from "../core/role/PersonalStatus";
 import Role from "../core/role/Role";
-import PersonalStatus from "../core/role/PersonalStatus";
 import TownBank from "../core/bank/TownBank";
-import CastleBank from "../core/bank/CastleBank";
 import _ from "lodash";
+import {CommonWidget, CommonWidgetFeature} from "./support/CommonWidget";
+import SetupLoader from "../core/config/SetupLoader";
 
 class RoleManager extends CommonWidget {
 
@@ -19,15 +19,18 @@ class RoleManager extends CommonWidget {
         super(credential, locationMode);
     }
 
-    private role?: Role;
-    private account?: BankAccount;
+    role?: Role;
+    account?: BankAccount;
 
     generateHTML(): string {
         let html = "";
-        html += "<table style='background-color:#888888;margin:auto;width:100%;border-width:0;display:none' id='_pocket_RoleInformationTable'>";
+        html += "<table style='background-color:#888888;margin:auto;border-width:0;display:none' id='_pocket_RoleInformationTable'>";
         html += "<thead style='background-color:skyblue;text-align:center'>";
         html += "<tr>";
         html += "<th>姓名</th>";
+        if (this.feature.enableCareerFixedFlag) {
+            html += "<th>定型</th>";
+        }
         html += "<th>ＬＶ</th>";
         html += "<th>ＨＰ</th>";
         html += "<th>ＭＰ</th>";
@@ -48,6 +51,9 @@ class RoleManager extends CommonWidget {
         html += "<tbody style='background-color:#F8F0E0;text-align:center'>";
         html += "<tr id='_pocket_RoleInformation'>";
         html += "<td></td>";
+        if (this.feature.enableCareerFixedFlag) {
+            html += "<th></th>";
+        }
         html += "<td></td>";
         html += "<td></td>";
         html += "<td></td>";
@@ -105,6 +111,15 @@ class RoleManager extends CommonWidget {
                 return "<span style='color:blue;font-weight:bold'>" + this.account!.saving!.toLocaleString() + "</span> GOLD";
             });
         }
+        if (this.feature.enableCareerFixedFlag) {
+            information.find("> th:first").html(() => {
+                if (SetupLoader.isCareerFixed(this.credential.id, this.role!.mirrorIndex!)) {
+                    return "★";
+                } else {
+                    return "";
+                }
+            });
+        }
         $("#_pocket_RoleInformationTable").show();
     }
 
@@ -115,6 +130,7 @@ class RoleManager extends CommonWidget {
 class RoleManagerFeature extends CommonWidgetFeature {
 
     enableBankAccount: boolean = false;
+    enableCareerFixedFlag: boolean = true;
 
 }
 

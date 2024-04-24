@@ -102,6 +102,59 @@ class TeamEquipmentReportGenerator {
             });
     }
 
+    async generateTeamGemDistribution() {
+        const members = TeamMemberLoader.loadTeamMembersAsMap(this.#includeExternal);
+        const roleIdList: string[] = [];
+        for (const roleId of members.keys()) {
+            roleIdList.push(roleId);
+        }
+        const reports = await RoleEquipmentStatusManager.loadEquipmentStatusReports(roleIdList);
+
+        let totalPowerGemCount = 0;
+        let totalWeightGemCount = 0;
+        let totalLuckGemCount = 0;
+
+        let html = "";
+        html += "<table style='margin:auto;border-width:0;text-align:center;background-color:#888888'>";
+        html += "<tbody id='equipmentStatusList'>";
+        html += "<tr>";
+        html += "<th style='background-color:skyblue'>队员</th>";
+        html += "<th style='background-color:skyblue'>威力宝石</th>";
+        html += "<th style='background-color:skyblue'>重量宝石</th>";
+        html += "<th style='background-color:skyblue'>幸运宝石</th>";
+        html += "</tr>";
+        for (const roleId of roleIdList) {
+            html += "<tr>";
+            const member = members.get(roleId)!;
+            const report = reports.get(roleId);
+            html += "<th style='background-color:black;color:white'>" + member.name + "</th>";
+            if (report !== undefined) {
+                html += "<td style='background-color:#E8E8D0'>" + report.formattedPowerGemCountHTML + "</td>";
+                html += "<td style='background-color:#E8E8D0'>" + report.formattedWeightGemCountHTML + "</td>";
+                html += "<td style='background-color:#E8E8D0'>" + report.formattedLuckGemCountHTML + "</td>";
+
+                totalPowerGemCount += report.powerGemCount ?? 0;
+                totalWeightGemCount += report.weightGemCount ?? 0;
+                totalLuckGemCount += report.luckGemCount ?? 0;
+            } else {
+                html += "<td style='background-color:#E8E8D0'>-</td>";
+                html += "<td style='background-color:#E8E8D0'>-</td>";
+                html += "<td style='background-color:#E8E8D0'>-</td>";
+            }
+            html += "</tr>";
+        }
+        html += "<tr>";
+        html += "<th style='background-color:black;color:white'>全团队</th>";
+        html += "<th style='background-color:wheat'>" + totalPowerGemCount + "</th>";
+        html += "<th style='background-color:wheat'>" + totalWeightGemCount + "</th>";
+        html += "<th style='background-color:wheat'>" + totalLuckGemCount + "</th>";
+        html += "</tr>";
+
+        html += "</tbody>";
+        html += "</table>";
+
+        return html;
+    }
 }
 
 export = TeamEquipmentReportGenerator;

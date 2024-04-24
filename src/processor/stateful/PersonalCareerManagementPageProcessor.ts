@@ -2,7 +2,7 @@ import StatefulPageProcessor from "../StatefulPageProcessor";
 import Credential from "../../util/Credential";
 import PageProcessorContext from "../PageProcessorContext";
 import Role from "../../core/role/Role";
-import PersonalStatus from "../../core/role/PersonalStatus";
+import {PersonalStatus} from "../../core/role/PersonalStatus";
 import SetupLoader from "../../core/config/SetupLoader";
 import PersonalCareerManagement from "../../core/career/PersonalCareerManagement";
 import PageUtils from "../../util/PageUtils";
@@ -16,25 +16,31 @@ import MessageBoard from "../../util/MessageBoard";
 import _ from "lodash";
 import LocationModeTown from "../../core/location/LocationModeTown";
 import LocationModeCastle from "../../core/location/LocationModeCastle";
-import SpellManager from "../../widget/SpellManager";
+import {SpellManager} from "../../widget/SpellManager";
 import CareerLoader from "../../core/career/CareerLoader";
 import StringUtils from "../../util/StringUtils";
 import {EquipmentManager} from "../../widget/EquipmentManager";
 import MouseClickEventBuilder from "../../util/MouseClickEventBuilder";
 import StorageUtils from "../../util/StorageUtils";
-import MirrorManager from "../../widget/MirrorManager";
+import {MirrorManager} from "../../widget/MirrorManager";
+import {PocketFormGenerator} from "../../pocket/PocketPage";
 
-abstract class PersonalCareerManagementPageProcessor extends StatefulPageProcessor {
+class PersonalCareerManagementPageProcessor extends StatefulPageProcessor {
+
+    private readonly formGenerator: PocketFormGenerator;
 
     protected spellManager: SpellManager;
     protected equipmentManager: EquipmentManager;
     protected mirrorManager?: MirrorManager;
 
-    protected constructor(credential: Credential, context: PageProcessorContext) {
+    constructor(credential: Credential, context: PageProcessorContext) {
         super(credential, context);
         const locationMode = this.createLocationMode() as LocationModeTown | LocationModeCastle;
+
+        this.formGenerator = new PocketFormGenerator(credential, locationMode);
+
         this.spellManager = new SpellManager(this.credential, locationMode);
-        this.spellManager.onRefresh = (message) => {
+        this.spellManager.feature.onRefresh = (message) => {
             this.role = message.extensions.get("role") as Role;
             $("#roleSpell").html(_.toString(this.role!.spell));
             this.mirrorManager?.reload().then(() => {
@@ -51,6 +57,13 @@ abstract class PersonalCareerManagementPageProcessor extends StatefulPageProcess
         this.equipmentManager.feature.onRefresh = () => {
             this.equipmentManager.renderHitStatus(this.role);
         };
+
+        if (locationMode instanceof LocationModeTown) {
+            this.mirrorManager = new MirrorManager(credential, locationMode);
+            this.mirrorManager.feature.onRefresh = (message) => {
+                this.onMirrorManagerChanged(message.extensions.get("role") as Role).then();
+            };
+        }
     }
 
     protected role?: Role;
@@ -70,7 +83,6 @@ abstract class PersonalCareerManagementPageProcessor extends StatefulPageProcess
     }
 
     protected async doRefresh() {
-
         await this.reloadRole();
         await this.renderRole();
         await this.spellManager.reload();
@@ -79,6 +91,8 @@ abstract class PersonalCareerManagementPageProcessor extends StatefulPageProcess
         await this.renderCareerPage();
         await this.equipmentManager.reload();
         await this.equipmentManager.render();
+        await this.mirrorManager?.reload();
+        await this.mirrorManager?.render(this.role!);
     }
 
     protected async beforeReturn() {
@@ -91,7 +105,6 @@ abstract class PersonalCareerManagementPageProcessor extends StatefulPageProcess
 
         // Render immutable page (static)
         await this.renderImmutablePage();
-        await this.doPostCreatePage();
 
         await this.reloadRole();
         await this.renderRole();
@@ -102,7 +115,9 @@ abstract class PersonalCareerManagementPageProcessor extends StatefulPageProcess
         await this.equipmentManager.reload();
         await this.equipmentManager.render();
         this.equipmentManager.renderHitStatus(this.role);
-        await this.doPostProcess();
+
+        await this.mirrorManager?.reload();
+        await this.mirrorManager?.render(this.role!);
 
         KeyboardShortcutBuilder.newInstance()
             .onKeyPressed("e", () => PageUtils.triggerClick("equipmentButton"))
@@ -110,13 +125,6 @@ abstract class PersonalCareerManagementPageProcessor extends StatefulPageProcess
             .onEscapePressed(() => PageUtils.triggerClick("returnButton"))
             .withDefaultPredicate()
             .bind();
-    }
-
-    protected async doPostCreatePage() {
-
-    }
-
-    protected async doPostProcess() {
     }
 
     private async renderImmutablePage() {
@@ -253,11 +261,18 @@ abstract class PersonalCareerManagementPageProcessor extends StatefulPageProcess
         CommentBoard.writeMessage("是的，你没有看错，换人了，某幕后黑手不愿意出镜。不过请放心，转职方面我是专业的，毕竟我一直制霸钉耙榜。<br>");
         CommentBoard.writeMessage("蓝色的职业代表你已经掌握了。我会把为你推荐的职业红色加深标识出来，当然，前提是如果有能推荐的。<br>");
 
+        if (this.createLocationMode() instanceof LocationModeTown) {
+            const panel = $("#ID_mirrorManagerPanel");
+            panel.html(this.mirrorManager!.generateHTML());
+            panel.parent().show();
+        }
+
         await this.doCreateReturnButton();
         await this.createRefreshButton();
         await this.createEquipmentButton();
 
         this.equipmentManager.bindButtons();
+        this.mirrorManager?.bindButtons();
 
         new MouseClickEventBuilder(this.credential)
             .bind($("#roleImage"), () => {
@@ -273,6 +288,15 @@ abstract class PersonalCareerManagementPageProcessor extends StatefulPageProcess
     }
 
     protected async doCreateReturnButton() {
+        $("#extension_1").html(() => {
+            return this.formGenerator.generateReturnFormHTML();
+        });
+        $("#returnButton").on("click", () => {
+            PageUtils.disablePageInteractiveElements();
+            this.beforeReturn().then(() => {
+                PageUtils.triggerClick("_pocket_ReturnSubmit");
+            });
+        });
     }
 
     private async createRefreshButton() {
@@ -570,6 +594,17 @@ abstract class PersonalCareerManagementPageProcessor extends StatefulPageProcess
         if (careerName !== undefined) {
             MessageBoard.publishMessage("成功转职到：" + careerName);
         }
+    }
+
+    private async onMirrorManagerChanged(role: Role) {
+        this.role = role;
+        await this.renderRole();
+        await this.spellManager.reload();
+        await this.spellManager.render(this.role!);
+        await this.reloadCareerPage();
+        await this.renderCareerPage();
+        await this.equipmentManager.reload();
+        await this.equipmentManager.render();
     }
 }
 

@@ -1,38 +1,53 @@
-import CommonWidget from "./support/CommonWidget";
+import {CommonWidget, CommonWidgetFeature} from "./support/CommonWidget";
 import Credential from "../util/Credential";
 import LocationModeTown from "../core/location/LocationModeTown";
-import Role from "../core/role/Role";
-import PersonalMirrorPage from "../core/role/PersonalMirrorPage";
-import PersonalMirror from "../core/role/PersonalMirror";
 import Mirror from "../core/role/Mirror";
-import _ from "lodash";
+import MouseClickEventBuilder from "../util/MouseClickEventBuilder";
+import OperationMessage from "../util/OperationMessage";
+import PersonalMirror from "../core/role/PersonalMirror";
+import PersonalMirrorPage from "../core/role/PersonalMirrorPage";
+import {PersonalStatus} from "../core/role/PersonalStatus";
+import Role from "../core/role/Role";
 import SetupLoader from "../core/config/SetupLoader";
+import StorageUtils from "../util/StorageUtils";
 import StringUtils from "../util/StringUtils";
 import TownInn from "../core/inn/TownInn";
-import MouseClickEventBuilder from "../util/MouseClickEventBuilder";
-import StorageUtils from "../util/StorageUtils";
-import MessageBoard from "../util/MessageBoard";
-import OperationMessage from "../util/OperationMessage";
-import PersonalStatus from "../core/role/PersonalStatus";
+import _ from "lodash";
 
 class MirrorManager extends CommonWidget {
+
+    readonly feature = new MirrorManagerFeature();
 
     constructor(credential: Credential, locationMode: LocationModeTown) {
         super(credential, locationMode);
     }
 
-    onRefresh?: (message: OperationMessage) => void;
     mirrorPage?: PersonalMirrorPage;
 
     private _role?: Role;
 
     generateHTML(): string {
+        return "" +
+            "<table style='background-color:#888888;margin:auto;width:100%;border-width:0'>" +
+            "<tbody>" +
+            "<tr>" +
+            "<th style='writing-mode:vertical-rl;text-orientation:mixed;" +
+            "background-color:navy;color:white;font-size:120%;text-align:left'>" +
+            "分 身" +
+            "</th>" +
+            "<td style='border-spacing:0;width:100%'>" +
+            this._generateHTML() +
+            "</td>" +
+            "</tr>" +
+            "</tbody>" +
+            "</table>" +
+            "";
+    }
+
+    private _generateHTML(): string {
         let html = "";
         html += "<table style='text-align:center;border-width:0;margin:auto;width:100%;background-color:#888888'>";
         html += "<tbody id='_pocket_mirrorTable'>";
-        html += "<tr style='background-color:skyblue'>";
-        html += "<th style='font-size:120%;font-weight:bold' colspan='18'>＜ 分 身 状 态 ＞</th>";
-        html += "</tr>";
         html += "<tr style='background-color:wheat'>";
         html += "<th>切换</th>";
         html += "<th>类别</th>";
@@ -126,7 +141,7 @@ class MirrorManager extends CommonWidget {
             const index = _.parseInt(StringUtils.substringAfterLast(btnId, "_"));
             $(".C_pocket_mirrorChangeButton").prop("disabled", true);
             new TownInn(this.credential, this.townId).recovery().then(() => {
-                new PersonalMirror(this.credential, this.townId).change(index).then(() => {
+                new PersonalMirror(this.credential, this.townId).changeMirror(index).then(() => {
                     const message = OperationMessage.success();
                     this._refresh(message).then();
                 });
@@ -146,7 +161,7 @@ class MirrorManager extends CommonWidget {
                         c[key] = !c[key];
                         StorageUtils.set("_pa_070_" + this.credential.id, JSON.stringify(c));
                         const mirrorDesc = (index === 0) ? "本体" : "第" + index + "分身";
-                        MessageBoard.publishMessage("【" + mirrorDesc + "】定型标识设置完成。");
+                        this.feature.publishMessage("【" + mirrorDesc + "】定型标识设置完成。");
                         this.render(this._role!).then();
                     });
             })
@@ -157,9 +172,12 @@ class MirrorManager extends CommonWidget {
         message.extensions.set("role", role);
         await this.reload();
         await this.render(role);
-        (this.onRefresh) && (this.onRefresh(message));
+        this.feature.publishRefresh(message);
     }
 
 }
 
-export = MirrorManager;
+class MirrorManagerFeature extends CommonWidgetFeature {
+}
+
+export {MirrorManager, MirrorManagerFeature};

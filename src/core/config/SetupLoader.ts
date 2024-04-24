@@ -62,10 +62,6 @@ class SetupLoader {
         return StorageUtils.getBoolean("_pa_028");
     }
 
-    static isCollectTownTaxDisabled(): boolean {
-        return StorageUtils.getBoolean("_pa_030");
-    }
-
     static isAsciiTextButtonEnabled(): boolean {
         return StorageUtils.getBoolean("_pa_035");
     }
@@ -116,14 +112,6 @@ class SetupLoader {
 
     static isWinnerLeftEnabled(): boolean {
         return StorageUtils.getBoolean("_pa_058");
-    }
-
-    static isAutoSetBattleFieldEnabled(): boolean {
-        return StorageUtils.getBoolean("_pa_059");
-    }
-
-    static isForceSeniorBattleEnabled(id: string): boolean {
-        return StorageUtils.getBoolean("_pa_061_" + id);
     }
 
     static isShortcutPromptHidden(): boolean {
@@ -177,10 +165,6 @@ class SetupLoader {
         return partner;
     }
 
-    static isGemCountVisible(id: string) {
-        return StorageUtils.getBoolean("_pa_068_" + id);
-    }
-
     static isAutoChangePointToTown() {
         return StorageUtils.getBoolean("_pa_069");
     }
@@ -196,6 +180,14 @@ class SetupLoader {
     static isCareerFixed(id: string, mirrorIndex: number): boolean {
         const c: any = SetupLoader.loadMirrorCareerFixedConfig(id);
         return c["_m_" + mirrorIndex];
+    }
+
+    static isRenameHistoriesHidden(): boolean {
+        return StorageUtils.getBoolean("_pa_072");
+    }
+
+    static isAutoEquipmentExperience() {
+        return StorageUtils.getBoolean("_pa_073");
     }
 }
 

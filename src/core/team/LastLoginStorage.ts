@@ -1,4 +1,4 @@
-import PocketDatabase from "../../util/PocketDatabase";
+import {PocketDatabase} from "../../pocket/PocketDatabase";
 import LastLogin from "./LastLogin";
 
 class LastLoginStorage {

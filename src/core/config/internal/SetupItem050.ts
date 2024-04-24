@@ -14,6 +14,10 @@ class SetupItem050 implements SetupItem {
         return code;
     }
 
+    accept(id?: string): boolean {
+        return true;
+    }
+
     render(id?: string): void {
         doRender();
     }

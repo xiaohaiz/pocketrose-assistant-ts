@@ -23,6 +23,8 @@ class Role {
     specialDefense?: number;
     speed?: number;                 // 速度
     pet?: string;                   // 当前宠物
+    petGender?: string;             // 当前宠物性别
+    petLevel?: number;              // 当前宠物的等级
     attribute?: string;             // 属性
     location?: string;              // 所在位置(TOWN|CASTLE|WILD|METRO|TANG)
     town?: Town;

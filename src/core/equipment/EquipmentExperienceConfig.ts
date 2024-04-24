@@ -1,3 +1,5 @@
+import StorageUtils from "../../util/StorageUtils";
+
 class EquipmentExperienceConfig {
 
     weapon?: boolean;
@@ -28,6 +30,12 @@ class EquipmentExperienceConfig {
         config.accessory = false;
         return config;
     }
+
+    static writeConfig(id: string, config: EquipmentExperienceConfig) {
+        const document = config.asDocument();
+        StorageUtils.set("_pa_065_" + id, JSON.stringify(document));
+    }
+
 }
 
 export = EquipmentExperienceConfig;

@@ -1,4 +1,5 @@
 import Pet from "./Pet";
+import _ from "lodash";
 
 class CastleRanchPage {
 
@@ -7,7 +8,9 @@ class CastleRanchPage {
 
     get sortedRanchPetList(): Pet[] {
         if (this.ranchPetList === undefined) return [];
-        return Pet.sortPetList(this.ranchPetList!);
+        const petList = _.clone(this.ranchPetList);
+        petList.sort(Pet.sortByCode);
+        return petList;
     }
 
     findRanchPet(index: number | undefined | null): Pet | null {

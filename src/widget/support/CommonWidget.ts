@@ -4,8 +4,10 @@ import LocationModeMap from "../../core/location/LocationModeMap";
 import LocationModeMetro from "../../core/location/LocationModeMetro";
 import LocationModeTown from "../../core/location/LocationModeTown";
 import Role from "../../core/role/Role";
-import PersonalStatus from "../../core/role/PersonalStatus";
+import {PersonalStatus} from "../../core/role/PersonalStatus";
 import {LocationModeSupport} from "./LocationModeSupport";
+import MessageBoard from "../../util/MessageBoard";
+import OperationMessage from "../../util/OperationMessage";
 
 abstract class CommonWidget extends LocationModeSupport {
 
@@ -40,4 +42,24 @@ abstract class CommonWidget extends LocationModeSupport {
     }
 }
 
-export = CommonWidget;
+abstract class CommonWidgetFeature {
+
+    onMessage?: (s: string) => void = s => MessageBoard.publishMessage(s);
+    onWarning?: (s: string) => void = s => MessageBoard.publishWarning(s);
+    onRefresh?: (message: OperationMessage) => void;
+
+    publishMessage(s: string) {
+        (this.onMessage) && (this.onMessage(s));
+    }
+
+    publishWarning(s: string) {
+        (this.onWarning) && (this.onWarning(s));
+    }
+
+    publishRefresh(message: OperationMessage): void {
+        (this.onRefresh) && (this.onRefresh(message));
+    }
+
+}
+
+export {CommonWidget, CommonWidgetFeature};

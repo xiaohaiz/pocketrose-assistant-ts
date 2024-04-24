@@ -1,23 +1,24 @@
-import CommonWidget from "./support/CommonWidget";
+import CastleBank from "../core/bank/CastleBank";
 import Credential from "../util/Credential";
 import LocationModeCastle from "../core/location/LocationModeCastle";
 import LocationModeTown from "../core/location/LocationModeTown";
-import OperationMessage from "../util/OperationMessage";
-import PersonalPetEvolutionPage from "../core/monster/PersonalPetEvolutionPage";
-import PersonalPetEvolution from "../core/monster/PersonalPetEvolution";
-import _ from "lodash";
-import PersonalPetManagementPage from "../core/monster/PersonalPetManagementPage";
-import StringUtils from "../util/StringUtils";
-import PageUtils from "../util/PageUtils";
-import MessageBoard from "../util/MessageBoard";
-import PersonalPetManagement from "../core/monster/PersonalPetManagement";
 import MonsterProfileLoader from "../core/monster/MonsterProfileLoader";
-import SetupLoader from "../core/config/SetupLoader";
 import MonsterRelationLoader from "../core/monster/MonsterRelationLoader";
+import OperationMessage from "../util/OperationMessage";
+import PageUtils from "../util/PageUtils";
+import PersonalPetEvolution from "../core/monster/PersonalPetEvolution";
+import PersonalPetEvolutionPage from "../core/monster/PersonalPetEvolutionPage";
+import PersonalPetManagement from "../core/monster/PersonalPetManagement";
+import PersonalPetManagementPage from "../core/monster/PersonalPetManagementPage";
+import SetupLoader from "../core/config/SetupLoader";
+import StringUtils from "../util/StringUtils";
 import TownBank from "../core/bank/TownBank";
-import CastleBank from "../core/bank/CastleBank";
+import _ from "lodash";
+import {CommonWidget, CommonWidgetFeature} from "./support/CommonWidget";
 
 class EvolutionManager extends CommonWidget {
+
+    readonly feature = new EvolutionManagerFeature();
 
     constructor(credential: Credential, locationMode: LocationModeCastle | LocationModeTown) {
         super(credential, locationMode);
@@ -25,7 +26,6 @@ class EvolutionManager extends CommonWidget {
 
     private petPage?: PersonalPetManagementPage;
 
-    onRefresh?: (message: OperationMessage) => void;
     evolutionPage?: PersonalPetEvolutionPage;
 
     private async triggerRefresh(message: OperationMessage) {
@@ -33,10 +33,28 @@ class EvolutionManager extends CommonWidget {
         message.extensions.set("petPage", this.petPage);
         await this.reload();
         await this.render(this.petPage);
-        (this.onRefresh) && (this.onRefresh(message));
+        this.feature.publishRefresh(message);
     }
 
     generateHTML(): string {
+        return "" +
+            "<table style='background-color:#888888;margin:auto;width:100%;border-width:0'>" +
+            "<tbody>" +
+            "<tr>" +
+            "<th style='writing-mode:vertical-rl;text-orientation:mixed;" +
+            "background-color:navy;color:white;font-size:120%;text-align:left'>" +
+            "演 化" +
+            "</th>" +
+            "<td style='border-spacing:0;width:100%'>" +
+            this._generateHTML() +
+            "</td>" +
+            "</tr>" +
+            "</tbody>" +
+            "</table>" +
+            "";
+    }
+
+    private _generateHTML(): string {
         return "<table style='background-color:transparent;width:100%;margin:auto;border-spacing:0;border-width:0'>" +
             "<tbody>" +
             // 繁殖
@@ -209,7 +227,7 @@ class EvolutionManager extends CommonWidget {
                     }
                 });
             if (fatherIndexList.length !== 1 || motherIndexList.length !== 1) {
-                MessageBoard.publishWarning("无效的父系或者母系宠物选择，忽略！");
+                this.feature.publishWarning("无效的父系或者母系宠物选择，忽略！");
                 return;
             }
             const father = this.petPage!.findPet(fatherIndexList[0])!;
@@ -541,4 +559,7 @@ class EvolutionManager extends CommonWidget {
     }
 }
 
-export = EvolutionManager;
+class EvolutionManagerFeature extends CommonWidgetFeature {
+}
+
+export {EvolutionManager, EvolutionManagerFeature};

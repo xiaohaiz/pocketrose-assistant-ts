@@ -5,13 +5,24 @@ import KeyboardShortcutBuilder from "../../util/KeyboardShortcutBuilder";
 import PageUtils from "../../util/PageUtils";
 import StringUtils from "../../util/StringUtils";
 import PageProcessor from "../PageProcessor";
+import Credential from "../../util/Credential";
+import {RoleStatusManager} from "../../core/role/RoleStatus";
 
 class CastleDashboardPageProcessor implements PageProcessor {
 
     process(): void {
+        this.doProcess().then();
+    }
+
+    private async doProcess() {
         PageUtils.fixCurrentPageBrokenImages();
         PageUtils.removeUnusedHyperLinks();
         PageUtils.removeGoogleAnalyticsScript();
+
+        const credential = Credential.newInstance();
+        if (credential) {
+            await new RoleStatusManager(credential).unsetTownId();
+        }
 
         this.#renderMenu();
         this.#renderRankTitle();

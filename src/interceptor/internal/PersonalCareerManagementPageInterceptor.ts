@@ -1,11 +1,8 @@
 import RoleStateMachineManager from "../../core/state/RoleStateMachineManager";
 import PageProcessorContext from "../../processor/PageProcessorContext";
 import PageInterceptor from "../PageInterceptor";
-import PersonalCareerManagementPageProcessorTownImpl
-    from "../../processor/stateful/PersonalCareerManagementPageProcessorTownImpl";
 import Credential from "../../util/Credential";
-import PersonalCareerManagementPageProcessorCastleImpl
-    from "../../processor/stateful/PersonalCareerManagementPageProcessorCastleImpl";
+import PersonalCareerManagementPageProcessor from "../../processor/stateful/PersonalCareerManagementPageProcessor";
 
 class PersonalCareerManagementPageInterceptor implements PageInterceptor {
 
@@ -25,11 +22,11 @@ class PersonalCareerManagementPageInterceptor implements PageInterceptor {
                 machine.start()
                     .whenInTown(state => {
                         const context = PageProcessorContext.whenInTown(state?.townId);
-                        new PersonalCareerManagementPageProcessorTownImpl(credential, context).process();
+                        new PersonalCareerManagementPageProcessor(credential, context).process();
                     })
                     .whenInCastle(state => {
                         const context = PageProcessorContext.whenInCastle(state?.castleName);
-                        new PersonalCareerManagementPageProcessorCastleImpl(credential, context).process();
+                        new PersonalCareerManagementPageProcessor(credential, context).process();
                     })
                     .process();
             });

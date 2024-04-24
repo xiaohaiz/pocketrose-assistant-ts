@@ -1,5 +1,4 @@
 import _ from "lodash";
-import Constants from "../../util/Constants";
 import Credential from "../../util/Credential";
 import NetworkUtils from "../../util/NetworkUtils";
 import PageUtils from "../../util/PageUtils";
@@ -14,10 +13,9 @@ import LocalSettingManager from "../config/LocalSettingManager";
 import SetupLoader from "../config/SetupLoader";
 import TownForge from "../forge/TownForge";
 import TownInn from "../inn/TownInn";
-import PersonalStatus from "../role/PersonalStatus";
+import {PersonalStatus} from "../role/PersonalStatus";
 import RoleControlPanel from "../role/RoleControlPanel";
 import PalaceTaskManager from "../task/PalaceTaskManager";
-import TeamMemberLoader from "../team/TeamMemberLoader";
 import TownDashboardTaxManager from "../town/TownDashboardTaxManager";
 import DashboardPageUtils from "./DashboardPageUtils";
 import TownDashboardKeyboardManager from "./TownDashboardKeyboardManager";
@@ -25,7 +23,9 @@ import TownDashboardLayout from "./TownDashboardLayout";
 import TownDashboardPage from "./TownDashboardPage";
 import TownDashboardPageParser from "./TownDashboardPageParser";
 import {BattleFailureRecordManager} from "../battle/BattleFailureRecordManager";
-import {RoleEquipmentStatusManager} from "../equipment/RoleEquipmentStatusManager";
+import {BattleConfigManager} from "../config/ConfigManager";
+import {RoleStatusManager} from "../role/RoleStatus";
+import {ValidationCodeTrigger} from "../trigger/ValidationCodeTrigger";
 
 class TownDashboardLayout007 extends TownDashboardLayout {
 
@@ -37,7 +37,7 @@ class TownDashboardLayout007 extends TownDashboardLayout {
         return true;
     }
 
-    async render(credential: Credential, page: TownDashboardPage): Promise<void> {
+    async render(credential: Credential, page: TownDashboardPage, validationCodeTrigger?: ValidationCodeTrigger): Promise<void> {
         $("input[name='watch']")
             .hide()
             .after($("<span style='background-color:lightgreen;font-weight:bold;font-size:120%' " +
@@ -73,13 +73,26 @@ class TownDashboardLayout007 extends TownDashboardLayout {
                     "</tr>"));
                 new TownDashboardTaxManager(credential, page).processTownTax($("#townTax"));
             });
-        new PersonalStatus(credential, page.townId)
-            .load()
-            .then(role => {
-                $("#roleCareer").text(role.career!);
-                $("#consecrateRP").text(role.consecrateRP!);
-                $("#additionalRP").html(() => DashboardPageUtils.generateAdditionalRPHtml(role.additionalRP));
-            });
+
+        const roleStatusManager = new RoleStatusManager(credential);
+        const roleStatus = await roleStatusManager.load();
+        if (roleStatus !== null &&
+            (roleStatus.career !== undefined && roleStatus.career !== "") &&
+            (roleStatus.consecrateRP !== undefined && roleStatus.consecrateRP >= 0) &&
+            (roleStatus.additionalRP !== undefined && roleStatus.additionalRP >= 0)) {
+            // Local cache HIT
+            $("#roleCareer").text(roleStatus.career!);
+            $("#consecrateRP").text(roleStatus.consecrateRP!);
+            $("#additionalRP").html(() => DashboardPageUtils.generateAdditionalRPHtml(roleStatus.additionalRP));
+        } else {
+            new PersonalStatus(credential, page.townId)
+                .load()
+                .then(role => {
+                    $("#roleCareer").text(role.career!);
+                    $("#consecrateRP").text(role.consecrateRP!);
+                    $("#additionalRP").html(() => DashboardPageUtils.generateAdditionalRPHtml(role.additionalRP));
+                });
+        }
 
         $("#rightPanel")
             .find("> table:first")
@@ -140,62 +153,63 @@ class TownDashboardLayout007 extends TownDashboardLayout {
                 "<div style='display:none' id='hidden-5'></div>" +
                 "");
 
-        if (SetupLoader.isGemCountVisible(credential.id)) {
-            let gemHtml = "";
-            gemHtml += "<tr>";
-            gemHtml += "<td>";
-            gemHtml += "<table style='background-color:transparent;width:100%;margin:0;border-width:0'>";
-            gemHtml += "<tbody>";
-            gemHtml += "<tr>";
-            gemHtml += "<td style='text-align:right'>";
-            gemHtml += "<img src='" + Constants.POCKET_DOMAIN + "/image/item/PowerStone.gif' " +
-                "alt='威力宝石' title='威力宝石'>&nbsp;";
-            gemHtml += "</td>";
-            gemHtml += "<th id='powerGemCount' style='text-align:left'>-</th>";
-            gemHtml += "<td style='text-align:right'>";
-            gemHtml += "<img src='" + Constants.POCKET_DOMAIN + "/image/item/LuckStone.gif' " +
-                "alt='幸运宝石' title='幸运宝石'>&nbsp;";
-            gemHtml += "</td>";
-            gemHtml += "<th id='luckGemCount' style='text-align:left'>-</th>";
-            gemHtml += "<td style='text-align:right'>";
-            gemHtml += "<img src='" + Constants.POCKET_DOMAIN + "/image/item/WeightStone.gif' " +
-                "alt='重量宝石' title='重量宝石'>&nbsp;";
-            gemHtml += "</td>";
-            gemHtml += "<th id='weightGemCount' style='text-align:left'>-</th>";
-            gemHtml += "</tr>";
-            gemHtml += "</tbody>";
-            gemHtml += "</table>";
-            gemHtml += "</td>";
-            gemHtml += "</tr>";
-            $("#battlePanelTitle")
-                .parent()
-                .parent()
-                .after($(gemHtml));
-
-            _renderGemCount();
-            setInterval(() => _renderGemCount(), 3000);
-        }
-
-        BattleRecordStorage.getInstance().load(credential.id).then(record => {
-            const lastBattle = record.html!;
-            if (lastBattle.includes("吐故纳新，扶摇直上") && lastBattle.includes("孵化成功")) {
-                $("#battlePanel").css("background-color", "yellow");
-            } else if (lastBattle.includes("吐故纳新，扶摇直上")) {
-                $("#battlePanel").css("background-color", "wheat");
-            } else if (lastBattle.includes("孵化成功")) {
-                $("#battlePanel").css("background-color", "skyblue");
+        BattleRecordStorage.load(credential.id).then(record => {
+            if (record?.available) {
+                const lastBattle = record.html!;
+                if (lastBattle.includes("吐故纳新，扶摇直上") && lastBattle.includes("孵化成功")) {
+                    $("#battlePanel").css("background-color", "yellow");
+                } else if (lastBattle.includes("吐故纳新，扶摇直上")) {
+                    $("#battlePanel").css("background-color", "wheat");
+                } else if (lastBattle.includes("孵化成功")) {
+                    $("#battlePanel").css("background-color", "skyblue");
+                }
+                $("#battlePanel").html(lastBattle);
             }
-            $("#battlePanel").html(lastBattle);
         });
 
-        _processValidationCodeFailure(credential);
+        if (validationCodeTrigger) {
+            validationCodeTrigger!.safe = () => {
+                $("#ID_DANGEROUS").text("SAFE");
+                const element = $("#battleCell").prev();
+                element.find("> span:first").remove();
+                element.find("> br:first").remove();// 如果安全按钮启用了，就不要显示了，交给安全按钮定时器去干活
+                const configManager = new BattleConfigManager(credential);
+                if (!BattleConfigManager.isSafeBattleButtonEnabled()) {
+                    const battleButton = $("#battleButton");
+                    battleButton.prop("disabled", false).show();
+                }
+            };
+            validationCodeTrigger!.warning = count => {
+                $("#ID_DANGEROUS").text("SAFE");
+                const element = $("#battleCell").prev();
+                element.find("> span:first").remove();
+                element.find("> br").remove();
+                element.prepend($("" +
+                    "<span style='background-color:red;color:white;font-weight:bold;font-size:120%'>" +
+                    "验证错" + count + "次" +
+                    "</span>" +
+                    "<br><br><br><br>" +
+                    ""));
+                const configManager = new BattleConfigManager(credential);
+                if (!BattleConfigManager.isSafeBattleButtonEnabled()) {
+                    const battleButton = $("#battleButton");
+                    battleButton.prop("disabled", false).show();
+                }
+            };
+            validationCodeTrigger!.danger = () => {
+                $("#ID_DANGEROUS").text("DANGEROUS");
+                const battleButton = $("#battleButton");
+                battleButton.prop("disabled", true).hide();
+            };
+            await validationCodeTrigger!.triggerStartup();
+        }
 
         new TownDashboardKeyboardManager(credential, page.battleLevelShortcut, page).bind();
 
         $("#battleButton")
             .attr("type", "button")
             .on("click", () => {
-                if (BattleButtonManager.isHiddenButtonEnabled()) {
+                if (BattleConfigManager.isHiddenBattleButtonEnabled()) {
                     $("#refreshButton").hide();
                     $("#battleButton").hide();
                 } else {
@@ -227,7 +241,7 @@ class TownDashboardLayout007 extends TownDashboardLayout {
 
                 NetworkUtils.post("battle.cgi", request).then(html => {
                     if (html.includes("ERROR !")) {
-                        doProcessBattleVerificationError(credential, html).then(() => {
+                        doProcessBattleVerificationError(credential, html, validationCodeTrigger).then(() => {
                             $(".battleButton").trigger("click");
                         });
                         return;
@@ -248,7 +262,9 @@ class TownDashboardLayout007 extends TownDashboardLayout {
 
 }
 
-async function doProcessBattleVerificationError(credential: Credential, html: string) {
+async function doProcessBattleVerificationError(credential: Credential,
+                                                html: string,
+                                                ValidationCodeTrigger?: ValidationCodeTrigger) {
     let errMsg = $(html).find("font:first").html();
     const validationCodeFailed = errMsg.includes("选择验证码错误");
     errMsg = "<p style='color:red;font-size:200%'>" + errMsg + "</p>";
@@ -258,10 +274,11 @@ async function doProcessBattleVerificationError(credential: Credential, html: st
     record.id = credential.id;
     record.html = errMsg;
     record.validationCodeFailed = validationCodeFailed;
-    await BattleRecordStorage.getInstance().write(record);
+    await BattleRecordStorage.write(record);
 
     if (validationCodeFailed) {
         await new BattleFailureRecordManager(credential).onValidationCodeFailure();
+        await ValidationCodeTrigger?.triggerStartup();
     }
 
     $("#battleMenu").html("" +
@@ -427,7 +444,7 @@ function doProcessBattleReturn(credential: Credential,
     $("#systemAnnouncement").removeAttr("style");
     $(".battleButton").off("click");
     $("#battleMenu").html("").parent().hide();
-    if (BattleButtonManager.isHiddenButtonEnabled()) {
+    if (BattleConfigManager.isHiddenBattleButtonEnabled()) {
         $("#refreshButton").show();
         $("#battleButton").show();
     } else {
@@ -550,17 +567,28 @@ function doProcessBattleReturn(credential: Credential,
     }
     if (harvestList && harvestList.length > 0) {
         // 有入手，其中有可能是干拔了，重新刷新一下RP吧。毕竟入手是小概率事件。
-        new PersonalStatus(credential)
-            .load()
-            .then(role => {
-                $("#consecrateRP").text(role.consecrateRP!);
-                $("#additionalRP").html(() => DashboardPageUtils.generateAdditionalRPHtml(role.additionalRP));
-            });
+        const roleStatusManager = new RoleStatusManager(credential);
+        roleStatusManager.load().then(roleStatus => {
+            if (roleStatus !== null &&
+                (roleStatus.consecrateRP !== undefined && roleStatus.consecrateRP >= 0) &&
+                (roleStatus.additionalRP !== undefined && roleStatus.additionalRP >= 0)) {
+                // Local cache HIT
+                $("#consecrateRP").text(roleStatus.consecrateRP!);
+                $("#additionalRP").html(() => DashboardPageUtils.generateAdditionalRPHtml(roleStatus.additionalRP));
+            } else {
+                new PersonalStatus(credential)
+                    .load()
+                    .then(role => {
+                        $("#consecrateRP").text(role.consecrateRP!);
+                        $("#additionalRP").html(() => DashboardPageUtils.generateAdditionalRPHtml(role.additionalRP));
+                    });
+            }
+        });
     }
 
     new TownDashboardKeyboardManager(credential, page.battleLevelShortcut, page).bind();
 
-    new BattleButtonManager().createSafeBattleButton().then();
+    new BattleButtonManager(credential).createSafeBattleButton().then();
 }
 
 function _showTime() {
@@ -609,87 +637,6 @@ function _renderConversation(page: TownDashboardPage) {
         .next()     // conversation table
         .html(page.t1Html!);
     $("input:text[name='message']").attr("id", "messageInputText");
-}
-
-function _renderGemCount() {
-    const roleIdList: string[] = [];
-    const includeExternal = LocalSettingManager.isIncludeExternal();
-    for (const roleId of TeamMemberLoader.loadTeamMembersAsMap(includeExternal).keys()) {
-        roleIdList.push(roleId);
-    }
-    RoleEquipmentStatusManager.loadEquipmentStatusReports(roleIdList).then(reports => {
-        let powerGemCount = 0;
-        let weightGemCount = 0;
-        let luckGemCount: number = 0;
-        reports.forEach(it => {
-            powerGemCount += it.powerGemCount!;
-            weightGemCount += it.weightGemCount!;
-            luckGemCount += it.luckGemCount!;
-        });
-        $("#powerGemCount").text(powerGemCount);
-        $("#luckGemCount").text(luckGemCount);
-        $("#weightGemCount").text(weightGemCount);
-    });
-}
-
-function _processValidationCodeFailure(credential: Credential) {
-    const threshold = BattleFailureRecordManager.loadConfiguredThreshold();
-    if (threshold === 0) return;
-
-    $("a:contains('看不到图片按这里')")
-        .filter((_idx, a) => {
-            const s = $(a).text();
-            return s === "看不到图片按这里";
-        })
-        .parent()
-        .attr("colspan", "3")
-        .after($("" +
-            "<td id='ID_DANGEROUS' style='display:none'></td>" +
-            ""));
-
-    _renderValidationCodeFailure(credential);
-    setInterval(() => _renderValidationCodeFailure(credential), 2000);
-}
-
-function _renderValidationCodeFailure(credential: Credential) {
-    const manager = new BattleFailureRecordManager(credential);
-    manager.getValidationCodeFailureCount().then(count => {
-        let safe = true;
-        if (count > 0) {
-            const threshold = BattleFailureRecordManager.loadConfiguredThreshold();
-            if (count >= threshold - 1) {
-                const element = $("#battleCell").prev();
-                element.find("> span:first").remove();
-                element.find("> br").remove();
-                element.prepend($("" +
-                    "<span style='background-color:red;color:white;font-weight:bold;font-size:120%'>" +
-                    "验证错" + count + "次" +
-                    "</span>" +
-                    "<br><br><br><br>" +
-                    ""));
-            }
-
-            if (threshold > 0 && count >= threshold) {
-                safe = false;
-                $("#ID_DANGEROUS").text("DANGEROUS");
-                // 已经到了安全的阈值了
-                const battleButton = $("#battleButton");
-                battleButton.prop("disabled", true).hide();
-            }
-        } else {
-            const element = $("#battleCell").prev();
-            element.find("> span:first").remove();
-            element.find("> br:first").remove();
-        }
-        if (safe) {
-            $("#ID_DANGEROUS").text("SAFE");
-            // 如果安全按钮启用了，就不要显示了，交给安全按钮定时器去干活
-            if (!BattleButtonManager.isSafeButtonEnabled()) {
-                const battleButton = $("#battleButton");
-                battleButton.prop("disabled", false).show();
-            }
-        }
-    });
 }
 
 export = TownDashboardLayout007;

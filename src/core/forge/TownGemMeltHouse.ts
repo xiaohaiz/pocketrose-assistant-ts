@@ -2,7 +2,7 @@ import Credential from "../../util/Credential";
 import MessageBoard from "../../util/MessageBoard";
 import NetworkUtils from "../../util/NetworkUtils";
 import TownGemMeltHousePage from "./TownGemMeltHousePage";
-import TownGemMeltHouseParser from "./TownGemMeltHouseParser";
+import {TownGemMeltHousePageParser} from "./TownGemMeltHousePageParser";
 
 class TownGemMeltHouse {
 
@@ -24,7 +24,8 @@ class TownGemMeltHouse {
                     request.set("town", this.#townId);
                 }
                 NetworkUtils.post("town.cgi", request).then(html => {
-                    TownGemMeltHouseParser.parse(html).then(page => resolve(page));
+                    const page = TownGemMeltHousePageParser.parse(html);
+                    resolve(page);
                 });
             });
         };

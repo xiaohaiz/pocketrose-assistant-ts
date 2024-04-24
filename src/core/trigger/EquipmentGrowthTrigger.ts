@@ -42,6 +42,60 @@ class EquipmentGrowthTrigger {
      * equipmentPage is optional
      */
     async triggerUpdate() {
+        if (SetupLoader.isAutoEquipmentExperience()) {
+            const usingWeapon = this.#equipmentPage!.usingWeapon;
+            if (usingWeapon) {
+                const ratio = usingWeapon.fullExperienceRatio;
+                if (ratio >= 0 && ratio < 1) {
+                    const config = SetupLoader.loadEquipmentExperienceConfig(this.#credential.id);
+                    if (config.weapon === undefined || !config.weapon) {
+                        config.weapon = true;
+                        EquipmentExperienceConfig.writeConfig(this.#credential.id, config);
+                    }
+                } else if (ratio < 0) {
+                    const config = SetupLoader.loadEquipmentExperienceConfig(this.#credential.id);
+                    if (!!config.weapon) {
+                        config.weapon = false;
+                        EquipmentExperienceConfig.writeConfig(this.#credential.id, config);
+                    }
+                }
+            }
+            const usingArmor = this.#equipmentPage!.usingArmor;
+            if (usingArmor) {
+                const ratio = usingArmor.fullExperienceRatio;
+                if (ratio >= 0 && ratio < 1) {
+                    const config = SetupLoader.loadEquipmentExperienceConfig(this.#credential.id);
+                    if (config.armor === undefined || !config.armor) {
+                        config.armor = true;
+                        EquipmentExperienceConfig.writeConfig(this.#credential.id, config);
+                    }
+                } else if (ratio < 0) {
+                    const config = SetupLoader.loadEquipmentExperienceConfig(this.#credential.id);
+                    if (!!config.armor) {
+                        config.armor = false;
+                        EquipmentExperienceConfig.writeConfig(this.#credential.id, config);
+                    }
+                }
+            }
+            const usingAccessory = this.#equipmentPage!.usingAccessory;
+            if (usingAccessory) {
+                const ratio = usingAccessory.fullExperienceRatio;
+                if (ratio >= 0 && ratio < 1) {
+                    const config = SetupLoader.loadEquipmentExperienceConfig(this.#credential.id);
+                    if (config.accessory === undefined || !config.accessory) {
+                        config.accessory = true;
+                        EquipmentExperienceConfig.writeConfig(this.#credential.id, config);
+                    }
+                } else if (ratio < 0) {
+                    const config = SetupLoader.loadEquipmentExperienceConfig(this.#credential.id);
+                    if (!!config.accessory) {
+                        config.accessory = false;
+                        EquipmentExperienceConfig.writeConfig(this.#credential.id, config);
+                    }
+                }
+            }
+        }
+
         const config = SetupLoader.loadEquipmentExperienceConfig(this.#credential.id);
         if (!config.configured) {
             // 用户压根就没有配置，忽略吧，关闭显示的开关。

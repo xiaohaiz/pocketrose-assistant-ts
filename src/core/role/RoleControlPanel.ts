@@ -1,10 +1,13 @@
 import Credential from "../../util/Credential";
 import OperationMessage from "../../util/OperationMessage";
-import LocalSettingManager from "../config/LocalSettingManager";
 import SetupLoader from "../config/SetupLoader";
-import PersonalStatus from "./PersonalStatus";
+import {PersonalStatus} from "./PersonalStatus";
 import Role from "./Role";
+import {RoleStatusManager} from "./RoleStatus";
 
+/**
+ * @deprecated
+ */
 class RoleControlPanel {
 
     readonly #credential: Credential;
@@ -13,20 +16,11 @@ class RoleControlPanel {
         this.#credential = credential;
     }
 
-    async isCareerTransferEnabled(): Promise<boolean> {
-        let currentMirrorIndex = LocalSettingManager.getMirrorIndex(this.#credential.id);
-        if (currentMirrorIndex === undefined) {
-            currentMirrorIndex = (await new PersonalStatus(this.#credential).load()).mirrorIndex!;
-        }
-        const config: any = SetupLoader.loadMirrorCareerFixedConfig(this.#credential.id);
-        return !config["_m_" + currentMirrorIndex];
-    }
-
     async triggerCareerTransferNotification(role: Role): Promise<OperationMessage> {
         if (role.level !== 150) {
             return OperationMessage.failure();
         }
-        let currentMirrorIndex = LocalSettingManager.getMirrorIndex(this.#credential.id);
+        let currentMirrorIndex = await new RoleStatusManager(this.#credential).getCurrentMirrorIndex();
         if (currentMirrorIndex === undefined) {
             currentMirrorIndex = (await new PersonalStatus(this.#credential).load()).mirrorIndex!;
         }

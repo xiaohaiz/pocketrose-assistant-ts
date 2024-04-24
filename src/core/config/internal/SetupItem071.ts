@@ -18,6 +18,10 @@ class SetupItem071 implements SetupItem {
         return this.#code;
     }
 
+    accept(id?: string): boolean {
+        return true;
+    }
+
     render(): void {
         this.doRender();
     }

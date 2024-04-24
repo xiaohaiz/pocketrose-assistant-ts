@@ -1,13 +1,13 @@
 import _ from "lodash";
 import Credential from "../../util/Credential";
 import StringUtils from "../../util/StringUtils";
-import BattleFieldConfigLoader from "../battle/BattleFieldConfigLoader";
 import SetupLoader from "../config/SetupLoader";
 import EventHandler from "../event/EventHandler";
 import RankTitleLoader from "../role/RankTitleLoader";
 import Role from "../role/Role";
 import TownLoader from "../town/TownLoader";
 import TownDashboardPage from "./TownDashboardPage";
+import {BattleConfigManager, MiscConfigManager} from "../config/ConfigManager";
 
 class TownDashboardPageParser {
 
@@ -21,14 +21,14 @@ class TownDashboardPageParser {
         this.#credential = credential;
         this.#html = html;
         this.#battleMode = battleMode;
-        this.#page = this.#doParse();
+        this.#page = this.#doParse(credential);
     }
 
     parse() {
         return this.#page;
     }
 
-    #doParse() {
+    #doParse(credential: Credential) {
         const page = new TownDashboardPage();
         page.role = new Role();
 
@@ -74,7 +74,7 @@ class TownDashboardPageParser {
         _parseRoleStatus(page, t_0_0_1, t_1.next(), this.#credential);
         _parseEventBoard(page, t_0_0_1);
         _parseConversation(page, t_1);
-        _calculateCollectTownTax(page);
+        _calculateCollectTownTax(credential, page);
 
         return page;
     }
@@ -202,7 +202,7 @@ function _parseBattleMenu(page: TownDashboardPage, table: JQuery, credential: Cr
             }
         });
     }
-    const config = new BattleFieldConfigLoader(credential).loadConfig();
+    const config = new BattleConfigManager(credential).loadBattleFieldConfig();
     page.battleLevelShortcut = config.count === 1;
 
     if (config.configured) {
@@ -441,9 +441,9 @@ function _parseConversation(page: TownDashboardPage, table: JQuery) {
     page.townMessageHtml = townMessageHtml;
 }
 
-function _calculateCollectTownTax(page: TownDashboardPage) {
+function _calculateCollectTownTax(credential: Credential, page: TownDashboardPage) {
     page.canCollectTownTax = false;
-    if (SetupLoader.isCollectTownTaxDisabled()) {
+    if (new MiscConfigManager(credential).isCollectTownTaxDisabled) {
         return;
     }
     if (page.obtainRole.country !== "在野" && page.obtainRole.country === page.townCountry) {

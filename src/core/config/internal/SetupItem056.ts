@@ -1,10 +1,10 @@
 import MessageBoard from "../../../util/MessageBoard";
 import StorageUtils from "../../../util/StorageUtils";
-import BattleFieldConfigLoader from "../../battle/BattleFieldConfigLoader";
 import SetupItem from "../SetupItem";
 import PageUtils from "../../../util/PageUtils";
 import StringUtils from "../../../util/StringUtils";
 import _ from "lodash";
+import {BattleConfigManager} from "../ConfigManager";
 
 class SetupItem056 implements SetupItem {
 
@@ -18,6 +18,10 @@ class SetupItem056 implements SetupItem {
 
     code(): string {
         return this.#code;
+    }
+
+    accept(id?: string): boolean {
+        return true;
     }
 
     render(id?: string): void {
@@ -44,7 +48,7 @@ class SetupItem056 implements SetupItem {
         html += "</tr>";
         $("#setup_item_table").append($(html));
 
-        const config = BattleFieldConfigLoader.loadGlobalConfig();
+        const config = BattleConfigManager.loadGlobalBattleFieldConfig();
         if (config.primary) $("#_056_button_1").css("color", "blue").prop("disabled", true);
         if (config.junior) $("#_056_button_2").css("color", "blue").prop("disabled", true);
         if (config.senior) $("#_056_button_3").css("color", "blue").prop("disabled", true);

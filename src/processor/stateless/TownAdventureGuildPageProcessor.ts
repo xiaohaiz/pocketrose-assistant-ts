@@ -6,7 +6,7 @@ import TravelPlan from "../../core/map/TravelPlan";
 import TravelPlanExecutor from "../../core/map/TravelPlanExecutor";
 import TreasureHintParser from "../../core/map/TreasureHintParser";
 import NpcLoader from "../../core/role/NpcLoader";
-import PersonalStatus from "../../core/role/PersonalStatus";
+import {PersonalStatus} from "../../core/role/PersonalStatus";
 import Town from "../../core/town/Town";
 import TownEntrance from "../../core/town/TownEntrance";
 import Coordinate from "../../util/Coordinate";

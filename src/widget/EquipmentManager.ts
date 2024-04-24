@@ -2,7 +2,7 @@ import CastleBank from "../core/bank/CastleBank";
 import CastleEquipmentExpressHouse from "../core/equipment/CastleEquipmentExpressHouse";
 import CastleWarehouse from "../core/equipment/CastleWarehouse";
 import CastleWarehousePage from "../core/equipment/CastleWarehousePage";
-import CommonWidget from "./support/CommonWidget";
+import {CommonWidget, CommonWidgetFeature} from "./support/CommonWidget";
 import Credential from "../util/Credential";
 import {Equipment} from "../core/equipment/Equipment";
 import EquipmentGrowthTrigger from "../core/trigger/EquipmentGrowthTrigger";
@@ -21,7 +21,6 @@ import PersonalEquipmentManagement from "../core/equipment/PersonalEquipmentMana
 import PersonalEquipmentManagementPage from "../core/equipment/PersonalEquipmentManagementPage";
 import PocketPageRenderer from "../util/PocketPageRenderer";
 import Role from "../core/role/Role";
-import RoleUsingEquipmentStorage from "../core/role/RoleUsingEquipmentStorage";
 import SetupLoader from "../core/config/SetupLoader";
 import StringUtils from "../util/StringUtils";
 import TownBank from "../core/bank/TownBank";
@@ -30,9 +29,9 @@ import TownForgeHouse from "../core/forge/TownForgeHouse";
 import TreasureBag from "../core/equipment/TreasureBag";
 import TreasureBagPage from "../core/equipment/TreasureBagPage";
 import _ from "lodash";
-import {CommonWidgetFeature} from "./support/CommonWidgetFeature";
 import {RoleEquipmentStatusManager} from "../core/equipment/RoleEquipmentStatusManager";
-import {PocketPage} from "../util/PocketPage";
+import {PocketPage} from "../pocket/PocketPage";
+import {RoleUsingEquipmentManager} from "../core/role/RoleUsingEquipment";
 
 class EquipmentManager extends CommonWidget {
 
@@ -62,6 +61,24 @@ class EquipmentManager extends CommonWidget {
     private gemTransferAutoPutIntoWarehouseTimer?: any;
 
     generateHTML(): string {
+        return "" +
+            "<table style='background-color:#888888;margin:auto;width:100%;border-width:0'>" +
+            "<tbody>" +
+            "<tr>" +
+            "<th style='writing-mode:vertical-rl;text-orientation:mixed;" +
+            "background-color:navy;color:white;font-size:120%;text-align:left'>" +
+            "装 备" +
+            "</th>" +
+            "<td style='border-spacing:0;width:100%'>" +
+            this._generateHTML() +
+            "</td>" +
+            "</tr>" +
+            "</tbody>" +
+            "</table>" +
+            "";
+    }
+
+    private _generateHTML(): string {
         const cellCount = (this.isTownMode || this.isCastleMode) ? 16 : 14;
 
         let html = "";
@@ -377,7 +394,7 @@ class EquipmentManager extends CommonWidget {
             });
         });
         $("#_pocket_restoreEquipment").on("click", () => {
-            RoleUsingEquipmentStorage.load(this.credential.id).then(data => {
+            new RoleUsingEquipmentManager(this.credential).load().then(data => {
                 if (data !== null && data.available) {
                     const set = new EquipmentSet();
                     set.initialize();
@@ -470,6 +487,10 @@ class EquipmentManager extends CommonWidget {
             if (target === undefined || target === "") {
                 this.feature.publishWarning("没有选择发送的对象，忽略！");
                 return
+            }
+            if (target === this.credential.id) {
+                this.feature.publishWarning("不能发送给自己，忽略！");
+                return;
             }
             this._sendEquipments(equipments, target).then(() => {
                 const message = OperationMessage.success();
@@ -760,6 +781,10 @@ class EquipmentManager extends CommonWidget {
                     this.feature.publishWarning("没有选择发送的对象，忽略！");
                     return;
                 }
+                if (target === this.credential.id) {
+                    this.feature.publishWarning("不能发送给自己，忽略！");
+                    return;
+                }
                 this._sendEquipments([equipment], target).then(() => {
                     const message = OperationMessage.success();
                     this._triggerRefresh(message).then();
@@ -885,7 +910,7 @@ class EquipmentManager extends CommonWidget {
         }
         $(".C_pocket_equipmentSelectRequired").prop("disabled", true);
 
-        const restoreConfig = await RoleUsingEquipmentStorage.load(this.credential.id);
+        const restoreConfig = await new RoleUsingEquipmentManager(this.credential).load();
         if (restoreConfig !== null && restoreConfig.available) {
             $("#_pocket_restoreEquipment").prop("disabled", false).show();
         } else {
@@ -1299,6 +1324,10 @@ class EquipmentManager extends CommonWidget {
         const target = this._peopleFinder!.targetPeople;
         if (target === undefined) {
             if (!silence) this.feature.publishWarning("没有选择发送对象，忽略！");
+            return;
+        }
+        if (target === this.credential.id) {
+            this.feature.publishWarning("不能发送给自己，忽略！");
             return;
         }
         const category = $("#_pocket_EQM_GT_1_1").val() as string;

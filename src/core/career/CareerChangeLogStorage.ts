@@ -1,6 +1,6 @@
 import ObjectID from "bson-objectid";
 import _ from "lodash";
-import PocketDatabase from "../../util/PocketDatabase";
+import {PocketDatabase} from "../../pocket/PocketDatabase";
 import CareerChangeLog from "./CareerChangeLog";
 
 class CareerChangeLogStorage {

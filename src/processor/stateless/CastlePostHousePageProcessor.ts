@@ -3,7 +3,7 @@ import TownBank from "../../core/bank/TownBank";
 import CastleEntrance from "../../core/castle/CastleEntrance";
 import MapBuilder from "../../core/map/MapBuilder";
 import TravelPlanExecutor from "../../core/map/TravelPlanExecutor";
-import PersonalStatus from "../../core/role/PersonalStatus";
+import {PersonalStatus} from "../../core/role/PersonalStatus";
 import Town from "../../core/town/Town";
 import TownEntrance from "../../core/town/TownEntrance";
 import TownLoader from "../../core/town/TownLoader";

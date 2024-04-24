@@ -12,10 +12,15 @@ import _ from "lodash";
 import PetStatusTrigger from "../trigger/PetStatusTrigger";
 import {EquipmentStatusTrigger} from "../trigger/EquipmentStatusTrigger";
 import EquipmentGrowthTrigger from "../trigger/EquipmentGrowthTrigger";
-import SetupLoader from "../config/SetupLoader";
 import EquipmentSpaceTrigger from "../trigger/EquipmentSpaceTrigger";
 import PetSpaceTrigger from "../trigger/PetSpaceTrigger";
 import {PersonalSalaryTrigger} from "../trigger/PersonalSalaryTrigger";
+import {RoleEquipmentStatusManager} from "../equipment/RoleEquipmentStatusManager";
+import {RolePetStatusManager} from "../monster/RolePetStatusManager";
+import {RoleStatusManager} from "../role/RoleStatus";
+import {BattleConfigManager} from "../config/ConfigManager";
+import LocalSettingManager from "../config/LocalSettingManager";
+import {PetUsingTrigger} from "../trigger/PetUsingTrigger";
 
 class BattleReturnInterceptor {
 
@@ -45,28 +50,54 @@ class BattleReturnInterceptor {
     }
 
     async beforeExitBattle() {
+        const roleStatusManager = new RoleStatusManager(this.#credential);
+        if (!this.#battlePage.zodiacBattle && this.#hasHarvestExcludesPetMap()) {
+            // 非十二宫战斗有入手，其实不知道是什么，只能排除不是图鉴
+            // 有可能是宠物，也有可能是上洞、中塔、初森。
+            // 为了保证数据一致性，直接清除角色状态中的祭奠RP即可。
+            await roleStatusManager.unsetConsecrateRP();
+        }
+
+        const statisticsTriggered = LocalSettingManager.drainStatisticsTriggered(this.#credential.id);
+
         const mod = this.#battleCount % 100;
+
+        if (mod === 67 || statisticsTriggered || this.#battlePage.petLearnSpell || this.#battlePage.petUpgrade) {
+            await this.#initializePetPage();
+            await new PetUsingTrigger(this.#credential).withPetPage(this.#petPage).triggerUpdate();
+        }
+
         if (mod === 73 || this.#battlePage.treasureBattle) {
             await new BankAccountTrigger(this.#credential).triggerUpdate();
         }
         if (mod === 83 || this.#hasHarvestIncludesPetMap()) {
             await new PetMapStatusTrigger(this.#credential).triggerUpdate();
         }
-        if (mod === 7 || mod === 29 || mod === 47 || mod === 67 || mod === 89 || this.#hasHarvestExcludesPetMap()) {
-            await Promise.all([
-                this.#initializeEquipmentPage(),
-                this.#initializePetPage()
-            ]);
-            await new PetStatusTrigger(this.#credential)
-                .withEquipmentPage(this.#equipmentPage)
-                .withPetPage(this.#petPage)
-                .triggerUpdate();
+        if (statisticsTriggered || mod === 89 || this.#hasHarvestExcludesPetMap()) {
+            if (statisticsTriggered || mod === 89) {
+                await Promise.all([
+                    this.#initializeEquipmentPage(),
+                    this.#initializePetPage()
+                ]);
+                await new PetStatusTrigger(this.#credential)
+                    .withEquipmentPage(this.#equipmentPage)
+                    .withPetPage(this.#petPage)
+                    .triggerUpdate();
+            } else {
+                await this.#initializePetPage();
+                await new RolePetStatusManager(this.#credential).updatePersonalPetStatus(this.#petPage);
+            }
         }
-        if (mod === 97 || this.#hasHarvestExcludesPetMap()) {
+        if (statisticsTriggered || mod === 97 || this.#hasHarvestExcludesPetMap()) {
             await this.#initializeEquipmentPage();
-            await new EquipmentStatusTrigger(this.#credential)
-                .withEquipmentPage(this.#equipmentPage)
-                .triggerUpdate();
+            if (statisticsTriggered || mod === 97) {
+                await new EquipmentStatusTrigger(this.#credential)
+                    .withEquipmentPage(this.#equipmentPage)
+                    .triggerUpdate();
+            } else {
+                const statusManager = new RoleEquipmentStatusManager(this.#credential);
+                await statusManager.updatePersonalEquipmentStatus(this.#equipmentPage);
+            }
         }
         if (mod === 19 || mod === 37 || mod === 59 || mod === 79 || mod === 97) {
             const trigger = new EquipmentGrowthTrigger(this.#credential)
@@ -76,7 +107,7 @@ class BattleReturnInterceptor {
                 this.#equipmentPage = trigger.equipmentPage;
             }
         }
-        if (SetupLoader.isAutoSetBattleFieldEnabled()) {
+        if (new BattleConfigManager(this.#credential).isAutoSetBattleFieldEnabled) {
             await new BattleFieldTrigger(this.#credential)
                 .triggerUpdateWhenBattle(this.#battlePage);
         }
@@ -103,11 +134,6 @@ class BattleReturnInterceptor {
 
         // 触发自动领取俸禄
         await new PersonalSalaryTrigger(this.#credential).triggerReceive(this.#battleCount);
-    }
-
-    #hasHarvest() {
-        const harvestList = this.#battlePage.harvestList;
-        return harvestList && harvestList.length > 0;
     }
 
     #hasHarvestIncludesPetMap() {

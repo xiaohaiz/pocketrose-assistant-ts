@@ -24,6 +24,13 @@ class TeamMemberLoader {
         return member.available ? member : null;
     }
 
+    static findTeamMemberById(id: string) {
+        for (const member of TeamMemberLoader.loadTeamMembers()) {
+            if (member.id === id) return member;
+        }
+        return null;
+    }
+
     static loadTeamMembers() {
         const memberList: TeamMember[] = [];
         for (let i = 0; i < Constants.MAX_TEAM_MEMBER_COUNT; i++) {

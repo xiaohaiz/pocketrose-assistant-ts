@@ -18,8 +18,7 @@ class TownWeaponHousePageInterceptor implements PageInterceptor {
             .then(machine => {
                 machine.start()
                     .whenInTown(state => {
-                        const context = new PageProcessorContext();
-                        context.withTownId(state?.townId);
+                        const context = PageProcessorContext.whenInTown(state?.townId);
                         new TownWeaponHousePageProcessor().process(context);
                     })
                     .process();

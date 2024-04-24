@@ -1,9 +1,8 @@
 import Credential from "../../util/Credential";
 import PersonalEquipmentManagementPage from "../equipment/PersonalEquipmentManagementPage";
 import PersonalEquipmentManagement from "../equipment/PersonalEquipmentManagement";
-import RoleUsingEquipment from "../role/RoleUsingEquipment";
+import {RoleUsingEquipment, RoleUsingEquipmentManager} from "../role/RoleUsingEquipment";
 import _ from "lodash";
-import RoleUsingEquipmentStorage from "../role/RoleUsingEquipmentStorage";
 
 /**
  * ============================================================================
@@ -40,7 +39,6 @@ class EquipmentUsingTrigger {
         await this.#initializeEquipmentPage();
         const data = new RoleUsingEquipment();
         data.id = this.#credential.id;
-        data.updateTime = new Date().getTime();
         _.forEach(this.#equipmentPage!.equipmentList!)
             .filter(it => it.using)
             .forEach(it => {
@@ -52,7 +50,7 @@ class EquipmentUsingTrigger {
                     data.usingAccessory = it.fullName;
                 }
             });
-        await RoleUsingEquipmentStorage.write(data);
+        await new RoleUsingEquipmentManager(this.#credential.id).write(data);
     }
 }
 

@@ -1,6 +1,6 @@
 import Credential from "../../util/Credential";
 import Role from "./Role";
-import PersonalStatus from "./PersonalStatus";
+import {PersonalStatus} from "./PersonalStatus";
 
 class RoleLoader {
 

@@ -13,7 +13,8 @@ import TownDashboardLayout from "./TownDashboardLayout";
 import TownDashboardPage from "./TownDashboardPage";
 import BattleReturnInterceptor from "../battle/BattleReturnInterceptor";
 import {BattleFailureRecordManager} from "../battle/BattleFailureRecordManager";
-import BattleButtonManager from "../battle/BattleButtonManager";
+import {BattleConfigManager} from "../config/ConfigManager";
+import {ValidationCodeTrigger} from "../trigger/ValidationCodeTrigger";
 
 class TownDashboardLayout006 extends TownDashboardLayout {
 
@@ -25,7 +26,7 @@ class TownDashboardLayout006 extends TownDashboardLayout {
         return true;
     }
 
-    render2(credential: Credential, page: TownDashboardPage): void {
+    render2(credential: Credential, page: TownDashboardPage, validationCodeTrigger?: ValidationCodeTrigger): void {
         $("center:first").hide();
         $("br:first").hide();
 
@@ -111,8 +112,8 @@ class TownDashboardLayout006 extends TownDashboardLayout {
             .after($("<tr><td colspan='4'>　</td></tr>"));
     }
 
-    render3(credential: Credential, page: TownDashboardPage): void {
-        this.render2(credential, page);
+    render3(credential: Credential, page: TownDashboardPage, validationCodeTrigger?: ValidationCodeTrigger): void {
+        this.render2(credential, page, validationCodeTrigger);
         $("#townTax").off("click");
 
         let tr1 = "";
@@ -145,13 +146,48 @@ class TownDashboardLayout006 extends TownDashboardLayout {
             .find("> tbody:first")
             .prepend("<tr>" + tr1 + "</tr>");
 
-        _processValidationCodeFailure(credential);
+        if (validationCodeTrigger) {
+            validationCodeTrigger!.safe = () => {
+                $("#ID_DANGEROUS").text("SAFE");
+                const element = $("#battleCell").prev();
+                element.find("> span:first").remove();
+                element.find("> br:first").remove();// 如果安全按钮启用了，就不要显示了，交给安全按钮定时器去干活
+                const configManager = new BattleConfigManager(credential);
+                if (!BattleConfigManager.isSafeBattleButtonEnabled()) {
+                    const battleButton = $("#battleButton");
+                    battleButton.prop("disabled", false).show();
+                }
+            };
+            validationCodeTrigger!.warning = count => {
+                $("#ID_DANGEROUS").text("SAFE");
+                const element = $("#battleCell").prev();
+                element.find("> span:first").remove();
+                element.find("> br").remove();
+                element.prepend($("" +
+                    "<span style='background-color:red;color:white;font-weight:bold;font-size:120%'>" +
+                    "验证错" + count + "次" +
+                    "</span>" +
+                    "<br><br><br><br>" +
+                    ""));
+                const configManager = new BattleConfigManager(credential);
+                if (!BattleConfigManager.isSafeBattleButtonEnabled()) {
+                    const battleButton = $("#battleButton");
+                    battleButton.prop("disabled", false).show();
+                }
+            };
+            validationCodeTrigger!.danger = () => {
+                $("#ID_DANGEROUS").text("DANGEROUS");
+                const battleButton = $("#battleButton");
+                battleButton.prop("disabled", true).hide();
+            };
+            validationCodeTrigger!.triggerStartup().then();
+        }
 
         new TownDashboardTaxManager(credential, page).processTownTax($("#townTax"));
     }
 
-    async render(credential: Credential, page: TownDashboardPage): Promise<void> {
-        this.render3(credential, page);
+    async render(credential: Credential, page: TownDashboardPage, validationCodeTrigger?: ValidationCodeTrigger): Promise<void> {
+        this.render3(credential, page, validationCodeTrigger);
 
         $("table:first")
             .next()
@@ -170,41 +206,43 @@ class TownDashboardLayout006 extends TownDashboardLayout {
         generateRepairForm(credential);
         generateLodgeForm(credential);
 
-        BattleRecordStorage.getInstance().load(credential.id).then(record => {
-            const lastBattle = record.html!;
+        BattleRecordStorage.load(credential.id).then(record => {
+            if (record?.available) {
+                const lastBattle = record.html!;
 
-            // 提示入手 sephirothy
-            if (record.hasAdditionalNotification()) {
-                const additionalNotifications: string[] = [];
-                const harvestList = record.harvestList;
-                if (harvestList && harvestList.length > 0) {
-                    for (const ht of harvestList) {
-                        additionalNotifications.push("<span style='color:red;font-size:200%'>" + ht + "</span>");
+                // 提示入手 sephirothy
+                if (record.hasAdditionalNotification) {
+                    const additionalNotifications: string[] = [];
+                    const harvestList = record.harvestList;
+                    if (harvestList && harvestList.length > 0) {
+                        for (const ht of harvestList) {
+                            additionalNotifications.push("<span style='color:red;font-size:200%'>" + ht + "</span>");
+                        }
                     }
+                    if (record.petEggHatched) {
+                        additionalNotifications.push("<span style='color:blue;font-size:200%'>" + "宠物蛋孵化成功！" + "</span>");
+                    }
+                    if (record.petSpellLearned) {
+                        additionalNotifications.push("<span style='color:blue;font-size:200%'>" + "宠物学会了新技能！" + "</span>");
+                    }
+                    if (record.validationCodeFailed) {
+                        additionalNotifications.push("<span style='color:red;font-size:200%'>" + "选择验证码错误！" + "</span>");
+                    }
+                    const anHtml = _.join(additionalNotifications, "<br>");
+                    $("#harvestInfo").html(anHtml).parent().show();
+                } else {
+                    $("#harvestInfo").html("").parent().hide();
                 }
-                if (record.petEggHatched) {
-                    additionalNotifications.push("<span style='color:blue;font-size:200%'>" + "宠物蛋孵化成功！" + "</span>");
-                }
-                if (record.petSpellLearned) {
-                    additionalNotifications.push("<span style='color:blue;font-size:200%'>" + "宠物学会了新技能！" + "</span>");
-                }
-                if (record.validationCodeFailed) {
-                    additionalNotifications.push("<span style='color:red;font-size:200%'>" + "选择验证码错误！" + "</span>");
-                }
-                const anHtml = _.join(additionalNotifications, "<br>");
-                $("#harvestInfo").html(anHtml).parent().show();
-            } else {
-                $("#harvestInfo").html("").parent().hide();
-            }
 
-            if (lastBattle.includes("吐故纳新，扶摇直上") && lastBattle.includes("孵化成功")) {
-                $("#battlePanel").css("background-color", "yellow");
-            } else if (lastBattle.includes("吐故纳新，扶摇直上")) {
-                $("#battlePanel").css("background-color", "wheat");
-            } else if (lastBattle.includes("孵化成功")) {
-                $("#battlePanel").css("background-color", "skyblue");
+                if (lastBattle.includes("吐故纳新，扶摇直上") && lastBattle.includes("孵化成功")) {
+                    $("#battlePanel").css("background-color", "yellow");
+                } else if (lastBattle.includes("吐故纳新，扶摇直上")) {
+                    $("#battlePanel").css("background-color", "wheat");
+                } else if (lastBattle.includes("孵化成功")) {
+                    $("#battlePanel").css("background-color", "skyblue");
+                }
+                $("#battlePanel").html(lastBattle);
             }
-            $("#battlePanel").html(lastBattle);
         });
 
 
@@ -249,9 +287,11 @@ class TownDashboardLayout006 extends TownDashboardLayout {
                         record.id = credential.id;
                         record.html = errMsg;
                         record.validationCodeFailed = validationCodeFailed;
-                        BattleRecordStorage.getInstance().write(record).then();
+                        BattleRecordStorage.write(record).then();
                         if (validationCodeFailed) {
-                            new BattleFailureRecordManager(credential).onValidationCodeFailure().then();
+                            new BattleFailureRecordManager(credential).onValidationCodeFailure().then(() => {
+                                validationCodeTrigger?.triggerStartup().then();
+                            });
                         }
 
                         $("#battleMenu").html("" +
@@ -387,66 +427,6 @@ function generateLodgeForm(credential: Credential) {
 
 async function doBeforeReturn(credential: Credential, battleCount: number, battlePage: BattlePage): Promise<void> {
     await new BattleReturnInterceptor(credential, battleCount, battlePage).beforeExitBattle();
-}
-
-function _processValidationCodeFailure(credential: Credential) {
-    const threshold = BattleFailureRecordManager.loadConfiguredThreshold();
-    if (threshold === 0) return;
-
-    $("a:contains('看不到图片按这里')")
-        .filter((_idx, a) => {
-            const s = $(a).text();
-            return s === "看不到图片按这里";
-        })
-        .parent()
-        .attr("colspan", "3")
-        .after($("" +
-            "<td id='ID_DANGEROUS' style='display:none'></td>" +
-            ""));
-
-    _renderValidationCodeFailure(credential);
-    setInterval(() => _renderValidationCodeFailure(credential), 2000);
-}
-
-function _renderValidationCodeFailure(credential: Credential) {
-    const manager = new BattleFailureRecordManager(credential);
-    manager.getValidationCodeFailureCount().then(count => {
-        let safe = true;
-        if (count > 0) {
-            const threshold = BattleFailureRecordManager.loadConfiguredThreshold();
-            if (count >= threshold - 1) {
-                const element = $("#battleCell").prev();
-                element.find("> span:first").remove();
-                element.find("> br").remove();
-                element.prepend($("" +
-                    "<span style='background-color:red;color:white;font-weight:bold;font-size:120%'>" +
-                    "验证错" + count + "次" +
-                    "</span>" +
-                    "<br><br><br><br>" +
-                    ""));
-            }
-
-            if (threshold > 0 && count >= threshold) {
-                safe = false;
-                $("#ID_DANGEROUS").text("DANGEROUS");
-                // 已经到了安全的阈值了
-                const battleButton = $("#battleButton");
-                battleButton.prop("disabled", true).hide();
-            }
-        } else {
-            const element = $("#battleCell").prev();
-            element.find("> span:first").remove();
-            element.find("> br:first").remove();
-        }
-        if (safe) {
-            $("#ID_DANGEROUS").text("SAFE");
-            // 如果安全按钮启用了，就不要显示了，交给安全按钮定时器去干活
-            if (!BattleButtonManager.isSafeButtonEnabled()) {
-                const battleButton = $("#battleButton");
-                battleButton.prop("disabled", false).show();
-            }
-        }
-    });
 }
 
 export = TownDashboardLayout006;

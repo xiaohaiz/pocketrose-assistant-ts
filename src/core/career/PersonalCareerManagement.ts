@@ -1,7 +1,7 @@
 import Credential from "../../util/Credential";
 import MessageBoard from "../../util/MessageBoard";
 import NetworkUtils from "../../util/NetworkUtils";
-import PersonalStatus from "../role/PersonalStatus";
+import {PersonalStatus} from "../role/PersonalStatus";
 import Role from "../role/Role";
 import CareerChangeLog from "./CareerChangeLog";
 import CareerChangeLogStorage from "./CareerChangeLogStorage";
@@ -47,6 +47,7 @@ class PersonalCareerManagement {
                         NetworkUtils.post("mydata.cgi", request)
                             .then(html => {
                                 MessageBoard.processResponseMessage(html);
+                                // 不需要额外的清理RoleStatus缓存数据了
                                 new PersonalStatus(this.#credential, this.#townId)
                                     .load()
                                     .then(after => {

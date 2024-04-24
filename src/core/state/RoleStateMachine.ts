@@ -1,4 +1,4 @@
-import RoleState from "./RoleState";
+import {RoleState} from "./RoleState";
 
 class RoleStateMachine {
 

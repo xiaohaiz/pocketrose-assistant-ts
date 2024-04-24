@@ -2,17 +2,18 @@ import StatefulPageProcessor from "../StatefulPageProcessor";
 import Credential from "../../util/Credential";
 import PageProcessorContext from "../PageProcessorContext";
 import LocationModeTown from "../../core/location/LocationModeTown";
-import MirrorManager from "../../widget/MirrorManager";
+import {MirrorManager} from "../../widget/MirrorManager";
 import PersonalMirrorPageParser from "../../core/role/PersonalMirrorPageParser";
 import PageUtils from "../../util/PageUtils";
 import _ from "lodash";
 import ButtonUtils from "../../util/ButtonUtils";
 import MessageBoard from "../../util/MessageBoard";
 import Role from "../../core/role/Role";
-import PersonalStatus from "../../core/role/PersonalStatus";
+import {PersonalStatus} from "../../core/role/PersonalStatus";
 import KeyboardShortcutBuilder from "../../util/KeyboardShortcutBuilder";
 import {EquipmentManager} from "../../widget/EquipmentManager";
 import {BankManager} from "../../widget/BankManager";
+import {RoleStatusManager} from "../../core/role/RoleStatus";
 
 class PersonalMirrorPageProcessor extends StatefulPageProcessor {
 
@@ -24,7 +25,7 @@ class PersonalMirrorPageProcessor extends StatefulPageProcessor {
         super(credential, context);
         const locationMode = this.createLocationMode() as LocationModeTown;
         this.mirrorManager = new MirrorManager(credential, locationMode);
-        this.mirrorManager.onRefresh = (message) => {
+        this.mirrorManager.feature.onRefresh = (message) => {
             this.role = message.extensions.get("role") as Role;
             this.equipmentManager.reload().then(() => {
                 this.equipmentManager.render().then();
@@ -175,6 +176,24 @@ class PersonalMirrorPageProcessor extends StatefulPageProcessor {
         this.mirrorManager.bindButtons();
         this.equipmentManager.bindButtons();
         this.bankManager.bindButtons();
+
+        const obtainMirrorBtn = $("input:submit[value='获取新分身']");
+        if (obtainMirrorBtn.length > 0) {
+            obtainMirrorBtn
+                .attr("id", "_pocket_ObtainMirrorSubmit")
+                .parent().hide()
+                .after($("" +
+                    "<button role='button' class='C_StatelessElement' id='_pocket_ObtainMirrorButton'>获取新分身</button>" +
+                    ""));
+            $("#_pocket_ObtainMirrorButton").on("click", () => {
+                const statusManager = new RoleStatusManager(this.credential);
+                statusManager.unsetMirrorIndex().then(() => {
+                    statusManager.unsetCareer().then(() => {
+                        PageUtils.triggerClick("_pocket_ObtainMirrorSubmit");
+                    });
+                });
+            });
+        }
     }
 
     private async _resetMessageBoard() {

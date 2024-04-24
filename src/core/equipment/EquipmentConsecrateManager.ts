@@ -2,10 +2,9 @@ import _ from "lodash";
 import Credential from "../../util/Credential";
 import MessageBoard from "../../util/MessageBoard";
 import NetworkUtils from "../../util/NetworkUtils";
-import BattleFieldConfigLoader from "../battle/BattleFieldConfigLoader";
-import BattleFieldConfigWriter from "../battle/BattleFieldConfigWriter";
 import EquipmentConsecrateLog from "./EquipmentConsecrateLog";
 import EquipmentConsecrateLogStorage from "./EquipmentConsecrateLogStorage";
+import {BattleConfigManager} from "../config/ConfigManager";
 
 class EquipmentConsecrateManager {
 
@@ -45,10 +44,9 @@ class EquipmentConsecrateManager {
     }
 
     async #autoSetBattleField() {
-        const config = BattleFieldConfigLoader.loadGlobalConfig();
-        if (!config.configured) {
-            const writer = new BattleFieldConfigWriter(this.#credential);
-            await writer.writeCustomizedConfig(false, false, true, false);
+        if (!BattleConfigManager.loadGlobalBattleFieldConfig().configured) {
+            const configManager = new BattleConfigManager(this.#credential);
+            configManager.setPersonalBattleFieldConfig(false, false, true, false);
             MessageBoard.publishMessage("战斗场所自动切换为【上级之洞窟】！");
         }
     }

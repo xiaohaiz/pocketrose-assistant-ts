@@ -1,67 +1,43 @@
-import PocketDatabase from "../../util/PocketDatabase";
-import RolePetStatus from "./RolePetStatus";
+import {PocketDatabase} from "../../pocket/PocketDatabase";
+import {RolePetStatus} from "./RolePetStatus";
 
 class RolePetStatusStorage {
 
-    static getInstance() {
-        return instance;
-    }
-
-    async loads(idList: string[]): Promise<Map<string, RolePetStatus>> {
+    static async load(location: string, roleId: string): Promise<RolePetStatus | null> {
+        const id = location + "/" + roleId;
         const db = await PocketDatabase.connectDatabase();
         return await (() => {
-            return new Promise<Map<string, RolePetStatus>>((resolve, reject) => {
+            return new Promise<RolePetStatus | null>((resolve, reject) => {
                 const request = db.transaction(["RolePetStatus"], "readonly")
                     .objectStore("RolePetStatus")
-                    .getAll();  // Bad usage here
-
+                    .get(id);
                 request.onerror = reject;
-
                 request.onsuccess = () => {
+                    let record: RolePetStatus | null = null;
                     if (request.result) {
-                        const dataMap = new Map<string, RolePetStatus>();
-                        for (const it of request.result) {
-                            const data = new RolePetStatus();
-                            data.id = it.id;
-                            data.json = it.json;
-                            data.updateTime = it.updateTime;
-                            if (idList.includes(data.id!)) {
-                                dataMap.set(data.id!, data);
-                            }
-                        }
-                        resolve(dataMap);
-                    } else {
-                        reject();
+                        record = new RolePetStatus();
+                        record.id = request.result.id;
+                        record.json = request.result.json;
+                        record.updateTime = request.result.updateTime;
                     }
+                    resolve(record);
                 };
             });
         })();
     }
 
-    async write(id: string, json: string): Promise<void> {
+    static async write(record: RolePetStatus): Promise<void> {
         const db = await PocketDatabase.connectDatabase();
         return await (() => {
             return new Promise<void>((resolve, reject) => {
-                const document = {};
-                // @ts-ignore
-                document.id = id;
-                // @ts-ignore
-                document.json = json;
-                // @ts-ignore
-                document.updateTime = new Date().getTime();
-
                 const request = db.transaction(["RolePetStatus"], "readwrite")
                     .objectStore("RolePetStatus")
-                    .put(document);
-
+                    .put(record.asDocument());
                 request.onerror = reject;
-
                 request.onsuccess = () => resolve();
             });
         })();
     }
 }
 
-const instance = new RolePetStatusStorage();
-
-export = RolePetStatusStorage;
+export {RolePetStatusStorage};

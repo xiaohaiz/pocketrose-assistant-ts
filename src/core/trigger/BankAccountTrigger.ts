@@ -1,6 +1,6 @@
 import _ from "lodash";
 import Credential from "../../util/Credential";
-import DayRange from "../../util/DayRange";
+import {DayRange} from "../../util/PocketDateUtils";
 import BankRecord from "../bank/BankRecord";
 import BankRecordStorage from "../bank/BankRecordStorage";
 import TownBank from "../bank/TownBank";

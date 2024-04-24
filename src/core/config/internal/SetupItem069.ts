@@ -17,6 +17,10 @@ class SetupItem069 implements SetupItem {
         return this.#code;
     }
 
+    accept(id?: string): boolean {
+        return true;
+    }
+
     render(id?: string): void {
         let html = "";
         html += "<tr>";

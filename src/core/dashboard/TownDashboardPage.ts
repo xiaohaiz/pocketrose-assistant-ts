@@ -19,7 +19,7 @@ class TownDashboardPage {
     messageNotificationHtml?: string;               // 是否有未读消息
     actionNotificationHtml?: string;                // 行动提示
 
-    battleSessionId?: string;                       // 战斗回话ID
+    battleSessionId?: string;                       // 战斗会话ID
     battleLevelSelectionHtml?: string;              // 战斗选项
     processedBattleLevelSelectionHtml?: string;     // 战斗选项（处理后）
     battleLevelShortcut?: boolean;

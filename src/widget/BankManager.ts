@@ -1,4 +1,4 @@
-import CommonWidget from "./support/CommonWidget";
+import {CommonWidget, CommonWidgetFeature} from "./support/CommonWidget";
 import Credential from "../util/Credential";
 import LocationModeCastle from "../core/location/LocationModeCastle";
 import LocationModeTown from "../core/location/LocationModeTown";
@@ -11,13 +11,12 @@ import PocketPageRenderer from "../util/PocketPageRenderer";
 import PocketUtils from "../util/PocketUtils";
 import TeamMemberLoader from "../core/team/TeamMemberLoader";
 import BankRecord from "../core/bank/BankRecord";
-import DayRange from "../util/DayRange";
 import BankRecordStorage from "../core/bank/BankRecordStorage";
 import NpcLoader from "../core/role/NpcLoader";
 import {PersonalSalary} from "../core/bank/PersonalSalary";
 import {PersonalSalaryRecordStorage} from "../core/bank/PersonalSalaryRecordStorage";
-import PersonalStatus from "../core/role/PersonalStatus";
-import {CommonWidgetFeature} from "./support/CommonWidgetFeature";
+import {PersonalStatus} from "../core/role/PersonalStatus";
+import {DayRange} from "../util/PocketDateUtils";
 
 class BankManager extends CommonWidget {
 
@@ -36,10 +35,25 @@ class BankManager extends CommonWidget {
     generateHTML(): string {
         return "" +
             "<table style='background-color:#888888;margin:auto;width:100%;border-width:0'>" +
-            "<thead style='text-align:center'>" +
-            "<tr style='background-color:skyblue'>" +
-            "<td>＜ 银 行 账 号 ＞</td>" +
+            "<tbody>" +
+            "<tr>" +
+            "<th style='writing-mode:vertical-rl;text-orientation:mixed;" +
+            "background-color:navy;color:white;font-size:120%;text-align:left'>" +
+            "银 行" +
+            "</th>" +
+            "<td style='border-spacing:0;width:100%'>" +
+            this._generateHTML() +
+            "</td>" +
             "</tr>" +
+            "</tbody>" +
+            "</table>" +
+            "";
+    }
+
+    private _generateHTML(): string {
+        return "" +
+            "<table style='background-color:#888888;margin:auto;width:100%;border-width:0'>" +
+            "<thead style='text-align:center'>" +
             "</thead>" +
             "<tbody style='text-align:center'>" +
             "<tr style='background-color:#F8F0E0'>" +
@@ -143,6 +157,10 @@ class BankManager extends CommonWidget {
                     (this.feature.onWarning) && (this.feature.onWarning("没有选择转账的对象，忽略！"));
                     return;
                 }
+                if (target === this.credential.id) {
+                    this.feature.publishWarning("不能给自己转账，忽略。");
+                    return;
+                }
                 if ((amount + 10) * 10000 > this.bankPage!.account!.total) {
                     (this.feature.onWarning) && (this.feature.onWarning("很遗憾，你压根就没有这么多钱！"));
                     return;
@@ -173,7 +191,7 @@ class BankManager extends CommonWidget {
 
     async reload() {
         this.bankPage = await new TownBank(this.credential, this.townId).open();
-        (this.feature.onMessage) && (this.feature.onMessage("银行账户数据重新加载完成。"));
+        this.feature.publishMessage("银行账户数据加载完成。");
     }
 
     async render() {

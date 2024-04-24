@@ -1,33 +1,47 @@
-import CommonWidget from "./support/CommonWidget";
+import {CommonWidget, CommonWidgetFeature} from "./support/CommonWidget";
 import Credential from "../util/Credential";
 import LocationModeCastle from "../core/location/LocationModeCastle";
 import LocationModeTown from "../core/location/LocationModeTown";
-import PersonalSpellPage from "../core/career/PersonalSpellPage";
+import OperationMessage from "../util/OperationMessage";
 import PersonalSpell from "../core/career/PersonalSpell";
+import PersonalSpellPage from "../core/career/PersonalSpellPage";
+import {PersonalStatus} from "../core/role/PersonalStatus";
 import Role from "../core/role/Role";
 import StringUtils from "../util/StringUtils";
-import MessageBoard from "../util/MessageBoard";
-import PersonalStatus from "../core/role/PersonalStatus";
-import OperationMessage from "../util/OperationMessage";
 
 class SpellManager extends CommonWidget {
+
+    readonly feature = new SpellManagerFeature();
 
     constructor(credential: Credential, locationMode: LocationModeCastle | LocationModeTown) {
         super(credential, locationMode);
     }
 
-    onRefresh?: (message: OperationMessage) => void;
     spellPage?: PersonalSpellPage;
-
     private _role?: Role;
 
     generateHTML(): string {
+        return "" +
+            "<table style='background-color:#888888;margin:auto;width:100%;border-width:0'>" +
+            "<tbody>" +
+            "<tr>" +
+            "<th style='writing-mode:vertical-rl;text-orientation:mixed;" +
+            "background-color:navy;color:white;font-size:120%;text-align:left'>" +
+            "技 能" +
+            "</th>" +
+            "<td style='border-spacing:0;width:100%'>" +
+            this._generateHTML() +
+            "</td>" +
+            "</tr>" +
+            "</tbody>" +
+            "</table>" +
+            "";
+    }
+
+    private _generateHTML(): string {
         let html = "";
         html += "<table style='width:100%;text-align:center;margin:auto;border-width:0'>";
         html += "<tbody id='_pocket_spellTable'>";
-        html += "<tr style='background-color:skyblue'>";
-        html += "<th style='text-align:center;font-size:120%' colspan='7'>＜ 技 能 设 置 ＞</th>";
-        html += "</tr>";
         html += "<tr style='background-color:wheat'>";
         html += "<th>设置</th>";
         html += "<th>使用</th>";
@@ -90,7 +104,7 @@ class SpellManager extends CommonWidget {
             if (spell === null) return;
             $(".C_pocket_spellButton").prop("disabled", true);
             new PersonalSpell(this.credential).set(spellId).then(() => {
-                MessageBoard.publishMessage("技能设置为：" +
+                this.feature.publishMessage("技能设置为：" +
                     "<span style='color:yellow;font-weight:bold'>" + spell.name + "</span>");
                 const message = OperationMessage.success();
                 message.extensions.set("spell", spell);
@@ -104,9 +118,12 @@ class SpellManager extends CommonWidget {
         message.extensions.set("role", role);
         await this.reload();
         await this.render(role);
-        (this.onRefresh) && (this.onRefresh(message));
+        this.feature.publishRefresh(message);
     }
 
 }
 
-export = SpellManager;
+class SpellManagerFeature extends CommonWidgetFeature {
+}
+
+export {SpellManager, SpellManagerFeature};

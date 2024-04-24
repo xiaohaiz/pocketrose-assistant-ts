@@ -1,4 +1,4 @@
-import PocketDatabase from "../../util/PocketDatabase";
+import {PocketDatabase} from "../../pocket/PocketDatabase";
 import BattleLog from "./BattleLog";
 import BattleResult from "./BattleResult";
 

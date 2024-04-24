@@ -18,21 +18,21 @@ class RoleEquipmentStatusManager {
     async updatePersonalEquipmentStatus(page?: PersonalEquipmentManagementPage) {
         if (page === undefined) return;
         const list = page.equipmentList;
-        if (list === undefined || list.length === 0) return;
+        if (list === undefined) return;
         await this.writeEquipmentStatus("P", list);
     }
 
     async updateTreasureBagEquipmentStatus(page?: TreasureBagPage) {
         if (page === undefined) return;
         const list = page.equipmentList;
-        if (list === undefined || list.length === 0) return;
+        if (list === undefined) return;
         await this.writeEquipmentStatus("B", list);
     }
 
     async updateCastleWarehouseEquipmentStatus(page?: CastleWarehousePage) {
         if (page === undefined) return;
         const list = page.storageEquipmentList;
-        if (list === undefined || list.length === 0) return;
+        if (list === undefined) return;
         await this.writeEquipmentStatus("W", list);
     }
 

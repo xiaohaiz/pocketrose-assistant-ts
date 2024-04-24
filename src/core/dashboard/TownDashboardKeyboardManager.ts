@@ -1,6 +1,5 @@
 import Credential from "../../util/Credential";
 import KeyboardShortcutBuilder from "../../util/KeyboardShortcutBuilder";
-import BattleFieldTrigger from "../trigger/BattleFieldTrigger";
 import TownDashboardPage from "./TownDashboardPage";
 
 class TownDashboardKeyboardManager {
@@ -134,9 +133,7 @@ class TownDashboardKeyboardManager {
     }
 
     #processKeyPressed_r() {
-        new BattleFieldTrigger(this.#credential)
-            .triggerUpdate()
-            .then(() => $("#refreshButton").trigger("click"));
+        $("#refreshButton").trigger("click");
     }
 
     #processKeyPressed_s() {

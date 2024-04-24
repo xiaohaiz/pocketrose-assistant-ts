@@ -42,6 +42,7 @@ import TownTaskHousePageInterceptor from "./internal/TownTaskHousePageIntercepto
 import TownWeaponHousePageInterceptor from "./internal/TownWeaponHousePageInterceptor";
 import PageInterceptor from "./PageInterceptor";
 import {TownCastleHousekeeperPageInterceptor} from "./internal/TownCastleHousekeeperPageInterceptor";
+import {TownSpecialPetHousePageInterceptor} from "./internal/TownSpecialPetHousePageInterceptor";
 
 class PageInterceptorManager {
 
@@ -90,6 +91,7 @@ class PageInterceptorManager {
             new TownPetMapHousePageInterceptor(),
             new TownPetRankHousePageInterceptor(),
             new TownInnPageInterceptor(),
+            new TownSpecialPetHousePageInterceptor(),
             new TownTaskHousePageInterceptor(),
             new TownWeaponHousePageInterceptor(),
         ];

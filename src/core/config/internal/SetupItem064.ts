@@ -20,6 +20,10 @@ class SetupItem064 implements SetupItem {
         return this.#code;
     }
 
+    accept(id?: string): boolean {
+        return true;
+    }
+
     render(id?: string): void {
         $("#_064_setup").off("click");
         let html = "";

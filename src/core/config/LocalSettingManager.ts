@@ -1,6 +1,5 @@
 import _ from "lodash";
 import StorageUtils from "../../util/StorageUtils";
-import StringUtils from "../../util/StringUtils";
 
 /**
  * ----------------------------------------------------------------------------
@@ -12,7 +11,9 @@ import StringUtils from "../../util/StringUtils";
  * _ts_004_${id} : 是否提醒饰品满级
  * _ts_005_${id} : 身上装备位是否已满
  * _ts_006_${id} : 身上宠物位是否已满
- * _ts_007_${id} : 当前分身的情况：index/count
+ * _ts_007_${id} : 触发装备宠物统计数据更新的标识
+ * _ts_008_${id} : （已废弃）当前的装备
+ * _ts_009_${id} : （已废弃）当前的宠物
  * ----------------------------------------------------------------------------
  */
 class LocalSettingManager {
@@ -83,28 +84,23 @@ class LocalSettingManager {
 
     // ------------------------------------------------------------------------
 
-    static getMirrorIndex(id: string): number | undefined {
-        const value = StorageUtils.getString("_ts_007_" + id);
-        if (value === "") return undefined;
-        return _.parseInt(StringUtils.substringBeforeSlash(value));
+    static hasStatisticsTriggered(id: string) {
+        return StorageUtils.getBoolean("_ts_007_" + id);
     }
 
-    static getMirrorCount(id: string): number | undefined {
-        const value = StorageUtils.getString("_ts_007_" + id);
-        if (value === "") return undefined;
-        return _.parseInt(StringUtils.substringAfterSlash(value));
+    static setStatisticsTriggered(id: string) {
+        StorageUtils.set("_ts_007_" + id, "1");
     }
 
-    static setMirrorStatus(id: string, mirrorIndex: number, mirrorCount: number) {
-        const value = mirrorIndex + "/" + mirrorCount;
-        StorageUtils.set("_ts_007_" + id, value);
-    }
-
-    static clearMirrorStatus(id: string) {
+    static unsetStatisticsTriggered(id: string) {
         StorageUtils.remove("_ts_007_" + id);
     }
 
-    // ------------------------------------------------------------------------
+    static drainStatisticsTriggered(id: string) {
+        const value = LocalSettingManager.hasStatisticsTriggered(id);
+        LocalSettingManager.unsetStatisticsTriggered(id);
+        return value;
+    }
 
 }
 

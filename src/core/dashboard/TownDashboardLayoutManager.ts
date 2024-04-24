@@ -8,6 +8,10 @@ import TownDashboardLayout007 from "./TownDashboardLayout007";
 
 class TownDashboardLayoutManager {
 
+    static getInstance(): TownDashboardLayoutManager {
+        return instance;
+    }
+
     readonly #buffer: Map<number, TownDashboardLayout>;
 
     constructor() {
@@ -36,5 +40,7 @@ class TownDashboardLayoutManager {
         return StorageUtils.getFloat("_pa_052", 1);
     }
 }
+
+const instance = new TownDashboardLayoutManager();
 
 export = TownDashboardLayoutManager;

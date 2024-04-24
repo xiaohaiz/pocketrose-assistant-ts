@@ -1,19 +1,18 @@
-import CommonWidget from "./support/CommonWidget";
+import {CommonWidget, CommonWidgetFeature} from "./support/CommonWidget";
 import Credential from "../util/Credential";
 import LocationModeTown from "../core/location/LocationModeTown";
-import PersonalEquipmentManagementPage from "../core/equipment/PersonalEquipmentManagementPage";
-import TownGemHouse from "../core/forge/TownGemHouse";
-import TownGemHousePage from "../core/forge/TownGemHousePage";
-import _ from "lodash";
-import {CommonWidgetFeature} from "./support/CommonWidgetFeature";
-import {Equipment, EquipmentPosition} from "../core/equipment/Equipment";
-import PageUtils from "../util/PageUtils";
-import StringUtils from "../util/StringUtils";
-import OperationMessage from "../util/OperationMessage";
-import PersonalEquipmentManagement from "../core/equipment/PersonalEquipmentManagement";
-import TownBank from "../core/bank/TownBank";
-import TownGemMeltHouse from "../core/forge/TownGemMeltHouse";
 import NpcLoader from "../core/role/NpcLoader";
+import OperationMessage from "../util/OperationMessage";
+import PageUtils from "../util/PageUtils";
+import PersonalEquipmentManagement from "../core/equipment/PersonalEquipmentManagement";
+import PersonalEquipmentManagementPage from "../core/equipment/PersonalEquipmentManagementPage";
+import StringUtils from "../util/StringUtils";
+import TownBank from "../core/bank/TownBank";
+import TownGemHousePage from "../core/forge/TownGemHousePage";
+import TownGemMeltHouse from "../core/forge/TownGemMeltHouse";
+import _ from "lodash";
+import {Equipment, EquipmentPosition} from "../core/equipment/Equipment";
+import {TownGemHouse} from "../core/forge/TownGemHouse";
 
 class GemManager extends CommonWidget {
 
@@ -34,7 +33,10 @@ class GemManager extends CommonWidget {
             "<table style='background-color:#888888;margin:auto;width:100%;border-width:0'>" +
             "<tbody>" +
             "<tr>" +
-            "<th style='writing-mode:vertical-rl;text-orientation:mixed;background-color:skyblue;'>◎ 宝 石 管 理</th>" +
+            "<th style='writing-mode:vertical-rl;text-orientation:mixed;" +
+            "background-color:navy;color:white;font-size:120%;text-align:left'>" +
+            "宝 石" +
+            "</th>" +
             "<td style='border-spacing:0;width:100%'>" +
             "<table style='background-color:transparent;margin:auto;width:100%;border-spacing:0;'>" +
             "<tbody>" +
@@ -395,14 +397,23 @@ class GemManager extends CommonWidget {
         );
     }
 
+    private autoFuseGemInProgress: boolean = false;
+
     private async autoFuseGem(btnId: string, category: string) {
+        if (this.autoFuseGemInProgress) {
+            this.feature.publishWarning("继续等待砸宝石刷新数据完成。");
+            return;
+        }
+        this.autoFuseGemInProgress = true;
         const equipment = this.findLocationEquipment();
         if (equipment === null) {
+            this.autoFuseGemInProgress = false;
             PageUtils.triggerClick(btnId);
             return;
         }
         const canFuse = equipment.selectable! && (!equipment.using! || (equipment.using! && equipment.name === "宠物蛋"));
         if (!canFuse) {
+            this.autoFuseGemInProgress = false;
             this.feature.publishMessage("所选装备已经没有剩余孔位，结束。");
             PageUtils.triggerClick(btnId);
             return;
@@ -410,6 +421,7 @@ class GemManager extends CommonWidget {
 
         const gem = this.findFirstGem(category);
         if (gem === null) {
+            this.autoFuseGemInProgress = false;
             this.feature.publishMessage("已经没有剩余的宝石，结束。");
             PageUtils.triggerClick(btnId);
             return;
@@ -418,21 +430,25 @@ class GemManager extends CommonWidget {
         if (category === "POWER") {
             const detail = this.equipmentPage!.findEquipment(equipment.index!)!;
             if (detail.additionalPower! < 0) {
+                this.autoFuseGemInProgress = false;
                 this.feature.publishMessage("当前装备镶嵌威力宝石时出现负数，中断转手工处理。");
                 PageUtils.triggerClick(btnId);
                 return;
             }
             if (detail.category === "饰品" && detail.additionalPower! >= 50) {
+                this.autoFuseGemInProgress = false;
                 this.feature.publishMessage("当前饰品威力已经达到最大值50，结束。");
                 PageUtils.triggerClick(btnId);
                 return;
             }
             if (detail.category === "防具" && detail.additionalPower! >= 100) {
+                this.autoFuseGemInProgress = false;
                 this.feature.publishMessage("当前防具威力已经达到最大值100，结束。");
                 PageUtils.triggerClick(btnId);
                 return;
             }
             if (detail.category === "武器" && detail.additionalPower! >= 100) {
+                this.autoFuseGemInProgress = false;
                 this.feature.publishMessage("当前武器威力已经达到最大值100，结束。");
                 PageUtils.triggerClick(btnId);
                 return;
@@ -440,6 +456,7 @@ class GemManager extends CommonWidget {
         }
 
         await this.fuseGem(equipment, gem);
+        this.autoFuseGemInProgress = false;
     }
 
     private findFirstGem(category: string): Equipment | null {

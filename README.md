@@ -1,5 +1,102 @@
 # pocketrose assistant
 
+### 版本 5.2.3
+
+1. [ISSUE #I9J3YY](https://gitee.com/barnabus/pocketrose-assistant/issues/I9J3YY) 特殊宠物管理组件化。
+2. [ISSUE #I9J7T7](https://gitee.com/barnabus/pocketrose-assistant/issues/I9J7T7) 宠物管理和城堡管家集成特殊宠物组件。
+3. [ISSUE #I9J7T4](https://gitee.com/barnabus/pocketrose-assistant/issues/I9J7T4) 黄金笼子和牧场宠物可点击图鉴显示宠物资料。
+4. [ISSUE #I9J3ZC](https://gitee.com/barnabus/pocketrose-assistant/issues/I9J3ZC) 自动练装备设置可自动维护练装备的状态。
+5. [ISSUE #I9J3Z2](https://gitee.com/barnabus/pocketrose-assistant/issues/I9J3Z2) 设置中心页面按钮样式缺失修复。
+6. [ISSUE #I9IZEB](https://gitee.com/barnabus/pocketrose-assistant/issues/I9IZEB) 城堡牧场宠物排序不考虑等级因素。
+
+### 版本 5.2.2
+
+1. [ISSUE #I9IYAS](https://gitee.com/barnabus/pocketrose-assistant/issues/I9IYAS) 黄金笼子和城堡牧场内的宠物增加详细资料。
+2. [ISSUE #I9IYBW](https://gitee.com/barnabus/pocketrose-assistant/issues/I9IYBW) 新增特殊宠物管理。
+
+### 版本 5.2.1
+
+1. [ISSUE #I9IJT7](https://gitee.com/barnabus/pocketrose-assistant/issues/I9IJT7) 个人面板增加更新统计数据的按钮。
+2. [ISSUE #I9IJTZ](https://gitee.com/barnabus/pocketrose-assistant/issues/I9IJTZ) 主页面不再显示过期的战斗记录。
+3. [ISSUE #I9IJVP](https://gitee.com/barnabus/pocketrose-assistant/issues/I9IJVP) 验证码错误探查机制性能优化。
+4. [ISSUE #I9ININ](https://gitee.com/barnabus/pocketrose-assistant/issues/I9ININ) 团队成员列表控制是否显示编外人员。
+5. [ISSUE #I9IO52](https://gitee.com/barnabus/pocketrose-assistant/issues/I9IO52) 团队列表中显示宠物性别。
+
+### 版本 5.2.0
+
+1. [ISSUE #I9HRDO](https://gitee.com/barnabus/pocketrose-assistant/issues/I9HRDO) 提供角色快照功能。
+2. [ISSUE #I9HX4X](https://gitee.com/barnabus/pocketrose-assistant/issues/I9HX4X) 迁移部分缓存数据的存储。
+3. [ISSUE #I9HX3F](https://gitee.com/barnabus/pocketrose-assistant/issues/I9HX3F) 宠物升级或者学习新技能时更新宠物缓存。
+
+### 版本 5.1.0
+
+1. [ISSUE #I9HSBR](https://gitee.com/barnabus/pocketrose-assistant/issues/I9HSBR) 本地记录当前使用宠物的基本信息。
+2. [ISSUE #I9HR1A](https://gitee.com/barnabus/pocketrose-assistant/issues/I9HR1A) 团队面板中可查看全体队员的状态。
+3. [ISSUE #I9HQZO](https://gitee.com/barnabus/pocketrose-assistant/issues/I9HQZO) 取消威力宝石库存的统计。
+4. [ISSUE #I9HQQ0](https://gitee.com/barnabus/pocketrose-assistant/issues/I9HQQ0) 删除实时展示宝石数及相关的功能。
+5. [ISSUE #I9HQPO](https://gitee.com/barnabus/pocketrose-assistant/issues/I9HQPO) 宠物传输功能仅在城堡模式开启。
+
+### 版本 5.0.0
+
+1. [ISSUE #I9HL7E](https://gitee.com/barnabus/pocketrose-assistant/issues/I9HL7E) 统计报告页面改版。
+2. [ISSUE #I9HL78](https://gitee.com/barnabus/pocketrose-assistant/issues/I9HL78) 个人状态页面改造。
+3. [ISSUE #I9EQ8P](https://gitee.com/barnabus/pocketrose-assistant/issues/I9EQ8P) 宠物管理组件宠物传输功能。
+4. [ISSUE #I9HQCR](https://gitee.com/barnabus/pocketrose-assistant/issues/I9HQCR) 团队装备统计可分类查询重铠。
+
+### 版本 4.9.9
+
+1. [ISSUE #I9HFO6](https://gitee.com/barnabus/pocketrose-assistant/issues/I9HFO6) 装备维度展示镶嵌威力的统计。
+2. [ISSUE #I9GW52](https://gitee.com/barnabus/pocketrose-assistant/issues/I9GW52) 角色当前使用装备存储迁移到本地存储。
+
+### 版本 4.9.8
+
+1. [ISSUE #I9HCEU](https://gitee.com/barnabus/pocketrose-assistant/issues/I9HCEU) 解决设置中心数据权限问题导致的可能无法执行导入操作。
+2. [ISSUE #I9HB9K](https://gitee.com/barnabus/pocketrose-assistant/issues/I9HB9K) 个人面板集成银行组件。
+3. [ISSUE #I9G6PH](https://gitee.com/barnabus/pocketrose-assistant/issues/I9G6PH) 记录更多宝石镶嵌记录包括幸运宝石和七心宝石。
+
+### 版本 4.9.7
+
+1. [ISSUE #I9H9X2](https://gitee.com/barnabus/pocketrose-assistant/issues/I9H9X2) 团队宝石分布统计提供汇总数据。
+2. [ISSUE #I9H98Y](https://gitee.com/barnabus/pocketrose-assistant/issues/I9H98Y) 增加角色缓存数据结构优化性能减少主页额外请求。
+3. [ISSUE #I9H98O](https://gitee.com/barnabus/pocketrose-assistant/issues/I9H98O) 修复自动领取俸禄成功后评估下次时间的错误。
+4. [ISSUE #I9H8M5](https://gitee.com/barnabus/pocketrose-assistant/issues/I9H8M5) 可手工触发全团队执行装备宠物统计数据更新。
+
+### 版本 4.9.6
+
+1. [ISSUE #I9H48H](https://gitee.com/barnabus/pocketrose-assistant/issues/I9H48H) 修正装备宠物统计数据边界条件下的偏差。
+2. [ISSUE #I9H47Z](https://gitee.com/barnabus/pocketrose-assistant/issues/I9H47Z) 宠物管理组件恢复召唤战宠的功能。
+3. [ISSUE #I9F7L9](https://gitee.com/barnabus/pocketrose-assistant/issues/I9F7L9) 智能战斗切换与皇宫任务自动关联。
+
+### 版本 4.9.5
+
+1. [ISSUE #I9H2CJ](https://gitee.com/barnabus/pocketrose-assistant/issues/I9H2CJ) 角色管理组件增加可选定型标志。
+2. [ISSUE #I9H14M](https://gitee.com/barnabus/pocketrose-assistant/issues/I9H14M) 城市收益入口可按成员定制。
+3. [ISSUE #I9GCT7](https://gitee.com/barnabus/pocketrose-assistant/issues/I9GCT7) 团队面板中可查询宝石的分布情况。
+4. [ISSUE #I9EQAQ](https://gitee.com/barnabus/pocketrose-assistant/issues/I9EQAQ) 装备资料库进一步完善。
+
+### 版本 4.9.4
+
+1. [ISSUE #I9GW0Q](https://gitee.com/barnabus/pocketrose-assistant/issues/I9GW0Q) 口袋助手设置中心页面改造。
+2. [ISSUE #I9GTNR](https://gitee.com/barnabus/pocketrose-assistant/issues/I9GTNR) 团队设置组件化。
+3. [ISSUE #I9GR0G](https://gitee.com/barnabus/pocketrose-assistant/issues/I9GR0G) 战斗场所设置重构。
+
+### 版本 4.9.3
+
+1. [ISSUE #I9GOJX](https://gitee.com/barnabus/pocketrose-assistant/issues/I9GOJX) 冗余的配置项移动到团队面板。
+2. [ISSUE #I9GNY8](https://gitee.com/barnabus/pocketrose-assistant/issues/I9GNY8) 团队面板设置中心紧凑型布局。
+3. [ISSUE #I9GNXU](https://gitee.com/barnabus/pocketrose-assistant/issues/I9GNXU) 基于本地缓存的智能战斗切换性能优化。
+
+### 版本 4.9.1
+
+1. [ISSUE #I9GGBJ](https://gitee.com/barnabus/pocketrose-assistant/issues/I9GGBJ) 角色状态实时存储以便提高部分操作的性能。
+2. [ISSUE #I9GEGO](https://gitee.com/barnabus/pocketrose-assistant/issues/I9GEGO) 全新的基于团队面板的设置中心更加直观方便。
+3. [ISSUE #I9GDH2](https://gitee.com/barnabus/pocketrose-assistant/issues/I9GDH2) 临时修复设置导出数据有缺失的问题。
+4. [ISSUE #I9GAOX](https://gitee.com/barnabus/pocketrose-assistant/issues/I9GAOX) 宠物统计数据分类存储以优化采集性能。
+
+### 版本 4.8.4
+
+1. [ISSUE #I9GEVY](https://gitee.com/barnabus/pocketrose-assistant/issues/I9GEVY) 自动砸宝石进程冲突导致脏数据读取无法正确中断。
+
 ### 版本 4.8.3
 
 1. [ISSUE #I9EZM4](https://gitee.com/barnabus/pocketrose-assistant/issues/I9EZM4) 宝石屋全新改版。

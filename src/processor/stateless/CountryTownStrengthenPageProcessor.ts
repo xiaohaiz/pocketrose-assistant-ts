@@ -1,6 +1,6 @@
 import _ from "lodash";
 import NpcLoader from "../../core/role/NpcLoader";
-import PersonalStatus from "../../core/role/PersonalStatus";
+import {PersonalStatus} from "../../core/role/PersonalStatus";
 import TownLoader from "../../core/town/TownLoader";
 import Credential from "../../util/Credential";
 import KeyboardShortcutBuilder from "../../util/KeyboardShortcutBuilder";

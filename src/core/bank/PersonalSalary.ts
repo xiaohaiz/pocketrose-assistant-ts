@@ -3,7 +3,7 @@ import NetworkUtils from "../../util/NetworkUtils";
 import MessageBoard from "../../util/MessageBoard";
 import _ from "lodash";
 import {PersonalSalaryRecord} from "./PersonalSalaryRecord";
-import PersonalStatus from "../role/PersonalStatus";
+import {PersonalStatus} from "../role/PersonalStatus";
 import {PersonalSalaryRecordStorage} from "./PersonalSalaryRecordStorage";
 import StringUtils from "../../util/StringUtils";
 
@@ -47,8 +47,8 @@ class PersonalSalary {
         if (_.includes(response, "领取了")) {
             // 成功
             record.code = 0;
-            record.estimatedTime = record.createTime! + 86400 * 1000;   // 7天后可再次领取
-            record.estimatedBattleCount = record.battleCount! + 300;    // 300战后可领取
+            record.estimatedTime = record.createTime! + 86400 * 7 * 1000;   // 7天后可再次领取
+            record.estimatedBattleCount = record.battleCount! + 300;        // 300战后可领取
             success = true;
         } else if (_.includes(response, "下次领取俸禄还需要等待")) {
             // 时间不到

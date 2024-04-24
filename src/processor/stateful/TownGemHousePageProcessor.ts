@@ -8,7 +8,7 @@ import {GemManager} from "../../widget/GemManager";
 import {EquipmentManager} from "../../widget/EquipmentManager";
 import PersonalEquipmentManagementPage from "../../core/equipment/PersonalEquipmentManagementPage";
 import KeyboardShortcutBuilder from "../../util/KeyboardShortcutBuilder";
-import {PocketPage} from "../../util/PocketPage";
+import {PocketPage} from "../../pocket/PocketPage";
 import ButtonUtils from "../../util/ButtonUtils";
 import MessageBoard from "../../util/MessageBoard";
 import {RoleManager} from "../../widget/RoleManager";

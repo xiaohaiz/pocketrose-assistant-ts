@@ -4,8 +4,9 @@ class GemFuseLog {
     roleId?: string;
     createTime?: number;
     gem?: string;
-    effort?: number;
+    effort?: number;        // 七心宝石1成功，0失败
     equipment?: string;
+    success?: boolean;
 
     asDocument() {
         const document: any = {};
@@ -15,6 +16,7 @@ class GemFuseLog {
         (this.gem) && (document.gem = this.gem);
         (this.effort !== undefined) && (document.effort = this.effort);
         (this.equipment) && (document.equipment = this.equipment);
+        (this.success !== undefined) && (document.success = this.success);
         return document;
     }
 }

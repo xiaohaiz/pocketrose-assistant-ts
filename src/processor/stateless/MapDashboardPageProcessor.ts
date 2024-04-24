@@ -15,11 +15,14 @@ import PageUtils from "../../util/PageUtils";
 import StringUtils from "../../util/StringUtils";
 import PageProcessorContext from "../PageProcessorContext";
 import StatelessPageProcessorCredentialSupport from "../StatelessPageProcessorCredentialSupport";
+import {RoleStatusManager} from "../../core/role/RoleStatus";
 
 class MapDashboardPageProcessor extends StatelessPageProcessorCredentialSupport {
 
     async doProcess(credential: Credential, context?: PageProcessorContext): Promise<void> {
         const page = MapDashboardPage.parse(PageUtils.currentPageHtml());
+
+        await new RoleStatusManager(credential).unsetTownId();
 
         $("center:first")
             .attr("id", "systemAnnouncement");

@@ -1,6 +1,7 @@
 import RoleStateMachineManager from "../../core/state/RoleStateMachineManager";
 import TownDashboardPageProcessor from "../../processor/stateless/TownDashboardPageProcessor";
 import PageInterceptor from "../PageInterceptor";
+import PageProcessorContext from "../../processor/PageProcessorContext";
 
 class TownDashboardPageInterceptor implements PageInterceptor {
 
@@ -14,8 +15,11 @@ class TownDashboardPageInterceptor implements PageInterceptor {
     intercept(): void {
         RoleStateMachineManager.create()
             .inTown()
-            .then(() => {
-                new TownDashboardPageProcessor().process();
+            .then(state => {
+                const context = PageProcessorContext.whenInTown(state.townId);
+                context.withRoleLevel(state.roleLevel);
+                context.withRoleCareer(state.roleCareer);
+                new TownDashboardPageProcessor().process(context);
             });
     }
 

@@ -29,6 +29,20 @@ class RoleEquipmentStatusReport {
     weightGemCount?: number;
     luckGemCount?: number;
 
+    get formattedPowerGemCountHTML() {
+        return this.powerGemCount === undefined || this.powerGemCount === 0 ?
+            "-" : "<span style='color:blue;font-weight:bold'>" + this.powerGemCount + "</span>";
+    }
+
+    get formattedWeightGemCountHTML() {
+        return this.weightGemCount === undefined || this.weightGemCount === 0 ?
+            "-" : "<span style='color:green;font-weight:bold'>" + this.weightGemCount + "</span>";
+    }
+
+    get formattedLuckGemCountHTML() {
+        return this.luckGemCount === undefined || this.luckGemCount === 0 ?
+            "-" : "<span style='color:red;font-weight:bold'>" + this.luckGemCount + "</span>";
+    }
 }
 
 export {RoleEquipmentStatus, RoleEquipmentStatusReport};

@@ -5,7 +5,7 @@ import CastleInformation from "../../core/dashboard/CastleInformation";
 import TownInnPageParser from "../../core/inn/TownInnPageParser";
 import MapBuilder from "../../core/map/MapBuilder";
 import TravelPlanExecutor from "../../core/map/TravelPlanExecutor";
-import PersonalStatus from "../../core/role/PersonalStatus";
+import {PersonalStatus} from "../../core/role/PersonalStatus";
 import Role from "../../core/role/Role";
 import Town from "../../core/town/Town";
 import TownEntrance from "../../core/town/TownEntrance";

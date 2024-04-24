@@ -13,11 +13,15 @@ import PageUtils from "../../util/PageUtils";
 import StringUtils from "../../util/StringUtils";
 import PageProcessorContext from "../PageProcessorContext";
 import StatelessPageProcessorCredentialSupport from "../StatelessPageProcessorCredentialSupport";
+import {RoleStatusManager} from "../../core/role/RoleStatus";
 
 class MetroDashboardPageProcessor extends StatelessPageProcessorCredentialSupport {
 
     async doProcess(credential: Credential, context?: PageProcessorContext): Promise<void> {
         const page = MetroDashboardPage.parse(PageUtils.currentPageHtml());
+
+        await new RoleStatusManager(credential).unsetTownId();
+
         renderAnnouncement();
         renderMobilization();
         renderRoleStatus();

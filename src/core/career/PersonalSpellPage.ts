@@ -15,6 +15,16 @@ class PersonalSpellPage {
         }
         return null;
     }
+
+    findBySpellName(name: string | undefined): Spell | null {
+        if (!name || this.spellList === undefined) return null;
+        for (const spell of this.spellList!) {
+            if (spell.name === name) {
+                return spell;
+            }
+        }
+        return null;
+    }
 }
 
 export = PersonalSpellPage;

@@ -4,6 +4,8 @@ import PageUtils from "../../util/PageUtils";
 import StringUtils from "../../util/StringUtils";
 import SetupLoader from "../config/SetupLoader";
 import MonsterProfileLoader from "./MonsterProfileLoader";
+import MonsterProfile from "./MonsterProfile";
+import {SpecialPet, SpecialPetStorage} from "./SpecialPet";
 
 class Pet {
 
@@ -46,6 +48,10 @@ class Pet {
     evolution?: number;
 
     location?: string;  // P/C/R
+
+    get isMaxLevel(): boolean {
+        return this.level !== undefined && this.level === 100;
+    }
 
     get attributeList(): string[] {
         const s: string[] = [];
@@ -202,6 +208,34 @@ class Pet {
         return true;
     }
 
+    get lookupCode(): string | undefined {
+        if (this.code !== undefined) return this.code;
+        if (this.name === undefined) return undefined;
+        if (!_.includes(this.name, "(")) return undefined;
+        if (!_.endsWith(this.name, ")")) return undefined;
+        let s = StringUtils.substringAfterLast(this.name, "(");
+        return StringUtils.substringBefore(s, ")");
+    }
+
+    async lookupProfile(): Promise<MonsterProfile | null> {
+        const profile = MonsterProfileLoader.load(this.lookupCode);
+        if (profile !== null) return profile;
+        if (!this.isMaxLevel) return null;
+        const special = new SpecialPet();
+        special.gender = this.gender;
+        special.level = this.level;
+        special.health = this.maxHealth;
+        special.attack = this.attack;
+        special.defense = this.defense;
+        special.specialAttack = this.specialAttack;
+        special.specialDefense = this.specialDefense;
+        special.speed = this.speed;
+        special.generateId();
+        const sp = await SpecialPetStorage.load(special.id!);
+        if (sp === null) return null;
+        return MonsterProfileLoader.load(sp.code);
+    }
+
     static parse(text: string): Pet {
         const ss = _.split(text, "/");
         const pet = new Pet();
@@ -248,6 +282,18 @@ class Pet {
         let b2 = (b.name!.includes("(") && b.name!.includes(")")) ?
             StringUtils.substringBetween(b.name!, "(", ")") : b.name!;
         return a2.localeCompare(b2);
+    }
+
+    static sortByCode(a: Pet, b: Pet): number {
+        if (!SetupLoader.isEquipmentPetSortEnabled()) {
+            return 0;
+        }
+        const c1 = _.parseInt(a.lookupCode ?? "999");
+        const c2 = _.parseInt(b.lookupCode ?? "999");
+        if (c1 === 999 && c2 === 999) {
+            return a.name!.localeCompare(b.name!);
+        }
+        return c1 - c2;
     }
 }
 

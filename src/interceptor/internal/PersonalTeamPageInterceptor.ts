@@ -1,7 +1,8 @@
 import RoleStateMachineManager from "../../core/state/RoleStateMachineManager";
-import PersonalTeamPageProcessor_Castle from "../../processor/stateless/PersonalTeamPageProcessor_Castle";
-import PersonalTeamPageProcessor_Town from "../../processor/stateless/PersonalTeamPageProcessor_Town";
 import PageInterceptor from "../PageInterceptor";
+import Credential from "../../util/Credential";
+import PageProcessorContext from "../../processor/PageProcessorContext";
+import {PersonalTeamPageProcessor} from "../../processor/stateful/PersonalTeamPageProcessor";
 
 class PersonalTeamPageInterceptor implements PageInterceptor {
 
@@ -13,15 +14,19 @@ class PersonalTeamPageInterceptor implements PageInterceptor {
     }
 
     intercept(): void {
+        const credential = Credential.newInstance();
+        if (credential === undefined) return;
         RoleStateMachineManager.create()
             .load()
             .then(machine => {
                 machine.start()
-                    .whenInTown(() => {
-                        new PersonalTeamPageProcessor_Town().process();
+                    .whenInTown(state => {
+                        const context = PageProcessorContext.whenInTown(state?.townId);
+                        new PersonalTeamPageProcessor(credential, context).process();
                     })
-                    .whenInCastle(() => {
-                        new PersonalTeamPageProcessor_Castle().process();
+                    .whenInCastle(state => {
+                        const context = PageProcessorContext.whenInCastle(state?.castleName);
+                        new PersonalTeamPageProcessor(credential, context).process();
                     })
                     .process();
             });

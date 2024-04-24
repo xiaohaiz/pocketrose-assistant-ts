@@ -12,10 +12,15 @@ import PageUtils from "../../util/PageUtils";
 import StringUtils from "../../util/StringUtils";
 import PageProcessorContext from "../PageProcessorContext";
 import StatelessPageProcessorCredentialSupport from "../StatelessPageProcessorCredentialSupport";
-
-const LAYOUT_MANAGER = new TownDashboardLayoutManager();
+import {RoleStatusManager} from "../../core/role/RoleStatus";
+import _ from "lodash";
+import {MiscConfigManager} from "../../core/config/ConfigManager";
+import BattleFieldTrigger from "../../core/trigger/BattleFieldTrigger";
+import {ValidationCodeTrigger} from "../../core/trigger/ValidationCodeTrigger";
 
 class TownDashboardPageProcessor extends StatelessPageProcessorCredentialSupport {
+
+    private validationCodeTrigger?: ValidationCodeTrigger;
 
     doLoadButtonStyles(): number[] {
         return [10005, 10007, 10008, 10016, 10024, 10028, 10032, 10033, 10035, 10062,
@@ -23,14 +28,35 @@ class TownDashboardPageProcessor extends StatelessPageProcessorCredentialSupport
     }
 
     async doProcess(credential: Credential, context?: PageProcessorContext): Promise<void> {
-        await this.#internalProcess(credential);
+        this.validationCodeTrigger = new ValidationCodeTrigger(credential);
+        await this.#internalProcess(credential, context);
     }
 
-    async #internalProcess(credential: Credential) {
+    async #internalProcess(credential: Credential, context?: PageProcessorContext) {
         const configId = TownDashboardLayoutManager.loadDashboardLayoutConfigId(credential);
-        const layout = LAYOUT_MANAGER.getLayout(configId);
+        const layout = TownDashboardLayoutManager.getInstance().getLayout(configId);
         const parser = new TownDashboardPageParser(credential, PageUtils.currentPageHtml(), layout?.battleMode());
         const page = parser.parse();
+
+        // 解析城市页面后更新角色当前所在城市的数据
+        if (page.townId) {
+            await new RoleStatusManager(credential).setTownId(page.townId);
+        }
+
+        // 更新角色等级数据
+        const roleLevel = context?.get("roleLevel");
+        if (roleLevel !== undefined) {
+            await new RoleStatusManager(credential).setLevel(_.parseInt(roleLevel));
+        }
+
+        // 更新角色职业数据
+        const roleCareer = context?.get("roleCareer");
+        if (roleCareer !== undefined) {
+            await new RoleStatusManager(credential).setCareer(roleCareer);
+        }
+
+        // RoleStatus update finished, trigger battlefield change.
+        await new BattleFieldTrigger(credential).triggerUpdate();
 
         $("center:first")
             .attr("id", "systemAnnouncement")
@@ -49,7 +75,8 @@ class TownDashboardPageProcessor extends StatelessPageProcessorCredentialSupport
                 "<p style='display:none' id='eden-2'></p>" +
                 "<p style='display:none' id='eden-3'></p>" +
                 "<p style='display:none' id='eden-4'></p>" +
-                "<p style='display:none' id='eden-5'></p>"));
+                "<p style='display:none' id='eden-5'></p>" +
+                "<p style='display:none' id='ID_DANGEROUS'></p>"));
 
         doMarkElement();
         doRenderMobilization(page);
@@ -57,10 +84,10 @@ class TownDashboardPageProcessor extends StatelessPageProcessorCredentialSupport
         doRenderEventBoard(page);
         doRenderRoleStatus(credential, page);
         doRenderEnlargeMode();
-        await new BattleButtonManager().createSafeBattleButton();
+        await new BattleButtonManager(credential).createSafeBattleButton();
 
         if (layout) {
-            await layout.render(credential, page);
+            await layout.render(credential, page, this.validationCodeTrigger);
         }
     }
 
@@ -479,6 +506,7 @@ function doRenderMenu(credential: Credential, page: TownDashboardPage) {
     $("option[value='PRO_SHOP']").text("防具商店");
     $("option[value='ACC_SHOP']").text("饰品商店");
     $("option[value='ITEM_SHOP']").text("物品商店");
+    $("option[value='TOWN_ARM']").text("特殊宠物管理");
 
     $("option[value='BAOSHI_SHOP']").text("宝石镶嵌");
     $("option[value='BAOSHI_DELSHOP']").remove();
@@ -492,7 +520,7 @@ function doRenderMenu(credential: Credential, page: TownDashboardPage) {
     $("option[value='SALARY']").remove();
     $("option[value='FREE_SELL']").text("城堡管家");
 
-    if (SetupLoader.isCollectTownTaxDisabled()) {
+    if (new MiscConfigManager(credential).isCollectTownTaxDisabled) {
         $("option[value='MAKE_TOWN']").remove();
     }
     $("option[value='COU_MAKE']").text("使用手册");

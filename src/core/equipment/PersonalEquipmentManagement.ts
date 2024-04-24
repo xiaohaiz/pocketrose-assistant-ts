@@ -3,7 +3,7 @@ import Credential from "../../util/Credential";
 import MessageBoard from "../../util/MessageBoard";
 import NetworkUtils from "../../util/NetworkUtils";
 import OperationMessage from "../../util/OperationMessage";
-import PersonalStatus from "../role/PersonalStatus";
+import {PersonalStatus} from "../role/PersonalStatus";
 import PersonalEquipmentManagementPage from "./PersonalEquipmentManagementPage";
 import TreasureBag from "./TreasureBag";
 import PersonalEquipmentManagementPageParser from "./PersonalEquipmentManagementPageParser";

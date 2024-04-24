@@ -1,21 +1,22 @@
 import _ from "lodash";
-import StorageUtils from "../../util/StorageUtils";
 import TimeoutUtils from "../../util/TimeoutUtils";
+import Credential from "../../util/Credential";
+import {BattleConfigManager} from "../config/ConfigManager";
 
 class BattleButtonManager {
 
-    static isSafeButtonEnabled() {
-        return StorageUtils.getBoolean("_pa_045");
-    }
+    private readonly credential: Credential;
+    private readonly configManager: BattleConfigManager;
 
-    static isHiddenButtonEnabled() {
-        return StorageUtils.getBoolean("_pa_046");
+    constructor(credential: Credential) {
+        this.credential = credential;
+        this.configManager = new BattleConfigManager(credential);
     }
 
     async createSafeBattleButton() {
         return await (() => {
             return new Promise<void>(resolve => {
-                if (!BattleButtonManager.isSafeButtonEnabled()) {
+                if (!BattleConfigManager.isSafeBattleButtonEnabled()) {
                     resolve();
                     return;
                 }

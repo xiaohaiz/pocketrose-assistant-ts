@@ -1,4 +1,4 @@
-import PocketDatabase from "../../util/PocketDatabase";
+import {PocketDatabase} from "../../pocket/PocketDatabase";
 import TaskGuide from "./TaskGuide";
 
 class TaskGuideStorage {

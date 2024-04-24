@@ -64,6 +64,20 @@ class PageProcessorContext {
         return this;
     }
 
+    withRoleLevel(roleLevel: number | undefined): PageProcessorContext {
+        if (roleLevel !== undefined) {
+            this.set("roleLevel", roleLevel.toString());
+        }
+        return this;
+    }
+
+    withRoleCareer(roleCareer: string | undefined): PageProcessorContext {
+        if (roleCareer !== undefined) {
+            this.set("roleCareer", roleCareer);
+        }
+        return this;
+    }
+
     parseBattleCount(): number | undefined {
         const s = this.get("battleCount");
         if (s === undefined) {

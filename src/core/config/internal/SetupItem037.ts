@@ -2,6 +2,7 @@ import MessageBoard from "../../../util/MessageBoard";
 import StorageUtils from "../../../util/StorageUtils";
 import SetupItem from "../SetupItem";
 import SetupLoader from "../SetupLoader";
+import TeamMemberLoader from "../../team/TeamMemberLoader";
 
 class SetupItem037 implements SetupItem {
 
@@ -11,6 +12,10 @@ class SetupItem037 implements SetupItem {
 
     code(): string {
         return code;
+    }
+
+    accept(id?: string): boolean {
+        return id !== undefined && TeamMemberLoader.loadTeamMembersAsMap(true).has(id);
     }
 
     render(id?: string): void {

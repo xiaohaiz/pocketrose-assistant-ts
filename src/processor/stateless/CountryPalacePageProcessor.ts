@@ -1,7 +1,7 @@
 import _ from "lodash";
 import TownBank from "../../core/bank/TownBank";
 import NpcLoader from "../../core/role/NpcLoader";
-import PersonalStatus from "../../core/role/PersonalStatus";
+import {PersonalStatus} from "../../core/role/PersonalStatus";
 import PalaceTaskManager from "../../core/task/PalaceTaskManager";
 import TownLoader from "../../core/town/TownLoader";
 import Credential from "../../util/Credential";
@@ -12,6 +12,7 @@ import PageUtils from "../../util/PageUtils";
 import TimeoutUtils from "../../util/TimeoutUtils";
 import PageProcessorContext from "../PageProcessorContext";
 import StatelessPageProcessorCredentialSupport from "../StatelessPageProcessorCredentialSupport";
+import BattleFieldTrigger from "../../core/trigger/BattleFieldTrigger";
 
 class CountryPalacePageProcessor extends StatelessPageProcessorCredentialSupport {
 
@@ -115,7 +116,7 @@ class CountryPalacePageProcessor extends StatelessPageProcessorCredentialSupport
                 $(tr).after($(html));
             });
 
-        renderMenu(context!);
+        renderMenu(credential, context!);
         renderTask(credential, context!);
         renderPrompt(credential);
 
@@ -135,7 +136,7 @@ class CountryPalacePageProcessor extends StatelessPageProcessorCredentialSupport
 
 }
 
-function renderMenu(context: PageProcessorContext) {
+function renderMenu(credential: Credential, context: PageProcessorContext) {
     $("#menu")
         .each((i, td) => {
             const town = TownLoader.load(context?.get("townId"));
@@ -151,7 +152,9 @@ function renderMenu(context: PageProcessorContext) {
             html += "</table>";
             $(td).html(html);
             $("#returnButton").on("click", () => {
-                $("input:submit[value='返回城市']").trigger("click");
+                new BattleFieldTrigger(credential).triggerUpdate().then(() => {
+                    $("input:submit[value='返回城市']").trigger("click");
+                });
             });
         });
 }

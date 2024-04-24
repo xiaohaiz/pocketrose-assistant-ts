@@ -22,8 +22,7 @@ class BattlePageInterceptor implements PageInterceptor {
             .then(machine => {
                 machine.start()
                     .whenInTown(state => {
-                        const context = new PageProcessorContext()
-                            .withTownId(state?.townId)
+                        const context = PageProcessorContext.whenInTown(state?.townId)
                             .withBattleCount(state?.battleCount?.toString());
                         new BattlePageProcessor().process(context);
                     })

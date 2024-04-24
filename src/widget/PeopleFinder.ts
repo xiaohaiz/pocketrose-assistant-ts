@@ -1,4 +1,4 @@
-import CommonWidget from "./support/CommonWidget";
+import {CommonWidget} from "./support/CommonWidget";
 import Credential from "../util/Credential";
 import LocationModeCastle from "../core/location/LocationModeCastle";
 import LocationModeTown from "../core/location/LocationModeTown";

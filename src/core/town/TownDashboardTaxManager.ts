@@ -1,17 +1,19 @@
 import Credential from "../../util/Credential";
 import MessageBoard from "../../util/MessageBoard";
 import NetworkUtils from "../../util/NetworkUtils";
-import SetupLoader from "../config/SetupLoader";
 import TownDashboardPage from "../dashboard/TownDashboardPage";
+import {MiscConfigManager} from "../config/ConfigManager";
 
 class TownDashboardTaxManager {
 
     readonly #credential: Credential;
     readonly #page: TownDashboardPage;
+    private readonly configManager: MiscConfigManager;
 
     constructor(credential: Credential, page: TownDashboardPage) {
         this.#credential = credential;
         this.#page = page;
+        this.configManager = new MiscConfigManager(credential);
     }
 
     processTownTax(taxCell: JQuery) {
@@ -21,7 +23,7 @@ class TownDashboardTaxManager {
             return;
         }
 
-        if (SetupLoader.isCollectTownTaxDisabled()) {
+        if (this.configManager.isCollectTownTaxDisabled) {
             return;
         }
 

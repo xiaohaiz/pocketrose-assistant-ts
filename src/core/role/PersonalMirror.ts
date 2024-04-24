@@ -1,9 +1,10 @@
 import Credential from "../../util/Credential";
 import MessageBoard from "../../util/MessageBoard";
 import NetworkUtils from "../../util/NetworkUtils";
-import LocalSettingManager from "../config/LocalSettingManager";
 import PersonalMirrorPage from "./PersonalMirrorPage";
 import PersonalMirrorPageParser from "./PersonalMirrorPageParser";
+import {RoleStatusManager} from "./RoleStatus";
+import {PocketNetwork} from "../../pocket/PocketNetwork";
 
 class PersonalMirror {
 
@@ -31,13 +32,14 @@ class PersonalMirror {
         })();
     }
 
-    async change(index: number) {
+    async changeMirror(index: number) {
         const request = this.#credential.asRequestMap();
         request.set("select", index.toString());
         request.set("mode", "FENSHENCHANGE");
-        const html = await NetworkUtils.post("mydata.cgi", request);
-        // Clear role's mirror status after mirror changed.
-        LocalSettingManager.clearMirrorStatus(this.#credential.id);
+        const html = await PocketNetwork.post("mydata.cgi", request);
+        // Clear mirrorIndex / roleCareer from role status after mirror changed.
+        await new RoleStatusManager(this.#credential).unsetMirrorIndex();
+        await new RoleStatusManager(this.#credential).unsetCareer();
         MessageBoard.processResponseMessage(html);
     }
 

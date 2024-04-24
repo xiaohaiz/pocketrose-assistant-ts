@@ -1,5 +1,5 @@
 import ObjectID from "bson-objectid";
-import PocketDatabase from "../../util/PocketDatabase";
+import {PocketDatabase} from "../../pocket/PocketDatabase";
 import GemFuseLog from "./GemFuseLog";
 
 class GemFuseLogStorage {
@@ -44,6 +44,7 @@ class GemFuseLogStorage {
                         data.gem = it.gem;
                         data.effort = it.effort;
                         data.equipment = it.equipment;
+                        data.success = it.success;
                         dataList.push(data);
                     });
                 }

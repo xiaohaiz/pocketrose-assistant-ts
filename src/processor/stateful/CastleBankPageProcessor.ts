@@ -7,7 +7,7 @@ import MessageBoard from "../../util/MessageBoard";
 import {CastleBankPageParser} from "../../core/bank/BankPageParser";
 import PageUtils from "../../util/PageUtils";
 import KeyboardShortcutBuilder from "../../util/KeyboardShortcutBuilder";
-import {PocketPage} from "../../util/PocketPage";
+import {PocketPage} from "../../pocket/PocketPage";
 import ButtonUtils from "../../util/ButtonUtils";
 
 class CastleBankPageProcessor extends StatefulPageProcessor {

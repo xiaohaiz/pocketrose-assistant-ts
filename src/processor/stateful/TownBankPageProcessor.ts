@@ -5,7 +5,7 @@ import LocationModeTown from "../../core/location/LocationModeTown";
 import {BankManager} from "../../widget/BankManager";
 import {TownBankPageParser} from "../../core/bank/BankPageParser";
 import PageUtils from "../../util/PageUtils";
-import {PocketPage} from "../../util/PocketPage";
+import {PocketPage} from "../../pocket/PocketPage";
 import ButtonUtils from "../../util/ButtonUtils";
 import KeyboardShortcutBuilder from "../../util/KeyboardShortcutBuilder";
 import MessageBoard from "../../util/MessageBoard";

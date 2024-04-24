@@ -1,69 +1,86 @@
-import PersonalEquipmentManagementPageParser from "../../core/equipment/PersonalEquipmentManagementPageParser";
-import PageUtils from "../../util/PageUtils";
+import BattleFieldTrigger from "../../core/trigger/BattleFieldTrigger";
+import ButtonUtils from "../../util/ButtonUtils";
+import CommentBoard from "../../util/CommentBoard";
+import Credential from "../../util/Credential";
+import EquipmentConsecrateManager from "../../core/equipment/EquipmentConsecrateManager";
+import EquipmentSetConfig from "../../core/equipment/EquipmentSetConfig";
+import KeyboardShortcutBuilder from "../../util/KeyboardShortcutBuilder";
+import LocationModeMap from "../../core/location/LocationModeMap";
+import LocationModeTown from "../../core/location/LocationModeTown";
 import MessageBoard from "../../util/MessageBoard";
+import MouseClickEventBuilder from "../../util/MouseClickEventBuilder";
 import NpcLoader from "../../core/role/NpcLoader";
+import PageProcessorContext from "../PageProcessorContext";
+import PageUtils from "../../util/PageUtils";
+import PersonalEquipmentManagementPageParser from "../../core/equipment/PersonalEquipmentManagementPageParser";
+import SetupLoader from "../../core/config/SetupLoader";
+import StatefulPageProcessor from "../StatefulPageProcessor";
+import StorageUtils from "../../util/StorageUtils";
+import StringUtils from "../../util/StringUtils";
+import TownBank from "../../core/bank/TownBank";
+import TownDashboard from "../../core/dashboard/TownDashboard";
 import TreasureBag from "../../core/equipment/TreasureBag";
 import TreasureBagPage from "../../core/equipment/TreasureBagPage";
 import _ from "lodash";
-import StringUtils from "../../util/StringUtils";
-import KeyboardShortcutBuilder from "../../util/KeyboardShortcutBuilder";
-import SetupLoader from "../../core/config/SetupLoader";
-import StorageUtils from "../../util/StorageUtils";
-import StatefulPageProcessor from "../StatefulPageProcessor";
-import PageProcessorContext from "../PageProcessorContext";
-import Credential from "../../util/Credential";
-import MouseClickEventBuilder from "../../util/MouseClickEventBuilder";
-import EquipmentSetConfig from "../../core/equipment/EquipmentSetConfig";
-import ButtonUtils from "../../util/ButtonUtils";
-import {EquipmentStatusTrigger} from "../../core/trigger/EquipmentStatusTrigger";
-import LocalSettingManager from "../../core/config/LocalSettingManager";
-import TeamMemberLoader from "../../core/team/TeamMemberLoader";
-import Constants from "../../util/Constants";
 import {EquipmentManager} from "../../widget/EquipmentManager";
-import Role from "../../core/role/Role";
-import {RoleEquipmentStatusManager} from "../../core/equipment/RoleEquipmentStatusManager";
+import {EquipmentStatusTrigger} from "../../core/trigger/EquipmentStatusTrigger";
+import {Equipment} from "../../core/equipment/Equipment";
+import {PocketFormGenerator} from "../../pocket/PocketPage";
+import {RoleManager} from "../../widget/RoleManager";
 
-abstract class PersonalEquipmentManagementPageProcessor extends StatefulPageProcessor {
+class PersonalEquipmentManagementPageProcessor extends StatefulPageProcessor {
 
-    protected equipmentManager: EquipmentManager;
-    protected role?: Role;
+    private readonly formGenerator: PocketFormGenerator;
+    private roleManager?: RoleManager;
+    private readonly equipmentManager: EquipmentManager;
     private equipmentSetPanelOpened = false;
 
-    protected constructor(credential: Credential, context: PageProcessorContext) {
+    constructor(credential: Credential, context: PageProcessorContext) {
         super(credential, context);
-        const locationMode = this.createLocationMode();
-        this.equipmentManager = new EquipmentManager(credential, locationMode!);
+        const locationMode = this.createLocationMode()!;
+
+        this.formGenerator = new PocketFormGenerator(credential, locationMode);
+
+        if (!(locationMode instanceof LocationModeMap)) {
+            this.roleManager = new RoleManager(credential, locationMode);
+            this.roleManager.feature.onRefresh = () => {
+                this.equipmentManager.renderHitStatus(this.roleManager?.role);
+            };
+        }
+
+        this.equipmentManager = new EquipmentManager(credential, locationMode);
         this.equipmentManager.feature.enableRecoverItem = true;
         this.equipmentManager.feature.enableGemTransfer = true;
         this.equipmentManager.feature.enableGrowthTriggerOnDispose = true;
         this.equipmentManager.feature.enableSpaceTriggerOnDispose = true;
         this.equipmentManager.feature.enableStatusTriggerOnDispose = true;
         this.equipmentManager.feature.enableUsingTriggerOnDispose = true;
-        this.equipmentManager.feature.onMessage = s => MessageBoard.publishMessage(s);
-        this.equipmentManager.feature.onWarning = s => MessageBoard.publishWarning(s);
+        this.equipmentManager.feature.onRefresh = () => {
+            this.equipmentManager.renderHitStatus(this.roleManager?.role);
+        }
     }
 
     async refresh() {
+        await this.roleManager?.reload();
+        await this.roleManager?.render();
         await this.equipmentManager.reload();
         await this.equipmentManager.render();
-        this.equipmentManager.renderHitStatus(this.role);
+        this.equipmentManager.renderHitStatus(this.roleManager?.role);
     }
-
-    protected abstract triggerLoadRole(handler: (role: Role | undefined) => void): void;
 
     async doProcess(): Promise<void> {
         this.equipmentManager.equipmentPage = PersonalEquipmentManagementPageParser.parsePage(PageUtils.currentPageHtml());
 
         await this.doBeforeReformatPage()
         await this.createPage()
-        await this.doPostReformatPage()
+        await this.doPostReformatPage();
 
+        this.roleManager?.bindButtons();
         this.equipmentManager.bindButtons();
+        await this.roleManager?.reload();
+        await this.roleManager?.render();
         await this.equipmentManager.render();
-        this.triggerLoadRole((role: Role | undefined) => {
-            this.role = role;
-            this.equipmentManager.renderHitStatus(this.role);
-        });
+        this.equipmentManager.renderHitStatus(this.roleManager?.role);
 
         KeyboardShortcutBuilder.newInstance()
             .onKeyPressed("r", () => PageUtils.triggerClick("refreshButton"))
@@ -219,27 +236,6 @@ abstract class PersonalEquipmentManagementPageProcessor extends StatefulPageProc
 
     async doResetMessageBoard() {
         let msg = "<b style='font-size:120%;color:wheat'>又来管理您的装备来啦？就这点破烂折腾来折腾去的，您累不累啊。</b>";
-        if (SetupLoader.isGemCountVisible(this.credential.id)) {
-            const roleIdList: string[] = [];
-            const includeExternal = LocalSettingManager.isIncludeExternal();
-            for (const roleId of TeamMemberLoader.loadTeamMembersAsMap(includeExternal).keys()) {
-                roleIdList.push(roleId);
-            }
-            const reports = await RoleEquipmentStatusManager.loadEquipmentStatusReports(roleIdList);
-            let powerGemCount = 0;
-            let luckGemCount: number = 0;
-            let weightGemCount = 0;
-            reports.forEach(it => {
-                powerGemCount += it.powerGemCount!;
-                weightGemCount += it.weightGemCount!;
-                luckGemCount += it.luckGemCount!;
-            });
-
-            const pp = "<img src='" + Constants.POCKET_DOMAIN + "/image/item/PowerStone.gif' alt='威力宝石' title='威力宝石'>";
-            const lp = "<img src='" + Constants.POCKET_DOMAIN + "/image/item/LuckStone.gif' alt='幸运宝石' title='幸运宝石'>";
-            const wp = "<img src='" + Constants.POCKET_DOMAIN + "/image/item/WeightStone.gif' alt='重量宝石' title='重量宝石'>";
-            msg += "<br>团队当前的宝石库存情况：" + pp + powerGemCount + " " + lp + luckGemCount + " " + wp + weightGemCount + "</b>";
-        }
         MessageBoard.resetMessageBoard(msg);
     }
 
@@ -261,6 +257,15 @@ abstract class PersonalEquipmentManagementPageProcessor extends StatefulPageProc
     }
 
     async doBindReturnButton() {
+        $("#extension_1").html(() => {
+            return this.formGenerator.generateReturnFormHTML();
+        });
+        $("#returnButton").on("click", () => {
+            PageUtils.disablePageInteractiveElements();
+            this.doBeforeExit().then(() => {
+                PageUtils.triggerClick("_pocket_ReturnSubmit");
+            });
+        });
     }
 
     async doBindRefreshButton() {
@@ -275,33 +280,105 @@ abstract class PersonalEquipmentManagementPageProcessor extends StatefulPageProc
     }
 
     async doBindItemShopButton() {
+        if (this.createLocationMode() instanceof LocationModeTown) {
+            $("#extension_2").html(PageUtils.generateItemShopForm(this.credential, this.townId!));
+            $("#itemShopButton")
+                .prop("disabled", false)
+                .on("click", () => {
+                    PageUtils.disablePageInteractiveElements();
+                    this.doBeforeExit().then(() => {
+                        PageUtils.triggerClick("openItemShop");
+                    });
+                })
+                .parent().show();
+        }
     }
 
     async doBindGemFuseButton() {
+        if (this.createLocationMode() instanceof LocationModeTown) {
+            $("#extension_3").html(PageUtils.generateGemHouseForm(this.credential, this.townId));
+            $("#gemFuseButton")
+                .prop("disabled", false)
+                .on("click", () => {
+                    PageUtils.disablePageInteractiveElements();
+                    this.doBeforeExit().then(() => {
+                        PageUtils.triggerClick("openGemHouse");
+                    });
+                })
+                .parent().show();
+        }
     }
 
     async doBindUpdateButton() {
-        $("#updateButton")
-            .prop("disabled", false)
-            .on("click", () => {
-                PageUtils.disableElement("updateButton");
-                MessageBoard.publishMessage("开始更新装备数据......");
-                new EquipmentStatusTrigger(this.credential)
-                    .withEquipmentPage(this.equipmentManager.equipmentPage)
-                    .triggerUpdate()
-                    .then(() => {
-                        MessageBoard.publishMessage("装备数据（百宝袋|城堡仓库）更新完成。");
-                        PageUtils.enableElement("updateButton");
-                    });
-            })
-            .parent().show();
+        if (!(this.createLocationMode() instanceof LocationModeMap)) {
+            $("#updateButton")
+                .prop("disabled", false)
+                .on("click", () => {
+                    PageUtils.disableElement("updateButton");
+                    MessageBoard.publishMessage("开始更新装备数据......");
+                    new EquipmentStatusTrigger(this.credential)
+                        .withEquipmentPage(this.equipmentManager.equipmentPage)
+                        .triggerUpdate()
+                        .then(() => {
+                            MessageBoard.publishMessage("装备数据（百宝袋|城堡仓库）更新完成。");
+                            PageUtils.enableElement("updateButton");
+                        });
+                })
+                .parent().show();
+        }
     }
 
     async doPostReformatPage() {
+        if (this.createLocationMode() instanceof LocationModeTown) {
+            CommentBoard.createCommentBoard(NpcLoader.getNpcImageHtml("饭饭")!);
+            CommentBoard.writeMessage("我就要一键祭奠，就要，就要！");
+            CommentBoard.writeMessage("<input type='button' id='consecrateButton' value='祭奠选择的装备' style='display:none'>");
+
+            new MouseClickEventBuilder(this.credential)
+                .bind($("#p_3139"), () => {
+                    new TownDashboard(this.credential).open().then(dashboardPage => {
+                        if (dashboardPage.role!.canConsecrate) {
+                            $("#consecrateButton").show();
+                        } else {
+                            MessageBoard.publishWarning("祭奠还在冷却中！");
+                            PageUtils.scrollIntoView("messageBoard");
+                        }
+                    });
+                });
+            $("#consecrateButton")
+                .on("click", () => {
+                    const candidate = _.forEach(this.equipmentManager._calculateEquipmentSelection())
+                        .map(it => this.equipmentManager.equipmentPage!.findEquipment(it))
+                        .filter(it => it !== null)
+                        .map(it => it!)
+                        .filter(it => !it.using)
+                        .filter(it => it.isWeapon || it.isArmor || it.isAccessory);
+                    if (candidate.length === 0) {
+                        MessageBoard.publishWarning("没有选择可祭奠的装备，忽略！");
+                        PageUtils.scrollIntoView("messageBoard");
+                        return;
+                    }
+                    const consecrateCandidateNames = _.forEach(candidate)
+                        .map(it => it.fullName)
+                        .join("、");
+                    if (!confirm("请务必确认你将要祭奠的这些装备：" + consecrateCandidateNames)) {
+                        return;
+                    }
+                    this.consecrateEquipment(candidate).then(() => {
+                        $("#consecrateButton").hide();
+                        PageUtils.scrollIntoView("messageBoard");
+                    });
+                });
+        }
     }
 
     async doBeforeExit() {
         await this.equipmentManager.dispose();
+        if (this.createLocationMode() instanceof LocationModeTown) {
+            await new BattleFieldTrigger(this.credential)
+                .withRole(this.roleManager?.role)
+                .triggerUpdate();
+        }
     }
 
     _changeEquipmentExperienceSetting(mode: string, value: boolean) {
@@ -481,6 +558,18 @@ abstract class PersonalEquipmentManagementPageProcessor extends StatefulPageProc
         });
     }
 
+    private async consecrateEquipment(candidate: Equipment[]) {
+        const indexList = _.forEach(candidate).map(it => it.index!);
+        const nameList = _.forEach(candidate).map(it => it.fullName);
+        await new TownBank(this.credential, this.townId).withdraw(100);
+        await new EquipmentConsecrateManager(this.credential).consecrate(indexList, nameList);
+        await new TownBank(this.credential, this.townId).deposit();
+        await this.equipmentManager.reload();
+        await this.equipmentManager.render();
+        // 祭奠完成后会造成角色额外RP数值变化，必须修正这里，否则会造成无法正确切换战斗场所。
+        // 祭奠只允许在城市的时候执行，因此这个时候重新加载角色是安全的。
+        await this.roleManager?.reload();
+    }
 }
 
 export = PersonalEquipmentManagementPageProcessor;

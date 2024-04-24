@@ -1,15 +1,9 @@
 import RoleStateMachineManager from "../../core/state/RoleStateMachineManager";
 import PageProcessorContext from "../../processor/PageProcessorContext";
 import PageInterceptor from "../PageInterceptor";
-import PersonalEquipmentManagementPageProcessorTownImpl
-    from "../../processor/stateful/PersonalEquipmentManagementPageProcessorTownImpl";
-import PersonalEquipmentManagementPageProcessorMetroImpl
-    from "../../processor/stateful/PersonalEquipmentManagementPageProcessorMetroImpl";
-import PersonalEquipmentManagementPageProcessorMapImpl
-    from "../../processor/stateful/PersonalEquipmentManagementPageProcessorMapImpl";
 import Credential from "../../util/Credential";
-import PersonalEquipmentManagementPageProcessorCastleImpl
-    from "../../processor/stateful/PersonalEquipmentManagementPageProcessorCastleImpl";
+import PersonalEquipmentManagementPageProcessor
+    from "../../processor/stateful/PersonalEquipmentManagementPageProcessor";
 
 class PersonalEquipmentManagementPageInterceptor implements PageInterceptor {
 
@@ -31,19 +25,19 @@ class PersonalEquipmentManagementPageInterceptor implements PageInterceptor {
                 machine.start()
                     .whenInTown(state => {
                         const context = PageProcessorContext.whenInTown(state?.townId)
-                        new PersonalEquipmentManagementPageProcessorTownImpl(credential, context).process();
+                        new PersonalEquipmentManagementPageProcessor(credential, context).process();
                     })
                     .whenInCastle(state => {
                         const context = PageProcessorContext.whenInCastle(state?.castleName);
-                        new PersonalEquipmentManagementPageProcessorCastleImpl(credential, context).process();
+                        new PersonalEquipmentManagementPageProcessor(credential, context).process();
                     })
                     .whenInMap(state => {
                         const context = PageProcessorContext.whenInMap(state?.asCoordinate())
-                        new PersonalEquipmentManagementPageProcessorMapImpl(credential, context).process();
+                        new PersonalEquipmentManagementPageProcessor(credential, context).process();
                     })
                     .whenInMetro(() => {
                         const context = PageProcessorContext.whenInMetro()
-                        new PersonalEquipmentManagementPageProcessorMetroImpl(credential, context).process();
+                        new PersonalEquipmentManagementPageProcessor(credential, context).process();
                     })
                     .process();
             });

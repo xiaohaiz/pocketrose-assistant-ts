@@ -12,6 +12,8 @@ import BattleRecommendation from "./BattleRecommendation";
 import BattleRecord from "./BattleRecord";
 import BattleRecordStorage from "./BattleRecordStorage";
 import BattleResultStorage from "./BattleResultStorage";
+import {RoleStatusManager} from "../role/RoleStatus";
+import _ from "lodash";
 
 class BattleProcessor {
 
@@ -44,6 +46,18 @@ class BattleProcessor {
         // 解析战斗页面
         this.page = await BattlePageParser.parse(this.#html);
 
+        //  解析结果更新角色状态
+        await new RoleStatusManager(this.#credential).updateBattleCount(this.#battleCount, this.page.additionalRP);
+
+        // 如果角色升级，则尝试增加角色状态中的等级数据
+        // 唯一坑点就是宠物名和角色名一样
+        if (this.page.battleResult !== "战败") {
+            const roleName = this.page.roleNameHtml;
+            if (roleName && _.includes(this.#html, roleName + "等级上升！")) {
+                await new RoleStatusManager(this.#credential).increaseLevelIfNecessary();
+            }
+        }
+
         // 确认后续行为
         this.recommendation = await BattleRecommendation.analysis(this.#battleCount, this.obtainPage);
 
@@ -66,7 +80,7 @@ class BattleProcessor {
         record.harvestList = this.obtainPage.harvestList;
         record.petEggHatched = this.obtainPage.eggBorn;
         record.petSpellLearned = this.obtainPage.petLearnSpell;
-        await BattleRecordStorage.getInstance().write(record);
+        await BattleRecordStorage.write(record);
 
         // 分析入手的结果
         let catchCount: number | undefined = undefined;
