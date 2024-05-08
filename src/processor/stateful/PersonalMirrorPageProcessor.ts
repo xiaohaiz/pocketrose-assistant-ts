@@ -1,37 +1,45 @@
-import StatefulPageProcessor from "../StatefulPageProcessor";
-import Credential from "../../util/Credential";
-import PageProcessorContext from "../PageProcessorContext";
-import LocationModeTown from "../../core/location/LocationModeTown";
-import {MirrorManager} from "../../widget/MirrorManager";
-import PersonalMirrorPageParser from "../../core/role/PersonalMirrorPageParser";
-import PageUtils from "../../util/PageUtils";
-import _ from "lodash";
 import ButtonUtils from "../../util/ButtonUtils";
-import MessageBoard from "../../util/MessageBoard";
-import Role from "../../core/role/Role";
-import {PersonalStatus} from "../../core/role/PersonalStatus";
+import Credential from "../../util/Credential";
 import KeyboardShortcutBuilder from "../../util/KeyboardShortcutBuilder";
-import {EquipmentManager} from "../../widget/EquipmentManager";
+import LocationModeTown from "../../core/location/LocationModeTown";
+import MessageBoard from "../../util/MessageBoard";
+import PageProcessorContext from "../PageProcessorContext";
+import PageUtils from "../../util/PageUtils";
+import PersonalMirrorPageParser from "../../core/role/PersonalMirrorPageParser";
+import Role from "../../core/role/Role";
+import StatefulPageProcessor from "../StatefulPageProcessor";
+import _ from "lodash";
 import {BankManager} from "../../widget/BankManager";
+import {EquipmentManager} from "../../widget/EquipmentManager";
+import {MirrorManager} from "../../widget/MirrorManager";
+import {PocketFormGenerator, PocketPage} from "../../pocket/PocketPage";
+import {RoleManager} from "../../widget/RoleManager";
 import {RoleStatusManager} from "../../core/role/RoleStatus";
 
 class PersonalMirrorPageProcessor extends StatefulPageProcessor {
 
+    private readonly location: LocationModeTown;
+    private readonly roleManager: RoleManager;
     private readonly mirrorManager: MirrorManager;
     private readonly equipmentManager: EquipmentManager;
     private readonly bankManager: BankManager;
 
     constructor(credential: Credential, context: PageProcessorContext) {
         super(credential, context);
-        const locationMode = this.createLocationMode() as LocationModeTown;
-        this.mirrorManager = new MirrorManager(credential, locationMode);
-        this.mirrorManager.feature.onRefresh = (message) => {
-            this.role = message.extensions.get("role") as Role;
-            this.equipmentManager.reload().then(() => {
-                this.equipmentManager.render().then();
-            });
+        this.location = this.createLocationMode() as LocationModeTown;
+
+        this.roleManager = new RoleManager(credential, this.location);
+
+        this.mirrorManager = new MirrorManager(credential, this.location);
+        this.mirrorManager.feature.onRefresh = async (message) => {
+            this.roleManager.role = message.extensions.get("role") as Role;
+            await this.roleManager.render();
+            await this.equipmentManager.reload();
+            await this.equipmentManager.render();
+            this.equipmentManager.renderRoleStatus(this.roleManager.role);
         };
-        this.equipmentManager = new EquipmentManager(credential, locationMode);
+
+        this.equipmentManager = new EquipmentManager(credential, this.location);
         this.equipmentManager.feature.enableStatusTriggerOnDispose = true;
         this.equipmentManager.feature.enableGrowthTriggerOnDispose = true;
         this.equipmentManager.feature.enableSpaceTriggerOnDispose = true;
@@ -40,31 +48,43 @@ class PersonalMirrorPageProcessor extends StatefulPageProcessor {
         this.equipmentManager.feature.onMessage = s => MessageBoard.publishMessage(s);
         this.equipmentManager.feature.onWarning = s => MessageBoard.publishWarning(s);
         this.equipmentManager.feature.onRefresh = () => {
-            this.equipmentManager.renderHitStatus(this.role);
+            this.roleManager.reload().then(() => {
+                this.roleManager.render().then(() => {
+                    this.equipmentManager.renderRoleStatus(this.roleManager.role);
+                });
+            });
         };
-        this.bankManager = new BankManager(credential, locationMode);
-        this.bankManager.feature.enableWriteRecordOnDispose = true;
+
+        this.bankManager = new BankManager(credential, this.location);
         this.bankManager.feature.onMessage = s => MessageBoard.publishMessage(s);
         this.bankManager.feature.onWarning = s => MessageBoard.publishWarning(s);
         this.bankManager.feature.onRefresh = () => {
-            this._reloadRole().then();
+            this.roleManager.reload().then(() => {
+                this.roleManager.render().then();
+            });
         };
     }
-
-    private role?: Role;
 
     protected async doProcess(): Promise<void> {
         this.mirrorManager.mirrorPage = PersonalMirrorPageParser.parsePage(PageUtils.currentPageHtml());
 
-        await this._reformatPage();
-        await this._reloadRole();
+        await this.generateHTML();
+        await this.bindButtons();
+        this.roleManager.bindButtons();
+        this.mirrorManager.bindButtons();
+        this.equipmentManager.bindButtons();
+        this.bankManager.bindButtons();
+
+        await this.roleManager.reload();
+        await this.roleManager.render();
         await this.mirrorManager.reload();
-        await this.mirrorManager.render(this.role!);
+        await this.mirrorManager.render(this.roleManager.role!);
         await this.equipmentManager.reload();
         await this.equipmentManager.render();
-        this.equipmentManager.renderHitStatus(this.role);
+        this.equipmentManager.renderRoleStatus(this.roleManager.role!);
         await this.bankManager.reload();
         await this.bankManager.render();
+
         KeyboardShortcutBuilder.newInstance()
             .onKeyPressed("r", () => PageUtils.triggerClick("refreshButton"))
             .onEscapePressed(() => PageUtils.triggerClick("returnButton"))
@@ -72,42 +92,30 @@ class PersonalMirrorPageProcessor extends StatefulPageProcessor {
             .bind();
     }
 
-    private async _reformatPage() {
+    private async generateHTML() {
         $("table[height='100%']").removeAttr("height");
         $("td:first")
-            .attr("id", "pageTitle")
             .removeAttr("width")
             .removeAttr("height")
             .removeAttr("bgcolor")
-            .css("background-color", "navy")
             .html(() => {
-                return "" +
-                    "<table style='background-color:transparent;margin:auto;width:100%;border-spacing:0;border-width:0'>" +
-                    "<tbody>" +
-                    "<tr>" +
-                    "<td style='text-align:left;width:100%;font-size:150%;font-weight:bold;color:yellowgreen'>" +
-                    "＜＜  分 身 试 管  ＞＞" +
-                    "</td>" +
-                    "<td style='text-align:right;white-space:nowrap'>" +
-                    "<span> <button role='button' class='C_commandButton' id='refreshButton'>" + ButtonUtils.createTitle("刷新", "r") + "</button></span>" +
-                    "<span> <button role='button' class='C_commandButton' id='returnButton'>" + ButtonUtils.createTitle("退出", "Esc") + "</button></span>" +
-                    "</td>" +
-                    "</tr>" +
-                    "<tr style='display:none'>" +
-                    "<td colspan='2'>" +
-                    "<div id='extension_1'></div>" +
-                    "<div id='extension_2'></div>" +
-                    "<div id='extension_3'></div>" +
-                    "<div id='extension_4'></div>" +
-                    "<div id='extension_5'></div>" +
-                    "</td>" +
-                    "</tr>" +
-                    "</tbody>" +
-                    "</table>" +
-                    "";
+                return PocketPage.generatePageHeaderHTML("＜＜  分 身 试 管  ＞＞", this.roleLocation);
             });
+        $("#_pocket_page_command").html(() => {
+            return "" +
+                "<span> <button role='button' class='C_StatelessElement' id='refreshButton'>" + ButtonUtils.createTitle("刷新", "r") + "</button></span>" +
+                "<span> <button role='button' class='C_StatelessElement' id='returnButton'>" + ButtonUtils.createTitle("退出", "Esc") + "</button></span>";
+        });
 
         const table = $("table:first");
+
+        table.find("> tbody:first")
+            .find("> tr:eq(1) > td:first")
+            .find("> table:first > tbody:first")
+            .find("> tr:first > td:last")
+            .html(() => {
+                return this.roleManager.generateHTML();
+            });
 
         table.find("> tbody:first")
             .find("> tr:eq(2)")
@@ -159,24 +167,6 @@ class PersonalMirrorPageProcessor extends StatefulPageProcessor {
         $("#equipmentPanel").html(this.equipmentManager.generateHTML());
         $("#bankPanel").html(this.bankManager.generateHTML());
 
-        $("#extension_1").html(PageUtils.generateReturnTownForm(this.credential));
-        $("#returnButton").on("click", () => {
-            PageUtils.disablePageInteractiveElements();
-            this._beforeReturn().then(() => {
-                PageUtils.triggerClick("returnTown");
-            });
-        });
-        $("#refreshButton").on("click", () => {
-            $(".C_commandButton").prop("disabled", true);
-            this._refresh().then(() => {
-                $(".C_commandButton").prop("disabled", false);
-            });
-        });
-
-        this.mirrorManager.bindButtons();
-        this.equipmentManager.bindButtons();
-        this.bankManager.bindButtons();
-
         const obtainMirrorBtn = $("input:submit[value='获取新分身']");
         if (obtainMirrorBtn.length > 0) {
             obtainMirrorBtn
@@ -185,43 +175,57 @@ class PersonalMirrorPageProcessor extends StatefulPageProcessor {
                 .after($("" +
                     "<button role='button' class='C_StatelessElement' id='_pocket_ObtainMirrorButton'>获取新分身</button>" +
                     ""));
-            $("#_pocket_ObtainMirrorButton").on("click", () => {
-                const statusManager = new RoleStatusManager(this.credential);
-                statusManager.unsetMirrorIndex().then(() => {
-                    statusManager.unsetCareer().then(() => {
-                        PageUtils.triggerClick("_pocket_ObtainMirrorSubmit");
-                    });
-                });
-            });
         }
     }
 
-    private async _resetMessageBoard() {
+    private async bindButtons() {
+        $("#_pocket_page_extension_0").html(() => {
+            return new PocketFormGenerator(this.credential, this.location).generateReturnFormHTML();
+        });
+        $("#returnButton").on("click", () => {
+            PageUtils.disablePageInteractiveElements();
+            this.dispose().then(() => {
+                PageUtils.triggerClick("_pocket_ReturnSubmit");
+            });
+        });
+        $("#refreshButton").on("click", () => {
+            PocketPage.disableStatelessElements();
+            PocketPage.scrollIntoTitle();
+            this.resetMessageBoard();
+            this.refresh().then(() => {
+                PocketPage.enableStatelessElements();
+                MessageBoard.publishMessage("刷新完成。");
+            });
+        });
+        $("#_pocket_ObtainMirrorButton").on("click", async () => {
+            const statusManager = new RoleStatusManager(this.credential);
+            await statusManager.unsetMirror();
+            PageUtils.triggerClick("_pocket_ObtainMirrorSubmit");
+        });
+    }
+
+    private resetMessageBoard() {
         const welcomeMessage = this.mirrorManager.mirrorPage!.welcomeMessage!;
         MessageBoard.resetMessageBoard(welcomeMessage);
     }
 
-    private async _refresh() {
-        PageUtils.scrollIntoView("pageTitle");
-        await this._resetMessageBoard();
-        await this._reloadRole();
+    private async refresh() {
+        await this.roleManager.reload();
+        await this.roleManager.render();
         await this.mirrorManager.reload();
-        await this.mirrorManager.render(this.role!);
+        await this.mirrorManager.render(this.roleManager.role!);
         await this.equipmentManager.reload();
         await this.equipmentManager.render();
+        this.equipmentManager.renderRoleStatus(this.roleManager.role);
         await this.bankManager.reload();
         await this.bankManager.render();
-        MessageBoard.publishMessage("刷新完成。");
     }
 
-    private async _beforeReturn() {
+    private async dispose() {
         await this.equipmentManager.dispose();
         await this.bankManager.dispose();
     }
 
-    private async _reloadRole() {
-        this.role = await new PersonalStatus(this.credential).load();
-    }
 }
 
 export = PersonalMirrorPageProcessor;

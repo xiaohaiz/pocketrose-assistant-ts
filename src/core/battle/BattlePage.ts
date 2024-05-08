@@ -19,6 +19,7 @@ class BattlePage {
     monsterTask?: boolean;          // 杀怪任务
     petLearnSpell?: boolean;        // 宠物是否学会新技能
     petLove?: number;               // 宠物亲密度
+    petEarnExperience?: boolean;    // 宠物是否获得经验值
 
     roleImageHtml?: string;
     roleNameHtml?: string;

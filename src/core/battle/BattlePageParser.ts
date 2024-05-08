@@ -105,6 +105,7 @@ class BattlePageParser {
             }
             if (s.includes(" 获得 ") && s.includes(" 经验值.")) {
                 // 这一行是宠物获得经验值的那一行
+                page.petEarnExperience = true;
                 // 记录下宠物名
                 petName = StringUtils.substringBefore(s, " 获得 ");
             }

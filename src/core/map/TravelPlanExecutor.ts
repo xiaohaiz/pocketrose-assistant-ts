@@ -80,14 +80,13 @@ function doMoveOnPath(credential: Credential, pathList: Coordinate[], index: num
             NetworkUtils.sendPostRequest("map.cgi", request, function () {
                 MessageBoard.publishMessage("<span style='color:greenyellow'>" + direction + "</span>移动" + distance + "格，到达" + to.asText() + "。");
 
-                if ($("#roleLocation").length > 0) {
-                    let roleLocation = to.asText();
-                    const town = TownLoader.load(to);
-                    if (town) {
-                        roleLocation = town.name + " " + roleLocation;
-                    }
-                    $("#roleLocation").text(roleLocation);
+                let roleLocation = to.asText();
+                const town = TownLoader.load(to);
+                if (town) {
+                    roleLocation = town.name + " " + roleLocation;
                 }
+                $("#roleLocation").text(roleLocation);
+                $("#_pocket_page_role_location").text(roleLocation);
 
                 let mapId = "location_" + from.x + "_" + from.y;
                 if ($("#" + mapId).length > 0) {

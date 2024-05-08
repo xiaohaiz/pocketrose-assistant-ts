@@ -40,6 +40,7 @@ class Role {
     battleWinCount?: number;        // 战胜数
     experience?: number;
     rank?: string;
+    contribution?: number;
     cash?: number;
     career?: string;                // 职业
     masterCareerList?: string[];    // 掌握职业

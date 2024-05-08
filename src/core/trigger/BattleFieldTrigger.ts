@@ -85,7 +85,7 @@ class BattleFieldTrigger {
             return;
         }
 
-        let additionalRP = await this.statusManager.getCurrentAdditionalRP();
+        let additionalRP = (await this.statusManager.load())?.readAdditionalRP;
         if (additionalRP === undefined) {
             await this.#initializeRole();
             additionalRP = this.#role?.additionalRP;
@@ -109,7 +109,7 @@ class BattleFieldTrigger {
 
     // 当祭奠RP大于0时，战斗场所切换到上洞
     private async checkConsecrate(): Promise<boolean> {
-        let consecrateRP = await this.statusManager.getCurrentConsecrateRP();
+        let consecrateRP = (await this.statusManager.load())?.readConsecrateRP;
         if (consecrateRP === undefined) {
             await this.#initializeRole();
             consecrateRP = this.#role!.consecrateRP!;
@@ -145,7 +145,7 @@ class BattleFieldTrigger {
     // 当前位于枫丹并且自身和宠物都满级时，战斗场所切换到十二宫
     private async checkZodiacBattle(): Promise<boolean> {
         // 当前角色满级
-        let roleLevel = await this.statusManager.getCurrentLevel();
+        let roleLevel = (await this.statusManager.load())?.readLevel;
         if (roleLevel === undefined) {
             await this.#initializeRole();
             roleLevel = this.#role?.level;
@@ -155,7 +155,7 @@ class BattleFieldTrigger {
         }
 
         // 当前城市是枫丹
-        let roleTownId = await this.statusManager.getCurrentTownId();
+        let roleTownId = (await this.statusManager.load())?.readTownId;
         if (roleTownId === undefined) {
             await this.#initializeRole();
             roleTownId = this.#role?.town?.id;
@@ -165,7 +165,7 @@ class BattleFieldTrigger {
         }
 
         // 宠物必须满级
-        let petLevel = await this.statusManager.getCurrentPetLevel();
+        let petLevel = (await this.statusManager.load())?.readPetLevel;
         if (petLevel === undefined) {
             await this.#initializePetPage();
             petLevel = this.#petPage?.usingPet?.level;
@@ -216,7 +216,7 @@ class BattleFieldTrigger {
             return;
         }
 
-        let consecrateRP = await this.statusManager.getCurrentConsecrateRP();
+        let consecrateRP = (await this.statusManager.load())?.readConsecrateRP;
         if (consecrateRP === undefined) {
             await this.#initializeRole();
             consecrateRP = this.#role!.consecrateRP;

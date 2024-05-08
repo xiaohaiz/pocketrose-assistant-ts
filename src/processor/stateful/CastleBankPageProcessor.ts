@@ -1,42 +1,43 @@
-import StatefulPageProcessor from "../StatefulPageProcessor";
-import Credential from "../../util/Credential";
-import PageProcessorContext from "../PageProcessorContext";
-import LocationModeCastle from "../../core/location/LocationModeCastle";
-import {BankManager} from "../../widget/BankManager";
-import MessageBoard from "../../util/MessageBoard";
-import {CastleBankPageParser} from "../../core/bank/BankPageParser";
-import PageUtils from "../../util/PageUtils";
-import KeyboardShortcutBuilder from "../../util/KeyboardShortcutBuilder";
-import {PocketPage} from "../../pocket/PocketPage";
 import ButtonUtils from "../../util/ButtonUtils";
+import Credential from "../../util/Credential";
+import KeyboardShortcutBuilder from "../../util/KeyboardShortcutBuilder";
+import LocationModeCastle from "../../core/location/LocationModeCastle";
+import MessageBoard from "../../util/MessageBoard";
+import NpcLoader from "../../core/role/NpcLoader";
+import PageProcessorContext from "../PageProcessorContext";
+import PageUtils from "../../util/PageUtils";
+import StatefulPageProcessor from "../StatefulPageProcessor";
+import {BankManager} from "../../widget/BankManager";
+import {CastleBankPageParser} from "../../core/bank/BankPageParser";
+import {PocketFormGenerator, PocketPage} from "../../pocket/PocketPage";
+import {RoleManager} from "../../widget/RoleManager";
 
 class CastleBankPageProcessor extends StatefulPageProcessor {
 
+    private readonly location: LocationModeCastle;
+    private readonly roleManager: RoleManager;
     private readonly bankManager: BankManager;
 
     constructor(credential: Credential, context: PageProcessorContext) {
         super(credential, context);
-
-        const locationMode = this.createLocationMode() as LocationModeCastle;
-        this.bankManager = new BankManager(credential, locationMode);
-        this.bankManager.feature.enableWriteRecordOnDispose = true;
+        this.location = this.createLocationMode() as LocationModeCastle;
+        this.roleManager = new RoleManager(credential, this.location);
+        this.bankManager = new BankManager(credential, this.location);
         this.bankManager.feature.enableSalaryDistribution = true;
-        this.bankManager.feature.onMessage = s => {
-            MessageBoard.publishMessage(s);
-        };
-        this.bankManager.feature.onWarning = s => {
-            MessageBoard.publishWarning(s);
-        };
-        this.bankManager.feature.onRefresh = () => {
-            this.renderRole();
+        this.bankManager.feature.onRefresh = async () => {
+            await this.roleManager.reload();
+            await this.roleManager.render();
         };
     }
 
     protected async doProcess(): Promise<void> {
         this.bankManager.bankPage = CastleBankPageParser.parsePage(PageUtils.currentPageHtml());
-        await this.createPage();
-        this.bindButtons();
+        await this.generateHTML();
+        await this.bindButtons();
+        this.roleManager.bindButtons();
         this.bankManager.bindButtons();
+        await this.roleManager.reload();
+        await this.roleManager.render();
         await this.bankManager.render();
         KeyboardShortcutBuilder.newInstance()
             .onKeyPressed("r", () => PageUtils.triggerClick("refreshButton"))
@@ -45,7 +46,7 @@ class CastleBankPageProcessor extends StatefulPageProcessor {
             .bind();
     }
 
-    private async createPage() {
+    private async generateHTML() {
         const table = $("body:first > table:first > tbody:first > tr:first > td:first > table:first");
 
         table.find("> tbody:first > tr:first > td:first")
@@ -61,9 +62,9 @@ class CastleBankPageProcessor extends StatefulPageProcessor {
 
         table.find("> tbody:first > tr:eq(1) > td:first")
             .find("> table:first > tbody:first > tr:first > td:eq(3)")
-            .find("> table:first > tbody:first > tr:first > td:first")
-            .find("> table:first > tbody:first > tr:eq(2) > td:eq(1)")
-            .attr("id", "_pocket_RoleCash");
+            .html(() => {
+                return this.roleManager.generateHTML();
+            });
 
         table.find("> tbody:first > tr:eq(2) > td:first")
             .find("> table:first > tbody:first > tr:first > td:first")
@@ -79,43 +80,47 @@ class CastleBankPageProcessor extends StatefulPageProcessor {
             });
     }
 
-    private bindButtons(): void {
-        $("#_pocket_page_extension_0").html(() => {
-            return PageUtils.generateReturnCastleForm(this.credential);
+    private async resetMessageBoard() {
+        $("#messageBoardManager").html(() => {
+            return NpcLoader.randomNpcImageHtml();
         });
-        $("#returnButton").on("click", () => {
-            PageUtils.disablePageInteractiveElements();
-            this.beforeReturn().then(() => {
-                PageUtils.triggerClick("returnCastle");
-            });
-        });
-        $("#refreshButton").on("click", () => {
-            PocketPage.disableStatelessElements();
-            PocketPage.scrollIntoTitle();
-            MessageBoard.resetMessageBoard(this.bankManager.bankPage!.welcomeMessage!);
-            this.refresh().then(() => {
-                MessageBoard.publishMessage("刷新操作完成。");
-                PocketPage.enableStatelessElements();
-            });
-        });
+        MessageBoard.resetMessageBoard("" +
+            "<span style='color:wheat;font-weight:bold;font-size:120%'>" +
+            "不义而富且贵，于我如浮云。" +
+            "</span>");
     }
 
-    private async beforeReturn() {
-        await this.bankManager.dispose();
+    private async bindButtons() {
+        $("#_pocket_page_extension_0").html(() => {
+            return new PocketFormGenerator(this.credential, this.location).generateReturnFormHTML();
+        });
+        $("#returnButton").on("click", async () => {
+            PageUtils.disablePageInteractiveElements();
+            await this.dispose();
+            PageUtils.triggerClick("_pocket_ReturnSubmit");
+        });
+        $("#refreshButton").on("click", async () => {
+            PocketPage.scrollIntoTitle();
+            PocketPage.disableStatelessElements();
+            await this.resetMessageBoard();
+            await this.refresh();
+            MessageBoard.publishMessage("Refresh operation finished successfully.");
+            PocketPage.enableStatelessElements();
+        });
     }
 
     private async refresh() {
+        await this.roleManager.reload();
+        await this.roleManager.render();
         await this.bankManager.reload();
         await this.bankManager.render();
-        this.renderRole();
     }
 
-    private renderRole() {
-        const cash = this.bankManager.bankPage!.account!.cash;
-        $("#_pocket_RoleCash").html(() => {
-            return cash + " GOLD";
-        });
+    private async dispose() {
+        await this.roleManager.dispose();
+        await this.bankManager.dispose();
     }
+
 }
 
 export {CastleBankPageProcessor};

@@ -21,13 +21,25 @@ class CastleDashboardPageProcessor implements PageProcessor {
 
         const credential = Credential.newInstance();
         if (credential) {
-            await new RoleStatusManager(credential).unsetTownId();
+            // Trigger expired RoleStatus eviction.
+            await new RoleStatusManager(credential).load();
+
+            await new RoleStatusManager(credential).unsetTown();
         }
 
         this.#renderMenu();
         this.#renderRankTitle();
         this.#renderExperience();
         this.#renderEventBoard();
+
+        if (SetupLoader.isHiddenLeaveAndExitEnabled()) {
+            $("th:contains('离开城堡')")
+                .filter((_idx, th) => {
+                    return $(th).text() === "离开城堡";
+                })
+                .closest("tr").hide()
+                .next().hide();
+        }
 
         KeyboardShortcutBuilder.newInstance()
             .onKeyPressed("b", () => {
@@ -59,7 +71,7 @@ class CastleDashboardPageProcessor implements PageProcessor {
                 PageUtils.triggerClick("personalButton");
             })
             .onEscapePressed(() => {
-                $("option[value='CASTLE_BUILDMACHINE']").prop("selected", true);
+                $("option[value='CASTLE_INN']").prop("selected", true);
                 PageUtils.triggerClick("castleButton");
             })
             .withDefaultPredicate()
@@ -68,11 +80,11 @@ class CastleDashboardPageProcessor implements PageProcessor {
 
     #renderMenu() {
         $("option[value='CASTLE_BANK']")
-            .text("口袋银行城堡支行");
+            .text("城堡银行");
         $("option[value='CASTLE_SENDMONEY']").remove();
         $("option[value='SALARY']").remove();
 
-        $("option[value='CASTLE_BUILDMACHINE']")
+        $("option[value='CASTLE_INN']")
             .text("城堡驿站");
         $("option[value='LETTER']")
             .text("口袋助手设置");

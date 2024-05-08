@@ -1,7 +1,8 @@
 import RoleStateMachineManager from "../../core/state/RoleStateMachineManager";
-import TownDashboardPageProcessor from "../../processor/stateless/TownDashboardPageProcessor";
 import PageInterceptor from "../PageInterceptor";
 import PageProcessorContext from "../../processor/PageProcessorContext";
+import Credential from "../../util/Credential";
+import {TownDashboardPageProcessor} from "../../processor/stateful/TownDashboardPageProcessor";
 
 class TownDashboardPageInterceptor implements PageInterceptor {
 
@@ -13,13 +14,15 @@ class TownDashboardPageInterceptor implements PageInterceptor {
     }
 
     intercept(): void {
+        const credential = Credential.newInstance();
+        if (credential === undefined) return;
         RoleStateMachineManager.create()
             .inTown()
             .then(state => {
                 const context = PageProcessorContext.whenInTown(state.townId);
                 context.withRoleLevel(state.roleLevel);
                 context.withRoleCareer(state.roleCareer);
-                new TownDashboardPageProcessor().process(context);
+                new TownDashboardPageProcessor(credential, context).process();
             });
     }
 

@@ -1,6 +1,77 @@
 # pocketrose assistant
 
-### 版本 5.2.3
+### 版本 5.4.0
+
+1. [ISSUE #I9NMYM](https://gitee.com/barnabus/pocketrose-assistant/issues/I9NMYM) 支持开发和调试模式。
+2. [ISSUE #I9NIKL](https://gitee.com/barnabus/pocketrose-assistant/issues/I9NIKL) 基于留言系统的全新消息模式。
+3. [ISSUE #I9NJFW](https://gitee.com/barnabus/pocketrose-assistant/issues/I9NJFW) 修复战斗后处理有可能触发重复加载城堡页面。
+
+### 版本 5.3.6
+
+1. [ISSUE #I9KXBJ](https://gitee.com/barnabus/pocketrose-assistant/issues/I9KXBJ) 规避数字验证码功能。
+2. [ISSUE #I9NFCM](https://gitee.com/barnabus/pocketrose-assistant/issues/I9NFCM) 城市页面增加调试开发的消息。
+3. [ISSUE #I9N2RH](https://gitee.com/barnabus/pocketrose-assistant/issues/I9N2RH) 团队宠物分布统计。
+4. [ISSUE #I9NFLK](https://gitee.com/barnabus/pocketrose-assistant/issues/I9NFLK) 可选新的验证码错误警示显示。
+5. [ISSUE #I9NFIL](https://gitee.com/barnabus/pocketrose-assistant/issues/I9NFIL) 冒险家公会藏宝图排序显示。
+
+### 版本 5.3.5
+
+1. [ISSUE #I9MXX6](https://gitee.com/barnabus/pocketrose-assistant/issues/I9MXX6) 手机布局菜单项统一放大。
+2. [ISSUE #I9MZ9T](https://gitee.com/barnabus/pocketrose-assistant/issues/I9MZ9T) 战斗过场显示效果优化。
+
+### 版本 5.3.3
+
+1. [ISSUE #I9MSKF](https://gitee.com/barnabus/pocketrose-assistant/issues/I9MSKF) 修复战斗验证码超时后页面没有重载的问题。
+2. [ISSUE #I9MNTN](https://gitee.com/barnabus/pocketrose-assistant/issues/I9MNTN) 面板快捷按钮功能恢复。
+3. [ISSUE #I9MNUB](https://gitee.com/barnabus/pocketrose-assistant/issues/I9MNUB) 宠物页面改进资料显示格式。
+4. [ISSUE #I9L9TP](https://gitee.com/barnabus/pocketrose-assistant/issues/I9L9TP) 宠物页面提供到装备页面的快速跳转路径。
+5. [ISSUE #I9L5DU](https://gitee.com/barnabus/pocketrose-assistant/issues/I9L5DU) 修复重铠剩余经验计算的误差。
+
+### 版本 5.3.2
+
+1. [ISSUE #I9LB3C](https://gitee.com/barnabus/pocketrose-assistant/issues/I9LB3C) 城市面板全新改版。
+
+### 版本 5.2.12
+
+1. [ISSUE #I9L219](https://gitee.com/barnabus/pocketrose-assistant/issues/I9L219) 角色缓存查看器。
+2. [ISSUE #I9L1V9](https://gitee.com/barnabus/pocketrose-assistant/issues/I9L1V9) 角色缓存性能优化。
+3. [ISSUE #I9L1HG](https://gitee.com/barnabus/pocketrose-assistant/issues/I9L1HG) 角色缓存数据一致性。
+
+### 版本 5.2.9
+
+1. [ISSUE #I9KX0D](https://gitee.com/barnabus/pocketrose-assistant/issues/I9KX0D) 冒险家公会标准化改造。
+2. [ISSUE #I9KSR4](https://gitee.com/barnabus/pocketrose-assistant/issues/I9KSR4) 团队宠物列表中展示宠物图鉴。
+3. [ISSUE #I9KM05](https://gitee.com/barnabus/pocketrose-assistant/issues/I9KM05) 装备管理页面显示练装备剩余所需经验数。
+
+### 版本 5.2.8
+
+1. [ISSUE #I9KLX9](https://gitee.com/barnabus/pocketrose-assistant/issues/I9KLX9) 装备+角色的数据详细计算。
+2. [ISSUE #I9KHYX](https://gitee.com/barnabus/pocketrose-assistant/issues/I9KHYX) 角色状态缓存性能优化。
+3. [ISSUE #I9KE06](https://gitee.com/barnabus/pocketrose-assistant/issues/I9KE06) 宠联页面标准化改造。
+4. [ISSUE #I9JQTL](https://gitee.com/barnabus/pocketrose-assistant/issues/I9JQTL) 装备管理页面标准化改造。
+
+### 版本 5.2.7
+
+1. [ISSUE #I9K3MW](https://gitee.com/barnabus/pocketrose-assistant/issues/I9K3MW) 城市、城堡驿站页面标准化改造。
+2. [ISSUE #I9KACX](https://gitee.com/barnabus/pocketrose-assistant/issues/I9KACX) 智能战斗某些情况无法自动从十二宫切换出来。
+
+### 版本 5.2.6
+
+1. [ISSUE #I9JFGB](https://gitee.com/barnabus/pocketrose-assistant/issues/I9JFGB) 宠物管理页面标准化改造。
+2. [ISSUE #I9JLUG](https://gitee.com/barnabus/pocketrose-assistant/issues/I9JLUG) 武器商店组件化及页面标准化改造。
+3. [ISSUE #I9JKGB](https://gitee.com/barnabus/pocketrose-assistant/issues/I9JKGB) 宠物图鉴页面标准化改造。
+4. [ISSUE #I9JJAA](https://gitee.com/barnabus/pocketrose-assistant/issues/I9JJAA) 分身试管页面标准化改造。
+5. [ISSUE #I9JJ4S](https://gitee.com/barnabus/pocketrose-assistant/issues/I9JJ4S) 删除特殊宠物管理专有页面。
+
+### 版本 5.2.5
+
+1. [ISSUE #I9JDNS](https://gitee.com/barnabus/pocketrose-assistant/issues/I9JDNS) 城市银行页面标准化改造。
+2. [ISSUE #I9JE9M](https://gitee.com/barnabus/pocketrose-assistant/issues/I9JE9M) 城堡银行页面标准化改造。
+3. [ISSUE #I9JET8](https://gitee.com/barnabus/pocketrose-assistant/issues/I9JET8) 宠物管理页面增加角色信息。
+4. [ISSUE #I9JF39](https://gitee.com/barnabus/pocketrose-assistant/issues/I9JF39) 怪物资料进退化关系补充编号。
+5. [ISSUE #I9JEXJ](https://gitee.com/barnabus/pocketrose-assistant/issues/I9JEXJ) 镶嵌宝石改进为极速模式。
+
+### 版本 5.2.4
 
 1. [ISSUE #I9J3YY](https://gitee.com/barnabus/pocketrose-assistant/issues/I9J3YY) 特殊宠物管理组件化。
 2. [ISSUE #I9J7T7](https://gitee.com/barnabus/pocketrose-assistant/issues/I9J7T7) 宠物管理和城堡管家集成特殊宠物组件。

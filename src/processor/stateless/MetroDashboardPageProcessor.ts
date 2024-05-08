@@ -20,7 +20,10 @@ class MetroDashboardPageProcessor extends StatelessPageProcessorCredentialSuppor
     async doProcess(credential: Credential, context?: PageProcessorContext): Promise<void> {
         const page = MetroDashboardPage.parse(PageUtils.currentPageHtml());
 
-        await new RoleStatusManager(credential).unsetTownId();
+        // Trigger expired RoleStatus eviction.
+        await new RoleStatusManager(credential).load();
+
+        await new RoleStatusManager(credential).unsetTown();
 
         renderAnnouncement();
         renderMobilization();

@@ -31,7 +31,7 @@ import PetStatusTrigger from "../../core/trigger/PetStatusTrigger";
 
 class PersonalProfilePageProcessor extends StatefulPageProcessor {
 
-    private readonly formGenerator: PocketFormGenerator;
+    private readonly location: LocationModeTown | LocationModeCastle;
     private readonly roleManager: RoleManager;
     private readonly bankManager: BankManager;
     private readonly spellManager: SpellManager;
@@ -44,28 +44,24 @@ class PersonalProfilePageProcessor extends StatefulPageProcessor {
 
     constructor(credential: Credential, context: PageProcessorContext) {
         super(credential, context);
-        const locationMode = this.createLocationMode() as LocationModeTown | LocationModeCastle;
+        this.location = this.createLocationMode() as LocationModeTown | LocationModeCastle;
 
-        this.formGenerator = new PocketFormGenerator(credential, locationMode);
-
-        this.roleManager = new RoleManager(credential, locationMode);
+        this.roleManager = new RoleManager(credential, this.location);
         this.roleManager.feature.enableCareerFixedFlag = false;
 
-        this.bankManager = new BankManager(credential, locationMode);
-        this.bankManager.feature.enableWriteRecordOnDispose = true;
-        this.bankManager.feature.enableSalaryDistribution = false;
+        this.bankManager = new BankManager(credential, this.location);
         this.bankManager.feature.onRefresh = () => {
             this._renderBankAccount().then();
         }
 
-        this.spellManager = new SpellManager(credential, locationMode);
+        this.spellManager = new SpellManager(credential, this.location);
         this.spellManager.feature.onRefresh = (message) => {
             this.roleManager.role = message.extensions.get("role") as Role;
             this.mirrorManager?.reload().then(() => {
                 this.mirrorManager?.render(this.roleManager.role!).then();
             });
         };
-        this.equipmentManager = new EquipmentManager(credential, locationMode);
+        this.equipmentManager = new EquipmentManager(credential, this.location);
         this.equipmentManager.feature.enableStatusTriggerOnDispose = true;
         this.equipmentManager.feature.enableGrowthTriggerOnDispose = true;
         this.equipmentManager.feature.enableSpaceTriggerOnDispose = true;
@@ -74,21 +70,22 @@ class PersonalProfilePageProcessor extends StatefulPageProcessor {
         this.equipmentManager.feature.onMessage = s => MessageBoard.publishMessage(s);
         this.equipmentManager.feature.onWarning = s => MessageBoard.publishWarning(s);
         this.equipmentManager.feature.onRefresh = () => {
-            this.equipmentManager.renderHitStatus(this.roleManager.role);
+            this.equipmentManager.renderRoleStatus(this.roleManager.role);
             // Will trigger pet manager reloading, for golden cage index may changed.
             this.petManager.reload().then(() => {
                 this.petManager.render(this.equipmentManager.equipmentPage!).then();
             });
         };
-        this.petManager = new PetManager(credential, locationMode);
+        this.petManager = new PetManager(credential, this.location);
         this.petManager.feature.leagueEnabled = true;
         this.petManager.feature.enableSpaceTriggerOnDispose = true;
         this.petManager.feature.enableStatusTriggerOnDispose = true;
         this.petManager.feature.enableUsingTriggerOnDispose = true;
-        this.petManager.feature.onRefresh = (message) => {
+        this.petManager.feature.onRefresh = async (message) => {
             this.equipmentManager.equipmentPage = message.extensions.get("equipmentPage") as PersonalEquipmentManagementPage;
             if (message.extensions.get("mode") === "CONSECRATE") {
-                this.equipmentManager.render().then();
+                await this.equipmentManager.render();
+                this.equipmentManager.renderRoleStatus(this.roleManager.role);
             }
             if (message.extensions.get("mode") === "LEAGUE") {
                 PocketPage.scrollIntoTitle();
@@ -96,22 +93,19 @@ class PersonalProfilePageProcessor extends StatefulPageProcessor {
             }
         };
 
-        if (locationMode instanceof LocationModeTown) {
-            this.mirrorManager = new MirrorManager(credential, locationMode);
-            this.mirrorManager.feature.onRefresh = (message) => {
+        if (this.location instanceof LocationModeTown) {
+            this.mirrorManager = new MirrorManager(credential, this.location);
+            this.mirrorManager.feature.onRefresh = async (message) => {
                 this.roleManager.role = message.extensions.get("role") as Role;
-                this.renderRole().then(() => {
-                    this.spellManager.reload().then(() => {
-                        this.spellManager.render(this.roleManager.role!).then(() => {
-                            this.equipmentManager.reload().then(() => {
-                                this.equipmentManager.render().then();
-                            });
-                        });
-                    });
-                });
+                await this.renderRole();
+                await this.spellManager.reload();
+                await this.spellManager.render(this.roleManager.role!);
+                await this.equipmentManager.reload();
+                await this.equipmentManager.render();
+                this.equipmentManager.renderRoleStatus(this.roleManager.role);
             };
 
-            this.snapshotManager = new SnapshotManager(credential, locationMode);
+            this.snapshotManager = new SnapshotManager(credential, this.location);
             this.snapshotManager.feature.onRefresh = message => {
                 if (message.extensions.get("mode") === "RESTORE") {
                     this.refresh().then();
@@ -135,7 +129,7 @@ class PersonalProfilePageProcessor extends StatefulPageProcessor {
         await this.spellManager.render(this.roleManager.role!);
         await this.equipmentManager.reload();
         await this.equipmentManager.render();
-        this.equipmentManager.renderHitStatus(this.roleManager.role);
+        this.equipmentManager.renderRoleStatus(this.roleManager.role);
         await this.petManager.reload();
         await this.petManager.render(this.equipmentManager.equipmentPage!);
         await this.mirrorManager?.reload();
@@ -238,12 +232,13 @@ class PersonalProfilePageProcessor extends StatefulPageProcessor {
     }
 
     private async bindButtons() {
-        $("#_pocket_page_extension_0").html(this.formGenerator.generateReturnFormHTML());
-        $("#returnButton").on("click", () => {
+        $("#_pocket_page_extension_0").html(() => {
+            return new PocketFormGenerator(this.credential, this.location).generateReturnFormHTML();
+        });
+        $("#returnButton").on("click", async () => {
             PageUtils.disablePageInteractiveElements();
-            this.dispose().then(() => {
-                PageUtils.triggerClick("_pocket_ReturnSubmit");
-            });
+            await this.dispose();
+            PageUtils.triggerClick("_pocket_ReturnSubmit");
         });
         $("#refreshButton").on("click", () => {
             PocketPage.scrollIntoTitle();
@@ -281,13 +276,12 @@ class PersonalProfilePageProcessor extends StatefulPageProcessor {
             });
         });
         $("#_pocket_page_extension_3").html(() => {
-            return PageUtils.generateEquipmentManagementForm(this.credential);
+            return new PocketFormGenerator(this.credential, this.location).generateEquipmentForm();
         });
-        $("#equipmentButton").on("click", () => {
+        $("#equipmentButton").on("click", async () => {
             PageUtils.disablePageInteractiveElements();
-            this.dispose().then(() => {
-                PageUtils.triggerClick("openEquipmentManagement");
-            });
+            await this.dispose();
+            PageUtils.triggerClick("_pocket_EquipmentSubmit");
         });
         if (this.createLocationMode() instanceof LocationModeTown) {
             $("#_pocket_page_extension_4").html(() => {
@@ -323,6 +317,7 @@ class PersonalProfilePageProcessor extends StatefulPageProcessor {
         await this.spellManager.render(this.roleManager.role!);
         await this.equipmentManager.reload();
         await this.equipmentManager.render();
+        this.equipmentManager.renderRoleStatus(this.roleManager.role);
         await this.petManager.reload();
         await this.petManager.render(this.equipmentManager.equipmentPage!);
         await this.mirrorManager?.reload();

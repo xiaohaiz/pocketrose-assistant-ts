@@ -1,6 +1,6 @@
 {
   "name": "pocketrose-assistant",
-  "version": "5.2.3",
+  "version": "5.4.0",
   "description": "",
   "main": "/src/Pocketrose.ts",
   "scripts": {

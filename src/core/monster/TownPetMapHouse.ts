@@ -2,6 +2,7 @@ import Credential from "../../util/Credential";
 import NetworkUtils from "../../util/NetworkUtils";
 import TownPetMapHousePage from "./TownPetMapHousePage";
 import {TownPetMapHousePageParser} from "./TownPetMapHousePageParser";
+import MessageBoard from "../../util/MessageBoard";
 
 class TownPetMapHouse {
 
@@ -22,8 +23,11 @@ class TownPetMapHouse {
                 }
                 request.set("con_str", "50");
                 request.set("mode", "PETMAP");
+                const start = Date.now();
                 NetworkUtils.post("town.cgi", request).then(html => {
                     const page = TownPetMapHousePageParser.parsePage(html);
+                    const end = Date.now();
+                    MessageBoard.publishMessage("Pet portrait page loaded. (" + (end - start) + "ms spent)");
                     resolve(page);
                 });
             });

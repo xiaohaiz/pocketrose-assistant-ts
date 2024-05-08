@@ -1,7 +1,8 @@
 import RoleStateMachineManager from "../../core/state/RoleStateMachineManager";
-import TownPetLeaguePageProcessor from "../../processor/stateless/TownPetLeaguePageProcessor";
 import PageProcessorContext from "../../processor/PageProcessorContext";
 import PageInterceptor from "../PageInterceptor";
+import Credential from "../../util/Credential";
+import {TownPetLeaguePageProcessor} from "../../processor/stateful/TownPetLeaguePageProcessor";
 
 class TownPetLeaguePageInterceptor implements PageInterceptor {
 
@@ -13,14 +14,15 @@ class TownPetLeaguePageInterceptor implements PageInterceptor {
     }
 
     intercept(): void {
+        const credential = Credential.newInstance();
+        if (credential === undefined) return;
         RoleStateMachineManager.create()
             .load()
             .then(machine => {
                 machine.start()
                     .whenInTown(state => {
-                        const context = new PageProcessorContext();
-                        context.withTownId(state?.townId);
-                        new TownPetLeaguePageProcessor().process(context);
+                        const context = PageProcessorContext.whenInTown(state?.townId);
+                        new TownPetLeaguePageProcessor(credential, context).process();
                     })
                     .process();
             });

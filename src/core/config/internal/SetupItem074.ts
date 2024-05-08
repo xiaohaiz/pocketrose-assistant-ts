@@ -1,11 +1,12 @@
 import MessageBoard from "../../../util/MessageBoard";
+import StorageUtils from "../../../util/StorageUtils";
 import SetupItem from "../SetupItem";
-import {BattleConfigManager} from "../ConfigManager";
+import SetupLoader from "../SetupLoader";
 
-class SetupItem046 implements SetupItem {
+class SetupItem074 implements SetupItem {
 
-    readonly #code = "046";
-    readonly #name = "战斗后隐藏按钮";
+    readonly #code = "074";
+    readonly #name = "传统的战斗模式";
     readonly #key = "_pa_" + this.#code;
 
     category(): string {
@@ -27,8 +28,8 @@ class SetupItem046 implements SetupItem {
         html += "<td style='background-color:#E8E8D0'></td>";
         html += "<td style='background-color:#EFE0C0'></td>";
         html += "<td style='background-color:#E0D0B0;text-align:left' colspan='2'>";
-        html += "<input type='button' class='dynamic_button _046_button' id='_046_button_1' value='启用'>";
-        html += "<input type='button' class='dynamic_button _046_button' id='_046_button_2' value='禁用'>";
+        html += "<input type='button' class='dynamic_button _074_button' id='_074_button_1' value='启用'>";
+        html += "<input type='button' class='dynamic_button _074_button' id='_074_button_2' value='禁用'>";
         html += "</td>";
         html += "</tr>";
         $("#setup_item_table").append($(html));
@@ -36,19 +37,19 @@ class SetupItem046 implements SetupItem {
     }
 
     #doProcessButton() {
-        if (BattleConfigManager.isHiddenBattleButtonEnabled()) {
-            $("#_046_button_1").css("color", "blue").prop("disabled", true);
+        if (SetupLoader.isTraditionalBattleModeEnabled()) {
+            $("#_074_button_1").css("color", "blue").prop("disabled", true);
         } else {
-            $("#_046_button_2").css("color", "blue").prop("disabled", true);
+            $("#_074_button_2").css("color", "blue").prop("disabled", true);
         }
 
-        $("._046_button").on("click", event => {
-            $("._046_button").off("click");
+        $("._074_button").on("click", event => {
+            $("._074_button").off("click");
             const buttonId = $(event.target).attr("id")!;
-            if (buttonId === "_046_button_1") {
-                BattleConfigManager.enableHiddenBattleButton();
-            } else if (buttonId === "_046_button_2") {
-                BattleConfigManager.disableHiddenBattleButton();
+            if (buttonId === "_074_button_1") {
+                StorageUtils.set(this.#key, "1");
+            } else if (buttonId === "_074_button_2") {
+                StorageUtils.set(this.#key, "0");
             } else {
                 return;
             }
@@ -59,4 +60,4 @@ class SetupItem046 implements SetupItem {
 
 }
 
-export {SetupItem046};
+export {SetupItem074};

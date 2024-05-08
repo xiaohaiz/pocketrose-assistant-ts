@@ -25,62 +25,55 @@ import _ from "lodash";
 import {EquipmentManager} from "../../widget/EquipmentManager";
 import {EquipmentStatusTrigger} from "../../core/trigger/EquipmentStatusTrigger";
 import {Equipment} from "../../core/equipment/Equipment";
-import {PocketFormGenerator} from "../../pocket/PocketPage";
+import {PocketFormGenerator, PocketPage} from "../../pocket/PocketPage";
 import {RoleManager} from "../../widget/RoleManager";
+import LocationModeCastle from "../../core/location/LocationModeCastle";
+import LocationModeMetro from "../../core/location/LocationModeMetro";
 
 class PersonalEquipmentManagementPageProcessor extends StatefulPageProcessor {
 
-    private readonly formGenerator: PocketFormGenerator;
+    private readonly location: LocationModeTown | LocationModeCastle | LocationModeMap | LocationModeMetro;
     private roleManager?: RoleManager;
     private readonly equipmentManager: EquipmentManager;
     private equipmentSetPanelOpened = false;
 
     constructor(credential: Credential, context: PageProcessorContext) {
         super(credential, context);
-        const locationMode = this.createLocationMode()!;
+        this.location = this.createLocationMode()!;
 
-        this.formGenerator = new PocketFormGenerator(credential, locationMode);
-
-        if (!(locationMode instanceof LocationModeMap)) {
-            this.roleManager = new RoleManager(credential, locationMode);
+        if (!(this.location instanceof LocationModeMap)) {
+            this.roleManager = new RoleManager(credential, this.location);
+            this.roleManager.feature.enableBankAccount = true;
             this.roleManager.feature.onRefresh = () => {
-                this.equipmentManager.renderHitStatus(this.roleManager?.role);
+                this.equipmentManager.renderRoleStatus(this.roleManager?.role);
             };
         }
 
-        this.equipmentManager = new EquipmentManager(credential, locationMode);
+        this.equipmentManager = new EquipmentManager(credential, this.location);
+        this.equipmentManager.feature.enableExperienceConfig = true;
         this.equipmentManager.feature.enableRecoverItem = true;
         this.equipmentManager.feature.enableGemTransfer = true;
-        this.equipmentManager.feature.enableGrowthTriggerOnDispose = true;
-        this.equipmentManager.feature.enableSpaceTriggerOnDispose = true;
-        this.equipmentManager.feature.enableStatusTriggerOnDispose = true;
-        this.equipmentManager.feature.enableUsingTriggerOnDispose = true;
-        this.equipmentManager.feature.onRefresh = () => {
-            this.equipmentManager.renderHitStatus(this.roleManager?.role);
+        this.equipmentManager.feature.enableFullAutoSetExperience = true;
+        this.equipmentManager.feature.onRefresh = async () => {
+            await this.roleManager?.reload();
+            await this.roleManager?.render();
+            this.equipmentManager.renderRoleStatus(this.roleManager?.role);
         }
-    }
-
-    async refresh() {
-        await this.roleManager?.reload();
-        await this.roleManager?.render();
-        await this.equipmentManager.reload();
-        await this.equipmentManager.render();
-        this.equipmentManager.renderHitStatus(this.roleManager?.role);
     }
 
     async doProcess(): Promise<void> {
         this.equipmentManager.equipmentPage = PersonalEquipmentManagementPageParser.parsePage(PageUtils.currentPageHtml());
 
-        await this.doBeforeReformatPage()
-        await this.createPage()
-        await this.doPostReformatPage();
+        await this.generateHTML()
+        await this.resetMessageBoard();
+        await this.bindButtons();
 
         this.roleManager?.bindButtons();
         this.equipmentManager.bindButtons();
         await this.roleManager?.reload();
         await this.roleManager?.render();
         await this.equipmentManager.render();
-        this.equipmentManager.renderHitStatus(this.roleManager?.role);
+        this.equipmentManager.renderRoleStatus(this.roleManager?.role);
 
         KeyboardShortcutBuilder.newInstance()
             .onKeyPressed("r", () => PageUtils.triggerClick("refreshButton"))
@@ -96,10 +89,7 @@ class PersonalEquipmentManagementPageProcessor extends StatefulPageProcessor {
             .bind()
     }
 
-    async doBeforeReformatPage() {
-    }
-
-    private async createPage() {
+    private async generateHTML() {
         const t0 = $("table:first")
             .attr("id", "t0")
             .removeAttr("height");
@@ -111,26 +101,17 @@ class PersonalEquipmentManagementPageProcessor extends StatefulPageProcessor {
             .removeAttr("width")
             .removeAttr("height")
             .removeAttr("bgcolor")
-            .css("background-color", "navy")
-            .css("color", "yellowgreen")
-            .html("" +
-                "<table style='background-color:transparent;width:100%;margin:auto;border-width:0'>" +
-                "<tbody>" +
-                "<tr>" +
-                "<td style='width:100%;font-size:150%;font-weight:bold;text-align:left;color:yellowgreen'>" +
-                "＜＜ 装 备 管 理 （3.0） ＞＞" +
-                "</td>" +
-                "<td style='white-space:nowrap'>" +
-                "<span style='display:none'> <button role='button' id='itemShopButton' disabled>" + ButtonUtils.createTitle("商店", "s") + "</button></span>" +
-                "<span style='display:none'> <button role='button' id='gemFuseButton' disabled>" + ButtonUtils.createTitle("宝石", "y") + "</button></span>" +
-                "<span style='display:none'> <button role='button' id='updateButton' style='color:red' disabled>" + ButtonUtils.createTitle("统计", "u") + "</button></span>" +
-                "<span> <button role='button' id='refreshButton'>" + ButtonUtils.createTitle("刷新", "r") + "</button></span>" +
-                "<span> <button role='button' id='returnButton'>" + ButtonUtils.createTitle("退出", "Esc") + "</button></span>" +
-                "</td>" +
-                "</tr>" +
-                "</tbody>" +
-                "</table>" +
-                "");
+            .html(() => {
+                return PocketPage.generatePageHeaderHTML("＜＜ 装 备 管 理 ＞＞", this.roleLocation);
+            });
+        $("#_pocket_page_command").html(() => {
+            return "" +
+                "<span style='display:none'> <button role='button' class='C_pocket_StatelessElement' id='itemShopButton' disabled>" + ButtonUtils.createTitle("商店", "s") + "</button></span>" +
+                "<span style='display:none'> <button role='button' class='C_pocket_StatelessElement' id='gemFuseButton' disabled>" + ButtonUtils.createTitle("宝石", "y") + "</button></span>" +
+                "<span style='display:none'> <button role='button' class='C_pocket_StatelessElement' id='updateButton' style='color:red' disabled>" + ButtonUtils.createTitle("统计", "u") + "</button></span>" +
+                "<span> <button role='button' class='C_pocket_StatelessElement' id='refreshButton'>" + ButtonUtils.createTitle("刷新", "r") + "</button></span>" +
+                "<span> <button role='button' class='C_pocket_StatelessElement' id='returnButton'>" + ButtonUtils.createTitle("退出", "Esc") + "</button></span>";
+        });
 
         $("#tr0")
             .next()
@@ -145,38 +126,9 @@ class PersonalEquipmentManagementPageProcessor extends StatefulPageProcessor {
             .css("width", "100%")
             .next().remove();
 
-        const roleLocation = this.roleLocation;
-        $("#roleImage")
-            .next()
-            .find("table:first")
-            .find("tr:first")
-            .next()
-            .find("td:eq(2)")
-            .attr("id", "roleHealth")
-            .next()
-            .attr("id", "roleMana")
-            .parent()
-            .next()
-            .find("td:last")
-            .attr("id", "roleCash")
-            .parent()
-            .after($("" +
-                "<tr>" +
-                "<td style='background-color:#E0D0B0'>坐标点</td>" +
-                "<td style='background-color:#E8E8D0;text-align:right;font-weight:bold;color:red' " +
-                "colspan='5' id='roleLocation'>" +
-                (roleLocation === undefined ? "未知" : roleLocation) +
-                "</td>" +
-                "</tr>" +
-                "<tr>" +
-                "<td style='background-color:#E0D0B0;text-align:center;white-space:nowrap' " +
-                "colspan='6' id='equipmentExperienceSetting'>" +
-                "<button role='button' class='C_equipmentExperienceSetting' id='_ees_a' style='color:grey'>正在练武器</button>" +
-                "<button role='button' class='C_equipmentExperienceSetting' id='_ees_b' style='color:grey'>正在练防具</button>" +
-                "<button role='button' class='C_equipmentExperienceSetting' id='_ees_c' style='color:grey'>正在练饰品</button>" +
-                "</td>" +
-                "</tr>" +
-                ""));
+        $("#roleImage").next().html(() => {
+            return this.roleManager?.generateHTML() ?? "";
+        });
 
         $("#tr1")
             .next()
@@ -208,11 +160,6 @@ class PersonalEquipmentManagementPageProcessor extends StatefulPageProcessor {
         html += "</tr>";
         html += "<tr id='tr5' style='display:none'>";
         html += "<td>";
-        html += "<div id='extension_1'></div>";
-        html += "<div id='extension_2'></div>";
-        html += "<div id='extension_3'></div>";
-        html += "<div id='extension_4'></div>";
-        html += "<div id='extension_5'></div>";
         html += "</td>";
         html += "</tr>";
         html += "<tr id='tr6'>";
@@ -220,121 +167,14 @@ class PersonalEquipmentManagementPageProcessor extends StatefulPageProcessor {
         html += "</tr>";
         $("#tr2").after($(html));
 
-        await this.doResetMessageBoard();
-
-        await this.doBindEquipmentExperienceSettingButton()
-        await this.bindEquipmentSetButton();
-        await this.doBindReturnButton()
-        await this.doBindRefreshButton()
-        await this.doBindItemShopButton();
-        await this.doBindGemFuseButton();
-        await this.doBindUpdateButton();
-
         $("#equipmentList").html(this.equipmentManager.generateHTML());
-        $("#roleCash").html("-");
-    }
 
-    async doResetMessageBoard() {
-        let msg = "<b style='font-size:120%;color:wheat'>又来管理您的装备来啦？就这点破烂折腾来折腾去的，您累不累啊。</b>";
-        MessageBoard.resetMessageBoard(msg);
-    }
-
-    async doBindEquipmentExperienceSettingButton() {
-        const config = SetupLoader.loadEquipmentExperienceConfig(this.credential.id)
-        if (config.weapon) PageUtils.changeColorBlue("_ees_a")
-        if (config.armor) PageUtils.changeColorBlue("_ees_b")
-        if (config.accessory) PageUtils.changeColorBlue("_ees_c")
-
-        $(".C_equipmentExperienceSetting").on("click", event => {
-            const btnId = $(event.target).attr("id") as string
-            const mode = StringUtils.substringAfterLast(btnId, "_")
-            PageUtils.toggleColor(
-                btnId,
-                () => this._changeEquipmentExperienceSetting(mode, true),
-                () => this._changeEquipmentExperienceSetting(mode, false)
-            )
-        })
-    }
-
-    async doBindReturnButton() {
-        $("#extension_1").html(() => {
-            return this.formGenerator.generateReturnFormHTML();
-        });
-        $("#returnButton").on("click", () => {
-            PageUtils.disablePageInteractiveElements();
-            this.doBeforeExit().then(() => {
-                PageUtils.triggerClick("_pocket_ReturnSubmit");
-            });
-        });
-    }
-
-    async doBindRefreshButton() {
-        $("#refreshButton").on("click", () => {
-            PageUtils.disableElement("refreshButton")
-            PageUtils.scrollIntoView("messageBoard");
-            this.refresh().then(() => {
-                MessageBoard.publishMessage("装备管理刷新完成。")
-                PageUtils.enableElement("refreshButton")
-            })
-        })
-    }
-
-    async doBindItemShopButton() {
-        if (this.createLocationMode() instanceof LocationModeTown) {
-            $("#extension_2").html(PageUtils.generateItemShopForm(this.credential, this.townId!));
-            $("#itemShopButton")
-                .prop("disabled", false)
-                .on("click", () => {
-                    PageUtils.disablePageInteractiveElements();
-                    this.doBeforeExit().then(() => {
-                        PageUtils.triggerClick("openItemShop");
-                    });
-                })
-                .parent().show();
-        }
-    }
-
-    async doBindGemFuseButton() {
-        if (this.createLocationMode() instanceof LocationModeTown) {
-            $("#extension_3").html(PageUtils.generateGemHouseForm(this.credential, this.townId));
-            $("#gemFuseButton")
-                .prop("disabled", false)
-                .on("click", () => {
-                    PageUtils.disablePageInteractiveElements();
-                    this.doBeforeExit().then(() => {
-                        PageUtils.triggerClick("openGemHouse");
-                    });
-                })
-                .parent().show();
-        }
-    }
-
-    async doBindUpdateButton() {
-        if (!(this.createLocationMode() instanceof LocationModeMap)) {
-            $("#updateButton")
-                .prop("disabled", false)
-                .on("click", () => {
-                    PageUtils.disableElement("updateButton");
-                    MessageBoard.publishMessage("开始更新装备数据......");
-                    new EquipmentStatusTrigger(this.credential)
-                        .withEquipmentPage(this.equipmentManager.equipmentPage)
-                        .triggerUpdate()
-                        .then(() => {
-                            MessageBoard.publishMessage("装备数据（百宝袋|城堡仓库）更新完成。");
-                            PageUtils.enableElement("updateButton");
-                        });
-                })
-                .parent().show();
-        }
-    }
-
-    async doPostReformatPage() {
-        if (this.createLocationMode() instanceof LocationModeTown) {
+        if (this.location instanceof LocationModeTown) {
             CommentBoard.createCommentBoard(NpcLoader.getNpcImageHtml("饭饭")!);
             CommentBoard.writeMessage("我就要一键祭奠，就要，就要！");
             CommentBoard.writeMessage("<input type='button' id='consecrateButton' value='祭奠选择的装备' style='display:none'>");
 
-            new MouseClickEventBuilder(this.credential)
+            new MouseClickEventBuilder()
                 .bind($("#p_3139"), () => {
                     new TownDashboard(this.credential).open().then(dashboardPage => {
                         if (dashboardPage.role!.canConsecrate) {
@@ -372,38 +212,16 @@ class PersonalEquipmentManagementPageProcessor extends StatefulPageProcessor {
         }
     }
 
-    async doBeforeExit() {
-        await this.equipmentManager.dispose();
-        if (this.createLocationMode() instanceof LocationModeTown) {
-            await new BattleFieldTrigger(this.credential)
-                .withRole(this.roleManager?.role)
-                .triggerUpdate();
-        }
+    private async resetMessageBoard() {
+        let msg = "<b style='font-size:120%;color:wheat'>" +
+            "醉里挑灯看剑，梦回吹角连营。八百里分麾下炙，五十弦翻塞外声，沙场秋点兵。<br>" +
+            "马作的卢飞快，弓如霹雳弦惊。了却君王天下事，赢得生前身后名。可怜白发生！" +
+            "</b>";
+        MessageBoard.resetMessageBoard(msg);
     }
 
-    _changeEquipmentExperienceSetting(mode: string, value: boolean) {
-        const config = SetupLoader.loadEquipmentExperienceConfig(this.credential.id);
-        switch (mode) {
-            case "a":
-                config.weapon = value
-                break
-            case "b":
-                config.armor = value
-                break
-            case "c":
-                config.accessory = value
-                break
-        }
-        const document = config.asDocument();
-        StorageUtils.set("_pa_065_" + this.credential.id, JSON.stringify(document));
-    }
-
-    // ========================================================================
-    // 装备套装相关的设置，点击左上角的头像激活。
-    // ========================================================================
-
-    private async bindEquipmentSetButton() {
-        new MouseClickEventBuilder(this.credential)
+    private async bindButtons() {
+        new MouseClickEventBuilder()
             .bind($("#roleImage"), () => {
                 if (this.equipmentSetPanelOpened) {
                     $(".C_equipmentSetButton").off("click");
@@ -416,6 +234,85 @@ class PersonalEquipmentManagementPageProcessor extends StatefulPageProcessor {
                     });
                 }
             });
+
+        $("#_pocket_page_extension_0").html(() => {
+            return new PocketFormGenerator(this.credential, this.location).generateReturnFormHTML();
+        });
+        $("#returnButton").on("click", () => {
+            PageUtils.disablePageInteractiveElements();
+            this.dispose().then(() => {
+                PageUtils.triggerClick("_pocket_ReturnSubmit");
+            });
+        });
+
+        $("#refreshButton").on("click", () => {
+            PocketPage.scrollIntoTitle();
+            PocketPage.disableStatelessElements();
+            this.refresh().then(() => {
+                MessageBoard.publishMessage("装备管理刷新完成。")
+                PocketPage.enableStatelessElements();
+            })
+        });
+
+        if (this.location instanceof LocationModeTown) {
+            $("#_pocket_page_extension_1").html(PageUtils.generateItemShopForm(this.credential, this.townId!));
+            $("#itemShopButton")
+                .prop("disabled", false)
+                .on("click", () => {
+                    PageUtils.disablePageInteractiveElements();
+                    this.dispose().then(() => {
+                        PageUtils.triggerClick("openItemShop");
+                    });
+                })
+                .parent().show();
+        }
+
+        if (this.location instanceof LocationModeTown) {
+            $("#_pocket_page_extension_2").html(PageUtils.generateGemHouseForm(this.credential, this.townId));
+            $("#gemFuseButton")
+                .prop("disabled", false)
+                .on("click", () => {
+                    PageUtils.disablePageInteractiveElements();
+                    this.dispose().then(() => {
+                        PageUtils.triggerClick("openGemHouse");
+                    });
+                })
+                .parent().show();
+        }
+
+        if (!(this.location instanceof LocationModeMap)) {
+            $("#updateButton")
+                .prop("disabled", false)
+                .on("click", () => {
+                    PageUtils.disableElement("updateButton");
+                    MessageBoard.publishMessage("开始更新装备数据......");
+                    new EquipmentStatusTrigger(this.credential)
+                        .withEquipmentPage(this.equipmentManager.equipmentPage)
+                        .triggerUpdate()
+                        .then(() => {
+                            MessageBoard.publishMessage("装备数据（百宝袋|城堡仓库）更新完成。");
+                            PageUtils.enableElement("updateButton");
+                        });
+                })
+                .parent().show();
+        }
+    }
+
+    private async refresh() {
+        await this.roleManager?.reload();
+        await this.roleManager?.render();
+        await this.equipmentManager.reload();
+        await this.equipmentManager.render();
+        this.equipmentManager.renderRoleStatus(this.roleManager?.role);
+    }
+
+    private async dispose() {
+        await this.equipmentManager.dispose();
+        if (this.createLocationMode() instanceof LocationModeTown) {
+            await new BattleFieldTrigger(this.credential)
+                .withRole(this.roleManager?.role)
+                .triggerUpdate();
+        }
     }
 
     private async renderEquipmentSetPanel() {

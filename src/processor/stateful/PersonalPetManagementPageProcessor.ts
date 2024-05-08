@@ -1,44 +1,41 @@
-import StatefulPageProcessor from "../StatefulPageProcessor";
-import Credential from "../../util/Credential";
-import PageProcessorContext from "../PageProcessorContext";
-import {PetManager} from "../../widget/PetManager";
-import LocationModeTown from "../../core/location/LocationModeTown";
-import LocationModeCastle from "../../core/location/LocationModeCastle";
-import PersonalPetManagementPageParser from "../../core/monster/PersonalPetManagementPageParser";
-import PageUtils from "../../util/PageUtils";
+import BattleFieldTrigger from "../../core/trigger/BattleFieldTrigger";
 import ButtonUtils from "../../util/ButtonUtils";
+import Credential from "../../util/Credential";
 import KeyboardShortcutBuilder from "../../util/KeyboardShortcutBuilder";
+import LocationModeCastle from "../../core/location/LocationModeCastle";
+import LocationModeTown from "../../core/location/LocationModeTown";
 import MessageBoard from "../../util/MessageBoard";
 import NpcLoader from "../../core/role/NpcLoader";
-import {EquipmentManager} from "../../widget/EquipmentManager";
-import Role from "../../core/role/Role";
-import {PersonalStatus} from "../../core/role/PersonalStatus";
-import _ from "lodash";
-import NetworkUtils from "../../util/NetworkUtils";
-import {EvolutionManager} from "../../widget/EvolutionManager";
-import PersonalPetManagementPage from "../../core/monster/PersonalPetManagementPage";
+import PageProcessorContext from "../PageProcessorContext";
+import PageUtils from "../../util/PageUtils";
 import PersonalEquipmentManagementPage from "../../core/equipment/PersonalEquipmentManagementPage";
+import PersonalPetManagementPage from "../../core/monster/PersonalPetManagementPage";
+import PersonalPetManagementPageParser from "../../core/monster/PersonalPetManagementPageParser";
+import StatefulPageProcessor from "../StatefulPageProcessor";
+import _ from "lodash";
+import {EquipmentManager} from "../../widget/EquipmentManager";
+import {EvolutionManager} from "../../widget/EvolutionManager";
+import {PetManager} from "../../widget/PetManager";
 import {PetMapFinder} from "../../widget/PetMapFinder";
-import {PocketFormGenerator} from "../../pocket/PocketPage";
-import BattleFieldTrigger from "../../core/trigger/BattleFieldTrigger";
+import {PocketFormGenerator, PocketPage} from "../../pocket/PocketPage";
+import {RoleManager} from "../../widget/RoleManager";
 import {SpecialPetManager} from "../../widget/SpecialPetManager";
+import {PocketNetwork} from "../../pocket/PocketNetwork";
 
 class PersonalPetManagementPageProcessor extends StatefulPageProcessor {
 
     private readonly location: LocationModeTown | LocationModeCastle;
+    private readonly roleManager: RoleManager;
     private readonly equipmentManager: EquipmentManager;
     private readonly petManager: PetManager;
     private readonly evolutionManager: EvolutionManager;
     private readonly specialPetManager: SpecialPetManager;
     private readonly petMapFinder?: PetMapFinder;
 
-    private role?: Role;
-    private messageBoardContent?: string;
-
     constructor(credential: Credential, context: PageProcessorContext) {
         super(credential, context);
         this.location = this.createLocationMode() as LocationModeTown | LocationModeCastle;
-
+        this.roleManager = new RoleManager(credential, this.location);
         this.equipmentManager = new EquipmentManager(credential, this.location);
         this.petManager = new PetManager(credential, this.location);
         this.petManager.feature.leagueEnabled = true;
@@ -47,19 +44,10 @@ class PersonalPetManagementPageProcessor extends StatefulPageProcessor {
         this.petManager.feature.enableStatusTriggerOnDispose = true;
         this.petManager.feature.enableUsingTriggerOnDispose = true;
         this.petManager.feature.enablePetTransfer = true;
-        this.petManager.showProfile = (html) => {
-            this.messageBoardContent = $("#messageBoard").html();
-            MessageBoard.resetMessageBoard(html);
-        };
-        this.petManager.hideProfile = () => {
-            if (this.messageBoardContent !== undefined) {
-                MessageBoard.resetMessageBoard(this.messageBoardContent);
-                this.messageBoardContent = undefined;
-            } else {
-                this.resetMessageBoard();
-            }
-        };
         this.petManager.feature.onRefresh = (message) => {
+            this.roleManager.reload().then(() => {
+                this.roleManager.render().then();
+            });
             if (message.extensions.get("mode") === "SPECIAL") {
                 this.specialPetManager.reload().then(() => {
                     this.specialPetManager.render().then();
@@ -80,6 +68,9 @@ class PersonalPetManagementPageProcessor extends StatefulPageProcessor {
         };
         this.evolutionManager = new EvolutionManager(credential, this.location);
         this.evolutionManager.feature.onRefresh = (message) => {
+            this.roleManager.reload().then(() => {
+                this.roleManager.render().then();
+            });
             this.equipmentManager.reload().then(() => {
                 this.petManager.petPage = message.extensions.get("petPage") as PersonalPetManagementPage;
                 this.petManager.render(this.equipmentManager.equipmentPage!).then();
@@ -94,9 +85,6 @@ class PersonalPetManagementPageProcessor extends StatefulPageProcessor {
 
         if (this.location instanceof LocationModeTown) {
             this.petMapFinder = new PetMapFinder(this.credential, this.location);
-            this.petMapFinder.onWarningMessage = (message) => {
-                MessageBoard.publishWarning(message);
-            };
         }
     }
 
@@ -104,15 +92,16 @@ class PersonalPetManagementPageProcessor extends StatefulPageProcessor {
         this.petManager.petPage = PersonalPetManagementPageParser.parsePage(PageUtils.currentPageHtml());
         await this.generateHTML();
 
-        await this.doBindReturnButton();
-        await this.bindRefreshButton();
-        await this.bindLeagueButton();
+        await this.bindButtons();
+        this.roleManager.bindButtons();
         this.petManager.bindButtons();
         this.evolutionManager.bindButtons();
         this.specialPetManager.bindButtons();
         this.petMapFinder?.bindButtons();
 
-        await this.reloadRole();
+        await this.roleManager.reload();
+        $("#currentRoleImage").html(this.roleManager.role!.imageHtml);
+        await this.roleManager.render();
         await this.equipmentManager.reload();
         await this.petManager.render(this.equipmentManager.equipmentPage!);
         await this.renderPetLeague();
@@ -123,33 +112,11 @@ class PersonalPetManagementPageProcessor extends StatefulPageProcessor {
         await this.petMapFinder?.reload();
 
         KeyboardShortcutBuilder.newInstance()
+            .onKeyPressed("e", () => PageUtils.triggerClick("equipmentButton"))
             .onKeyPressed("r", () => PageUtils.triggerClick("refreshButton"))
             .onEscapePressed(() => PageUtils.triggerClick("returnButton"))
             .withDefaultPredicate()
             .bind();
-    }
-
-    private async reloadRole() {
-        this.role = await new PersonalStatus(this.credential).load();
-    }
-
-    private async refresh() {
-        await this.reloadRole();
-        await this.equipmentManager.reload();
-        await this.petManager.reload();
-        await this.petManager.render(this.equipmentManager.equipmentPage!);
-        await this.renderPetLeague();
-        await this.evolutionManager.reload();
-        await this.evolutionManager.render(this.petManager.petPage!);
-        await this.specialPetManager.reload();
-        await this.specialPetManager.render();
-    }
-
-    private resetMessageBoard() {
-        MessageBoard.resetMessageBoard("" +
-            "<span style='color:wheat;font-weight:bold'>又来管理您的宠物了？说句实话，" +
-            "来来回回也就这么几只，折腾个什么劲儿啊，洗洗睡了不好么？</span>" +
-            "");
     }
 
     private async generateHTML(): Promise<void> {
@@ -167,30 +134,21 @@ class PersonalPetManagementPageProcessor extends StatefulPageProcessor {
         html += "<table style='background-color:#888888;width:100%;text-align:center;border-width:0;border-spacing:0'>";
         html += "<tbody style='background-color:#F8F0E0'>";
         html += "<tr>";
-        html += "<td style='background-color:navy' id='pageTitle'>";
-        html += "<table style='background-color:transparent;width:100%;margin:auto;border-width:0'>" +
-            "<tbody>" +
+        html += "<td>";
+        html += PocketPage.generatePageHeaderHTML("＜＜  宠 物 管 理  ＞＞", this.roleLocation);
+        html += "</td>";
+        html += "</tr>";
+        html += "<tr>";
+        html += "<td style='border-spacing:0' id='_pocket_roleStatusPanel'>" +
+            "<table style='background-color:#888888;margin:auto;width:100%;border-width:0'>" +
+            "<tbody style='background-color:#E8E8D0'>" +
             "<tr>" +
-            "<td style='text-align:left;width:100%;color:yellowgreen;font-size:150%;font-weight:bold'>" +
-            "＜＜  宠 物 管 理  ＞＞" +
-            "</td>" +
-            "<td style='text-align:right;white-space:nowrap'>" +
-            "<span> <button role='button' id='refreshButton'>" + ButtonUtils.createTitle("刷新", "r") + "</button></span>" +
-            "<span> <button role='button' id='returnButton'>" + ButtonUtils.createTitle("退出", "Esc") + "</button></span>" +
-            "</td>" +
-            "</tr>" +
-            "<tr style='display:none'>" +
-            "<td colspan='2'>" +
-            "<div id='_pocket_extension_1'></div>" +
-            "<div id='_pocket_extension_2'></div>" +
-            "<div id='_pocket_extension_3'></div>" +
-            "<div id='_pocket_extension_4'></div>" +
-            "<div id='_pocket_extension_5'></div>" +
-            "</td>" +
+            "<td style='white-space:nowrap;width:64px;height:64px' id='currentRoleImage'>" + NpcLoader.getNpcImageHtml("U_041") + "</td>" +
+            "<td style='width:100%;text-align:center'>" + this.roleManager.generateHTML() + "</td>" +
             "</tr>" +
             "</tbody>" +
-            "</table>";
-        html += "</td>";
+            "</table>" +
+            "</td>";
         html += "</tr>";
         html += "<tr>";
         html += "<td style='border-spacing:0' id='_pocket_messageBoardPanel'></td>";
@@ -258,27 +216,32 @@ class PersonalPetManagementPageProcessor extends StatefulPageProcessor {
         html += "</table>";
         container.prepend($(html));
 
+        $("#_pocket_page_command").html(() => {
+            return "" +
+                "<span> <button role='button' class='C_pocket_StatelessElement' id='equipmentButton'>" + ButtonUtils.createTitle("装备", "e") + "</button></span>" +
+                "<span> <button role='button' class='C_pocket_StatelessElement' id='refreshButton'>" + ButtonUtils.createTitle("刷新", "r") + "</button></span>" +
+                "<span> <button role='button' class='C_pocket_StatelessElement' id='returnButton'>" + ButtonUtils.createTitle("退出", "Esc") + "</button></span>";
+        });
+
         MessageBoard.createMessageBoardStyleB("_pocket_messageBoardPanel", NpcLoader.randomFemaleNpcImageHtml());
         $("#messageBoard")
             .css("background-color", "black")
-            .css("color", "white")
-            .css("height", "176");
+            .css("color", "white");
         this.resetMessageBoard();
     }
 
-    private async dispose() {
-        await this.petManager.dispose();
-        await this.specialPetManager.dispose();
-        if (this.createLocationMode() instanceof LocationModeTown) {
-            await new BattleFieldTrigger(this.credential)
-                .withRole(this.role)
-                .withPetPage(this.petManager.petPage)
-                .triggerUpdate();
-        }
+    private resetMessageBoard() {
+        MessageBoard.resetMessageBoard("" +
+            "<span style='color:wheat;font-weight:bold;font-size:120%'>" +
+            "昨夜雨疏风骤，浓睡不消残酒。" +
+            "试问卷帘人，却道海棠依旧。" +
+            "知否？知否？应是绿肥红瘦。" +
+            "</span>" +
+            "");
     }
 
-    protected async doBindReturnButton() {
-        $("#_pocket_extension_1").html(() => {
+    private async bindButtons() {
+        $("#_pocket_page_extension_0").html(() => {
             return new PocketFormGenerator(this.credential, this.location).generateReturnFormHTML();
         });
         $("#returnButton").on("click", () => {
@@ -287,25 +250,27 @@ class PersonalPetManagementPageProcessor extends StatefulPageProcessor {
                 PageUtils.triggerClick("_pocket_ReturnSubmit");
             });
         });
-    }
-
-    private async bindRefreshButton() {
-        $("#refreshButton").on("click", () => {
-            PageUtils.scrollIntoView("pageTitle");
+        $("#refreshButton").on("click", async () => {
+            PocketPage.scrollIntoTitle();
             this.resetMessageBoard();
-            this.refresh().then(() => {
-                MessageBoard.publishMessage("宠物管理刷新完成。");
-            });
+            PocketPage.disableStatelessElements();
+            await this.refresh();
+            PocketPage.enableStatelessElements();
+            MessageBoard.publishMessage("宠物管理刷新完成。");
         });
-    }
-
-    private async bindLeagueButton() {
-        $("#_pocket_setPetLeague").on("click", () => {
+        $("#_pocket_page_extension_1").html(() => {
+            return new PocketFormGenerator(this.credential, this.location).generateEquipmentForm();
+        });
+        $("#equipmentButton").on("click", async () => {
+            PageUtils.disablePageInteractiveElements();
+            await this.dispose();
+            PageUtils.triggerClick("_pocket_EquipmentSubmit");
+        });
+        $("#_pocket_setPetLeague").on("click", async () => {
             const players = this.petManager.petPage!.petLeaguePlayerList!;
             if (players.length === 0) return;
             const request = this.credential.asRequestMap();
             request.set("mode", "PETGAMECHOOSE");
-
             for (const player of players) {
                 const index = player.index!;
                 const id1 = "_pocket_PL_player_online_" + index;
@@ -317,13 +282,36 @@ class PersonalPetManagementPageProcessor extends StatefulPageProcessor {
                     request.set("matchtype" + index, _.toString(index));
                 }
             }
-            NetworkUtils.post("mydata.cgi", request).then(response => {
-                MessageBoard.processResponseMessage(response);
-                this.petManager.reload().then(() => {
-                    this.renderPetLeague().then();
-                });
-            });
+            const response = await PocketNetwork.post("mydata.cgi", request);
+            MessageBoard.processResponseMessage(response.html);
+            await this.petManager.reload();
+            await this.renderPetLeague();
         });
+    }
+
+    private async refresh() {
+        await this.roleManager.reload();
+        await this.roleManager.render();
+        await this.equipmentManager.reload();
+        await this.petManager.reload();
+        await this.petManager.render(this.equipmentManager.equipmentPage!);
+        await this.renderPetLeague();
+        await this.evolutionManager.reload();
+        await this.evolutionManager.render(this.petManager.petPage!);
+        await this.specialPetManager.reload();
+        await this.specialPetManager.render();
+    }
+
+    private async dispose() {
+        await this.roleManager.dispose();
+        await this.petManager.dispose();
+        await this.specialPetManager.dispose();
+        if (this.createLocationMode() instanceof LocationModeTown) {
+            await new BattleFieldTrigger(this.credential)
+                .withRole(this.roleManager.role)
+                .withPetPage(this.petManager.petPage)
+                .triggerUpdate();
+        }
     }
 
     private async renderPetLeague() {

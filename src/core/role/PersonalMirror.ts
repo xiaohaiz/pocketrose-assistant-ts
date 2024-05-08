@@ -36,11 +36,10 @@ class PersonalMirror {
         const request = this.#credential.asRequestMap();
         request.set("select", index.toString());
         request.set("mode", "FENSHENCHANGE");
-        const html = await PocketNetwork.post("mydata.cgi", request);
+        const response = await PocketNetwork.post("mydata.cgi", request);
         // Clear mirrorIndex / roleCareer from role status after mirror changed.
-        await new RoleStatusManager(this.#credential).unsetMirrorIndex();
-        await new RoleStatusManager(this.#credential).unsetCareer();
-        MessageBoard.processResponseMessage(html);
+        await new RoleStatusManager(this.#credential).unsetMirror();
+        MessageBoard.processResponseMessage(response.html);
     }
 
 }

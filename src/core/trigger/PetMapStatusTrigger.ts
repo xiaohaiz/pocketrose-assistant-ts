@@ -1,6 +1,9 @@
 import Credential from "../../util/Credential";
 import TownPetMapHouse from "../monster/TownPetMapHouse";
 import RolePetMapStorage from "../monster/RolePetMapStorage";
+import {PocketLogger} from "../../pocket/PocketLogger";
+
+const logger = PocketLogger.getLogger("PET");
 
 /**
  * ============================================================================
@@ -27,6 +30,7 @@ class PetMapStatusTrigger {
         const page = await new TownPetMapHouse(this.#credential).open();
         const json = page.asJson();
         await RolePetMapStorage.getInstance().write(this.#credential.id, json);
+        logger.debug("Pet portrait record saved.");
     }
 }
 

@@ -37,6 +37,15 @@ class TownWeaponHousePage {
         }
         return null;
     }
+
+    findFirstSellableDragonBall() {
+        for (const equipment of this.personalEquipmentList!) {
+            if (equipment.isDragonBall && equipment.isSellable) {
+                return equipment;
+            }
+        }
+        return null;
+    }
 }
 
 export = TownWeaponHousePage;

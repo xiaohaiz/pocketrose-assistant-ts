@@ -1,7 +1,10 @@
 import Credential from "../../util/Credential";
-import NetworkUtils from "../../util/NetworkUtils";
-import TownInnPage from "./TownInnPage";
-import TownInnPageParser from "./TownInnPageParser";
+import {PocketNetwork} from "../../pocket/PocketNetwork";
+import TownDashboardPage from "../dashboard/TownDashboardPage";
+import TownDashboardPageParser from "../dashboard/TownDashboardPageParser";
+import {PocketLogger} from "../../pocket/PocketLogger";
+
+const logger = PocketLogger.getLogger("INN");
 
 class TownInn {
 
@@ -13,28 +16,14 @@ class TownInn {
         this.#townId = townId;
     }
 
-    async open(): Promise<TownInnPage> {
+    async recovery(): Promise<TownDashboardPage> {
         const request = this.#credential.asRequestMap();
-        this.#townId && request.set("town", this.#townId);
-        request.set("con_str", "50");
-        request.set("mode", "INN");
-        return new Promise<TownInnPage>(resolve => {
-            NetworkUtils.post("town.cgi", request)
-                .then(html => {
-                    const page = TownInnPageParser.parsePage(html);
-                    resolve(page);
-                });
-        });
-    }
-
-    async recovery(): Promise<string> {
-        return await (() => {
-            return new Promise<string>(resolve => {
-                const request = this.#credential.asRequestMap();
-                request.set("mode", "RECOVERY");
-                NetworkUtils.post("town.cgi", request).then(html => resolve(html));
-            });
-        })();
+        request.set("mode", "RECOVERY");
+        const response = await PocketNetwork.post("town.cgi", request);
+        const page = new TownDashboardPageParser(this.#credential, response.html).parse();
+        response.touch();
+        logger.debug("Health/mana fully recovered and dashboard page returned.", response.durationInMillis);
+        return page;
     }
 }
 

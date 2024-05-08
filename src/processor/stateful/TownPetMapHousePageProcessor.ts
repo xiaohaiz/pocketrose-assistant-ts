@@ -9,31 +9,36 @@ import PageUtils from "../../util/PageUtils";
 import PetMap from "../../core/monster/PetMap";
 import StatefulPageProcessor from "../StatefulPageProcessor";
 import {PetMapFinder} from "../../widget/PetMapFinder";
+import {PocketFormGenerator, PocketPage} from "../../pocket/PocketPage";
+import {RoleManager} from "../../widget/RoleManager";
 import {TownPetMapHousePageParser} from "../../core/monster/TownPetMapHousePageParser";
 
 class TownPetMapHousePageProcessor extends StatefulPageProcessor {
 
+    private readonly location: LocationModeTown;
+    private readonly roleManager: RoleManager;
     private readonly petMapFinder: PetMapFinder;
 
     constructor(credential: Credential, context: PageProcessorContext) {
         super(credential, context);
-        const locationMode = this.createLocationMode() as LocationModeTown;
-        this.petMapFinder = new PetMapFinder(this.credential, locationMode);
-        this.petMapFinder.onWarningMessage = (msg) => {
-            MessageBoard.publishWarning(msg);
-        };
+        this.location = this.createLocationMode() as LocationModeTown;
+        this.roleManager = new RoleManager(credential, this.location);
+        this.petMapFinder = new PetMapFinder(credential, this.location);
     }
 
     protected async doProcess(): Promise<void> {
         await this.petMapFinder.initialize(TownPetMapHousePageParser.parsePage(PageUtils.currentPageHtml()));
 
-        await this.createPage();
+        await this.generateHTML();
         this.resetMessageBoard();
 
         this.bindButtons();
+        this.roleManager.bindButtons();
         this.petMapFinder.bindButtons();
 
-        await this.renderPage();
+        await this.roleManager.reload();
+        await this.roleManager.render();
+        await this.render();
 
         KeyboardShortcutBuilder.newInstance()
             .onKeyPressed("r", () => PageUtils.triggerClick("refreshButton"))
@@ -42,7 +47,7 @@ class TownPetMapHousePageProcessor extends StatefulPageProcessor {
             .bind();
     }
 
-    private async createPage() {
+    private async generateHTML() {
         $("body:first").html((_idx, html) => {
             return html.replace("\n\n\n收集图鉴一览：\n", "");
         });
@@ -57,33 +62,22 @@ class TownPetMapHousePageProcessor extends StatefulPageProcessor {
             .removeAttr("bgcolor")
             .removeAttr("width")
             .removeAttr("height")
-            .css("background-color", "navy")
             .html(() => {
-                return "" +
-                    "<table style='background-color:transparent;margin:0;width:100%;border-spacing:0;border-width:0'>" +
-                    "<tbody>" +
-                    "<tr>" +
-                    "<td style='text-align:left;width:100%;color:yellowgreen;font-weight:bold;font-size:150%'>" +
-                    "＜＜　宠 物 图 鉴 ＞＞ <span style='background-color:red;color:white;font-size:80%'>" + this.roleLocation + "</span>" +
-                    "</td>" +
-                    "<td style='text-align:right;white-space:nowrap'>" +
-                    "<span> <button role='button' id='refreshButton' class='C_statelessElement'>" + ButtonUtils.createTitle("刷新", "r") + "</button></span>" +
-                    "<span> <button role='button' id='returnButton' class='C_statelessElement'>" + ButtonUtils.createTitle("退出", "Esc") + "</button></span>" +
-                    "</td>" +
-                    "</tr>" +
-                    "<tr style='display:none'>" +
-                    "<td colspan='2'>" +
-                    "<div id='ID_extension_1'></div>" +
-                    "<div id='ID_extension_2'></div>" +
-                    "<div id='ID_extension_3'></div>" +
-                    "<div id='ID_extension_4'></div>" +
-                    "<div id='ID_extension_5'></div>" +
-                    "</td>" +
-                    "</tr>" +
-                    "</tbody>" +
-                    "</table>" +
-                    "";
+                return PocketPage.generatePageHeaderHTML("＜＜　宠 物 图 鉴 ＞＞", this.roleLocation);
             });
+        $("#_pocket_page_command").html(() => {
+            return "" +
+                "<span> <button role='button' id='refreshButton' class='C_StatelessElement'>" + ButtonUtils.createTitle("刷新", "r") + "</button></span>" +
+                "<span> <button role='button' id='returnButton' class='C_StatelessElement'>" + ButtonUtils.createTitle("退出", "Esc") + "</button></span>";
+        });
+
+        $("body:first > table:first > tbody:first > tr:first > td:first")
+            .find("> table:first > tbody:first > tr:eq(1) > td:first")
+            .find("> table:first > tbody:first > tr:first > td:last")
+            .html(() => {
+                return this.roleManager.generateHTML();
+            });
+
         $("body:first > table:first > tbody:first > tr:eq(1) > td:first > table:first > tbody:first > tr:first > td:first")
             .attr("id", "messageBoard")
             .css("color", "white");
@@ -120,28 +114,25 @@ class TownPetMapHousePageProcessor extends StatefulPageProcessor {
     }
 
     private bindButtons(): void {
-        $("#ID_extension_1").html(() => {
-            return PageUtils.generateReturnTownForm(this.credential);
+        $("#_pocket_page_extension_0").html(() => {
+            return new PocketFormGenerator(this.credential, this.location).generateReturnFormHTML();
         });
         $("#returnButton").on("click", () => {
             PageUtils.disablePageInteractiveElements();
-            PageUtils.triggerClick("returnTown");
+            this.dispose().then(() => PageUtils.triggerClick("_pocket_ReturnSubmit"));
         });
         $("#refreshButton").on("click", () => {
-            PageUtils.scrollIntoView("ID_pageTitle");
-            $(".C_statelessElement").prop("disabled", true);
+            PocketPage.scrollIntoTitle();
+            PocketPage.disableStatelessElements();
             this.resetMessageBoard();
-            this.petMapFinder.reload().then(() => {
-                this.petMapFinder.disposeSearchResult();
-                this.renderPage().then(() => {
-                    $(".C_statelessElement").prop("disabled", false);
-                    MessageBoard.publishMessage("宠物图鉴刷新完成。");
-                });
+            this.refresh().then(() => {
+                PocketPage.enableStatelessElements();
+                MessageBoard.publishMessage("宠物图鉴刷新完成。");
             });
         });
     }
 
-    private async renderPage() {
+    private async render() {
         let html = "";
         html += "<table style='background-color:#888888;text-align:center;margin:auto'>";
         html += "<tbody>";
@@ -225,6 +216,18 @@ class TownPetMapHousePageProcessor extends StatefulPageProcessor {
         html += "</table>";
 
         $("#ID_petMapPanel").html(html);
+    }
+
+    private async refresh() {
+        await this.roleManager.reload();
+        await this.roleManager.render();
+        await this.petMapFinder.reload();
+        this.petMapFinder.disposeSearchResult();
+        await this.render();
+    }
+
+    private async dispose() {
+        await this.roleManager.dispose();
     }
 }
 

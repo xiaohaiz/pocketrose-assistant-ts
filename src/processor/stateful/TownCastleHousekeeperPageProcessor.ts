@@ -1,28 +1,28 @@
-import StatefulPageProcessor from "../StatefulPageProcessor";
-import Credential from "../../util/Credential";
-import PageProcessorContext from "../PageProcessorContext";
-import LocationModeTown from "../../core/location/LocationModeTown";
 import ButtonUtils from "../../util/ButtonUtils";
-import PageUtils from "../../util/PageUtils";
-import KeyboardShortcutBuilder from "../../util/KeyboardShortcutBuilder";
-import {TownCastleHousekeeperPage} from "../../core/castle/TownCastleHousekeeperPage";
-import {TownCastleHousekeeperPageParser} from "../../core/castle/TownCastleHousekeeperPageParser";
 import Castle from "../../core/castle/Castle";
 import CastleInformation from "../../core/dashboard/CastleInformation";
-import MessageBoard from "../../util/MessageBoard";
-import CastleWarehousePage from "../../core/equipment/CastleWarehousePage";
+import CastleRanch from "../../core/monster/CastleRanch";
 import CastleRanchPage from "../../core/monster/CastleRanchPage";
 import CastleWarehouse from "../../core/equipment/CastleWarehouse";
-import CastleRanch from "../../core/monster/CastleRanch";
+import CastleWarehousePage from "../../core/equipment/CastleWarehousePage";
+import Credential from "../../util/Credential";
+import KeyboardShortcutBuilder from "../../util/KeyboardShortcutBuilder";
+import LocationModeTown from "../../core/location/LocationModeTown";
+import MessageBoard from "../../util/MessageBoard";
+import MonsterPageUtils from "../../core/monster/MonsterPageUtils";
+import MouseClickEventBuilder from "../../util/MouseClickEventBuilder";
+import PageProcessorContext from "../PageProcessorContext";
+import PageUtils from "../../util/PageUtils";
+import StatefulPageProcessor from "../StatefulPageProcessor";
+import StringUtils from "../../util/StringUtils";
+import _ from "lodash";
 import {PocketFormGenerator, PocketPage} from "../../pocket/PocketPage";
 import {RoleEquipmentStatusManager} from "../../core/equipment/RoleEquipmentStatusManager";
 import {RolePetStatusManager} from "../../core/monster/RolePetStatusManager";
 import {SpecialPet, SpecialPetStorage} from "../../core/monster/SpecialPet";
-import _ from "lodash";
-import StringUtils from "../../util/StringUtils";
 import {SpecialPetManager} from "../../widget/SpecialPetManager";
-import MouseClickEventBuilder from "../../util/MouseClickEventBuilder";
-import MonsterPageUtils from "../../core/monster/MonsterPageUtils";
+import {TownCastleHousekeeperPageParser} from "../../core/castle/TownCastleHousekeeperPageParser";
+import {TownCastleHousekeeperPage} from "../../core/castle/TownCastleHousekeeperPage";
 
 class TownCastleHousekeeperPageProcessor extends StatefulPageProcessor {
 
@@ -33,9 +33,9 @@ class TownCastleHousekeeperPageProcessor extends StatefulPageProcessor {
         super(credential, context);
         this.location = this.createLocationMode() as LocationModeTown;
         this.specialPetManager = new SpecialPetManager(credential, this.location);
-        this.specialPetManager.feature.onRefresh = () => {
+        this.specialPetManager.feature.onRefresh = async () => {
             if (this.castle) {
-                this.renderCastleRanch().then();
+                await this.renderCastleRanch();
             }
         };
     }
@@ -344,7 +344,7 @@ class TownCastleHousekeeperPageProcessor extends StatefulPageProcessor {
             if (img.length > 0) {
                 img.addClass("C_SpecialPetButton");
                 const code = img.attr("alt") as string;
-                new MouseClickEventBuilder(this.credential)
+                new MouseClickEventBuilder()
                     .bind(img, () => {
                         const next = $(tr).next();
                         if (next.hasClass("C_PetProfile")) {

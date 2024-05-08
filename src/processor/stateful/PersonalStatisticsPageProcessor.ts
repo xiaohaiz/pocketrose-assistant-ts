@@ -238,7 +238,7 @@ class PersonalStatisticsPageProcessor extends StatefulPageProcessor {
             PageUtils.disablePageInteractiveElements();
             this.dispose().then(() => PageUtils.triggerClick("_pocket_ReturnSubmit"));
         });
-        new MouseClickEventBuilder(this.credential)
+        new MouseClickEventBuilder()
             .bind($("#messageBoardManager"), () => {
                 $("#rollCallForm").toggle();
             });

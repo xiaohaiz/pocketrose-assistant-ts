@@ -13,14 +13,12 @@ class TownDashboardPageParser {
 
     readonly #credential: Credential;
     readonly #html: string;
-    readonly #battleMode?: boolean;
 
     readonly #page: TownDashboardPage;
 
-    constructor(credential: Credential, html: string, battleMode?: boolean) {
+    constructor(credential: Credential, html: string) {
         this.#credential = credential;
         this.#html = html;
-        this.#battleMode = battleMode;
         this.#page = this.#doParse(credential);
     }
 
@@ -70,11 +68,13 @@ class TownDashboardPageParser {
         _parseTownInformation(page, t_0_0_0);
         _parseMessageNotification(page, t_0_0_1);
         _parseActionNotification(page, t_0_0_1);
-        _parseBattleMenu(page, t_0_0_1, this.#credential, this.#battleMode);
+        _parseBattleMenu(page, t_0_0_1, this.#credential);
         _parseRoleStatus(page, t_0_0_1, t_1.next(), this.#credential);
         _parseEventBoard(page, t_0_0_1);
         _parseConversation(page, t_1);
         _calculateCollectTownTax(credential, page);
+
+        page.messageTargetSelectHtml = $("select[name='mes_id']").html();
 
         return page;
     }
@@ -158,7 +158,7 @@ function _parseActionNotification(page: TownDashboardPage, table: JQuery) {
         });
 }
 
-function _parseBattleMenu(page: TownDashboardPage, table: JQuery, credential: Credential, battleMode?: boolean) {
+function _parseBattleMenu(page: TownDashboardPage, table: JQuery, credential: Credential) {
     $(table).find("> tbody:first")
         .find("> tr:first")
         .find("> td:first")
@@ -182,26 +182,6 @@ function _parseBattleMenu(page: TownDashboardPage, table: JQuery, credential: Cr
         });
 
     const s = $("<select>" + page.battleLevelSelectionHtml + "</select>");
-    if (battleMode) {
-        s.find("option").each((idx, option) => {
-            const text = $(option).text();
-            if (text.startsWith("秘宝之岛")) {
-                // do nothing, keep
-            } else if (text.startsWith("初级之森")) {
-                // do nothing, keep
-            } else if (text.startsWith("中级之塔")) {
-                // do nothing, keep
-            } else if (text.startsWith("上级之洞")) {
-                // do nothing, keep
-            } else if (text.startsWith("十二神殿")) {
-                // do nothing, keep
-            } else if (text.startsWith("------")) {
-                // do nothing, keep
-            } else {
-                $(option).remove();
-            }
-        });
-    }
     const config = new BattleConfigManager(credential).loadBattleFieldConfig();
     page.battleLevelShortcut = config.count === 1;
 
@@ -327,6 +307,13 @@ function _parseRoleStatus(page: TownDashboardPage, table: JQuery, div: JQuery, c
             let s = $(th).text();
             s = StringUtils.substringAfterLast(s, " ");
             page.obtainRole.rank = s;
+        })
+        .next()
+        .next()
+        .each((idx, th) => {
+            let s = $(th).text();
+            s = StringUtils.substringBefore(s, " p");
+            page.obtainRole.contribution = _.parseInt(s);
         })
 
     $(div).find("> table:first")

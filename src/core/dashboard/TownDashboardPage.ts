@@ -38,16 +38,18 @@ class TownDashboardPage {
     capacityLimitationNotification?: boolean;
     canCollectTownTax?: boolean;
 
+    messageTargetSelectHtml?: string;
+
     get obtainRole(): Role {
         return this.role!;
     }
 
     get cashHtml() {
-        const cash = this.obtainRole.cash;
-        if (cash! >= 1000000) {
-            return "<span style='color:red'>" + cash + " Gold</span>";
+        const cash = this.obtainRole.cash!;
+        if (cash >= 1000000) {
+            return "<span style='color:red'>" + cash.toLocaleString() + " Gold</span>";
         } else {
-            return cash + " Gold";
+            return cash.toLocaleString() + " Gold";
         }
     }
 

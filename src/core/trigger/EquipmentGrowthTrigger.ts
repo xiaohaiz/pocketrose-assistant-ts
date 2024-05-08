@@ -21,6 +21,8 @@ class EquipmentGrowthTrigger {
         this.#credential = credential;
     }
 
+    fullAutoSet?: boolean;
+
     #equipmentPage?: PersonalEquipmentManagementPage;
 
     get equipmentPage(): PersonalEquipmentManagementPage | undefined {
@@ -43,6 +45,7 @@ class EquipmentGrowthTrigger {
      */
     async triggerUpdate() {
         if (SetupLoader.isAutoEquipmentExperience()) {
+            await this.#initializeEquipmentPage();
             const usingWeapon = this.#equipmentPage!.usingWeapon;
             if (usingWeapon) {
                 const ratio = usingWeapon.fullExperienceRatio;
@@ -52,7 +55,7 @@ class EquipmentGrowthTrigger {
                         config.weapon = true;
                         EquipmentExperienceConfig.writeConfig(this.#credential.id, config);
                     }
-                } else if (ratio < 0) {
+                } else if (ratio < 0 || (ratio === 1 && !!this.fullAutoSet)) {
                     const config = SetupLoader.loadEquipmentExperienceConfig(this.#credential.id);
                     if (!!config.weapon) {
                         config.weapon = false;
@@ -69,7 +72,7 @@ class EquipmentGrowthTrigger {
                         config.armor = true;
                         EquipmentExperienceConfig.writeConfig(this.#credential.id, config);
                     }
-                } else if (ratio < 0) {
+                } else if (ratio < 0 || (ratio === 1 && !!this.fullAutoSet)) {
                     const config = SetupLoader.loadEquipmentExperienceConfig(this.#credential.id);
                     if (!!config.armor) {
                         config.armor = false;
@@ -86,7 +89,7 @@ class EquipmentGrowthTrigger {
                         config.accessory = true;
                         EquipmentExperienceConfig.writeConfig(this.#credential.id, config);
                     }
-                } else if (ratio < 0) {
+                } else if (ratio < 0 || (ratio === 1 && !!this.fullAutoSet)) {
                     const config = SetupLoader.loadEquipmentExperienceConfig(this.#credential.id);
                     if (!!config.accessory) {
                         config.accessory = false;

@@ -55,7 +55,7 @@ class PersonalCareerManagementPageProcessor extends StatefulPageProcessor {
         this.equipmentManager.feature.onMessage = s => MessageBoard.publishMessage(s);
         this.equipmentManager.feature.onWarning = s => MessageBoard.publishWarning(s);
         this.equipmentManager.feature.onRefresh = () => {
-            this.equipmentManager.renderHitStatus(this.role);
+            this.equipmentManager.renderRoleStatus(this.role);
         };
 
         if (locationMode instanceof LocationModeTown) {
@@ -114,7 +114,7 @@ class PersonalCareerManagementPageProcessor extends StatefulPageProcessor {
         await this.renderCareerPage();
         await this.equipmentManager.reload();
         await this.equipmentManager.render();
-        this.equipmentManager.renderHitStatus(this.role);
+        this.equipmentManager.renderRoleStatus(this.role);
 
         await this.mirrorManager?.reload();
         await this.mirrorManager?.render(this.role!);
@@ -274,7 +274,7 @@ class PersonalCareerManagementPageProcessor extends StatefulPageProcessor {
         this.equipmentManager.bindButtons();
         this.mirrorManager?.bindButtons();
 
-        new MouseClickEventBuilder(this.credential)
+        new MouseClickEventBuilder()
             .bind($("#roleImage"), () => {
                 if (this.role === undefined) return;
                 const key = "_m_" + this.role.mirrorIndex!;

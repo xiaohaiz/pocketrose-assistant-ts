@@ -350,7 +350,7 @@ class BankManager extends CommonWidget {
 
 class BankManagerFeature extends CommonWidgetFeature {
 
-    enableWriteRecordOnDispose: boolean = false;
+    enableWriteRecordOnDispose: boolean = true;
     enableSalaryDistribution: boolean = false;
 
 }

@@ -2,6 +2,8 @@ import {PocketDatabase} from "../../pocket/PocketDatabase";
 import Credential from "../../util/Credential";
 import Role from "./Role";
 import Constants from "../../util/Constants";
+import Town from "../town/Town";
+import TownLoader from "../town/TownLoader";
 
 class RoleStatus {
 
@@ -21,18 +23,58 @@ class RoleStatus {
     petGender?: string;
     petLevel?: number;
 
+    get readLevel(): number | undefined {
+        return (this.level === undefined || this.level < 0) ? undefined : this.level;
+    }
+
+    get readMirrorIndex(): number | undefined {
+        return (this.mirrorIndex === undefined || this.mirrorIndex < 0) ? undefined : this.mirrorIndex;
+    }
+
+    get readAdditionalRP(): number | undefined {
+        return (this.additionalRP === undefined || this.additionalRP < 0) ? undefined : this.additionalRP;
+    }
+
+    get readConsecrateRP(): number | undefined {
+        return (this.consecrateRP === undefined || this.consecrateRP < 0) ? undefined : this.consecrateRP;
+    }
+
+    get readTownId(): string | undefined {
+        return (this.townId === undefined || this.townId === "-1") ? undefined : this.townId;
+    }
+
+    get readPetLevel(): number | undefined {
+        return (this.petLevel === undefined || this.petLevel < 0) ? undefined : this.petLevel;
+    }
+
+    get readImageHtml(): string | undefined {
+        if (this.image === undefined) return undefined;
+        const src = Constants.POCKET_DOMAIN + "/image/head/" + this.image;
+        return "<img src='" + src + "' alt='" + this.name + "' width='64' height='64'>";
+    }
+
+    get expired(): boolean {
+        if (this.updateTime === undefined) return true;
+        return (Date.now() - this.updateTime!) >= 1800000;
+    }
+
     get mirrorCategory(): string | undefined {
-        if (this.mirrorIndex === undefined) return undefined;
-        if (this.mirrorIndex! === 0) {
+        const mirrorIndex = this.readMirrorIndex;
+        if (mirrorIndex === undefined) return undefined;
+        if (mirrorIndex === 0) {
             return "本体";
         } else {
-            return "第" + this.mirrorIndex! + "分身";
+            return "第" + mirrorIndex + "分身";
         }
     }
 
-    get imageHtml(): string {
-        const src = Constants.POCKET_DOMAIN + "/image/head/" + this.image;
-        return "<img src='" + src + "' alt='" + this.name + "' width='64' height='64'>";
+    get town(): Town | null {
+        return TownLoader.load(this.readTownId);
+    }
+
+    get updateTimeLocalString(): string | undefined {
+        if (this.updateTime === undefined) return undefined;
+        return new Date(this.updateTime).toLocaleString();
     }
 
     asDocument() {
@@ -141,6 +183,286 @@ class RoleStatusStorage {
         })();
     }
 
+    static async update(record: RoleStatus) {
+        const db = await PocketDatabase.connectDatabase();
+        return await (() => {
+            return new Promise<void>((resolve, reject) => {
+                const store = db
+                    .transaction(["RoleStatus"], "readwrite")
+                    .objectStore("RoleStatus");
+                const readRequest = store.get(record.id!);
+                readRequest.onerror = reject;
+                readRequest.onsuccess = () => {
+                    if (!readRequest.result) {
+                        // Cache missed, do nothing.
+                        resolve();
+                        return;
+                    }
+                    const document = readRequest.result;
+                    document.updateTime = Date.now();
+                    document.revision = (document.revision ?? 1) + 1;
+                    (record.name) && (document.name = record.name);
+                    (record.image) && (document.image = record.image);
+                    (record.level !== undefined) && (document.level = record.level);
+                    (record.mirrorIndex !== undefined) && (document.mirrorIndex = record.mirrorIndex);
+                    (record.career) && (document.career = record.career);
+                    (record.additionalRP !== undefined) && (document.additionalRP = record.additionalRP);
+                    (record.consecrateRP !== undefined) && (document.consecrateRP = record.consecrateRP);
+                    (record.battleCount !== undefined) && (document.battleCount = record.battleCount);
+                    (record.townId) && (document.townId = record.townId);
+                    (record.petGender) && (document.petGender = record.petGender);
+                    (record.petLevel !== undefined) && (document.petLevel = record.petLevel);
+                    const writeRequest = store.put(document);
+                    writeRequest.onerror = reject;
+                    writeRequest.onsuccess = () => resolve();
+                };
+            });
+        })();
+    }
+
+    static async evict(id: string) {
+        const db = await PocketDatabase.connectDatabase();
+        return await (() => {
+            return new Promise<void>((resolve, reject) => {
+                const store = db
+                    .transaction(["RoleStatus"], "readwrite")
+                    .objectStore("RoleStatus");
+                const readRequest = store.get(id);
+                readRequest.onerror = reject;
+                readRequest.onsuccess = () => {
+                    if (!readRequest.result) {
+                        // Cache missed, do nothing.
+                        resolve();
+                        return;
+                    }
+                    const document = readRequest.result;
+                    let changeCount = 0;
+                    if (delete document.name) changeCount++;
+                    if (delete document.image) changeCount++;
+                    if (delete document.level) changeCount++;
+                    if (delete document.mirrorIndex) changeCount++;
+                    if (delete document.career) changeCount++;
+                    if (delete document.additionalRP) changeCount++;
+                    if (delete document.consecrateRP) changeCount++;
+                    if (delete document.battleCount) changeCount++;
+                    if (delete document.townId) changeCount++;
+                    if (delete document.petGender) changeCount++;
+                    if (delete document.petLevel) changeCount++;
+                    if (changeCount === 0) {
+                        // Nothing changed, ignore
+                        resolve();
+                        return;
+                    }
+                    document.updateTime = Date.now();
+                    document.revision = (document.revision ?? 1) + 1;
+                    const writeRequest = store.put(document);
+                    writeRequest.onerror = reject;
+                    writeRequest.onsuccess = () => resolve();
+                };
+            });
+        })();
+    }
+
+    static async unsetTown(id: string) {
+        const db = await PocketDatabase.connectDatabase();
+        return await (() => {
+            return new Promise<void>((resolve, reject) => {
+                const store = db
+                    .transaction(["RoleStatus"], "readwrite")
+                    .objectStore("RoleStatus");
+                const readRequest = store.get(id);
+                readRequest.onerror = reject;
+                readRequest.onsuccess = () => {
+                    if (!readRequest.result) {
+                        // Cache missed, do nothing.
+                        resolve();
+                        return;
+                    }
+                    const document = readRequest.result;
+                    let changeCount = 0;
+                    if (delete document.townId) changeCount++;
+                    if (changeCount === 0) {
+                        // Nothing changed, ignore
+                        resolve();
+                        return;
+                    }
+                    document.updateTime = Date.now();
+                    document.revision = (document.revision ?? 1) + 1;
+                    const writeRequest = store.put(document);
+                    writeRequest.onerror = reject;
+                    writeRequest.onsuccess = () => resolve();
+                };
+            });
+        })();
+    }
+
+    static async unsetMirror(id: string) {
+        const db = await PocketDatabase.connectDatabase();
+        return await (() => {
+            return new Promise<void>((resolve, reject) => {
+                const store = db
+                    .transaction(["RoleStatus"], "readwrite")
+                    .objectStore("RoleStatus");
+                const readRequest = store.get(id);
+                readRequest.onerror = reject;
+                readRequest.onsuccess = () => {
+                    if (!readRequest.result) {
+                        // Cache missed, do nothing.
+                        resolve();
+                        return;
+                    }
+                    const document = readRequest.result;
+                    let changeCount = 0;
+                    if (delete document.mirrorIndex) changeCount++;
+                    if (delete document.career) changeCount++;
+                    if (changeCount === 0) {
+                        // Nothing changed, ignore
+                        resolve();
+                        return;
+                    }
+                    document.updateTime = Date.now();
+                    document.revision = (document.revision ?? 1) + 1;
+                    const writeRequest = store.put(document);
+                    writeRequest.onerror = reject;
+                    writeRequest.onsuccess = () => resolve();
+                };
+            });
+        })();
+    }
+
+    static async unsetConsecrateRP(id: string) {
+        const db = await PocketDatabase.connectDatabase();
+        return await (() => {
+            return new Promise<void>((resolve, reject) => {
+                const store = db
+                    .transaction(["RoleStatus"], "readwrite")
+                    .objectStore("RoleStatus");
+                const readRequest = store.get(id);
+                readRequest.onerror = reject;
+                readRequest.onsuccess = () => {
+                    if (!readRequest.result) {
+                        // Cache missed, do nothing.
+                        resolve();
+                        return;
+                    }
+                    const document = readRequest.result;
+                    let changeCount = 0;
+                    if (delete document.consecrateRP) changeCount++;
+                    if (changeCount === 0) {
+                        // Nothing changed, ignore
+                        resolve();
+                        return;
+                    }
+                    document.updateTime = Date.now();
+                    document.revision = (document.revision ?? 1) + 1;
+                    const writeRequest = store.put(document);
+                    writeRequest.onerror = reject;
+                    writeRequest.onsuccess = () => resolve();
+                };
+            });
+        })();
+    }
+
+    static async unsetPet(id: string) {
+        const db = await PocketDatabase.connectDatabase();
+        return await (() => {
+            return new Promise<void>((resolve, reject) => {
+                const store = db
+                    .transaction(["RoleStatus"], "readwrite")
+                    .objectStore("RoleStatus");
+                const readRequest = store.get(id);
+                readRequest.onerror = reject;
+                readRequest.onsuccess = () => {
+                    if (!readRequest.result) {
+                        // Cache missed, do nothing.
+                        resolve();
+                        return;
+                    }
+                    const document = readRequest.result;
+                    let changeCount = 0;
+                    if (delete document.petLevel) changeCount++;
+                    if (delete document.petGender) changeCount++;
+                    if (changeCount === 0) {
+                        // Nothing changed, ignore
+                        resolve();
+                        return;
+                    }
+                    document.updateTime = Date.now();
+                    document.revision = (document.revision ?? 1) + 1;
+                    const writeRequest = store.put(document);
+                    writeRequest.onerror = reject;
+                    writeRequest.onsuccess = () => resolve();
+                };
+            });
+        })();
+    }
+
+    static async increaseLevel(id: string) {
+        const db = await PocketDatabase.connectDatabase();
+        return await (() => {
+            return new Promise<void>((resolve, reject) => {
+                const store = db
+                    .transaction(["RoleStatus"], "readwrite")
+                    .objectStore("RoleStatus");
+                const readRequest = store.get(id);
+                readRequest.onerror = reject;
+                readRequest.onsuccess = () => {
+                    if (!readRequest.result) {
+                        // Cache missed, do nothing.
+                        resolve();
+                        return;
+                    }
+                    const document = readRequest.result;
+                    const level = document.level;
+                    if (level === undefined || level === 150) {
+                        // No level field or max level reached, do nothing.
+                        resolve();
+                        return;
+                    }
+                    document.level = level + 1;
+                    document.updateTime = Date.now();
+                    document.revision = (document.revision ?? 1) + 1;
+                    const writeRequest = store.put(document);
+                    writeRequest.onerror = reject;
+                    writeRequest.onsuccess = () => resolve();
+                };
+            });
+        })();
+    }
+
+    static async increasePetLevel(id: string) {
+        const db = await PocketDatabase.connectDatabase();
+        return await (() => {
+            return new Promise<void>((resolve, reject) => {
+                const store = db
+                    .transaction(["RoleStatus"], "readwrite")
+                    .objectStore("RoleStatus");
+                const readRequest = store.get(id);
+                readRequest.onerror = reject;
+                readRequest.onsuccess = () => {
+                    if (!readRequest.result) {
+                        // Cache missed, do nothing.
+                        resolve();
+                        return;
+                    }
+                    const document = readRequest.result;
+                    const petLevel = document.petLevel;
+                    if (petLevel === undefined || petLevel === 100) {
+                        // No petLevel field or max petLevel reached, do nothing.
+                        resolve();
+                        return;
+                    }
+                    document.petLevel = petLevel + 1;
+                    document.updateTime = Date.now();
+                    document.revision = (document.revision ?? 1) + 1;
+                    const writeRequest = store.put(document);
+                    writeRequest.onerror = reject;
+                    writeRequest.onsuccess = () => resolve();
+                };
+            });
+        })();
+    }
+
 }
 
 class RoleStatusManager {
@@ -156,63 +478,12 @@ class RoleStatusManager {
     }
 
     async load(): Promise<RoleStatus | null> {
-        return await RoleStatusStorage.load(this.roleId);
-    }
-
-    async getCurrentLevel(): Promise<number | undefined> {
-        const status = await this.load();
-        if (status === null) return undefined;
-        const level = status.level;
-        if (level === undefined || level < 0) return undefined;
-        return level;
-    }
-
-    async getCurrentMirrorIndex(): Promise<number | undefined> {
-        const status = await this.load();
-        if (status === null) return undefined;
-        const mirrorIndex = status.mirrorIndex;
-        if (mirrorIndex === undefined || mirrorIndex < 0) return undefined;
-        return mirrorIndex;
-    }
-
-    async getCurrentCareer(): Promise<string | undefined> {
-        const status = await this.load();
-        if (status === null) return undefined;
-        const career = status.career;
-        if (career === undefined || career === "") return undefined;
-        return career;
-    }
-
-    async getCurrentAdditionalRP(): Promise<number | undefined> {
-        const status = await this.load();
-        if (status === null) return undefined;
-        const additionalRP = status.additionalRP;
-        if (additionalRP === undefined || additionalRP < 0) return undefined;
-        return additionalRP;
-    }
-
-    async getCurrentConsecrateRP(): Promise<number | undefined> {
-        const status = await this.load();
-        if (status === null) return undefined;
-        const consecrateRP = status.consecrateRP;
-        if (consecrateRP === undefined || consecrateRP < 0) return undefined;
-        return consecrateRP;
-    }
-
-    async getCurrentTownId(): Promise<string | undefined> {
-        const status = await this.load();
-        if (status === null) return undefined;
-        const townId = status.townId;
-        if (townId === undefined || townId === "-1") return undefined;
-        return townId;
-    }
-
-    async getCurrentPetLevel(): Promise<number | undefined> {
-        const status = await this.load();
-        if (status === null) return undefined;
-        const petLevel = status.petLevel;
-        if (petLevel === undefined || petLevel < 0) return undefined;
-        return petLevel;
+        const status = await RoleStatusStorage.load(this.roleId);
+        if (status !== null && status.expired) {
+            await RoleStatusStorage.evict(this.roleId);
+            return null;
+        }
+        return status;
     }
 
     async writeRoleStatus(role?: Role) {
@@ -245,100 +516,33 @@ class RoleStatusManager {
         await RoleStatusStorage.upsert(status);
     }
 
-    async setLevel(level: number) {
-        const status = new RoleStatus();
-        status.id = this.roleId;
-        status.level = level;
-        await RoleStatusStorage.upsert(status);
+    async increaseLevel() {
+        await RoleStatusStorage.increaseLevel(this.roleId);
     }
 
-    async setTownId(townId: string) {
-        const status = new RoleStatus();
-        status.id = this.roleId;
-        status.townId = townId;
-        await RoleStatusStorage.upsert(status);
+    async increasePetLevel() {
+        await RoleStatusStorage.increasePetLevel(this.roleId);
     }
 
-    async unsetTownId() {
-        const status = new RoleStatus();
-        status.id = this.roleId;
-        status.townId = "-1";
-        await RoleStatusStorage.upsert(status);
+    async update(record: RoleStatus) {
+        record.id = this.roleId;
+        await RoleStatusStorage.update(record);
     }
 
-    async setPetGender(petGender: string) {
-        const status = new RoleStatus();
-        status.id = this.roleId;
-        status.petGender = petGender;
-        await RoleStatusStorage.upsert(status);
+    async unsetTown() {
+        await RoleStatusStorage.unsetTown(this.roleId);
     }
 
-    async unsetPetGender() {
-        const status = new RoleStatus();
-        status.id = this.roleId;
-        status.petGender = "";
-        await RoleStatusStorage.upsert(status);
-    }
-
-    async setPetLevel(petLevel: number) {
-        const status = new RoleStatus();
-        status.id = this.roleId;
-        status.petLevel = petLevel;
-        await RoleStatusStorage.upsert(status);
-    }
-
-    async unsetPetLevel() {
-        const status = new RoleStatus();
-        status.id = this.roleId;
-        status.petLevel = -1;
-        await RoleStatusStorage.upsert(status);
-    }
-
-    async unsetMirrorIndex() {
-        const status = new RoleStatus();
-        status.id = this.roleId;
-        status.mirrorIndex = -1;
-        await RoleStatusStorage.upsert(status);
-    }
-
-    async setCareer(career: string) {
-        const status = new RoleStatus();
-        status.id = this.roleId;
-        status.career = career;
-        await RoleStatusStorage.upsert(status);
-    }
-
-    async unsetCareer() {
-        const status = new RoleStatus();
-        status.id = this.roleId;
-        status.career = "";
-        await RoleStatusStorage.upsert(status);
+    async unsetMirror() {
+        await RoleStatusStorage.unsetMirror(this.roleId);
     }
 
     async unsetConsecrateRP() {
-        const status = new RoleStatus();
-        status.id = this.roleId;
-        status.consecrateRP = -1;
-        await RoleStatusStorage.upsert(status);
+        await RoleStatusStorage.unsetConsecrateRP(this.roleId);
     }
 
-    async updateBattleCount(battleCount: number, additionalRP?: number) {
-        const status = new RoleStatus();
-        status.id = this.roleId;
-        status.battleCount = battleCount;
-        if (additionalRP !== undefined) {
-            status.additionalRP = additionalRP;
-        }
-        await RoleStatusStorage.upsert(status);
-    }
-
-    async increaseLevelIfNecessary() {
-        const loaded = await this.load();
-        if (loaded === null || loaded.level === undefined || loaded.level === 150) return;
-        const status = new RoleStatus();
-        status.id = this.roleId;
-        status.level = loaded.level! + 1;
-        await RoleStatusStorage.upsert(status);
+    async unsetPet() {
+        await RoleStatusStorage.unsetPet(this.roleId);
     }
 }
 

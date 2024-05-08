@@ -166,12 +166,10 @@ async function renderEquipmentList(credential: Credential, page: TownForgePage, 
             });
         });
     });
-    $("#repairAll").on("click", () => {
-        new TownForge(credential, town.id).repairAll().then(() => {
-            refreshPage(credential, town).then(() => {
-                MessageBoard.publishMessage("所有装备修理完成。");
-            });
-        });
+    $("#repairAll").on("click", async () => {
+        await new TownForge(credential, town.id).repairAll();
+        await refreshPage(credential, town);
+        MessageBoard.publishMessage("所有装备修理完成。");
     });
 }
 

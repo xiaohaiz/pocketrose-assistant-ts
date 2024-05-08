@@ -6,6 +6,7 @@ class ConversationPage {
     domesticMessageHtml?: string;
     unitMessageHtml?: string;
     townMessageHtml?: string;
+    messageTargetSelectHtml?: string;
 
     static parse(html: string) {
         const tr = $(html)
@@ -22,6 +23,7 @@ class ConversationPage {
         const unitMessageHtml = td.find("> table:eq(1)").html();
         const townMessageHtml = td.find("> table:eq(2)").html();
 
+        const targetSelectHtml = $(html).find("select[name='mes_id']").html();
 
         const page = new ConversationPage();
         page.globalMessageHtml = globalMessageHtml;
@@ -30,6 +32,7 @@ class ConversationPage {
         page.domesticMessageHtml = domesticMessageHtml;
         page.unitMessageHtml = unitMessageHtml;
         page.townMessageHtml = townMessageHtml;
+        page.messageTargetSelectHtml = targetSelectHtml;
         return page;
     }
 }

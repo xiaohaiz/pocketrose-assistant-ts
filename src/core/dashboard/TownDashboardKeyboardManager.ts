@@ -133,7 +133,7 @@ class TownDashboardKeyboardManager {
     }
 
     #processKeyPressed_r() {
-        $("#refreshButton").trigger("click");
+        $("#reloadButton").trigger("click");
     }
 
     #processKeyPressed_s() {

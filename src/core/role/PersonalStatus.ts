@@ -7,6 +7,9 @@ import Role from "./Role";
 import {RoleStatusManager} from "./RoleStatus";
 import {PocketNetwork} from "../../pocket/PocketNetwork";
 import _ from "lodash";
+import {PocketLogger} from "../../pocket/PocketLogger";
+
+const logger = PocketLogger.getLogger("STATUS");
 
 class PersonalStatus {
 
@@ -26,10 +29,13 @@ class PersonalStatus {
             request.set("town", this.townId);
         }
         request.set("mode", "STATUS_PRINT");
-        const html = await PocketNetwork.post("mydata.cgi", request);
-        const page = PersonalStatusPageParser.parsePage(html);
+        const response = await PocketNetwork.post("mydata.cgi", request);
+        const page = PersonalStatusPageParser.parsePage(response.html);
+        response.touch();
+        logger.debug("Role status page loaded.", response.durationInMillis);
         // Write role status after role parsed.
         await this.statusManager.writeRoleStatus(page.role);
+        logger.debug("Role status cache updated.");
         return page;
     }
 

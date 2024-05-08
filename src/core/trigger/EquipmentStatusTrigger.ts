@@ -5,6 +5,7 @@ import TreasureBag from "../equipment/TreasureBag";
 import CastleInformation from "../dashboard/CastleInformation";
 import CastleWarehouse from "../equipment/CastleWarehouse";
 import {RoleEquipmentStatusManager} from "../equipment/RoleEquipmentStatusManager";
+import CastleInformationPage from "../dashboard/CastleInformationPage";
 
 /**
  * ============================================================================
@@ -27,6 +28,7 @@ class EquipmentStatusTrigger {
     }
 
     private equipmentPage?: PersonalEquipmentManagementPage;
+    castlePage?: CastleInformationPage;
 
     withEquipmentPage(value: PersonalEquipmentManagementPage | undefined): EquipmentStatusTrigger {
         this.equipmentPage = value;
@@ -36,6 +38,12 @@ class EquipmentStatusTrigger {
     async #initializeEquipmentPage() {
         if (!this.equipmentPage) {
             this.equipmentPage = await new PersonalEquipmentManagement(this.credential).open();
+        }
+    }
+
+    private async initializeCastlePage() {
+        if (!this.castlePage) {
+            this.castlePage = await new CastleInformation().open();
         }
     }
 
@@ -56,8 +64,8 @@ class EquipmentStatusTrigger {
 
         // 解析城堡仓库中的装备
         const roleName = this.equipmentPage!.role!.name!;
-        const castlePage = await new CastleInformation().open();
-        const castle = castlePage.findByRoleName(roleName);
+        await this.initializeCastlePage();
+        const castle = this.castlePage!.findByRoleName(roleName);
         if (castle) {
             const warehousePage = await new CastleWarehouse(this.credential).open();
             await this.statusManager.updateCastleWarehouseEquipmentStatus(warehousePage);

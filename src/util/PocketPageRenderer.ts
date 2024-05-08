@@ -36,23 +36,6 @@ class PocketPageRenderer {
         return html;
     }
 
-    /**
-     * @deprecated
-     */
-    static createGemCategorySelection(id?: string) {
-        let idForUse = "_pocket_gemCategory";
-        if (id !== undefined) idForUse = id;
-        let html = "";
-        html += "<select id='" + idForUse + "'>";
-        html += "<option value='ALL'>所有宝石</option>";
-        html += "<option value='POWER' style='color:blue'>威力宝石</option>";
-        html += "<option value='LUCK' style='color:red'>幸运宝石</option>";
-        html += "<option value='WEIGHT' style='color:green'>重量宝石</option>";
-        html += "<option value='DRAGON'>龙珠</option>";
-        html += "</select>";
-        return html;
-    }
-
     static createScanIntervalSelection(id?: string) {
         let idForUse = "_pocket_scanInterval";
         if (id !== undefined) idForUse = id;

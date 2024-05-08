@@ -5,10 +5,18 @@ import Credential from "../../util/Credential";
 import PageUtils from "../../util/PageUtils";
 import PageProcessorContext from "../PageProcessorContext";
 import StatelessPageProcessorCredentialSupport from "../StatelessPageProcessorCredentialSupport";
+import {BattleErrorPageProcessor} from "../../core/battle/BattleErrorPageProcessor";
 
 class BattlePageProcessor extends StatelessPageProcessorCredentialSupport {
 
     async doProcess(credential: Credential, context?: PageProcessorContext): Promise<void> {
+        const html = PageUtils.currentPageHtml();
+        if (_.includes(html, "ERROR !")) {
+            await new BattleErrorPageProcessor(credential).processErrorPage(html);
+            $("input:submit[value='返回城市']").trigger("click");
+            return;
+        }
+
         // 解析当前的战数
         const battleCount = parseBattleCount(context);
         if (battleCount === undefined) {
@@ -16,7 +24,7 @@ class BattlePageProcessor extends StatelessPageProcessorCredentialSupport {
         }
 
         // 解析页面的反馈的数据
-        const processor = new BattleProcessor(credential, PageUtils.currentPageHtml(), battleCount);
+        const processor = new BattleProcessor(credential, html, battleCount);
         await processor.doProcess();
 
         // 开始正式处理战斗页面
@@ -129,7 +137,7 @@ function processBattle(credential: Credential,
         .find("> b:first")
         .find("> font:first")
         .find("> font[color='red']")
-        .each((idx, font) => {
+        .each((_idx, font) => {
             const ft = $(font).text();
             if (ft.includes("遗忘了技能") || ft.includes("学会了新技能")) {
                 petLearnSpell = true;
@@ -138,7 +146,7 @@ function processBattle(credential: Credential,
         });
 
     // 强制推荐，则删除其余所有的按钮
-    $("button").each((idx, button) => {
+    $("button").each((_idx, button) => {
         const tabindex = $(button).attr("tabindex");
         if (tabindex !== "1") {
             $(button).parent().remove();
@@ -150,6 +158,9 @@ function processBattle(credential: Credential,
     // 战斗页自动触底
     const buttonId = $("button[tabindex='1']").attr("id")!;
     PageUtils.scrollIntoView(buttonId);
+
+    // 自动返回
+    PageUtils.triggerClick(buttonId);
 }
 
 function parseBattleCount(context?: PageProcessorContext): number | undefined {

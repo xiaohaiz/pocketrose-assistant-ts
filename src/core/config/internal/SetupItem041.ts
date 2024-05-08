@@ -105,4 +105,4 @@ function doSaveSetupItem() {
     $("#refreshButton").trigger("click");
 }
 
-export = SetupItem041;
+export {SetupItem041};

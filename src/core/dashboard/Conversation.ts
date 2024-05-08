@@ -1,6 +1,9 @@
 import Credential from "../../util/Credential";
-import NetworkUtils from "../../util/NetworkUtils";
 import ConversationPage from "./ConversationPage";
+import {PocketNetwork} from "../../pocket/PocketNetwork";
+import {PocketLogger} from "../../pocket/PocketLogger";
+
+const logger = PocketLogger.getLogger("CONVERSATION");
 
 class Conversation {
 
@@ -11,17 +14,15 @@ class Conversation {
     }
 
     async open(): Promise<ConversationPage> {
-        return (() => {
-            return new Promise<ConversationPage>(resolve => {
-                const request = this.#credential.asRequestMap();
-                request.set("mode", "MESSE_PRINT");
-                NetworkUtils.post("messe_print.cgi", request).then(html => {
-                    const page = ConversationPage.parse(html);
-                    resolve(page);
-                });
-            });
-        })();
+        const request = this.#credential.asRequestMap();
+        request.set("mode", "MESSE_PRINT");
+        const response = await PocketNetwork.post("messe_print.cgi", request);
+        const page = ConversationPage.parse(response.html);
+        response.touch();
+        logger.debug("Conversation page loaded.", response.durationInMillis);
+        return page;
     }
+
 }
 
 export = Conversation;

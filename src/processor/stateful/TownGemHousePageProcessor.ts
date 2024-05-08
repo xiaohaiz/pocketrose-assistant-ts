@@ -8,25 +8,26 @@ import {GemManager} from "../../widget/GemManager";
 import {EquipmentManager} from "../../widget/EquipmentManager";
 import PersonalEquipmentManagementPage from "../../core/equipment/PersonalEquipmentManagementPage";
 import KeyboardShortcutBuilder from "../../util/KeyboardShortcutBuilder";
-import {PocketPage} from "../../pocket/PocketPage";
+import {PocketFormGenerator, PocketPage} from "../../pocket/PocketPage";
 import ButtonUtils from "../../util/ButtonUtils";
 import MessageBoard from "../../util/MessageBoard";
 import {RoleManager} from "../../widget/RoleManager";
 
 class TownGemHousePageProcessor extends StatefulPageProcessor {
 
+    private readonly location: LocationModeTown;
     private readonly roleManager: RoleManager;
     private readonly equipmentManager: EquipmentManager;
     private readonly gemManager: GemManager;
 
     constructor(credential: Credential, context: PageProcessorContext) {
         super(credential, context);
-        const locationMode = this.createLocationMode() as LocationModeTown;
+        this.location = this.createLocationMode() as LocationModeTown;
 
-        this.roleManager = new RoleManager(credential, locationMode);
+        this.roleManager = new RoleManager(credential, this.location);
         this.roleManager.feature.enableBankAccount = true;
 
-        this.equipmentManager = new EquipmentManager(credential, locationMode);
+        this.equipmentManager = new EquipmentManager(credential, this.location);
         this.equipmentManager.feature.enableGemTransfer = true;
         this.equipmentManager.feature.enableGrowthTriggerOnDispose = true;
         this.equipmentManager.feature.enableSpaceTriggerOnDispose = true;
@@ -42,21 +43,20 @@ class TownGemHousePageProcessor extends StatefulPageProcessor {
             });
         };
 
-        this.gemManager = new GemManager(credential, locationMode);
-        this.gemManager.feature.onRefresh = message => {
-            this.roleManager.reload().then(() => {
-                this.roleManager.render().then(() => {
-                    this.equipmentManager.equipmentPage = message.extensions.get("equipmentPage") as PersonalEquipmentManagementPage;
-                    this.equipmentManager.render().then();
-                });
-            });
+        this.gemManager = new GemManager(credential, this.location);
+        this.gemManager.feature.onRefresh = async (message) => {
+            await this.roleManager.reload();
+            await this.roleManager.render();
+            this.equipmentManager.equipmentPage = message.extensions.get("equipmentPage") as PersonalEquipmentManagementPage;
+            await this.equipmentManager.render();
+            this.equipmentManager.renderRoleStatus(this.roleManager.role);
         };
     }
 
     protected async doProcess(): Promise<void> {
         if (!(this.createLocationMode() instanceof LocationModeTown)) return;
         this.gemManager.gemPage = await new TownGemHousePageParser(this.credential, this.townId).parsePage(PageUtils.currentPageHtml());
-        await this.createPage();
+        await this.generateHTML();
         this.resetMessageBoard();
         this.bindButtons();
         this.roleManager.bindButtons();
@@ -66,6 +66,7 @@ class TownGemHousePageProcessor extends StatefulPageProcessor {
         await this.roleManager.render();
         await this.equipmentManager.reload();
         await this.equipmentManager.render();
+        this.equipmentManager.renderRoleStatus(this.roleManager.role);
         await this.gemManager.render(this.equipmentManager.equipmentPage!);
         KeyboardShortcutBuilder.newInstance()
             .onKeyPressed("r", () => PageUtils.triggerClick("refreshButton"))
@@ -74,7 +75,7 @@ class TownGemHousePageProcessor extends StatefulPageProcessor {
             .bind();
     }
 
-    private async createPage() {
+    private async generateHTML() {
         const container = $("body:first > table:first > tbody:first > tr:first > td:first");
         container.find("> hr:first").remove();
         const table = container.find("> table:first");
@@ -120,11 +121,11 @@ class TownGemHousePageProcessor extends StatefulPageProcessor {
 
     private bindButtons(): void {
         $("#_pocket_page_extension_0").html(() => {
-            return PageUtils.generateReturnTownForm(this.credential);
+            return new PocketFormGenerator(this.credential, this.location).generateReturnFormHTML();
         });
         $("#returnButton").on("click", () => {
             PageUtils.disablePageInteractiveElements();
-            this.beforeReturn().then(() => PageUtils.triggerClick("returnTown"));
+            this.dispose().then(() => PageUtils.triggerClick("_pocket_ReturnSubmit"));
         });
         $("#refreshButton").on("click", () => {
             PocketPage.scrollIntoTitle();
@@ -141,7 +142,7 @@ class TownGemHousePageProcessor extends StatefulPageProcessor {
         MessageBoard.resetMessageBoard("" +
             "<b style='color:yellow'>宝石屋改造的一些说明：</b><br>" +
             "正在使用中的装备除了宠物蛋之外不允许镶嵌。<br>" +
-            "自动砸宝石功能每2秒执行一次，会自动结束，无需干涉。<br>" +
+            "自动砸宝石功能持续进行，会自动结束，无需干涉。<br>" +
             "威力负数、武器威力100、防具威力100、饰品威力50时会自动中断。" +
             "");
     }
@@ -151,11 +152,12 @@ class TownGemHousePageProcessor extends StatefulPageProcessor {
         await this.roleManager.render();
         await this.equipmentManager.reload();
         await this.equipmentManager.render();
+        this.equipmentManager.renderRoleStatus(this.roleManager.role);
         await this.gemManager.reload();
         await this.gemManager.render(this.equipmentManager.equipmentPage!);
     }
 
-    private async beforeReturn() {
+    private async dispose() {
         await this.roleManager.dispose();
         await this.equipmentManager.dispose();
         await this.gemManager.dispose();

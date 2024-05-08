@@ -1,36 +1,21 @@
 import _ from "lodash";
 import Coordinate from "../../util/Coordinate";
-import NetworkUtils from "../../util/NetworkUtils";
 import StringUtils from "../../util/StringUtils";
 import Castle from "../castle/Castle";
 import CastleInformationPage from "./CastleInformationPage";
+import {PocketNetwork} from "../../pocket/PocketNetwork";
+import {PocketLogger} from "../../pocket/PocketLogger";
+
+const logger = PocketLogger.getLogger("CASTLE");
 
 class CastleInformation {
 
     async open(): Promise<CastleInformationPage> {
-        return await (() => {
-            return new Promise<CastleInformationPage>(resolve => {
-                NetworkUtils.get("castle_print.cgi").then(html => {
-                    const page = CastleInformation.parsePage(html);
-                    resolve(page);
-                });
-            });
-        })();
-    }
-
-    async load(roleName: string): Promise<Castle> {
-        return await (() => {
-            return new Promise<Castle>((resolve, reject) => {
-                this.open().then(page => {
-                    const castle = page.findByRoleName(roleName);
-                    if (castle === null) {
-                        reject();
-                    } else {
-                        resolve(castle);
-                    }
-                });
-            });
-        })();
+        const response = await PocketNetwork.get("castle_print.cgi");
+        const page = CastleInformation.parsePage(response.html);
+        response.touch();
+        logger.debug("Castle information page loaded.", response.durationInMillis);
+        return page;
     }
 
     static parsePage(html: string) {

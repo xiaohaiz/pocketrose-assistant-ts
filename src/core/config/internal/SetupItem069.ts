@@ -27,12 +27,9 @@ class SetupItem069 implements SetupItem {
         html += "<th style='background-color:#E8E8D0' class='C_setupItemName' id='_s_" + this.#code + "'>" + this.#name + "</th>";
         html += "<td style='background-color:#E8E8D0'></td>";
         html += "<td style='background-color:#EFE0C0'></td>";
-        html += "<td style='background-color:#E0D0B0;text-align:left'>";
+        html += "<td style='background-color:#E0D0B0;text-align:left' colspan='2'>";
         html += "<input type='button' class='dynamic_button _069_button' id='_069_button_1' value='启用'>";
         html += "<input type='button' class='dynamic_button _069_button' id='_069_button_2' value='禁用'>";
-        html += "</td>";
-        html += "<td style='background-color:#E8E8D0;text-align:left'>";
-        html += "开启此功能后，在进城后会自动转移据点到当前的城市。"
         html += "</td>";
         html += "</tr>";
         $("#setup_item_table").append($(html));

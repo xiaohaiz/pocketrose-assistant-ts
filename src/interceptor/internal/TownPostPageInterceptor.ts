@@ -1,14 +1,14 @@
-import PageInterceptor from "../PageInterceptor";
 import RoleStateMachineManager from "../../core/state/RoleStateMachineManager";
+import PageInterceptor from "../PageInterceptor";
 import PageProcessorContext from "../../processor/PageProcessorContext";
+import {TownPostHousePageProcessor} from "../../processor/stateful/TownPostHousePageProcessor";
 import Credential from "../../util/Credential";
-import {TownSpecialPetHousePageProcessor} from "../../processor/stateful/TownSpecialPetHousePageProcessor";
 
-class TownSpecialPetHousePageInterceptor implements PageInterceptor {
+class TownPostPageInterceptor implements PageInterceptor {
 
     accept(cgi: string, pageText: string): boolean {
         if (cgi === "town.cgi") {
-            return pageText.includes("* 自制装备 *");
+            return pageText.includes("* 宿 屋 *");
         }
         return false;
     }
@@ -22,7 +22,7 @@ class TownSpecialPetHousePageInterceptor implements PageInterceptor {
                 machine.start()
                     .whenInTown(state => {
                         const context = PageProcessorContext.whenInTown(state?.townId);
-                        new TownSpecialPetHousePageProcessor(credential, context).process();
+                        new TownPostHousePageProcessor(credential, context).process();
                     })
                     .process();
             });
@@ -30,4 +30,4 @@ class TownSpecialPetHousePageInterceptor implements PageInterceptor {
 
 }
 
-export {TownSpecialPetHousePageInterceptor};
+export = TownPostPageInterceptor;

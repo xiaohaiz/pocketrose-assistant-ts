@@ -23,8 +23,11 @@ class PersonalPetManagement {
                     request.set("town", this.#townId);
                 }
                 request.set("mode", "PETSTATUS");
+                const start = Date.now();
                 NetworkUtils.post("mydata.cgi", request).then(html => {
                     const page = PersonalPetManagementPageParser.parsePage(html);
+                    const end = Date.now();
+                    MessageBoard.publishMessage("Pet page loaded. (" + (end - start) + "ms spent)");
                     resolve(page);
                 });
             });

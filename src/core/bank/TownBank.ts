@@ -5,6 +5,12 @@ import PocketUtils from "../../util/PocketUtils";
 import BankAccount from "./BankAccount";
 import {TownBankPage} from "./BankPage";
 import {TownBankPageParser} from "./BankPageParser";
+import {PocketNetwork} from "../../pocket/PocketNetwork";
+import TownDashboardPageParser from "../dashboard/TownDashboardPageParser";
+import TownDashboardPage from "../dashboard/TownDashboardPage";
+import {PocketLogger} from "../../pocket/PocketLogger";
+
+const logger = PocketLogger.getLogger("BANK");
 
 class TownBank {
 
@@ -65,6 +71,17 @@ class TownBank {
             });
         };
         return await action();
+    }
+
+    async depositAll(): Promise<TownDashboardPage> {
+        const request = this.credential.asRequestMap();
+        request.set("azukeru", "all");
+        request.set("mode", "BANK_SELL");
+        const response = await PocketNetwork.post("town.cgi", request);
+        const page = new TownDashboardPageParser(this.credential, response.html).parse();
+        response.touch();
+        logger.debug("All cash deposited into bank and dashboard page returned.", response.durationInMillis);
+        return page;
     }
 
     async deposit(amount?: number): Promise<void> {

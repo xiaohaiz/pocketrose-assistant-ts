@@ -21,6 +21,8 @@ import {RoleStatusManager} from "../role/RoleStatus";
 import {BattleConfigManager} from "../config/ConfigManager";
 import LocalSettingManager from "../config/LocalSettingManager";
 import {PetUsingTrigger} from "../trigger/PetUsingTrigger";
+import MessageBoard from "../../util/MessageBoard";
+import CastleInformationPage from "../dashboard/CastleInformationPage";
 
 class BattleReturnInterceptor {
 
@@ -34,6 +36,9 @@ class BattleReturnInterceptor {
         this.#battlePage = battlePage;
     }
 
+    // Local cached
+
+    private castlePage?: CastleInformationPage;
     #equipmentPage?: PersonalEquipmentManagementPage;
     #petPage?: PersonalPetManagementPage;
 
@@ -58,6 +63,22 @@ class BattleReturnInterceptor {
             await roleStatusManager.unsetConsecrateRP();
         }
 
+        let doCompleteBattleFieldTrigger: boolean = false;
+        if (this.#battlePage.petEarnExperience) {
+            const petLevel = (await roleStatusManager.load())?.readPetLevel;
+            if (petLevel !== undefined && petLevel === 100) {
+                // 宠物战斗中获取了经验值，但是缓存中的宠物等级是100，数据不一致了，清除。
+                await roleStatusManager.unsetPet();
+                doCompleteBattleFieldTrigger = true;
+                MessageBoard.publishMessage("Role cached data crashed, trigger full reloading.");
+            }
+        }
+
+        if (this.#battlePage.petUpgrade) {
+            // 宠物升级，更新缓存的对应数据
+            await roleStatusManager.increasePetLevel();
+        }
+
         const statisticsTriggered = LocalSettingManager.drainStatisticsTriggered(this.#credential.id);
 
         const mod = this.#battleCount % 100;
@@ -79,10 +100,13 @@ class BattleReturnInterceptor {
                     this.#initializeEquipmentPage(),
                     this.#initializePetPage()
                 ]);
-                await new PetStatusTrigger(this.#credential)
+                const trigger = new PetStatusTrigger(this.#credential)
                     .withEquipmentPage(this.#equipmentPage)
-                    .withPetPage(this.#petPage)
-                    .triggerUpdate();
+                    .withPetPage(this.#petPage);
+                trigger.castlePage = this.castlePage;
+                await trigger.triggerUpdate();
+                this.castlePage = trigger.castlePage;
+
             } else {
                 await this.#initializePetPage();
                 await new RolePetStatusManager(this.#credential).updatePersonalPetStatus(this.#petPage);
@@ -91,9 +115,11 @@ class BattleReturnInterceptor {
         if (statisticsTriggered || mod === 97 || this.#hasHarvestExcludesPetMap()) {
             await this.#initializeEquipmentPage();
             if (statisticsTriggered || mod === 97) {
-                await new EquipmentStatusTrigger(this.#credential)
-                    .withEquipmentPage(this.#equipmentPage)
-                    .triggerUpdate();
+                const trigger = new EquipmentStatusTrigger(this.#credential)
+                    .withEquipmentPage(this.#equipmentPage);
+                trigger.castlePage = this.castlePage;
+                await trigger.triggerUpdate();
+                this.castlePage = trigger.castlePage;
             } else {
                 const statusManager = new RoleEquipmentStatusManager(this.#credential);
                 await statusManager.updatePersonalEquipmentStatus(this.#equipmentPage);
@@ -108,8 +134,11 @@ class BattleReturnInterceptor {
             }
         }
         if (new BattleConfigManager(this.#credential).isAutoSetBattleFieldEnabled) {
-            await new BattleFieldTrigger(this.#credential)
-                .triggerUpdateWhenBattle(this.#battlePage);
+            if (doCompleteBattleFieldTrigger) {
+                await new BattleFieldTrigger(this.#credential).triggerUpdate();
+            } else {
+                await new BattleFieldTrigger(this.#credential).triggerUpdateWhenBattle(this.#battlePage);
+            }
         }
         if (this.#battlePage.zodiacBattle) {
             const trigger = new ZodiacBattlePetLoveTrigger(this.#credential)

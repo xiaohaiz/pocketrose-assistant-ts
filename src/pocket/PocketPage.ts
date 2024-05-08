@@ -18,10 +18,12 @@ class PocketPage {
         html += "<tr>";
         html += "<td id='_pocket_page_title' style='color:yellowgreen;text-align:left;font-weight:bold;font-size:150%;width:100%'>";
         html += title;
-        if (location !== undefined) {
-            html += "<span> </span>";
-            html += "<span style='background-color:red;color:white;font-size:80%'>" + location + "</span>";
-        }
+        html += "<span> </span>";
+        html += "<span id='_pocket_page_role_location' style='background-color:red;color:white;font-size:80%'>" + (location ?? "") + "</span>";
+        html += "</td>";
+        html += "<td style='text-align:center;white-space:nowrap'>";
+        html += "<span id='_pocket_page_timer' style='background-color:wheat;color:navy;font-weight:bold'></span>";
+        html += "<span> </span>";
         html += "</td>";
         html += "<td id='_pocket_page_command' style='text-align:right;white-space:nowrap'>";
         html += "</td>";
@@ -114,6 +116,53 @@ class PocketFormGenerator {
             html += "</form>";
         }
         return html;
+    }
+
+    generateLeaveForm(): string | undefined {
+        if (this.locationMode instanceof LocationModeTown ||
+            this.locationMode instanceof LocationModeCastle) {
+            let html = "";
+            // noinspection HtmlUnknownTarget
+            html += "<form action='map.cgi' method='post'>";
+            html += "<input type='hidden' name='id' value='" + this.credential.id + "'>";
+            html += "<input type='hidden' name='pass' value='" + this.credential.pass + "'>";
+            html += "<input type='hidden' name='navi' value='on'>";
+            html += "<input type='hidden' name='out' value='1'>";
+            html += "<input type='hidden' name='mode' value='MAP_MOVE'>";
+            html += "<input type='submit' id='_pocket_LeaveSubmit'>";
+            html += "</form>";
+            return html;
+        }
+        return undefined;
+    }
+
+    generateEquipmentForm(): string {
+        let html = "";
+        // noinspection HtmlUnknownTarget
+        html += "<form action='mydata.cgi' method='post'>";
+        html += "<input type='hidden' name='id' value='" + this.credential.id + "'>";
+        html += "<input type='hidden' name='pass' value='" + this.credential.pass + "'>"
+        html += "<input type='hidden' name='mode' value='USE_ITEM'>";
+        html += "<input type='submit' id='_pocket_EquipmentSubmit'>";
+        html += "</form>";
+        return html;
+    }
+
+    generateGemForm(): string | undefined {
+        if (this.locationMode instanceof LocationModeTown) {
+            let form = "";
+            // noinspection HtmlUnknownTarget
+            form += "<form action='town.cgi' method='post'>";
+            form += "<input type='hidden' name='id' value='" + this.credential.id + "'>";
+            form += "<input type='hidden' name='pass' value='" + this.credential.pass + "'>"
+            form += "<input type='hidden' name='town' value='" + this.locationMode.townId + "'>";
+            form += "<input type='hidden' name='con_str' value='50'>";
+            form += "<input type='hidden' name='mode' value='BAOSHI_SHOP'>";
+            form += "<input type='submit' id='_pocket_GemSubmit'>";
+            form += "</form>";
+            return form;
+        }
+        return undefined;
     }
 }
 

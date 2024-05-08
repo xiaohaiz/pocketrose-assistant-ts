@@ -136,15 +136,14 @@ class MirrorManager extends CommonWidget {
             $("#_pocket_mirrorTable").append($(html));
         }
 
-        $(".C_pocket_mirrorChangeButton").on("click", event => {
+        $(".C_pocket_mirrorChangeButton").on("click", async (event) => {
             const btnId = $(event.target).attr("id") as string;
             const index = _.parseInt(StringUtils.substringAfterLast(btnId, "_"));
             $(".C_pocket_mirrorChangeButton").prop("disabled", true);
-            new TownInn(this.credential, this.townId).recovery().then(() => {
-                new PersonalMirror(this.credential, this.townId).changeMirror(index).then(() => {
-                    const message = OperationMessage.success();
-                    this._refresh(message).then();
-                });
+            await new TownInn(this.credential, this.townId).recovery();
+            new PersonalMirror(this.credential, this.townId).changeMirror(index).then(() => {
+                const message = OperationMessage.success();
+                this._refresh(message).then();
             });
         });
 
@@ -153,7 +152,7 @@ class MirrorManager extends CommonWidget {
                 const td = $(e);
                 const btnId = td.attr("id") as string;
                 const index = _.parseInt(StringUtils.substringAfterLast(btnId, "_"));
-                new MouseClickEventBuilder(this.credential)
+                new MouseClickEventBuilder()
                     .bind(td, () => {
                         $(".C_pocket_mirrorChangeButton").prop("disabled", true);
                         const key = "_m_" + index;

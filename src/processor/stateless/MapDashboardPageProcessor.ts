@@ -22,7 +22,10 @@ class MapDashboardPageProcessor extends StatelessPageProcessorCredentialSupport 
     async doProcess(credential: Credential, context?: PageProcessorContext): Promise<void> {
         const page = MapDashboardPage.parse(PageUtils.currentPageHtml());
 
-        await new RoleStatusManager(credential).unsetTownId();
+        // Trigger expired RoleStatus eviction.
+        await new RoleStatusManager(credential).load();
+
+        await new RoleStatusManager(credential).unsetTown();
 
         $("center:first")
             .attr("id", "systemAnnouncement");
@@ -82,9 +85,9 @@ class MapDashboardPageProcessor extends StatelessPageProcessorCredentialSupport 
         const roleTask = await new TaskGuideManager(credential).currentTask();
         if (roleTask === null || roleTask === "") {
             // 如果有必要的话绘制城堡
-            new CastleInformation()
-                .load(page.role!.name!)
-                .then(castle => {
+            new CastleInformation().open().then(castlePage => {
+                const castle = castlePage.findByRoleName(page.role!.name!);
+                if (castle) {
                     const coordinate = castle.coordinate!;
                     const buttonId = "location_" + coordinate.x + "_" + coordinate.y;
                     $("#" + buttonId)
@@ -93,7 +96,8 @@ class MapDashboardPageProcessor extends StatelessPageProcessorCredentialSupport 
                         .parent()
                         .attr("title", "城堡" + coordinate.asText() + " " + castle.name)
                         .attr("class", "color_fuchsia");
-                });
+                }
+            });
         }
 
         const coordinate = Coordinate.parse(context!.get("coordinate")!);

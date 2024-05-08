@@ -87,20 +87,6 @@ class BattleConfigManager {
 
     // ------------------------------------------------------------------------
 
-    static isHiddenBattleButtonEnabled(): boolean {
-        return StorageUtils.getBoolean("_pa_046");
-    }
-
-    static enableHiddenBattleButton() {
-        StorageUtils.set("_pa_046", "1");
-    }
-
-    static disableHiddenBattleButton() {
-        StorageUtils.set("_pa_046", "0");
-    }
-
-    // ------------------------------------------------------------------------
-
     get isAutoSetBattleFieldEnabled(): boolean {
         return StorageUtils.getBoolean("_pa_059_" + this.roleId);
     }

@@ -3,7 +3,7 @@ import RandomUtils from "../util/RandomUtils";
 import Credential from "../util/Credential";
 import TownPetMapHousePage from "../core/monster/TownPetMapHousePage";
 import TownPetMapHouse from "../core/monster/TownPetMapHouse";
-import {CommonWidget} from "./support/CommonWidget";
+import {CommonWidget, CommonWidgetFeature} from "./support/CommonWidget";
 import LocationModeTown from "../core/location/LocationModeTown";
 import RolePetMapStorage from "../core/monster/RolePetMapStorage";
 import PocketPageRenderer from "../util/PocketPageRenderer";
@@ -26,11 +26,11 @@ class PetMapFinder extends CommonWidget {
 
     private readonly storage = RolePetMapStorage.getInstance();
 
+    readonly feature = new PetMapFinderFeature();
+
     constructor(credential: Credential, locationMode: LocationModeTown) {
         super(credential, locationMode);
     }
-
-    onWarningMessage?: (msg: string) => void;
 
     petMapPage?: TownPetMapHousePage;
     private chart?: any;
@@ -85,12 +85,12 @@ class PetMapFinder extends CommonWidget {
             .on("click", () => {
                 const petCode = _.trim($("#" + this.TXT_PET_CODE).val() as string);
                 if (petCode === "") {
-                    (this.onWarningMessage) && (this.onWarningMessage("没有输入要查询图鉴的宠物编号，忽略！"));
+                    this.feature.publishWarning("没有输入要查询图鉴的宠物编号，忽略！");
                     return;
                 }
                 const monster = MonsterProfileLoader.load(petCode);
                 if (monster === null) {
-                    (this.onWarningMessage) && (this.onWarningMessage("宠物编号[" + petCode + "]不能识别，忽略！"));
+                    this.feature.publishWarning("宠物编号[" + petCode + "]不能识别，忽略！");
                     return;
                 }
                 this.disposeSearchResult();
@@ -240,4 +240,7 @@ class PetMapFinder extends CommonWidget {
     }
 }
 
-export {PetMapFinder};
+class PetMapFinderFeature extends CommonWidgetFeature {
+}
+
+export {PetMapFinder, PetMapFinderFeature};

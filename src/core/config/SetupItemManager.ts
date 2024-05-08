@@ -7,17 +7,11 @@ import SetupItem026 from "./internal/SetupItem026";
 import SetupItem028 from "./internal/SetupItem028";
 import SetupItem035 from "./internal/SetupItem035";
 import SetupItem036 from "./internal/SetupItem036";
-import SetupItem037 from "./internal/SetupItem037";
 import SetupItem038 from "./internal/SetupItem038";
-import SetupItem040 from "./internal/SetupItem040";
-import SetupItem041 from "./internal/SetupItem041";
 import SetupItem042 from "./internal/SetupItem042";
 import SetupItem043 from "./internal/SetupItem043";
 import SetupItem044 from "./internal/SetupItem044";
 import SetupItem048 from "./internal/SetupItem048";
-import SetupItem050 from "./internal/SetupItem050";
-import SetupItem052 from "./internal/SetupItem052";
-import SetupItem053 from "./internal/SetupItem053";
 import SetupItem054 from "./internal/SetupItem054";
 import SetupItem056 from "./internal/SetupItem056";
 import SetupItem057 from "./internal/SetupItem057";
@@ -28,9 +22,14 @@ import SetupItem069 from "./internal/SetupItem069";
 import SetupItem from "./SetupItem";
 import {SetupItem071} from "./internal/SetupItem071";
 import {SetupItem045} from "./internal/SetupItem045";
-import {SetupItem046} from "./internal/SetupItem046";
 import {SetupItem072} from "./internal/SetupItem072";
 import {SetupItem073} from "./internal/SetupItem073";
+import {SetupItem074} from "./internal/SetupItem074";
+import {SetupItem075} from "./internal/SetupItem075";
+import {SetupItem041} from "./internal/SetupItem041";
+import {SetupItem076} from "./internal/SetupItem076";
+import {SetupItem077} from "./internal/SetupItem077";
+import {SetupItem078} from "./internal/SetupItem078";
 
 class SetupItemManager {
 
@@ -48,20 +47,15 @@ class SetupItemManager {
             new SetupItem028(),
             new SetupItem035(),
             new SetupItem036(),
-            new SetupItem037(),
             new SetupItem038(),
             new SetupItem041(),
             new SetupItem054(),
-            new SetupItem050(),
             new SetupItem042(),
             new SetupItem043(),
+            new SetupItem078(),
             new SetupItem044(),
             new SetupItem048(),
-            new SetupItem052(),
-            new SetupItem053(),
-            new SetupItem040(),
             new SetupItem045(),
-            new SetupItem046(),
             new SetupItem057(),
             new SetupItem058(),
             new SetupItem064(),
@@ -70,6 +64,10 @@ class SetupItemManager {
             new SetupItem071(),
             new SetupItem072(),
             new SetupItem073(),
+            new SetupItem074(),
+            new SetupItem075(),
+            new SetupItem076(),
+            new SetupItem077(),
         ];
     }
 

@@ -26,8 +26,6 @@ class GemManager extends CommonWidget {
     private equipmentPage?: PersonalEquipmentManagementPage;
     private selectedPosition?: EquipmentPosition;               // 当前被选择的装备
 
-    private autoTimer?: any;
-
     generateHTML(): string {
         return "" +
             "<table style='background-color:#888888;margin:auto;width:100%;border-width:0'>" +
@@ -94,13 +92,13 @@ class GemManager extends CommonWidget {
         html += "<td style='width:64px;vertical-align:center;white-space:nowrap'>" + NpcLoader.getNpcImageHtml("末末") + "</td>";
         html += "<td style='text-align:left;width:100%'>";
         html += "<span style='font-weight:bold;font-size:120%;color:navy'>关于砸石头这种事儿，我可以负责任的说，真的是有手就行。</span><br>";
-        html += "<span><button role='button' style='color:grey' " +
+        html += "<span><button role='button' " +
             "class='C_pocket_GMM_Daemon' " +
             "id='_pocket_GMM_AutoPower'>自动砸威力宝石</button> </span>";
-        html += "<span><button role='button' style='color:grey' " +
+        html += "<span><button role='button' " +
             "class='C_pocket_GMM_Daemon' " +
             "id='_pocket_GMM_AutoWeight'>自动砸重量宝石</button> </span>";
-        html += "<span><button role='button' style='color:grey' " +
+        html += "<span><button role='button' " +
             "class='C_pocket_GMM_Daemon' " +
             "id='_pocket_GMM_AutoLuck'>自动砸幸运宝石</button> </span>";
         html += "</td>";
@@ -112,13 +110,22 @@ class GemManager extends CommonWidget {
 
     bindButtons() {
         $("#_pocket_GMM_AutoPower").on("click", () => {
-            this.autoGem("_pocket_GMM_AutoPower", "POWER").then();
+            $(".C_pocket_GMM_Daemon").prop("disabled", true);
+            this._autoFuseGem("POWER").then(() => {
+                $(".C_pocket_GMM_Daemon").prop("disabled", false);
+            });
         });
         $("#_pocket_GMM_AutoWeight").on("click", () => {
-            this.autoGem("_pocket_GMM_AutoWeight", "WEIGHT").then();
+            $(".C_pocket_GMM_Daemon").prop("disabled", true);
+            this._autoFuseGem("WEIGHT").then(() => {
+                $(".C_pocket_GMM_Daemon").prop("disabled", false);
+            });
         });
         $("#_pocket_GMM_AutoLuck").on("click", () => {
-            this.autoGem("_pocket_GMM_AutoLuck", "LUCK").then();
+            $(".C_pocket_GMM_Daemon").prop("disabled", true);
+            this._autoFuseGem("LUCK").then(() => {
+                $(".C_pocket_GMM_Daemon").prop("disabled", false);
+            });
         });
     }
 
@@ -364,99 +371,44 @@ class GemManager extends CommonWidget {
         await this.refresh(OperationMessage.success());
     }
 
-    private async autoGem(btnId: string, category: string) {
-        if (this.findLocationEquipment() === null) {
-            this.feature.publishWarning("没有选择镶嵌宝石的装备，忽略！");
-            return;
-        }
-        PageUtils.toggleColor(
-            btnId,
-            () => {
-                // Cancel other daemon(s)
-                $(".C_pocket_GMM_Daemon").each((_idx, it) => {
-                    const btn = $(it);
-                    const id = btn.attr("id") as string;
-                    if (id !== btnId) {
-                        if (PageUtils.isColorBlue(id)) {
-                            PageUtils.triggerClick(id);
-                        }
-                    }
-                });
-                this.feature.publishMessage("启动自动砸宝石进程。");
-                this.autoTimer = setInterval(() => {
-                    this.autoFuseGem(btnId, category).then();
-                }, 2000);
-            },
-            () => {
-                if (this.autoTimer !== undefined) {
-                    clearInterval(this.autoTimer);
-                    this.autoTimer = undefined;
-                    this.feature.publishMessage("自动砸宝石进程结束。");
-                }
-            }
-        );
-    }
-
-    private autoFuseGemInProgress: boolean = false;
-
-    private async autoFuseGem(btnId: string, category: string) {
-        if (this.autoFuseGemInProgress) {
-            this.feature.publishWarning("继续等待砸宝石刷新数据完成。");
-            return;
-        }
-        this.autoFuseGemInProgress = true;
+    private async _autoFuseGem(category: string) {
         const equipment = this.findLocationEquipment();
         if (equipment === null) {
-            this.autoFuseGemInProgress = false;
-            PageUtils.triggerClick(btnId);
+            this.feature.publishWarning("没有选择镶嵌宝石的装备，忽略！");
             return;
         }
         const canFuse = equipment.selectable! && (!equipment.using! || (equipment.using! && equipment.name === "宠物蛋"));
         if (!canFuse) {
-            this.autoFuseGemInProgress = false;
             this.feature.publishMessage("所选装备已经没有剩余孔位，结束。");
-            PageUtils.triggerClick(btnId);
             return;
         }
-
         const gem = this.findFirstGem(category);
         if (gem === null) {
-            this.autoFuseGemInProgress = false;
             this.feature.publishMessage("已经没有剩余的宝石，结束。");
-            PageUtils.triggerClick(btnId);
             return;
         }
-
         if (category === "POWER") {
             const detail = this.equipmentPage!.findEquipment(equipment.index!)!;
             if (detail.additionalPower! < 0) {
-                this.autoFuseGemInProgress = false;
                 this.feature.publishMessage("当前装备镶嵌威力宝石时出现负数，中断转手工处理。");
-                PageUtils.triggerClick(btnId);
                 return;
             }
             if (detail.category === "饰品" && detail.additionalPower! >= 50) {
-                this.autoFuseGemInProgress = false;
                 this.feature.publishMessage("当前饰品威力已经达到最大值50，结束。");
-                PageUtils.triggerClick(btnId);
                 return;
             }
             if (detail.category === "防具" && detail.additionalPower! >= 100) {
-                this.autoFuseGemInProgress = false;
                 this.feature.publishMessage("当前防具威力已经达到最大值100，结束。");
-                PageUtils.triggerClick(btnId);
                 return;
             }
             if (detail.category === "武器" && detail.additionalPower! >= 100) {
-                this.autoFuseGemInProgress = false;
                 this.feature.publishMessage("当前武器威力已经达到最大值100，结束。");
-                PageUtils.triggerClick(btnId);
                 return;
             }
         }
-
         await this.fuseGem(equipment, gem);
-        this.autoFuseGemInProgress = false;
+        // 页面已经被刷新
+        await this._autoFuseGem(category);
     }
 
     private findFirstGem(category: string): Equipment | null {

@@ -11,11 +11,6 @@ class TownBankPageParser {
         page.role = new Role();
         page.account = new BankAccount();
 
-        page.welcomeMessage = $(html).find("img[alt='钱庄']")
-            .parent()
-            .prev()
-            .html();
-
         const table = $(html).find("td:contains('姓名')")
             .filter((_idx, td) => {
                 return $(td).text() === "姓名";
@@ -73,11 +68,6 @@ class TownBankPageParser {
 class CastleBankPageParser {
 
     static parsePage(html: string): CastleBankPage {
-        const welcomeMessage = $(html).find("img[alt='城堡仆人']")
-            .parent()
-            .prev()
-            .html();
-
         const table = $(html).find("td:contains('姓名')")
             .filter((_idx, td) => {
                 return $(td).text() === "姓名";
@@ -132,7 +122,6 @@ class CastleBankPageParser {
         const page = new CastleBankPage();
         page.role = role;
         page.account = account;
-        page.welcomeMessage = welcomeMessage;
         return page;
     }
 

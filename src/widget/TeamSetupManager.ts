@@ -67,7 +67,7 @@ class TeamSetupManager extends CommonWidget {
                     const role = await RoleStatusStorage.load(roleId);
                     if (role !== null) {
                         name = role.name;
-                        imageHtml = role.imageHtml;
+                        imageHtml = role.readImageHtml ?? imageHtml;
                     }
                     imageHtml = $("<div>" + imageHtml + "</div>")
                         .find("img:first")

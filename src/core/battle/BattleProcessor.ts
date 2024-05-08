@@ -12,8 +12,11 @@ import BattleRecommendation from "./BattleRecommendation";
 import BattleRecord from "./BattleRecord";
 import BattleRecordStorage from "./BattleRecordStorage";
 import BattleResultStorage from "./BattleResultStorage";
-import {RoleStatusManager} from "../role/RoleStatus";
+import {RoleStatus, RoleStatusManager} from "../role/RoleStatus";
 import _ from "lodash";
+import {PocketLogger} from "../../pocket/PocketLogger";
+
+const logger = PocketLogger.getLogger("BATTLE");
 
 class BattleProcessor {
 
@@ -46,15 +49,18 @@ class BattleProcessor {
         // 解析战斗页面
         this.page = await BattlePageParser.parse(this.#html);
 
-        //  解析结果更新角色状态
-        await new RoleStatusManager(this.#credential).updateBattleCount(this.#battleCount, this.page.additionalRP);
+        // 解析结果更新角色状态
+        const status = new RoleStatus();
+        status.battleCount = this.#battleCount;
+        status.additionalRP = this.page.additionalRP;
+        await new RoleStatusManager(this.#credential).update(status);
 
         // 如果角色升级，则尝试增加角色状态中的等级数据
         // 唯一坑点就是宠物名和角色名一样
         if (this.page.battleResult !== "战败") {
             const roleName = this.page.roleNameHtml;
             if (roleName && _.includes(this.#html, roleName + "等级上升！")) {
-                await new RoleStatusManager(this.#credential).increaseLevelIfNecessary();
+                await new RoleStatusManager(this.#credential).increaseLevel();
             }
         }
 
@@ -81,6 +87,7 @@ class BattleProcessor {
         record.petEggHatched = this.obtainPage.eggBorn;
         record.petSpellLearned = this.obtainPage.petLearnSpell;
         await BattleRecordStorage.write(record);
+        logger.debug("Battle record saved.");
 
         // 分析入手的结果
         let catchCount: number | undefined = undefined;
@@ -128,6 +135,9 @@ class BattleProcessor {
         log.treasures = treasures;
         await BattleLogStorage.getInstance().write(log);     // 写入战斗日志
         await BattleResultStorage.getInstance().replay(log); // 写入战斗结果
+
+        logger.debug("Battle log saved.");
+        logger.debug("Battle result saved.");
 
         return await (() => {
             return new Promise<void>(resolve => resolve());

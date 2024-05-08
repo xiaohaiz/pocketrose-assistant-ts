@@ -4,6 +4,9 @@ import {DayRange} from "../../util/PocketDateUtils";
 import BankRecord from "../bank/BankRecord";
 import BankRecordStorage from "../bank/BankRecordStorage";
 import TownBank from "../bank/TownBank";
+import {PocketLogger} from "../../pocket/PocketLogger";
+
+const logger = PocketLogger.getLogger("BANK");
 
 /**
  * ============================================================================
@@ -33,6 +36,7 @@ class BankAccountTrigger {
         data.cash = account.cash;
         data.saving = account.saving;
         await BankRecordStorage.getInstance().upsert(data);
+        logger.debug("Bank record saved.");
     }
 
     static async importFromJson(json: string) {

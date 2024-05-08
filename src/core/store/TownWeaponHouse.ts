@@ -14,7 +14,7 @@ class TownWeaponHouse {
         this.#townId = townId;
     }
 
-    async enter(): Promise<TownWeaponHousePage> {
+    async open(): Promise<TownWeaponHousePage> {
         const action = (credential: Credential, townId: string) => {
             return new Promise<TownWeaponHousePage>(resolve => {
                 const request = credential.asRequest();

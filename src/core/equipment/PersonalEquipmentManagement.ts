@@ -26,8 +26,11 @@ class PersonalEquipmentManagement {
                 if (this.#townId !== undefined) {
                     request.set("town", this.#townId);
                 }
+                const start = Date.now();
                 NetworkUtils.post("mydata.cgi", request).then(html => {
                     const page = PersonalEquipmentManagementPageParser.parsePage(html);
+                    const end = Date.now();
+                    MessageBoard.publishMessage("Equipment page loaded. (" + (end - start) + "ms spent)");
                     resolve(page);
                 });
             });

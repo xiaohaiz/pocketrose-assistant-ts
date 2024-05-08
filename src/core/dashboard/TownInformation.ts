@@ -1,19 +1,19 @@
-import NetworkUtils from "../../util/NetworkUtils";
 import StringUtils from "../../util/StringUtils";
 import TownStatus from "../town/TownStatus";
 import TownInformationPage from "./TownInformationPage";
+import {PocketLogger} from "../../pocket/PocketLogger";
+import {PocketNetwork} from "../../pocket/PocketNetwork";
+
+const logger = PocketLogger.getLogger("TOWN");
 
 class TownInformation {
 
     async open(): Promise<TownInformationPage> {
-        return await (() => {
-            return new Promise<TownInformationPage>(resolve => {
-                NetworkUtils.get("town_print.cgi").then(html => {
-                    const page = TownInformation.parsePage(html);
-                    resolve(page);
-                });
-            });
-        })();
+        const response = await PocketNetwork.get("town_print.cgi");
+        const page = TownInformation.parsePage(response.html);
+        response.touch();
+        logger.debug("Town information page loaded.", response.durationInMillis);
+        return page;
     }
 
     static parsePage(html: string): TownInformationPage {

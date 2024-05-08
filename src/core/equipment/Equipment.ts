@@ -6,6 +6,7 @@ import SetupLoader from "../config/SetupLoader";
 import TownLoader from "../town/TownLoader";
 import EquipmentConstants from "./EquipmentConstants";
 import EquipmentProfileLoader from "./EquipmentProfileLoader";
+import Role from "../role/Role";
 
 class Equipment {
 
@@ -489,6 +490,53 @@ class Equipment {
             title = "卸下";
         }
         return title;
+    }
+
+    calculateRemainingExperience() {
+        if (this.isItem) return 0;
+        if (this.power! === 0) return 0;
+        let basePower = this.power!;
+        let maxExperience = _.floor(Math.abs(basePower) * 0.2) * 1000;
+        if (this.isArmor && isAttributeHeavyArmor(this.name!)) {
+            maxExperience = 76000;
+        }
+        const remaining = maxExperience - this.experience!;
+        return _.max([0, remaining])!;
+    }
+
+    calculateActualPowerHTML(role: Role) {
+        if (this.isRecoverItem) {
+            return _.toString(this.power);
+        }
+        if (this.isItem) {
+            return "-";
+        }
+        let basePower = this.power!;
+        if (this.isArmor && isAttributeHeavyArmor(this.name!)) {
+            if (this.attribute! === role.attribute!) {
+                basePower = _.floor(basePower * 1.5);
+            }
+        }
+        const maxExperience = _.floor(Math.abs(basePower) * 0.2) * 1000;
+        const effectedExperience = _.min([maxExperience, this.experience])!;
+
+        const actualPower = basePower + _.floor(effectedExperience / 1000) + this.additionalPower!;
+        let color = "none";
+        if (this.isWeapon) color = "red";
+        if (this.isArmor) color = "green";
+        if (this.isAccessory) color = "blue";
+
+        return this.power + "/<span style='color:" + color + "'>" + actualPower + "</span>";
+    }
+
+    calculateActualWeightHTML() {
+        if (this.isItem) return "-";
+        const actualWeight = this.weight! + this.additionalWeight!;
+        let color = "none";
+        if (this.isWeapon) color = "red";
+        if (this.isArmor) color = "green";
+        if (this.isAccessory) color = "blue";
+        return this.weight + "/<span style='color:" + color + "'>" + actualWeight + "</span>";
     }
 
     static sortEquipmentList(source: Equipment[]): Equipment[] {

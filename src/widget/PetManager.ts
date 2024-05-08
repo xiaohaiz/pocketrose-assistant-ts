@@ -7,8 +7,6 @@ import GoldenCage from "../core/monster/GoldenCage";
 import GoldenCagePage from "../core/monster/GoldenCagePage";
 import LocationModeCastle from "../core/location/LocationModeCastle";
 import LocationModeTown from "../core/location/LocationModeTown";
-import MonsterProfileLoader from "../core/monster/MonsterProfileLoader";
-import MonsterRelationLoader from "../core/monster/MonsterRelationLoader";
 import NetworkUtils from "../util/NetworkUtils";
 import OperationMessage from "../util/OperationMessage";
 import PageUtils from "../util/PageUtils";
@@ -25,14 +23,13 @@ import RandomUtils from "../util/RandomUtils";
 import StorageUtils from "../util/StorageUtils";
 import StringUtils from "../util/StringUtils";
 import TownBank from "../core/bank/TownBank";
-import TownDashboardLayoutManager from "../core/dashboard/TownDashboardLayoutManager";
 import ZodiacPartner from "../core/monster/ZodiacPartner";
 import ZodiacPartnerLoader from "../core/monster/ZodiacPartnerLoader";
 import _ from "lodash";
 import {CommonWidget, CommonWidgetFeature} from "./support/CommonWidget";
 import {RolePetStatusManager} from "../core/monster/RolePetStatusManager";
 import MessageBoard from "../util/MessageBoard";
-import {RoleStatusManager} from "../core/role/RoleStatus";
+import {RoleStatus, RoleStatusManager} from "../core/role/RoleStatus";
 import {PetUsingTrigger} from "../core/trigger/PetUsingTrigger";
 import {SpecialPet, SpecialPetStorage} from "../core/monster/SpecialPet";
 import MouseClickEventBuilder from "../util/MouseClickEventBuilder";
@@ -57,8 +54,6 @@ class PetManager extends CommonWidget {
     private lastRanchPage?: CastleRanchPage;
 
     petPage?: PersonalPetManagementPage;
-    showProfile?: (html: string) => void;
-    hideProfile?: () => void;
 
     private petTransferPeopleFinder?: PeopleFinder;
     private sendTimer?: any;
@@ -460,19 +455,46 @@ class PetManager extends CommonWidget {
         await this._bindPartnerButton();
         await this._bindConsecrateButton();
         await this._bindRenameButton();
-        await this._bindProfileButton();
+
+        personalPetTable.find("> tr").each((_idx, tr) => {
+            const img = $(tr).find("> td:first > img:first");
+            if (img.length > 0) {
+                const race = img.attr("alt") as string;
+                const code = StringUtils.substringBetween(race, "(", ")");
+                new MouseClickEventBuilder()
+                    .bind(img, () => {
+                        const next = $(tr).next().next().next().next().next();
+                        if (next.hasClass("C_PetProfile")) {
+                            next.remove();
+                        } else {
+                            const profileHTML = MonsterPageUtils.generateMonsterProfileHtml(code);
+                            if (profileHTML !== "") {
+                                $(tr).next().next().next().next().after($("" +
+                                    "<tr style='background-color:#E8E8D0' class='C_pocket_petManager_personalPet C_PetProfile'>" +
+                                    "<td colspan='15'>" + profileHTML + "</td>" +
+                                    "</tr>" +
+                                    ""));
+                                const pt = $(tr).next().next().next().next().next().find("> td:first > table:first");
+                                pt.css("background-color", "#888888");
+                                pt.find("> tbody:first").css("background-color", "#E8E8D0");
+                            }
+                        }
+                    });
+            }
+        });
     }
 
     async dispose() {
         const usingPet = this.petPage?.usingPet;
         if (usingPet === null) {
-            await new RoleStatusManager(this.credential).unsetPetGender();
-            await new RoleStatusManager(this.credential).unsetPetLevel();
+            await new RoleStatusManager(this.credential).unsetPet();
         } else {
             const usingPetGender = usingPet!.gender!;
             const usingPetLevel = usingPet!.level!;
-            await new RoleStatusManager(this.credential).setPetGender(usingPetGender);
-            await new RoleStatusManager(this.credential).setPetLevel(usingPetLevel);
+            const status = new RoleStatus();
+            status.petGender = usingPetGender;
+            status.petLevel = usingPetLevel;
+            await new RoleStatusManager(this.credential).update(status);
         }
 
         const promises = [];
@@ -899,30 +921,6 @@ class PetManager extends CommonWidget {
         });
     }
 
-    private async _bindProfileButton() {
-        const configId = TownDashboardLayoutManager.loadDashboardLayoutConfigId(this.credential);
-        if (configId === 6) {
-            $(".C_pocket_pet_imageButton")
-                .on("click", event => {
-                    const btnId = $(event.target).attr("id") as string;
-                    const code = StringUtils.substringAfterLast(btnId, "_");
-                    const html = this.createPetProfileHTML(code);
-                    (this.showProfile) && (this.showProfile(html));
-                });
-        } else {
-            $(".C_pocket_pet_imageButton")
-                .on("mouseenter", event => {
-                    const btnId = $(event.target).attr("id") as string;
-                    const code = StringUtils.substringAfterLast(btnId, "_");
-                    const html = this.createPetProfileHTML(code);
-                    (this.showProfile) && (this.showProfile(html));
-                })
-                .on("mouseleave", () => {
-                    (this.hideProfile) && (this.hideProfile());
-                });
-        }
-    }
-
     private async _executeLovePet(pet: Pet) {
         const amount = Math.ceil(100 - pet.love!);
         if (this.isTownMode) {
@@ -1091,7 +1089,7 @@ class PetManager extends CommonWidget {
             if (img.length > 0) {
                 img.addClass("C_pocket_petManager_cagePetButton");
                 const code = img.attr("alt") as string;
-                new MouseClickEventBuilder(this.credential)
+                new MouseClickEventBuilder()
                     .bind(img, () => {
                         const next = $(tr).next();
                         if (next.hasClass("C_PetProfile")) {
@@ -1263,7 +1261,7 @@ class PetManager extends CommonWidget {
             if (img.length > 0) {
                 img.addClass("C_pocket_petManager_ranchPetButton");
                 const code = img.attr("alt") as string;
-                new MouseClickEventBuilder(this.credential)
+                new MouseClickEventBuilder()
                     .bind(img, () => {
                         const next = $(tr).next();
                         if (next.hasClass("C_PetProfile")) {
@@ -1334,77 +1332,6 @@ class PetManager extends CommonWidget {
                 }
             );
         });
-    }
-
-    private createPetProfileHTML(code: string) {
-        const profile = MonsterProfileLoader.load(code)!;
-        let html = "";
-        html += "<table style='width:100%;border-width:0;background-color:wheat;margin:auto'>";
-        html += "<tbody>";
-        html += "<tr style='background-color:black;color:wheat'>";
-        html += "<th>名字</th>";
-        html += "<th>总族</th>";
-        html += "<th>命族</th>";
-        html += "<th>攻族</th>";
-        html += "<th>防族</th>";
-        html += "<th>智族</th>";
-        html += "<th>精族</th>";
-        html += "<th>速族</th>";
-        html += "<th>命努</th>";
-        html += "<th>攻努</th>";
-        html += "<th>防努</th>";
-        html += "<th>智努</th>";
-        html += "<th>精努</th>";
-        html += "<th>速努</th>";
-        html += "<th>捕获</th>";
-        html += "<th>成长</th>";
-        html += "<td rowspan='5' style='text-align:center'>" + profile.imageHtml + "</td>";
-        html += "</tr>";
-        html += "<tr style='background-color:black;color:wheat;font-weight:bold;text-align:center'>";
-        html += "<td rowspan='2'>" + profile.nameHtml + "</td>";
-        html += "<td rowspan='2'>" + profile.totalBaseStats + "</td>";
-        html += "<td>" + profile.healthBaseStats + "</td>";
-        html += "<td>" + profile.attackBaseStats + "</td>";
-        html += "<td>" + profile.defenseBaseStats + "</td>";
-        html += "<td>" + profile.specialAttackBaseStats + "</td>";
-        html += "<td>" + profile.specialDefenseBaseStats + "</td>";
-        html += "<td>" + profile.speedBaseStats + "</td>";
-        html += "<td rowspan='2'>" + profile.healthEffort + "</td>";
-        html += "<td rowspan='2'>" + profile.attackEffort + "</td>";
-        html += "<td rowspan='2'>" + profile.defenseEffort + "</td>";
-        html += "<td rowspan='2'>" + profile.specialAttackEffort + "</td>";
-        html += "<td rowspan='2'>" + profile.specialDefenseEffort + "</td>";
-        html += "<td rowspan='2'>" + profile.speedEffort + "</td>";
-        html += "<td rowspan='2'>" + profile.catchRatio + "</td>";
-        html += "<td rowspan='2'>" + profile.growExperience + "</td>";
-        html += "</tr>";
-        html += "<tr style='background-color:black;color:wheat;font-weight:bold;text-align:center'>";
-        html += "<td>" + profile.perfectHealth + "</td>";
-        html += "<td>" + profile.perfectAttack + "</td>";
-        html += "<td>" + profile.perfectDefense + "</td>";
-        html += "<td>" + profile.perfectSpecialAttack + "</td>";
-        html += "<td>" + profile.perfectSpecialDefense + "</td>";
-        html += "<td>" + profile.perfectSpeed + "</td>";
-        html += "</tr>";
-        html += "<tr style='background-color:black;color:wheat;font-weight:bold;text-align:left'>";
-        html += "<td colspan='16'>";
-        html += profile.spellText;
-        html += "</td>";
-        html += "</tr>";
-        html += "<tr style='background-color:black;color:wheat;font-weight:bold;text-align:left'>";
-        html += "<td colspan='16' style='height:64px'>";
-        for (const it of MonsterRelationLoader.getPetRelations(parseInt(profile.code!))) {
-            const monsterProfile = MonsterProfileLoader.load(it);
-            if (monsterProfile !== null) {
-                html += monsterProfile.imageHtml;
-                html += monsterProfile.code;
-            }
-        }
-        html += "</td>";
-        html += "</tr>";
-        html += "</tbody>";
-        html += "</table>";
-        return html;
     }
 
     private cancelDaemonButtons(exceptId: string) {

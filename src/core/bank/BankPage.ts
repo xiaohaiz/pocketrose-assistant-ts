@@ -7,8 +7,6 @@ abstract class BankPage {
     role?: Role;
     account?: BankAccount;
 
-    welcomeMessage?: string;
-
     get available(): boolean {
         return this.account !== undefined
             && this.account.cash !== undefined

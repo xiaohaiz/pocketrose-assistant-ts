@@ -1,23 +1,28 @@
 import RoleStateMachineManager from "../../core/state/RoleStateMachineManager";
-import CastlePostHousePageProcessor from "../../processor/stateless/CastlePostHousePageProcessor";
 import PageInterceptor from "../PageInterceptor";
+import Credential from "../../util/Credential";
+import PageProcessorContext from "../../processor/PageProcessorContext";
+import {CastlePostHousePageProcessor} from "../../processor/stateful/CastlePostHousePageProcessor";
 
 class CastlePostHousePageInterceptor implements PageInterceptor {
 
     accept(cgi: string, pageText: string): boolean {
         if (cgi === "castle.cgi") {
-            return pageText.includes("＜＜ * 机车建造厂 *＞＞");
+            return pageText.includes(" * 城堡卧房 *");
         }
         return false;
     }
 
     intercept(): void {
+        const credential = Credential.newInstance();
+        if (credential === undefined) return;
         RoleStateMachineManager.create()
             .load()
             .then(machine => {
                 machine.start()
                     .whenInCastle(state => {
-                        new CastlePostHousePageProcessor().process();
+                        const context = PageProcessorContext.whenInCastle(state?.castleName);
+                        new CastlePostHousePageProcessor(credential, context).process();
                     })
                     .process();
             });

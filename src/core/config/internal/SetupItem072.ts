@@ -28,8 +28,8 @@ class SetupItem072 implements SetupItem {
         html += "<td style='background-color:#E8E8D0'></td>";
         html += "<td style='background-color:#EFE0C0'></td>";
         html += "<td style='background-color:#E0D0B0;text-align:left' colspan='2'>";
-        html += "<input type='button' class='dynamic_button _072_button C_StatelessElement' id='_072_button_1' value='启用'>";
-        html += "<input type='button' class='dynamic_button _072_button C_StatelessElement' id='_072_button_2' value='禁用'>";
+        html += "<input type='button' class='dynamic_button _072_button' id='_072_button_1' value='启用'>";
+        html += "<input type='button' class='dynamic_button _072_button' id='_072_button_2' value='禁用'>";
         html += "</td>";
         html += "</tr>";
         $("#setup_item_table").append($(html));

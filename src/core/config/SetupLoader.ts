@@ -70,10 +70,6 @@ class SetupLoader {
         return StorageUtils.getFloat("_pa_036", -1);
     }
 
-    static isConsecrateStateRecognizeEnabled(id: string): boolean {
-        return StorageUtils.getBoolean("_pa_037_" + id);
-    }
-
     static isEquipmentPetSortEnabled(): boolean {
         return StorageUtils.getBoolean("_pa_038");
     }
@@ -84,10 +80,6 @@ class SetupLoader {
 
     static getTownDashboardMainButton(): number {
         return StorageUtils.getInt("_pa_054", 0);
-    }
-
-    static getTownDashboardExtensionShortcutButton(): number {
-        return StorageUtils.getInt("_pa_050", 1);
     }
 
     static getLoginPageLayout(): number {
@@ -188,6 +180,26 @@ class SetupLoader {
 
     static isAutoEquipmentExperience() {
         return StorageUtils.getBoolean("_pa_073");
+    }
+
+    static isTraditionalBattleModeEnabled() {
+        return StorageUtils.getBoolean("_pa_074");
+    }
+
+    static isMobileTownDashboardEnabled() {
+        return StorageUtils.getBoolean("_pa_075");
+    }
+
+    static isAvoidDigitalValidationCodeEnabled() {
+        return StorageUtils.getBoolean("_pa_076");
+    }
+
+    static isWarningValidationFailureEnabled() {
+        return StorageUtils.getBoolean("_pa_077");
+    }
+
+    static isDebugModeEnabled() {
+        return StorageUtils.getBoolean("_pa_078");
     }
 }
 

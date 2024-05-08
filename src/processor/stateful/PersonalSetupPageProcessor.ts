@@ -19,12 +19,14 @@ import MouseClickEventBuilder from "../../util/MouseClickEventBuilder";
 import {ConfigManager} from "../../core/config/ConfigManager";
 import {TeamSetupManager} from "../../widget/TeamSetupManager";
 import TeamMemberLoader from "../../core/team/TeamMemberLoader";
+import {CacheManager} from "../../widget/CacheManager";
 
 class PersonalSetupPageProcessor extends StatefulPageProcessor {
 
     private readonly formGenerator: PocketFormGenerator;
     private readonly roleManager: RoleManager;
     private readonly teamSetupManager: TeamSetupManager;
+    private readonly cacheManager: CacheManager;
 
     constructor(credential: Credential, context: PageProcessorContext) {
         super(credential, context);
@@ -32,21 +34,25 @@ class PersonalSetupPageProcessor extends StatefulPageProcessor {
         this.formGenerator = new PocketFormGenerator(credential, locationMode);
         this.roleManager = new RoleManager(credential, locationMode);
         this.teamSetupManager = new TeamSetupManager(credential, locationMode);
+        this.cacheManager = new CacheManager(credential, locationMode);
     }
 
     protected async doProcess(): Promise<void> {
         const buttonStyles = [10005, 10007, 10008, 10016, 10024, 10028, 10032, 10033, 10035, 10062, 10132];
         _.forEach(buttonStyles, it => ButtonUtils.loadButtonStyle(it));
 
-        await this.createPage();
+        await this.generateHTML();
         this.resetMessageBoard();
         this.roleManager.bindButtons();
         this.teamSetupManager.bindButtons();
+        this.cacheManager.bindButtons();
         this.bindButtons();
         await this.roleManager.reload();
         await this.roleManager.render();
         await this.teamSetupManager.reload();
         await this.teamSetupManager.render();
+        await this.cacheManager.reload();
+        await this.cacheManager.render();
         await this.render();
         KeyboardShortcutBuilder.newInstance()
             .onKeyPressed("r", () => PageUtils.triggerClick("refreshButton"))
@@ -55,7 +61,7 @@ class PersonalSetupPageProcessor extends StatefulPageProcessor {
             .bind();
     }
 
-    private async createPage() {
+    private async generateHTML() {
         // 整个页面是放在一个大form里面，删除重组
         const lastDivHtml = $("div:last").html();
         $("form:first").remove();
@@ -115,11 +121,16 @@ class PersonalSetupPageProcessor extends StatefulPageProcessor {
             "</td>" +
             "</tr>" +
             "<tr>" +
-            "<td  style='text-align:center'>" +
+            "<td style='text-align:center'>" +
             "<textarea id='allConfigs' " +
             "rows='15' " +
             "style=\"height:expression((this.scrollHeight>150)?'150px':(this.scrollHeight+5)+'px');overflow:auto;width:100%;word-break;break-all;\">" +
             "</textarea>" +
+            "</td>" +
+            "</tr>" +
+            "<tr>" +
+            "<td style='text-align:center'>" +
+            this.cacheManager.generateHTML() +
             "</td>" +
             "</tr>" +
             "</tbody>" +
@@ -157,7 +168,7 @@ class PersonalSetupPageProcessor extends StatefulPageProcessor {
         });
         $("#returnButton").on("click", () => {
             PageUtils.disablePageInteractiveElements();
-            this.beforeReturn().then(() => PageUtils.triggerClick("_pocket_ReturnSubmit"));
+            this.dispose().then(() => PageUtils.triggerClick("_pocket_ReturnSubmit"));
         });
         $("#refreshButton").on("click", () => {
             PocketPage.disableStatelessElements();
@@ -165,7 +176,7 @@ class PersonalSetupPageProcessor extends StatefulPageProcessor {
                 PocketPage.enableStatelessElements();
             });
         });
-        new MouseClickEventBuilder(this.credential)
+        new MouseClickEventBuilder()
             .bind($("#RoleImage"), () => {
                 if (!TeamMemberLoader.loadTeamMembersAsMap(true).has(this.credential.id)) {
                     MessageBoard.publishWarning("你不是团队成员，无法进入团队设置。");
@@ -173,7 +184,7 @@ class PersonalSetupPageProcessor extends StatefulPageProcessor {
                 }
                 $("#TeamSetupPanel").parent().toggle();
             });
-        new MouseClickEventBuilder(this.credential)
+        new MouseClickEventBuilder()
             .bind($("#messageBoardManager"), () => {
                 this.resetMessageBoard();
                 $("#messageBoardManager").html(() => {
@@ -254,17 +265,20 @@ class PersonalSetupPageProcessor extends StatefulPageProcessor {
         this.bindSetupCategories();
     }
 
-    private async beforeReturn() {
-        await this.roleManager.dispose();
-        await this.teamSetupManager.dispose();
-    }
-
     private async refresh() {
         await this.roleManager.reload();
         await this.roleManager.render();
         await this.teamSetupManager.reload();
         await this.teamSetupManager.render();
+        await this.cacheManager.reload();
+        await this.cacheManager.render();
         await this.render();
+    }
+
+    private async dispose() {
+        await this.roleManager.dispose();
+        await this.teamSetupManager.dispose();
+        await this.cacheManager.dispose();
     }
 
     private determineSetupCategories(item: SetupItem) {

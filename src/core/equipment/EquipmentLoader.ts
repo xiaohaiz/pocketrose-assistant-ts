@@ -249,6 +249,7 @@ const ACCESSORY_LIST = [
     "王道军神玉佩",
     "霸者疾风玉佩",
     "王道疾风玉佩",
+    "2010圣诞老人（葫芦娃老爷爷）面具"
 ];
 
 export = EquipmentLoader;

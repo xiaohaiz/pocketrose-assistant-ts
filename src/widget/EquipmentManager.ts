@@ -32,6 +32,7 @@ import _ from "lodash";
 import {RoleEquipmentStatusManager} from "../core/equipment/RoleEquipmentStatusManager";
 import {PocketPage} from "../pocket/PocketPage";
 import {RoleUsingEquipmentManager} from "../core/role/RoleUsingEquipment";
+import StorageUtils from "../util/StorageUtils";
 
 class EquipmentManager extends CommonWidget {
 
@@ -84,6 +85,17 @@ class EquipmentManager extends CommonWidget {
         let html = "";
         html += "<table style='border-width:0;margin:auto;width:100%;background-color:#888888'>";
         html += "<tbody>";
+        if (this.feature.enableExperienceConfig) {
+            html += "<tr style='background-color:#E8E8D0'>";
+            html += "<td style='text-align:center'>";
+            html += "<button role='button' class='C_EQM_ExperienceConfig' id='_pocket_EQM_ExperienceConfig_a' style='color:grey'>正在练武器</button>";
+            html += PocketPageRenderer.AND();
+            html += "<button role='button' class='C_EQM_ExperienceConfig' id='_pocket_EQM_ExperienceConfig_b' style='color:grey'>正在练防具</button>";
+            html += PocketPageRenderer.AND();
+            html += "<button role='button' class='C_EQM_ExperienceConfig' id='_pocket_EQM_ExperienceConfig_c' style='color:grey'>正在练饰品</button>";
+            html += "</td>";
+            html += "</tr>";
+        }
         // ------------------------------------------------
         // Personal equipment panel
         // ------------------------------------------------
@@ -613,6 +625,18 @@ class EquipmentManager extends CommonWidget {
                 }
             );
         });
+
+        if (this.feature.enableExperienceConfig) {
+            $(".C_EQM_ExperienceConfig").on("click", event => {
+                const btnId = $(event.target).attr("id") as string
+                const mode = StringUtils.substringAfterLast(btnId, "_")
+                PageUtils.toggleColor(
+                    btnId,
+                    () => this._changeEquipmentExperienceSetting(mode, true),
+                    () => this._changeEquipmentExperienceSetting(mode, false)
+                )
+            });
+        }
     }
 
     async reload() {
@@ -635,6 +659,20 @@ class EquipmentManager extends CommonWidget {
     }
 
     async render() {
+        if (this.feature.enableExperienceConfig) {
+            PageUtils.changeColorGrey("_pocket_EQM_ExperienceConfig_a");
+            PageUtils.changeColorGrey("_pocket_EQM_ExperienceConfig_b");
+            PageUtils.changeColorGrey("_pocket_EQM_ExperienceConfig_c");
+            const config = SetupLoader.loadEquipmentExperienceConfig(this.credential.id);
+            if (config.weapon) PageUtils.changeColorBlue("_pocket_EQM_ExperienceConfig_a");
+            if (config.armor) PageUtils.changeColorBlue("_pocket_EQM_ExperienceConfig_b");
+            if (config.accessory) PageUtils.changeColorBlue("_pocket_EQM_ExperienceConfig_c");
+
+            $("#_pocket_EQM_ExperienceConfig_a").text("正在练武器");
+            $("#_pocket_EQM_ExperienceConfig_b").text("正在练防具");
+            $("#_pocket_EQM_ExperienceConfig_c").text("正在练饰品");
+        }
+
         await this._resetButtons();
         await this._resetGemTransferPanel();
 
@@ -797,8 +835,56 @@ class EquipmentManager extends CommonWidget {
         });
     }
 
-    renderHitStatus(role?: Role) {
-        if (!role || role.speed === undefined) return;
+    renderRoleStatus(role?: Role) {
+        if (!role) return;
+
+        for (const equipment of this.equipmentPage!.equipmentList!) {
+            const tr = $("#_pocket_equipment_" + equipment.index);
+            if (tr.length === 0) continue;
+            tr.find("> td:eq(4)").html(() => {
+                return equipment.calculateActualPowerHTML(role);
+            });
+            tr.find("> td:eq(5)").html(() => {
+                return equipment.calculateActualWeightHTML();
+            });
+        }
+
+        let attack = 0;
+        let defense = 0;
+        const usingWeapon = this.equipmentPage?.usingWeapon;
+        if (usingWeapon) {
+            const t = $("#_pocket_equipment_" + usingWeapon.index).find("> td:eq(4)").text();
+            attack = _.parseInt(StringUtils.substringAfter(t, "/"));
+            const remaining = usingWeapon.calculateRemainingExperience();
+            if (this.feature.enableExperienceConfig && remaining > 0) {
+                $("#_pocket_EQM_ExperienceConfig_a").text((_idx, s) => {
+                    return s + "（剩余" + remaining + "点经验）";
+                });
+            }
+        }
+        const usingArmor = this.equipmentPage?.usingArmor;
+        if (usingArmor) {
+            const t = $("#_pocket_equipment_" + usingArmor.index).find("> td:eq(4)").text();
+            defense += _.parseInt(StringUtils.substringAfter(t, "/"));
+            const remaining = usingArmor.calculateRemainingExperience();
+            if (this.feature.enableExperienceConfig && remaining > 0) {
+                $("#_pocket_EQM_ExperienceConfig_b").text((_idx, s) => {
+                    return s + "（剩余" + remaining + "点经验）";
+                });
+            }
+        }
+        const usingAccessory = this.equipmentPage?.usingAccessory;
+        if (usingAccessory) {
+            const t = $("#_pocket_equipment_" + usingAccessory.index).find("> td:eq(4)").text();
+            defense += _.parseInt(StringUtils.substringAfter(t, "/"));
+            const remaining = usingAccessory.calculateRemainingExperience();
+            if (this.feature.enableExperienceConfig && remaining > 0) {
+                $("#_pocket_EQM_ExperienceConfig_c").text((_idx, s) => {
+                    return s + "（剩余" + remaining + "点经验）";
+                });
+            }
+        }
+
         let totalWeight = 0;
         _.forEach(this.equipmentPage!.equipmentList!)
             .filter(it => it.using)
@@ -814,8 +900,11 @@ class EquipmentManager extends CommonWidget {
             hitCount = _.floor(delta / 50);
         }
         const status = "" +
-            "（速度:" + role.speed + "） " +
-            "（总重:" + totalWeight + "） " +
+            "（攻击:" + role.attack + "+" + attack + "=<span style='font-weight:bold;color:red'>" + (role.attack! + attack) + "</span>）" +
+            "（防御:" + role.defense + "+" + defense + "=<span style='font-weight:bold;color:green'>" + (role.defense! + defense) + "</span>）" +
+            "（速度:" + role.speed + "）" +
+            "（总重:" + totalWeight + "）" +
+            "（余速:" + (role.speed! - totalWeight) + "）" +
             "（ＨＩＴ:<span style='color:red;font-weight:bold'>" + hitCount + "击</span>）";
         $("#_pocket_roleHitStatus").html(status);
     }
@@ -836,6 +925,7 @@ class EquipmentManager extends CommonWidget {
         const promises = [];
         if (this.feature.enableGrowthTriggerOnDispose) {
             const trigger = new EquipmentGrowthTrigger(this.credential);
+            trigger.fullAutoSet = this.feature.enableFullAutoSetExperience;
             promises.push(trigger.withEquipmentPage(this.equipmentPage).triggerUpdate());
         }
         if (this.feature.enableSpaceTriggerOnDispose) {
@@ -1451,16 +1541,35 @@ class EquipmentManager extends CommonWidget {
         await this.render();
         await this._gemTransfer_putIntoWarehouse(true);
     }
+
+    private _changeEquipmentExperienceSetting(mode: string, value: boolean) {
+        const config = SetupLoader.loadEquipmentExperienceConfig(this.credential.id);
+        switch (mode) {
+            case "a":
+                config.weapon = value
+                break
+            case "b":
+                config.armor = value
+                break
+            case "c":
+                config.accessory = value
+                break
+        }
+        const document = config.asDocument();
+        StorageUtils.set("_pa_065_" + this.credential.id, JSON.stringify(document));
+    }
 }
 
 class EquipmentManagerFeature extends CommonWidgetFeature {
 
+    enableExperienceConfig: boolean = false;
     enableRecoverItem: boolean = false;
     enableGemTransfer: boolean = false;
-    enableGrowthTriggerOnDispose: boolean = false;
-    enableSpaceTriggerOnDispose: boolean = false;
-    enableStatusTriggerOnDispose: boolean = false;
-    enableUsingTriggerOnDispose: boolean = false;
+    enableGrowthTriggerOnDispose: boolean = true;
+    enableSpaceTriggerOnDispose: boolean = true;
+    enableStatusTriggerOnDispose: boolean = true;
+    enableUsingTriggerOnDispose: boolean = true;
+    enableFullAutoSetExperience: boolean = false;
 
 }
 

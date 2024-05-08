@@ -11,7 +11,8 @@ class BattlePageInterceptor implements PageInterceptor {
                 pageText.includes("＜＜ - 初级之森 - ＞＞") ||
                 pageText.includes("＜＜ - 中级之塔 - ＞＞") ||
                 pageText.includes("＜＜ - 上级之洞窟 - ＞＞") ||
-                pageText.includes("＜＜ - 十二神殿 - ＞＞");
+                pageText.includes("＜＜ - 十二神殿 - ＞＞") ||
+                pageText.includes("ERROR !");
         }
         return false;
     }

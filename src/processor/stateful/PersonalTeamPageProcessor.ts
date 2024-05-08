@@ -24,11 +24,11 @@ import {RoleManager} from "../../widget/RoleManager";
 import {RolePetStatusManager} from "../../core/monster/RolePetStatusManager";
 import {TeamSetupManager} from "../../widget/TeamSetupManager";
 import {RoleStatusManager} from "../../core/role/RoleStatus";
-import TownLoader from "../../core/town/TownLoader";
 import {RoleUsingEquipmentManager} from "../../core/role/RoleUsingEquipment";
 import {RoleUsingPetManager} from "../../core/role/RoleUsingPet";
 import SetupLoader from "../../core/config/SetupLoader";
 import TeamMember from "../../core/team/TeamMember";
+import {TeamPetReportGenerator} from "../../core/report/TeamPetReportGenerator";
 
 class PersonalTeamPageProcessor extends StatefulPageProcessor {
 
@@ -174,6 +174,7 @@ class PersonalTeamPageProcessor extends StatefulPageProcessor {
         html += "<input type='button' id='searchTeamUsingEquipmentButton' value='使用中的装备'>";
         html += "<input type='button' id='searchTeamStarEquipmentButton' value='有齐心的装备'>";
         html += "<input type='button' id='teamGemDistributionButton' value='团队宝石分布'>";
+        html += "<input type='button' id='teamPetDistributionButton' value='团队宠物分布'>";
         html += "</td>";
         html += "</tr>";
         html += "</tbody>";
@@ -246,7 +247,7 @@ class PersonalTeamPageProcessor extends StatefulPageProcessor {
                 MessageBoard.publishMessage("团队面板刷新操作完成。");
             });
         });
-        new MouseClickEventBuilder(this.credential)
+        new MouseClickEventBuilder()
             .bind($("#messageBoardManager"), () => {
                 $("#changeBattleDeclarationPanel").toggle();
             });
@@ -269,6 +270,7 @@ class PersonalTeamPageProcessor extends StatefulPageProcessor {
         this.bindSearchTeamUsingEquipmentButton();
         this.bindSearchTeamStarEquipmentButton();
         this.bindTeamGemDistributionButton();
+        this.bindTeamPetDistributionButton();
         this.bindSearchTeamSpecialEquipmentButton_A();
         this.bindSearchTeamSpecialEquipmentButton_B();
         this.bindSearchTeamSpecialEquipmentButton_C();
@@ -282,7 +284,7 @@ class PersonalTeamPageProcessor extends StatefulPageProcessor {
         this.bindSearchTeamSpecialEquipmentButton_K();
         this.bindSearchHeavyArmorButtons();
 
-        new MouseClickEventBuilder(this.credential)
+        new MouseClickEventBuilder()
             .bind($("#_pocket_RoleImage"), () => {
                 if (!TeamMemberLoader.loadTeamMembersAsMap(true).has(this.credential.id)) {
                     MessageBoard.publishWarning("你不是团队成员，无法进入团队设置。");
@@ -374,11 +376,7 @@ class PersonalTeamPageProcessor extends StatefulPageProcessor {
             const status = await statusManager.load();
             let html = "<tr class='C_TeamMemberStatus'>";
             html += "<td style='width:64px;height:64px'>";
-            if (status === null || status.image === undefined) {
-                html += NpcLoader.getNpcImageHtml("U_041")!;
-            } else {
-                html += status.imageHtml;
-            }
+            html += status?.readImageHtml ?? NpcLoader.getNpcImageHtml("U_041")!;
             html += "</td>";
             html += "<td>";
             html += status?.name ?? member.name;
@@ -387,25 +385,20 @@ class PersonalTeamPageProcessor extends StatefulPageProcessor {
             html += status?.mirrorCategory ?? "-";
             html += "</td>";
             html += "<td>";
-            if (status?.mirrorIndex !== undefined) {
-                if (SetupLoader.isCareerFixed(member.id!, status.mirrorIndex)) {
+            if (status?.readMirrorIndex !== undefined) {
+                if (SetupLoader.isCareerFixed(member.id!, status.readMirrorIndex)) {
                     html += "★";
                 }
             }
             html += "</td>";
             html += "<td>";
-            html += status?.level ?? "-";
+            html += status?.readLevel ?? "-";
             html += "</td>";
             html += "<td>";
             html += status?.career ?? "-";
             html += "</td>";
             html += "<td>";
-            if (status === null || status.townId === undefined) {
-                html += "-";
-            } else {
-                const town = TownLoader.load(status.townId!)!;
-                html += town.name;
-            }
+            html += status?.town?.name ?? "-";
             html += "</td>";
             html += "<td style='white-space:nowrap;text-align:left'>";
             const usingEquipment = await new RoleUsingEquipmentManager(member.id!).load();
@@ -449,7 +442,7 @@ class PersonalTeamPageProcessor extends StatefulPageProcessor {
     }
 
     private bindListPetButton() {
-        $("#listPetButton").on("click", () => {
+        $("#listPetButton").on("click", async () => {
             $(".simulationButton").off("click");
 
             const includeExternal = $("#includeExternal").prop("checked") as boolean;
@@ -459,6 +452,7 @@ class PersonalTeamPageProcessor extends StatefulPageProcessor {
             html += "<tbody id='petStatusList'>";
             html += "<tr>";
             html += "<th style='background-color:#F8F0E0'>队员</th>";
+            html += "<th style='background-color:#F8F0E0'>图鉴</th>";
             html += "<th style='background-color:#F8F0E0'>名字</th>";
             html += "<th style='background-color:#F8F0E0'>性别</th>";
             html += "<th style='background-color:#F8F0E0'>等级</th>";
@@ -479,63 +473,61 @@ class PersonalTeamPageProcessor extends StatefulPageProcessor {
                 .filter(it => includeExternal || it.external === undefined || !it.external);
 
             const idList = configs.map(it => it.id!);
-            RolePetStatusManager.loadRolePetStatusReports(idList)
-                .then(dataMap => {
-                    const allPetList: Pet[] = [];
-                    let petIndex = 0;
+            const dataMap = await RolePetStatusManager.loadRolePetStatusReports(idList);
 
-                    for (const config of configs) {
-                        const data = dataMap.get(config.id!);
-                        if (data === undefined) {
-                            continue;
-                        }
+            const allPetList: Pet[] = [];
+            let petIndex = 0;
 
-                        let html = "";
-                        let row = 0;
+            for (const config of configs) {
+                const data = dataMap.get(config.id!);
+                if (data === undefined) {
+                    continue;
+                }
 
-                        const petList = data.petList!
-                            .sort(Pet.sorter)
-                            .filter(it => !(config.warehouse !== undefined && config.warehouse && it.location === "R"));
+                let html = "";
+                let row = 0;
 
-                        petList.forEach(it => {
-                            it.index = petIndex++;
-                            allPetList.push(it);
+                const petList = data.petList!
+                    .sort(Pet.sorter)
+                    .filter(p => !(config.warehouse !== undefined && config.warehouse && p.location === "R"));
 
-                            html += "<tr>";
-                            if (row === 0) {
-                                html += "<td style='background-color:#F8F0E0;vertical-align:center' rowspan='" + (petList.length) + "'>" + config.name + "</td>";
-                            }
-                            html += "<td style='background-color:#E8E8D0;text-align:left'>" + it.nameHtml + "</td>";
-                            html += "<td style='background-color:#E8E8B0'>" + it.gender + "</td>";
-                            html += "<td style='background-color:#E8E8D0'>" + it.levelHtml + "</td>";
-                            html += "<td style='background-color:#E8E8B0'>" + it.maxHealth + "</td>";
-                            html += "<td style='background-color:#E8E8D0'>" + it.attackHtml + "</td>";
-                            html += "<td style='background-color:#E8E8B0'>" + it.defenseHtml + "</td>";
-                            html += "<td style='background-color:#E8E8D0'>" + it.specialAttackHtml + "</td>";
-                            html += "<td style='background-color:#E8E8B0'>" + it.specialDefenseHtml + "</td>";
-                            html += "<td style='background-color:#E8E8D0'>" + it.speedHtml + "</td>";
-                            html += "<td style='background-color:#E8E8B0'>" + it.location + "</td>";
-                            html += "<td style='background-color:#E8E8D0'>";
-                            html += "<button role='button' class='simulationButton' id='simulate-" + it.index + "'>模拟</button>";
-                            html += "</td>";
-                            html += "</tr>";
-                            row++;
-                        });
+                for (const it of petList) {
+                    it.index = petIndex++;
+                    allPetList.push(it);
 
-                        $("#petStatusList").append($(html));
+                    html += "<tr>";
+                    if (row === 0) {
+                        html += "<td style='background-color:#F8F0E0;vertical-align:center' rowspan='" + (petList.length) + "'>" + config.name + "</td>";
                     }
-
-                    html = "";
-                    html += "<tr style='display:none'>";
-                    html += "<td id='simulation' style='background-color:#F8F0E0' colspan='12'></td>";
+                    html += "<td style='background-color:#E8E8D0;width:64px;height:64px'>" + ((await it.lookupProfile())?.imageHtml ?? "") + "</td>";
+                    html += "<td style='background-color:#E8E8D0;text-align:left'>" + it.nameHtml + "</td>";
+                    html += "<td style='background-color:#E8E8B0'>" + it.gender + "</td>";
+                    html += "<td style='background-color:#E8E8D0'>" + it.levelHtml + "</td>";
+                    html += "<td style='background-color:#E8E8B0'>" + it.maxHealth + "</td>";
+                    html += "<td style='background-color:#E8E8D0'>" + it.attackHtml + "</td>";
+                    html += "<td style='background-color:#E8E8B0'>" + it.defenseHtml + "</td>";
+                    html += "<td style='background-color:#E8E8D0'>" + it.specialAttackHtml + "</td>";
+                    html += "<td style='background-color:#E8E8B0'>" + it.specialDefenseHtml + "</td>";
+                    html += "<td style='background-color:#E8E8D0'>" + it.speedHtml + "</td>";
+                    html += "<td style='background-color:#E8E8B0'>" + it.location + "</td>";
+                    html += "<td style='background-color:#E8E8D0'>";
+                    html += "<button role='button' class='simulationButton' id='simulate-" + it.index + "'>模拟</button>";
+                    html += "</td>";
                     html += "</tr>";
-                    $("#petStatusList").append($(html));
-                    this.bindSimulationButton(allPetList);
+                    row++;
+                }
 
-                    $("#information").parent().show();
-                });
+                $("#petStatusList").append($(html));
+            }
 
+            html = "";
+            html += "<tr style='display:none'>";
+            html += "<td id='simulation' style='background-color:#F8F0E0' colspan='13'></td>";
+            html += "</tr>";
+            $("#petStatusList").append($(html));
+            this.bindSimulationButton(allPetList);
 
+            $("#information").parent().show();
         });
     }
 
@@ -561,7 +553,7 @@ class PersonalTeamPageProcessor extends StatefulPageProcessor {
     }
 
     private bindSearchTeamPetButton() {
-        $("#searchTeamPetButton").on("click", () => {
+        $("#searchTeamPetButton").on("click", async () => {
             $(".simulationButton").off("click");
 
             const includeExternal = $("#includeExternal").prop("checked") as boolean;
@@ -575,6 +567,7 @@ class PersonalTeamPageProcessor extends StatefulPageProcessor {
             html += "<tbody id='petStatusList'>";
             html += "<tr>";
             html += "<th style='background-color:#F8F0E0'>队员</th>";
+            html += "<th style='background-color:#F8F0E0'>图鉴</th>";
             html += "<th style='background-color:#F8F0E0'>名字</th>";
             html += "<th style='background-color:#F8F0E0'>性别</th>";
             html += "<th style='background-color:#F8F0E0'>等级</th>";
@@ -595,61 +588,62 @@ class PersonalTeamPageProcessor extends StatefulPageProcessor {
                 .filter(it => includeExternal || it.external === undefined || !it.external);
 
             const idList = configs.map(it => it.id!);
-            RolePetStatusManager.loadRolePetStatusReports(idList)
-                .then(dataMap => {
-                    const allPetList: Pet[] = [];
-                    let petIndex = 0;
+            const dataMap = await RolePetStatusManager.loadRolePetStatusReports(idList);
 
-                    for (const config of configs) {
-                        const data = dataMap.get(config.id!);
-                        if (data === undefined) {
-                            continue;
-                        }
+            const allPetList: Pet[] = [];
+            let petIndex = 0;
 
-                        let html = "";
-                        let row = 0;
-                        const petList = data.petList!
-                            .sort(Pet.sorter)
-                            .filter(it => !(config.warehouse !== undefined && config.warehouse && it.location === "R"))
-                            .filter(it => it.name?.includes(searchName));
-                        petList.forEach(it => {
-                            it.index = petIndex++;
-                            allPetList.push(it);
+            for (const config of configs) {
+                const data = dataMap.get(config.id!);
+                if (data === undefined) {
+                    continue;
+                }
 
-                            html += "<tr>";
-                            if (row === 0) {
-                                html += "<td style='background-color:black;color:white;white-space:nowrap;font-weight:bold;vertical-align:center' " +
-                                    "rowspan='" + (petList.length) + "'>" + config.name + "</td>";
-                            }
-                            html += "<td style='background-color:#E8E8D0;text-align:left'>" + it.nameHtml + "</td>";
-                            html += "<td style='background-color:#E8E8B0'>" + it.gender + "</td>";
-                            html += "<td style='background-color:#E8E8D0'>" + it.levelHtml + "</td>";
-                            html += "<td style='background-color:#E8E8B0'>" + it.maxHealth + "</td>";
-                            html += "<td style='background-color:#E8E8D0'>" + it.attackHtml + "</td>";
-                            html += "<td style='background-color:#E8E8B0'>" + it.defenseHtml + "</td>";
-                            html += "<td style='background-color:#E8E8D0'>" + it.specialAttackHtml + "</td>";
-                            html += "<td style='background-color:#E8E8B0'>" + it.specialDefenseHtml + "</td>";
-                            html += "<td style='background-color:#E8E8D0'>" + it.speedHtml + "</td>";
-                            html += "<td style='background-color:#E8E8B0'>" + it.location + "</td>";
-                            html += "<td style='background-color:#E8E8D0'>";
-                            html += "<button role='button' class='simulationButton' id='simulate-" + it.index + "'>模拟</button>";
-                            html += "</td>";
-                            html += "</tr>";
-                            row++;
-                        });
+                let html = "";
+                let row = 0;
+                const petList = data.petList!
+                    .sort(Pet.sorter)
+                    .filter(it => !(config.warehouse !== undefined && config.warehouse && it.location === "R"))
+                    .filter(it => it.name?.includes(searchName));
 
-                        $("#petStatusList").append($(html));
+                for (const it of petList) {
+                    it.index = petIndex++;
+                    allPetList.push(it);
+
+                    html += "<tr>";
+                    if (row === 0) {
+                        html += "<td style='background-color:black;color:white;white-space:nowrap;font-weight:bold;vertical-align:center' " +
+                            "rowspan='" + (petList.length) + "'>" + config.name + "</td>";
                     }
-
-                    html = "";
-                    html += "<tr style='display:none'>";
-                    html += "<td id='simulation' style='background-color:#F8F0E0' colspan='12'></td>";
+                    html += "<td style='background-color:#E8E8B0;width:64px;height:64px'>" + ((await it.lookupProfile())?.imageHtml ?? "") + "</td>";
+                    html += "<td style='background-color:#E8E8D0;text-align:left'>" + it.nameHtml + "</td>";
+                    html += "<td style='background-color:#E8E8B0'>" + it.gender + "</td>";
+                    html += "<td style='background-color:#E8E8D0'>" + it.levelHtml + "</td>";
+                    html += "<td style='background-color:#E8E8B0'>" + it.maxHealth + "</td>";
+                    html += "<td style='background-color:#E8E8D0'>" + it.attackHtml + "</td>";
+                    html += "<td style='background-color:#E8E8B0'>" + it.defenseHtml + "</td>";
+                    html += "<td style='background-color:#E8E8D0'>" + it.specialAttackHtml + "</td>";
+                    html += "<td style='background-color:#E8E8B0'>" + it.specialDefenseHtml + "</td>";
+                    html += "<td style='background-color:#E8E8D0'>" + it.speedHtml + "</td>";
+                    html += "<td style='background-color:#E8E8B0'>" + it.location + "</td>";
+                    html += "<td style='background-color:#E8E8D0'>";
+                    html += "<button role='button' class='simulationButton' id='simulate-" + it.index + "'>模拟</button>";
+                    html += "</td>";
                     html += "</tr>";
-                    $("#petStatusList").append($(html));
-                    this.bindSimulationButton(allPetList);
+                    row++;
+                }
 
-                    $("#information").parent().show();
-                });
+                $("#petStatusList").append($(html));
+            }
+
+            html = "";
+            html += "<tr style='display:none'>";
+            html += "<td id='simulation' style='background-color:#F8F0E0' colspan='13'></td>";
+            html += "</tr>";
+            $("#petStatusList").append($(html));
+            this.bindSimulationButton(allPetList);
+
+            $("#information").parent().show();
         });
     }
 
@@ -698,6 +692,16 @@ class PersonalTeamPageProcessor extends StatefulPageProcessor {
                 .then(html => {
                     $("#information").html(html).parent().show();
                 });
+        });
+    }
+
+    private bindTeamPetDistributionButton() {
+        $("#teamPetDistributionButton").on("click", async () => {
+            $(".simulationButton").off("click");
+            const includeExternal = $("#includeExternal").prop("checked") as boolean;
+            const reportGenerator = new TeamPetReportGenerator(includeExternal);
+            const html = await reportGenerator.generateTeamPetDistribution();
+            $("#information").html(html).parent().show();
         });
     }
 
