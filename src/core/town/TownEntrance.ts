@@ -1,14 +1,17 @@
 import _ from "lodash";
 import Credential from "../../util/Credential";
 import MessageBoard from "../../util/MessageBoard";
-import NetworkUtils from "../../util/NetworkUtils";
 import OperationMessage from "../../util/OperationMessage";
 import TimeoutUtils from "../../util/TimeoutUtils";
-import SetupLoader from "../config/SetupLoader";
+import SetupLoader from "../../setup/SetupLoader";
 import TravelPlan from "../map/TravelPlan";
 import TravelPlanBuilder from "../map/TravelPlanBuilder";
 import TownLoader from "./TownLoader";
 import BattleFieldTrigger from "../trigger/BattleFieldTrigger";
+import {PocketNetwork} from "../../pocket/PocketNetwork";
+import {PocketLogger} from "../../pocket/PocketLogger";
+
+const logger = PocketLogger.getLogger("TRAVEL");
 
 class TownEntrance {
 
@@ -24,22 +27,18 @@ class TownEntrance {
             return new Promise<void>(resolve => {
                 MessageBoard.publishMessage("等待进城冷却中......(约52秒)");
                 TimeoutUtils.execute(52000, function () {
-                    const request = credential.asRequest();
-                    // @ts-ignore
-                    request["townid"] = townId;
-                    // @ts-ignore
-                    request["mode"] = "MOVE";
-                    NetworkUtils.sendPostRequest("status.cgi", request, function (html) {
+                    const request = credential.asRequest()
+                    request.set("townid", townId);
+                    request.set("mode", "MOVE");
+                    PocketNetwork.post("status.cgi", request).then(response => {
+                        const html = response.html;
                         if ($(html).text().includes("进入方法选择")) {
                             MessageBoard.publishMessage("与门卫交涉中......");
                             const request = credential.asRequest();
-                            // @ts-ignore
-                            request["townid"] = townId;
-                            // @ts-ignore
-                            request["givemoney"] = "1";
-                            // @ts-ignore
-                            request["mode"] = "MOVE";
-                            NetworkUtils.sendPostRequest("status.cgi", request, function () {
+                            request.set("townid", townId);
+                            request.set("givemoney", "1");
+                            request.set("mode", "MOVE");
+                            PocketNetwork.post("status.cgi", request).then(() => {
                                 MessageBoard.publishMessage("门卫通情达理的收取了入城费用放你入城。");
                                 const town = TownLoader.load(townId);
                                 MessageBoard.publishMessage("进入了<span style='color:greenyellow'>" + town!.name + "</span>。");
@@ -64,14 +63,12 @@ class TownEntrance {
     async leave(): Promise<TravelPlan> {
         const action = (credential: Credential) => {
             return new Promise<TravelPlan>(resolve => {
-                const request = credential.asRequest();
-                // @ts-ignore
-                request["navi"] = "on";
-                // @ts-ignore
-                request["out"] = "1";
-                // @ts-ignore
-                request["mode"] = "MAP_MOVE";
-                NetworkUtils.sendPostRequest("map.cgi", request, function (html: string) {
+                const request = credential.asRequest()
+                request.set("navi", "on");
+                request.set("out", "1");
+                request.set("mode", "MAP_MOVE");
+                PocketNetwork.post("map.cgi", request).then(response => {
+                    const html = response.html;
                     MessageBoard.publishMessage("离开了当前所在城市。");
                     const plan = TravelPlanBuilder.initializeTravelPlan(html);
                     plan.credential = credential;
@@ -100,13 +97,17 @@ class TownEntrance {
      * @param townId 城市ID
      */
     async changeAccessPoint(townId: string): Promise<OperationMessage> {
-        const request = this.#credential.asRequestMap();
+        const request = this.#credential.asRequest();
         request.set("town", townId);
         request.set("mode", "ACCESS_POINT");
-        const response = await NetworkUtils.post("mydata.cgi", request);
-        const success = _.includes(response, "据点成功转移到");
+        const response = await PocketNetwork.post("mydata.cgi", request);
+        const success = _.includes(response.html, "据点成功转移到");
         const message = new OperationMessage();
         message.success = success;
+        if (success) {
+            const townName = TownLoader.load(townId)?.name ?? "";
+            logger.debug("Changed access point to [" + townName + "] successfully.");
+        }
         return message;
     }
 }

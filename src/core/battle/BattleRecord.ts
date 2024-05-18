@@ -6,6 +6,7 @@ class BattleRecord {
     harvestList?: string[];
     petEggHatched?: boolean;        // 是否宠物蛋孵化
     petSpellLearned?: boolean;      // 是否宠物学会新技能
+    petBeforeLevel?: number;        // 宠物学习技能时，尝试记录缓存中宠物的等级，正常应该尾数为9
     validationCodeFailed?: boolean; // 是否验证码选择错误
 
     get available(): boolean {
@@ -28,6 +29,7 @@ class BattleRecord {
         (this.harvestList) && (document.harvestList = this.harvestList);
         (this.petEggHatched) && (document.petEggHatched = this.petEggHatched);
         (this.petSpellLearned) && (document.petSpellLearned = this.petSpellLearned);
+        (this.petBeforeLevel !== undefined) && (document.petBeforeLevel = this.petBeforeLevel);
         (this.validationCodeFailed) && (document.validationCodeFailed = this.validationCodeFailed);
         return document;
     }

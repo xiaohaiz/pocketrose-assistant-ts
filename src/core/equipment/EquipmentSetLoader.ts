@@ -1,10 +1,10 @@
 import Credential from "../../util/Credential";
 import MessageBoard from "../../util/MessageBoard";
-import NetworkUtils from "../../util/NetworkUtils";
 import {Equipment} from "./Equipment";
 import EquipmentSet from "./EquipmentSet";
 import PersonalEquipmentManagement from "./PersonalEquipmentManagement";
 import TreasureBag from "./TreasureBag";
+import {PocketNetwork} from "../../pocket/PocketNetwork";
 
 class EquipmentSetLoader {
 
@@ -110,32 +110,27 @@ function doScanEquipmentSet(equipmentList: Equipment[], set: EquipmentSet) {
 
 function doLoadEquipmentSet(credential: Credential, set: EquipmentSet, resolve: () => void) {
     const request = credential.asRequest();
-    // @ts-ignore
-    request["chara"] = "1";
-    // @ts-ignore
-    request["mode"] = "USE";
+    request.set("chara", "1");
+    request.set("mode", "USE");
     let count = 0;
     if (set.weaponIndex !== undefined && set.weaponUsing !== undefined && !set.weaponUsing) {
         count++;
-        // @ts-ignore
-        request["item" + set.weaponIndex] = set.weaponIndex;
+        request.set("item" + set.weaponIndex, set.weaponIndex.toString());
     }
     if (set.armorIndex !== undefined && set.armorUsing !== undefined && !set.armorUsing) {
         count++;
-        // @ts-ignore
-        request["item" + set.armorIndex] = set.armorIndex;
+        request.set("item" + set.armorIndex, set.armorIndex.toString());
     }
     if (set.accessoryIndex !== undefined && set.accessoryUsing !== undefined && !set.accessoryUsing) {
         count++;
-        // @ts-ignore
-        request["item" + set.accessoryIndex] = set.accessoryIndex;
+        request.set("item" + set.accessoryIndex, set.accessoryIndex.toString());
     }
     if (count === 0) {
         MessageBoard.publishMessage("没有找到对应的装备或者正在装备中，忽略。");
         resolve();
     } else {
-        NetworkUtils.sendPostRequest("mydata.cgi", request, function (html) {
-            MessageBoard.processResponseMessage(html);
+        PocketNetwork.post("mydata.cgi", request).then(response => {
+            MessageBoard.processResponseMessage(response.html);
             resolve();
         });
     }

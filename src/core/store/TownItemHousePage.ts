@@ -10,6 +10,7 @@ class TownItemHousePage {
     role?: Role;
     equipmentList?: Equipment[];
     merchandiseList?: Merchandise[];
+    spaceCount?: number;
 
     get town() {
         return TownLoader.load(this.townId)!;
@@ -49,6 +50,14 @@ class TownItemHousePage {
             }
         }
         return null;
+    }
+
+    findFirstSellableDragonBall() {
+        return this.equipmentList?.find(it => it.isDragonBall && it.isSellable) ?? null;
+    }
+
+    findFirstRecoverLotion() {
+        return this.equipmentList?.find(it => it.isRecoverLotion && it.isSellable) ?? null;
     }
 }
 

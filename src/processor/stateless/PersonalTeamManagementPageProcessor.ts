@@ -9,6 +9,9 @@ import StringUtils from "../../util/StringUtils";
 import PageProcessorContext from "../PageProcessorContext";
 import StatelessPageProcessorCredentialSupport from "../StatelessPageProcessorCredentialSupport";
 import KeyboardShortcutBuilder from "../../util/KeyboardShortcutBuilder";
+import {PocketLogger} from "../../pocket/PocketLogger";
+
+const logger = PocketLogger.getLogger("TEAM");
 
 class PersonalTeamManagementPageProcessor extends StatelessPageProcessorCredentialSupport {
 
@@ -17,7 +20,7 @@ class PersonalTeamManagementPageProcessor extends StatelessPageProcessorCredenti
         KeyboardShortcutBuilder.newInstance()
             .onEscapePressed(() => $("#returnButton").trigger("click"))
             .withDefaultPredicate()
-            .bind();
+            .doBind();
     }
 
 }
@@ -187,34 +190,34 @@ function doBindFastLoginButton() {
         const code = parseInt(($(this).attr("id") as string).split("_")[1]);
         let s = $("#name_" + code).val();
         if (s === undefined || (s as string).trim().length === 0) {
-            MessageBoard.publishWarning("角色名字不能为空");
+            logger.warn("角色名字不能为空");
             return;
         }
         const name = (s as string).trim();
 
         s = $("#id_" + code).val();
         if (s === undefined || (s as string).trim().length === 0) {
-            MessageBoard.publishWarning("登陆名不能为空");
+            logger.warn("登陆名不能为空");
             return;
         }
         const id = (s as string).trim();
 
         s = $("#pass1_" + code).val();
         if (s === undefined || (s as string).trim().length === 0) {
-            MessageBoard.publishWarning("密码不能为空");
+            logger.warn("密码不能为空");
             return;
         }
         const pass1 = (s as string).trim();
 
         s = $("#pass2_" + code).val();
         if (s === undefined || (s as string).trim().length === 0) {
-            MessageBoard.publishWarning("密码不能为空");
+            logger.warn("密码不能为空");
             return;
         }
         const pass2 = (s as string).trim();
 
         if (pass1 !== pass2) {
-            MessageBoard.publishWarning("两次输入的密码不匹配");
+            logger.warn("两次输入的密码不匹配");
             return;
         }
 
@@ -249,7 +252,7 @@ function doBindMasterButton() {
         if (!member) return;
 
         if (member.external) {
-            MessageBoard.publishWarning("编制外人员<b style='color:yellow'>" + member.name + "</b>不能被设置为队长！");
+            logger.warn("编制外人员<b style='color:yellow'>" + member.name + "</b>不能被设置为队长！");
             return;
         }
 

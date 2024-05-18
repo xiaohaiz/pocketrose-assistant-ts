@@ -15,7 +15,7 @@ class TownAdventureGuild {
     }
 
     async open(): Promise<TownAdventureGuildPage> {
-        const request = this.credential.asRequestMap();
+        const request = this.credential.asRequest();
         request.set("con_str", "50");
         request.set("mode", "CHANGEMAP");
         const response = await PocketNetwork.post("town.cgi", request);
@@ -29,7 +29,7 @@ class TownAdventureGuild {
 
     async exchange(indexList: number[]) {
         if (indexList.length === 0) return;
-        const request = this.credential.asRequestMap();
+        const request = this.credential.asRequest();
         request.set("mode", "CHANGEMAP2");
         for (const index of indexList) {
             request.set("item" + index, index.toString());

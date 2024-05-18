@@ -7,12 +7,12 @@ import TownLoader from "../../core/town/TownLoader";
 import Credential from "../../util/Credential";
 import KeyboardShortcutBuilder from "../../util/KeyboardShortcutBuilder";
 import MessageBoard from "../../util/MessageBoard";
-import NetworkUtils from "../../util/NetworkUtils";
 import PageUtils from "../../util/PageUtils";
 import TimeoutUtils from "../../util/TimeoutUtils";
 import PageProcessorContext from "../PageProcessorContext";
 import StatelessPageProcessorCredentialSupport from "../StatelessPageProcessorCredentialSupport";
 import BattleFieldTrigger from "../../core/trigger/BattleFieldTrigger";
+import {PocketNetwork} from "../../pocket/PocketNetwork";
 
 class CountryPalacePageProcessor extends StatelessPageProcessorCredentialSupport {
 
@@ -123,7 +123,7 @@ class CountryPalacePageProcessor extends StatelessPageProcessorCredentialSupport
         KeyboardShortcutBuilder.newInstance()
             .onEscapePressed(() => $("#returnButton").trigger("click"))
             .withDefaultPredicate()
-            .bind();
+            .doBind();
     }
 
     #welcomeMessageHtml() {
@@ -253,10 +253,11 @@ function bindTaskButton(credential: Credential, context: PageProcessorContext) {
                 $("option[value='ACCEPTTASK']").prop("selected", true);
                 $("input:submit[value='OK']").trigger("click");
             } else {
-                const request = credential.asRequestMap();
+                const request = credential.asRequest();
                 request.set("governid", "4");
                 request.set("mode", "ACCEPTTASK");
-                NetworkUtils.post("country.cgi", request).then(html => {
+                PocketNetwork.post("country.cgi", request).then(response => {
+                    const html = response.html;
                     MessageBoard.processResponseMessage(html);
                     if (html.includes("请去战斗场所消灭")) {
                         const monsterName = $(html)
@@ -306,10 +307,11 @@ function bindTaskButton(credential: Credential, context: PageProcessorContext) {
                 $("option[value='COMPLETETASK']").prop("selected", true);
                 $("input:submit[value='OK']").trigger("click");
             } else {
-                const request = credential.asRequestMap();
+                const request = credential.asRequest();
                 request.set("governid", "4");
                 request.set("mode", "COMPLETETASK");
-                NetworkUtils.post("country.cgi", request).then(html => {
+                PocketNetwork.post("country.cgi", request).then(response => {
+                    const html = response.html;
                     MessageBoard.processResponseMessage(html);
                     if (html.includes("你还没有完成杀掉")) {
                         const monsterName = $(html)
@@ -351,9 +353,10 @@ function bindTaskButton(credential: Credential, context: PageProcessorContext) {
             });
             MessageBoard.publishMessage("请耐心等待计时器冷却...");
             TimeoutUtils.execute(52000, () => {
-                const request = credential.asRequestMap();
+                const request = credential.asRequest();
                 request.set("mode", "CANCELTASK");
-                NetworkUtils.post("country.cgi", request).then(html => {
+                PocketNetwork.post("country.cgi", request).then(response => {
+                    const html = response.html;
                     MessageBoard.processResponseMessage(html);
                     new PalaceTaskManager(credential)
                         .finishMonsterTask()

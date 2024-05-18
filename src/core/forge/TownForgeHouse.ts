@@ -1,8 +1,11 @@
 import Credential from "../../util/Credential";
-import NetworkUtils from "../../util/NetworkUtils";
-import StringUtils from "../../util/StringUtils";
-import Role from "../role/Role";
+import {TownDashboardPage, TownDashboardPageParser} from "../dashboard/TownDashboardPage";
 import TownForgeHousePage from "./TownForgeHousePage";
+import TownForgeHousePageParser from "./TownForgeHousePageParser";
+import {PocketLogger} from "../../pocket/PocketLogger";
+import {PocketNetwork} from "../../pocket/PocketNetwork";
+
+const logger = PocketLogger.getLogger("FORGE");
 
 class TownForgeHouse {
 
@@ -15,73 +18,33 @@ class TownForgeHouse {
     }
 
     async open(): Promise<TownForgeHousePage> {
-        return await (() => {
-            return new Promise<TownForgeHousePage>(resolve => {
-                const request = this.#credential.asRequestMap();
-                if (this.#townId !== undefined) {
-                    request.set("town", this.#townId);
-                }
-                request.set("con_str", "50");
-                request.set("mode", "MY_ARM");
-                NetworkUtils.post("town.cgi", request).then(html => {
-                    const page = TownForgeHouse.parsePage(html);
-                    resolve(page);
-                });
-            });
-        })();
+        logger.debug("Loading forge page...");
+        const request = this.#credential.asRequest();
+        if (this.#townId) request.set("town", this.#townId);
+        request.set("con_str", "50");
+        request.set("mode", "MY_ARM");
+        const response = await PocketNetwork.post("town.cgi", request);
+        const page = await TownForgeHousePageParser.parse(response.html);
+        response.touch();
+        logger.debug("Forge page loaded.", response.durationInMillis);
+        return page;
     }
 
-    async repair(index: number): Promise<void> {
-        return await (() => {
-            return new Promise<void>((resolve, reject) => {
-                if (index < 0) {
-                    reject();
-                    return;
-                }
-                const request = this.#credential.asRequestMap();
-                request.set("select", index.toString());
-                request.set("mode", "MY_ARM2");
-                NetworkUtils.post("town.cgi", request).then(() => {
-                    resolve();
-                });
-            });
-        })();
+    async repair(index: number) {
+        const request = this.#credential.asRequest();
+        request.set("select", index.toString());
+        request.set("mode", "MY_ARM2");
+        await PocketNetwork.post("town.cgi", request);
     }
 
-    static parsePage(html: string): TownForgeHousePage {
-        const role = new Role();
-        $(html).find("td:contains('ＬＶ')")
-            .filter((idx, td) => $(td).text() === "ＬＶ")
-            .closest("tr")
-            .next()
-            .find("td:first")
-            .each((idx, td) => {
-                role.name = $(td).text();
-            })
-            .next()
-            .each((idx, td) => {
-                role.level = parseInt($(td).text());
-            })
-            .next()
-            .each((idx, td) => {
-                role.attribute = StringUtils.substringBefore($(td).text(), "属");
-            })
-            .next()
-            .each((idx, td) => {
-                role.attribute = $(td).text();
-            })
-            .parent()
-            .next()
-            .find("td:first")
-            .next()
-            .each((idx, td) => {
-                let s = $(td).text();
-                s = StringUtils.substringBefore(s, " GOLD");
-                role.cash = parseInt(s);
-            });
-
-        const page = new TownForgeHousePage();
-        page.role = role;
+    async repairAll(): Promise<TownDashboardPage> {
+        const request = this.#credential.asRequest();
+        request.set("arm_mode", "all");
+        request.set("mode", "MY_ARM2");
+        const response = await PocketNetwork.post("town.cgi", request);
+        const page = new TownDashboardPageParser(this.#credential).parse(response.html);
+        response.touch();
+        logger.debug("Repaired all equipments and dashboard page returned.", response.durationInMillis);
         return page;
     }
 

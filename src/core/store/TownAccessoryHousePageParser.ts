@@ -55,6 +55,16 @@ class TownAccessoryHousePageParser {
         page.equipmentList = __parseEquipmentList(pageHtml);
         page.merchandiseList = __parseMerchandiseList(pageHtml);
 
+        // Parse space count
+        const option = $(pageHtml)
+            .find("select[name='num']")
+            .find("option:last");
+        if (option.length === 0) {
+            page.spaceCount = 0;
+        } else {
+            page.spaceCount = parseInt($(option).val() as string);
+        }
+
         return page;
     }
 

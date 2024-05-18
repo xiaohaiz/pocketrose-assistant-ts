@@ -1,7 +1,7 @@
 import _ from "lodash";
 import Constants from "../../util/Constants";
 import StringUtils from "../../util/StringUtils";
-import SetupLoader from "../config/SetupLoader";
+import SetupLoader from "../../setup/SetupLoader";
 import MonsterSpellLoader from "./MonsterSpellLoader";
 
 class MonsterProfile {

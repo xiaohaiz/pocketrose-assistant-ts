@@ -2,7 +2,7 @@ import _ from "lodash";
 import Coordinate from "../../util/Coordinate";
 import PageUtils from "../../util/PageUtils";
 import StringUtils from "../../util/StringUtils";
-import SetupLoader from "../config/SetupLoader";
+import SetupLoader from "../../setup/SetupLoader";
 import TownLoader from "../town/TownLoader";
 import EquipmentConstants from "./EquipmentConstants";
 import EquipmentProfileLoader from "./EquipmentProfileLoader";
@@ -184,6 +184,13 @@ class Equipment {
 
     get isDragonBall(): boolean {
         return this.isItem && _.endsWith(this.name, "星龙珠");
+    }
+
+    get isRecoverLotion(): boolean {
+        return this.isItem &&
+            (this.name === "药草" || this.name === "当归" ||
+                this.name === "雪莲" || this.name === "鹿茸" ||
+                this.name === "人参" || this.name === "大还丹");
     }
 
     get isSevenHeart(): boolean {

@@ -1,7 +1,6 @@
 import Credential from "../../util/Credential";
 import {PocketNetwork} from "../../pocket/PocketNetwork";
-import TownDashboardPage from "../dashboard/TownDashboardPage";
-import TownDashboardPageParser from "../dashboard/TownDashboardPageParser";
+import {TownDashboardPage, TownDashboardPageParser} from "../dashboard/TownDashboardPage";
 import {PocketLogger} from "../../pocket/PocketLogger";
 
 const logger = PocketLogger.getLogger("INN");
@@ -17,10 +16,10 @@ class TownInn {
     }
 
     async recovery(): Promise<TownDashboardPage> {
-        const request = this.#credential.asRequestMap();
+        const request = this.#credential.asRequest();
         request.set("mode", "RECOVERY");
         const response = await PocketNetwork.post("town.cgi", request);
-        const page = new TownDashboardPageParser(this.#credential, response.html).parse();
+        const page = new TownDashboardPageParser(this.#credential).parse(response.html);
         response.touch();
         logger.debug("Health/mana fully recovered and dashboard page returned.", response.durationInMillis);
         return page;

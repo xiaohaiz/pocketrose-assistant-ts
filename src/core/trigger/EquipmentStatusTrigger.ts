@@ -5,7 +5,7 @@ import TreasureBag from "../equipment/TreasureBag";
 import CastleInformation from "../dashboard/CastleInformation";
 import CastleWarehouse from "../equipment/CastleWarehouse";
 import {RoleEquipmentStatusManager} from "../equipment/RoleEquipmentStatusManager";
-import CastleInformationPage from "../dashboard/CastleInformationPage";
+import {CastleInformationPage} from "../dashboard/CastleInformationPage";
 
 /**
  * ============================================================================
@@ -35,6 +35,11 @@ class EquipmentStatusTrigger {
         return this;
     }
 
+    withCastlePage(value?: CastleInformationPage): EquipmentStatusTrigger {
+        this.castlePage = value;
+        return this;
+    }
+
     async #initializeEquipmentPage() {
         if (!this.equipmentPage) {
             this.equipmentPage = await new PersonalEquipmentManagement(this.credential).open();
@@ -43,7 +48,7 @@ class EquipmentStatusTrigger {
 
     private async initializeCastlePage() {
         if (!this.castlePage) {
-            this.castlePage = await new CastleInformation().open();
+            this.castlePage = await new CastleInformation().openWithCache();
         }
     }
 

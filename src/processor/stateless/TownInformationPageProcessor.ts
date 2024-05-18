@@ -1,6 +1,5 @@
 import _ from "lodash";
-import TownInformation from "../../core/dashboard/TownInformation";
-import TownInformationPage from "../../core/dashboard/TownInformationPage";
+import {TownInformationPage, TownInformationPageParser} from "../../core/dashboard/TownInformationPage";
 import MapBuilder from "../../core/map/MapBuilder";
 import Town from "../../core/town/Town";
 import TownLoader from "../../core/town/TownLoader";
@@ -21,7 +20,7 @@ class TownInformationPageProcessor implements PageProcessor {
     }
 
     async #processPage() {
-        const page = TownInformation.parsePage(PageUtils.currentPageHtml());
+        const page = TownInformationPageParser.parse(PageUtils.currentPageHtml());
 
         // Render map
         let html = "";

@@ -1,7 +1,7 @@
 import Credential from "../../util/Credential";
 import PersonalEquipmentManagementPage from "../equipment/PersonalEquipmentManagementPage";
 import PersonalEquipmentManagement from "../equipment/PersonalEquipmentManagement";
-import LocalSettingManager from "../config/LocalSettingManager";
+import LocalSettingManager from "../../setup/LocalSettingManager";
 import TownItemHousePage from "../store/TownItemHousePage";
 
 /**

@@ -21,11 +21,10 @@ import PersonalEquipmentManagement from "../core/equipment/PersonalEquipmentMana
 import PersonalEquipmentManagementPage from "../core/equipment/PersonalEquipmentManagementPage";
 import PocketPageRenderer from "../util/PocketPageRenderer";
 import Role from "../core/role/Role";
-import SetupLoader from "../core/config/SetupLoader";
+import SetupLoader from "../setup/SetupLoader";
 import StringUtils from "../util/StringUtils";
 import TownBank from "../core/bank/TownBank";
 import TownEquipmentExpressHouse from "../core/equipment/TownEquipmentExpressHouse";
-import TownForgeHouse from "../core/forge/TownForgeHouse";
 import TreasureBag from "../core/equipment/TreasureBag";
 import TreasureBagPage from "../core/equipment/TreasureBagPage";
 import _ from "lodash";
@@ -33,6 +32,7 @@ import {RoleEquipmentStatusManager} from "../core/equipment/RoleEquipmentStatusM
 import {PocketPage} from "../pocket/PocketPage";
 import {RoleUsingEquipmentManager} from "../core/role/RoleUsingEquipment";
 import StorageUtils from "../util/StorageUtils";
+import TownForgeHouse from "../core/forge/TownForgeHouse";
 
 class EquipmentManager extends CommonWidget {
 
@@ -143,6 +143,7 @@ class EquipmentManager extends CommonWidget {
             "<span><button role='button' id='_pocket_useEquipment' class='C_pocket_equipmentSelectRequired' disabled>使用装备</button> </span>" +
             "<span><button role='button' id='_pocket_bagEquipment' class='C_pocket_equipmentSelectRequired' disabled style='display:none'>放入百宝袋</button> </span>" +
             "<span><button role='button' id='_pocket_warehouseEquipment' class='C_pocket_equipmentSelectRequired' disabled style='display:none'>放入城堡仓库</button> </span>" +
+            "<span style='display:none'><button role='button' id='_pocket_idleIntoBag' class='C_pocket_StatelessElement' disabled>闲置装备物品入袋</button> </span>" +
             "</td>" +
             "<td style='text-align:right;white-space:nowrap'>" +
             "<span style='display:none'> <button role='button' disabled id='_pocket_EQM_blindBag' class='C_pocket_EQM_spaceRequired'>从百宝袋盲取</button></span>" +
@@ -404,6 +405,18 @@ class EquipmentManager extends CommonWidget {
                 const message = OperationMessage.success();
                 this._triggerRefresh(message, false, true).then();
             });
+        });
+        const idleIntoBagButton = $("#_pocket_idleIntoBag");
+        idleIntoBagButton.on("click", async () => {
+            this._cancelEquipmentSelection();
+            _.forEach(this.equipmentPage!.equipmentList!)
+                .filter(it => it.isIdle)
+                .forEach(it => {
+                    const buttonId = "_pocket_equipment_select_" + it.index;
+                    PageUtils.triggerClick(buttonId);
+                });
+            const putButton = $("#_pocket_bagEquipment");
+            if (!putButton.prop("disabled")) putButton.trigger("click");
         });
         $("#_pocket_restoreEquipment").on("click", () => {
             new RoleUsingEquipmentManager(this.credential).load().then(data => {
@@ -990,8 +1003,10 @@ class EquipmentManager extends CommonWidget {
 
         if (this._hasTreasureBag) {
             $("#_pocket_bagEquipment").show();
+            $("#_pocket_idleIntoBag").prop("disabled", false).parent().show();
         } else {
             $("#_pocket_bagEquipment").hide();
+            $("#_pocket_idleIntoBag").prop("disabled", true).parent().hide();
         }
         if (this.isCastleMode) {
             $("#_pocket_warehouseEquipment").show();
@@ -1108,7 +1123,7 @@ class EquipmentManager extends CommonWidget {
         const indexList = _.forEach(equipments).map(it => it.index!);
         if (this.isTownMode) {
             await new TownBank(this.credential, this.townId).withdraw(10);
-            await new TownEquipmentExpressHouse(this.credential, this.townId).send(target, indexList);
+            await new TownEquipmentExpressHouse(this.credential).send(target, indexList);
             await new TownBank(this.credential, this.townId).deposit();
         } else if (this.isCastleMode) {
             await new CastleBank(this.credential).withdraw(10);

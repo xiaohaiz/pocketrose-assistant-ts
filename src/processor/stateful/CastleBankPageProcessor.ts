@@ -3,14 +3,18 @@ import Credential from "../../util/Credential";
 import KeyboardShortcutBuilder from "../../util/KeyboardShortcutBuilder";
 import LocationModeCastle from "../../core/location/LocationModeCastle";
 import MessageBoard from "../../util/MessageBoard";
-import NpcLoader from "../../core/role/NpcLoader";
+import MouseClickEventBuilder from "../../util/MouseClickEventBuilder";
 import PageProcessorContext from "../PageProcessorContext";
 import PageUtils from "../../util/PageUtils";
 import StatefulPageProcessor from "../StatefulPageProcessor";
 import {BankManager} from "../../widget/BankManager";
 import {CastleBankPageParser} from "../../core/bank/BankPageParser";
+import {PocketEvent} from "../../pocket/PocketEvent";
 import {PocketFormGenerator, PocketPage} from "../../pocket/PocketPage";
+import {PocketLogger} from "../../pocket/PocketLogger";
 import {RoleManager} from "../../widget/RoleManager";
+
+const logger = PocketLogger.getLogger("BANK");
 
 class CastleBankPageProcessor extends StatefulPageProcessor {
 
@@ -43,7 +47,7 @@ class CastleBankPageProcessor extends StatefulPageProcessor {
             .onKeyPressed("r", () => PageUtils.triggerClick("refreshButton"))
             .onEscapePressed(() => PageUtils.triggerClick("returnButton"))
             .withDefaultPredicate()
-            .bind();
+            .doBind();
     }
 
     private async generateHTML() {
@@ -61,7 +65,10 @@ class CastleBankPageProcessor extends StatefulPageProcessor {
         });
 
         table.find("> tbody:first > tr:eq(1) > td:first")
-            .find("> table:first > tbody:first > tr:first > td:eq(3)")
+            .find("> table:first > tbody:first > tr:first > td:first")
+            .attr("id", "roleInformationManager")
+            .closest("tr")
+            .find("> td:last")
             .html(() => {
                 return this.roleManager.generateHTML();
             });
@@ -69,7 +76,7 @@ class CastleBankPageProcessor extends StatefulPageProcessor {
         table.find("> tbody:first > tr:eq(2) > td:first")
             .find("> table:first > tbody:first > tr:first > td:first")
             .attr("id", "messageBoard")
-            .css("color", "wheat")
+            .css("color", "white")
             .next()
             .attr("id", "messageBoardManager");
 
@@ -81,13 +88,8 @@ class CastleBankPageProcessor extends StatefulPageProcessor {
     }
 
     private async resetMessageBoard() {
-        $("#messageBoardManager").html(() => {
-            return NpcLoader.randomNpcImageHtml();
-        });
-        MessageBoard.resetMessageBoard("" +
-            "<span style='color:wheat;font-weight:bold;font-size:120%'>" +
-            "不义而富且贵，于我如浮云。" +
-            "</span>");
+        MessageBoard.initializeManager();
+        MessageBoard.initializeWelcomeMessage();
     }
 
     private async bindButtons() {
@@ -104,9 +106,18 @@ class CastleBankPageProcessor extends StatefulPageProcessor {
             PocketPage.disableStatelessElements();
             await this.resetMessageBoard();
             await this.refresh();
-            MessageBoard.publishMessage("Refresh operation finished successfully.");
+            logger.info("城堡银行刷新操作完成。");
             PocketPage.enableStatelessElements();
         });
+        const roleImageHandler = PocketEvent.newMouseClickHandler();
+        MouseClickEventBuilder.newInstance()
+            .onElementClicked("roleInformationManager", async () => {
+                await roleImageHandler.onMouseClicked();
+            })
+            .onElementClicked("messageBoardManager", async () => {
+                await this.resetMessageBoard();
+            })
+            .doBind();
     }
 
     private async refresh() {

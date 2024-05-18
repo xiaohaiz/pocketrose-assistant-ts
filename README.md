@@ -1,5 +1,95 @@
 # pocketrose assistant
 
+### 版本 5.5.5
+
+1. [ISSUE #I9P3O9](https://gitee.com/barnabus/pocketrose-assistant/issues/I9P3O9) 个人天真比赛期可自动触发。
+2. [ISSUE #I9QC7Y](https://gitee.com/barnabus/pocketrose-assistant/issues/I9QC7Y) 修复设置项缓存可能造成的数据不一致的问题。
+
+### 版本 5.5.4
+
+1. [ISSUE #I9PYV6](https://gitee.com/barnabus/pocketrose-assistant/issues/I9PYV6) 城堡支持手机布局界面。
+2. [ISSUE #I9Q8UV](https://gitee.com/barnabus/pocketrose-assistant/issues/I9Q8UV) 会话过期自动刷新支持限时启动（仅工作时间）。
+3. [ISSUE #I9Q8US](https://gitee.com/barnabus/pocketrose-assistant/issues/I9Q8US) 基于内存的设置缓存用以性能优化。
+4. [ISSUE #I9Q7NW](https://gitee.com/barnabus/pocketrose-assistant/issues/I9Q7NW) 城堡管家可简单查询宠物库存。
+
+### 版本 5.5.3
+
+1. [ISSUE #I9Q50Y](https://gitee.com/barnabus/pocketrose-assistant/issues/I9Q50Y) 可设置战斗会话过期(150秒)自动刷新。
+2. [ISSUE #I9PYVC](https://gitee.com/barnabus/pocketrose-assistant/issues/I9PYVC) 城堡管家页面显示自己城堡的基本信息。
+3. [ISSUE #I9Q4SN](https://gitee.com/barnabus/pocketrose-assistant/issues/I9Q4SN) 宠联页面格式调整。
+
+### 版本 5.5.1
+
+1. [ISSUE #I9PVZC](https://gitee.com/barnabus/pocketrose-assistant/issues/I9PVZC) 成功规避数字验证码后给出提示。
+2. [ISSUE #I9Q2OP](https://gitee.com/barnabus/pocketrose-assistant/issues/I9Q2OP) 买卖城堡页面标准化改造。
+3. [ISSUE #I9PY3K](https://gitee.com/barnabus/pocketrose-assistant/issues/I9PY3K) 禁止出售非空的城堡。
+4. [ISSUE #I9Q2TB](https://gitee.com/barnabus/pocketrose-assistant/issues/I9Q2TB) 城市城堡菜单项重构。
+
+### 版本 5.5.0
+
+1. [ISSUE #I9PH6N](https://gitee.com/barnabus/pocketrose-assistant/issues/I9PH6N) 城堡界面标准化改造主体完成。
+2. [ISSUE #I9PDSN](https://gitee.com/barnabus/pocketrose-assistant/issues/I9PDSN) 城市和城堡的快捷键支持自定义。
+
+### 版本 5.4.11
+
+1. [ISSUE #I9PIGL](https://gitee.com/barnabus/pocketrose-assistant/issues/I9PIGL) 计时器性能优化并使用系统时钟保证准确性。
+2. [ISSUE #I9PINC](https://gitee.com/barnabus/pocketrose-assistant/issues/I9PINC) 非手机界面战斗收获可配置左边面板。
+3. [ISSUE #I9PMOZ](https://gitee.com/barnabus/pocketrose-assistant/issues/I9PMOZ) 城市界面初始化时使用原始计时器。
+
+### 版本 5.4.8
+
+1. [ISSUE #I9PH6I](https://gitee.com/barnabus/pocketrose-assistant/issues/I9PH6I) 设置中心结构优化。
+2. [ISSUE #I9PH5I](https://gitee.com/barnabus/pocketrose-assistant/issues/I9PH5I) 优化个人天真继续一场的处理逻辑。
+3. [ISSUE #I9PH82](https://gitee.com/barnabus/pocketrose-assistant/issues/I9PH82) 个人天真页面恢复购买彩票的按钮。
+4. [ISSUE #I9PDTV](https://gitee.com/barnabus/pocketrose-assistant/issues/I9PDTV) 商店页面的装备组件增加宝石功能。
+
+### 版本 5.4.7
+
+1. [ISSUE #I9OIT1](https://gitee.com/barnabus/pocketrose-assistant/issues/I9OIT1) 职业管理页面标准化改造。
+2. [ISSUE #I9P7EV](https://gitee.com/barnabus/pocketrose-assistant/issues/I9P7EV) 解决火狐浏览器更新和战斗按钮有轻微重叠的问题。
+3. [ISSUE #I9PB6P](https://gitee.com/barnabus/pocketrose-assistant/issues/I9PB6P) 修复个天页面出现继续下一场按钮时可能会导致页面卡死的问题。
+
+### 版本 5.4.6
+
+1. [ISSUE #I9OHBY](https://gitee.com/barnabus/pocketrose-assistant/issues/I9OHBY) 个人天真页面标准化改造。
+2. [ISSUE #I9P0PK](https://gitee.com/barnabus/pocketrose-assistant/issues/I9P0PK) 没有设置宠物学习技能时的宠物升级提醒。
+
+### 版本 5.4.5
+
+1. [ISSUE #I9OW7D](https://gitee.com/barnabus/pocketrose-assistant/issues/I9OW7D) 城堡开发页面标准化改造可支持自动修复。
+2. [ISSUE #I9OMC2](https://gitee.com/barnabus/pocketrose-assistant/issues/I9OMC2) 城堡管家页面标准化改造。
+3. [ISSUE #I9OO2J](https://gitee.com/barnabus/pocketrose-assistant/issues/I9OO2J) 修复收到消息后收件人列表没有更新的问题。
+
+### 版本 5.4.4
+
+1. [ISSUE #I9OBFG](https://gitee.com/barnabus/pocketrose-assistant/issues/I9OBFG) 闲置装备物品可一键入袋。
+2. [ISSUE #I9OFB1](https://gitee.com/barnabus/pocketrose-assistant/issues/I9OFB1) 快照可在创建时自行命名。
+3. [ISSUE #I9OBG8](https://gitee.com/barnabus/pocketrose-assistant/issues/I9OBG8) 团队宠物分布统计过滤仓储账号。
+
+### 版本 5.4.3
+
+1. [ISSUE #I9OF2K](https://gitee.com/barnabus/pocketrose-assistant/issues/I9OF2K) 解决主页面战斗倒计时器冲突问题。
+2. [ISSUE #I9O7SO](https://gitee.com/barnabus/pocketrose-assistant/issues/I9O7SO) 宠物联赛页面标准化改造。
+3. [ISSUE #I9OBGD](https://gitee.com/barnabus/pocketrose-assistant/issues/I9OBGD) 城市可收益时可设置提示。
+4. [ISSUE #I9OF2R](https://gitee.com/barnabus/pocketrose-assistant/issues/I9OF2R) 物品商店可自动卖掉所有药材。
+
+### 版本 5.4.2
+
+1. [ISSUE #I9O5QU](https://gitee.com/barnabus/pocketrose-assistant/issues/I9O5QU) 通用缓存基础结构。
+2. [ISSUE #I9O04Z](https://gitee.com/barnabus/pocketrose-assistant/issues/I9O04Z) 城堡信息缓存支持优化性能。
+
+### 版本 5.4.1
+
+1. [ISSUE #I9NTEU](https://gitee.com/barnabus/pocketrose-assistant/issues/I9NTEU) 开发调试专属页面。
+2. [ISSUE #I9N11M](https://gitee.com/barnabus/pocketrose-assistant/issues/I9N11M) 防具商店标准化改造。
+3. [ISSUE #I9N11T](https://gitee.com/barnabus/pocketrose-assistant/issues/I9N11T) 饰品商店标准化改造。
+4. [ISSUE #I9NZTD](https://gitee.com/barnabus/pocketrose-assistant/issues/I9NZTD) 物品商店标准化改造。
+5. [ISSUE #I9O0SF](https://gitee.com/barnabus/pocketrose-assistant/issues/I9O0SF) 优化主面板收益操作。
+6. [ISSUE #I9O0QN](https://gitee.com/barnabus/pocketrose-assistant/issues/I9O0QN) 战斗额外信息可自行配置。
+7. [ISSUE #I9O32E](https://gitee.com/barnabus/pocketrose-assistant/issues/I9O32E) 战斗后自动置顶可配置。
+8. [ISSUE #I9O0RR](https://gitee.com/barnabus/pocketrose-assistant/issues/I9O0RR) 修复武器商店装备按钮部分失效。
+9. [ISSUE #I9O0QM](https://gitee.com/barnabus/pocketrose-assistant/issues/I9O0QM) 修复PC布局右侧面板部分情况下轻微变形。
+
 ### 版本 5.4.0
 
 1. [ISSUE #I9NMYM](https://gitee.com/barnabus/pocketrose-assistant/issues/I9NMYM) 支持开发和调试模式。

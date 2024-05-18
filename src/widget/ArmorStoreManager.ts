@@ -18,7 +18,7 @@ class ArmorStoreManager extends CommonWidget {
         super(credential, locationMode);
     }
 
-    private armorPage?: TownArmorHousePage;
+    armorPage?: TownArmorHousePage;
 
     generateHTML() {
         let html = "";

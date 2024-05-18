@@ -21,6 +21,7 @@ import {PocketFormGenerator, PocketPage} from "../../pocket/PocketPage";
 import {RoleManager} from "../../widget/RoleManager";
 import {SpecialPetManager} from "../../widget/SpecialPetManager";
 import {PocketNetwork} from "../../pocket/PocketNetwork";
+import MouseClickEventBuilder from "../../util/MouseClickEventBuilder";
 
 class PersonalPetManagementPageProcessor extends StatefulPageProcessor {
 
@@ -91,14 +92,13 @@ class PersonalPetManagementPageProcessor extends StatefulPageProcessor {
     protected async doProcess(): Promise<void> {
         this.petManager.petPage = PersonalPetManagementPageParser.parsePage(PageUtils.currentPageHtml());
         await this.generateHTML();
-
+        await this.resetMessageBoard();
         await this.bindButtons();
         this.roleManager.bindButtons();
         this.petManager.bindButtons();
         this.evolutionManager.bindButtons();
         this.specialPetManager.bindButtons();
         this.petMapFinder?.bindButtons();
-
         await this.roleManager.reload();
         $("#currentRoleImage").html(this.roleManager.role!.imageHtml);
         await this.roleManager.render();
@@ -116,7 +116,7 @@ class PersonalPetManagementPageProcessor extends StatefulPageProcessor {
             .onKeyPressed("r", () => PageUtils.triggerClick("refreshButton"))
             .onEscapePressed(() => PageUtils.triggerClick("returnButton"))
             .withDefaultPredicate()
-            .bind();
+            .doBind();
     }
 
     private async generateHTML(): Promise<void> {
@@ -227,17 +227,11 @@ class PersonalPetManagementPageProcessor extends StatefulPageProcessor {
         $("#messageBoard")
             .css("background-color", "black")
             .css("color", "white");
-        this.resetMessageBoard();
     }
 
-    private resetMessageBoard() {
-        MessageBoard.resetMessageBoard("" +
-            "<span style='color:wheat;font-weight:bold;font-size:120%'>" +
-            "昨夜雨疏风骤，浓睡不消残酒。" +
-            "试问卷帘人，却道海棠依旧。" +
-            "知否？知否？应是绿肥红瘦。" +
-            "</span>" +
-            "");
+    private async resetMessageBoard() {
+        MessageBoard.initializeManager();
+        MessageBoard.initializeWelcomeMessage();
     }
 
     private async bindButtons() {
@@ -252,7 +246,7 @@ class PersonalPetManagementPageProcessor extends StatefulPageProcessor {
         });
         $("#refreshButton").on("click", async () => {
             PocketPage.scrollIntoTitle();
-            this.resetMessageBoard();
+            await this.resetMessageBoard();
             PocketPage.disableStatelessElements();
             await this.refresh();
             PocketPage.enableStatelessElements();
@@ -269,7 +263,7 @@ class PersonalPetManagementPageProcessor extends StatefulPageProcessor {
         $("#_pocket_setPetLeague").on("click", async () => {
             const players = this.petManager.petPage!.petLeaguePlayerList!;
             if (players.length === 0) return;
-            const request = this.credential.asRequestMap();
+            const request = this.credential.asRequest();
             request.set("mode", "PETGAMECHOOSE");
             for (const player of players) {
                 const index = player.index!;
@@ -286,6 +280,10 @@ class PersonalPetManagementPageProcessor extends StatefulPageProcessor {
             MessageBoard.processResponseMessage(response.html);
             await this.petManager.reload();
             await this.renderPetLeague();
+        });
+
+        new MouseClickEventBuilder().bind($("#messageBoardManager"), async () => {
+            await this.resetMessageBoard();
         });
     }
 

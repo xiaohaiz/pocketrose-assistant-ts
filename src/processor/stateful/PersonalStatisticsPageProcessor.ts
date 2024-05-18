@@ -11,7 +11,7 @@ import MouseClickEventBuilder from "../../util/MouseClickEventBuilder";
 import ButtonUtils from "../../util/ButtonUtils";
 import PageUtils from "../../util/PageUtils";
 import KeyboardShortcutBuilder from "../../util/KeyboardShortcutBuilder";
-import LocalSettingManager from "../../core/config/LocalSettingManager";
+import LocalSettingManager from "../../setup/LocalSettingManager";
 import BattleResultStorage from "../../core/battle/BattleResultStorage";
 import BattleReportGenerator from "../../core/report/BattleReportGenerator";
 import MonsterReportGenerator from "../../core/report/MonsterReportGenerator";
@@ -45,7 +45,7 @@ class PersonalStatisticsPageProcessor extends StatefulPageProcessor {
         KeyboardShortcutBuilder.newInstance()
             .onEscapePressed(() => PageUtils.triggerClick("returnButton"))
             .withDefaultPredicate()
-            .bind();
+            .doBind();
     }
 
     private async generateHTML() {

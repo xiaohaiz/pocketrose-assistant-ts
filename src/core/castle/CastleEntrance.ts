@@ -1,8 +1,10 @@
 import Credential from "../../util/Credential";
-import MessageBoard from "../../util/MessageBoard";
-import NetworkUtils from "../../util/NetworkUtils";
 import TravelPlan from "../map/TravelPlan";
 import TravelPlanBuilder from "../map/TravelPlanBuilder";
+import {PocketNetwork} from "../../pocket/PocketNetwork";
+import {PocketLogger} from "../../pocket/PocketLogger";
+
+const logger = PocketLogger.getLogger("TRAVEL");
 
 class CastleEntrance {
 
@@ -12,40 +14,23 @@ class CastleEntrance {
         this.#credential = credential;
     }
 
-    async enter(): Promise<void> {
-        const action = (credential: Credential) => {
-            return new Promise<void>(resolve => {
-                const request = credential.asRequest();
-                // @ts-ignore
-                request["mode"] = "CASTLE_ENTRY";
-                NetworkUtils.sendPostRequest("map.cgi", request, function () {
-                    MessageBoard.publishMessage("进入了城堡。");
-                    resolve();
-                });
-            });
-        };
-        return await action(this.#credential);
+    async enter() {
+        const request = this.#credential.asRequest();
+        request.set("mode", "CASTLE_ENTRY");
+        await PocketNetwork.post("map.cgi", request);
+        logger.info("进入了城堡。");
     }
 
     async leave(): Promise<TravelPlan> {
-        const action = (credential: Credential) => {
-            return new Promise<TravelPlan>(resolve => {
-                const request = credential.asRequest();
-                // @ts-ignore
-                request["navi"] = "on";
-                // @ts-ignore
-                request["out"] = "1";
-                // @ts-ignore
-                request["mode"] = "MAP_MOVE";
-                NetworkUtils.sendPostRequest("map.cgi", request, function (html) {
-                    MessageBoard.publishMessage("已经离开了城堡。");
-                    const plan = TravelPlanBuilder.initializeTravelPlan(html);
-                    plan.credential = credential;
-                    resolve(plan);
-                });
-            });
-        };
-        return await action(this.#credential);
+        const request = this.#credential.asRequest();
+        request.set("navi", "on");
+        request.set("out", "1");
+        request.set("mode", "MAP_MOVE");
+        const response = await PocketNetwork.post("map.cgi", request);
+        logger.info("已经离开了城堡。");
+        const plan = TravelPlanBuilder.initializeTravelPlan(response.html);
+        plan.credential = this.#credential;
+        return plan;
     }
 
 }

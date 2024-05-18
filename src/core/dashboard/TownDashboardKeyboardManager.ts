@@ -1,6 +1,7 @@
 import Credential from "../../util/Credential";
 import KeyboardShortcutBuilder from "../../util/KeyboardShortcutBuilder";
-import TownDashboardPage from "./TownDashboardPage";
+import {TownDashboardPage} from "./TownDashboardPage";
+import SetupLoader from "../../setup/SetupLoader";
 
 class TownDashboardKeyboardManager {
 
@@ -26,6 +27,7 @@ class TownDashboardKeyboardManager {
             .onKeyPressed("j", () => this.#processKeyPressed_j())
             .onKeyPressed("k", () => this.#processKeyPressed_k())
             .onKeyPressed("m", () => this.#processKeyPressed_m())
+            .onKeyPressed("o", () => this.#processKeyPressed_o())
             .onKeyPressed("p", () => this.#processKeyPressed_p())
             .onKeyPressed("q", () => this.#processKeyPressed_q())
             .onKeyPressed("r", () => this.#processKeyPressed_r())
@@ -37,7 +39,7 @@ class TownDashboardKeyboardManager {
             .onKeyPressed("z", () => this.#processKeyPressed_z())
             .onEscapePressed(() => this.#processKeyPressed_Escape())
             .withDefaultPredicate()
-            .bind();
+            .doBind();
     }
 
     #processKeyPressed_a() {
@@ -77,6 +79,17 @@ class TownDashboardKeyboardManager {
     #processKeyPressed_m() {
         $("option[value='CHANGEMAP']").prop("selected", true);
         $("#townButton").trigger("click");
+    }
+
+    #processKeyPressed_o() {
+        const element = $("#townTax");
+        if (element.length > 0) {
+            if (SetupLoader.isMobileTownDashboardEnabled()) {
+                element.trigger("click");
+            } else {
+                element.trigger("dblclick");
+            }
+        }
     }
 
     #processKeyPressed_p() {

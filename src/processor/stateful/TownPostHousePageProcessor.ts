@@ -22,6 +22,8 @@ import TravelPlanExecutor from "../../core/map/TravelPlanExecutor";
 import CastleEntrance from "../../core/castle/CastleEntrance";
 import LocationModeCastle from "../../core/location/LocationModeCastle";
 import LocationModeMap from "../../core/location/LocationModeMap";
+import MouseClickEventBuilder from "../../util/MouseClickEventBuilder";
+import {PocketEvent} from "../../pocket/PocketEvent";
 
 class TownPostHousePageProcessor extends StatefulPageProcessor {
 
@@ -46,7 +48,7 @@ class TownPostHousePageProcessor extends StatefulPageProcessor {
             .onKeyPressed("r", () => PageUtils.triggerClick("refreshButton"))
             .onEscapePressed(() => PageUtils.triggerClick("returnButton"))
             .withDefaultPredicate()
-            .bind();
+            .doBind();
     }
 
     private async generateHTML() {
@@ -67,7 +69,10 @@ class TownPostHousePageProcessor extends StatefulPageProcessor {
                 "<span> <button role='button' class='C_pocket_StatelessElement' id='returnButton'>" + returnButtonTitle + "</button></span>";
         });
         table.find("> tbody:first > tr:eq(1) > td:first")
-            .find("> table:first > tbody:first > tr:first > td:last")
+            .find("> table:first > tbody:first > tr:first > td:first")
+            .attr("id", "roleInformationManager")
+            .closest("tr")
+            .find("> td:last")
             .html(() => {
                 return this.roleManager.generateHTML();
             });
@@ -75,19 +80,18 @@ class TownPostHousePageProcessor extends StatefulPageProcessor {
             .find("> table:first > tbody:first > tr:first > td:first")
             .attr("id", "messageBoard")
             .css("background-color", "black")
-            .css("color", "white");
+            .css("color", "white")
+            .closest("tr")
+            .find("> td:last")
+            .attr("id", "messageBoardManager");
 
         table.find("> tbody:first > tr:eq(3) > td:first")
             .attr("id", "mapPanel");
     }
 
     private async resetMessageBoard() {
-        MessageBoard.resetMessageBoard("" +
-            "<span style='font-weight:bold;font-size:120%;color:wheat'>" +
-            "驿外断桥边，寂寞开无主。已是黄昏独自愁，更着风和雨。<br>" +
-            "无意苦争春，一任群芳妒。零落成泥碾作尘，只有香如故。" +
-            "</span>" +
-            "");
+        MessageBoard.initializeManager();
+        MessageBoard.initializeWelcomeMessage();
     }
 
     private async bindButtons() {
@@ -122,6 +126,15 @@ class TownPostHousePageProcessor extends StatefulPageProcessor {
             }
             PocketPage.enableStatelessElements();
         });
+        const roleImageClickHandler = PocketEvent.newMouseClickHandler();
+        MouseClickEventBuilder.newInstance()
+            .onElementClicked("roleInformationManager", async () => {
+                await roleImageClickHandler.onMouseClicked();
+            })
+            .onElementClicked("messageBoardManager", async () => {
+                await this.resetMessageBoard();
+            })
+            .doBind();
     }
 
     private async render() {

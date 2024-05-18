@@ -9,7 +9,7 @@ import Role from "../core/role/Role";
 import TownBank from "../core/bank/TownBank";
 import _ from "lodash";
 import {CommonWidget, CommonWidgetFeature} from "./support/CommonWidget";
-import SetupLoader from "../core/config/SetupLoader";
+import SetupLoader from "../setup/SetupLoader";
 
 class RoleManager extends CommonWidget {
 

@@ -20,6 +20,7 @@ class BattleRecordStorage {
                         record.harvestList = request.result.harvestList;
                         record.petEggHatched = request.result.petEggHatched;
                         record.petSpellLearned = request.result.petSpellLearned;
+                        record.petBeforeLevel = request.result.petBeforeLevel;
                         record.validationCodeFailed = request.result.validationCodeFailed;
                         resolve(record);
                     } else {

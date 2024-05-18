@@ -5,7 +5,7 @@ import LocationModeMap from "../core/location/LocationModeMap";
 import LocationModeMetro from "../core/location/LocationModeMetro";
 import LocationModeTown from "../core/location/LocationModeTown";
 import TeamMemberLoader from "../core/team/TeamMemberLoader";
-import LocalSettingManager from "../core/config/LocalSettingManager";
+import LocalSettingManager from "../setup/LocalSettingManager";
 import {RoleStatusManager} from "../core/role/RoleStatus";
 import NpcLoader from "../core/role/NpcLoader";
 

@@ -1,12 +1,15 @@
 import Credential from "../../util/Credential";
 import MessageBoard from "../../util/MessageBoard";
-import NetworkUtils from "../../util/NetworkUtils";
 import {PersonalStatus} from "../role/PersonalStatus";
 import Role from "../role/Role";
 import CareerChangeLog from "./CareerChangeLog";
 import CareerChangeLogStorage from "./CareerChangeLogStorage";
 import PersonalCareerManagementPage from "./PersonalCareerManagementPage";
 import PersonalCareerManagementPageParser from "./PersonalCareerManagementPageParser";
+import {PocketNetwork} from "../../pocket/PocketNetwork";
+import {PocketLogger} from "../../pocket/PocketLogger";
+
+const logger = PocketLogger.getLogger("CAREER");
 
 class PersonalCareerManagement {
 
@@ -19,50 +22,35 @@ class PersonalCareerManagement {
     }
 
     async open(): Promise<PersonalCareerManagementPage> {
-        return await (() => {
-            return new Promise<PersonalCareerManagementPage>(resolve => {
-                const request = this.#credential.asRequestMap();
-                if (this.#townId !== undefined) {
-                    request.set("town", this.#townId);
-                }
-                request.set("mode", "CHANGE_OCCUPATION");
-                NetworkUtils.post("mydata.cgi", request).then(html => {
-                    const page = PersonalCareerManagementPageParser.parsePage(html);
-                    resolve(page);
-                });
-            });
-        })();
+        const request = this.#credential.asRequest();
+        if (this.#townId !== undefined) {
+            request.set("town", this.#townId);
+        }
+        request.set("mode", "CHANGE_OCCUPATION");
+        const response = await PocketNetwork.post("mydata.cgi", request);
+        const page = PersonalCareerManagementPageParser.parse(response.html);
+        response.touch();
+        logger.debug("Career page loaded.", response.durationInMillis);
+        return page;
     }
 
-    async transfer(careerId: number): Promise<void> {
-        return await (() => {
-            return new Promise<void>(resolve => {
-                new PersonalStatus(this.#credential, this.#townId)
-                    .load()
-                    .then(before => {
-                        const request = this.#credential.asRequestMap();
-                        request.set("chara", "1");
-                        request.set("mode", "JOB_CHANGE");
-                        request.set("syoku_no", careerId.toString());
-                        NetworkUtils.post("mydata.cgi", request)
-                            .then(html => {
-                                MessageBoard.processResponseMessage(html);
-                                // 不需要额外的清理RoleStatus缓存数据了
-                                new PersonalStatus(this.#credential, this.#townId)
-                                    .load()
-                                    .then(after => {
-                                        this.#postTransfer(before, after, () => resolve());
-                                    });
-                            });
-                    });
-
-            });
-        })();
+    async transfer(careerId: number) {
+        const before = await new PersonalStatus(this.#credential, this.#townId).load();
+        const request = this.#credential.asRequest();
+        request.set("chara", "1");
+        request.set("mode", "JOB_CHANGE");
+        request.set("syoku_no", careerId.toString());
+        const response = await PocketNetwork.post("mydata.cgi", request);
+        MessageBoard.processResponseMessage(response.html);
+        // 不需要额外的清理RoleStatus缓存数据了
+        const after = await new PersonalStatus(this.#credential, this.#townId).load();
+        await this.#postTransfer(before, after);
     }
 
-    #postTransfer(before: Role, after: Role, handler: () => void) {
+    async #postTransfer(before: Role, after: Role) {
         if (before.level! !== after.level! && after.level! === 1) {
             // 成功完成了转职操作
+            // 否则没有转职，大概率是由于需要转职任务引发的
             const data = new CareerChangeLog();
             data.roleId = this.#credential.id;
             data.career_1 = before.career;
@@ -84,10 +72,8 @@ class PersonalCareerManagement {
             data.specialDefense_2 = after.specialDefense;
             data.speed_2 = after.speed;
             // 保存转职的记录
-            CareerChangeLogStorage.getInstance().insert(data).then(() => handler());
-        } else {
-            // 没有转职，大概率是由于需要转职任务引发的
-            handler();
+            await CareerChangeLogStorage.getInstance().insert(data);
+            logger.debug("Career change log saved into IndexedDB.");
         }
     }
 

@@ -1,10 +1,12 @@
 import Credential from "../../util/Credential";
-import NetworkUtils from "../../util/NetworkUtils";
-import NumberUtils from "../../util/NumberUtils";
-import StringUtils from "../../util/StringUtils";
 import GoldenCagePage from "./GoldenCagePage";
-import Pet from "./Pet";
 import MessageBoard from "../../util/MessageBoard";
+import Pet from "./Pet";
+import StringUtils from "../../util/StringUtils";
+import {PocketLogger} from "../../pocket/PocketLogger";
+import {PocketNetwork} from "../../pocket/PocketNetwork";
+
+const logger = PocketLogger.getLogger("CAGE");
 
 class GoldenCage {
 
@@ -15,38 +17,32 @@ class GoldenCage {
     }
 
     async open(cageIndex: number): Promise<GoldenCagePage> {
-        return await (() => {
-            return new Promise<GoldenCagePage>((resolve, reject) => {
-                if (!NumberUtils.isIndexNumber(cageIndex)) {
-                    reject();
-                } else {
-                    const request = this.#credential.asRequestMap();
-                    request.set("chara", "1");
-                    request.set("item" + cageIndex, cageIndex.toString());
-                    request.set("mode", "USE");
-                    NetworkUtils.post("mydata.cgi", request).then(html => {
-                        const page = GoldenCage.parsePage(html);
-                        resolve(page);
-                    });
-                }
-            });
-        })();
+        logger.debug("Loading golden cage page...");
+        const request = this.#credential.asRequest();
+        request.set("chara", "1");
+        request.set("item" + cageIndex, cageIndex.toString());
+        request.set("mode", "USE");
+        const response = await PocketNetwork.post("mydata.cgi", request);
+        const page = GoldenCage.parsePage(response.html);
+        response.touch();
+        logger.debug("Golden cage page loaded.", response.durationInMillis);
+        return page;
     }
 
     async takeOut(index: number) {
-        const request = this.#credential.asRequestMap();
+        const request = this.#credential.asRequest();
         request.set("select", index.toString());
         request.set("mode", "GETOUTLONGZI");
-        const response = await NetworkUtils.post("mydata.cgi", request);
-        MessageBoard.processResponseMessage(response);
+        const response = await PocketNetwork.post("mydata.cgi", request);
+        MessageBoard.processResponseMessage(response.html);
     }
 
     async putInto(index: number) {
-        const request = this.#credential.asRequestMap();
+        const request = this.#credential.asRequest();
         request.set("select", index.toString());
         request.set("mode", "PUTINLONGZI");
-        const response = await NetworkUtils.post("mydata.cgi", request);
-        MessageBoard.processResponseMessage(response);
+        const response = await PocketNetwork.post("mydata.cgi", request);
+        MessageBoard.processResponseMessage(response.html);
     }
 
     static parsePage(pageHtml: string) {

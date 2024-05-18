@@ -47,7 +47,7 @@ class BattleProcessor {
 
     async doProcess() {
         // 解析战斗页面
-        this.page = await BattlePageParser.parse(this.#html);
+        this.page = await new BattlePageParser(this.#credential).parse(this.#html);
 
         // 解析结果更新角色状态
         const status = new RoleStatus();
@@ -86,6 +86,7 @@ class BattleProcessor {
         record.harvestList = this.obtainPage.harvestList;
         record.petEggHatched = this.obtainPage.eggBorn;
         record.petSpellLearned = this.obtainPage.petLearnSpell;
+        record.petBeforeLevel = this.obtainPage.petBeforeLevel;
         await BattleRecordStorage.write(record);
         logger.debug("Battle record saved.");
 

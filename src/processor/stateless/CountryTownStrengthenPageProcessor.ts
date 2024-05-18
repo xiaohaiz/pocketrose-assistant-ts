@@ -5,10 +5,13 @@ import TownLoader from "../../core/town/TownLoader";
 import Credential from "../../util/Credential";
 import KeyboardShortcutBuilder from "../../util/KeyboardShortcutBuilder";
 import MessageBoard from "../../util/MessageBoard";
-import NetworkUtils from "../../util/NetworkUtils";
 import PageUtils from "../../util/PageUtils";
 import PageProcessorContext from "../PageProcessorContext";
 import StatelessPageProcessorCredentialSupport from "../StatelessPageProcessorCredentialSupport";
+import {PocketNetwork} from "../../pocket/PocketNetwork";
+import {PocketLogger} from "../../pocket/PocketLogger";
+
+const logger = PocketLogger.getLogger("COUNTRY");
 
 class CountryTownStrengthenPageProcessor extends StatelessPageProcessorCredentialSupport {
 
@@ -142,7 +145,7 @@ class CountryTownStrengthenPageProcessor extends StatelessPageProcessorCredentia
         KeyboardShortcutBuilder.newInstance()
             .onEscapePressed(() => $("#returnButton").trigger("click"))
             .withDefaultPredicate()
-            .bind();
+            .doBind();
     }
 
     #welcomeMessageHtml() {
@@ -157,38 +160,38 @@ function doBindPublishButton(credential: Credential) {
         PageUtils.scrollIntoView("pageTitle");
         const msg = $("#m1").val();
         if (msg === undefined || _.trim(msg as string) === "") {
-            MessageBoard.publishWarning("没有输入指令内容！");
+            logger.warn("没有输入指令内容！");
             return;
         }
         const msgForPublish = _.trim(msg as string);
-        const request = credential.asRequestMap();
+        const request = credential.asRequest();
         request.set("m_0", "1");
         request.set("azukeru", "1");
         // noinspection JSDeprecatedSymbols
         request.set("ins", escape(msgForPublish));
         request.set("ins2", "");
         request.set("mode", "COUNTRY_STR");
-        NetworkUtils.post("country.cgi", request).then(html => {
-            MessageBoard.processResponseMessage(html);
+        PocketNetwork.post("country.cgi", request).then(response => {
+            MessageBoard.processResponseMessage(response.html);
         });
     });
     $("#p2").on("click", () => {
         PageUtils.scrollIntoView("pageTitle");
         const msg = $("#m2").val();
         if (msg === undefined || _.trim(msg as string) === "") {
-            MessageBoard.publishWarning("没有输入指令内容！");
+            logger.warn("没有输入指令内容！");
             return;
         }
         const msgForPublish = _.trim(msg as string);
-        const request = credential.asRequestMap();
+        const request = credential.asRequest();
         request.set("m_0", "1");
         request.set("azukeru", "1");
         request.set("ins", "");
         // noinspection JSDeprecatedSymbols
         request.set("ins2", escape(msgForPublish));
         request.set("mode", "COUNTRY_STR");
-        NetworkUtils.post("country.cgi", request).then(html => {
-            MessageBoard.processResponseMessage(html);
+        PocketNetwork.post("country.cgi", request).then(response => {
+            MessageBoard.processResponseMessage(response.html);
         });
     });
 }

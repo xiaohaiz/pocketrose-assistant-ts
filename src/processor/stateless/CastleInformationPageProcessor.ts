@@ -1,6 +1,5 @@
 import _ from "lodash";
-import CastleInformation from "../../core/dashboard/CastleInformation";
-import CastleInformationPage from "../../core/dashboard/CastleInformationPage";
+import {CastleInformationPage, CastleInformationPageParser} from "../../core/dashboard/CastleInformationPage";
 import MapBuilder from "../../core/map/MapBuilder";
 import Coordinate from "../../util/Coordinate";
 import PageUtils from "../../util/PageUtils";
@@ -17,7 +16,7 @@ class CastleInformationPageProcessor implements PageProcessor {
     }
 
     async #processPage() {
-        const page = CastleInformation.parsePage(PageUtils.currentPageHtml());
+        const page = CastleInformationPageParser.parse(PageUtils.currentPageHtml());
 
         let html = "";
         html += "<tr>";

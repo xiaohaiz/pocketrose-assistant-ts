@@ -3,8 +3,8 @@ import MessageBoard from "../../../util/MessageBoard";
 import PageUtils from "../../../util/PageUtils";
 import StorageUtils from "../../../util/StorageUtils";
 import BattleFieldThreshold from "../../battle/BattleFieldThreshold";
-import SetupItem from "../SetupItem";
-import SetupLoader from "../SetupLoader";
+import SetupItem from "../../../setup/SetupItem";
+import SetupLoader from "../../../setup/SetupLoader";
 
 class SetupItem064 implements SetupItem {
 

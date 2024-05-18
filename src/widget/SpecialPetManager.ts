@@ -1,13 +1,15 @@
 import Credential from "../util/Credential";
 import LocationModeCastle from "../core/location/LocationModeCastle";
 import LocationModeTown from "../core/location/LocationModeTown";
-import MessageBoard from "../util/MessageBoard";
 import MonsterProfileLoader from "../core/monster/MonsterProfileLoader";
 import OperationMessage from "../util/OperationMessage";
 import StringUtils from "../util/StringUtils";
 import _ from "lodash";
 import {CommonWidget, CommonWidgetFeature} from "./support/CommonWidget";
 import {SpecialPet, SpecialPetStorage} from "../core/monster/SpecialPet";
+import {PocketLogger} from "../pocket/PocketLogger";
+
+const logger = PocketLogger.getLogger("PET");
 
 class SpecialPetManager extends CommonWidget {
 
@@ -111,7 +113,7 @@ class SpecialPetManager extends CommonWidget {
             if (s === "") return;
             const code = _.parseInt(s);
             if (MonsterProfileLoader.load(code) === null) {
-                MessageBoard.publishWarning("无效的编号：" + s);
+                logger.warn("无效的编号：" + s);
                 return;
             }
             const record = new SpecialPet();

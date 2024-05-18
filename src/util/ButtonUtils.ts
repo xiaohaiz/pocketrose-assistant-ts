@@ -1,7 +1,13 @@
 import PageUtils from "./PageUtils";
-import SetupLoader from "../core/config/SetupLoader";
+import SetupLoader from "../setup/SetupLoader";
+import _ from "lodash";
 
 class ButtonUtils {
+
+    static loadDefaultButtonStyles() {
+        const buttonStyles = [10005, 10007, 10008, 10016, 10024, 10028, 10032, 10033, 10035, 10062, 10132];
+        _.forEach(buttonStyles, it => ButtonUtils.loadButtonStyle(it));
+    }
 
     static loadButtonStyle(code: number) {
         const key = code.toString();

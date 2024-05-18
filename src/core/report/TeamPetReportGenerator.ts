@@ -37,13 +37,17 @@ class TeamPetReportGenerator {
             const report = reports.get(roleId);
             html += "<th style='background-color:black;color:white'>" + member.name + "</th>";
             if (report !== undefined) {
-                html += "<td style='background-color:#E8E8D0'>" + report.personalPetCount + "</td>";
-                html += "<td style='background-color:#E8E8D0'>" + report.cagePetCount + "</td>";
-                html += "<td style='background-color:#E8E8D0'>" + report.ranchPetCount + "</td>";
+                const personalPetCount = report.personalPetCount;
+                const cagePetCount = report.cagePetCount;
+                const ranchPetCount = member.warehouse ? 0 : report.ranchPetCount;
 
-                totalPersonalPetCount += report.personalPetCount;
-                totalCagePetCount += report.cagePetCount;
-                totalRanchPetCount += report.ranchPetCount;
+                html += "<td style='background-color:#E8E8D0'>" + personalPetCount + "</td>";
+                html += "<td style='background-color:#E8E8D0'>" + cagePetCount + "</td>";
+                html += "<td style='background-color:#E8E8D0'>" + ranchPetCount + "</td>";
+
+                totalPersonalPetCount += personalPetCount;
+                totalCagePetCount += cagePetCount;
+                totalRanchPetCount += ranchPetCount;
             } else {
                 html += "<td style='background-color:#E8E8D0'>-</td>";
                 html += "<td style='background-color:#E8E8D0'>-</td>";

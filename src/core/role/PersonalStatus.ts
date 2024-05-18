@@ -24,7 +24,7 @@ class PersonalStatus {
     }
 
     async open(): Promise<PersonalStatusPage> {
-        const request = this.credential.asRequestMap();
+        const request = this.credential.asRequest();
         if (this.townId !== undefined) {
             request.set("town", this.townId);
         }

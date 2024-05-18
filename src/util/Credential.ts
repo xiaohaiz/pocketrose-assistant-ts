@@ -9,10 +9,6 @@ class Credential {
     }
 
     asRequest() {
-        return {"id": this.id, "pass": this.pass};
-    }
-
-    asRequestMap() {
         const request = new Map<string, string>();
         request.set("id", this.id);
         request.set("pass", this.pass);

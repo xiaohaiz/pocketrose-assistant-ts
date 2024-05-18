@@ -10,7 +10,7 @@ import _ from "lodash";
 import {PocketFormGenerator, PocketPage} from "../../pocket/PocketPage";
 import ButtonUtils from "../../util/ButtonUtils";
 import KeyboardShortcutBuilder from "../../util/KeyboardShortcutBuilder";
-import SetupLoader from "../../core/config/SetupLoader";
+import SetupLoader from "../../setup/SetupLoader";
 import StringUtils from "../../util/StringUtils";
 
 class PersonalStatusPageProcessor extends StatefulPageProcessor {
@@ -37,7 +37,7 @@ class PersonalStatusPageProcessor extends StatefulPageProcessor {
         KeyboardShortcutBuilder.newInstance()
             .onEscapePressed(() => PageUtils.triggerClick("returnButton"))
             .withDefaultPredicate()
-            .bind();
+            .doBind();
     }
 
     private async generateHTML() {

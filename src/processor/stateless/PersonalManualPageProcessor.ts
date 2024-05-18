@@ -125,7 +125,7 @@ class PersonalManualPageProcessor extends StatelessPageProcessorCredentialSuppor
         KeyboardShortcutBuilder.newInstance()
             .onEscapePressed(() => $("#returnButton").trigger("click"))
             .withDefaultPredicate()
-            .bind();
+            .doBind();
     }
 
     #welcomeMessageHtml() {

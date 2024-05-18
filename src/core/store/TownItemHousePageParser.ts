@@ -117,6 +117,16 @@ class TownItemHousePageParser {
         page.equipmentList = equipmentList;
         page.merchandiseList = merchandiseList;
 
+        // Parse space count
+        const option = $(html)
+            .find("select[name='num']")
+            .find("option:last");
+        if (option.length === 0) {
+            page.spaceCount = 0;
+        } else {
+            page.spaceCount = parseInt($(option).val() as string);
+        }
+
         return page;
     }
 

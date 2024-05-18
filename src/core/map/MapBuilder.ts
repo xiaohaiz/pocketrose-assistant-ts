@@ -1,6 +1,6 @@
 import Coordinate from "../../util/Coordinate";
 import TownInformation from "../dashboard/TownInformation";
-import TownInformationPage from "../dashboard/TownInformationPage";
+import {TownInformationPage} from "../dashboard/TownInformationPage";
 import TownLoader from "../town/TownLoader";
 
 class MapBuilder {

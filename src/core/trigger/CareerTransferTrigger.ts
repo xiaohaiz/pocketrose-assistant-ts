@@ -1,5 +1,5 @@
 import Credential from "../../util/Credential";
-import SetupLoader from "../config/SetupLoader";
+import SetupLoader from "../../setup/SetupLoader";
 import {PersonalStatus} from "../role/PersonalStatus";
 import {RoleStatusManager} from "../role/RoleStatus";
 

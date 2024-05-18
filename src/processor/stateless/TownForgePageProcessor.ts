@@ -1,7 +1,7 @@
 import _ from "lodash";
-import TownForge from "../../core/forge/TownForge";
-import TownForgePage from "../../core/forge/TownForgePage";
-import TownForgePageParser from "../../core/forge/TownForgePageParser";
+import TownForgeHouse from "../../core/forge/TownForgeHouse";
+import TownForgeHousePage from "../../core/forge/TownForgeHousePage";
+import TownForgeHousePageParser from "../../core/forge/TownForgeHousePageParser";
 import NpcLoader from "../../core/role/NpcLoader";
 import Town from "../../core/town/Town";
 import TownLoader from "../../core/town/TownLoader";
@@ -15,19 +15,19 @@ import StatelessPageProcessorCredentialSupport from "../StatelessPageProcessorCr
 class TownForgePageProcessor extends StatelessPageProcessorCredentialSupport {
 
     async doProcess(credential: Credential, context?: PageProcessorContext): Promise<void> {
-        const page = await TownForgePageParser.parse(PageUtils.currentPageHtml());
+        const page = await TownForgeHousePageParser.parse(PageUtils.currentPageHtml());
         const town = TownLoader.load(context?.get("townId"));
         await renderPage(credential, page, town!);
         await renderEquipmentList(credential, page, town!);
         KeyboardShortcutBuilder.newInstance()
             .onEscapePressed(() => $("#returnButton").trigger("click"))
             .withDefaultPredicate()
-            .bind();
+            .doBind();
     }
 
 }
 
-async function renderPage(credential: Credential, page: TownForgePage, town: Town) {
+async function renderPage(credential: Credential, page: TownForgeHousePage, town: Town) {
     $("table:first")
         .find("> tbody:first")
         .find("> tr:first")
@@ -105,7 +105,7 @@ async function renderPage(credential: Credential, page: TownForgePage, town: Tow
     });
 }
 
-async function renderEquipmentList(credential: Credential, page: TownForgePage, town: Town) {
+async function renderEquipmentList(credential: Credential, page: TownForgeHousePage, town: Town) {
     let html = "";
     html += "<table style='margin:auto;background-color:#888888'>";
     html += "<thead>";
@@ -160,21 +160,21 @@ async function renderEquipmentList(credential: Credential, page: TownForgePage, 
     $(".repairButton").on("click", event => {
         const buttonId = $(event.target).attr("id") as string;
         const index = _.parseInt(_.split(buttonId, "-")[1]);
-        new TownForge(credential, town.id).repair(index).then(() => {
+        new TownForgeHouse(credential, town.id).repair(index).then(() => {
             refreshPage(credential, town).then(() => {
                 MessageBoard.publishMessage("装备已经修理。");
             });
         });
     });
     $("#repairAll").on("click", async () => {
-        await new TownForge(credential, town.id).repairAll();
+        await new TownForgeHouse(credential, town.id).repairAll();
         await refreshPage(credential, town);
         MessageBoard.publishMessage("所有装备修理完成。");
     });
 }
 
 async function refreshPage(credential: Credential, town: Town) {
-    const page = await new TownForge(credential, town.id).open();
+    const page = await new TownForgeHouse(credential, town.id).open();
     $(".repairButton").off("click");
     $(".repairAllButton").off("click");
     $("#roleCash").text(page.role.cash!);

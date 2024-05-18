@@ -44,7 +44,7 @@ class CastlePostHousePageProcessor extends StatefulPageProcessor {
             .onKeyPressed("r", () => PageUtils.triggerClick("refreshButton"))
             .onEscapePressed(() => PageUtils.triggerClick("returnButton"))
             .withDefaultPredicate()
-            .bind();
+            .doBind();
     }
 
     private async generateHTML() {
@@ -82,14 +82,7 @@ class CastlePostHousePageProcessor extends StatefulPageProcessor {
     }
 
     private async resetMessageBoard() {
-        MessageBoard.resetMessageBoard("" +
-            "<span style='font-weight:bold;font-size:120%;color:wheat'>" +
-            "山不在高，有仙则名。水不在深，有龙则灵。斯是陋室，惟吾德馨。<br>" +
-            "苔痕上阶绿，草色入帘青。谈笑有鸿儒，往来无白丁。<br>" +
-            "可以调素琴，阅金经。无丝竹之乱耳，无案牍之劳形。<br>" +
-            "南阳诸葛庐，西蜀子云亭。孔子云：何陋之有？" +
-            "</span>" +
-            "");
+        MessageBoard.initializeWelcomeMessage();
     }
 
     private async bindButtons() {

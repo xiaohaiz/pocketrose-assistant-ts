@@ -34,7 +34,7 @@ class KeyboardShortcutBuilder {
         );
     }
 
-    bind() {
+    doBind() {
         $(document).off("keydown.city").on("keydown.city", event => {
             const key = event.key;
             if (!key) return;

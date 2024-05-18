@@ -6,8 +6,10 @@ import LocationModeTown from "../../core/location/LocationModeTown";
 import Role from "../../core/role/Role";
 import {PersonalStatus} from "../../core/role/PersonalStatus";
 import {LocationModeSupport} from "./LocationModeSupport";
-import MessageBoard from "../../util/MessageBoard";
 import OperationMessage from "../../util/OperationMessage";
+import {PocketLogger} from "../../pocket/PocketLogger";
+
+const logger = PocketLogger.getLogger("WIDGET");
 
 abstract class CommonWidget extends LocationModeSupport {
 
@@ -44,8 +46,8 @@ abstract class CommonWidget extends LocationModeSupport {
 
 abstract class CommonWidgetFeature {
 
-    onMessage?: (s: string) => void = s => MessageBoard.publishMessage(s);
-    onWarning?: (s: string) => void = s => MessageBoard.publishWarning(s);
+    onMessage?: (s: string) => void = s => logger.info(s);
+    onWarning?: (s: string) => void = s => logger.warn(s);
     onRefresh?: (message: OperationMessage) => void;
 
     publishMessage(s: string) {

@@ -11,27 +11,22 @@ class TownAccessoryHousePage {
     role?: Role;
     equipmentList?: Equipment[];
     merchandiseList?: Merchandise[];
+    spaceCount?: number;
 
     get town(): Town {
         return TownLoader.load(this.townId)!;
     }
 
     findEquipment(index: number) {
-        for (const equipment of this.equipmentList!) {
-            if (equipment.index === index) {
-                return equipment;
-            }
-        }
-        return null;
+        return this.equipmentList?.find(it => it.index === index) ?? null;
     }
 
     findMerchandise(index: number) {
-        for (const merchandise of this.merchandiseList!) {
-            if (merchandise.index === index) {
-                return merchandise;
-            }
-        }
-        return null;
+        return this.merchandiseList?.find(it => it.index === index) ?? null;
+    }
+
+    findFirstSellableDragonBall() {
+        return this.equipmentList?.find(it => it.isDragonBall && it.isSellable) ?? null;
     }
 
 }

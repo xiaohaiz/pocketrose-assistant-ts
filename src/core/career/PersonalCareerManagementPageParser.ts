@@ -4,14 +4,8 @@ import PersonalCareerManagementPage from "./PersonalCareerManagementPage";
 
 class PersonalCareerManagementPageParser {
 
-    static parsePage(html: string) {
+    static parse(html: string) {
         const role = new Role();
-
-        const welcomeMessage = $(html).find("img[alt='神官']")
-            .parent()
-            .prev()
-            .find("> font:first")
-            .html();
 
         $(html).find("input:radio:first")
             .parent()
@@ -61,7 +55,6 @@ class PersonalCareerManagementPageParser {
             });
 
         const page = new PersonalCareerManagementPage();
-        page.welcomeMessage = welcomeMessage;
         page.role = role;
         page.careerList = careerCandidateList;
         return page;

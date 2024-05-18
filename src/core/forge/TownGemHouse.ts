@@ -2,11 +2,14 @@ import Credential from "../../util/Credential";
 import GemFuseLog from "./GemFuseLog";
 import GemFuseLogStorage from "./GemFuseLogStorage";
 import MessageBoard from "../../util/MessageBoard";
-import NetworkUtils from "../../util/NetworkUtils";
 import StringUtils from "../../util/StringUtils";
 import TownGemHousePage from "./TownGemHousePage";
 import _ from "lodash";
+import {PocketLogger} from "../../pocket/PocketLogger";
+import {PocketNetwork} from "../../pocket/PocketNetwork";
 import {TownGemHousePageParser} from "./TownGemHousePageParser";
+
+const logger = PocketLogger.getLogger("GEM");
 
 class TownGemHouse {
 
@@ -19,24 +22,28 @@ class TownGemHouse {
     }
 
     async open(): Promise<TownGemHousePage> {
-        const request = this.#credential.asRequestMap();
+        logger.debug("Loading gem page...");
+        const request = this.#credential.asRequest();
         request.set("con_str", "50");
         request.set("mode", "BAOSHI_SHOP");
         if (this.#townId !== undefined) {
             request.set("town", this.#townId);
         }
-        const html = await NetworkUtils.post("town.cgi", request);
+        const response = await PocketNetwork.post("town.cgi", request);
         const parser = new TownGemHousePageParser(this.#credential, this.#townId);
-        return parser.parsePage(html);
+        const page = parser.parsePage(response.html);
+        response.touch();
+        logger.debug("Gem page loaded.", response.durationInMillis);
+        return page;
     }
 
     async fuse(equipmentIndex: number, gemIndex: number, equipment?: string) {
-        const request = this.#credential.asRequestMap();
+        const request = this.#credential.asRequest();
         request.set("select", equipmentIndex.toString());
         request.set("baoshi", gemIndex.toString());
         request.set("azukeru", "0");
         request.set("mode", "BAOSHI_MAKE");
-        const html = await NetworkUtils.post("town.cgi", request)
+        const html = (await PocketNetwork.post("town.cgi", request)).html;
         MessageBoard.processResponseMessage(html);
         const text = $(html).text();
         if (text.includes("所选装备提升威力")) {

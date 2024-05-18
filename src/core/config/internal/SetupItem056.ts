@@ -1,10 +1,10 @@
 import MessageBoard from "../../../util/MessageBoard";
 import StorageUtils from "../../../util/StorageUtils";
-import SetupItem from "../SetupItem";
+import SetupItem from "../../../setup/SetupItem";
 import PageUtils from "../../../util/PageUtils";
 import StringUtils from "../../../util/StringUtils";
 import _ from "lodash";
-import {BattleConfigManager} from "../ConfigManager";
+import {BattleConfigManager} from "../../../setup/ConfigManager";
 
 class SetupItem056 implements SetupItem {
 

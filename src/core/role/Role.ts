@@ -56,6 +56,11 @@ class Role {
         return "<img src='" + src + "' alt='" + this.name + "' width='64' height='64' id='roleImage'>";
     }
 
+    get imageHTML(): string {
+        const src = Constants.POCKET_DOMAIN + "/image/head/" + this.image;
+        return "<img src='" + src + "' alt='" + this.name + "' width='64' height='64' title='" + this.name + "'>";
+    }
+
     get experienceHtml(): string {
         if (this.experience! >= 14900) {
             return "MAX";
@@ -159,6 +164,14 @@ class Role {
             return this.mirrorCount > 0;
         }
         return undefined;
+    }
+
+    static newInstanceFromImageElement(img: JQuery): Role | undefined {
+        if (img.length === 0) return undefined;
+        const inst = new Role();
+        inst.image = StringUtils.substringAfterLast(img.attr("src") as string, "/");
+        inst.name = img.attr("alt");
+        return inst;
     }
 }
 

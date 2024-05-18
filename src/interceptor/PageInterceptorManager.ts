@@ -42,6 +42,9 @@ import TownTaskHousePageInterceptor from "./internal/TownTaskHousePageIntercepto
 import TownWeaponHousePageInterceptor from "./internal/TownWeaponHousePageInterceptor";
 import PageInterceptor from "./PageInterceptor";
 import {TownCastleHousekeeperPageInterceptor} from "./internal/TownCastleHousekeeperPageInterceptor";
+import {DevelopmentPageInterceptor} from "./internal/DevelopmentPageInterceptor";
+import {CastleDevelopmentPageInterceptor} from "./internal/CastleDevelopmentPageInterceptor";
+import {MapBuyCastlePageInterceptor} from "./internal/MapBuyCastlePageInterceptor";
 
 class PageInterceptorManager {
 
@@ -52,13 +55,16 @@ class PageInterceptorManager {
             new BattlePageInterceptor(),
             new CastleBankPageInterceptor(),
             new CastleDashboardPageInterceptor(),
+            new CastleDevelopmentPageInterceptor(),
             new CastleInformationPageInterceptor(),
             new CastlePostHousePageInterceptor(),
             new ConversationPageInterceptor(),
             new CountryChangePageInterceptor(),
             new CountryPalacePageInterceptor(),
             new CountryTownStrengthenPageInterceptor(),
+            new DevelopmentPageInterceptor(),
             new LoginDashboardPageInterceptor(),
+            new MapBuyCastlePageInterceptor(),
             new MapDashboardPageInterceptor(),
             new MetroDashboardPageInterceptor(),
             new NationInformationPageInterceptor(),

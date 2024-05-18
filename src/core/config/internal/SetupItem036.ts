@@ -1,7 +1,7 @@
 import MessageBoard from "../../../util/MessageBoard";
 import StorageUtils from "../../../util/StorageUtils";
-import SetupItem from "../SetupItem";
-import SetupLoader from "../SetupLoader";
+import SetupItem from "../../../setup/SetupItem";
+import SetupLoader from "../../../setup/SetupLoader";
 
 class SetupItem036 implements SetupItem {
 

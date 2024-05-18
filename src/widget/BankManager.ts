@@ -191,7 +191,6 @@ class BankManager extends CommonWidget {
 
     async reload() {
         this.bankPage = await new TownBank(this.credential, this.townId).open();
-        this.feature.publishMessage("银行账户数据加载完成。");
     }
 
     async render() {

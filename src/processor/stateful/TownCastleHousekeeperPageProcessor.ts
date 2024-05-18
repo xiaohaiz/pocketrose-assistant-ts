@@ -16,22 +16,29 @@ import PageUtils from "../../util/PageUtils";
 import StatefulPageProcessor from "../StatefulPageProcessor";
 import StringUtils from "../../util/StringUtils";
 import _ from "lodash";
+import {PocketEvent} from "../../pocket/PocketEvent";
 import {PocketFormGenerator, PocketPage} from "../../pocket/PocketPage";
 import {RoleEquipmentStatusManager} from "../../core/equipment/RoleEquipmentStatusManager";
+import {RoleManager} from "../../widget/RoleManager";
 import {RolePetStatusManager} from "../../core/monster/RolePetStatusManager";
 import {SpecialPet, SpecialPetStorage} from "../../core/monster/SpecialPet";
 import {SpecialPetManager} from "../../widget/SpecialPetManager";
 import {TownCastleHousekeeperPageParser} from "../../core/castle/TownCastleHousekeeperPageParser";
 import {TownCastleHousekeeperPage} from "../../core/castle/TownCastleHousekeeperPage";
+import NpcLoader from "../../core/role/NpcLoader";
+import PetMap from "../../core/monster/PetMap";
+import MonsterProfileLoader from "../../core/monster/MonsterProfileLoader";
 
 class TownCastleHousekeeperPageProcessor extends StatefulPageProcessor {
 
     private readonly location: LocationModeTown;
+    private readonly roleManager: RoleManager;
     private readonly specialPetManager: SpecialPetManager;
 
     constructor(credential: Credential, context: PageProcessorContext) {
         super(credential, context);
         this.location = this.createLocationMode() as LocationModeTown;
+        this.roleManager = new RoleManager(credential, this.location);
         this.specialPetManager = new SpecialPetManager(credential, this.location);
         this.specialPetManager.feature.onRefresh = async () => {
             if (this.castle) {
@@ -49,7 +56,9 @@ class TownCastleHousekeeperPageProcessor extends StatefulPageProcessor {
         this.housekeeperPage = TownCastleHousekeeperPageParser.parsePage(PageUtils.currentPageHtml());
 
         await this.generateHTML();
+        await this.resetMessageBoard();
         await this.bindButtons();
+        this.roleManager.bindButtons();
         this.specialPetManager.bindButtons();
 
         await this.initializeCastle();
@@ -58,7 +67,9 @@ class TownCastleHousekeeperPageProcessor extends StatefulPageProcessor {
             MessageBoard.resetMessageBoard("<span style='font-weight:bold;color:yellow;font-size:120%'>" +
                 "你说你连座城堡都没有的人，是谁给了你勇气来进入这个页面？是梁静茹么？麻利儿哪凉快哪歇着去，少来裹乱！</span>");
         } else {
-            this.resetMessageBoard();
+            $("#ID_castleInformation")
+                .html(this.createCastleInformationHTML())
+                .parent().show();
             $("#ID_castleWarehouse")
                 .html(this.createCastleWarehouseHTML())
                 .parent().show();
@@ -70,14 +81,31 @@ class TownCastleHousekeeperPageProcessor extends StatefulPageProcessor {
             await Promise.all([this.renderCastleWarehouse(), this.renderCastleRanch()]);
         }
 
+        await this.roleManager.reload();
+        await this.roleManager.render();
         await this.specialPetManager.reload();
         await this.specialPetManager.render();
+
+        if (this.castle) {
+            $("#castleOwner").html(() => {
+                return this.roleManager.role!.imageHTML;
+            });
+            MouseClickEventBuilder.newInstance()
+                .onElementClicked("castleOwner", async () => {
+                    if ($("#renderRanchPetStatistics").length > 0) {
+                        $("#ID_ranchPetStatistics").html("").parent().hide();
+                    } else {
+                        await this.renderRanchPetStatistics();
+                    }
+                })
+                .doBind();
+        }
 
         KeyboardShortcutBuilder.newInstance()
             .onKeyPressed("r", () => PageUtils.triggerClick("refreshButton"))
             .onEscapePressed(() => PageUtils.triggerClick("returnButton"))
             .withDefaultPredicate()
-            .bind();
+            .doBind();
     }
 
     private async generateHTML() {
@@ -104,6 +132,7 @@ class TownCastleHousekeeperPageProcessor extends StatefulPageProcessor {
             .removeAttr("height")
             .find("> table:first > tbody:first > tr:first")
             .find("> td:first")
+            .attr("id", "roleInformationManager")
             .css("white-space", "nowrap")
             .next()
             .attr("id", "ID_roleStatus")
@@ -113,21 +142,27 @@ class TownCastleHousekeeperPageProcessor extends StatefulPageProcessor {
             .css("width", "100%")
             .next().remove();
 
-        $("#ID_roleStatus")
-            .find("> table:first")
-            .removeAttr("width")
-            .css("margin", "auto")
-            .find("> tbody:first > tr:eq(2) > td:last")
-            .attr("id", "ID_roleCash");
+        $("#ID_roleStatus").html(() => {
+            return this.roleManager.generateHTML();
+        });
 
         $("body:first > table:first > tbody:first > tr:eq(2) > td:first")
             .removeAttr("height")
             .find("> table:first > tbody:first > tr:first > td:first")
             .attr("id", "messageBoard")
-            .css("color", "white");
+            .css("color", "white")
+            .closest("tr")
+            .find("> td:last")
+            .attr("id", "messageBoardManager");
 
         $("body:first > table:first > tbody:first")
             .append($("" +
+                "<tr style='display:none'>" +
+                "<td id='ID_castleInformation' style='border-spacing:0'></td>" +
+                "</tr>" +
+                "<tr style='display:none'>" +
+                "<td id='ID_ranchPetStatistics' style='border-spacing:0'></td>" +
+                "</tr>" +
                 "<tr style='display:none'>" +
                 "<td id='ID_castleWarehouse' style='border-spacing:0'></td>" +
                 "</tr>" +
@@ -154,23 +189,39 @@ class TownCastleHousekeeperPageProcessor extends StatefulPageProcessor {
                 PageUtils.triggerClick("_pocket_ReturnSubmit");
             });
         });
-        $("#refreshButton").on("click", () => {
+        $("#refreshButton").on("click", async () => {
             PocketPage.scrollIntoTitle();
             if (this.castle === undefined) return;
-            this.resetMessageBoard();
+            await this.resetMessageBoard();
             this.refresh().then(() => {
                 MessageBoard.publishMessage("城堡管家刷新完成。");
             });
         });
+        const roleImageHandler = PocketEvent.newMouseClickHandler();
+        MouseClickEventBuilder.newInstance()
+            .onElementClicked("roleInformationManager", async () => {
+                await roleImageHandler.onMouseClicked();
+            })
+            .onElementClicked("messageBoardManager", async () => {
+                await this.resetMessageBoard();
+            })
+            .doBind();
     }
 
-    private resetMessageBoard(): void {
-        MessageBoard.resetMessageBoard("<span style='color:wheat;font-size:120%;font-weight:bold'>" +
-            "这里可以查看您的城堡仓库和牧场的存货，当然您的理解也没错，查看就是查看，仅仅也只是“查看”，别想多了。" +
-            "</span>");
+    private async resetMessageBoard() {
+        MessageBoard.initializeManager();
+        MessageBoard.initializeWelcomeMessage();
+    }
+
+    private async refresh() {
+        await this.roleManager.reload();
+        await this.roleManager.render();
+        await Promise.all([this.reloadCastleWarehouse(), this.reloadCastleRanch()]);
+        await Promise.all([this.renderCastleWarehouse(), this.renderCastleRanch()]);
     }
 
     private async dispose(): Promise<void> {
+        await this.roleManager.dispose();
         await this.specialPetManager.dispose();
         const equipmentStatusManager = new RoleEquipmentStatusManager(this.credential);
         const petStatusManager = new RolePetStatusManager(this.credential);
@@ -180,15 +231,38 @@ class TownCastleHousekeeperPageProcessor extends StatefulPageProcessor {
         ]);
     }
 
-    private async refresh() {
-        await Promise.all([this.reloadCastleWarehouse(), this.reloadCastleRanch()]);
-        await Promise.all([this.renderCastleWarehouse(), this.renderCastleRanch()]);
-    }
-
     private async initializeCastle() {
-        const castlePage = await new CastleInformation().open();
+        const castlePage = await new CastleInformation().openWithCache();
         const castle = castlePage.findByRoleName(this.housekeeperPage!.role!.name!);
         if (castle !== null) this.castle = castle;
+    }
+
+    private createCastleInformationHTML() {
+        return "<table style='background-color:#888888;margin:auto;text-align:center'>" +
+            "<tbody style='text-align:center'>" +
+            "<tr style='background-color:skyblue'>" +
+            "<th rowspan='2' style='width:64px;height:64px' id='castleOwner'>" + NpcLoader.getNpcImageHtml("U_041") + "</th>" +
+            "<th>名字</th>" +
+            "<th>坐标</th>" +
+            "<th>属性</th>" +
+            "<th>开发</th>" +
+            "<th>商业</th>" +
+            "<th>工业</th>" +
+            "<th>矿产</th>" +
+            "<th>防御</th>" +
+            "</tr>" +
+            "<tr style='background-color:#F8F0E0'>" +
+            "<td>" + (this.castle?.name ?? "") + "</td>" +
+            "<td>" + (this.castle?.coordinate?.coordinateText ?? "") + "</td>" +
+            "<td>" + (this.castle?.attribute ?? "") + "</td>" +
+            "<td>" + (this.castle?.development ?? "0") + "</td>" +
+            "<td>" + (this.castle?.commerce ?? "0") + "</td>" +
+            "<td>" + (this.castle?.industry ?? "0") + "</td>" +
+            "<td>" + (this.castle?.mineral ?? "0") + "</td>" +
+            "<td>" + (this.castle?.defense ?? "0") + "</td>" +
+            "</tr>" +
+            "</tbody>" +
+            "</table>";
     }
 
     private createCastleWarehouseHTML(): string {
@@ -259,7 +333,7 @@ class TownCastleHousekeeperPageProcessor extends StatefulPageProcessor {
     }
 
     private async reloadCastleRanch() {
-        this.ranchPage = await new CastleRanch(this.credential).enter();
+        this.ranchPage = await new CastleRanch(this.credential).open();
     }
 
     private async renderCastleWarehouse() {
@@ -396,6 +470,86 @@ class TownCastleHousekeeperPageProcessor extends StatefulPageProcessor {
                 }
             );
         });
+    }
+
+    private async renderRanchPetStatistics() {
+        let html = "";
+        html += "<table style='background-color:#888888;text-align:center;margin:auto' id='renderRanchPetStatistics'>";
+        html += "<tbody>";
+
+        const mm = new Map<string, PetMap>();
+        for (const pet of this.ranchPage!.ranchPetList!) {
+            const profile = await pet.lookupProfile();
+            if (profile === null) continue;
+            if (mm.has(profile.code!)) continue;
+            const mock = new PetMap();
+            mock.code = profile.code;
+            mock.picture = profile.picture;
+            mock.count = 1;
+            mm.set(mock.code!, mock);
+        }
+
+        let row = 0;
+        while (true) {
+            const currentRowPetMaps: PetMap[] = [];
+            let notFound = false;
+            for (let i = 0; i < 10; i++) {
+                const index = i + row * 10;
+                if (index >= 493) {
+                    notFound = true;
+                    const placeHolder = new PetMap();
+                    currentRowPetMaps.push(placeHolder);
+                } else {
+                    const m = MonsterProfileLoader.load(index + 1)!;
+                    const pm = mm.get(m.code!);
+                    if (pm) {
+                        currentRowPetMaps.push(pm);
+                    } else {
+                        const placeHolder = new PetMap();
+                        placeHolder.code = m.code;
+                        currentRowPetMaps.push(placeHolder);
+                    }
+                }
+            }
+
+            html += "<tr>";
+            for (const pm of currentRowPetMaps) {
+                if (pm.count !== undefined) {
+                    const monster = MonsterProfileLoader.load(pm.code)!;
+                    html += "<td style='background-color:#E8E8D0;width:64px;height:64px'>" + monster.imageHtml + "</td>"
+                } else {
+                    html += "<td style='background-color:#E8E8D0;width:64px;height:64px'></td>"
+                }
+            }
+            html += "</tr>";
+            html += "<tr>";
+            for (const pm of currentRowPetMaps) {
+                if (pm.code !== undefined) {
+                    const monster = MonsterProfileLoader.load(pm.code)!;
+                    if (monster.location === 1) {
+                        html += "<td style='background-color:wheat;width:64px;color:green'>" + pm.code + "</td>"
+                    } else if (monster.location === 2) {
+                        html += "<td style='background-color:wheat;width:64px;color:blue'>" + pm.code + "</td>"
+                    } else if (monster.location === 3) {
+                        html += "<td style='background-color:wheat;width:64px;color:red'>" + pm.code + "</td>"
+                    } else {
+                        html += "<td style='background-color:wheat;width:64px'>" + pm.code + "</td>"
+                    }
+                } else {
+                    html += "<td style='background-color:wheat;width:64px'></td>"
+                }
+            }
+            html += "</tr>";
+
+            if (notFound) {
+                break;
+            }
+            row++;
+        }
+        html += "</tbody>";
+        html += "</table>";
+
+        $("#ID_ranchPetStatistics").html(html).parent().show();
     }
 
     private async onSpecialPetModified() {

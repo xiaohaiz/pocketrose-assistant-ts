@@ -1,10 +1,14 @@
 import BankAccount from "./BankAccount";
 import Credential from "../../util/Credential";
 import MessageBoard from "../../util/MessageBoard";
-import NetworkUtils from "../../util/NetworkUtils";
 import PocketUtils from "../../util/PocketUtils";
+import _ from "lodash";
 import {CastleBankPageParser} from "./BankPageParser";
 import {CastleBankPage} from "./BankPage";
+import {PocketLogger} from "../../pocket/PocketLogger";
+import {PocketNetwork} from "../../pocket/PocketNetwork";
+
+const logger = PocketLogger.getLogger("BANK");
 
 class CastleBank {
 
@@ -19,10 +23,12 @@ class CastleBank {
     }
 
     private async _open(count: number = 0): Promise<CastleBankPage> {
-        const request = this.#credential.asRequestMap();
+        const request = this.#credential.asRequest();
         request.set("mode", "CASTLE_BANK");
-        const response = await NetworkUtils.post("castle.cgi", request);
-        const page = CastleBankPageParser.parsePage(response);
+        const response = await PocketNetwork.post("castle.cgi", request);
+        const page = CastleBankPageParser.parsePage(response.html);
+        response.touch();
+        logger.debug("Castle bank page loaded.", response.durationInMillis);
         if (page.available) return page;
         if (count >= 2) return page;
         return await this._open(count + 1);
@@ -32,77 +38,56 @@ class CastleBank {
         return (await this.open()).account!;
     }
 
-    async deposit(amount?: number): Promise<void> {
-        return await (() => {
-            return new Promise<void>((resolve, reject) => {
-                const request = this.#credential.asRequestMap();
-                if (amount === undefined) {
-                    // deposit all
-                    request.set("azukeru", "all");
-                    request.set("mode", "CASTLEBANK_SELL");
-                    NetworkUtils.post("castle.cgi", request)
-                        .then(() => {
-                            MessageBoard.publishMessage("在城堡支行存入全部现金。");
-                            resolve();
-                        });
-                } else {
-                    // deposit specified amount
-                    if (!PocketUtils.checkAmount(amount)) {
-                        MessageBoard.publishWarning("非法的金额" + amount + "！");
-                        reject();
-                    } else if (amount === 0) {
-                        // 真逗，没钱凑什么热闹。
-                        resolve();
-                    } else {
-                        request.set("azukeru", amount.toString());
-                        request.set("mode", "CASTLEBANK_SELL");
-                        NetworkUtils.post("castle.cgi", request)
-                            .then(() => {
-                                MessageBoard.publishMessage("在城堡支行存入了" + amount + "万现金。");
-                                resolve();
-                            });
-                    }
-                }
-            });
-        })();
+    async deposit(amount?: number) {
+        const request = this.#credential.asRequest();
+        if (amount === undefined) {
+            // deposit all
+            request.set("azukeru", "all");
+            request.set("mode", "CASTLEBANK_SELL");
+            await PocketNetwork.post("castle.cgi", request);
+            logger.info("在城堡支行存入全部现金。");
+        } else {
+            // deposit specified amount
+            if (!PocketUtils.checkAmount(amount)) {
+                logger.warn("非法的金额" + amount + "！");
+                return;
+            } else if (amount === 0) {
+                // 真逗，没钱凑什么热闹。
+                return;
+            } else {
+                request.set("azukeru", amount.toString());
+                request.set("mode", "CASTLEBANK_SELL");
+                await PocketNetwork.post("castle.cgi", request);
+                logger.info("在城堡支行存入了" + amount + "万现金。");
+            }
+        }
     }
 
-    async withdraw(amount: number): Promise<void> {
-        const action = () => {
-            return new Promise<void>((resolve, reject) => {
-                if (isNaN(amount) || !Number.isInteger(amount) || amount < 0) {
-                    reject();
-                    return;
-                }
-                if (amount === 0) {
-                    resolve();
-                    return;
-                }
-                const request = this.#credential.asRequestMap();
-                request.set("dasu", amount.toString());
-                request.set("mode", "CASTLEBANK_BUY");
-                NetworkUtils.post("castle.cgi", request)
-                    .then(html => {
-                        if ($(html).text().includes("您在钱庄里没那么多存款")) {
-                            MessageBoard.publishWarning("真可怜，银行里面连" + amount + "万存款都没有！");
-                            reject();
-                        } else {
-                            MessageBoard.publishMessage("从城堡支行里提取了" + amount + "万现金。");
-                            resolve();
-                        }
-                    });
-            });
-        };
-        return await action();
+    async withdraw(amount: number) {
+        if (isNaN(amount) || !Number.isInteger(amount) || amount < 0) {
+            return;
+        }
+        if (amount === 0) {
+            return;
+        }
+        const request = this.#credential.asRequest();
+        request.set("dasu", amount.toString());
+        request.set("mode", "CASTLEBANK_BUY");
+        const response = await PocketNetwork.post("castle.cgi", request);
+        if (_.includes(response.html, "您在钱庄里没那么多存款")) {
+            MessageBoard.processResponseMessage(response.html);
+            return;
+        }
+        logger.info("从城堡支行里提取了" + amount + "万现金。");
     }
 
     async transfer(target: string, amount: number) {
-        const request = this.#credential.asRequestMap();
+        const request = this.#credential.asRequest();
         request.set("gold", (amount * 10).toString());  // 送钱的接口单位是K
         request.set("eid", target);
         request.set("mode", "CASTLE_SENDMONEY2");
-        const response = await NetworkUtils.post("castle.cgi", request);
-        MessageBoard.processResponseMessage(response);
+        const response = await PocketNetwork.post("castle.cgi", request);
+        MessageBoard.processResponseMessage(response.html);
     }
 }
 

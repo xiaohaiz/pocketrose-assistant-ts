@@ -1,11 +1,14 @@
 import Credential from "../../util/Credential";
-import NetworkUtils from "../../util/NetworkUtils";
 import MessageBoard from "../../util/MessageBoard";
 import _ from "lodash";
 import {PersonalSalaryRecord} from "./PersonalSalaryRecord";
 import {PersonalStatus} from "../role/PersonalStatus";
 import {PersonalSalaryRecordStorage} from "./PersonalSalaryRecordStorage";
 import StringUtils from "../../util/StringUtils";
+import {PocketNetwork} from "../../pocket/PocketNetwork";
+import {PocketLogger} from "../../pocket/PocketLogger";
+
+const logger = PocketLogger.getLogger("SALARY");
 
 class PersonalSalary {
 
@@ -27,14 +30,14 @@ class PersonalSalary {
     }
 
     async receiveSalary() {
-        const request = this.credential.asRequestMap();
+        const request = this.credential.asRequest();
         request.set("mode", "SALARY");
         if (this.townId !== undefined) {
             request.set("town", this.townId);
         }
-        const response = await NetworkUtils.post("mydata.cgi", request);
-        MessageBoard.processResponseMessage(response);
-        return await this._processResponse(response);
+        const response = await PocketNetwork.post("mydata.cgi", request);
+        MessageBoard.processResponseMessage(response.html);
+        return await this._processResponse(response.html);
     }
 
     private async _processResponse(response: string) {
@@ -71,6 +74,7 @@ class PersonalSalary {
             record.code = -1;
         }
         await PersonalSalaryRecordStorage.write(record);
+        logger.debug("Personal salary record saved into IndexedDB (code=" + record.code + ").");
         return success;
     }
 }

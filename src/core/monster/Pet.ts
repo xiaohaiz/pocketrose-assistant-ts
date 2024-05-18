@@ -2,7 +2,7 @@ import _ from "lodash";
 import Constants from "../../util/Constants";
 import PageUtils from "../../util/PageUtils";
 import StringUtils from "../../util/StringUtils";
-import SetupLoader from "../config/SetupLoader";
+import SetupLoader from "../../setup/SetupLoader";
 import MonsterProfileLoader from "./MonsterProfileLoader";
 import MonsterProfile from "./MonsterProfile";
 import {SpecialPet, SpecialPetStorage} from "./SpecialPet";

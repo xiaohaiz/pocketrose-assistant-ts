@@ -1,9 +1,12 @@
 import Credential from "../../util/Credential";
 import MessageBoard from "../../util/MessageBoard";
-import NetworkUtils from "../../util/NetworkUtils";
 import PersonalPetManagementPage from "./PersonalPetManagementPage";
 import PersonalPetManagementPageParser from "./PersonalPetManagementPageParser";
 import _ from "lodash";
+import {PocketLogger} from "../../pocket/PocketLogger";
+import {PocketNetwork} from "../../pocket/PocketNetwork";
+
+const logger = PocketLogger.getLogger("PET");
 
 class PersonalPetManagement {
 
@@ -16,61 +19,48 @@ class PersonalPetManagement {
     }
 
     async open(): Promise<PersonalPetManagementPage> {
-        return await (() => {
-            return new Promise<PersonalPetManagementPage>(resolve => {
-                const request = this.#credential.asRequestMap();
-                if (this.#townId !== undefined) {
-                    request.set("town", this.#townId);
-                }
-                request.set("mode", "PETSTATUS");
-                const start = Date.now();
-                NetworkUtils.post("mydata.cgi", request).then(html => {
-                    const page = PersonalPetManagementPageParser.parsePage(html);
-                    const end = Date.now();
-                    MessageBoard.publishMessage("Pet page loaded. (" + (end - start) + "ms spent)");
-                    resolve(page);
-                });
-            });
-        })();
+        logger.debug("Loading pet page...");
+        const request = this.#credential.asRequest();
+        if (this.#townId) request.set("town", this.#townId);
+        request.set("mode", "PETSTATUS");
+        const response = await PocketNetwork.post("mydata.cgi", request);
+        const page = PersonalPetManagementPageParser.parsePage(response.html);
+        response.touch();
+        logger.debug("Pet page loaded.", response.durationInMillis);
+        return page;
     }
 
-    async set(index: number): Promise<void> {
-        return await (() => {
-            return new Promise<void>(resolve => {
-                const request = this.#credential.asRequestMap();
-                request.set("select", index.toString());
-                request.set("mode", "CHOOSEPET");
-                NetworkUtils.post("mydata.cgi", request).then(html => {
-                    MessageBoard.processResponseMessage(html);
-                    resolve();
-                });
-            });
-        })();
+    async set(index: number) {
+        const request = this.#credential.asRequest();
+        request.set("select", index.toString());
+        request.set("mode", "CHOOSEPET");
+        const response = await PocketNetwork.post("mydata.cgi", request);
+        MessageBoard.processResponseMessage(response.html);
     }
 
     async love(index: number) {
-        const request = this.#credential.asRequestMap();
+        const request = this.#credential.asRequest();
         request.set("mode", "PETADDLOVE");
         request.set("select", _.toString(index));
-        const response = await NetworkUtils.post("mydata.cgi", request);
-        MessageBoard.processResponseMessage(response);
+        const response = await PocketNetwork.post("mydata.cgi", request);
+        MessageBoard.processResponseMessage(response.html);
     }
 
     async rename(index: number, name: string): Promise<void> {
-        const request = this.#credential.asRequestMap();
+        const request = this.#credential.asRequest();
         request.set("select", _.toString(index));
         request.set("name", escape(name));
         request.set("mode", "PETCHANGENAME");
-        const response = await NetworkUtils.post("mydata.cgi", request);
-        MessageBoard.processResponseMessage(response);
+        const response = await PocketNetwork.post("mydata.cgi", request);
+        MessageBoard.processResponseMessage(response.html);
     }
 
     async joinLeague(index: number) {
-        const request = this.#credential.asRequestMap();
+        const request = this.#credential.asRequest();
         request.set("select", _.toString(index));
         request.set("mode", "PETGAME");
-        const response = await NetworkUtils.post("mydata.cgi", request);
-        MessageBoard.processResponseMessage(response);
+        const response = await PocketNetwork.post("mydata.cgi", request);
+        MessageBoard.processResponseMessage(response.html);
     }
 }
 

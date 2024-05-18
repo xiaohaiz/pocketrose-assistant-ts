@@ -13,7 +13,7 @@ class TownPetRankHousePageProcessor extends StatelessPageProcessorCredentialSupp
         KeyboardShortcutBuilder.newInstance()
             .onEscapePressed(() => $("#return_button").trigger("click"))
             .withDefaultPredicate()
-            .bind();
+            .doBind();
     }
 
     async #processPage(credential: Credential, context?: PageProcessorContext) {

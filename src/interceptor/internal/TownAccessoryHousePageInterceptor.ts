@@ -1,6 +1,8 @@
 import RoleStateMachineManager from "../../core/state/RoleStateMachineManager";
-import TownAccessoryHousePageProcessor from "../../processor/stateless/TownAccessoryHousePageProcessor";
 import PageInterceptor from "../PageInterceptor";
+import Credential from "../../util/Credential";
+import PageProcessorContext from "../../processor/PageProcessorContext";
+import {TownAccessoryHousePageProcessor} from "../../processor/stateful/TownAccessoryHousePageProcessor";
 
 class TownAccessoryHousePageInterceptor implements PageInterceptor {
 
@@ -12,12 +14,15 @@ class TownAccessoryHousePageInterceptor implements PageInterceptor {
     }
 
     intercept(): void {
+        const credential = Credential.newInstance();
+        if (!credential) return;
         RoleStateMachineManager.create()
             .load()
             .then(machine => {
                 machine.start()
-                    .whenInTown(() => {
-                        new TownAccessoryHousePageProcessor().process();
+                    .whenInTown(state => {
+                        const context = PageProcessorContext.whenInTown(state?.townId);
+                        new TownAccessoryHousePageProcessor(credential, context).process();
                     })
                     .process();
             });

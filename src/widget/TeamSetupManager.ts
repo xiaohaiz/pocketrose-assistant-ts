@@ -7,7 +7,7 @@ import _ from "lodash";
 import NpcLoader from "../core/role/NpcLoader";
 import {RoleStatusStorage} from "../core/role/RoleStatus";
 import StringUtils from "../util/StringUtils";
-import {BattleConfigManager, MiscConfigManager, UIConfigManager} from "../core/config/ConfigManager";
+import {BattleConfigManager, MiscConfigManager, UIConfigManager} from "../setup/ConfigManager";
 import PageUtils from "../util/PageUtils";
 import OperationMessage from "../util/OperationMessage";
 

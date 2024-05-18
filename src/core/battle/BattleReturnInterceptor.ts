@@ -18,11 +18,14 @@ import {PersonalSalaryTrigger} from "../trigger/PersonalSalaryTrigger";
 import {RoleEquipmentStatusManager} from "../equipment/RoleEquipmentStatusManager";
 import {RolePetStatusManager} from "../monster/RolePetStatusManager";
 import {RoleStatusManager} from "../role/RoleStatus";
-import {BattleConfigManager} from "../config/ConfigManager";
-import LocalSettingManager from "../config/LocalSettingManager";
+import {BattleConfigManager} from "../../setup/ConfigManager";
+import LocalSettingManager from "../../setup/LocalSettingManager";
 import {PetUsingTrigger} from "../trigger/PetUsingTrigger";
-import MessageBoard from "../../util/MessageBoard";
-import CastleInformationPage from "../dashboard/CastleInformationPage";
+import {CastleInformationPage} from "../dashboard/CastleInformationPage";
+import {PocketLogger} from "../../pocket/PocketLogger";
+import {PersonalChampionTrigger} from "../trigger/PersonalChampionTrigger";
+
+const logger = PocketLogger.getLogger("BATTLE");
 
 class BattleReturnInterceptor {
 
@@ -55,6 +58,14 @@ class BattleReturnInterceptor {
     }
 
     async beforeExitBattle() {
+        logger.debug("Before return from battle...");
+        const start = Date.now();
+        await this._beforeExitBattle();
+        const end = Date.now();
+        logger.debug("Battle return interceptor finished.", (end - start));
+    }
+
+    private async _beforeExitBattle() {
         const roleStatusManager = new RoleStatusManager(this.#credential);
         if (!this.#battlePage.zodiacBattle && this.#hasHarvestExcludesPetMap()) {
             // 非十二宫战斗有入手，其实不知道是什么，只能排除不是图鉴
@@ -70,7 +81,7 @@ class BattleReturnInterceptor {
                 // 宠物战斗中获取了经验值，但是缓存中的宠物等级是100，数据不一致了，清除。
                 await roleStatusManager.unsetPet();
                 doCompleteBattleFieldTrigger = true;
-                MessageBoard.publishMessage("Role cached data crashed, trigger full reloading.");
+                logger.warn("Role cached data crashed, trigger full reloading.");
             }
         }
 
@@ -163,6 +174,9 @@ class BattleReturnInterceptor {
 
         // 触发自动领取俸禄
         await new PersonalSalaryTrigger(this.#credential).triggerReceive(this.#battleCount);
+
+        // 触发自动个天比赛
+        await new PersonalChampionTrigger(this.#credential).triggerPersonalChampionMatch();
     }
 
     #hasHarvestIncludesPetMap() {

@@ -1,6 +1,6 @@
 class CommentBoard {
 
-    static createCommentBoard(imageHtml: string) {
+    static createCommentBoard(imageHtml: string, extension?: boolean) {
         if ($("#commentBoard").length > 0) {
             return;
         }
@@ -11,6 +11,17 @@ class CommentBoard {
         html += "<td style='background-color:#F8F0E0' id='commentBoardManager'>" + imageHtml + "</td>"
         html += "<td style='background-color:#F8F0E0;width:100%' id='commentBoard'></td>"
         html += "</tr>";
+        if (extension) {
+            html += "<tr style='display:none'>";
+            html += "<td>";
+            html += "<div id='_comment_board_extension_0'></div>";
+            html += "<div id='_comment_board_extension_1'></div>";
+            html += "<div id='_comment_board_extension_2'></div>";
+            html += "<div id='_comment_board_extension_3'></div>";
+            html += "<div id='_comment_board_extension_4'></div>";
+            html += "</td>";
+            html += "</tr>";
+        }
         html += "</tbody>";
         html += "</table>";
         $("body:first").find("div:last").before($("<div id='commentBoardContainer'></div>"));

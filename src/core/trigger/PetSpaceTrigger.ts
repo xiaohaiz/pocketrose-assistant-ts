@@ -1,7 +1,7 @@
 import Credential from "../../util/Credential";
 import PersonalPetManagementPage from "../monster/PersonalPetManagementPage";
 import PersonalPetManagement from "../monster/PersonalPetManagement";
-import LocalSettingManager from "../config/LocalSettingManager";
+import LocalSettingManager from "../../setup/LocalSettingManager";
 
 /**
  * ============================================================================

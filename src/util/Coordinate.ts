@@ -19,6 +19,10 @@ class Coordinate {
         return "(" + this.x + "," + this.y + ")";
     }
 
+    get coordinateText() {
+        return "(" + this.x + "," + this.y + ")";
+    }
+
     equals(other: Coordinate): boolean {
         return this.x === other.x && this.y === other.y;
     }

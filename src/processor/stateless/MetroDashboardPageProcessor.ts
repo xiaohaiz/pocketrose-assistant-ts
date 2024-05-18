@@ -1,5 +1,5 @@
 import _ from "lodash";
-import SetupLoader from "../../core/config/SetupLoader";
+import SetupLoader from "../../setup/SetupLoader";
 import MetroDashboardPage from "../../core/dashboard/MetroDashboardPage";
 import EventHandler from "../../core/event/EventHandler";
 import MapBuilder from "../../core/map/MapBuilder";

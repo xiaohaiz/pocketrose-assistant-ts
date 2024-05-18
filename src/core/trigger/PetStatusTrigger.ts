@@ -7,7 +7,7 @@ import GoldenCage from "../monster/GoldenCage";
 import CastleInformation from "../dashboard/CastleInformation";
 import CastleRanch from "../monster/CastleRanch";
 import {RolePetStatusManager} from "../monster/RolePetStatusManager";
-import CastleInformationPage from "../dashboard/CastleInformationPage";
+import {CastleInformationPage} from "../dashboard/CastleInformationPage";
 
 /**
  * ============================================================================
@@ -43,6 +43,11 @@ class PetStatusTrigger {
         return this;
     }
 
+    withCastlePage(value?: CastleInformationPage): PetStatusTrigger {
+        this.castlePage = value;
+        return this;
+    }
+
     async #initializeEquipmentPage() {
         if (!this.#equipmentPage) {
             this.#equipmentPage = await new PersonalEquipmentManagement(this.#credential).open();
@@ -57,7 +62,7 @@ class PetStatusTrigger {
 
     private async initializeCastlePage() {
         if (!this.castlePage) {
-            this.castlePage = await new CastleInformation().open();
+            this.castlePage = await new CastleInformation().openWithCache();
         }
     }
 
@@ -83,7 +88,7 @@ class PetStatusTrigger {
         await this.initializeCastlePage();
         const castle = this.castlePage!.findByRoleName(roleName);
         if (castle) {
-            const ranchPage = await new CastleRanch(this.#credential).enter();
+            const ranchPage = await new CastleRanch(this.#credential).open();
             await this.statusManager.updateCastleRanchPetStatus(ranchPage);
         }
 

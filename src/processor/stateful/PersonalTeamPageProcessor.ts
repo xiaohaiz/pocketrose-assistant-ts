@@ -3,7 +3,7 @@ import ButtonUtils from "../../util/ButtonUtils";
 import Credential from "../../util/Credential";
 import EquipmentConstants from "../../core/equipment/EquipmentConstants";
 import KeyboardShortcutBuilder from "../../util/KeyboardShortcutBuilder";
-import LocalSettingManager from "../../core/config/LocalSettingManager";
+import LocalSettingManager from "../../setup/LocalSettingManager";
 import LocationModeCastle from "../../core/location/LocationModeCastle";
 import LocationModeTown from "../../core/location/LocationModeTown";
 import MessageBoard from "../../util/MessageBoard";
@@ -26,9 +26,12 @@ import {TeamSetupManager} from "../../widget/TeamSetupManager";
 import {RoleStatusManager} from "../../core/role/RoleStatus";
 import {RoleUsingEquipmentManager} from "../../core/role/RoleUsingEquipment";
 import {RoleUsingPetManager} from "../../core/role/RoleUsingPet";
-import SetupLoader from "../../core/config/SetupLoader";
+import SetupLoader from "../../setup/SetupLoader";
 import TeamMember from "../../core/team/TeamMember";
 import {TeamPetReportGenerator} from "../../core/report/TeamPetReportGenerator";
+import {PocketLogger} from "../../pocket/PocketLogger";
+
+const logger = PocketLogger.getLogger("TEAM");
 
 class PersonalTeamPageProcessor extends StatefulPageProcessor {
 
@@ -59,7 +62,7 @@ class PersonalTeamPageProcessor extends StatefulPageProcessor {
             .onKeyPressed("r", () => PageUtils.triggerClick("refreshButton"))
             .onEscapePressed(() => PageUtils.triggerClick("returnButton"))
             .withDefaultPredicate()
-            .bind();
+            .doBind();
     }
 
     private async generateHTML() {
@@ -287,7 +290,7 @@ class PersonalTeamPageProcessor extends StatefulPageProcessor {
         new MouseClickEventBuilder()
             .bind($("#_pocket_RoleImage"), () => {
                 if (!TeamMemberLoader.loadTeamMembersAsMap(true).has(this.credential.id)) {
-                    MessageBoard.publishWarning("你不是团队成员，无法进入团队设置。");
+                    logger.warn("你不是团队成员，无法进入团队设置。");
                     return;
                 }
                 $("#_pocket_TeamSetupPanel").parent().toggle();

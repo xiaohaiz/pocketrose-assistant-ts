@@ -45,8 +45,6 @@ class PersonalMirrorPageProcessor extends StatefulPageProcessor {
         this.equipmentManager.feature.enableSpaceTriggerOnDispose = true;
         this.equipmentManager.feature.enableStatusTriggerOnDispose = true;
         this.equipmentManager.feature.enableUsingTriggerOnDispose = true;
-        this.equipmentManager.feature.onMessage = s => MessageBoard.publishMessage(s);
-        this.equipmentManager.feature.onWarning = s => MessageBoard.publishWarning(s);
         this.equipmentManager.feature.onRefresh = () => {
             this.roleManager.reload().then(() => {
                 this.roleManager.render().then(() => {
@@ -56,8 +54,6 @@ class PersonalMirrorPageProcessor extends StatefulPageProcessor {
         };
 
         this.bankManager = new BankManager(credential, this.location);
-        this.bankManager.feature.onMessage = s => MessageBoard.publishMessage(s);
-        this.bankManager.feature.onWarning = s => MessageBoard.publishWarning(s);
         this.bankManager.feature.onRefresh = () => {
             this.roleManager.reload().then(() => {
                 this.roleManager.render().then();
@@ -89,7 +85,7 @@ class PersonalMirrorPageProcessor extends StatefulPageProcessor {
             .onKeyPressed("r", () => PageUtils.triggerClick("refreshButton"))
             .onEscapePressed(() => PageUtils.triggerClick("returnButton"))
             .withDefaultPredicate()
-            .bind();
+            .doBind();
     }
 
     private async generateHTML() {

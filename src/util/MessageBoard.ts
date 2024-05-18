@@ -1,3 +1,6 @@
+import {WelcomeMessage} from "./WelcomeMessage";
+import NpcLoader from "../core/role/NpcLoader";
+
 class MessageBoard {
 
     static createMessageBoard(containerId: string, imageHtml: string) {
@@ -38,6 +41,18 @@ class MessageBoard {
         $("#" + containerId).html(html);
     }
 
+    static initializeWelcomeMessage() {
+        const message = "<span style='font-weight:bold;font-size:120%;color:wheat'>" +
+            WelcomeMessage.randomWelcomeMessage() +
+            "</span>";
+        MessageBoard.resetMessageBoard(message);
+    }
+
+    static initializeManager() {
+        const manager = $("#messageBoardManager");
+        if (manager.length > 0) manager.html(NpcLoader.randomNpcImageHtml());
+    }
+
     static resetMessageBoard(message: string, elementId?: string) {
         let id = "messageBoard"
         if (elementId !== undefined) id = elementId
@@ -54,20 +69,19 @@ class MessageBoard {
         if (element.length > 0) {
             let html = element.html();
             const now = new Date();
-            const timeHtml = "<span style='color:forestgreen'>(" + now.toLocaleString() + ")</span>";
+            const timeHtml = "<span style='color:lightgreen'>(" + now.toLocaleString() + ")</span>";
             html = html + "<li>" + timeHtml + " " + message + "</li>";
             element.html(html);
         }
     }
 
-    static publishWarning(message: string, elementId?: string) {
+    static publishWarning(message: string) {
         let id = "messageBoard"
-        if (elementId !== undefined) id = elementId
         const element = $("#" + id)
         if (element.length > 0) {
             let html = element.html();
             const now = new Date();
-            const timeHtml = "<span style='color:forestgreen'>(" + now.toLocaleString() + ")</span>";
+            const timeHtml = "<span style='color:lightgreen'>(" + now.toLocaleString() + ")</span>";
             const messageHtml = "<span style='color:red'>" + message + "</span>";
             html = html + "<li>" + timeHtml + " " + messageHtml + "</li>";
             element.html(html);
@@ -78,6 +92,7 @@ class MessageBoard {
         if ($(html).text().includes("ERROR !")) {
             const errorMessage = $(html).find("font b").text();
             MessageBoard.publishMessage("<b style='color:red'>" + errorMessage + "</b>");
+            return false;
         } else {
             $(html).find("h2").each(function (_idx, h2) {
                 let successMessage = $(h2).html();
@@ -85,6 +100,7 @@ class MessageBoard {
                 successMessage = "<td>" + successMessage + "</td>";
                 MessageBoard.publishMessage($(successMessage).text());
             });
+            return true;
         }
     }
 }

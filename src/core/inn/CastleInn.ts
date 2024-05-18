@@ -13,7 +13,7 @@ class CastleInn {
     }
 
     async recovery() {
-        const request = this.#credential.asRequestMap();
+        const request = this.#credential.asRequest();
         request.set("mode", "CASTLE_RECOVERY");
         const response = await PocketNetwork.post("castle.cgi", request);
         response.touch();

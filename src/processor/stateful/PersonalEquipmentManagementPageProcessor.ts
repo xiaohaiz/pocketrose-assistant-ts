@@ -13,7 +13,7 @@ import NpcLoader from "../../core/role/NpcLoader";
 import PageProcessorContext from "../PageProcessorContext";
 import PageUtils from "../../util/PageUtils";
 import PersonalEquipmentManagementPageParser from "../../core/equipment/PersonalEquipmentManagementPageParser";
-import SetupLoader from "../../core/config/SetupLoader";
+import SetupLoader from "../../setup/SetupLoader";
 import StatefulPageProcessor from "../StatefulPageProcessor";
 import StorageUtils from "../../util/StorageUtils";
 import StringUtils from "../../util/StringUtils";
@@ -29,6 +29,9 @@ import {PocketFormGenerator, PocketPage} from "../../pocket/PocketPage";
 import {RoleManager} from "../../widget/RoleManager";
 import LocationModeCastle from "../../core/location/LocationModeCastle";
 import LocationModeMetro from "../../core/location/LocationModeMetro";
+import {PocketLogger} from "../../pocket/PocketLogger";
+
+const logger = PocketLogger.getLogger("EQUIPMENT");
 
 class PersonalEquipmentManagementPageProcessor extends StatefulPageProcessor {
 
@@ -86,7 +89,7 @@ class PersonalEquipmentManagementPageProcessor extends StatefulPageProcessor {
             })
             .onEscapePressed(() => PageUtils.triggerClick("returnButton"))
             .withDefaultPredicate()
-            .bind()
+            .doBind()
     }
 
     private async generateHTML() {
@@ -139,7 +142,7 @@ class PersonalEquipmentManagementPageProcessor extends StatefulPageProcessor {
         MessageBoard.createMessageBoardStyleB("messageBoardContainer", NpcLoader.randomNpcImageHtml());
         $("#messageBoard")
             .css("background-color", "black")
-            .css("color", "wheat");
+            .css("color", "white");
 
         let html = "";
         html += "<tr id='tr3' style='display:none'>";
@@ -180,7 +183,7 @@ class PersonalEquipmentManagementPageProcessor extends StatefulPageProcessor {
                         if (dashboardPage.role!.canConsecrate) {
                             $("#consecrateButton").show();
                         } else {
-                            MessageBoard.publishWarning("祭奠还在冷却中！");
+                            logger.warn("祭奠还在冷却中！");
                             PageUtils.scrollIntoView("messageBoard");
                         }
                     });
@@ -194,7 +197,7 @@ class PersonalEquipmentManagementPageProcessor extends StatefulPageProcessor {
                         .filter(it => !it.using)
                         .filter(it => it.isWeapon || it.isArmor || it.isAccessory);
                     if (candidate.length === 0) {
-                        MessageBoard.publishWarning("没有选择可祭奠的装备，忽略！");
+                        logger.warn("没有选择可祭奠的装备，忽略！");
                         PageUtils.scrollIntoView("messageBoard");
                         return;
                     }
@@ -213,11 +216,8 @@ class PersonalEquipmentManagementPageProcessor extends StatefulPageProcessor {
     }
 
     private async resetMessageBoard() {
-        let msg = "<b style='font-size:120%;color:wheat'>" +
-            "醉里挑灯看剑，梦回吹角连营。八百里分麾下炙，五十弦翻塞外声，沙场秋点兵。<br>" +
-            "马作的卢飞快，弓如霹雳弦惊。了却君王天下事，赢得生前身后名。可怜白发生！" +
-            "</b>";
-        MessageBoard.resetMessageBoard(msg);
+        MessageBoard.initializeManager();
+        MessageBoard.initializeWelcomeMessage();
     }
 
     private async bindButtons() {
@@ -296,6 +296,10 @@ class PersonalEquipmentManagementPageProcessor extends StatefulPageProcessor {
                 })
                 .parent().show();
         }
+
+        new MouseClickEventBuilder().bind($("#messageBoardManager"), async () => {
+            await this.resetMessageBoard();
+        });
     }
 
     private async refresh() {

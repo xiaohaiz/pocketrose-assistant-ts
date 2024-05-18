@@ -1,9 +1,12 @@
+import CastleRanchPage from "./CastleRanchPage";
 import Credential from "../../util/Credential";
 import MessageBoard from "../../util/MessageBoard";
-import NetworkUtils from "../../util/NetworkUtils";
-import StringUtils from "../../util/StringUtils";
-import CastleRanchPage from "./CastleRanchPage";
 import Pet from "./Pet";
+import StringUtils from "../../util/StringUtils";
+import {PocketLogger} from "../../pocket/PocketLogger";
+import {PocketNetwork} from "../../pocket/PocketNetwork";
+
+const logger = PocketLogger.getLogger("RANCH");
 
 class CastleRanch {
 
@@ -22,53 +25,31 @@ class CastleRanch {
         return page;
     }
 
-    async enter(): Promise<CastleRanchPage> {
-        const action = (credential: Credential) => {
-            return new Promise<CastleRanchPage>(resolve => {
-                const request = credential.asRequest();
-                // @ts-ignore
-                request.mode = "CASTLE_PET";
-                NetworkUtils.sendPostRequest("castle.cgi", request, function (pageHtml) {
-                    const ranchStatus = CastleRanch.parseCastleRanchStatus(pageHtml);
-                    resolve(ranchStatus);
-                });
-            });
-        };
-        return await action(this.#credential);
+    async open(): Promise<CastleRanchPage> {
+        logger.debug("Loading castle ranch page...");
+        const request = this.#credential.asRequest();
+        request.set("mode", "CASTLE_PET");
+        const response = await PocketNetwork.post("castle.cgi", request);
+        const page = CastleRanch.parseCastleRanchStatus(response.html);
+        response.touch();
+        logger.debug("Castle ranch page loaded.", response.durationInMillis);
+        return page;
     }
 
     async graze(index: number): Promise<void> {
-        const action = (credential: Credential, index: number) => {
-            return new Promise<void>(resolve => {
-                const request = credential.asRequest();
-                // @ts-ignore
-                request.select = index;
-                // @ts-ignore
-                request.mode = "CASTLE_PETSTORE";
-                NetworkUtils.sendPostRequest("castle.cgi", request, function (pageHtml) {
-                    MessageBoard.processResponseMessage(pageHtml);
-                    resolve();
-                });
-            });
-        };
-        return await action(this.#credential, index);
+        const request = this.#credential.asRequest();
+        request.set("select", index.toString());
+        request.set("mode", "CASTLE_PETSTORE");
+        const response = await PocketNetwork.post("castle.cgi", request);
+        MessageBoard.processResponseMessage(response.html);
     }
 
-    async summon(index: number): Promise<void> {
-        const action = (credential: Credential, index: number) => {
-            return new Promise<void>(resolve => {
-                const request = credential.asRequest();
-                // @ts-ignore
-                request.select = index;
-                // @ts-ignore
-                request.mode = "CASTLE_PETWITHDRAW";
-                NetworkUtils.sendPostRequest("castle.cgi", request, function (pageHtml) {
-                    MessageBoard.processResponseMessage(pageHtml);
-                    resolve();
-                });
-            });
-        };
-        return await action(this.#credential, index);
+    async summon(index: number) {
+        const request = this.#credential.asRequest();
+        request.set("select", index.toString());
+        request.set("mode", "CASTLE_PETWITHDRAW");
+        const response = await PocketNetwork.post("castle.cgi", request);
+        MessageBoard.processResponseMessage(response.html);
     }
 
 }

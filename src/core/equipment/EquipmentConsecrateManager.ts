@@ -1,10 +1,13 @@
-import _ from "lodash";
 import Credential from "../../util/Credential";
-import MessageBoard from "../../util/MessageBoard";
-import NetworkUtils from "../../util/NetworkUtils";
 import EquipmentConsecrateLog from "./EquipmentConsecrateLog";
 import EquipmentConsecrateLogStorage from "./EquipmentConsecrateLogStorage";
-import {BattleConfigManager} from "../config/ConfigManager";
+import MessageBoard from "../../util/MessageBoard";
+import _ from "lodash";
+import {BattleConfigManager} from "../../setup/ConfigManager";
+import {PocketLogger} from "../../pocket/PocketLogger";
+import {PocketNetwork} from "../../pocket/PocketNetwork";
+
+const logger = PocketLogger.getLogger("EQUIPMENT");
 
 class EquipmentConsecrateManager {
 
@@ -15,32 +18,23 @@ class EquipmentConsecrateManager {
     }
 
     async consecrate(indexList: number[], nameList?: string[]) {
-        const request = this.#credential.asRequestMap();
+        const request = this.#credential.asRequest();
         request.set("chara", "1");
         request.set("mode", "CONSECRATE");
         indexList.forEach(it => {
             request.set("item" + it, it.toString());
         });
-        return new Promise<void>(resolve => {
-            NetworkUtils.post("mydata.cgi", request).then(html => {
-                MessageBoard.processResponseMessage(html);
-                if ($(html).text().includes("ERROR !")) {
-                    resolve();
-                } else {
-                    const log = new EquipmentConsecrateLog();
-                    log.roleId = this.#credential.id;
-                    (nameList) && (log.equipments = _.join(nameList));
-                    EquipmentConsecrateLogStorage.getInstance()
-                        .insert(log)
-                        .then(() => {
-                            this.#autoSetBattleField().then(() => resolve());
-                        })
-                        .catch(() => {
-                            this.#autoSetBattleField().then(() => resolve());
-                        });
-                }
-            });
-        });
+        const response = await PocketNetwork.post("mydata.cgi", request);
+        MessageBoard.processResponseMessage(response.html);
+        if (_.includes(response.html, "ERROR !")) {
+            return;
+        }
+        const log = new EquipmentConsecrateLog();
+        log.roleId = this.#credential.id;
+        (nameList) && (log.equipments = _.join(nameList));
+        await EquipmentConsecrateLogStorage.getInstance().insert(log);
+        logger.debug("Equipment consecrate log saved into IndexedDB.");
+        await this.#autoSetBattleField();
     }
 
     async #autoSetBattleField() {

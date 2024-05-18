@@ -14,7 +14,7 @@ class Conversation {
     }
 
     async open(): Promise<ConversationPage> {
-        const request = this.#credential.asRequestMap();
+        const request = this.#credential.asRequest();
         request.set("mode", "MESSE_PRINT");
         const response = await PocketNetwork.post("messe_print.cgi", request);
         const page = ConversationPage.parse(response.html);

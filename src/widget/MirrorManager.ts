@@ -8,7 +8,7 @@ import PersonalMirror from "../core/role/PersonalMirror";
 import PersonalMirrorPage from "../core/role/PersonalMirrorPage";
 import {PersonalStatus} from "../core/role/PersonalStatus";
 import Role from "../core/role/Role";
-import SetupLoader from "../core/config/SetupLoader";
+import SetupLoader from "../setup/SetupLoader";
 import StorageUtils from "../util/StorageUtils";
 import StringUtils from "../util/StringUtils";
 import TownInn from "../core/inn/TownInn";
@@ -161,7 +161,11 @@ class MirrorManager extends CommonWidget {
                         StorageUtils.set("_pa_070_" + this.credential.id, JSON.stringify(c));
                         const mirrorDesc = (index === 0) ? "本体" : "第" + index + "分身";
                         this.feature.publishMessage("【" + mirrorDesc + "】定型标识设置完成。");
-                        this.render(this._role!).then();
+                        this.render(this._role!).then(() => {
+                            const message = OperationMessage.success();
+                            message.extensions.set("role", this._role!);
+                            this.feature.publishRefresh(message);
+                        });
                     });
             })
     }
@@ -172,6 +176,9 @@ class MirrorManager extends CommonWidget {
         await this.reload();
         await this.render(role);
         this.feature.publishRefresh(message);
+    }
+
+    async dispose() {
     }
 
 }

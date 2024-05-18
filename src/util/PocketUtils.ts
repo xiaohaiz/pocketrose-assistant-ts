@@ -2,15 +2,6 @@ import _ from "lodash";
 
 class PocketUtils {
 
-    static asRequest(map: Map<string, string>) {
-        const result = {};
-        map.forEach(function (value, key) {
-            // @ts-ignore
-            result[key] = value;
-        });
-        return result;
-    }
-
     static checkAmount(amount: number) {
         if (_.isNaN(amount)) {
             return false;

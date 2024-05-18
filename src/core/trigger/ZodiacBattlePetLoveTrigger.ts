@@ -1,10 +1,11 @@
 import Credential from "../../util/Credential";
-import NetworkUtils from "../../util/NetworkUtils";
 import TownBank from "../bank/TownBank";
 import BattlePage from "../battle/BattlePage";
 import PersonalPetManagement from "../monster/PersonalPetManagement";
 import PersonalPetManagementPage from "../monster/PersonalPetManagementPage";
 import Pet from "../monster/Pet";
+import {PocketNetwork} from "../../pocket/PocketNetwork";
+import MessageBoard from "../../util/MessageBoard";
 
 /**
  * ============================================================================
@@ -85,14 +86,11 @@ class ZodiacBattlePetLoveTrigger {
     }
 
     async #addLove(index: number): Promise<void> {
-        return await (() => {
-            return new Promise<void>(resolve => {
-                const request = this.#credential.asRequestMap();
-                request.set("select", index.toString());
-                request.set("mode", "PETADDLOVE");
-                NetworkUtils.post("mydata.cgi", request).then(() => resolve());
-            });
-        })();
+        const request = this.#credential.asRequest();
+        request.set("select", index.toString());
+        request.set("mode", "PETADDLOVE");
+        const response = await PocketNetwork.post("mydata.cgi", request);
+        MessageBoard.processResponseMessage(response.html);
     }
 }
 

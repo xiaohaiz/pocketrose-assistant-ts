@@ -4,11 +4,13 @@ import KeyboardShortcutBuilder from "../../util/KeyboardShortcutBuilder";
 import LocationModeTown from "../../core/location/LocationModeTown";
 import MessageBoard from "../../util/MessageBoard";
 import MonsterProfileLoader from "../../core/monster/MonsterProfileLoader";
+import MouseClickEventBuilder from "../../util/MouseClickEventBuilder";
 import PageProcessorContext from "../PageProcessorContext";
 import PageUtils from "../../util/PageUtils";
 import PetMap from "../../core/monster/PetMap";
 import StatefulPageProcessor from "../StatefulPageProcessor";
 import {PetMapFinder} from "../../widget/PetMapFinder";
+import {PocketEvent} from "../../pocket/PocketEvent";
 import {PocketFormGenerator, PocketPage} from "../../pocket/PocketPage";
 import {RoleManager} from "../../widget/RoleManager";
 import {TownPetMapHousePageParser} from "../../core/monster/TownPetMapHousePageParser";
@@ -28,23 +30,19 @@ class TownPetMapHousePageProcessor extends StatefulPageProcessor {
 
     protected async doProcess(): Promise<void> {
         await this.petMapFinder.initialize(TownPetMapHousePageParser.parsePage(PageUtils.currentPageHtml()));
-
         await this.generateHTML();
-        this.resetMessageBoard();
-
-        this.bindButtons();
+        await this.resetMessageBoard();
+        await this.bindButtons();
         this.roleManager.bindButtons();
         this.petMapFinder.bindButtons();
-
         await this.roleManager.reload();
         await this.roleManager.render();
         await this.render();
-
         KeyboardShortcutBuilder.newInstance()
             .onKeyPressed("r", () => PageUtils.triggerClick("refreshButton"))
             .onEscapePressed(() => PageUtils.triggerClick("returnButton"))
             .withDefaultPredicate()
-            .bind();
+            .doBind();
     }
 
     private async generateHTML() {
@@ -58,7 +56,6 @@ class TownPetMapHousePageProcessor extends StatefulPageProcessor {
         $("body:first > center:first > form:first").remove();
 
         $("body:first > table:first > tbody:first > tr:first > td:first > table:first > tbody:first > tr:first > td:first")
-            .attr("id", "ID_pageTitle")
             .removeAttr("bgcolor")
             .removeAttr("width")
             .removeAttr("height")
@@ -73,14 +70,20 @@ class TownPetMapHousePageProcessor extends StatefulPageProcessor {
 
         $("body:first > table:first > tbody:first > tr:first > td:first")
             .find("> table:first > tbody:first > tr:eq(1) > td:first")
-            .find("> table:first > tbody:first > tr:first > td:last")
+            .find("> table:first > tbody:first > tr:first > td:first")
+            .attr("id", "roleInformationManager")
+            .closest("tr")
+            .find("> td:last")
             .html(() => {
                 return this.roleManager.generateHTML();
             });
 
         $("body:first > table:first > tbody:first > tr:eq(1) > td:first > table:first > tbody:first > tr:first > td:first")
             .attr("id", "messageBoard")
-            .css("color", "white");
+            .css("color", "white")
+            .closest("tr")
+            .find("> td:last")
+            .attr("id", "messageBoardManager");
 
 
         $("body:first > table:eq(1)")
@@ -104,16 +107,16 @@ class TownPetMapHousePageProcessor extends StatefulPageProcessor {
             });
     }
 
-    private resetMessageBoard() {
-        MessageBoard.resetMessageBoard(
-            "<span style='color:wheat;font-weight:bold;font-size:120%'>这里提供团队宠物图鉴的查询功能。</span>" +
-            "<br>" +
-            "宠物编号<span style='background-color:wheat;color:green'>绿色</span>初森，" +
+    private async resetMessageBoard() {
+        MessageBoard.initializeManager();
+        MessageBoard.initializeWelcomeMessage();
+        MessageBoard.publishMessage("宠物编号" +
+            "<span style='background-color:wheat;color:green'>绿色</span>初森，" +
             "<span style='background-color:wheat;color:blue'>蓝色</span>中塔，" +
             "<span style='background-color:wheat;color:red'>红色</span>上洞。");
     }
 
-    private bindButtons(): void {
+    private async bindButtons() {
         $("#_pocket_page_extension_0").html(() => {
             return new PocketFormGenerator(this.credential, this.location).generateReturnFormHTML();
         });
@@ -121,15 +124,24 @@ class TownPetMapHousePageProcessor extends StatefulPageProcessor {
             PageUtils.disablePageInteractiveElements();
             this.dispose().then(() => PageUtils.triggerClick("_pocket_ReturnSubmit"));
         });
-        $("#refreshButton").on("click", () => {
+        $("#refreshButton").on("click", async () => {
             PocketPage.scrollIntoTitle();
             PocketPage.disableStatelessElements();
-            this.resetMessageBoard();
+            await this.resetMessageBoard();
             this.refresh().then(() => {
                 PocketPage.enableStatelessElements();
                 MessageBoard.publishMessage("宠物图鉴刷新完成。");
             });
         });
+        const roleImageClickHandler = PocketEvent.newMouseClickHandler();
+        MouseClickEventBuilder.newInstance()
+            .onElementClicked("roleInformationManager", async () => {
+                await roleImageClickHandler.onMouseClicked();
+            })
+            .onElementClicked("messageBoardManager", async () => {
+                await this.resetMessageBoard();
+            })
+            .doBind();
     }
 
     private async render() {

@@ -1,4 +1,4 @@
-import SetupItem from "../SetupItem";
+import SetupItem from "../../../setup/SetupItem";
 import {BattleFailureRecordManager} from "../../battle/BattleFailureRecordManager";
 import PageUtils from "../../../util/PageUtils";
 import StorageUtils from "../../../util/StorageUtils";

@@ -1,9 +1,12 @@
+import CastleWarehousePage from "./CastleWarehousePage";
 import Credential from "../../util/Credential";
 import MessageBoard from "../../util/MessageBoard";
-import NetworkUtils from "../../util/NetworkUtils";
 import StringUtils from "../../util/StringUtils";
-import CastleWarehousePage from "./CastleWarehousePage";
 import {Equipment} from "./Equipment";
+import {PocketLogger} from "../../pocket/PocketLogger";
+import {PocketNetwork} from "../../pocket/PocketNetwork";
+
+const logger = PocketLogger.getLogger("WAREHOUSE");
 
 class CastleWarehouse {
 
@@ -18,62 +21,44 @@ class CastleWarehouse {
     }
 
     async open(): Promise<CastleWarehousePage> {
-        const action = (credential: Credential) => {
-            return new Promise<CastleWarehousePage>(resolve => {
-                const request = credential.asRequestMap();
-                request.set("mode", "CASTLE_ITEM");
-                NetworkUtils.post("castle.cgi", request)
-                    .then(pageHtml => {
-                        const page = CastleWarehouse.parsePage(pageHtml);
-                        resolve(page);
-                    });
-            });
-        };
-        return await action(this.#credential);
+        logger.debug("Loading castle warehouse page...");
+        const request = this.#credential.asRequest();
+        request.set("mode", "CASTLE_ITEM");
+        const response = await PocketNetwork.post("castle.cgi", request);
+        const page = CastleWarehouse.parsePage(response.html);
+        response.touch();
+        logger.debug("Castle warehouse page loaded.", response.durationInMillis);
+        return page;
     }
 
     async putInto(indexList: number[]): Promise<void> {
-        const action = () => {
-            return new Promise<void>((resolve, reject) => {
-                if (indexList.length === 0) {
-                    reject();
-                    return;
-                }
-                const request = this.#credential.asRequestMap();
-                for (const index of indexList) {
-                    request.set("item" + index, index.toString());
-                }
-                request.set("chara", "1");
-                request.set("mode", "CASTLE_ITEMSTORE");
-                NetworkUtils.post("castle.cgi", request).then(html => {
-                    MessageBoard.processResponseMessage(html);
-                    resolve();
-                });
-            });
-        };
-        return await action();
+        if (indexList.length === 0) {
+            return;
+        }
+        logger.debug("Putting item(s) into castle warehouse...");
+        const request = this.#credential.asRequest();
+        for (const index of indexList) {
+            request.set("item" + index, index.toString());
+        }
+        request.set("chara", "1");
+        request.set("mode", "CASTLE_ITEMSTORE");
+        const response = await PocketNetwork.post("castle.cgi", request);
+        MessageBoard.processResponseMessage(response.html);
     }
 
     async takeOut(indexList: number[]): Promise<void> {
-        const action = () => {
-            return new Promise<void>((resolve, reject) => {
-                if (indexList.length === 0) {
-                    reject();
-                    return;
-                }
-                const request = this.#credential.asRequestMap();
-                for (const index of indexList) {
-                    request.set("item" + index, index.toString());
-                }
-                request.set("chara", "1");
-                request.set("mode", "CASTLE_ITEMWITHDRAW");
-                NetworkUtils.post("castle.cgi", request).then(html => {
-                    MessageBoard.processResponseMessage(html);
-                    resolve();
-                });
-            });
-        };
-        return await action();
+        if (indexList.length === 0) {
+            return;
+        }
+        logger.debug("Taking item(s) out from castle warehouse...");
+        const request = this.#credential.asRequest();
+        for (const index of indexList) {
+            request.set("item" + index, index.toString());
+        }
+        request.set("chara", "1");
+        request.set("mode", "CASTLE_ITEMWITHDRAW");
+        const response = await PocketNetwork.post("castle.cgi", request);
+        MessageBoard.processResponseMessage(response.html);
     }
 }
 

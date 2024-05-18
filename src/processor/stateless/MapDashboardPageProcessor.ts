@@ -1,5 +1,5 @@
 import _ from "lodash";
-import SetupLoader from "../../core/config/SetupLoader";
+import SetupLoader from "../../setup/SetupLoader";
 import CastleInformation from "../../core/dashboard/CastleInformation";
 import MapDashboardPage from "../../core/dashboard/MapDashboardPage";
 import EventHandler from "../../core/event/EventHandler";

@@ -1,5 +1,5 @@
 import Credential from "../../util/Credential";
-import SetupLoader from "../config/SetupLoader";
+import SetupLoader from "../../setup/SetupLoader";
 import PersonalPetManagement from "../monster/PersonalPetManagement";
 import {PersonalStatus} from "../role/PersonalStatus";
 import Role from "../role/Role";
@@ -7,7 +7,7 @@ import BattleFieldThreshold from "../battle/BattleFieldThreshold";
 import BattlePage from "../battle/BattlePage";
 import PersonalPetManagementPage from "../monster/PersonalPetManagementPage";
 import {RoleStatusManager} from "../role/RoleStatus";
-import {BattleConfigManager} from "../config/ConfigManager";
+import {BattleConfigManager} from "../../setup/ConfigManager";
 import PalaceTaskStorage from "../task/PalaceTaskStorage";
 import MonsterProfileLoader from "../monster/MonsterProfileLoader";
 

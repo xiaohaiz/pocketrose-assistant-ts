@@ -7,7 +7,7 @@ class CountryTownStrengthenPageInterceptor implements PageInterceptor {
 
     accept(cgi: string, pageText: string): boolean {
         if (cgi === "country.cgi") {
-            return pageText.includes("＜＜ * 国家．内政．强化．指令 *＞＞");
+            return pageText.includes("* 国家．内政．强化．指令 *");
         }
         return false;
     }
@@ -17,7 +17,7 @@ class CountryTownStrengthenPageInterceptor implements PageInterceptor {
             .load()
             .then(machine => {
                 machine.start()
-                    .whenInCastle(state => {
+                    .whenInTown(state => {
                         const context = new PageProcessorContext();
                         context.withTownId(state?.townId);
                         new CountryTownStrengthenPageProcessor().process(context);

@@ -1,17 +1,22 @@
-import StatefulPageProcessor from "../StatefulPageProcessor";
-import Credential from "../../util/Credential";
-import PageProcessorContext from "../PageProcessorContext";
-import LocationModeTown from "../../core/location/LocationModeTown";
-import {TownGemHousePageParser} from "../../core/forge/TownGemHousePageParser";
-import PageUtils from "../../util/PageUtils";
-import {GemManager} from "../../widget/GemManager";
-import {EquipmentManager} from "../../widget/EquipmentManager";
-import PersonalEquipmentManagementPage from "../../core/equipment/PersonalEquipmentManagementPage";
-import KeyboardShortcutBuilder from "../../util/KeyboardShortcutBuilder";
-import {PocketFormGenerator, PocketPage} from "../../pocket/PocketPage";
 import ButtonUtils from "../../util/ButtonUtils";
+import Credential from "../../util/Credential";
+import KeyboardShortcutBuilder from "../../util/KeyboardShortcutBuilder";
+import LocationModeTown from "../../core/location/LocationModeTown";
 import MessageBoard from "../../util/MessageBoard";
+import MouseClickEventBuilder from "../../util/MouseClickEventBuilder";
+import PageProcessorContext from "../PageProcessorContext";
+import PageUtils from "../../util/PageUtils";
+import PersonalEquipmentManagementPage from "../../core/equipment/PersonalEquipmentManagementPage";
+import StatefulPageProcessor from "../StatefulPageProcessor";
+import {EquipmentManager} from "../../widget/EquipmentManager";
+import {GemManager} from "../../widget/GemManager";
+import {PocketEvent} from "../../pocket/PocketEvent";
+import {PocketFormGenerator, PocketPage} from "../../pocket/PocketPage";
+import {PocketLogger} from "../../pocket/PocketLogger";
 import {RoleManager} from "../../widget/RoleManager";
+import {TownGemHousePageParser} from "../../core/forge/TownGemHousePageParser";
+
+const logger = PocketLogger.getLogger("GEM");
 
 class TownGemHousePageProcessor extends StatefulPageProcessor {
 
@@ -57,7 +62,7 @@ class TownGemHousePageProcessor extends StatefulPageProcessor {
         if (!(this.createLocationMode() instanceof LocationModeTown)) return;
         this.gemManager.gemPage = await new TownGemHousePageParser(this.credential, this.townId).parsePage(PageUtils.currentPageHtml());
         await this.generateHTML();
-        this.resetMessageBoard();
+        await this.resetMessageBoard();
         this.bindButtons();
         this.roleManager.bindButtons();
         this.gemManager.bindButtons();
@@ -72,7 +77,7 @@ class TownGemHousePageProcessor extends StatefulPageProcessor {
             .onKeyPressed("r", () => PageUtils.triggerClick("refreshButton"))
             .onEscapePressed(() => PageUtils.triggerClick("returnButton"))
             .withDefaultPredicate()
-            .bind();
+            .doBind();
     }
 
     private async generateHTML() {
@@ -93,7 +98,10 @@ class TownGemHousePageProcessor extends StatefulPageProcessor {
         });
 
         table.find("> tbody:first > tr:eq(1) > td:first")
-            .find("> table:first > tbody:first > tr:first > td:eq(1)")
+            .find("> table:first > tbody:first > tr:first > td:first")
+            .attr("id", "roleInformationManager")
+            .closest("tr")
+            .find("> td:last")
             .find("> table:first > tbody:first > tr:first > td:first")
             .html(() => {
                 return this.roleManager.generateHTML();
@@ -102,7 +110,7 @@ class TownGemHousePageProcessor extends StatefulPageProcessor {
         table.find("> tbody:first > tr:eq(2) > td:first")
             .find("> table:first > tbody:first > tr:first > td:first")
             .attr("id", "messageBoard")
-            .css("color", "wheat")
+            .css("color", "white")
             .next()
             .attr("id", "messageBoardManager");
 
@@ -127,24 +135,28 @@ class TownGemHousePageProcessor extends StatefulPageProcessor {
             PageUtils.disablePageInteractiveElements();
             this.dispose().then(() => PageUtils.triggerClick("_pocket_ReturnSubmit"));
         });
-        $("#refreshButton").on("click", () => {
+        $("#refreshButton").on("click", async () => {
             PocketPage.scrollIntoTitle();
             PocketPage.disableStatelessElements();
-            this.resetMessageBoard();
-            this.refresh().then(() => {
-                MessageBoard.publishMessage("刷新操作执行完成。");
-                PocketPage.enableStatelessElements();
-            });
+            await this.resetMessageBoard();
+            await this.refresh();
+            logger.info("刷新操作执行完成。");
+            PocketPage.enableStatelessElements();
         });
+        const roleImageHandler = PocketEvent.newMouseClickHandler();
+        MouseClickEventBuilder.newInstance()
+            .onElementClicked("roleInformationManager", async () => {
+                await roleImageHandler.onMouseClicked();
+            })
+            .onElementClicked("messageBoardManager", async () => {
+                await this.resetMessageBoard();
+            })
+            .doBind();
     }
 
-    private resetMessageBoard() {
-        MessageBoard.resetMessageBoard("" +
-            "<b style='color:yellow'>宝石屋改造的一些说明：</b><br>" +
-            "正在使用中的装备除了宠物蛋之外不允许镶嵌。<br>" +
-            "自动砸宝石功能持续进行，会自动结束，无需干涉。<br>" +
-            "威力负数、武器威力100、防具威力100、饰品威力50时会自动中断。" +
-            "");
+    private async resetMessageBoard() {
+        MessageBoard.initializeManager();
+        MessageBoard.initializeWelcomeMessage();
     }
 
     private async refresh() {

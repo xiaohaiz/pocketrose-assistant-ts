@@ -1,11 +1,13 @@
 import Credential from "../../util/Credential";
+import SetupLoader from "../../setup/SetupLoader";
+import StringUtils from "../../util/StringUtils";
 import _ from "lodash";
-import {BattleConfigManager} from "../config/ConfigManager";
+import {BattleConfigManager} from "../../setup/ConfigManager";
 import {BattleFailureRecordManager} from "./BattleFailureRecordManager";
 import {BattleFailureRecord} from "./BattleFailureRecord";
-import SetupLoader from "../config/SetupLoader";
-import StringUtils from "../../util/StringUtils";
-import PageUtils from "../../util/PageUtils";
+import {PocketLogger} from "../../pocket/PocketLogger";
+
+const logger = PocketLogger.getLogger("TOWN");
 
 class BattleButtonProcessor {
 
@@ -15,15 +17,25 @@ class BattleButtonProcessor {
         this.recordManager = new BattleFailureRecordManager(credential);
     }
 
+    doRefresh?: () => void;
+
+    private digitalValidationCodeMet?: boolean;     // 遇到了数字验证码
+    private digitalValidationCodeDodged?: boolean;  // 成功规避了数字验证码
+
     async renderBattleButton() {
         await this.processValidationFailure();
+    }
+
+    async reset() {
+        this.digitalValidationCodeMet = undefined;
+        this.digitalValidationCodeDodged = undefined;
     }
 
     private async processValidationFailure() {
         const threshold = BattleFailureRecordManager.loadConfiguredThreshold();
         const records = await this.recordManager.findValidationCodeFailureRecords();
         // Render validation failure if necessary.
-        await this._renderValidationFailure(threshold, records);
+        await this.renderValidationFailure(threshold, records);
         if (threshold === 0 || records.length === 0 || records.length < threshold) {
             // Safe, move to next processor.
             await this.processDigitalValidation();
@@ -82,28 +94,29 @@ class BattleButtonProcessor {
         }
 
         // 发现了数字验证码，10秒后刷新
+        this.digitalValidationCodeMet = true;
+        logger.debug("Digital validation code found: " + _.join(uniqueOptionValues, " "));
         setTimeout(() => {
-            PageUtils.triggerClick("reloadButton");
+            (this.doRefresh) && (this.doRefresh());
         }, 10000);
     }
 
     private async processSafeBattleButton() {
-        const battleButton = $("#battleButton");
+        // 流程到这里意味着即使有数字验证码出现过也已经成功规避了
+        if (this.digitalValidationCodeMet) {
+            // 之前的处理器已经发现了数字验证码，设置成功规避
+            this.digitalValidationCodeDodged = true;
+        }
+
         if (!BattleConfigManager.isSafeBattleButtonEnabled()) {
             // 没有开启安全按钮，直接恢复战斗按钮
-            battleButton.show();
+            await this.restoreBattleButton();
             return;
         }
-        const clock = $("input:text[name='clock']");
-        if (clock.length === 0) {
-            // clock已经消失了，表示读秒已经完成，恢复战斗按钮
-            battleButton.show();
-            return;
-        }
-        const remain = _.parseInt(clock.val()! as string);
+        const remain = this.parseClockTime();
         if (remain <= 0) {
-            // 倒计时已经完成，恢复战斗按钮
-            battleButton.show();
+            // clock已经消失或者倒计时已经完成，恢复战斗按钮
+            await this.restoreBattleButton();
             return;
         }
         if (remain > 2) {
@@ -119,8 +132,24 @@ class BattleButtonProcessor {
         }
     }
 
-    private async _renderValidationFailure(threshold: number,
-                                           records: BattleFailureRecord[]) {
+    private async restoreBattleButton() {
+        const battleButton = $("#battleButton");
+        const battleButtonText = battleButton.text();
+        if (battleButton.find("> span:first").length > 0) {
+            // 先清理战斗按钮的状态
+            battleButton.html(battleButtonText);
+        }
+        if (this.digitalValidationCodeDodged) {
+            // 成功规避数字验证码的时候特殊显示战斗按钮
+            battleButton.html(() => {
+                return "<span style='color:red'>" + battleButtonText + "</span>";
+            });
+        }
+        battleButton.show();
+    }
+
+    private async renderValidationFailure(threshold: number,
+                                          records: BattleFailureRecord[]) {
         if (SetupLoader.isWarningValidationFailureEnabled()) {
             const th = $("#battleMenu").closest("tr").find("> th:first");
             if (threshold === 0 || records.length === 0 || records.length < threshold - 1) {
@@ -163,6 +192,18 @@ class BattleButtonProcessor {
             html += "</table>";
             validationFailure.html(html).parent().show();
         }
+    }
+
+    private parseClockTime() {
+        let clock = $("input:text[name='clock2']");
+        if (clock.length > 0) {
+            return _.parseInt(clock.val() as string);
+        }
+        clock = $("input:text[name='clock']");
+        if (clock.length > 0) {
+            return _.parseInt(clock.val() as string);
+        }
+        return -1;
     }
 }
 

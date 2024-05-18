@@ -1,7 +1,7 @@
 import MessageBoard from "../../../util/MessageBoard";
-import StorageUtils from "../../../util/StorageUtils";
-import SetupItem from "../SetupItem";
-import SetupLoader from "../SetupLoader";
+import SetupItem from "../../../setup/SetupItem";
+import SetupLoader from "../../../setup/SetupLoader";
+import {SetupStorage} from "../../../setup/SetupStorage";
 
 class SetupItem005 implements SetupItem {
 
@@ -59,7 +59,7 @@ function doGenerateSetupItem() {
 
 function doSaveSetupItem() {
     const value = $("#select_" + code).val();
-    StorageUtils.set(key, value!.toString());
+    SetupStorage.store(key, value!.toString());
     MessageBoard.publishMessage("<b style='color:red'>" + name + "</b>已经设置。");
     $("#refreshButton").trigger("click");
 }

@@ -1,16 +1,20 @@
-import StatefulPageProcessor from "../StatefulPageProcessor";
-import Credential from "../../util/Credential";
-import PageProcessorContext from "../PageProcessorContext";
-import LocationModeTown from "../../core/location/LocationModeTown";
-import {BankManager} from "../../widget/BankManager";
-import {TownBankPageParser} from "../../core/bank/BankPageParser";
-import PageUtils from "../../util/PageUtils";
-import {PocketFormGenerator, PocketPage} from "../../pocket/PocketPage";
 import ButtonUtils from "../../util/ButtonUtils";
+import Credential from "../../util/Credential";
 import KeyboardShortcutBuilder from "../../util/KeyboardShortcutBuilder";
+import LocationModeTown from "../../core/location/LocationModeTown";
 import MessageBoard from "../../util/MessageBoard";
+import MouseClickEventBuilder from "../../util/MouseClickEventBuilder";
+import PageProcessorContext from "../PageProcessorContext";
+import PageUtils from "../../util/PageUtils";
+import StatefulPageProcessor from "../StatefulPageProcessor";
+import {BankManager} from "../../widget/BankManager";
+import {PocketEvent} from "../../pocket/PocketEvent";
+import {PocketFormGenerator, PocketPage} from "../../pocket/PocketPage";
+import {PocketLogger} from "../../pocket/PocketLogger";
 import {RoleManager} from "../../widget/RoleManager";
-import NpcLoader from "../../core/role/NpcLoader";
+import {TownBankPageParser} from "../../core/bank/BankPageParser";
+
+const logger = PocketLogger.getLogger("BANK");
 
 class TownBankPageProcessor extends StatefulPageProcessor {
 
@@ -45,7 +49,7 @@ class TownBankPageProcessor extends StatefulPageProcessor {
             .onKeyPressed("r", () => PageUtils.triggerClick("refreshButton"))
             .onEscapePressed(() => PageUtils.triggerClick("returnButton"))
             .withDefaultPredicate()
-            .bind();
+            .doBind();
     }
 
     private async generateHTML() {
@@ -63,7 +67,10 @@ class TownBankPageProcessor extends StatefulPageProcessor {
         });
 
         table.find("> tbody:first > tr:eq(1) > td:first")
-            .find("> table:first > tbody:first > tr:first > td:eq(3)")
+            .find("> table:first > tbody:first > tr:first > td:first")
+            .attr("id", "roleInformationManager")
+            .closest("tr")
+            .find("> td:last")
             .html(() => {
                 return this.roleManager.generateHTML();
             });
@@ -83,13 +90,8 @@ class TownBankPageProcessor extends StatefulPageProcessor {
     }
 
     private async resetMessageBoard() {
-        $("#messageBoardManager").html(() => {
-            return NpcLoader.randomNpcImageHtml();
-        });
-        MessageBoard.resetMessageBoard("" +
-            "<span style='color:wheat;font-weight:bold;font-size:120%'>" +
-            "不义而富且贵，于我如浮云。" +
-            "</span>");
+        MessageBoard.initializeManager();
+        MessageBoard.initializeWelcomeMessage();
     }
 
     private async bindButtons() {
@@ -106,9 +108,22 @@ class TownBankPageProcessor extends StatefulPageProcessor {
             PocketPage.disableStatelessElements();
             await this.resetMessageBoard();
             await this.refresh();
-            MessageBoard.publishMessage("Refresh operation finished successfully.");
+            logger.info("城市银行刷新操作完成。");
             PocketPage.enableStatelessElements();
         });
+        const roleImageHandler = PocketEvent.newMouseClickHandler();
+        MouseClickEventBuilder.newInstance()
+            .onElementClicked("roleInformationManager", async () => {
+                await roleImageHandler.onMouseClicked();
+            })
+            .onElementClicked("messageBoardManager", async () => {
+                await this.resetMessageBoard();
+            })
+            .doBind();
+        new MouseClickEventBuilder()
+            .bind($("#messageBoardManager"), async () => {
+                await this.resetMessageBoard();
+            });
     }
 
     private async refresh() {

@@ -1,40 +1,40 @@
-import StatefulPageProcessor from "../StatefulPageProcessor";
-import Credential from "../../util/Credential";
-import PageProcessorContext from "../PageProcessorContext";
-import LocationModeTown from "../../core/location/LocationModeTown";
-import LocationModeCastle from "../../core/location/LocationModeCastle";
-import {PocketFormGenerator, PocketPage} from "../../pocket/PocketPage";
-import {RoleManager} from "../../widget/RoleManager";
 import ButtonUtils from "../../util/ButtonUtils";
-import PageUtils from "../../util/PageUtils";
+import Credential from "../../util/Credential";
 import KeyboardShortcutBuilder from "../../util/KeyboardShortcutBuilder";
-import NpcLoader from "../../core/role/NpcLoader";
+import LocationModeCastle from "../../core/location/LocationModeCastle";
+import LocationModeTown from "../../core/location/LocationModeTown";
 import MessageBoard from "../../util/MessageBoard";
-import SetupItemManager from "../../core/config/SetupItemManager";
-import _ from "lodash";
-import SetupItem from "../../core/config/SetupItem";
+import MouseClickEventBuilder from "../../util/MouseClickEventBuilder";
+import NpcLoader from "../../core/role/NpcLoader";
+import PageProcessorContext from "../PageProcessorContext";
+import PageUtils from "../../util/PageUtils";
+import SetupItem from "../../setup/SetupItem";
+import SetupItemManager from "../../setup/SetupItemManager";
+import StatefulPageProcessor from "../StatefulPageProcessor";
 import StorageUtils from "../../util/StorageUtils";
 import StringUtils from "../../util/StringUtils";
-import MouseClickEventBuilder from "../../util/MouseClickEventBuilder";
-import {ConfigManager} from "../../core/config/ConfigManager";
-import {TeamSetupManager} from "../../widget/TeamSetupManager";
 import TeamMemberLoader from "../../core/team/TeamMemberLoader";
-import {CacheManager} from "../../widget/CacheManager";
+import _ from "lodash";
+import {ConfigManager} from "../../setup/ConfigManager";
+import {PocketEvent} from "../../pocket/PocketEvent";
+import {PocketFormGenerator, PocketPage} from "../../pocket/PocketPage";
+import {PocketLogger} from "../../pocket/PocketLogger";
+import {RoleManager} from "../../widget/RoleManager";
+import {TeamSetupManager} from "../../widget/TeamSetupManager";
+
+const logger = PocketLogger.getLogger("SETUP")
 
 class PersonalSetupPageProcessor extends StatefulPageProcessor {
 
-    private readonly formGenerator: PocketFormGenerator;
+    private readonly location: LocationModeTown | LocationModeCastle;
     private readonly roleManager: RoleManager;
     private readonly teamSetupManager: TeamSetupManager;
-    private readonly cacheManager: CacheManager;
 
     constructor(credential: Credential, context: PageProcessorContext) {
         super(credential, context);
-        const locationMode = this.createLocationMode() as LocationModeTown | LocationModeCastle;
-        this.formGenerator = new PocketFormGenerator(credential, locationMode);
-        this.roleManager = new RoleManager(credential, locationMode);
-        this.teamSetupManager = new TeamSetupManager(credential, locationMode);
-        this.cacheManager = new CacheManager(credential, locationMode);
+        this.location = this.createLocationMode() as LocationModeTown | LocationModeCastle;
+        this.roleManager = new RoleManager(credential, this.location);
+        this.teamSetupManager = new TeamSetupManager(credential, this.location);
     }
 
     protected async doProcess(): Promise<void> {
@@ -42,23 +42,20 @@ class PersonalSetupPageProcessor extends StatefulPageProcessor {
         _.forEach(buttonStyles, it => ButtonUtils.loadButtonStyle(it));
 
         await this.generateHTML();
-        this.resetMessageBoard();
+        await this.resetMessageBoard();
         this.roleManager.bindButtons();
         this.teamSetupManager.bindButtons();
-        this.cacheManager.bindButtons();
         this.bindButtons();
         await this.roleManager.reload();
         await this.roleManager.render();
         await this.teamSetupManager.reload();
         await this.teamSetupManager.render();
-        await this.cacheManager.reload();
-        await this.cacheManager.render();
         await this.render();
         KeyboardShortcutBuilder.newInstance()
             .onKeyPressed("r", () => PageUtils.triggerClick("refreshButton"))
             .onEscapePressed(() => PageUtils.triggerClick("returnButton"))
             .withDefaultPredicate()
-            .bind();
+            .doBind();
     }
 
     private async generateHTML() {
@@ -80,7 +77,7 @@ class PersonalSetupPageProcessor extends StatefulPageProcessor {
             "<table style='background-color:#888888;margin:0;width:100%;border-width:0'>" +
             "<tbody style='background-color:#F8F0E0'>" +
             "<tr>" +
-            "<td style='width:64px;height:64px;white-space:nowrap' id='RoleImage'>" +
+            "<td style='width:64px;height:64px;white-space:nowrap' id='roleInformationManager'>" +
             NpcLoader.getNpcImageHtml("U_041") +
             "</td>" +
             "<td style='width:100%' id='RoleInformation'>" +
@@ -128,11 +125,6 @@ class PersonalSetupPageProcessor extends StatefulPageProcessor {
             "</textarea>" +
             "</td>" +
             "</tr>" +
-            "<tr>" +
-            "<td style='text-align:center'>" +
-            this.cacheManager.generateHTML() +
-            "</td>" +
-            "</tr>" +
             "</tbody>" +
             "</table>" +
             "</td>" +
@@ -144,10 +136,9 @@ class PersonalSetupPageProcessor extends StatefulPageProcessor {
         $("#_pocket_page_command").html(() => {
             const refreshButtonTitle = ButtonUtils.createTitle("刷新", "r");
             const returnButtonTitle = ButtonUtils.createTitle("退出", "Esc");
-            return "" +
-                "<span> <button role='button' class='C_StatelessElement' id='refreshButton'>" + refreshButtonTitle + "</button></span>" +
-                "<span> <button role='button' class='C_StatelessElement' id='returnButton'>" + returnButtonTitle + "</button></span>" +
-                "";
+            return "<span style='display:none'> <button role='button' class='C_pocket_StatelessElement' id='refreshSetupButton'>刷新设置</button></span>" +
+                "<span> <button role='button' class='C_pocket_StatelessElement' id='refreshButton'>" + refreshButtonTitle + "</button></span>" +
+                "<span> <button role='button' class='C_pocket_StatelessElement' id='returnButton'>" + returnButtonTitle + "</button></span>";
         });
         MessageBoard.createMessageBoardStyleB("MessageBoardPanel", NpcLoader.randomFemaleNpcImageHtml());
         $("#messageBoard")
@@ -155,16 +146,15 @@ class PersonalSetupPageProcessor extends StatefulPageProcessor {
             .css("color", "wheat");
     }
 
-    private resetMessageBoard() {
-        MessageBoard.resetMessageBoard("" +
-            "<span style='font-size:120%;font-weight:bold'>欢迎来到口袋助手的设置中心，这里是初学者梦开始的地方。好吧，其实就是新手村的意思。</span><br>" +
-            "<span style='font-size:120%;font-weight:bold;color:yellowgreen'>点击左上角角色头像可进入团队的配置中心。</span>" +
-            "");
+    private async resetMessageBoard() {
+        MessageBoard.initializeManager();
+        MessageBoard.initializeWelcomeMessage();
+        MessageBoard.publishMessage("<span style='font-weight:bold;color:yellowgreen'>点击左上角角色头像可进入团队的配置中心。</span>");
     }
 
     private bindButtons() {
         $("#_pocket_page_extension_0").html(() => {
-            return this.formGenerator.generateReturnFormHTML();
+            return new PocketFormGenerator(this.credential, this.location).generateReturnFormHTML();
         });
         $("#returnButton").on("click", () => {
             PageUtils.disablePageInteractiveElements();
@@ -176,22 +166,13 @@ class PersonalSetupPageProcessor extends StatefulPageProcessor {
                 PocketPage.enableStatelessElements();
             });
         });
-        new MouseClickEventBuilder()
-            .bind($("#RoleImage"), () => {
-                if (!TeamMemberLoader.loadTeamMembersAsMap(true).has(this.credential.id)) {
-                    MessageBoard.publishWarning("你不是团队成员，无法进入团队设置。");
-                    return;
-                }
-                $("#TeamSetupPanel").parent().toggle();
-            });
-        new MouseClickEventBuilder()
-            .bind($("#messageBoardManager"), () => {
-                this.resetMessageBoard();
-                $("#messageBoardManager").html(() => {
-                    return NpcLoader.randomFemaleNpcImageHtml();
-                });
-                MessageBoard.publishMessage("消息面板重置完成。");
-            });
+        $("#refreshSetupButton").on("click", async () => {
+            PocketPage.disableStatelessElements();
+            await this.teamSetupManager.reload();
+            await this.teamSetupManager.render();
+            await this.render();
+            PocketPage.enableStatelessElements();
+        });
         $("#exportButton").on("click", () => {
             const allConfigs = ConfigManager.exportAsJson();
             $("#allConfigs").val(allConfigs);
@@ -216,10 +197,27 @@ class PersonalSetupPageProcessor extends StatefulPageProcessor {
             PageUtils.scrollIntoView("pageTitle");
             $("#refreshButton").trigger("click");
         });
+        const roleImageHandler = PocketEvent.newMouseClickHandler();
+        roleImageHandler.threshold = 1;
+        roleImageHandler.handler = async () => {
+            if (!TeamMemberLoader.loadTeamMembersAsMap(true).has(this.credential.id)) {
+                logger.warn("你不是团队成员，无法进入团队设置。");
+                return;
+            }
+            $("#TeamSetupPanel").parent().toggle();
+        };
+        MouseClickEventBuilder.newInstance()
+            .onElementClicked("roleInformationManager", async () => {
+                await roleImageHandler.onMouseClicked();
+            })
+            .onElementClicked("messageBoardManager", async () => {
+                await this.resetMessageBoard();
+            })
+            .doBind();
     }
 
     private async render() {
-        $("#RoleImage").html(() => {
+        $("#roleInformationManager").html(() => {
             return this.roleManager.role!.imageHtml;
         });
 
@@ -270,15 +268,12 @@ class PersonalSetupPageProcessor extends StatefulPageProcessor {
         await this.roleManager.render();
         await this.teamSetupManager.reload();
         await this.teamSetupManager.render();
-        await this.cacheManager.reload();
-        await this.cacheManager.render();
         await this.render();
     }
 
     private async dispose() {
         await this.roleManager.dispose();
         await this.teamSetupManager.dispose();
-        await this.cacheManager.dispose();
     }
 
     private determineSetupCategories(item: SetupItem) {

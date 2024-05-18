@@ -1,61 +1,74 @@
-import _ from "lodash";
-import Coordinate from "../../util/Coordinate";
-import StringUtils from "../../util/StringUtils";
-import Castle from "../castle/Castle";
-import CastleInformationPage from "./CastleInformationPage";
+import {CastleInformationPage, CastleInformationPageParser} from "./CastleInformationPage";
 import {PocketNetwork} from "../../pocket/PocketNetwork";
 import {PocketLogger} from "../../pocket/PocketLogger";
+import {CacheObject, PocketCache} from "../../pocket/PocketCache";
+import _ from "lodash";
+import Castle from "../castle/Castle";
+import Coordinate from "../../util/Coordinate";
 
 const logger = PocketLogger.getLogger("CASTLE");
 
+const CACHE_ID: string = "CastleInformation";
+const TTL_IN_MILLIS: number = 300000;
+
 class CastleInformation {
 
+    async evictCache() {
+        await PocketCache.deleteCacheObject(CACHE_ID);
+    }
+
     async open(): Promise<CastleInformationPage> {
+        logger.debug("Loading castle information page...");
         const response = await PocketNetwork.get("castle_print.cgi");
-        const page = CastleInformation.parsePage(response.html);
+        const page = CastleInformationPageParser.parse(response.html);
         response.touch();
         logger.debug("Castle information page loaded.", response.durationInMillis);
         return page;
     }
 
-    static parsePage(html: string) {
-        const castleList: Castle[] = [];
-        $(html).find("td").each(function (_idx, td) {
-            const text = $(td).text();
-            if (text.endsWith(" (自购)")) {
-                const name = $(td).prev().text();
-                const owner = text.substring(0, text.indexOf(" (自购)"));
-                let location = $(td).next().text();
-                location = StringUtils.substringBetween(location, "(", ")");
-                let x = StringUtils.substringBefore(location, ",");
-                let y = StringUtils.substringAfter(location, ",");
-                const coordinate = new Coordinate(parseInt(x), parseInt(y));
-
-                const castle = new Castle();
-                castle.name = name;
-                castle.owner = owner;
-                castle.coordinate = coordinate;
-                castle.attribute = $(td).next().next().text();
-                castle.development = CastleInformation.#parseCastleNumber($(td).next().next().next().text());
-                castle.commerce = CastleInformation.#parseCastleNumber($(td).next().next().next().next().text());
-                castle.industry = CastleInformation.#parseCastleNumber($(td).next().next().next().next().next().text());
-                castle.mineral = CastleInformation.#parseCastleNumber($(td).next().next().next().next().next().next().text());
-                castle.defense = CastleInformation.#parseCastleNumber($(td).next().next().next().next().next().next().next().text());
-                castleList.push(castle);
+    async openWithCache(): Promise<CastleInformationPage> {
+        logger.debug("Loading castle information page (cache)...");
+        const cache = await PocketCache.loadCacheObject(CACHE_ID);
+        if (cache !== null) {
+            logger.debug("Castle information cache hit.");
+            return this.convertCacheToPage(cache);
+        } else {
+            logger.debug("Castle information cache miss.");
+            const page = await this.open();
+            if (page.castleList !== undefined) {
+                const json = JSON.stringify(page.castleList);
+                await PocketCache.writeCacheObject(CACHE_ID, json, TTL_IN_MILLIS);
+                logger.debug("Castle information wrote into cache.");
             }
-        });
+            return page;
+        }
+    }
+
+    private convertCacheToPage(cache: CacheObject) {
+        const documents = JSON.parse(cache.json!);
         const page = new CastleInformationPage();
-        page.castleList = castleList;
+        page.castleList = [];
+        _.forEach(documents, doc => {
+            const castle = new Castle();
+            castle.name = doc.name;
+            castle.owner = doc.owner;
+            if (doc.coordinate) {
+                const x = doc.coordinate.x;
+                const y = doc.coordinate.y;
+                castle.coordinate = new Coordinate(x, y);
+            }
+            castle.coordinate = doc.coordinate;
+            castle.attribute = doc.attribute;
+            castle.development = doc.development;
+            castle.commerce = doc.commerce;
+            castle.industry = doc.industry;
+            castle.mineral = doc.mineral;
+            castle.defense = doc.defense;
+            page.castleList!.push(castle);
+        });
         return page;
     }
 
-    static #parseCastleNumber(s: string) {
-        if (_.startsWith(s, "/")) {
-            return 0;
-        }
-        const n = StringUtils.substringBefore(s, "/");
-        return _.parseInt(n);
-    }
 }
 
 export = CastleInformation;

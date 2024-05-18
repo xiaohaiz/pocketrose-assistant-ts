@@ -114,7 +114,7 @@ class TownTaskHousePageProcessor extends StatelessPageProcessorCredentialSupport
             .onKeyPressed("r", () => $("#refreshButton").trigger("click"))
             .onEscapePressed(() => $("#returnButton").trigger("click"))
             .withDefaultPredicate()
-            .bind();
+            .doBind();
     }
 
 }

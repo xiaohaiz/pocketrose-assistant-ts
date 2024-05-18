@@ -1,27 +1,30 @@
-import StatefulPageProcessor from "../StatefulPageProcessor";
-import Credential from "../../util/Credential";
-import PageProcessorContext from "../PageProcessorContext";
-import LocationModeTown from "../../core/location/LocationModeTown";
-import {RoleManager} from "../../widget/RoleManager";
-import {PocketFormGenerator, PocketPage} from "../../pocket/PocketPage";
 import ButtonUtils from "../../util/ButtonUtils";
-import PageUtils from "../../util/PageUtils";
-import MessageBoard from "../../util/MessageBoard";
-import KeyboardShortcutBuilder from "../../util/KeyboardShortcutBuilder";
-import NpcLoader from "../../core/role/NpcLoader";
-import TreasureHint from "../../core/equipment/TreasureHint";
-import TreasureHintParser from "../../core/adventure/TreasureHintParser";
-import {TownAdventureGuild} from "../../core/adventure/TownAdventureGuild";
-import MapBuilder from "../../core/map/MapBuilder";
-import StringUtils from "../../util/StringUtils";
-import _ from "lodash";
-import TownBank from "../../core/bank/TownBank";
 import Coordinate from "../../util/Coordinate";
-import Town from "../../core/town/Town";
-import TownEntrance from "../../core/town/TownEntrance";
+import Credential from "../../util/Credential";
+import KeyboardShortcutBuilder from "../../util/KeyboardShortcutBuilder";
+import LocationModeTown from "../../core/location/LocationModeTown";
+import MapBuilder from "../../core/map/MapBuilder";
 import MapExplorer from "../../core/map/MapExplorer";
+import MessageBoard from "../../util/MessageBoard";
+import NpcLoader from "../../core/role/NpcLoader";
+import PageProcessorContext from "../PageProcessorContext";
+import PageUtils from "../../util/PageUtils";
+import StatefulPageProcessor from "../StatefulPageProcessor";
+import StringUtils from "../../util/StringUtils";
+import Town from "../../core/town/Town";
+import TownBank from "../../core/bank/TownBank";
+import TownEntrance from "../../core/town/TownEntrance";
 import TravelPlan from "../../core/map/TravelPlan";
 import TravelPlanExecutor from "../../core/map/TravelPlanExecutor";
+import TreasureHint from "../../core/equipment/TreasureHint";
+import TreasureHintParser from "../../core/adventure/TreasureHintParser";
+import _ from "lodash";
+import {PocketFormGenerator, PocketPage} from "../../pocket/PocketPage";
+import {PocketLogger} from "../../pocket/PocketLogger";
+import {RoleManager} from "../../widget/RoleManager";
+import {TownAdventureGuild} from "../../core/adventure/TownAdventureGuild";
+
+const logger = PocketLogger.getLogger("ADVENTURE");
 
 class TownAdventureGuildPageProcessor extends StatefulPageProcessor {
 
@@ -50,7 +53,7 @@ class TownAdventureGuildPageProcessor extends StatefulPageProcessor {
             .onKeyPressed("r", () => PageUtils.triggerClick("refreshButton"))
             .onEscapePressed(() => PageUtils.triggerClick("returnButton"))
             .withDefaultPredicate()
-            .bind();
+            .doBind();
     }
 
     private async generateHTML() {
@@ -275,7 +278,7 @@ class TownAdventureGuildPageProcessor extends StatefulPageProcessor {
     private async _exchangeTreasureHints() {
         const indexList = this._calculateSelectedTreasureHints();
         if (indexList.length === 0) {
-            MessageBoard.publishWarning("No treasure hint(s) selected, ignore.");
+            logger.warn("No treasure hint(s) selected, ignore.");
             return;
         }
         await new TownBank(this.credential, this.townId).withdraw(10);
@@ -302,7 +305,7 @@ class TownAdventureGuildPageProcessor extends StatefulPageProcessor {
             }
         });
         if (candidates.length === 0) {
-            MessageBoard.publishWarning("No available treasure hint(s) selected, ignore.");
+            logger.warn("No available treasure hint(s) selected, ignore.");
             return;
         }
 

@@ -10,7 +10,7 @@ import PersonalPetEvolution from "../core/monster/PersonalPetEvolution";
 import PersonalPetEvolutionPage from "../core/monster/PersonalPetEvolutionPage";
 import PersonalPetManagement from "../core/monster/PersonalPetManagement";
 import PersonalPetManagementPage from "../core/monster/PersonalPetManagementPage";
-import SetupLoader from "../core/config/SetupLoader";
+import SetupLoader from "../setup/SetupLoader";
 import StringUtils from "../util/StringUtils";
 import TownBank from "../core/bank/TownBank";
 import _ from "lodash";

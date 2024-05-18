@@ -1,8 +1,11 @@
 import Credential from "../../util/Credential";
 import MessageBoard from "../../util/MessageBoard";
-import NetworkUtils from "../../util/NetworkUtils";
-import {Equipment} from "./Equipment";
 import TreasureBagPage from "./TreasureBagPage";
+import {Equipment} from "./Equipment";
+import {PocketLogger} from "../../pocket/PocketLogger";
+import {PocketNetwork} from "../../pocket/PocketNetwork";
+
+const logger = PocketLogger.getLogger("BAG");
 
 class TreasureBag {
 
@@ -58,86 +61,53 @@ class TreasureBag {
     }
 
     async open(bagIndex: number): Promise<TreasureBagPage> {
-        const action = () => {
-            return new Promise<TreasureBagPage>((resolve, reject) => {
-                if (bagIndex < 0) {
-                    reject();
-                    return;
-                }
-                const request = this.#credential.asRequestMap();
-                request.set("chara", "1");
-                request.set("item" + bagIndex, bagIndex.toString());
-                request.set("mode", "USE");
-                NetworkUtils.post("mydata.cgi", request).then(html => {
-                    const page = TreasureBag.parsePage(html);
-                    resolve(page);
-                });
-            });
-        };
-        return await action();
+        logger.debug("Loading treasure bag page...");
+        const request = this.#credential.asRequest();
+        request.set("chara", "1");
+        request.set("item" + bagIndex, bagIndex.toString());
+        request.set("mode", "USE");
+        const response = await PocketNetwork.post("mydata.cgi", request);
+        const page = TreasureBag.parsePage(response.html);
+        response.touch();
+        logger.debug("Treasure bag page loaded.", response.durationInMillis);
+        return page;
     }
 
     async putInto(indexList: number[]): Promise<void> {
-        const action = () => {
-            return new Promise<void>((resolve, reject) => {
-                if (indexList.length === 0) {
-                    reject();
-                    return;
-                }
-                const request = this.#credential.asRequestMap();
-                request.set("chara", "1");
-                request.set("mode", "PUTINBAG");
-                for (const index of indexList) {
-                    request.set("item" + index, index.toString());
-                }
-                NetworkUtils.post("mydata.cgi", request).then(html => {
-                    MessageBoard.processResponseMessage(html);
-                    resolve();
-                });
-            });
-        };
-        return await action();
+        if (indexList.length === 0) return;
+        logger.debug("Putting item(s) into treasure bag...");
+        const request = this.#credential.asRequest();
+        request.set("chara", "1");
+        request.set("mode", "PUTINBAG");
+        for (const index of indexList) {
+            request.set("item" + index, index.toString());
+        }
+        const response = await PocketNetwork.post("mydata.cgi", request);
+        MessageBoard.processResponseMessage(response.html);
     }
 
     async takeOut(indexList: number[]): Promise<void> {
-        const action = () => {
-            return new Promise<void>((resolve, reject) => {
-                if (indexList.length === 0) {
-                    reject();
-                    return;
-                }
-                const request = this.#credential.asRequestMap();
-                request.set("mode", "GETOUTBAG");
-                for (const index of indexList) {
-                    request.set("item" + index, index.toString());
-                }
-                NetworkUtils.post("mydata.cgi", request).then(html => {
-                    MessageBoard.processResponseMessage(html);
-                    resolve();
-                });
-            });
-        };
-        return await action();
+        if (indexList.length === 0) return;
+        logger.debug("Taking item(s) out of treasure bag...");
+        const request = this.#credential.asRequest();
+        request.set("mode", "GETOUTBAG");
+        for (const index of indexList) {
+            request.set("item" + index, index.toString());
+        }
+        const response = await PocketNetwork.post("mydata.cgi", request);
+        MessageBoard.processResponseMessage(response.html);
     }
 
     async tryTakeOut(count: number): Promise<void> {
-        return await (() => {
-            return new Promise<void>((resolve, reject) => {
-                if (count <= 0) {
-                    reject();
-                    return;
-                }
-                const request = this.#credential.asRequestMap();
-                request.set("mode", "GETOUTBAG");
-                for (let i = 0; i < count; i++) {
-                    request.set("item" + i, i.toString());
-                }
-                NetworkUtils.post("mydata.cgi", request).then(html => {
-                    MessageBoard.processResponseMessage(html);
-                    resolve();
-                });
-            });
-        })();
+        if (count <= 0) return;
+        logger.debug("Try taking item(s) out of treasure bag... (count=" + count + ")");
+        const request = this.#credential.asRequest();
+        request.set("mode", "GETOUTBAG");
+        for (let i = 0; i < count; i++) {
+            request.set("item" + i, i.toString());
+        }
+        const response = await PocketNetwork.post("mydata.cgi", request);
+        MessageBoard.processResponseMessage(response.html);
     }
 }
 

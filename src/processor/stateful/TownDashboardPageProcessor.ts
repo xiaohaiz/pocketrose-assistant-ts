@@ -1,40 +1,42 @@
-import StatefulPageProcessor from "../StatefulPageProcessor";
-import Credential from "../../util/Credential";
-import PageProcessorContext from "../PageProcessorContext";
-import _ from "lodash";
-import ButtonUtils from "../../util/ButtonUtils";
-import {RoleStatus, RoleStatusManager} from "../../core/role/RoleStatus";
-import TownDashboardPageParser from "../../core/dashboard/TownDashboardPageParser";
-import PageUtils from "../../util/PageUtils";
-import TownDashboardPage from "../../core/dashboard/TownDashboardPage";
 import BattleFieldTrigger from "../../core/trigger/BattleFieldTrigger";
-import TownDashboardKeyboardManager from "../../core/dashboard/TownDashboardKeyboardManager";
-import SetupLoader from "../../core/config/SetupLoader";
-import StringUtils from "../../util/StringUtils";
-import {PersonalStatus} from "../../core/role/PersonalStatus";
-import DashboardPageUtils from "../../core/dashboard/DashboardPageUtils";
-import {MiscConfigManager} from "../../core/config/ConfigManager";
-import {PocketNetwork} from "../../pocket/PocketNetwork";
+import BattleProcessor from "../../core/battle/BattleProcessor";
+import BattleRecordStorage from "../../core/battle/BattleRecordStorage";
+import BattleReturnInterceptor from "../../core/battle/BattleReturnInterceptor";
 import BattleScene from "../../core/battle/BattleScene";
 import BattleSceneStorage from "../../core/battle/BattleSceneStorage";
-import BattleProcessor from "../../core/battle/BattleProcessor";
-import BattleReturnInterceptor from "../../core/battle/BattleReturnInterceptor";
-import TownInn from "../../core/inn/TownInn";
-import TownBank from "../../core/bank/TownBank";
-import TownForge from "../../core/forge/TownForge";
-import TownDashboard from "../../core/dashboard/TownDashboard";
-import BattleRecordStorage from "../../core/battle/BattleRecordStorage";
-import {BattleErrorPageProcessor} from "../../core/battle/BattleErrorPageProcessor";
-import {BattleButtonProcessor} from "../../core/battle/BattleButtonProcessor";
-import PalaceTaskManager from "../../core/task/PalaceTaskManager";
-import MouseClickEventBuilder from "../../util/MouseClickEventBuilder";
-import LocalSettingManager from "../../core/config/LocalSettingManager";
-import {CareerTransferTrigger} from "../../core/trigger/CareerTransferTrigger";
-import {BattleWordManager} from "../../core/battle/BattleWordManager";
-import MessageBoard from "../../util/MessageBoard";
-import {PocketLogger} from "../../pocket/PocketLogger";
+import ButtonUtils from "../../util/ButtonUtils";
 import Conversation from "../../core/dashboard/Conversation";
+import Credential from "../../util/Credential";
+import DashboardPageUtils from "../../core/dashboard/DashboardPageUtils";
+import LocalSettingManager from "../../setup/LocalSettingManager";
+import MessageBoard from "../../util/MessageBoard";
+import MouseClickEventBuilder from "../../util/MouseClickEventBuilder";
+import PageProcessorContext from "../PageProcessorContext";
+import PageUtils from "../../util/PageUtils";
+import PalaceTaskManager from "../../core/task/PalaceTaskManager";
 import PocketPageRenderer from "../../util/PocketPageRenderer";
+import SetupLoader from "../../setup/SetupLoader";
+import StatefulPageProcessor from "../StatefulPageProcessor";
+import StringUtils from "../../util/StringUtils";
+import TownBank from "../../core/bank/TownBank";
+import TownDashboard from "../../core/dashboard/TownDashboard";
+import TownDashboardKeyboardManager from "../../core/dashboard/TownDashboardKeyboardManager";
+import TownForgeHouse from "../../core/forge/TownForgeHouse";
+import TownInn from "../../core/inn/TownInn";
+import _ from "lodash";
+import {BattleButtonProcessor} from "../../core/battle/BattleButtonProcessor";
+import {BattleErrorPageProcessor} from "../../core/battle/BattleErrorPageProcessor";
+import {BattleWordManager} from "../../core/battle/BattleWordManager";
+import {CareerTransferTrigger} from "../../core/trigger/CareerTransferTrigger";
+import {CountryRevenue} from "../../core/country/CountryRevenue";
+import {MiscConfigManager} from "../../setup/ConfigManager";
+import {PersonalStatus} from "../../core/role/PersonalStatus";
+import {PocketLogger} from "../../pocket/PocketLogger";
+import {PocketNetwork} from "../../pocket/PocketNetwork";
+import {RoleStatus, RoleStatusManager} from "../../core/role/RoleStatus";
+import {TownDashboardPage, TownDashboardPageParser} from "../../core/dashboard/TownDashboardPage";
+import {TownDashboardShortcutManager} from "../../core/dashboard/TownDashboardShortcutManager";
+import {BattleSessionManager} from "../../core/battle/BattleSessionManager";
 
 const townLogger = PocketLogger.getLogger("TOWN");
 const battleLogger = PocketLogger.getLogger("BATTLE");
@@ -43,6 +45,7 @@ class TownDashboardPageProcessor extends StatefulPageProcessor {
 
     private readonly roleStatusManager: RoleStatusManager;
     private readonly buttonProcessor: BattleButtonProcessor;
+    private readonly sessionManager: BattleSessionManager;
     private readonly errorPageProcessor: BattleErrorPageProcessor;
     private readonly palaceTaskManager: PalaceTaskManager;
 
@@ -50,23 +53,50 @@ class TownDashboardPageProcessor extends StatefulPageProcessor {
         super(credential, context);
         this.roleStatusManager = new RoleStatusManager(credential);
         this.buttonProcessor = new BattleButtonProcessor(credential);
+        this.buttonProcessor.doRefresh = async () => {
+            await this.refresh(false);
+            townLogger.debug("Town dashboard refreshed for dodging digital validation code.");
+            new TownDashboardKeyboardManager(
+                this.credential,
+                this.dashboardPage?.battleLevelShortcut,
+                this.dashboardPage
+            ).bind();
+        };
+        this.sessionManager = new BattleSessionManager();
+        this.sessionManager.doRefresh = async () => {
+            await this.refresh(false);
+            townLogger.debug("Town dashboard refreshed for battle session expired.");
+            // 如果有必要，修改战斗按钮的提示颜色，表示重新刷新了
+            const battleButton = $("#battleButton");
+            const battleButtonText = battleButton.text();
+            if (battleButton.find("> span:first").length === 0) {
+                battleButton.html(() => {
+                    return "<span style='color:blue'>" + battleButtonText + "</span>";
+                });
+            }
+            new TownDashboardKeyboardManager(
+                this.credential,
+                this.dashboardPage?.battleLevelShortcut,
+                this.dashboardPage
+            ).bind();
+        };
         this.errorPageProcessor = new BattleErrorPageProcessor(credential);
         this.palaceTaskManager = new PalaceTaskManager(credential);
     }
 
     private dashboardPage?: TownDashboardPage;
+    private nextBattleTime?: number;            // 下次可以战斗的时间（单位毫秒）
 
     protected async doProcess(): Promise<void> {
-        const buttonStyles = [10005, 10007, 10008, 10016, 10024, 10028, 10032, 10033, 10035, 10062, 10132];
-        _.forEach(buttonStyles, it => ButtonUtils.loadButtonStyle(it));
+        ButtonUtils.loadDefaultButtonStyles();
 
-        const parser = new TownDashboardPageParser(this.credential, PageUtils.currentPageHtml());
-        this.dashboardPage = parser.parse();
+        this.dashboardPage = new TownDashboardPageParser(this.credential).parse(PageUtils.currentPageHtml());
 
         await this.initializeDashboard();
         await this.generateHTML();
         await this.resetMessageBoard();
         await this.bindButtons();
+        await this.renderClock(true);
         await this.render();
 
         new TownDashboardKeyboardManager(
@@ -124,7 +154,8 @@ class TownDashboardPageProcessor extends StatefulPageProcessor {
             $("#systemAnnouncement")
                 .after($("<div id='version' style='color:navy;font-weight:bold;text-align:center;width:100%'></div>"));
         }
-        $("#version").html(() => {
+        const version = $("#version");
+        version.html(() => {
             // @ts-ignore
             return __VERSION__;
         });
@@ -215,6 +246,7 @@ class TownDashboardPageProcessor extends StatefulPageProcessor {
                 .parent()
                 .after($("<tr><td colspan='4'>　</td></tr>"));
         } else {
+            // 修改左右侧面板的宽度比例，并在右面板最后增加一个新行，高度100%，保证格式显示不会变形。
             leftPanel
                 .removeAttr("width")
                 .css("width", "40%")
@@ -223,7 +255,10 @@ class TownDashboardPageProcessor extends StatefulPageProcessor {
                 .css("width", "95%");
             rightPanel
                 .removeAttr("width")
-                .css("width", "60%");
+                .css("width", "60%")
+                .find("> table:first > tbody:first")
+                .find("> tr:last")
+                .after($("<tr style='height:100%'><td></td></tr>"));
         }
 
         if (SetupLoader.isMobileTownDashboardEnabled()) {
@@ -260,15 +295,18 @@ class TownDashboardPageProcessor extends StatefulPageProcessor {
             tbody.find("> tr:eq(1)").addClass("C_TownInformation");
             tbody.find("> tr:eq(2)").addClass("C_TownInformation");
             tbody.find("> tr:eq(3)").addClass("C_TownInformation");
-            if (!this._canCollectTownTax()) {
-                tbody.find("> tr:eq(3) > td:first > table:first > tbody:first")
-                    .find("> tr:eq(1) > td:first")
-                    .css("text-align", "center")
-                    .html("-");
-            }
+            tbody.find("> tr:eq(3) > td:first > table:first > tbody:first")
+                .find("> tr:eq(1) > td:first")
+                .css("text-align", "center")
+                .html("-");
             tbody.append($("" +
                 "<tr class='C_BattleInformation' style='text-align:center;display:none' id='battlePanel'><td></td></tr>" +
                 "<tr class='C_BattleInformation' style='height:100%;display:none'><td></td></tr>"));
+            tbody.find("> tr:first")
+                .after($("<tr style='display:none'>" +
+                    "<td id='leftHarvestInfo' " +
+                    "style='background-color:#F8F0E0;text-align:center;font-weight:bold'></td>" +
+                    "</tr>"));
         }
     }
 
@@ -333,6 +371,7 @@ class TownDashboardPageProcessor extends StatefulPageProcessor {
         if (sId !== 0) buttonClass += " button-" + sId;
 
         $("#reloadSubmit").hide()
+            .closest("form").hide()
             .closest("td")
             .append($("<button role='button' style='height:100%;width:100%;min-height:30px' " +
                 "class='" + buttonClass + "' " +
@@ -452,11 +491,6 @@ class TownDashboardPageProcessor extends StatefulPageProcessor {
                 .attr("width", picWidth)
                 .attr("height", picHeight)
                 .before($("<br>"));
-
-            const clock = $("input:text[name='clock']");
-            if (clock.length > 0) {
-                clock.css("font-size", fontSize + "%");
-            }
         }
 
         const bsId = SetupLoader.getTownDashboardShortcutButton();
@@ -464,17 +498,15 @@ class TownDashboardPageProcessor extends StatefulPageProcessor {
             const buttonClass = "button-" + bsId;
             $("#battleMenu").closest("tr").find("> th:first").html("");
             $("#townMenu").closest("tr").find("> th:first").html(() => {
-                const shortcut1Value = SetupLoader.isShortcutPromptHidden() ? "&nbsp;图鉴&nbsp;" : "图鉴(g)";
-                const shortcut5Value = SetupLoader.isShortcutPromptHidden() ? "&nbsp;个人&nbsp;" : "个人(i)";
                 let html = "";
                 html += "<table style='background-color:transparent;border-spacing:0;border-width:0;margin:auto;text-align:center;width:100%'>";
                 html += "<tbody>";
                 html += "<tr>";
                 html += "<td>";
-                html += "<button role='button' class='" + buttonClass + "' id='shortcut1' style='white-space:nowrap;width:100%'>" + shortcut1Value + "</button>";
+                html += "<button role='button' class='" + buttonClass + " C_TownDashboardShortcutButton' id='shortcut1' style='white-space:nowrap;width:100%'>&nbsp;　　&nbsp;</button>";
                 html += "</td>";
                 html += "<td>";
-                html += "<button role='button' class='" + buttonClass + "' id='shortcut5' style='white-space:nowrap;width:100%'>" + shortcut5Value + "</button>";
+                html += "<button role='button' class='" + buttonClass + " C_TownDashboardShortcutButton' id='shortcut5' style='white-space:nowrap;width:100%'>&nbsp;　　&nbsp;</button>";
                 html += "</td>";
                 html += "</tr>";
                 html += "</tbody>";
@@ -482,17 +514,15 @@ class TownDashboardPageProcessor extends StatefulPageProcessor {
                 return html;
             });
             $("#personalMenu").closest("tr").find("> th:first").html(() => {
-                const shortcut2Value = SetupLoader.isShortcutPromptHidden() ? "&nbsp;装备&nbsp;" : "装备(e)";
-                const shortcut6Value = SetupLoader.isShortcutPromptHidden() ? "&nbsp;团队&nbsp;" : "团队(t)";
                 let html = "";
                 html += "<table style='background-color:transparent;border-spacing:0;border-width:0;margin:auto;text-align:center;width:100%'>";
                 html += "<tbody>";
                 html += "<tr>";
                 html += "<td>";
-                html += "<button role='button' class='" + buttonClass + "' id='shortcut2' style='white-space:nowrap;width:100%'>" + shortcut2Value + "</button>";
+                html += "<button role='button' class='" + buttonClass + " C_TownDashboardShortcutButton' id='shortcut2' style='white-space:nowrap;width:100%'>&nbsp;　　&nbsp;</button>";
                 html += "</td>";
                 html += "<td>";
-                html += "<button role='button' class='" + buttonClass + "' id='shortcut6' style='white-space:nowrap;width:100%'>" + shortcut6Value + "</button>";
+                html += "<button role='button' class='" + buttonClass + " C_TownDashboardShortcutButton' id='shortcut6' style='white-space:nowrap;width:100%'>&nbsp;　　&nbsp;</button>";
                 html += "</td>";
                 html += "</tr>";
                 html += "</tbody>";
@@ -500,17 +530,15 @@ class TownDashboardPageProcessor extends StatefulPageProcessor {
                 return html;
             });
             $("#countryNormalMenu").closest("tr").find("> th:first").html(() => {
-                const shortcut3Value = SetupLoader.isShortcutPromptHidden() ? "&nbsp;宠物&nbsp;" : "宠物(u)";
-                const shortcut7Value = SetupLoader.isShortcutPromptHidden() ? "&nbsp;统计&nbsp;" : "统计(j)";
                 let html = "";
                 html += "<table style='background-color:transparent;border-spacing:0;border-width:0;margin:auto;text-align:center;width:100%'>";
                 html += "<tbody>";
                 html += "<tr>";
                 html += "<td>";
-                html += "<button role='button' class='" + buttonClass + "' id='shortcut3' style='white-space:nowrap;width:100%'>" + shortcut3Value + "</button>";
+                html += "<button role='button' class='" + buttonClass + " C_TownDashboardShortcutButton' id='shortcut3' style='white-space:nowrap;width:100%'>&nbsp;　　&nbsp;</button>";
                 html += "</td>";
                 html += "<td>";
-                html += "<button role='button' class='" + buttonClass + "' id='shortcut7' style='white-space:nowrap;width:100%'>" + shortcut7Value + "</button>";
+                html += "<button role='button' class='" + buttonClass + " C_TownDashboardShortcutButton' id='shortcut7' style='white-space:nowrap;width:100%'>&nbsp;　　&nbsp;</button>";
                 html += "</td>";
                 html += "</tr>";
                 html += "</tbody>";
@@ -518,17 +546,15 @@ class TownDashboardPageProcessor extends StatefulPageProcessor {
                 return html;
             });
             $("#countryAdvanceMenu").closest("tr").find("> th:first").html(() => {
-                const shortcut4Value = SetupLoader.isShortcutPromptHidden() ? "&nbsp;职业&nbsp;" : "职业(z)";
-                const shortcut8Value = SetupLoader.isShortcutPromptHidden() ? "&nbsp;设置&nbsp;" : "设置(x)";
                 let html = "";
                 html += "<table style='background-color:transparent;border-spacing:0;border-width:0;margin:auto;text-align:center;width:100%'>";
                 html += "<tbody>";
                 html += "<tr>";
                 html += "<td>";
-                html += "<button role='button' class='" + buttonClass + "' id='shortcut4' style='white-space:nowrap;width:100%'>" + shortcut4Value + "</button>";
+                html += "<button role='button' class='" + buttonClass + " C_TownDashboardShortcutButton' id='shortcut4' style='white-space:nowrap;width:100%'>&nbsp;　　&nbsp;</button>";
                 html += "</td>";
                 html += "<td>";
-                html += "<button role='button' class='" + buttonClass + "' id='shortcut8' style='white-space:nowrap;width:100%'>" + shortcut8Value + "</button>";
+                html += "<button role='button' class='" + buttonClass + " C_TownDashboardShortcutButton' id='shortcut8' style='white-space:nowrap;width:100%'>&nbsp;　　&nbsp;</button>";
                 html += "</td>";
                 html += "</tr>";
                 html += "</tbody>";
@@ -608,7 +634,12 @@ class TownDashboardPageProcessor extends StatefulPageProcessor {
             .attr("id", "messageBoard")
             .removeAttr("align")
             .css("text-align", "left")
-            .css("color", "white");
+            .css("color", "white")
+            .closest("tr")
+            .find("> td:eq(2)")
+            .attr("id", "messageBoardManager")
+            .removeAttr("width")
+            .css("width", "64");
     }
 
     private async _generateConversationMessageHTML() {
@@ -654,11 +685,8 @@ class TownDashboardPageProcessor extends StatefulPageProcessor {
     }
 
     private async resetMessageBoard() {
-        MessageBoard.resetMessageBoard("" +
-            "<span style='font-weight:bold;font-size:120%;color:wheat'>" +
-            "东风夜放花千树。更吹落、星如雨。宝马雕车香满路。凤箫声动，玉壶光转，一夜鱼龙舞。<br>" +
-            "蛾儿雪柳黄金缕。笑语盈盈暗香去。众里寻他千百度。蓦然回首，那人却在，灯火阑珊处。" +
-            "</span>");
+        MessageBoard.initializeManager();
+        MessageBoard.initializeWelcomeMessage();
     }
 
     private async bindButtons() {
@@ -668,6 +696,9 @@ class TownDashboardPageProcessor extends StatefulPageProcessor {
             PageUtils.triggerClick("reloadSubmit");
         });
         $("#battleButton").on("click", async () => {
+            // 开始新的一次战斗了，重置战斗按钮处理器的状态
+            await this.buttonProcessor.reset();
+
             if (SetupLoader.isTraditionalBattleModeEnabled()) {
                 await this.dispose();
                 PageUtils.triggerClick("battleSubmit");
@@ -709,29 +740,6 @@ class TownDashboardPageProcessor extends StatefulPageProcessor {
             PageUtils.triggerClick("exitSubmit");
         });
 
-        const bsId = SetupLoader.getTownDashboardShortcutButton();
-        if (bsId >= 0) {
-            const mapping = new Map<string, string>();
-            mapping.set("shortcut1", "PETMAP");
-            mapping.set("shortcut5", "RANK_REMAKE");
-            mapping.set("shortcut2", "USE_ITEM");
-            mapping.set("shortcut6", "BATTLE_MES");
-            mapping.set("shortcut3", "PETSTATUS");
-            mapping.set("shortcut7", "DIANMING");
-            mapping.set("shortcut4", "CHANGE_OCCUPATION");
-            mapping.set("shortcut8", "LETTER");
-            mapping.forEach((option, buttonId) => {
-                $("#" + buttonId).on("click", () => {
-                    $("option[value='" + option + "']")
-                        .prop("selected", true)
-                        .closest("td")
-                        .next()
-                        .find("> button:first")
-                        .trigger("click");
-                });
-            });
-        }
-
         const messageInput = $("#messageInputText");
         const messageButton = $("#messageButton");
         messageButton.on("click", async () => {
@@ -770,6 +778,12 @@ class TownDashboardPageProcessor extends StatefulPageProcessor {
             await this.renderConversation();
             readButton.prop("disabled", false);
         });
+
+        MouseClickEventBuilder.newInstance()
+            .onElementClicked("messageBoardManager", async () => {
+                await this.resetMessageBoard();
+            })
+            .doBind();
     }
 
     private async _onBattleButtonClicked() {
@@ -799,7 +813,7 @@ class TownDashboardPageProcessor extends StatefulPageProcessor {
             $(".C_BattleInformation").show();
         }
 
-        const request = this.credential.asRequestMap();
+        const request = this.credential.asRequest();
         const battleForm = $("#battleMenu").find("> form:first");
         battleForm.find("> input:hidden")
             .filter((_idx, input) => $(input).attr("name") !== "id")
@@ -823,10 +837,8 @@ class TownDashboardPageProcessor extends StatefulPageProcessor {
         const html = (await PocketNetwork.post("battle.cgi", request)).html;
         if (_.includes(html, "ERROR !")) {
             await this.errorPageProcessor.processErrorPage(html);
-            this.dashboardPage = await new TownDashboard(this.credential).open();
             reloadButton.show();
-            await this.renderClock();
-            await this.render();
+            await this.refresh();
             return;
         }
 
@@ -870,7 +882,7 @@ class TownDashboardPageProcessor extends StatefulPageProcessor {
 
         switch (recommendation) {
             case "修": {
-                this.dashboardPage = await new TownForge(this.credential).repairAll();
+                this.dashboardPage = await new TownForgeHouse(this.credential).repairAll();
                 break;
             }
             case "宿": {
@@ -899,16 +911,18 @@ class TownDashboardPageProcessor extends StatefulPageProcessor {
         await this.render();
     }
 
-    private async render() {
+    private async render(scroll: boolean = true) {
         $("#systemAnnouncement").css("background-color", "transparent");
-        PageUtils.scrollIntoView("systemAnnouncement");
+        if (scroll && SetupLoader.isAutoScrollTopEnabled()) PageUtils.scrollIntoView("systemAnnouncement");
 
+        $(".C_TownDashboardShortcutButton").off("click");
         $(".C_TownTaxButton").off("click").off("dblclick");
 
         await this._renderMobilization();
         await this._renderPalaceTask();
         await this._renderValidationFailure();
         await this._renderControlPanel();
+        await this._renderShortcut();
         await this._renderEventBoard();
         await this._renderConversationMessage();
         await this._renderBattleOption();
@@ -971,19 +985,37 @@ class TownDashboardPageProcessor extends StatefulPageProcessor {
 
     }
 
-    private async renderClock() {
-        $("#actionNotification").html(this.dashboardPage!.actionNotificationHtml!);
-        const clock = $("input:text[name='clock']");
-        if (clock.length > 0) {
-            const enlargeRatio = SetupLoader.getEnlargeBattleRatio();
-            if (enlargeRatio > 0) {
-                let fontSize = 100 * enlargeRatio;
-                clock.css("font-size", fontSize + "%");
+    private async renderClock(initial: boolean = false) {
+        const enlargeRatio = SetupLoader.getEnlargeBattleRatio();
+        if (initial) {
+            // 初次渲染时，尝试放大原始的计时器（如果有必要）
+            const originalClock = $("input:text[name='clock']");
+            if (originalClock.length > 0) {
+                if (enlargeRatio > 0) {
+                    const fontSize = 100 * enlargeRatio;
+                    originalClock.css("font-size", fontSize + "%");
+                }
             }
-            let timeout = _.parseInt(clock.val() as string);
-            if (timeout > 0) {
-                const start = Date.now() / 1000;
-                this._countDownClock(timeout, start, clock);
+            townLogger.debug("Use original battle clock.");
+        } else {
+            // 非初次渲染页面
+            const actionNotification = $("#actionNotification");
+            actionNotification.html(this.dashboardPage!.actionNotificationHtml!);
+            const clock = $("input:text[name='clock2']");
+            if (clock.length > 0) {
+                if (enlargeRatio > 0) {
+                    let fontSize = 100 * enlargeRatio;
+                    clock.css("font-size", fontSize + "%");
+                }
+                let timeout = _.parseInt(clock.val() as string);
+                timeout = _.max([timeout, 0])!;
+                // 根据剩余的计时器值，计算出下次可以战斗的时间
+                this.nextBattleTime = Date.now() + (timeout * 1000);
+                townLogger.debug("Next battle time: " + new Date(this.nextBattleTime).toLocaleString());
+            } else {
+                // 计时器已经消失了，表示现在就可以战斗了，不再设置下次战斗时间。
+                this.nextBattleTime = undefined;
+                townLogger.debug("Next battle time has been initialized to 'undefined'.");
             }
         }
     }
@@ -1026,38 +1058,87 @@ class TownDashboardPageProcessor extends StatefulPageProcessor {
             return this.dashboardPage!.processedBattleLevelSelectionHtml!;
         });
 
-        $("option[value='INN']").text("口袋驿站");
-        $("option[value='ARM_SHOP']").text("武器商店");
-        $("option[value='PRO_SHOP']").text("防具商店");
-        $("option[value='ACC_SHOP']").text("饰品商店");
-        $("option[value='BAOSHI_SHOP']").text("宝石镶嵌");
+        $("option[value='INN']").text("★口袋驿站");
+        $("option[value='ARM_SHOP']").text("★武器商店");
+        $("option[value='PRO_SHOP']").text("★防具商店");
+        $("option[value='ACC_SHOP']").text("★饰品商店");
+        $("option[value='BAOSHI_SHOP']").text("★宝石镶嵌");
         $("option[value='BAOSHI_DELSHOP']").remove();
-        $("option[value='ITEM_SHOP']").text("物品商店");
-        $("option[value='BANK']").text("口袋银行");
-        $("option[value='FREE_SELL']").text("城堡管家");
+        $("option[value='MY_ARM']").text("★修理中心");
+        $("option[value='ITEM_SHOP']").text("★物品商店");
+        $("option[value='BANK']").text("★口袋银行");
+        $("option[value='FREE_SELL']").text("★城堡管家");
         $("option[value='ITEM_SEND']").remove();
         $("option[value='MONEY_SEND']").remove();
         $("option[value='PET_SEND']").remove();
-        $("option[value='PETPROFILE']").text("宠物排行榜");
-        $("option[value='TENNIS']").text("任务指南");
-        $("option[value='CHANGEMAP']").text("冒险家公会");
+        $("option[value='SINGLE_BATTLE']").text("★个人天真");
+        $("option[value='PET_TZ']").text("★宠物联赛");
+        $("option[value='PETMAP']").text("★宠物图鉴");
+        $("option[value='PETPROFILE']").text("★宠物排行");
+        $("option[value='TENNIS']").text("★任务指南");
+        $("option[value='CHANGEMAP']").text("★冒险公会");
 
 
-        $("option[value='LETTER']").text("口袋助手设置");
+        $("option[value='STATUS_PRINT']").text("★个人状态");
+        $("option[value='LETTER']").text("★设置中心");
         $("option[value='SALARY']").remove();
-        $("option[value='DIANMING']").text("统计报告");
+        $("option[value='DIANMING']").text("★统计报告");
         $("option[value='MAGIC']").remove();
-        $("option[value='BATTLE_MES']").text("团队面板");
-        $("option[value='USE_ITEM']").text("装备管理");
-        $("option[value='PETSTATUS']").text("宠物管理");
+        $("option[value='BATTLE_MES']").text("★团队面板");
+        $("option[value='USE_ITEM']").text("★装备管理");
+        $("option[value='PETSTATUS']").text("★宠物管理");
         $("option[value='PETBORN']").remove();
-        $("option[value='CHANGE_OCCUPATION']").text("职业管理");
-        $("option[value='RANK_REMAKE']").text("个人面板");
-        $("option[value='COU_MAKE']").text("使用手册");
-        $("option[value='CHUJIA']").text("团队管理");
+        $("option[value='CHANGE_OCCUPATION']").text("★职业管理");
+        $("option[value='FENSHENSHIGUAN']").text("★分身管理");
+        $("option[value='RANK_REMAKE']").text("★个人面板");
+        $("option[value='COU_MAKE']").text("★使用手册");
+        $("option[value='CHUJIA']").text("★团队管理");
 
-        if (!this._canCollectTownTax()) {
-            $("option[value='MAKE_TOWN']").remove();
+        if (!this._canCollectTownTax()) $("option[value='MAKE_TOWN']").remove();
+
+        $("option[value='FORT_STRENGTH']").text("★城市强化");
+
+        $("#townMenu").find("> form:first > select:first")
+            .find("> option")
+            .each((_idx, e) => {
+                const option = $(e);
+                if (_.startsWith(option.val() as string, "====")) option.remove();
+            });
+        $("#personalMenu").find("> select:first")
+            .find("> option")
+            .each((_idx, e) => {
+                const option = $(e);
+                if (_.startsWith(option.val() as string, "====")) option.remove();
+            });
+    }
+
+    private async _renderShortcut() {
+        const bsId = SetupLoader.getTownDashboardShortcutButton();
+        if (bsId >= 0) {
+            for (let i = 1; i <= 8; i++) {
+                const btn = $("#shortcut" + i);
+                if (btn.length > 0) {
+                    const cfg = TownDashboardShortcutManager.loadTownDashboardShortcutConfig();
+                    const id = cfg.getActualId(i);
+
+                    const title = TownDashboardShortcutManager.findMapping(id)?.buttonTitle ?? "&nbsp;　　&nbsp;";
+                    btn.html(title);
+                }
+            }
+            $(".C_TownDashboardShortcutButton").on("click", async (event) => {
+                const btnId = $(event.target).attr("id") as string;
+                const idx = _.parseInt(StringUtils.substringAfter(btnId, "shortcut"));
+                const cfg = TownDashboardShortcutManager.loadTownDashboardShortcutConfig();
+                const mapping = TownDashboardShortcutManager.findMapping(cfg.getActualId(idx));
+                if (!mapping) return;
+                const option = $("option[value='" + mapping.option + "']");
+                if (option.length === 0) return;
+                option.prop("selected", true)
+                    .closest("tr")
+                    .find("> td:last")
+                    .find("> button:first")
+                    .trigger("click");
+            });
         }
     }
 
@@ -1080,6 +1161,9 @@ class TownDashboardPageProcessor extends StatefulPageProcessor {
     private async _renderBattleOption() {
         $("input:hidden[name='ktotal']").val(this.dashboardPage!.role!.battleCount!);
         $("input:hidden[name='sessionid']").val(this.dashboardPage!.battleSessionId!);
+
+        // 更新战斗会话管理器
+        await this.sessionManager.touch(this.dashboardPage!.battleSessionId!);
 
         const battleForm = $("#battleMenu").find("> form:first");
         battleForm.find("> img:first")
@@ -1119,7 +1203,7 @@ class TownDashboardPageProcessor extends StatefulPageProcessor {
             $(".C_TownInformation").hide();
             $(".C_BattleInformation").show();
         }
-        if (record !== null && record.hasAdditionalNotification) {
+        if (record !== null && record.hasAdditionalNotification && SetupLoader.isBattleAdditionalNotificationEnabled()) {
             const additionalNotifications: string[] = [];
             const harvestList = record.harvestList;
             if (harvestList && harvestList.length > 0) {
@@ -1131,15 +1215,27 @@ class TownDashboardPageProcessor extends StatefulPageProcessor {
                 additionalNotifications.push("<span style='color:blue;font-size:200%'>" + "宠物蛋孵化成功！" + "</span>");
             }
             if (record.petSpellLearned) {
-                additionalNotifications.push("<span style='color:blue;font-size:200%'>" + "宠物学会了新技能！" + "</span>");
+                const petBeforeLevel = record.petBeforeLevel;
+                if (petBeforeLevel !== undefined && petBeforeLevel % 10 === 9) {
+                    additionalNotifications.push("<span style='color:blue;font-size:200%'>" +
+                        "宠物到达了<span style='color:red'>" + (petBeforeLevel + 1) + "</span>级！" + "</span>");
+                } else {
+                    additionalNotifications.push("<span style='color:blue;font-size:200%'>" + "宠物到达了技能等级！" + "</span>");
+                }
             }
             if (record.validationCodeFailed) {
                 additionalNotifications.push("<span style='color:red;font-size:200%'>" + "选择验证码错误！" + "</span>");
             }
             const anHtml = _.join(additionalNotifications, "<br>");
-            $("#harvestInfo").html(anHtml).parent().show();
+            if (!SetupLoader.isMobileTownDashboardEnabled() &&
+                SetupLoader.isBattleAdditionalNotificationLeftPanelEnabled()) {
+                $("#leftHarvestInfo").html(anHtml).parent().show();
+            } else {
+                $("#harvestInfo").html(anHtml).parent().show();
+            }
         } else {
             $("#harvestInfo").html("").parent().hide();
+            $("#leftHarvestInfo").html("").parent().hide();
         }
     }
 
@@ -1191,25 +1287,49 @@ class TownDashboardPageProcessor extends StatefulPageProcessor {
     }
 
     private async _renderTownTax() {
+        const reloadButton = $("#reloadButton");
+        const reloadButtonText = reloadButton.text();
+        if (reloadButton.find("> span:first").length > 0) {
+            reloadButton.html(reloadButtonText);
+        }
+        const revenue = $("#townTax");
+        revenue.html(() => {
+            // 枫丹收益不展示
+            // 在野角色不能看收益
+            // 不能看非本国城市的收益
+            if (this.dashboardPage!.townId === "12" ||
+                this.dashboardPage!.role!.country === "在野" ||
+                this.dashboardPage!.role!.country !== this.dashboardPage!.townCountry) {
+                return "-";
+            } else {
+                return this.dashboardPage!.townTax!.toLocaleString()
+            }
+        });
         if (!this._canCollectTownTax()) return;
-        const container = $("#townTax");
-        container.html(_.toString(this.dashboardPage!.townTax!));
 
         const tax = this.dashboardPage!.townTax!;
         if (tax >= 50000 && (tax - Math.floor(tax / 50000) * 50000 <= 10000)) {
-            container.css("color", "white")
+            revenue.css("color", "white")
                 .css("background-color", "green")
                 .css("font-weight", "bold");
             new MouseClickEventBuilder()
-                .bind(container, async () => {
-                    const request = this.credential.asRequestMap();
-                    request.set("town", this.dashboardPage!.townId!)
-                    request.set("mode", "MAKE_TOWN");
-                    await PocketNetwork.post("country.cgi", request);
-                    PageUtils.triggerClick("reloadButton");
+                .bind(revenue, async () => {
+                    const revenue = new CountryRevenue(this.credential, this.dashboardPage!.townId!);
+                    await revenue.collect();
+                    await this.refresh(false);
+                    new TownDashboardKeyboardManager(
+                        this.credential,
+                        this.dashboardPage?.battleLevelShortcut,
+                        this.dashboardPage
+                    ).bind();
                 });
+            if (SetupLoader.isRemindTownRevenueCollectableEnabled()) {
+                reloadButton.html(() => {
+                    return "<span style='color:red'>" + reloadButtonText + "</span>";
+                });
+            }
         } else {
-            container.removeAttr("style");
+            revenue.removeAttr("style");
         }
     }
 
@@ -1220,7 +1340,14 @@ class TownDashboardPageProcessor extends StatefulPageProcessor {
             (this.dashboardPage!.role!.country === this.dashboardPage!.townCountry);
     }
 
+    private async refresh(scroll: boolean = true) {
+        this.dashboardPage = await new TownDashboard(this.credential).open();
+        await this.renderClock();
+        await this.render(scroll);
+    }
+
     private async dispose() {
+        await this.sessionManager.dispose();
     }
 
     private _showTime() {
@@ -1233,22 +1360,31 @@ class TownDashboardPageProcessor extends StatefulPageProcessor {
         const second = _.padStart(s.toString(), 2, "0");
         const time = hour + ":" + minute + ":" + second;
         $("#watch2").html("&nbsp;&nbsp;&nbsp;" + time + "&nbsp;&nbsp;&nbsp;");
-        setTimeout(() => this._showTime(), 1000);
+
+        this.sessionManager.trigger(date);
+
+        if (this.nextBattleTime !== undefined) {
+            const clock = $("input:text[name='clock2']");
+            if (clock.length > 0) {
+                const now = date.getTime();
+                if (now >= this.nextBattleTime) {
+                    // 已经到时间了
+                    clock.val(0);
+                    this.nextBattleTime = undefined;
+                    townLogger.debug("Next battle time has been reset.");
+                    // @ts-ignore
+                    document.getElementById("mplayer")?.play();
+                } else {
+                    const delta = _.ceil((this.nextBattleTime - now) / 1000);
+                    // delta是剩余的秒数
+                    clock.val(delta);
+                }
+            }
+        }
+
+        setTimeout(() => this._showTime(), 500);
     }
 
-    private _countDownClock(timeout: number, start: number, clock: JQuery) {
-        let now = Date.now() / 1000;
-        let x = timeout - (now - start);
-        clock.val(_.max([_.ceil(x), 0])!);
-        if (x > 0) {
-            setTimeout(() => {
-                this._countDownClock(timeout, start, clock);
-            }, 100);
-        } else {
-            // @ts-ignore
-            document.getElementById("mplayer")?.play();
-        }
-    }
 }
 
 export {TownDashboardPageProcessor};

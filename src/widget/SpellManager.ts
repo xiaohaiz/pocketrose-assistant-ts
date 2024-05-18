@@ -121,6 +121,9 @@ class SpellManager extends CommonWidget {
         this.feature.publishRefresh(message);
     }
 
+    async dispose() {
+    }
+
 }
 
 class SpellManagerFeature extends CommonWidgetFeature {

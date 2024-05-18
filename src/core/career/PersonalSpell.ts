@@ -1,9 +1,12 @@
 import Credential from "../../util/Credential";
 import MessageBoard from "../../util/MessageBoard";
-import NetworkUtils from "../../util/NetworkUtils";
 import StringUtils from "../../util/StringUtils";
 import PersonalSpellPage from "./PersonalSpellPage";
 import Spell from "./Spell";
+import {PocketLogger} from "../../pocket/PocketLogger";
+import {PocketNetwork} from "../../pocket/PocketNetwork";
+
+const logger = PocketLogger.getLogger("SPELL");
 
 class PersonalSpell {
 
@@ -16,33 +19,25 @@ class PersonalSpell {
     }
 
     async open(): Promise<PersonalSpellPage> {
-        return await (() => {
-            return new Promise<PersonalSpellPage>(resolve => {
-                const request = this.#credential.asRequestMap();
-                if (this.#townId !== undefined) {
-                    request.set("town", this.#townId);
-                }
-                request.set("mode", "MAGIC");
-                NetworkUtils.post("mydata.cgi", request).then(html => {
-                    const page = PersonalSpell.parsePage(html);
-                    resolve(page);
-                });
-            });
-        })();
+        logger.debug("Loading spell page...");
+        const request = this.#credential.asRequest();
+        if (this.#townId !== undefined) {
+            request.set("town", this.#townId);
+        }
+        request.set("mode", "MAGIC");
+        const response = await PocketNetwork.post("mydata.cgi", request);
+        const page = PersonalSpell.parsePage(response.html);
+        response.touch();
+        logger.debug("Spell page loaded.", response.durationInMillis);
+        return page;
     }
 
     async set(spellId: string): Promise<void> {
-        return await (() => {
-            return new Promise<void>(resolve => {
-                const request = this.#credential.asRequestMap();
-                request.set("ktec_no", spellId);
-                request.set("mode", "MAGIC_SET");
-                NetworkUtils.post("mydata.cgi", request).then(html => {
-                    MessageBoard.processResponseMessage(html);
-                    resolve();
-                });
-            });
-        })();
+        const request = this.#credential.asRequest();
+        request.set("ktec_no", spellId);
+        request.set("mode", "MAGIC_SET");
+        const response = await PocketNetwork.post("mydata.cgi", request);
+        MessageBoard.processResponseMessage(response.html);
     }
 
     static parsePage(html: string) {

@@ -1,11 +1,11 @@
 import Coordinate from "../../util/Coordinate";
 import Credential from "../../util/Credential";
 import MessageBoard from "../../util/MessageBoard";
-import NetworkUtils from "../../util/NetworkUtils";
 import StringUtils from "../../util/StringUtils";
 import TimeoutUtils from "../../util/TimeoutUtils";
 import TownLoader from "../town/TownLoader";
 import TravelPlan from "./TravelPlan";
+import {PocketNetwork} from "../../pocket/PocketNetwork";
 
 class TravelPlanExecutor {
 
@@ -67,17 +67,12 @@ function doMoveOnPath(credential: Credential, pathList: Coordinate[], index: num
             const distance = calculateDistance(from, to);
 
             const request = credential.asRequest();
-            // @ts-ignore
-            request["con"] = "2";
-            // @ts-ignore
-            request["navi"] = "on";
-            // @ts-ignore
-            request["mode"] = "CHARA_MOVE";
-            // @ts-ignore
-            request["direct"] = escape(direction);
-            // @ts-ignore
-            request["chara_m"] = distance;
-            NetworkUtils.sendPostRequest("map.cgi", request, function () {
+            request.set("con", "2");
+            request.set("navi", "on");
+            request.set("mode", "CHARA_MOVE");
+            request.set("direct", escape(direction));
+            request.set("chara_m", distance.toString());
+            PocketNetwork.post("map.cgi", request).then(() => {
                 MessageBoard.publishMessage("<span style='color:greenyellow'>" + direction + "</span>移动" + distance + "格，到达" + to.asText() + "。");
 
                 let roleLocation = to.asText();

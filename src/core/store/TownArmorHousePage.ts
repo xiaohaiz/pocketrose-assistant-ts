@@ -1,7 +1,5 @@
 import {Equipment} from "../equipment/Equipment";
 import Role from "../role/Role";
-import Town from "../town/Town";
-import TownLoader from "../town/TownLoader";
 import Merchandise from "./Merchandise";
 
 class TownArmorHousePage {
@@ -12,10 +10,6 @@ class TownArmorHousePage {
     equipmentList?: Equipment[];
     merchandiseList?: Merchandise[];
     spaceCount?: number;
-
-    get town(): Town {
-        return TownLoader.load(this.townId)!;
-    }
 
     findEquipment(index: number) {
         return this.equipmentList?.find(it => it.index === index) ?? null;

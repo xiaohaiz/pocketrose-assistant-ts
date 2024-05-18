@@ -7,7 +7,6 @@ import GoldenCage from "../core/monster/GoldenCage";
 import GoldenCagePage from "../core/monster/GoldenCagePage";
 import LocationModeCastle from "../core/location/LocationModeCastle";
 import LocationModeTown from "../core/location/LocationModeTown";
-import NetworkUtils from "../util/NetworkUtils";
 import OperationMessage from "../util/OperationMessage";
 import PageUtils from "../util/PageUtils";
 import PeopleFinder from "./PeopleFinder";
@@ -34,6 +33,7 @@ import {PetUsingTrigger} from "../core/trigger/PetUsingTrigger";
 import {SpecialPet, SpecialPetStorage} from "../core/monster/SpecialPet";
 import MouseClickEventBuilder from "../util/MouseClickEventBuilder";
 import MonsterPageUtils from "../core/monster/MonsterPageUtils";
+import {PocketNetwork} from "../pocket/PocketNetwork";
 
 class PetManager extends CommonWidget {
 
@@ -140,7 +140,7 @@ class PetManager extends CommonWidget {
                         PageUtils.changeColorBlue(btnId);
                     },
                     undefined);
-                const request = this.credential.asRequestMap();
+                const request = this.credential.asRequest();
                 request.set("mode", "STUDY_SET");
                 const codes: number[] = [1, 2, 3, 4];
                 for (const code of codes) {
@@ -148,8 +148,8 @@ class PetManager extends CommonWidget {
                         request.set("study" + code, _.toString(code));
                     }
                 }
-                NetworkUtils.post("mydata.cgi", request).then(response => {
-                    MessageBoard.processResponseMessage(response);
+                PocketNetwork.post("mydata.cgi", request).then(response => {
+                    MessageBoard.processResponseMessage(response.html);
                     const message = OperationMessage.success();
                     this._triggerRefresh(message).then();
                 });
@@ -851,15 +851,15 @@ class PetManager extends CommonWidget {
             const btnId = $(event.target).attr("id") as string;
             const index = _.parseInt(StringUtils.substringAfterLast(btnId, "_"));
             PageUtils.toggleColor(btnId, undefined, undefined);
-            const request = this.credential.asRequestMap();
+            const request = this.credential.asRequest();
             request.set("select", _.toString(index));
             request.set("mode", "PETUSESKILL_SET");
             if (PageUtils.isColorBlue("_pocket_petManager_spell1_" + index)) request.set("use1", "1");
             if (PageUtils.isColorBlue("_pocket_petManager_spell2_" + index)) request.set("use2", "2");
             if (PageUtils.isColorBlue("_pocket_petManager_spell3_" + index)) request.set("use3", "3");
             if (PageUtils.isColorBlue("_pocket_petManager_spell4_" + index)) request.set("use4", "4");
-            NetworkUtils.post("mydata.cgi", request).then(response => {
-                MessageBoard.processResponseMessage(response);
+            PocketNetwork.post("mydata.cgi", request).then(response => {
+                MessageBoard.processResponseMessage(response.html);
                 const message = OperationMessage.success();
                 this._triggerRefresh(message).then();
             });
@@ -949,12 +949,12 @@ class PetManager extends CommonWidget {
     private async _executeSendPet(target: string, index: number) {
         if (this.isTownMode) {
             await new TownBank(this.credential, this.townId).withdraw(10);
-            const request = this.credential.asRequestMap();
+            const request = this.credential.asRequest();
             request.set("mode", "PET_SEND2");
             request.set("eid", target);
             request.set("select", _.toString(index));
-            const response = await NetworkUtils.post("town.cgi", request);
-            MessageBoard.processResponseMessage(response);
+            const response = await PocketNetwork.post("town.cgi", request);
+            MessageBoard.processResponseMessage(response.html);
             await new TownBank(this.credential, this.townId).deposit();
         } else if (this.isCastleMode) {
             await new CastleBank(this.credential).withdraw(10);
@@ -1184,7 +1184,7 @@ class PetManager extends CommonWidget {
 
     private async _reloadRanch() {
         if (!this._ranchOpened) return;
-        this._ranchPage = await new CastleRanch(this.credential).enter();
+        this._ranchPage = await new CastleRanch(this.credential).open();
         this.lastRanchPage = this._ranchPage;
     }
 

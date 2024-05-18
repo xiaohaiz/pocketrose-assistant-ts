@@ -17,7 +17,7 @@ import _ from "lodash";
 import PersonalEquipmentManagementPage from "../core/equipment/PersonalEquipmentManagementPage";
 import GoldenCage from "../core/monster/GoldenCage";
 import {PocketPage} from "../pocket/PocketPage";
-import SetupLoader from "../core/config/SetupLoader";
+import SetupLoader from "../setup/SetupLoader";
 
 class SnapshotManager extends CommonWidget {
 
@@ -35,6 +35,7 @@ class SnapshotManager extends CommonWidget {
             "<table style='background-color:#888888;margin:auto;width:100%;border-width:0'>" +
             "<thead style='background-color:wheat;text-align:center'>" +
             "<th>快照</th>" +
+            "<th>标识</th>" +
             "<th>名字</th>" +
             "<th>分身</th>" +
             "<th>定型</th>" +
@@ -86,6 +87,10 @@ class SnapshotManager extends CommonWidget {
 
             html += "<td style='width:64px;height:64px'>";
             html += snapshot?.roleImageHTML ?? NpcLoader.getNpcImageHtml("U_041")!;
+            html += "</td>";
+
+            html += "<td style='color:navy;font-weight:bold'>";
+            html += snapshot?.name ?? "";
             html += "</td>";
 
             html += "<td>";
@@ -170,8 +175,15 @@ class SnapshotManager extends CommonWidget {
                     return;
                 }
             }
+            let name: string | null | undefined = prompt("为新快照命名（可选择取消，最大长度10）");
+            if (name !== null) {
+                name = _.trim(name);
+                name = _.escape(name);
+                if (name.length > 10) name = name.substring(0, 10);
+            }
+            if (name === null || name === "") name = undefined;
             PocketPage.disableStatelessElements();
-            this.createSnapshot(key).then(() => {
+            this.createSnapshot(key, name).then(() => {
                 PocketPage.enableStatelessElements();
             });
         });
@@ -183,8 +195,15 @@ class SnapshotManager extends CommonWidget {
                     return;
                 }
             }
+            let name: string | null | undefined = prompt("为新快照命名（可选择取消，最大长度10）");
+            if (name !== null) {
+                name = _.trim(name);
+                name = _.escape(name);
+                if (name.length > 10) name = name.substring(0, 10);
+            }
+            if (name === null || name === "") name = undefined;
             PocketPage.disableStatelessElements();
-            this.createSnapshot2(key).then(() => {
+            this.createSnapshot2(key, name).then(() => {
                 PocketPage.enableStatelessElements();
             });
         });
@@ -226,8 +245,9 @@ class SnapshotManager extends CommonWidget {
         this.feature.publishRefresh(message);
     }
 
-    private async createSnapshot(key: string) {
+    private async createSnapshot(key: string, name?: string) {
         const snapshot = new RoleSnapshot();
+        snapshot.name = name;
 
         const role = await new PersonalStatus(this.credential).load();
         snapshot.roleId = this.credential.id;
@@ -270,8 +290,9 @@ class SnapshotManager extends CommonWidget {
         await this.refresh(message);
     }
 
-    private async createSnapshot2(key: string) {
+    private async createSnapshot2(key: string, name?: string) {
         const snapshot = new RoleSnapshot();
+        snapshot.name = name;
 
         const role = await new PersonalStatus(this.credential).load();
         snapshot.roleId = this.credential.id;

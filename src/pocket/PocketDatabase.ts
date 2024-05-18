@@ -257,6 +257,15 @@ class PocketDatabase {
                         keyPath: "id", autoIncrement: false
                     });
                 }
+
+                // ------------------------------------------------------------
+                // PocketCacheObject
+                // ------------------------------------------------------------
+                if (!db.objectStoreNames.contains("PocketCacheObject")) {
+                    db.createObjectStore("PocketCacheObject", {
+                        keyPath: "id", autoIncrement: false
+                    });
+                }
             };
         });
     };

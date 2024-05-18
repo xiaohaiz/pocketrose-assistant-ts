@@ -1,16 +1,21 @@
-import StatefulPageProcessor from "../StatefulPageProcessor";
+import ButtonUtils from "../../util/ButtonUtils";
 import Credential from "../../util/Credential";
-import PageProcessorContext from "../PageProcessorContext";
+import KeyboardShortcutBuilder from "../../util/KeyboardShortcutBuilder";
 import LocationModeTown from "../../core/location/LocationModeTown";
+import MessageBoard from "../../util/MessageBoard";
+import MouseClickEventBuilder from "../../util/MouseClickEventBuilder";
+import PageProcessorContext from "../PageProcessorContext";
+import PageUtils from "../../util/PageUtils";
+import StatefulPageProcessor from "../StatefulPageProcessor";
+import TownWeaponHousePageParser from "../../core/store/TownWeaponHousePageParser";
+import {EquipmentManager} from "../../widget/EquipmentManager";
+import {PocketEvent} from "../../pocket/PocketEvent";
+import {PocketFormGenerator, PocketPage} from "../../pocket/PocketPage";
+import {PocketLogger} from "../../pocket/PocketLogger";
 import {RoleManager} from "../../widget/RoleManager";
 import {WeaponStoreManager} from "../../widget/WeaponStoreManager";
-import TownWeaponHousePageParser from "../../core/store/TownWeaponHousePageParser";
-import PageUtils from "../../util/PageUtils";
-import {PocketFormGenerator, PocketPage} from "../../pocket/PocketPage";
-import ButtonUtils from "../../util/ButtonUtils";
-import KeyboardShortcutBuilder from "../../util/KeyboardShortcutBuilder";
-import MessageBoard from "../../util/MessageBoard";
-import {EquipmentManager} from "../../widget/EquipmentManager";
+
+const logger = PocketLogger.getLogger("WEAPON");
 
 class TownWeaponHousePageProcessor extends StatefulPageProcessor {
 
@@ -29,19 +34,20 @@ class TownWeaponHousePageProcessor extends StatefulPageProcessor {
         this.weaponStoreManager.feature.onRefresh = async () => {
             await this.roleManager.reload();
             await this.roleManager.render();
-            await this.renderDiscountRate();
+            await this.render();
             await this.equipmentManager.reload();
             await this.equipmentManager.render();
             this.equipmentManager.renderRoleStatus(this.roleManager.role);
         }
         this.equipmentManager = new EquipmentManager(credential, this.location);
         this.equipmentManager.feature.enableRecoverItem = true;
+        this.equipmentManager.feature.enableGemTransfer = true;
         this.equipmentManager.feature.onRefresh = async () => {
             await this.roleManager.reload();
             await this.roleManager.render();
             await this.weaponStoreManager.reload();
             await this.weaponStoreManager.render();
-            await this.renderDiscountRate();
+            await this.render();
             this.equipmentManager.renderRoleStatus(this.roleManager.role);
         };
     }
@@ -54,10 +60,11 @@ class TownWeaponHousePageProcessor extends StatefulPageProcessor {
         await this.bindButtons();
         this.roleManager.bindButtons();
         this.weaponStoreManager.bindButtons();
+        this.equipmentManager.bindButtons();
         await this.roleManager.reload();
         await this.roleManager.render();
         await this.weaponStoreManager.render();
-        await this.renderDiscountRate();
+        await this.render();
         await this.equipmentManager.reload();
         await this.equipmentManager.render();
         this.equipmentManager.renderRoleStatus(this.roleManager.role);
@@ -65,7 +72,7 @@ class TownWeaponHousePageProcessor extends StatefulPageProcessor {
             .onKeyPressed("r", () => PageUtils.triggerClick("refreshButton"))
             .onEscapePressed(() => PageUtils.triggerClick("returnButton"))
             .withDefaultPredicate()
-            .bind();
+            .doBind();
     }
 
     private async generateHTML() {
@@ -90,6 +97,7 @@ class TownWeaponHousePageProcessor extends StatefulPageProcessor {
         table.find("> tbody:first > tr:eq(1) > td:first")
             .find("> table:first > tbody:first > tr:first")
             .find("> td:first")
+            .attr("id", "roleInformationManager")
             .css("width", "64")
             .css("height", "64")
             .css("white-space", "nowrap")
@@ -107,7 +115,10 @@ class TownWeaponHousePageProcessor extends StatefulPageProcessor {
             .attr("id", "messageBoard")
             .removeAttr("bgcolor")
             .css("background-color", "black")
-            .css("color", "white");
+            .css("color", "white")
+            .closest("tr")
+            .find("> td:last")
+            .attr("id", "messageBoardManager");
 
         table.find("> tbody:first > tr:eq(3) > td:first")
             .html(() => {
@@ -118,12 +129,11 @@ class TownWeaponHousePageProcessor extends StatefulPageProcessor {
     }
 
     private async resetMessageBoard() {
-        const message = "" +
-            "<span style='font-weight:bold;font-size:120%;color:wheat'>" +
-            "来都来了，要么买点啥，要么卖点啥，这是一种美德。本店当前的折扣率是：" +
-            "<span style='background-color:red;color:white' id='discountRate'></span>" +
-            "</span>";
-        MessageBoard.resetMessageBoard(message);
+        MessageBoard.initializeManager();
+        MessageBoard.initializeWelcomeMessage();
+        logger.info(
+            "本店当前的折扣率是：<span style='background-color:red;color:white' id='discountRate'></span>"
+        );
     }
 
     private async bindButtons() {
@@ -141,8 +151,24 @@ class TownWeaponHousePageProcessor extends StatefulPageProcessor {
             await this.resetMessageBoard();
             await this.refresh();
             PocketPage.enableStatelessElements();
-            MessageBoard.publishMessage("刷新操作完成。");
-        })
+            logger.info("刷新操作完成。");
+        });
+        const roleImageHandler = PocketEvent.newMouseClickHandler();
+        MouseClickEventBuilder.newInstance()
+            .onElementClicked("roleInformationManager", async () => {
+                await roleImageHandler.onMouseClicked();
+            })
+            .onElementClicked("messageBoardManager", async () => {
+                await this.resetMessageBoard();
+                await this.render();
+            })
+            .doBind();
+    }
+
+    private async render() {
+        $("#discountRate").html(() => {
+            return this.weaponStoreManager.weaponPage!.discount!.toFixed(2);
+        });
     }
 
     private async refresh() {
@@ -150,7 +176,7 @@ class TownWeaponHousePageProcessor extends StatefulPageProcessor {
         await this.roleManager.render();
         await this.weaponStoreManager.reload();
         await this.weaponStoreManager.render();
-        await this.renderDiscountRate();
+        await this.render();
         await this.equipmentManager.reload();
         await this.equipmentManager.render();
         this.equipmentManager.renderRoleStatus(this.roleManager.role);
@@ -162,11 +188,6 @@ class TownWeaponHousePageProcessor extends StatefulPageProcessor {
         await this.equipmentManager.dispose();
     }
 
-    private async renderDiscountRate() {
-        $("#discountRate").html(() => {
-            return this.weaponStoreManager.weaponPage!.discount!.toFixed(2);
-        });
-    }
 
 }
 

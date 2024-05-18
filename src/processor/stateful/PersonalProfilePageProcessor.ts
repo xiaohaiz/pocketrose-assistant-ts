@@ -1,33 +1,35 @@
-import StatefulPageProcessor from "../StatefulPageProcessor";
-import Credential from "../../util/Credential";
-import PageProcessorContext from "../PageProcessorContext";
-import PageUtils from "../../util/PageUtils";
-import KeyboardShortcutBuilder from "../../util/KeyboardShortcutBuilder";
-import MessageBoard from "../../util/MessageBoard";
-import NpcLoader from "../../core/role/NpcLoader";
-import Role from "../../core/role/Role";
-import _ from "lodash";
 import * as echarts from "echarts";
 import {EChartsOption} from "echarts";
+import BankAccountTrigger from "../../core/trigger/BankAccountTrigger";
+import BattleFieldTrigger from "../../core/trigger/BattleFieldTrigger";
 import ButtonUtils from "../../util/ButtonUtils";
-import {SpellManager} from "../../widget/SpellManager";
-import LocationModeTown from "../../core/location/LocationModeTown";
+import CastleInformation from "../../core/dashboard/CastleInformation";
+import Credential from "../../util/Credential";
+import KeyboardShortcutBuilder from "../../util/KeyboardShortcutBuilder";
 import LocationModeCastle from "../../core/location/LocationModeCastle";
-import {EquipmentManager} from "../../widget/EquipmentManager";
-import {PetManager} from "../../widget/PetManager";
+import LocationModeTown from "../../core/location/LocationModeTown";
+import MessageBoard from "../../util/MessageBoard";
+import MouseClickEventBuilder from "../../util/MouseClickEventBuilder";
+import NpcLoader from "../../core/role/NpcLoader";
+import PageProcessorContext from "../PageProcessorContext";
+import PageUtils from "../../util/PageUtils";
+import PersonalEquipmentManagement from "../../core/equipment/PersonalEquipmentManagement";
 import PersonalEquipmentManagementPage from "../../core/equipment/PersonalEquipmentManagementPage";
+import PersonalPetManagement from "../../core/monster/PersonalPetManagement";
+import PetMapStatusTrigger from "../../core/trigger/PetMapStatusTrigger";
+import PetStatusTrigger from "../../core/trigger/PetStatusTrigger";
+import Role from "../../core/role/Role";
+import StatefulPageProcessor from "../StatefulPageProcessor";
+import _ from "lodash";
+import {BankManager} from "../../widget/BankManager";
+import {EquipmentManager} from "../../widget/EquipmentManager";
+import {EquipmentStatusTrigger} from "../../core/trigger/EquipmentStatusTrigger";
 import {MirrorManager} from "../../widget/MirrorManager";
+import {PetManager} from "../../widget/PetManager";
 import {PocketFormGenerator, PocketPage} from "../../pocket/PocketPage";
 import {RoleManager} from "../../widget/RoleManager";
-import {BankManager} from "../../widget/BankManager";
-import BattleFieldTrigger from "../../core/trigger/BattleFieldTrigger";
 import {SnapshotManager} from "../../widget/SnapshotManager";
-import {EquipmentStatusTrigger} from "../../core/trigger/EquipmentStatusTrigger";
-import PersonalEquipmentManagement from "../../core/equipment/PersonalEquipmentManagement";
-import BankAccountTrigger from "../../core/trigger/BankAccountTrigger";
-import PetMapStatusTrigger from "../../core/trigger/PetMapStatusTrigger";
-import PersonalPetManagement from "../../core/monster/PersonalPetManagement";
-import PetStatusTrigger from "../../core/trigger/PetStatusTrigger";
+import {SpellManager} from "../../widget/SpellManager";
 
 class PersonalProfilePageProcessor extends StatefulPageProcessor {
 
@@ -67,8 +69,6 @@ class PersonalProfilePageProcessor extends StatefulPageProcessor {
         this.equipmentManager.feature.enableSpaceTriggerOnDispose = true;
         this.equipmentManager.feature.enableStatusTriggerOnDispose = true;
         this.equipmentManager.feature.enableUsingTriggerOnDispose = true;
-        this.equipmentManager.feature.onMessage = s => MessageBoard.publishMessage(s);
-        this.equipmentManager.feature.onWarning = s => MessageBoard.publishWarning(s);
         this.equipmentManager.feature.onRefresh = () => {
             this.equipmentManager.renderRoleStatus(this.roleManager.role);
             // Will trigger pet manager reloading, for golden cage index may changed.
@@ -119,6 +119,7 @@ class PersonalProfilePageProcessor extends StatefulPageProcessor {
 
     protected async doProcess(): Promise<void> {
         await this.generateHTML();
+        this.resetMessageBoard();
         await this.bindButtons();
         await this.roleManager.reload();
         await this.renderRole();
@@ -145,7 +146,7 @@ class PersonalProfilePageProcessor extends StatefulPageProcessor {
             .onKeyPressed("z", () => PageUtils.triggerClick("careerButton"))
             .onEscapePressed(() => PageUtils.triggerClick("returnButton"))
             .withDefaultPredicate()
-            .bind();
+            .doBind();
     }
 
     private async generateHTML() {
@@ -226,8 +227,6 @@ class PersonalProfilePageProcessor extends StatefulPageProcessor {
         $("#messageBoard")
             .css("background-color", "black")
             .css("color", "wheat");
-        this._resetMessageBoard();
-
         await this._createRolePage();
     }
 
@@ -243,7 +242,7 @@ class PersonalProfilePageProcessor extends StatefulPageProcessor {
         $("#refreshButton").on("click", () => {
             PocketPage.scrollIntoTitle();
             PocketPage.disableStatelessElements();
-            this._resetMessageBoard();
+            this.resetMessageBoard();
             this.refresh().then(() => {
                 MessageBoard.publishMessage("个人面板刷新完成。");
                 PocketPage.enableStatelessElements();
@@ -305,6 +304,16 @@ class PersonalProfilePageProcessor extends StatefulPageProcessor {
         this.petManager.bindButtons();
         this.mirrorManager?.bindButtons();
         this.snapshotManager?.bindButtons();
+
+        new MouseClickEventBuilder()
+            .bind($("#messageBoardManager"), () => {
+                this.resetMessageBoard();
+            });
+    }
+
+    private resetMessageBoard() {
+        MessageBoard.initializeManager();
+        MessageBoard.initializeWelcomeMessage();
     }
 
     private async refresh() {
@@ -343,10 +352,6 @@ class PersonalProfilePageProcessor extends StatefulPageProcessor {
         }
     }
 
-    private _resetMessageBoard() {
-        const message: string = "<b style='font-size:120%'>见贤思齐焉，见不贤而内自省也。</b>";
-        MessageBoard.resetMessageBoard(message);
-    }
 
     private async _createRolePage() {
         let html = "";
@@ -528,13 +533,23 @@ class PersonalProfilePageProcessor extends StatefulPageProcessor {
     }
 
     private async _updateStatistics() {
-        const equipmentPage = await new PersonalEquipmentManagement(this.credential, this.townId).open();
-        const petPage = await new PersonalPetManagement(this.credential, this.townId).open();
+        const equipmentPage = new PersonalEquipmentManagement(this.credential, this.townId).open();
+        const petPage = new PersonalPetManagement(this.credential, this.townId).open();
+        const castlePage = new CastleInformation().openWithCache();
         await Promise.all([
-            new BankAccountTrigger(this.credential).triggerUpdate(),
-            new EquipmentStatusTrigger(this.credential).withEquipmentPage(equipmentPage).triggerUpdate(),
-            new PetMapStatusTrigger(this.credential).triggerUpdate(),
-            new PetStatusTrigger(this.credential).withPetPage(petPage).withEquipmentPage(equipmentPage).triggerUpdate(),
+            new BankAccountTrigger(this.credential)
+                .triggerUpdate(),
+            new EquipmentStatusTrigger(this.credential)
+                .withEquipmentPage(await equipmentPage)
+                .withCastlePage(await castlePage)
+                .triggerUpdate(),
+            new PetMapStatusTrigger(this.credential)
+                .triggerUpdate(),
+            new PetStatusTrigger(this.credential)
+                .withPetPage(await petPage)
+                .withEquipmentPage(await equipmentPage)
+                .withCastlePage(await castlePage)
+                .triggerUpdate(),
         ]);
     }
 }

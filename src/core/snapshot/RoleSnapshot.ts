@@ -13,6 +13,7 @@ const ROLE_SNAPSHOT_KEYS: string[] = [
 
 class RoleSnapshot {
 
+    name?: string;              // 快照名
     roleId?: string;
     roleName?: string;
     roleImage?: string;
@@ -42,6 +43,7 @@ class RoleSnapshot {
 
     asDocument() {
         const document: any = {};
+        (this.name) && (document.name = this.name);
         (this.roleId) && (document.roleId = this.roleId);
         (this.roleName) && (document.roleName = this.roleName);
         (this.roleImage) && (document.roleImage = this.roleImage);
@@ -145,6 +147,7 @@ class RoleSnapshotLocalStorage {
         if (s === "") return null;
         const document = JSON.parse(s);
         const snapshot = new RoleSnapshot();
+        (document.name) && (snapshot.name = document.name);
         (document.roleId) && (snapshot.roleId = document.roleId);
         (document.roleName) && (snapshot.roleName = document.roleName);
         (document.roleImage) && (snapshot.roleImage = document.roleImage);

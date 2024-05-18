@@ -20,6 +20,7 @@ class BattlePage {
     petLearnSpell?: boolean;        // 宠物是否学会新技能
     petLove?: number;               // 宠物亲密度
     petEarnExperience?: boolean;    // 宠物是否获得经验值
+    petBeforeLevel?: number;        // 宠物学习技能时，尝试记录缓存中宠物的等级，正常应该尾数为9
 
     roleImageHtml?: string;
     roleNameHtml?: string;

@@ -6,6 +6,10 @@ class OperationMessage {
 
     doRefresh?: boolean;
 
+    static newInstance(success: boolean): OperationMessage {
+        return success ? OperationMessage.success() : OperationMessage.failure();
+    }
+
     static success(): OperationMessage {
         const message = new OperationMessage();
         message.success = true;

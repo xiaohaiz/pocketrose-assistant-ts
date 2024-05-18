@@ -1,4 +1,4 @@
-import SetupLoader from "../config/SetupLoader";
+import SetupLoader from "../../setup/SetupLoader";
 import BattlePage from "./BattlePage";
 
 class BattleRecommendation {

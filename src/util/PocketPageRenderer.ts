@@ -36,19 +36,6 @@ class PocketPageRenderer {
         return html;
     }
 
-    static createScanIntervalSelection(id?: string) {
-        let idForUse = "_pocket_scanInterval";
-        if (id !== undefined) idForUse = id;
-        let html = "";
-        html += "<select id='" + idForUse + "'>";
-        html += "<option value='1000' style='color:red'>扫描间隔1秒</option>";
-        html += "<option value='2000' style='color:blue' selected>扫描间隔2秒</option>";
-        html += "<option value='3000' style='color:blue'>扫描间隔3秒</option>";
-        html += "<option value='4000' style='color:green'>扫描间隔4秒</option>";
-        html += "<option value='5000' style='color:green'>扫描间隔5秒</option>";
-        html += "</select>";
-        return html;
-    }
 }
 
 export = PocketPageRenderer;

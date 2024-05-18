@@ -11,7 +11,7 @@ import TeamMemberLoader from "../core/team/TeamMemberLoader";
 import {PersonalStatus} from "../core/role/PersonalStatus";
 import TeamMember from "../core/team/TeamMember";
 import MonsterProfileLoader from "../core/monster/MonsterProfileLoader";
-import LocalSettingManager from "../core/config/LocalSettingManager";
+import LocalSettingManager from "../setup/LocalSettingManager";
 import PageUtils from "../util/PageUtils";
 import * as echarts from "echarts";
 import {EChartsOption} from "echarts";

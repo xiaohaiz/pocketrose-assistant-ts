@@ -1,8 +1,11 @@
 import Credential from "../../util/Credential";
 import MessageBoard from "../../util/MessageBoard";
-import NetworkUtils from "../../util/NetworkUtils";
 import TownGemMeltHousePage from "./TownGemMeltHousePage";
+import {PocketLogger} from "../../pocket/PocketLogger";
+import {PocketNetwork} from "../../pocket/PocketNetwork";
 import {TownGemMeltHousePageParser} from "./TownGemMeltHousePageParser";
+
+const logger = PocketLogger.getLogger("GEM");
 
 class TownGemMeltHouse {
 
@@ -15,37 +18,24 @@ class TownGemMeltHouse {
     }
 
     async open(): Promise<TownGemMeltHousePage> {
-        const action = () => {
-            return new Promise<TownGemMeltHousePage>(resolve => {
-                const request = this.#credential.asRequestMap();
-                request.set("con_str", "50");
-                request.set("mode", "BAOSHI_DELSHOP");
-                if (this.#townId !== undefined) {
-                    request.set("town", this.#townId);
-                }
-                NetworkUtils.post("town.cgi", request).then(html => {
-                    const page = TownGemMeltHousePageParser.parse(html);
-                    resolve(page);
-                });
-            });
-        };
-        return await action();
+        const request = this.#credential.asRequest();
+        request.set("con_str", "50");
+        request.set("mode", "BAOSHI_DELSHOP");
+        if (this.#townId) request.set("town", this.#townId);
+        const response = await PocketNetwork.post("town.cgi", request);
+        const page = TownGemMeltHousePageParser.parse(response.html);
+        response.touch();
+        logger.debug("Gem melt page loaded.", response.durationInMillis);
+        return page;
     }
 
-    async melt(index: number): Promise<void> {
-        const action = () => {
-            return new Promise<void>(resolve => {
-                const request = this.#credential.asRequestMap();
-                request.set("select", index.toString());
-                request.set("azukeru", "0");
-                request.set("mode", "BAOSHI_DELETE");
-                NetworkUtils.post("town.cgi", request).then(html => {
-                    MessageBoard.processResponseMessage(html);
-                    resolve();
-                });
-            });
-        };
-        return await action();
+    async melt(index: number) {
+        const request = this.#credential.asRequest();
+        request.set("select", index.toString());
+        request.set("azukeru", "0");
+        request.set("mode", "BAOSHI_DELETE");
+        const response = await PocketNetwork.post("town.cgi", request);
+        MessageBoard.processResponseMessage(response.html);
     }
 }
 

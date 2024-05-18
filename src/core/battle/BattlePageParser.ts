@@ -1,12 +1,20 @@
-import _ from "lodash";
+import _, {parseInt} from "lodash";
 import StringUtils from "../../util/StringUtils";
-import SetupLoader from "../config/SetupLoader";
+import SetupLoader from "../../setup/SetupLoader";
 import BattleDeclarationManager from "./BattleDeclarationManager";
 import BattlePage from "./BattlePage";
+import Credential from "../../util/Credential";
+import {RoleStatusManager} from "../role/RoleStatus";
 
 class BattlePageParser {
 
-    static async parse(html: string): Promise<BattlePage> {
+    private readonly credential: Credential;
+
+    constructor(credential: Credential) {
+        this.credential = credential;
+    }
+
+    async parse(html: string): Promise<BattlePage> {
         const page = new BattlePage();
 
         let table = $(html)
@@ -248,6 +256,25 @@ class BattlePageParser {
         page.eggBorn = html.includes("孵化成功");
         page.monsterTask = html.includes("完成杀怪任务");
         page.petLearnSpell = html.includes("遗忘了技能") || html.includes("学会了新技能");
+
+        // 宠物升级了，但是没有学会新技能，有两种情况：
+        // 1. 正常的非整10级
+        // 2. 整10级，但是没有设置学习技能
+        if (page.petUpgrade && !page.petLearnSpell) {
+            const currentPetLevel = (await new RoleStatusManager(this.credential).load())?.readPetLevel ?? -1;
+            if (currentPetLevel >= 0 && (currentPetLevel % 10 === 9)) {
+                // 如果缓存有数据时，这里宠物等级是升级前的等级，因此需要判断尾数9
+                // 满足条件时也可视为宠物学习了新技能
+                page.petLearnSpell = true;
+            }
+        }
+        // 宠物学习新技能时（到达技能等级），尝试记录缓存中当前的宠物等级（正常情况应该是尾数9）
+        if (page.petLearnSpell) {
+            const currentPetLevel = (await new RoleStatusManager(this.credential).load())?.readPetLevel ?? -1;
+            if (currentPetLevel >= 0) {
+                page.petBeforeLevel = currentPetLevel;
+            }
+        }
 
         // 解析宠物的亲密度
         $(html).find("font:contains('亲密度成为')")

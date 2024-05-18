@@ -5,10 +5,12 @@ import LocationModeTown from "../core/location/LocationModeTown";
 import PocketPageRenderer from "../util/PocketPageRenderer";
 import _ from "lodash";
 import TeamMemberLoader from "../core/team/TeamMemberLoader";
-import MessageBoard from "../util/MessageBoard";
 import TownEquipmentExpressHouse from "../core/equipment/TownEquipmentExpressHouse";
 import CastleEquipmentExpressHouse from "../core/equipment/CastleEquipmentExpressHouse";
 import ObjectID from "bson-objectid";
+import {PocketLogger} from "../pocket/PocketLogger";
+
+const logger = PocketLogger.getLogger("PEOPLE");
 
 class PeopleFinder extends CommonWidget {
 
@@ -77,18 +79,22 @@ class PeopleFinder extends CommonWidget {
             .on("click", () => {
                 const s = $("#" + this.textId_target).val();
                 if (s === undefined || (s as string).trim() === "") {
-                    MessageBoard.publishWarning("没有正确输入人名！");
+                    logger.warn("没有正确输入人名！");
                     return;
                 }
                 const searchName = (s as string).trim();
                 if (this.isTownMode) {
                     new TownEquipmentExpressHouse(this.credential)
                         .search(searchName)
-                        .then(html => this._processSearchResult(searchName, html));
+                        .then(html => {
+                            if (html) this._processSearchResult(searchName, html);
+                        });
                 } else if (this.isCastleMode) {
                     new CastleEquipmentExpressHouse(this.credential)
                         .search(searchName)
-                        .then(html => this._processSearchResult(searchName, html));
+                        .then(html => {
+                            if (html) this._processSearchResult(searchName, html);
+                        });
                 }
             });
     }
