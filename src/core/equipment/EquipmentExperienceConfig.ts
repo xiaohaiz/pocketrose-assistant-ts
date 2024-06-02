@@ -6,12 +6,6 @@ class EquipmentExperienceConfig {
     armor?: boolean;
     accessory?: boolean;
 
-    get configured() {
-        return (this.weapon !== undefined && this.weapon)
-            || (this.armor !== undefined && this.armor)
-            || (this.accessory !== undefined && this.accessory);
-    }
-
     asDocument(): {} {
         const document = {};
         // @ts-ignore

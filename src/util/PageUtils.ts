@@ -45,30 +45,18 @@ class PageUtils {
         return new Credential(id, pass);
     }
 
-    static generateProgressBarHTML(ratio: number) {
+    static generateProgressBarHTML(ratio: number, width?: number) {
+        const px = (width === undefined || width < 10) ? 50 : width;
         if (ratio === 0) {
-            return "<img src='" + Constants.POCKET_DOMAIN + "/image/bg/bar2.gif'  height='7' width='50' alt=''>";
+            return "<img src='" + Constants.POCKET_DOMAIN + "/image/bg/bar2.gif'  height='7' width='" + px + "' alt=''>";
         }
         if (ratio === 1) {
-            return "<img src='" + Constants.POCKET_DOMAIN + "/image/bg/bar1.gif'  height='7' width='50' alt=''>";
+            return "<img src='" + Constants.POCKET_DOMAIN + "/image/bg/bar1.gif'  height='7' width='" + px + "' alt=''>";
         }
-        const w1 = Math.min(49, Math.ceil(50 * ratio));
-        const w2 = 50 - w1;
+        const w1 = Math.min(px - 1, Math.ceil(px * ratio));
+        const w2 = px - w1;
         return "<img src='" + Constants.POCKET_DOMAIN + "/image/bg/bar1.gif'  height='7' width='" + w1 + "' alt=''>" +
             "<img src='" + Constants.POCKET_DOMAIN + "/image/bg/bar2.gif'  height='7' width='" + w2 + "' alt=''>";
-    }
-
-    static generateProgressBarWithPercentage(ratio: number) {
-        if (ratio === 0) {
-            return "<img src='" + Constants.POCKET_DOMAIN + "/image/bg/bar2.gif'  height='7' width='50' alt=''>&nbsp;0%";
-        }
-        if (ratio === 1) {
-            return "<img src='" + Constants.POCKET_DOMAIN + "/image/bg/bar1.gif'  height='7' width='50' alt=''>&nbsp;100%";
-        }
-        const w1 = Math.min(49, Math.ceil(50 * ratio));
-        const w2 = 50 - w1;
-        return "<img src='" + Constants.POCKET_DOMAIN + "/image/bg/bar1.gif'  height='7' width='" + w1 + "' alt=''>" +
-            "<img src='" + Constants.POCKET_DOMAIN + "/image/bg/bar2.gif'  height='7' width='" + w2 + "' alt=''>&nbsp;" + (ratio * 100).toFixed(2) + "%";
     }
 
     static findFirstRoleImageHtml() {

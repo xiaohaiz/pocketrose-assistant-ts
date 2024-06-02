@@ -15,6 +15,8 @@ import {MirrorManager} from "../../widget/MirrorManager";
 import {PocketFormGenerator, PocketPage} from "../../pocket/PocketPage";
 import {RoleManager} from "../../widget/RoleManager";
 import {RoleStatusManager} from "../../core/role/RoleStatus";
+import {PocketEvent} from "../../pocket/PocketEvent";
+import MouseClickEventBuilder from "../../util/MouseClickEventBuilder";
 
 class PersonalMirrorPageProcessor extends StatefulPageProcessor {
 
@@ -41,7 +43,6 @@ class PersonalMirrorPageProcessor extends StatefulPageProcessor {
 
         this.equipmentManager = new EquipmentManager(credential, this.location);
         this.equipmentManager.feature.enableStatusTriggerOnDispose = true;
-        this.equipmentManager.feature.enableGrowthTriggerOnDispose = true;
         this.equipmentManager.feature.enableSpaceTriggerOnDispose = true;
         this.equipmentManager.feature.enableStatusTriggerOnDispose = true;
         this.equipmentManager.feature.enableUsingTriggerOnDispose = true;
@@ -65,6 +66,7 @@ class PersonalMirrorPageProcessor extends StatefulPageProcessor {
         this.mirrorManager.mirrorPage = PersonalMirrorPageParser.parsePage(PageUtils.currentPageHtml());
 
         await this.generateHTML();
+        await this.resetMessageBoard();
         await this.bindButtons();
         this.roleManager.bindButtons();
         this.mirrorManager.bindButtons();
@@ -108,7 +110,10 @@ class PersonalMirrorPageProcessor extends StatefulPageProcessor {
         table.find("> tbody:first")
             .find("> tr:eq(1) > td:first")
             .find("> table:first > tbody:first")
-            .find("> tr:first > td:last")
+            .find("> tr:first > td:first")
+            .attr("id", "roleInformationManager")
+            .closest("tr")
+            .find("> td:eq(3)")
             .html(() => {
                 return this.roleManager.generateHTML();
             });
@@ -121,7 +126,10 @@ class PersonalMirrorPageProcessor extends StatefulPageProcessor {
             .find("> tr:first")
             .find("> td:first")
             .attr("id", "messageBoard")
-            .css("color", "wheat");
+            .css("color", "white")
+            .closest("tr")
+            .find("> td:eq(1)")
+            .attr("id", "messageBoardManager");
 
         const mirrorPanel = table.find("> tbody:first")
             .find("> tr:eq(3)")
@@ -174,6 +182,11 @@ class PersonalMirrorPageProcessor extends StatefulPageProcessor {
         }
     }
 
+    private async resetMessageBoard() {
+        MessageBoard.initializeManager();
+        MessageBoard.initializeWelcomeMessage();
+    }
+
     private async bindButtons() {
         $("#_pocket_page_extension_0").html(() => {
             return new PocketFormGenerator(this.credential, this.location).generateReturnFormHTML();
@@ -184,26 +197,30 @@ class PersonalMirrorPageProcessor extends StatefulPageProcessor {
                 PageUtils.triggerClick("_pocket_ReturnSubmit");
             });
         });
-        $("#refreshButton").on("click", () => {
+        $("#refreshButton").on("click", async () => {
             PocketPage.disableStatelessElements();
             PocketPage.scrollIntoTitle();
-            this.resetMessageBoard();
-            this.refresh().then(() => {
-                PocketPage.enableStatelessElements();
-                MessageBoard.publishMessage("刷新完成。");
-            });
+            await this.resetMessageBoard();
+            await this.refresh();
+            PocketPage.enableStatelessElements();
+            MessageBoard.publishMessage("分身管理页面刷新完成。");
         });
         $("#_pocket_ObtainMirrorButton").on("click", async () => {
             const statusManager = new RoleStatusManager(this.credential);
             await statusManager.unsetMirror();
             PageUtils.triggerClick("_pocket_ObtainMirrorSubmit");
         });
+        const roleImageHandler = PocketEvent.newMouseClickHandler();
+        MouseClickEventBuilder.newInstance()
+            .onElementClicked("roleInformationManager", async () => {
+                await roleImageHandler.onMouseClicked();
+            })
+            .onElementClicked("messageBoardManager", async () => {
+                await this.resetMessageBoard();
+            })
+            .doBind();
     }
 
-    private resetMessageBoard() {
-        const welcomeMessage = this.mirrorManager.mirrorPage!.welcomeMessage!;
-        MessageBoard.resetMessageBoard(welcomeMessage);
-    }
 
     private async refresh() {
         await this.roleManager.reload();

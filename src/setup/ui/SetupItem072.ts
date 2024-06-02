@@ -19,6 +19,10 @@ class SetupItem072 extends AbstractBooleanValueSetupItem {
         return "隐藏改名的历史";
     }
 
+    protected doGetDescription(): string {
+        return "个人状态中隐藏掉那个乱七八糟的改名历史。";
+    }
+
 }
 
 export {SetupItem072};

@@ -19,6 +19,10 @@ class SetupItem028 extends AbstractBooleanValueSetupItem {
         return "隐藏出城和退出";
     }
 
+    protected doGetDescription(): string {
+        return "城市界面不显示出城和退出按钮，在驿站可出城。";
+    }
+
 }
 
 export {SetupItem028};

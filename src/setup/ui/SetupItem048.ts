@@ -19,6 +19,9 @@ class SetupItem048 extends AbstractBooleanValueSetupItem {
         return "秦汉二十等爵位";
     }
 
+    protected doGetDescription(): string {
+        return "贡献等级新的表示体系。";
+    }
 }
 
 

@@ -208,8 +208,7 @@ class PowerGemFuseReportGenerator {
         const allEquipment = new PowerGemFuseReport();
         allEquipment.roleName = "全部装备";
 
-        const storage = GemFuseLogStorage.getInstance();
-        (await storage.loads())
+        (await GemFuseLogStorage.loads())
             .filter(it => it.gem === "威力")
             .forEach(it => {
                 const roleId = it.roleId!;

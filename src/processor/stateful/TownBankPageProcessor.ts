@@ -120,10 +120,6 @@ class TownBankPageProcessor extends StatefulPageProcessor {
                 await this.resetMessageBoard();
             })
             .doBind();
-        new MouseClickEventBuilder()
-            .bind($("#messageBoardManager"), async () => {
-                await this.resetMessageBoard();
-            });
     }
 
     private async refresh() {

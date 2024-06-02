@@ -92,13 +92,11 @@ class WeaponStoreManager extends CommonWidget {
         html += "</tr>";
         html += "</tbody>";
         html += "</table>";
-        return "" +
-            "<table style='background-color:#888888;margin:auto;width:100%;border-width:0'>" +
+        return "<table style='background-color:#888888;margin:auto;width:100%;border-width:0'>" +
             "<tbody>" +
             "<tr>" +
-            "<th style='writing-mode:vertical-rl;text-orientation:mixed;" +
-            "background-color:navy;color:white;font-size:120%;text-align:left'>" +
-            "武 器 商 店" +
+            "<th style='background-color:navy;color:white;font-size:120%;vertical-align:top'>" +
+            "武<br>器<br>商<br>店" +
             "</th>" +
             "<td style='border-spacing:0;width:100%'>" +
             html +

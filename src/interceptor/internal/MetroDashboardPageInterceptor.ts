@@ -1,6 +1,8 @@
 import RoleStateMachineManager from "../../core/state/RoleStateMachineManager";
-import MetroDashboardPageProcessor from "../../processor/stateless/MetroDashboardPageProcessor";
 import PageInterceptor from "../PageInterceptor";
+import PageProcessorContext from "../../processor/PageProcessorContext";
+import Credential from "../../util/Credential";
+import {MetroDashboardPageProcessor} from "../../processor/stateful/MetroDashboardPageProcessor";
 
 class MetroDashboardPageInterceptor implements PageInterceptor {
 
@@ -12,10 +14,13 @@ class MetroDashboardPageInterceptor implements PageInterceptor {
     }
 
     intercept(): void {
+        const credential = Credential.newInstance();
+        if (!credential) return;
         RoleStateMachineManager.create()
             .inMetro()
             .then(() => {
-                new MetroDashboardPageProcessor().process();
+                const context = PageProcessorContext.whenInMetro();
+                new MetroDashboardPageProcessor(credential, context).process();
             });
     }
 

@@ -113,13 +113,11 @@ class SetupLoader {
             return BattleFieldThreshold.defaultInstance();
         }
         const value = JSON.parse(s);
-        if (!value.a || !value.b || !value.c) {
-            return BattleFieldThreshold.defaultInstance();
-        }
-        const config = new BattleFieldThreshold();
-        config.a = _.parseInt(value.a);
-        config.b = _.parseInt(value.b);
-        config.c = _.parseInt(value.c);
+        const config = BattleFieldThreshold.defaultInstance();
+        if (value.a) config.a = _.parseInt(value.a);
+        if (value.b) config.b = _.parseInt(value.b);
+        if (value.c) config.c = _.parseInt(value.c);
+        if (value.forceSenior) config.forceSenior = value.forceSenior;
         return config;
     }
 
@@ -154,10 +152,6 @@ class SetupLoader {
         return partner;
     }
 
-    static isAutoChangePointToTown() {
-        return SetupStorage.readBoolean("_pa_069");
-    }
-
     static loadMirrorCareerFixedConfig(id: string): {} {
         const s = StorageUtils.getString("_pa_070_" + id);
         if (s === "") {
@@ -173,10 +167,6 @@ class SetupLoader {
 
     static isRenameHistoriesHidden(): boolean {
         return SetupStorage.readBoolean("_pa_072");
-    }
-
-    static isAutoEquipmentExperience() {
-        return SetupStorage.readBoolean("_pa_073");
     }
 
     static isTraditionalBattleModeEnabled() {
@@ -207,29 +197,34 @@ class SetupLoader {
         return SetupStorage.readBoolean("_pa_080");
     }
 
-    static isRemindTownRevenueCollectableEnabled() {
-        return SetupStorage.readBoolean("_pa_081");
-    }
-
     static isBattleAdditionalNotificationLeftPanelEnabled() {
         return SetupStorage.readBoolean("_pa_082");
-    }
-
-    static isProhibitSellingNonEmptyCastleEnabled() {
-        return SetupStorage.readBoolean("_pa_085");
     }
 
     static isAutoRefreshWhenBattleSessionExpiredEnabled() {
         return SetupStorage.readBoolean("_pa_086");
     }
 
-    static isAutoRefreshTimeLimitationEnabled() {
-        return SetupStorage.readBoolean("_pa_087");
+    static isConfirmAutoRefreshExpiredSessionRiskEnabled() {
+        return SetupStorage.readBoolean("_pa_091");
     }
 
-    static isAutoTriggerPersonalChampionEnabled() {
-        return SetupStorage.readBoolean("_pa_088");
+    static isAutoSellBattleTrashEnabled() {
+        return SetupStorage.readBoolean("_pa_094");
     }
+
+    static isAutoCollectTownRevenueEnabled() {
+        return SetupStorage.readBoolean("_pa_098");
+    }
+
+    static getLowContributionJudgementStandard(): number {
+        return StorageUtils.getFloat("_pa_099", 5000);
+    }
+
+    static isElegantChangeAccessoriesEnabled() {
+        return SetupStorage.readBoolean("_pa_100");
+    }
+
 }
 
 export = SetupLoader;

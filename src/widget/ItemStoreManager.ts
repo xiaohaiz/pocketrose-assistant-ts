@@ -90,13 +90,11 @@ class ItemStoreManager extends CommonWidget {
         html += "</tr>";
         html += "</tbody>";
         html += "</table>";
-        return "" +
-            "<table style='background-color:#888888;margin:auto;width:100%;border-width:0'>" +
+        return "<table style='background-color:#888888;margin:auto;width:100%;border-width:0'>" +
             "<tbody>" +
             "<tr>" +
-            "<th style='writing-mode:vertical-rl;text-orientation:mixed;" +
-            "background-color:navy;color:white;font-size:120%;text-align:left'>" +
-            "物 品 商 店" +
+            "<th style='background-color:navy;color:white;font-size:120%;vertical-align:top'>" +
+            "物<br>品<br>商<br>店" +
             "</th>" +
             "<td style='border-spacing:0;width:100%'>" +
             html +
@@ -231,7 +229,7 @@ class ItemStoreManager extends CommonWidget {
     }
 
     private async _autoSellDragonBall() {
-        const dragonBall = this.itemPage!.findFirstSellableDragonBall();
+        const dragonBall = this.itemPage!.findLastSellableDragonBall();
         if (dragonBall === null) return;
         const discount = this.itemPage!.discount!;
         await new TownItemHouse(this.credential, this.townId!).sell(dragonBall.index!, discount);
@@ -241,7 +239,7 @@ class ItemStoreManager extends CommonWidget {
     }
 
     private async _autoSellRecoverLotion() {
-        const lotion = this.itemPage!.findFirstRecoverLotion();
+        const lotion = this.itemPage!.findLastSellableRecoverLotion();
         if (lotion === null) return;
         const discount = this.itemPage!.discount!;
         await new TownItemHouse(this.credential, this.townId!).sell(lotion.index!, discount);

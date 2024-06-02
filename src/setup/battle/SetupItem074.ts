@@ -19,6 +19,9 @@ class SetupItem074 extends AbstractBooleanValueSetupItem {
         return "传统的战斗模式";
     }
 
+    protected doGetDescription(): string {
+        return "传统的页面跳转型战斗模式。";
+    }
 }
 
 export {SetupItem074};

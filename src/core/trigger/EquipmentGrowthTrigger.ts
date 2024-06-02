@@ -21,8 +21,6 @@ class EquipmentGrowthTrigger {
         this.#credential = credential;
     }
 
-    fullAutoSet?: boolean;
-
     #equipmentPage?: PersonalEquipmentManagementPage;
 
     get equipmentPage(): PersonalEquipmentManagementPage | undefined {
@@ -41,130 +39,48 @@ class EquipmentGrowthTrigger {
     }
 
     /**
-     * equipmentPage is optional
+     * 使用当前装备页面的状态来更新练装备经验的记录。
      */
-    async triggerUpdate() {
-        if (SetupLoader.isAutoEquipmentExperience()) {
-            await this.#initializeEquipmentPage();
-            const usingWeapon = this.#equipmentPage!.usingWeapon;
-            if (usingWeapon) {
-                const ratio = usingWeapon.fullExperienceRatio;
-                if (ratio >= 0 && ratio < 1) {
-                    const config = SetupLoader.loadEquipmentExperienceConfig(this.#credential.id);
-                    if (config.weapon === undefined || !config.weapon) {
-                        config.weapon = true;
-                        EquipmentExperienceConfig.writeConfig(this.#credential.id, config);
-                    }
-                } else if (ratio < 0 || (ratio === 1 && !!this.fullAutoSet)) {
-                    const config = SetupLoader.loadEquipmentExperienceConfig(this.#credential.id);
-                    if (!!config.weapon) {
-                        config.weapon = false;
-                        EquipmentExperienceConfig.writeConfig(this.#credential.id, config);
-                    }
-                }
-            }
-            const usingArmor = this.#equipmentPage!.usingArmor;
-            if (usingArmor) {
-                const ratio = usingArmor.fullExperienceRatio;
-                if (ratio >= 0 && ratio < 1) {
-                    const config = SetupLoader.loadEquipmentExperienceConfig(this.#credential.id);
-                    if (config.armor === undefined || !config.armor) {
-                        config.armor = true;
-                        EquipmentExperienceConfig.writeConfig(this.#credential.id, config);
-                    }
-                } else if (ratio < 0 || (ratio === 1 && !!this.fullAutoSet)) {
-                    const config = SetupLoader.loadEquipmentExperienceConfig(this.#credential.id);
-                    if (!!config.armor) {
-                        config.armor = false;
-                        EquipmentExperienceConfig.writeConfig(this.#credential.id, config);
-                    }
-                }
-            }
-            const usingAccessory = this.#equipmentPage!.usingAccessory;
-            if (usingAccessory) {
-                const ratio = usingAccessory.fullExperienceRatio;
-                if (ratio >= 0 && ratio < 1) {
-                    const config = SetupLoader.loadEquipmentExperienceConfig(this.#credential.id);
-                    if (config.accessory === undefined || !config.accessory) {
-                        config.accessory = true;
-                        EquipmentExperienceConfig.writeConfig(this.#credential.id, config);
-                    }
-                } else if (ratio < 0 || (ratio === 1 && !!this.fullAutoSet)) {
-                    const config = SetupLoader.loadEquipmentExperienceConfig(this.#credential.id);
-                    if (!!config.accessory) {
-                        config.accessory = false;
-                        EquipmentExperienceConfig.writeConfig(this.#credential.id, config);
-                    }
-                }
-            }
-        }
+    async triggerUpdateExperienceConfig() {
+        await this.#initializeEquipmentPage();
+
+        // 更新练装备的状态位
+        const config = new EquipmentExperienceConfig();
+        config.weapon = (this.equipmentPage?.usingWeapon?.calculateRemainingExperience() ?? 0) > 0;
+        config.armor = (this.equipmentPage?.usingArmor?.calculateRemainingExperience() ?? 0) > 0;
+        config.accessory = (this.equipmentPage?.usingAccessory?.calculateRemainingExperience() ?? 0) > 0;
+        EquipmentExperienceConfig.writeConfig(this.#credential.id, config);
+
+        // 清除提醒标志位
+        LocalSettingManager.setWeaponExperienceMax(this.#credential.id, false);
+        LocalSettingManager.setArmorExperienceMax(this.#credential.id, false);
+        LocalSettingManager.setAccessoryExperienceMax(this.#credential.id, false);
+    }
+
+    /**
+     * 战斗触发，根据配置检查是否需要设置提醒标志位。
+     */
+    async triggerUpdateEquipmentGrowth() {
+        await this.#initializeEquipmentPage();
 
         const config = SetupLoader.loadEquipmentExperienceConfig(this.#credential.id);
-        if (!config.configured) {
-            // 用户压根就没有配置，忽略吧，关闭显示的开关。
-            LocalSettingManager.setWeaponExperienceMax(this.#credential.id, false);
-            LocalSettingManager.setArmorExperienceMax(this.#credential.id, false);
-            LocalSettingManager.setAccessoryExperienceMax(this.#credential.id, false);
-            return;
+        if (config.weapon) {
+            const remaining = this.equipmentPage?.usingWeapon?.calculateRemainingExperience() ?? 0;
+            if (remaining === 0) {
+                LocalSettingManager.setWeaponExperienceMax(this.#credential.id, true);
+            }
         }
-
-        await this.#initializeEquipmentPage();
-        this.#processWeapon(config, this.#equipmentPage!);
-        this.#processArmor(config, this.#equipmentPage!);
-        this.#processAccessory(config, this.#equipmentPage!);
-    }
-
-    #processWeapon(config: EquipmentExperienceConfig, page: PersonalEquipmentManagementPage) {
-        if (!config.weapon!) {
-            LocalSettingManager.setWeaponExperienceMax(this.#credential.id, false);
-            return;
+        if (config.armor) {
+            const remaining = this.equipmentPage?.usingArmor?.calculateRemainingExperience() ?? 0;
+            if (remaining === 0) {
+                LocalSettingManager.setArmorExperienceMax(this.#credential.id, true);
+            }
         }
-        const usingWeapon = page.usingWeapon;
-        if (!usingWeapon) {
-            LocalSettingManager.setWeaponExperienceMax(this.#credential.id, false);
-            return;
-        }
-        const ratio = usingWeapon.fullExperienceRatio;
-        if (ratio === 1) {
-            LocalSettingManager.setWeaponExperienceMax(this.#credential.id, true);
-        } else {
-            LocalSettingManager.setWeaponExperienceMax(this.#credential.id, false);
-        }
-    }
-
-    #processArmor(config: EquipmentExperienceConfig, page: PersonalEquipmentManagementPage) {
-        if (!config.armor!) {
-            LocalSettingManager.setArmorExperienceMax(this.#credential.id, false);
-            return;
-        }
-        const usingArmor = page.usingArmor;
-        if (!usingArmor) {
-            LocalSettingManager.setArmorExperienceMax(this.#credential.id, false);
-            return;
-        }
-        const ratio = usingArmor.fullExperienceRatio;
-        if (ratio === 1) {
-            LocalSettingManager.setArmorExperienceMax(this.#credential.id, true);
-        } else {
-            LocalSettingManager.setArmorExperienceMax(this.#credential.id, false);
-        }
-    }
-
-    #processAccessory(config: EquipmentExperienceConfig, page: PersonalEquipmentManagementPage) {
-        if (!config.accessory!) {
-            LocalSettingManager.setAccessoryExperienceMax(this.#credential.id, false);
-            return;
-        }
-        const usingAccessory = page.usingAccessory;
-        if (!usingAccessory) {
-            LocalSettingManager.setAccessoryExperienceMax(this.#credential.id, false);
-            return;
-        }
-        const ratio = usingAccessory.fullExperienceRatio;
-        if (ratio === 1) {
-            LocalSettingManager.setAccessoryExperienceMax(this.#credential.id, true);
-        } else {
-            LocalSettingManager.setAccessoryExperienceMax(this.#credential.id, false);
+        if (config.accessory) {
+            const remaining = this.equipmentPage?.usingAccessory?.calculateRemainingExperience() ?? 0;
+            if (remaining === 0) {
+                LocalSettingManager.setAccessoryExperienceMax(this.#credential.id, true);
+            }
         }
     }
 

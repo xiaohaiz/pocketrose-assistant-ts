@@ -8,6 +8,7 @@ import StringUtils from "../../util/StringUtils";
 import TownLoader from "../town/TownLoader";
 import {BattleConfigManager, MiscConfigManager} from "../../setup/ConfigManager";
 import EventHandler from "../event/EventHandler";
+import TimeoutUtils from "../../util/TimeoutUtils";
 
 class TownDashboardPage {
 
@@ -83,6 +84,40 @@ class TownDashboardPage {
         }
     }
 
+
+    /**
+     * Return undefined means action available.
+     */
+    parseActionTimeoutInSeconds(): number | undefined {
+        if (this.actionNotificationHtml === undefined) return undefined;
+        const dom = $("<div>" + this.actionNotificationHtml! + "</div>");
+        let available: boolean;
+        let timeoutInSeconds = 0;
+        const clock = dom.find("input:text[name='clock2']");
+        if (clock.length > 0) {
+            timeoutInSeconds = _.parseInt(clock.val() as string);
+            timeoutInSeconds = _.max([timeoutInSeconds, 0])!;
+            available = (timeoutInSeconds === 0);
+        } else {
+            // 计时器已经消失了，表示读秒结束
+            available = true;
+        }
+        return available ? undefined : timeoutInSeconds;
+    }
+
+    executeWhenActionTimeout(callback: () => void, timeout?: () => void) {
+        const timeoutInSeconds = this.parseActionTimeoutInSeconds();
+        if (timeoutInSeconds === undefined) {
+            // 不需要读秒
+            callback();
+        } else {
+            // 开始读秒
+            (timeout) && (timeout());
+            TimeoutUtils.execute(timeoutInSeconds * 1000, () => {
+                callback();
+            });
+        }
+    }
 }
 
 class TownDashboardPageParser {
@@ -485,4 +520,31 @@ class TownDashboardPageParser {
     }
 }
 
-export {TownDashboardPage, TownDashboardPageParser};
+class TownDashboardPageHelper {
+
+    static locateAdditionalNotification() {
+        let info: JQuery;
+        if (!SetupLoader.isMobileTownDashboardEnabled() &&
+            SetupLoader.isBattleAdditionalNotificationLeftPanelEnabled()) {
+            info = $("#leftHarvestInfo");
+        } else {
+            info = $("#harvestInfo");
+        }
+        return info;
+    }
+
+    static writeAdditionalNotification(message: string, element?: JQuery) {
+        const info = element !== undefined ?
+            element : TownDashboardPageHelper.locateAdditionalNotification();
+        if (info.length === 0) return;
+        let infoHTML = info.html();
+        if (infoHTML !== "") {
+            infoHTML += "<br>";
+        }
+        infoHTML += message;
+        info.html(infoHTML).parent().show();
+    }
+
+}
+
+export {TownDashboardPage, TownDashboardPageParser, TownDashboardPageHelper};

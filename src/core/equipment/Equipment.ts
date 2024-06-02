@@ -187,10 +187,12 @@ class Equipment {
     }
 
     get isRecoverLotion(): boolean {
-        return this.isItem &&
-            (this.name === "药草" || this.name === "当归" ||
-                this.name === "雪莲" || this.name === "鹿茸" ||
-                this.name === "人参" || this.name === "大还丹");
+        return this.isItem && EquipmentProfileLoader.isRecoverItem(this.name);
+    }
+
+    get isTrashEquipment() {
+        return (this.isWeapon || this.isArmor || this.isAccessory) &&
+            EquipmentProfileLoader.isTrashEquipment(this.name);
     }
 
     get isSevenHeart(): boolean {
@@ -213,6 +215,7 @@ class Equipment {
         if (_.includes(this.name, "九齿钉耙")) return false;
         if (_.includes(this.name, "1.5倍界王拳套")) return false;
         if (_.includes(this.name, "双经斩")) return false;
+        if (_.includes(this.name, "宗师球")) return false;
         if (_.includes(this.name, "霸者倚天玉佩")) return false;
         if (_.includes(this.name, "王道倚天玉佩")) return false;
         if (_.includes(this.name, "霸者磐石玉佩")) return false;
@@ -223,8 +226,7 @@ class Equipment {
         if (_.includes(this.name, "王道军神玉佩")) return false;
         if (_.includes(this.name, "霸者疾风玉佩")) return false;
         if (_.includes(this.name, "王道疾风玉佩")) return false;
-        if (_.endsWith(this.name, "星龙珠")) return false;
-        return true;
+        return !_.endsWith(this.name, "星龙珠");
     }
 
     get isSellable() {
@@ -245,6 +247,10 @@ class Equipment {
     get isRepairable() {
         if (this.isRecoverItem) {
             return true;
+        }
+        if (this.isPassportItem) {
+            // 入国证就别修了
+            return false;
         }
         if (this.isItem) {
             return false;
@@ -295,14 +301,12 @@ class Equipment {
         return this.isItem && _.includes(this.name, "(自动)");
     }
 
-    get isStorable(): boolean {
-        if (this.using!) {
-            return false;
-        }
-        if (this.isItem) {
-            return false;
-        }
-        return !EquipmentConstants.NONE_REPAIRABLE_ITEM_LIST.includes(this.name!);
+    get isPassportItem(): boolean {
+        return this.isItem && _.endsWith(this.name, "入国证");
+    }
+
+    get isHeavyArmor(): boolean {
+        return isAttributeHeavyArmor(this.name!);
     }
 
     get fullExperienceRatio() {
@@ -330,14 +334,6 @@ class Equipment {
             return 0;
         }
         return this.experience! / maxExperience;
-    }
-
-    get checkboxHTML() {
-        if (this.selectable) {
-            return "<input type='checkbox' name='item" + this.index + "' value='" + this.index + "' class='personal_checkbox'>";
-        } else {
-            return "";
-        }
     }
 
     get usingHTML() {

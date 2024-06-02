@@ -4,11 +4,10 @@ import RankTitleLoader from "../../core/role/RankTitleLoader";
 import PageUtils from "../../util/PageUtils";
 import StringUtils from "../../util/StringUtils";
 import PageProcessor from "../PageProcessor";
-import PageProcessorContext from "../PageProcessorContext";
 
 class RoleInformationPageProcessor implements PageProcessor {
 
-    process(context?: PageProcessorContext): void {
+    process(): void {
         PageUtils.fixCurrentPageBrokenImages();
         PageUtils.removeUnusedHyperLinks();
         PageUtils.removeGoogleAnalyticsScript();

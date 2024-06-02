@@ -3,6 +3,7 @@ import PersonalEquipmentManagementPage from "../equipment/PersonalEquipmentManag
 import PersonalEquipmentManagement from "../equipment/PersonalEquipmentManagement";
 import {RoleUsingEquipment, RoleUsingEquipmentManager} from "../role/RoleUsingEquipment";
 import _ from "lodash";
+import BattlePage from "../battle/BattlePage";
 
 /**
  * ============================================================================
@@ -50,6 +51,15 @@ class EquipmentUsingTrigger {
                     data.usingAccessory = it.fullName;
                 }
             });
+        await new RoleUsingEquipmentManager(this.#credential.id).write(data);
+    }
+
+    async triggerUpdateFromBattlePage(battlePage: BattlePage) {
+        const data = new RoleUsingEquipment();
+        data.id = this.#credential.id;
+        (battlePage.usingWeaponName) && (data.usingWeapon = battlePage.usingWeaponName);
+        (battlePage.usingArmorName) && (data.usingArmor = battlePage.usingArmorName);
+        (battlePage.usingAccessoryName) && (data.usingAccessory = battlePage.usingAccessoryName);
         await new RoleUsingEquipmentManager(this.#credential.id).write(data);
     }
 }

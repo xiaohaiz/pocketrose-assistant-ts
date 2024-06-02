@@ -303,7 +303,7 @@ class CastleDashboardPageProcessor extends StatefulPageProcessor {
                 CommentBoard.writeMessage("城堡牧场目前蓄养宠物数量：<span style='font-weight:bold;color:blue'>" + ranchPetCount + "</span><br>");
 
                 const emptyCastle = warehouseItemCount === 0 && ranchPetCount === 0;
-                if (SetupLoader.isProhibitSellingNonEmptyCastleEnabled() && !emptyCastle) {
+                if (!emptyCastle) {
                     CommentBoard.writeMessage("<span style='font-weight:bold'>出于财产保全的考虑，目前禁止您出售城堡，请清理后再来！</span>");
                     return;
                 }

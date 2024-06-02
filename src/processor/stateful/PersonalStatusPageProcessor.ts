@@ -27,17 +27,19 @@ class PersonalStatusPageProcessor extends StatefulPageProcessor {
     private rolePage?: PersonalStatusPage;
 
     protected async doProcess(): Promise<void> {
-        this.rolePage = PersonalStatusPageParser.parsePage(PageUtils.currentPageHtml());
-        await this.statusManager.writeRoleStatus(this.rolePage.role);
-
+        await this.initializeProcessor();
         await this.generateHTML();
         await this.bindButtons();
         await this.render();
-
         KeyboardShortcutBuilder.newInstance()
             .onEscapePressed(() => PageUtils.triggerClick("returnButton"))
             .withDefaultPredicate()
             .doBind();
+    }
+
+    private async initializeProcessor() {
+        this.rolePage = PersonalStatusPageParser.parsePage(PageUtils.currentPageHtml());
+        await this.statusManager.writeRoleStatus(this.rolePage.role);
     }
 
     private async generateHTML() {
@@ -162,9 +164,34 @@ class PersonalStatusPageProcessor extends StatefulPageProcessor {
                     }
                 });
         }
+        await this._renderWeaponSkills();
     }
 
     private async dispose() {
+    }
+
+    private async _renderWeaponSkills() {
+        const table = $("td:contains('技  能')")
+            .filter((_idx, e) => {
+                const t = $(e).text();
+                return t === "技  能";
+            })
+            .closest("table");
+        table.find("> tbody:first")
+            .find("> tr")
+            .filter(idx => idx > 0)
+            .each((_idx, e) => {
+                const tr = $(e);
+                tr.remove();
+            });
+        _.forEach(this.rolePage!.role!.weaponSkills, it => {
+            const html = "<tr style='text-align:center'>" +
+                "<th style='text-align:left;background-color:#E8E8D0' colspan='2'>" + it.fullName + "</th>" +
+                "<td style='background-color:#E0D0B0' colspan='2'>" + it.rankHTML + "</td>" +
+                "<td style='background-color:#E8E8D0'>" + it.fullLevel + "</td>" +
+                "</tr>";
+            table.find("> tbody:first").append($(html));
+        });
     }
 }
 

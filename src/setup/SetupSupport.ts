@@ -6,7 +6,7 @@ const logger = PocketLogger.getLogger("SETUP");
 
 abstract class AbstractSetupItem implements SetupItem {
 
-    accept(id?: string): boolean {
+    accept(): boolean {
         return true;
     }
 
@@ -18,7 +18,7 @@ abstract class AbstractSetupItem implements SetupItem {
         return this.getCode();
     }
 
-    render(id?: string): void {
+    render(): void {
         this.doRender();
     }
 
@@ -35,6 +35,10 @@ abstract class AbstractBooleanValueSetupItem extends AbstractSetupItem {
 
     protected abstract getCurrentSetupValue(): boolean;
 
+    protected doGetDescription(): string {
+        return "";
+    }
+
     protected doSetSetupValue(value: boolean) {
         SetupStorage.storeBoolean("_pa_" + this.getCode(), value);
     }
@@ -45,17 +49,28 @@ abstract class AbstractBooleanValueSetupItem extends AbstractSetupItem {
         const disableButtonId = "_" + this.getCode() + "_Button_Disable";
         $("." + buttonClass).off("click");
 
+        const description = this.doGetDescription();
+
         let html = "<tr>";
         html += "<th style='background-color:#E8E8D0' class='C_setupItemName' id='_s_" + this.getCode() + "'>" + this.getName() + "</th>";
         html += "<td style='background-color:#E8E8D0'></td>";
         html += "<td style='background-color:#EFE0C0'></td>";
-        html += "<td style='background-color:#F8F0E0;text-align:left' colspan='2'>";
+        if (description === "") {
+            html += "<td style='background-color:#F8F0E0;text-align:left' colspan='2'>";
+        } else {
+            html += "<td style='background-color:#F8F0E0;text-align:left'>";
+        }
         html += "<button role='button' class='dynamic_button " + buttonClass + "' " +
             "id='" + enableButtonId + "'>启用</button>";
         html += "<span> </span>";
         html += "<button role='button' class='dynamic_button " + buttonClass + "' " +
             "id='" + disableButtonId + "'>禁用</button>";
         html += "</td>";
+        if (description !== "") {
+            html += "<td style='background-color:#F8F0E0;text-align:left'>";
+            html += description;
+            html += "</td>";
+        }
         html += "</tr>";
         $("#setup_item_table").append($(html));
         this.bindButtons(buttonClass, enableButtonId, disableButtonId);

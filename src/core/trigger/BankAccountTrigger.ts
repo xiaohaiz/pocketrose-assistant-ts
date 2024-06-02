@@ -35,7 +35,7 @@ class BankAccountTrigger {
         data.recordDate = DayRange.current().asText();
         data.cash = account.cash;
         data.saving = account.saving;
-        await BankRecordStorage.getInstance().upsert(data);
+        await BankRecordStorage.upsert(data);
         logger.debug("Bank record saved.");
     }
 
@@ -69,7 +69,7 @@ function doImport(index: number, documentList: {}[]) {
     // @ts-ignore
     data.revision = document.revision;
 
-    BankRecordStorage.getInstance().replay(data)
+    BankRecordStorage.replay(data)
         .then(() => {
             let c = _.parseInt($("#importedBankRecordCount").text());
             c++;

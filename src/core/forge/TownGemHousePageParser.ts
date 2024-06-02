@@ -1,7 +1,5 @@
 import Credential from "../../util/Credential";
 import {Equipment} from "../equipment/Equipment";
-import Role from "../role/Role";
-import StringUtils from "../../util/StringUtils";
 import TownGemHousePage from "./TownGemHousePage";
 import TownGemMeltHouse from "./TownGemMeltHouse";
 import {parseInt} from "lodash";
@@ -17,41 +15,6 @@ class TownGemHousePageParser {
     }
 
     async parsePage(html: string): Promise<TownGemHousePage> {
-        const role = new Role();
-        $(html)
-            .find("td:contains('姓名')")
-            .filter((_idx, td) => $(td).text() === "姓名")
-            .closest("table")
-            .find("tr:first")
-            .next()
-            .find("td:first")
-            .each((_idx, td) => {
-                role.name = $(td).text();
-            })
-            .next()
-            .each((_idx, td) => {
-                let s = $(td).text();
-                role.level = parseInt(s);
-            })
-            .next()
-            .each((_idx, td) => {
-                let s = $(td).text();
-                role.attribute = StringUtils.substringBefore(s, "属");
-            })
-            .next()
-            .each((_idx, td) => {
-                role.career = $(td).text();
-            })
-            .parent()
-            .next()
-            .find("td:first")
-            .next()
-            .each((_idx, td) => {
-                let s = $(td).text();
-                s = StringUtils.substringBefore(s, " GOLD");
-                role.cash = parseInt(s);
-            });
-
         const equipmentList: Equipment[] = [];
         $(html).find("td:contains('选择要合成的装备')")
             .filter(function () {
@@ -102,7 +65,6 @@ class TownGemHousePageParser {
             });
 
         const page = new TownGemHousePage();
-        page.role = role;
         page.equipmentList = equipmentList;
         page.gemList = gemList;
         page.townGemMeltHousePage = await new TownGemMeltHouse(this.credential, this.townId).open();

@@ -91,6 +91,17 @@ class BattleFieldTrigger {
             additionalRP = this.#role?.additionalRP;
         }
         const config = SetupLoader.loadBattleFieldThreshold();
+        if (config.forceSenior) {
+            let mirrorIndex = (await this.statusManager.load())?.mirrorIndex;
+            if (mirrorIndex === undefined) {
+                await this.#initializeRole();
+                mirrorIndex = this.#role!.mirrorIndex!;
+            }
+            if (!SetupLoader.isCareerFixed(this.credential.id, mirrorIndex)) {
+                this.configManager.setPersonalBattleFieldConfig(false, false, true, false);
+                return;
+            }
+        }
         if (await this.checkAdditionalRP_1(additionalRP, config)) {
             this.configManager.setPersonalBattleFieldConfig(false, false, true, false);
             return;
@@ -234,6 +245,17 @@ class BattleFieldTrigger {
         }
 
         const config = SetupLoader.loadBattleFieldThreshold();
+        if (config.forceSenior) {
+            let mirrorIndex = (await this.statusManager.load())?.mirrorIndex;
+            if (mirrorIndex === undefined) {
+                await this.#initializeRole();
+                mirrorIndex = this.#role!.mirrorIndex!;
+            }
+            if (!SetupLoader.isCareerFixed(this.credential.id, mirrorIndex)) {
+                this.configManager.setPersonalBattleFieldConfig(false, false, true, false);
+                return;
+            }
+        }
         if (additionalRP === config.a!) {
             this.configManager.setPersonalBattleFieldConfig(true, false, false, false);
         } else if (additionalRP === config.b!) {

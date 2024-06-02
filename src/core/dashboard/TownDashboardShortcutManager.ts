@@ -138,20 +138,21 @@ const MAPPINGS: ShortcutMapping[] = [
     new ShortcutMapping("武器", "", "ARM_SHOP"),              // 武器商店
     new ShortcutMapping("防具", "", "PRO_SHOP"),              // 防具商店
     new ShortcutMapping("饰品", "", "ACC_SHOP"),              // 饰品商店
+    new ShortcutMapping("智装", "", "TOWN_ARM"),              // 智能装备
     new ShortcutMapping("宝石", "y", "BAOSHI_SHOP"),          // 宝石镶嵌
     new ShortcutMapping("修理", "", "MY_ARM"),                // 锻冶屋
     new ShortcutMapping("物品", "s", "ITEM_SHOP"),            // 物品商店
     new ShortcutMapping("银行", "b", "BANK"),                 // 口袋银行
     new ShortcutMapping("管家", "", "FREE_SELL"),             // 城堡管家
     new ShortcutMapping("个天", "k", "SINGLE_BATTLE"),        // 个人天真
-    new ShortcutMapping("宠联", "p", "PET_TZ"),               // 宠联
+    new ShortcutMapping("宠联", "p", "PET_TZ"),               // 宠物联赛
     new ShortcutMapping("图鉴", "g", "PETMAP"),               // 宠物图鉴
-    new ShortcutMapping("排行", "", "PETPROFILE"),            // 宠物排行榜
+    new ShortcutMapping("排行", "", "PETPROFILE"),            // 宠物排行
     new ShortcutMapping("任务", "", "TENNIS"),                // 任务指南
-    new ShortcutMapping("冒险", "m", "CHANGEMAP"),            // 冒险家公会
+    new ShortcutMapping("冒险", "m", "CHANGEMAP"),            // 冒险公会
 
     new ShortcutMapping("状态", "", "STATUS_PRINT"),          // 状态查看
-    new ShortcutMapping("设置", "x", "LETTER"),               // 口袋助手设置
+    new ShortcutMapping("设置", "x", "LETTER"),               // 设置中心
     new ShortcutMapping("统计", "j", "DIANMING"),             // 统计报告
     new ShortcutMapping("团队", "t", "BATTLE_MES"),           // 团队面板
     new ShortcutMapping("装备", "e", "USE_ITEM"),             // 装备管理

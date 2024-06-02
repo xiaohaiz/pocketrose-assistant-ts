@@ -54,21 +54,21 @@ class TownGemHouse {
             log.gem = "威力";
             log.effort = effort;
             log.equipment = equipment;
-            await GemFuseLogStorage.getInstance().insert(log);
+            await GemFuseLogStorage.insert(log);
         } else if (text.includes("打造失败，所选装备报废！")) {
             const log = new GemFuseLog();
             log.roleId = this.#credential.id;
             log.gem = "七心";
             log.effort = 0;
             log.equipment = equipment;
-            await GemFuseLogStorage.getInstance().insert(log);
+            await GemFuseLogStorage.insert(log);
         } else if (text.includes("所选装备成为齐心的装备")) {
             const log = new GemFuseLog();
             log.roleId = this.#credential.id;
             log.gem = "七心";
             log.effort = 1;
             log.equipment = equipment;
-            await GemFuseLogStorage.getInstance().insert(log);
+            await GemFuseLogStorage.insert(log);
         } else if (text.includes("所选宠物蛋将加速孵化") && text.includes("点")) {
             const t = StringUtils.substringBetween(text, "所选宠物蛋将加速孵化", "点");
             const effort = _.parseInt(t);
@@ -77,7 +77,7 @@ class TownGemHouse {
             log.gem = "幸运";
             log.effort = effort;
             log.equipment = equipment;
-            await GemFuseLogStorage.getInstance().insert(log);
+            await GemFuseLogStorage.insert(log);
         } else if (text.includes("所选装备提升幸运")) {
             const t = StringUtils.substringBetween(text, "所选装备提升幸运", "点");
             const effort = _.parseInt(t);
@@ -86,7 +86,7 @@ class TownGemHouse {
             log.gem = "幸运";
             log.effort = effort;
             log.equipment = equipment;
-            await GemFuseLogStorage.getInstance().insert(log);
+            await GemFuseLogStorage.insert(log);
         } else if (text.includes("所选装备提升重量")) {
             const t = StringUtils.substringBetween(text, "所选装备提升重量", "点");
             const effort = _.parseInt(t);
@@ -95,7 +95,7 @@ class TownGemHouse {
             log.gem = "重量";
             log.effort = effort;
             log.equipment = equipment;
-            await GemFuseLogStorage.getInstance().insert(log);
+            await GemFuseLogStorage.insert(log);
         }
 
     }

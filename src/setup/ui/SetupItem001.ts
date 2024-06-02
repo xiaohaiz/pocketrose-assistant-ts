@@ -18,6 +18,10 @@ class SetupItem001 extends AbstractBooleanValueSetupItem {
     protected getName(): string {
         return "宝可梦百科超链";
     }
+
+    protected doGetDescription(): string {
+        return "宠物名用官方中文名表示并可跳转到宝可梦百科。";
+    }
 }
 
 export {SetupItem001};

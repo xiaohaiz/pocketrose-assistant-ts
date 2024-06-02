@@ -14,10 +14,20 @@ class TownDashboard {
         this.#credential = credential;
     }
 
-    async open(): Promise<TownDashboardPage> {
+    async open(): Promise<TownDashboardPage | null> {
         const request = this.#credential.asRequest();
         request.set("mode", "STATUS");
         const response = await PocketNetwork.post("status.cgi", request);
+        // 刷新这里，实际上已经有可能不在城市里了
+        const dom = $(response.html);
+        if (dom.find("input:submit[value='进入城堡']").length > 0) {
+            // 不在城市在城堡了
+            return null;
+        }
+        if (dom.find("select[name='chara_m']").length > 0) {
+            // 已经出现了移动距离选择项，到了地图模式或者地铁区域
+            return null;
+        }
         const page = new TownDashboardPageParser(this.#credential).parse(response.html);
         response.touch();
         logger.debug("Town dashboard page loaded.", response.durationInMillis);

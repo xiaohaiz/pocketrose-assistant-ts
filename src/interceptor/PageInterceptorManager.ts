@@ -11,6 +11,7 @@ import LoginDashboardPageInterceptor from "./internal/LoginDashboardPageIntercep
 import MapDashboardPageInterceptor from "./internal/MapDashboardPageInterceptor";
 import MetroDashboardPageInterceptor from "./internal/MetroDashboardPageInterceptor";
 import NationInformationPageInterceptor from "./internal/NationInformationPageInterceptor";
+import PageInterceptor from "./PageInterceptor";
 import PersonalCareerManagementPageInterceptor from "./internal/PersonalCareerManagementPageInterceptor";
 import PersonalEquipmentManagementPageInterceptor from "./internal/PersonalEquipmentManagementPageInterceptor";
 import PersonalManualPageInterceptor from "./internal/PersonalManualPageInterceptor";
@@ -32,19 +33,22 @@ import TownDashboardPageInterceptor from "./internal/TownDashboardPageIntercepto
 import TownForgePageInterceptor from "./internal/TownForgePageInterceptor";
 import TownGemHousePageInterceptor from "./internal/TownGemHousePageInterceptor";
 import TownInformationPageInterceptor from "./internal/TownInformationPageInterceptor";
-import TownPostPageInterceptor from "./internal/TownPostPageInterceptor";
 import TownItemHousePageInterceptor from "./internal/TownItemHousePageInterceptor";
 import TownPersonalChampionPageInterceptor from "./internal/TownPersonalChampionPageInterceptor";
 import TownPetLeaguePageInterceptor from "./internal/TownPetLeaguePageInterceptor";
 import TownPetMapHousePageInterceptor from "./internal/TownPetMapHousePageInterceptor";
 import TownPetRankHousePageInterceptor from "./internal/TownPetRankHousePageInterceptor";
+import TownPostPageInterceptor from "./internal/TownPostPageInterceptor";
 import TownTaskHousePageInterceptor from "./internal/TownTaskHousePageInterceptor";
 import TownWeaponHousePageInterceptor from "./internal/TownWeaponHousePageInterceptor";
-import PageInterceptor from "./PageInterceptor";
-import {TownCastleHousekeeperPageInterceptor} from "./internal/TownCastleHousekeeperPageInterceptor";
-import {DevelopmentPageInterceptor} from "./internal/DevelopmentPageInterceptor";
 import {CastleDevelopmentPageInterceptor} from "./internal/CastleDevelopmentPageInterceptor";
 import {MapBuyCastlePageInterceptor} from "./internal/MapBuyCastlePageInterceptor";
+import {TownCastleHousekeeperPageInterceptor} from "./internal/TownCastleHousekeeperPageInterceptor";
+import {TownEquipmentProfilePageInterceptor} from "./internal/TownEquipmentProfilePageInterceptor";
+import CountryCacheManagementPageInterceptor from "./internal/CountryCacheManagementPageInterceptor";
+import CountryKingMinistryPageInterceptor from "./internal/CountryKingMinistryPageInterceptor";
+import CountryDenotePageInterceptor from "./internal/CountryDenotePageInterceptor";
+import VipInformationPageInterceptor from "./internal/VipInformationPageInterceptor";
 
 class PageInterceptorManager {
 
@@ -60,9 +64,11 @@ class PageInterceptorManager {
             new CastlePostHousePageInterceptor(),
             new ConversationPageInterceptor(),
             new CountryChangePageInterceptor(),
+            new CountryDenotePageInterceptor(),
+            new CountryCacheManagementPageInterceptor(),
+            new CountryKingMinistryPageInterceptor(),
             new CountryPalacePageInterceptor(),
             new CountryTownStrengthenPageInterceptor(),
-            new DevelopmentPageInterceptor(),
             new LoginDashboardPageInterceptor(),
             new MapBuyCastlePageInterceptor(),
             new MapDashboardPageInterceptor(),
@@ -87,6 +93,7 @@ class PageInterceptorManager {
             new TownBankPageInterceptor(),
             new TownCastleHousekeeperPageInterceptor(),
             new TownDashboardPageInterceptor(),
+            new TownEquipmentProfilePageInterceptor(),
             new TownForgePageInterceptor(),
             new TownGemHousePageInterceptor(),
             new TownInformationPageInterceptor(),
@@ -98,6 +105,7 @@ class PageInterceptorManager {
             new TownPostPageInterceptor(),
             new TownTaskHousePageInterceptor(),
             new TownWeaponHousePageInterceptor(),
+            new VipInformationPageInterceptor(),
         ];
     }
 

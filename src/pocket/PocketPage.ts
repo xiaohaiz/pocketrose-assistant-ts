@@ -148,22 +148,6 @@ class PocketFormGenerator {
         return html;
     }
 
-    generateGemForm(): string | undefined {
-        if (this.locationMode instanceof LocationModeTown) {
-            let form = "";
-            // noinspection HtmlUnknownTarget
-            form += "<form action='town.cgi' method='post'>";
-            form += "<input type='hidden' name='id' value='" + this.credential.id + "'>";
-            form += "<input type='hidden' name='pass' value='" + this.credential.pass + "'>"
-            form += "<input type='hidden' name='town' value='" + this.locationMode.townId + "'>";
-            form += "<input type='hidden' name='con_str' value='50'>";
-            form += "<input type='hidden' name='mode' value='BAOSHI_SHOP'>";
-            form += "<input type='submit' id='_pocket_GemSubmit'>";
-            form += "</form>";
-            return form;
-        }
-        return undefined;
-    }
 }
 
 export {PocketPage, PocketFormGenerator};

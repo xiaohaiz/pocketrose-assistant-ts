@@ -3,6 +3,7 @@ class BattleFieldThreshold {
     a?: number;
     b?: number;
     c?: number;
+    forceSenior?: boolean;
 
     asDocument(): {} {
         const document = {};
@@ -12,6 +13,8 @@ class BattleFieldThreshold {
         document["b"] = this.b;
         // @ts-ignore
         document["c"] = this.c;
+        // @ts-ignore
+        document["forceSenior"] = this.forceSenior;
         return document;
     }
 
@@ -20,6 +23,7 @@ class BattleFieldThreshold {
         inst.a = 100;
         inst.b = 300;
         inst.c = 500;
+        inst.forceSenior = false;
         return inst;
     }
 }

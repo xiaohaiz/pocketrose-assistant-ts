@@ -34,9 +34,15 @@ import {PersonalStatus} from "../../core/role/PersonalStatus";
 import {PocketLogger} from "../../pocket/PocketLogger";
 import {PocketNetwork} from "../../pocket/PocketNetwork";
 import {RoleStatus, RoleStatusManager} from "../../core/role/RoleStatus";
-import {TownDashboardPage, TownDashboardPageParser} from "../../core/dashboard/TownDashboardPage";
+import {
+    TownDashboardPage,
+    TownDashboardPageHelper,
+    TownDashboardPageParser
+} from "../../core/dashboard/TownDashboardPage";
 import {TownDashboardShortcutManager} from "../../core/dashboard/TownDashboardShortcutManager";
 import {BattleSessionManager} from "../../core/battle/BattleSessionManager";
+import TownItemHouse from "../../core/store/TownItemHouse";
+import EquipmentProfileLoader from "../../core/equipment/EquipmentProfileLoader";
 
 const townLogger = PocketLogger.getLogger("TOWN");
 const battleLogger = PocketLogger.getLogger("BATTLE");
@@ -62,18 +68,10 @@ class TownDashboardPageProcessor extends StatefulPageProcessor {
                 this.dashboardPage
             ).bind();
         };
-        this.sessionManager = new BattleSessionManager();
+        this.sessionManager = new BattleSessionManager(this.buttonProcessor);
         this.sessionManager.doRefresh = async () => {
             await this.refresh(false);
             townLogger.debug("Town dashboard refreshed for battle session expired.");
-            // 如果有必要，修改战斗按钮的提示颜色，表示重新刷新了
-            const battleButton = $("#battleButton");
-            const battleButtonText = battleButton.text();
-            if (battleButton.find("> span:first").length === 0) {
-                battleButton.html(() => {
-                    return "<span style='color:blue'>" + battleButtonText + "</span>";
-                });
-            }
             new TownDashboardKeyboardManager(
                 this.credential,
                 this.dashboardPage?.battleLevelShortcut,
@@ -86,13 +84,20 @@ class TownDashboardPageProcessor extends StatefulPageProcessor {
 
     private dashboardPage?: TownDashboardPage;
     private nextBattleTime?: number;            // 下次可以战斗的时间（单位毫秒）
+    private battlePanelRendered?: boolean;      // 是否已经渲染了战斗结果面板
+    private townRevenueAvailable?: boolean;     // 城市收益可回收
 
     protected async doProcess(): Promise<void> {
         ButtonUtils.loadDefaultButtonStyles();
 
-        this.dashboardPage = new TownDashboardPageParser(this.credential).parse(PageUtils.currentPageHtml());
-
+        const pageHTML = PageUtils.currentPageHtml();
+        const dashboardPageParser = new TownDashboardPageParser(this.credential);
+        this.dashboardPage = dashboardPageParser.parse(pageHTML);
         await this.initializeDashboard();
+        // 某些情况下可能会有战斗场所的变化，因此重新解析页面
+        // 更合理的做法是拆分页面静态部分和动态部分的解析。
+        this.dashboardPage = dashboardPageParser.parse(pageHTML);
+
         await this.generateHTML();
         await this.resetMessageBoard();
         await this.bindButtons();
@@ -696,6 +701,9 @@ class TownDashboardPageProcessor extends StatefulPageProcessor {
             PageUtils.triggerClick("reloadSubmit");
         });
         $("#battleButton").on("click", async () => {
+            this.battlePanelRendered = undefined;
+            this.townRevenueAvailable = undefined;
+
             // 开始新的一次战斗了，重置战斗按钮处理器的状态
             await this.buttonProcessor.reset();
 
@@ -874,6 +882,8 @@ class TownDashboardPageProcessor extends StatefulPageProcessor {
         battleLogger.debug("Monster name  : " + processor.obtainPage.monsterNameHtml ?? "-");
         battleLogger.debug("Battle result : " + processor.obtainPage.battleResult ?? "-");
 
+        await this._renderBattlePanel();
+
         const recommendation = processor.obtainRecommendation;
         battleLogger.debug("Battle result recommendation: " + recommendation);
 
@@ -897,11 +907,11 @@ class TownDashboardPageProcessor extends StatefulPageProcessor {
                 break;
             }
             case "回": {
-                this.dashboardPage = await new TownDashboard(this.credential).open();
+                this.dashboardPage = (await new TownDashboard(this.credential).open())!;
                 break;
             }
             default: {
-                this.dashboardPage = await new TownDashboard(this.credential).open();
+                this.dashboardPage = (await new TownDashboard(this.credential).open())!;
                 break;
             }
         }
@@ -909,6 +919,9 @@ class TownDashboardPageProcessor extends StatefulPageProcessor {
         reloadButton.show();
         await this.renderClock();
         await this.render();
+
+        await this._autoSellBattleTrash();
+        await this._autoCollectTownRevenue();
     }
 
     private async render(scroll: boolean = true) {
@@ -1058,45 +1071,56 @@ class TownDashboardPageProcessor extends StatefulPageProcessor {
             return this.dashboardPage!.processedBattleLevelSelectionHtml!;
         });
 
-        $("option[value='INN']").text("★口袋驿站");
-        $("option[value='ARM_SHOP']").text("★武器商店");
-        $("option[value='PRO_SHOP']").text("★防具商店");
-        $("option[value='ACC_SHOP']").text("★饰品商店");
-        $("option[value='BAOSHI_SHOP']").text("★宝石镶嵌");
+        $("option[value='INN']").text("★口袋驿站　　　　　　　");
+        $("option[value='ARM_SHOP']").text("★武器商店　　　　　　　");
+        $("option[value='PRO_SHOP']").text("★防具商店　　　　　　　");
+        $("option[value='ACC_SHOP']").text("★饰品商店　　　　　　　");
+        $("option[value='TOWN_ARM']").text("★智能装备　　　　　　　");
+        $("option[value='BAOSHI_SHOP']").text("★宝石镶嵌　　　　　　　");
         $("option[value='BAOSHI_DELSHOP']").remove();
-        $("option[value='MY_ARM']").text("★修理中心");
-        $("option[value='ITEM_SHOP']").text("★物品商店");
-        $("option[value='BANK']").text("★口袋银行");
-        $("option[value='FREE_SELL']").text("★城堡管家");
+        $("option[value='MY_ARM']").text("★修理中心　　　　　　　");
+        $("option[value='ITEM_SHOP']").text("★物品商店　　　　　　　");
+        $("option[value='BANK']").text("★口袋银行　　　　　　　");
+        $("option[value='FREE_SELL']").text("★城堡管家　　　　　　　");
         $("option[value='ITEM_SEND']").remove();
         $("option[value='MONEY_SEND']").remove();
         $("option[value='PET_SEND']").remove();
-        $("option[value='SINGLE_BATTLE']").text("★个人天真");
-        $("option[value='PET_TZ']").text("★宠物联赛");
-        $("option[value='PETMAP']").text("★宠物图鉴");
-        $("option[value='PETPROFILE']").text("★宠物排行");
-        $("option[value='TENNIS']").text("★任务指南");
-        $("option[value='CHANGEMAP']").text("★冒险公会");
+        $("option[value='SINGLE_BATTLE']").text("★个人天真　　　　　　　");
+        $("option[value='PET_TZ']").text("★宠物联赛　　　　　　　");
+        $("option[value='UNDERWAY']").remove();
+        $("option[value='PETMAP']").text("★宠物图鉴　　　　　　　").removeAttr("style");
+        $("option[value='PETPROFILE']").text("★宠物排行　　　　　　　").removeAttr("style");
+        $("option[value='TENNIS']").text("★任务指南　　　　　　　");
+        $("option[value='CHANGEMAP']").text("★冒险公会　　　　　　　").removeAttr("style");
 
 
-        $("option[value='STATUS_PRINT']").text("★个人状态");
-        $("option[value='LETTER']").text("★设置中心");
+        $("option[value='STATUS_PRINT']").text("★个人状态　　　　　　　");
+        $("option[value='LETTER']").text("★设置中心　　　　　　　");
         $("option[value='SALARY']").remove();
-        $("option[value='DIANMING']").text("★统计报告");
+        $("option[value='DIANMING']").text("★统计报告　　　　　　　");
         $("option[value='MAGIC']").remove();
-        $("option[value='BATTLE_MES']").text("★团队面板");
-        $("option[value='USE_ITEM']").text("★装备管理");
-        $("option[value='PETSTATUS']").text("★宠物管理");
+        $("option[value='BATTLE_MES']").text("★团队面板　　　　　　　");
+        $("option[value='USE_ITEM']").text("★装备管理　　　　　　　");
+        $("option[value='PETSTATUS']").text("★宠物管理　　　　　　　");
         $("option[value='PETBORN']").remove();
-        $("option[value='CHANGE_OCCUPATION']").text("★职业管理");
-        $("option[value='FENSHENSHIGUAN']").text("★分身管理");
-        $("option[value='RANK_REMAKE']").text("★个人面板");
-        $("option[value='COU_MAKE']").text("★使用手册");
-        $("option[value='CHUJIA']").text("★团队管理");
+        $("option[value='CHANGE_OCCUPATION']").text("★职业管理　　　　　　　");
+        $("option[value='FENSHENSHIGUAN']").text("★分身管理　　　　　　　");
+        $("option[value='RANK_REMAKE']").text("★个人面板　　　　　　　");
+        $("option[value='COU_MAKE']").text("★使用手册　　　　　　　");
+        $("option[value='CHUJIA']").text("★团队管理　　　　　　　");
 
-        if (!this._canCollectTownTax()) $("option[value='MAKE_TOWN']").remove();
+        $("option[value='COUNTRY_ALL_TALK']").text("★缓存管理　　　　　　　");
+        $("option[value='MAKE_TOWN']").text("★收益回收　　　　　　　");
+        $("option[value='GIVE_MONEY']").text("★资金捐赠　　　　　　　");
+        $("option[value='COUNTRY_CHANGE']").text("★仕官下野　　　　　　　");
 
-        $("option[value='FORT_STRENGTH']").text("★城市强化");
+        if (this.dashboardPage!.role!.country === "在野") {
+            $("option[value='PALACE']").text("★任务公会　　　　　　　");
+        } else {
+            $("option[value='PALACE']").text("★皇宫任务　　　　　　　");
+        }
+        $("option[value='KING']").text("★皇帝内阁　　　　　　　");
+        $("option[value='FORT_STRENGTH']").text("★城市强化　　　　　　　");
 
         $("#townMenu").find("> form:first > select:first")
             .find("> option")
@@ -1110,6 +1134,20 @@ class TownDashboardPageProcessor extends StatefulPageProcessor {
                 const option = $(e);
                 if (_.startsWith(option.val() as string, "====")) option.remove();
             });
+        $("#countryNormalMenu").find("> select:first")
+            .find("> option")
+            .each((_idx, e) => {
+                const option = $(e);
+                if (_.startsWith(option.val() as string, "====")) option.remove();
+            });
+        $("#countryAdvanceMenu").find("> select:first")
+            .find("> option")
+            .each((_idx, e) => {
+                const option = $(e);
+                if (_.startsWith(option.val() as string, "====")) option.remove();
+            });
+
+        await this._processMenuItems();
     }
 
     private async _renderShortcut() {
@@ -1180,6 +1218,9 @@ class TownDashboardPageProcessor extends StatefulPageProcessor {
     }
 
     private async _renderBattlePanel() {
+        if (this.battlePanelRendered) {
+            return;
+        }
         const record = await BattleRecordStorage.load(this.credential.id);
         if (record === null || !record.available) {
             $(".C_TownInformation").show();
@@ -1203,7 +1244,7 @@ class TownDashboardPageProcessor extends StatefulPageProcessor {
             $(".C_TownInformation").hide();
             $(".C_BattleInformation").show();
         }
-        if (record !== null && record.hasAdditionalNotification && SetupLoader.isBattleAdditionalNotificationEnabled()) {
+        if (record !== null && record.hasAdditionalNotification) {
             const additionalNotifications: string[] = [];
             const harvestList = record.harvestList;
             if (harvestList && harvestList.length > 0) {
@@ -1237,6 +1278,7 @@ class TownDashboardPageProcessor extends StatefulPageProcessor {
             $("#harvestInfo").html("").parent().hide();
             $("#leftHarvestInfo").html("").parent().hide();
         }
+        this.battlePanelRendered = true;
     }
 
     private async _renderReminderWarnings() {
@@ -1269,13 +1311,19 @@ class TownDashboardPageProcessor extends StatefulPageProcessor {
         // 练装备相关的展示
         // ------------------------------------------
         if (LocalSettingManager.isWeaponExperienceMax(this.credential.id)) {
-            personalMenu.css("background-color", "#FFC0C0");
+            TownDashboardPageHelper.writeAdditionalNotification(
+                "<span style='color:red;font-size:200%'>武器大概是练满了！</span>"
+            );
         }
         if (LocalSettingManager.isArmorExperienceMax(this.credential.id)) {
-            countryNormalMenu.css("background-color", "lightgreen");
+            TownDashboardPageHelper.writeAdditionalNotification(
+                "<span style='color:green;font-size:200%'>防具可能是练满了！</span>"
+            );
         }
         if (LocalSettingManager.isAccessoryExperienceMax(this.credential.id)) {
-            countryAdvancedMenu.css("background-color", "lightblue");
+            TownDashboardPageHelper.writeAdditionalNotification(
+                "<span style='color:blue;font-size:200%'>饰品也许是练满了！</span>"
+            );
         }
 
         await new CareerTransferTrigger(this.credential).trigger(() => {
@@ -1322,12 +1370,14 @@ class TownDashboardPageProcessor extends StatefulPageProcessor {
                         this.dashboardPage?.battleLevelShortcut,
                         this.dashboardPage
                     ).bind();
+                    TownDashboardPageHelper.writeAdditionalNotification(
+                        "<span style='color:green;font-size:200%'>已完成城市税收的收益！</span>"
+                    );
                 });
-            if (SetupLoader.isRemindTownRevenueCollectableEnabled()) {
-                reloadButton.html(() => {
-                    return "<span style='color:red'>" + reloadButtonText + "</span>";
-                });
-            }
+            reloadButton.html(() => {
+                return "<span style='color:red'>" + reloadButtonText + "</span>";
+            });
+            this.townRevenueAvailable = true;
         } else {
             revenue.removeAttr("style");
         }
@@ -1340,14 +1390,143 @@ class TownDashboardPageProcessor extends StatefulPageProcessor {
             (this.dashboardPage!.role!.country === this.dashboardPage!.townCountry);
     }
 
+    private async _processMenuItems() {
+        if (!this._canCollectTownTax()) {
+            $("option[value='MAKE_TOWN']").remove();
+        }
+
+        if (this.dashboardPage?.role?.country === "在野") {
+            $("option[value='LOCAL_RULE']").remove();
+            $("option[value='COUNTRY_TALK']").remove();
+            $("option[value='FORT_RESTORATION']").remove();
+            $("option[value='MAKE_TOWN']").remove();
+            $("option[value='DEF_SET']").remove();
+            $("option[value='DEF_OUT']").remove();
+            $("option[value='COUNTRY_REBELLED']").remove();     // 在野还造个毛线的反
+
+            if (this.townId !== "12") $("option[value='PALACE']").remove();
+            $("option[value='KING']").remove();
+            $("option[value='KINGSAVE']").remove();
+            $("option[value='KING_COM']").remove();
+            $("option[value='KING_CHANGE_TOWN_ELE']").remove();
+            $("option[value='TOWN_STRENGTH']").remove();
+            $("option[value='COUNTRY_DEF_OUT']").remove();
+            $("option[value='FORT_STRENGTH']").remove();
+        } else if (this.dashboardPage?.role?.country !== this.dashboardPage?.townCountry) {
+            $("option[value='DEF_SET']").remove();
+            $("option[value='DEF_OUT']").remove();
+
+            $("option[value='PALACE']").remove();
+            $("option[value='KING_CHANGE_TOWN_ELE']").remove();
+            $("option[value='TOWN_STRENGTH']").remove();
+            $("option[value='FORT_STRENGTH']").remove();
+        }
+
+        const caMenu = $("#countryAdvanceMenu");
+        if (caMenu.find("> select:first > option").length === 0) {
+            caMenu.find("> select:first").hide();
+            $("#countryAdvanceButton").prop("disabled", true);
+        }
+    }
+
     private async refresh(scroll: boolean = true) {
-        this.dashboardPage = await new TownDashboard(this.credential).open();
+        const page = await new TownDashboard(this.credential).open();
+        if (page === null) {
+            // 已经不在当前城市了，触发重载吧
+            PageUtils.triggerClick("reloadSubmit");
+            return;
+        }
+        if (page.townId !== this.dashboardPage!.townId) {
+            // 换了一个城市了，触发重载吧
+            PageUtils.triggerClick("reloadSubmit");
+            return;
+        }
+        this.dashboardPage = page;
         await this.renderClock();
         await this.render(scroll);
     }
 
     private async dispose() {
         await this.sessionManager.dispose();
+    }
+
+    private async _autoSellBattleTrash() {
+        if (!SetupLoader.isAutoSellBattleTrashEnabled()) return;
+        let sold = false;
+        const info = TownDashboardPageHelper.locateAdditionalNotification();
+        const additionalNotificationText = info.text();
+        if (_.includes(additionalNotificationText, "龙珠入手")) {
+            const itemStore = new TownItemHouse(this.credential, this.townId!);
+            const itemPage = await itemStore.open();
+            const dragonBall = itemPage.findLastSellableDragonBall();
+            if (dragonBall !== null) {
+                await itemStore.sell(dragonBall.index!, (itemPage.discount ?? 1));
+                this.dashboardPage = (await new TownBank(this.credential, this.townId).depositAll());
+                sold = true;
+                TownDashboardPageHelper.writeAdditionalNotification(
+                    "<span style='color:green;font-size:200%'>已自动卖掉龙珠！</span>", info
+                );
+            }
+        }
+        let harvestRecoverLotion = false;
+        for (const it of EquipmentProfileLoader.loadRecoverItemNames()) {
+            if (_.includes(additionalNotificationText, it + "入手")) {
+                harvestRecoverLotion = true;
+                break;
+            }
+        }
+        if (harvestRecoverLotion) {
+            const itemStore = new TownItemHouse(this.credential, this.townId!);
+            const itemPage = await itemStore.open();
+            const recoverLotion = itemPage.findLastSellableRecoverLotion();
+            if (recoverLotion !== null) {
+                await itemStore.sell(recoverLotion.index!, (itemPage.discount ?? 1));
+                this.dashboardPage = (await new TownBank(this.credential, this.townId).depositAll());
+                sold = true;
+                TownDashboardPageHelper.writeAdditionalNotification(
+                    "<span style='color:green;font-size:200%'>已自动卖掉" + recoverLotion.name + "！</span>", info
+                );
+            }
+        }
+        let harvestTrash = false;
+        for (const it of EquipmentProfileLoader.loadTrashEquipmentNames()) {
+            if (_.includes(additionalNotificationText, it + "入手")) {
+                harvestTrash = true;
+                break;
+            }
+        }
+        if (harvestTrash) {
+            const itemStore = new TownItemHouse(this.credential, this.townId!);
+            const itemPage = await itemStore.open();
+            const trash = itemPage.findLastSellableTrashEquipment();
+            if (trash !== null) {
+                await itemStore.sell(trash.index!, (itemPage.discount ?? 1));
+                this.dashboardPage = (await new TownBank(this.credential, this.townId).depositAll());
+                sold = true;
+                TownDashboardPageHelper.writeAdditionalNotification(
+                    "<span style='color:green;font-size:200%'>已自动卖掉" + trash.name + "！</span>", info
+                );
+            }
+        }
+        if (sold) {
+            await this.renderClock();
+            await this.render();
+            // 后续会绑定键盘快捷键
+        }
+    }
+
+    private async _autoCollectTownRevenue() {
+        if (this.townRevenueAvailable === undefined || !this.townRevenueAvailable) return;
+        if (!SetupLoader.isAutoCollectTownRevenueEnabled()) return;
+        if (this.dashboardPage!.role!.contribution! >= SetupLoader.getLowContributionJudgementStandard()) return;
+        if (this.dashboardPage!.townTax! >= 1000000) return;
+
+        const revenue = $("#townTax");
+        if (SetupLoader.isMobileTownDashboardEnabled()) {
+            revenue.trigger("click");
+        } else {
+            revenue.trigger("dblclick");
+        }
     }
 
     private _showTime() {
@@ -1382,7 +1561,7 @@ class TownDashboardPageProcessor extends StatefulPageProcessor {
             }
         }
 
-        setTimeout(() => this._showTime(), 500);
+        setTimeout(() => this._showTime(), 1000);
     }
 
 }

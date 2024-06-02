@@ -6,7 +6,6 @@ import MessageBoard from "../../util/MessageBoard";
 import PageUtils from "../../util/PageUtils";
 import StorageUtils from "../../util/StorageUtils";
 import StringUtils from "../../util/StringUtils";
-import PageProcessorContext from "../PageProcessorContext";
 import StatelessPageProcessorCredentialSupport from "../StatelessPageProcessorCredentialSupport";
 import KeyboardShortcutBuilder from "../../util/KeyboardShortcutBuilder";
 import {PocketLogger} from "../../pocket/PocketLogger";
@@ -15,7 +14,7 @@ const logger = PocketLogger.getLogger("TEAM");
 
 class PersonalTeamManagementPageProcessor extends StatelessPageProcessorCredentialSupport {
 
-    async doProcess(credential: Credential, context?: PageProcessorContext): Promise<void> {
+    async doProcess(credential: Credential): Promise<void> {
         doProcess(credential);
         KeyboardShortcutBuilder.newInstance()
             .onEscapePressed(() => $("#returnButton").trigger("click"))

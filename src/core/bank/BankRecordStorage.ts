@@ -1,43 +1,14 @@
 import {PocketDatabase} from "../../pocket/PocketDatabase";
 import StringUtils from "../../util/StringUtils";
 import BankRecord from "./BankRecord";
+import {DayRange, MonthRange} from "../../util/PocketDateUtils";
+import {PocketLogger} from "../../pocket/PocketLogger";
+
+const logger = PocketLogger.getLogger("STORAGE");
 
 class BankRecordStorage {
 
-    static getInstance() {
-        return instance;
-    }
-
-    async loads(): Promise<BankRecord[]> {
-        const db = await PocketDatabase.connectDatabase();
-        return new Promise<BankRecord[]>((resolve, reject) => {
-            const request = db
-                .transaction(["BankRecord"], "readonly")
-                .objectStore("BankRecord")
-                .getAll();
-            request.onerror = reject;
-            request.onsuccess = () => {
-                const dataList: BankRecord[] = [];
-                if (request.result && request.result.length > 0) {
-                    request.result.forEach(it => {
-                        const data = new BankRecord();
-                        data.id = it.id;
-                        data.roleId = it.roleId;
-                        data.createTime = it.createTime;
-                        data.updateTime = it.updateTime;
-                        data.recordDate = it.recordDate;
-                        data.cash = it.cash;
-                        data.saving = it.saving;
-                        data.revision = it.revision;
-                        dataList.push(data);
-                    });
-                }
-                resolve(dataList);
-            };
-        });
-    }
-
-    async load(roleId: string): Promise<BankRecord | null> {
+    static async load(roleId: string): Promise<BankRecord | null> {
         const db = await PocketDatabase.connectDatabase();
         return await (() => {
             return new Promise<BankRecord | null>((resolve, reject) => {
@@ -81,7 +52,7 @@ class BankRecordStorage {
         })();
     }
 
-    async upsert(data: BankRecord): Promise<void> {
+    static async upsert(data: BankRecord): Promise<void> {
         const db = await PocketDatabase.connectDatabase();
         return await (() => {
             return new Promise<void>((resolve, reject) => {
@@ -126,7 +97,7 @@ class BankRecordStorage {
         })();
     }
 
-    async replay(data: BankRecord) {
+    static async replay(data: BankRecord) {
         const db = await PocketDatabase.connectDatabase();
         return new Promise<void>((resolve, reject) => {
             const id = data.roleId + "/" + data.recordDate;
@@ -163,20 +134,34 @@ class BankRecordStorage {
         });
     }
 
-    async clear() {
+    static async purgeExpired() {
+        const month = MonthRange.current().previous().previous().previous();
+        const day = new DayRange(month.start);
+        logger.debug("Purge expired bank record data before: " + day.asText());
+
+        const range = IDBKeyRange.upperBound(day.previous().asText());
         const db = await PocketDatabase.connectDatabase();
         return new Promise<void>((resolve, reject) => {
             const request = db
                 .transaction(["BankRecord"], "readwrite")
                 .objectStore("BankRecord")
-                .clear();
+                .index("recordDate")
+                .openCursor(range);
             request.onerror = reject;
-            request.onsuccess = () => resolve();
+            let deletedCount = 0;
+            request.onsuccess = () => {
+                const cursor = request.result;
+                if (cursor) {
+                    cursor.delete();
+                    deletedCount++;
+                    cursor.continue();
+                } else {
+                    logger.debug("Total " + deletedCount + " bank record(s) purged.");
+                    resolve();
+                }
+            };
         });
     }
-
 }
-
-const instance = new BankRecordStorage();
 
 export = BankRecordStorage;

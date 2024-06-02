@@ -1,7 +1,8 @@
 import RoleStateMachineManager from "../../core/state/RoleStateMachineManager";
-import CountryPalacePageProcessor from "../../processor/stateless/CountryPalacePageProcessor";
 import PageProcessorContext from "../../processor/PageProcessorContext";
 import PageInterceptor from "../PageInterceptor";
+import Credential from "../../util/Credential";
+import {CountryPalacePageProcessor} from "../../processor/stateful/CountryPalacePageProcessor";
 
 class CountryPalacePageInterceptor implements PageInterceptor {
 
@@ -13,14 +14,15 @@ class CountryPalacePageInterceptor implements PageInterceptor {
     }
 
     intercept(): void {
+        const credential = Credential.newInstance();
+        if (!credential) return;
         RoleStateMachineManager.create()
             .load()
             .then(machine => {
                 machine.start()
                     .whenInTown(state => {
-                        const context = new PageProcessorContext();
-                        context.withTownId(state?.townId);
-                        new CountryPalacePageProcessor().process(context);
+                        const context = PageProcessorContext.whenInTown(state?.townId);
+                        new CountryPalacePageProcessor(credential, context).process();
                     })
                     .process();
             });

@@ -1,6 +1,9 @@
 import {PocketDatabase} from "../../pocket/PocketDatabase";
 import BattleLog from "./BattleLog";
-import {MonthRange} from "../../util/PocketDateUtils";
+import {DayRange, MonthRange} from "../../util/PocketDateUtils";
+import {PocketLogger} from "../../pocket/PocketLogger";
+
+const logger = PocketLogger.getLogger("STORAGE");
 
 class BattleLogStorage {
 
@@ -8,9 +11,13 @@ class BattleLogStorage {
         return instance;
     }
 
-    async purgeExpired() {
-        const start = MonthRange.current().previous().start;
-        const range = IDBKeyRange.upperBound(start - 1);
+    static async purgeExpired() {
+        const month = MonthRange.current().previous().previous().previous()
+            .previous().previous().previous();
+        const day = new DayRange(month.start);
+        logger.debug("Purge expired battle log data before: " + day.asText());
+
+        const range = IDBKeyRange.upperBound(day.previous().end);
         const db = await PocketDatabase.connectDatabase();
         return new Promise<void>((resolve, reject) => {
             const request = db
@@ -18,11 +25,17 @@ class BattleLogStorage {
                 .objectStore("BattleLog")
                 .index("createTime")
                 .openCursor(range);
+            request.onerror = reject;
+            let deletedCount = 0;
             request.onsuccess = () => {
                 const cursor = request.result;
                 if (cursor) {
                     cursor.delete();
+                    deletedCount++;
                     cursor.continue();
+                } else {
+                    logger.debug("Total " + deletedCount + " battle log(s) purged.");
+                    resolve();
                 }
             };
         });

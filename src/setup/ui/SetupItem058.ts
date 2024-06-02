@@ -19,6 +19,9 @@ class SetupItem058 extends AbstractBooleanValueSetupItem {
         return "胜利者站在左边";
     }
 
+    protected doGetDescription(): string {
+        return "战斗报告中胜利者的位置，方便快速感知前次战斗胜利与否。";
+    }
 }
 
 export {SetupItem058};

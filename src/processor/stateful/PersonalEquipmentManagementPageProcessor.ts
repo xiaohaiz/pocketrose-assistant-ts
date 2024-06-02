@@ -53,10 +53,9 @@ class PersonalEquipmentManagementPageProcessor extends StatefulPageProcessor {
         }
 
         this.equipmentManager = new EquipmentManager(credential, this.location);
-        this.equipmentManager.feature.enableExperienceConfig = true;
         this.equipmentManager.feature.enableRecoverItem = true;
+        this.equipmentManager.feature.enablePassportItem = true;
         this.equipmentManager.feature.enableGemTransfer = true;
-        this.equipmentManager.feature.enableFullAutoSetExperience = true;
         this.equipmentManager.feature.onRefresh = async () => {
             await this.roleManager?.reload();
             await this.roleManager?.render();
@@ -180,7 +179,7 @@ class PersonalEquipmentManagementPageProcessor extends StatefulPageProcessor {
             new MouseClickEventBuilder()
                 .bind($("#p_3139"), () => {
                     new TownDashboard(this.credential).open().then(dashboardPage => {
-                        if (dashboardPage.role!.canConsecrate) {
+                        if (dashboardPage!.role!.canConsecrate) {
                             $("#consecrateButton").show();
                         } else {
                             logger.warn("祭奠还在冷却中！");
@@ -470,6 +469,10 @@ class PersonalEquipmentManagementPageProcessor extends StatefulPageProcessor {
         // 祭奠完成后会造成角色额外RP数值变化，必须修正这里，否则会造成无法正确切换战斗场所。
         // 祭奠只允许在城市的时候执行，因此这个时候重新加载角色是安全的。
         await this.roleManager?.reload();
+
+        // 祭奠后自动尝试装备千寻
+        const luckCharmButton = $("#_pocket_EQM_luckCharm");
+        if (luckCharmButton.length > 0) luckCharmButton.trigger("click");
     }
 }
 

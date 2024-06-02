@@ -31,7 +31,6 @@ import _ from "lodash";
 import {RoleEquipmentStatusManager} from "../core/equipment/RoleEquipmentStatusManager";
 import {PocketPage} from "../pocket/PocketPage";
 import {RoleUsingEquipmentManager} from "../core/role/RoleUsingEquipment";
-import StorageUtils from "../util/StorageUtils";
 import TownForgeHouse from "../core/forge/TownForgeHouse";
 
 class EquipmentManager extends CommonWidget {
@@ -62,13 +61,11 @@ class EquipmentManager extends CommonWidget {
     private gemTransferAutoPutIntoWarehouseTimer?: any;
 
     generateHTML(): string {
-        return "" +
-            "<table style='background-color:#888888;margin:auto;width:100%;border-width:0'>" +
+        return "<table style='background-color:#888888;margin:auto;width:100%;border-width:0'>" +
             "<tbody>" +
             "<tr>" +
-            "<th style='writing-mode:vertical-rl;text-orientation:mixed;" +
-            "background-color:navy;color:white;font-size:120%;text-align:left'>" +
-            "装 备" +
+            "<th style='background-color:navy;color:white;font-size:120%;vertical-align:top'>" +
+            "装<br>备" +
             "</th>" +
             "<td style='border-spacing:0;width:100%'>" +
             this._generateHTML() +
@@ -85,17 +82,6 @@ class EquipmentManager extends CommonWidget {
         let html = "";
         html += "<table style='border-width:0;margin:auto;width:100%;background-color:#888888'>";
         html += "<tbody>";
-        if (this.feature.enableExperienceConfig) {
-            html += "<tr style='background-color:#E8E8D0'>";
-            html += "<td style='text-align:center'>";
-            html += "<button role='button' class='C_EQM_ExperienceConfig' id='_pocket_EQM_ExperienceConfig_a' style='color:grey'>正在练武器</button>";
-            html += PocketPageRenderer.AND();
-            html += "<button role='button' class='C_EQM_ExperienceConfig' id='_pocket_EQM_ExperienceConfig_b' style='color:grey'>正在练防具</button>";
-            html += PocketPageRenderer.AND();
-            html += "<button role='button' class='C_EQM_ExperienceConfig' id='_pocket_EQM_ExperienceConfig_c' style='color:grey'>正在练饰品</button>";
-            html += "</td>";
-            html += "</tr>";
-        }
         // ------------------------------------------------
         // Personal equipment panel
         // ------------------------------------------------
@@ -435,38 +421,38 @@ class EquipmentManager extends CommonWidget {
                 }
             });
         });
-        $("#_pocket_EQM_luckCharm").on("click", () => {
+        $("#_pocket_EQM_luckCharm").on("click", async () => {
             const set = new EquipmentSet();
             set.initialize();
             set.accessoryName = "千与千寻";
-            new EquipmentSetLoader(this.credential, this.equipmentPage!.equipmentList!)
-                .load(set)
-                .then(() => {
-                    const message = OperationMessage.success();
-                    this._triggerRefresh(message, true).then();
-                });
+            const message = await new EquipmentSetLoader(this.credential, this.equipmentPage!.equipmentList!).load(set);
+            if (!message.success) return;
+            await this._triggerRefresh(OperationMessage.success(), true);
+            if (SetupLoader.isElegantChangeAccessoriesEnabled() && this.equipmentPage!.findTreasureBag() !== null) {
+                await this._storeEquipments(["勿忘我", "魔法使的闪光弹"]);
+            }
         });
-        $("#_pocket_EQM_rememberMe").on("click", () => {
+        $("#_pocket_EQM_rememberMe").on("click", async () => {
             const set = new EquipmentSet();
             set.initialize();
             set.accessoryName = "勿忘我";
-            new EquipmentSetLoader(this.credential, this.equipmentPage!.equipmentList!)
-                .load(set)
-                .then(() => {
-                    const message = OperationMessage.success();
-                    this._triggerRefresh(message, true).then();
-                });
+            const message = await new EquipmentSetLoader(this.credential, this.equipmentPage!.equipmentList!).load(set);
+            if (!message.success) return;
+            await this._triggerRefresh(OperationMessage.success(), true);
+            if (SetupLoader.isElegantChangeAccessoriesEnabled() && this.equipmentPage!.findTreasureBag() !== null) {
+                await this._storeEquipments(["千与千寻", "魔法使的闪光弹"]);
+            }
         });
-        $("#_pocket_EQM_magicBall").on("click", () => {
+        $("#_pocket_EQM_magicBall").on("click", async () => {
             const set = new EquipmentSet();
             set.initialize();
             set.accessoryName = "魔法使的闪光弹";
-            new EquipmentSetLoader(this.credential, this.equipmentPage!.equipmentList!)
-                .load(set)
-                .then(() => {
-                    const message = OperationMessage.success();
-                    this._triggerRefresh(message, true).then();
-                });
+            const message = await new EquipmentSetLoader(this.credential, this.equipmentPage!.equipmentList!).load(set);
+            if (!message.success) return;
+            await this._triggerRefresh(OperationMessage.success(), true);
+            if (SetupLoader.isElegantChangeAccessoriesEnabled() && this.equipmentPage!.findTreasureBag() !== null) {
+                await this._storeEquipments(["千与千寻", "勿忘我"]);
+            }
         });
         $("#_pocket_EQM_chocolate").on("click", () => {
             const set = new EquipmentSet();
@@ -638,18 +624,6 @@ class EquipmentManager extends CommonWidget {
                 }
             );
         });
-
-        if (this.feature.enableExperienceConfig) {
-            $(".C_EQM_ExperienceConfig").on("click", event => {
-                const btnId = $(event.target).attr("id") as string
-                const mode = StringUtils.substringAfterLast(btnId, "_")
-                PageUtils.toggleColor(
-                    btnId,
-                    () => this._changeEquipmentExperienceSetting(mode, true),
-                    () => this._changeEquipmentExperienceSetting(mode, false)
-                )
-            });
-        }
     }
 
     async reload() {
@@ -668,24 +642,18 @@ class EquipmentManager extends CommonWidget {
                 return true;
             }
         }
+        if (equipment.isPassportItem) {
+            if (!this.feature.enablePassportItem) {
+                return false;
+            }
+            if (this.isTownMode || this.isCastleMode) {
+                return true;
+            }
+        }
         return equipment.selectable!;
     }
 
     async render() {
-        if (this.feature.enableExperienceConfig) {
-            PageUtils.changeColorGrey("_pocket_EQM_ExperienceConfig_a");
-            PageUtils.changeColorGrey("_pocket_EQM_ExperienceConfig_b");
-            PageUtils.changeColorGrey("_pocket_EQM_ExperienceConfig_c");
-            const config = SetupLoader.loadEquipmentExperienceConfig(this.credential.id);
-            if (config.weapon) PageUtils.changeColorBlue("_pocket_EQM_ExperienceConfig_a");
-            if (config.armor) PageUtils.changeColorBlue("_pocket_EQM_ExperienceConfig_b");
-            if (config.accessory) PageUtils.changeColorBlue("_pocket_EQM_ExperienceConfig_c");
-
-            $("#_pocket_EQM_ExperienceConfig_a").text("正在练武器");
-            $("#_pocket_EQM_ExperienceConfig_b").text("正在练防具");
-            $("#_pocket_EQM_ExperienceConfig_c").text("正在练饰品");
-        }
-
         await this._resetButtons();
         await this._resetGemTransferPanel();
 
@@ -732,7 +700,7 @@ class EquipmentManager extends CommonWidget {
                 html += "</td>";
             }
             html += "<td style='background-color:#E8E8D0'>";
-            if (!equipment.using && !equipment.isRecoverItem) {
+            if (!equipment.using && !equipment.isRecoverItem && !equipment.isPassportItem) {
                 html += "<button role='button' class='C_pocket_equipmentButton C_pocket_equipmentBagButton' " +
                     "id='_pocket_equipment_bag_" + equipment.index + "'>入袋</button>";
             }
@@ -747,7 +715,7 @@ class EquipmentManager extends CommonWidget {
             }
             if (this.isTownMode || this.isCastleMode) {
                 html += "<td style='background-color:#E8E8D0'>";
-                if (!equipment.using || equipment.isRecoverItem) {
+                if (!equipment.using || equipment.isRecoverItem || equipment.isPassportItem) {
                     html += "<button role='button' class='C_pocket_equipmentButton C_pocket_equipmentSendButton' " +
                         "id='_pocket_equipment_send_" + equipment.index + "'>发送</button>";
                 }
@@ -763,10 +731,15 @@ class EquipmentManager extends CommonWidget {
         html += "<table style='background-color:transparent;width:100%;border-spacing:0;border-width:0'>";
         html += "<tbody>";
         html += "<tr>";
-        html += "<td style='text-align:left;white-space:nowrap'>";
+        html += "<td style='text-align:left;white-space:nowrap' rowspan='2'>";
         html += "当前剩余空位：<span style='color:red;font-weight:bold'>" + this.equipmentPage!.spaceCount + "</span>";
         html += "</td>";
         html += "<td style='text-align:right;width:100%' id='_pocket_roleHitStatus'>";
+        html += "</td>";
+        html += "</tr>";
+        html += "<tr>";
+        html += "</td>";
+        html += "<td style='text-align:right;width:100%' id='_pocket_roleEquipmentStatus'>";
         html += "</td>";
         html += "</tr>";
         html += "</tbody>";
@@ -789,62 +762,54 @@ class EquipmentManager extends CommonWidget {
                 }
             );
         });
-        $(".C_pocket_equipmentUseButton").on("click", event => {
+        $(".C_pocket_equipmentUseButton").on("click", async (event) => {
             const btnId = $(event.target).attr("id") as string;
+            PageUtils.disableElement(btnId);
             const index = _.parseInt(StringUtils.substringAfterLast(btnId, "_"));
-            this._cancelEquipmentSelection();
-            PageUtils.triggerClick("_pocket_equipment_select_" + index);
-            PageUtils.triggerClick("_pocket_useEquipment");
+            await new PersonalEquipmentManagement(this.credential, this.townId).use([index]);
+            await this._triggerRefresh(OperationMessage.success());
         });
-        $(".C_pocket_equipmentRepairButton").on("click", event => {
+        $(".C_pocket_equipmentRepairButton").on("click", async (event) => {
             const btnId = $(event.target).attr("id") as string;
+            PageUtils.disableElement(btnId);
             const index = _.parseInt(StringUtils.substringAfterLast(btnId, "_"));
-            const equipment = this.equipmentPage!.findEquipment(index);
-            if (equipment === null) return;
-            this._repairIfNecessary([equipment]).then(() => {
-                const message = OperationMessage.success();
-                this._triggerRefresh(message).then();
-            });
+            const equipment = this.equipmentPage!.findEquipment(index)!;
+            await this._repairIfNecessary([equipment]);
+            await this._triggerRefresh(OperationMessage.success());
         });
-        $(".C_pocket_equipmentBagButton").on("click", event => {
+        $(".C_pocket_equipmentBagButton").on("click", async (event) => {
             const btnId = $(event.target).attr("id") as string;
+            PageUtils.disableElement(btnId);
             const index = _.parseInt(StringUtils.substringAfterLast(btnId, "_"));
-            this._cancelEquipmentSelection();
-            PageUtils.triggerClick("_pocket_equipment_select_" + index);
-            PageUtils.triggerClick("_pocket_bagEquipment");
+            const equipment = this.equipmentPage!.findEquipment(index)!;
+            await this._putIntoBag([equipment]);
+            await this._triggerRefresh(OperationMessage.success(), true);
         });
-        $(".C_pocket_equipmentWarehouseButton").on("click", event => {
+        $(".C_pocket_equipmentWarehouseButton").on("click", async (event) => {
             const btnId = $(event.target).attr("id") as string;
+            PageUtils.disableElement(btnId);
             const index = _.parseInt(StringUtils.substringAfterLast(btnId, "_"));
-            this._cancelEquipmentSelection();
-            PageUtils.triggerClick("_pocket_equipment_select_" + index);
-            PageUtils.triggerClick("_pocket_warehouseEquipment");
+            await new CastleWarehouse(this.credential).putInto([index]);
+            await this._triggerRefresh(OperationMessage.success(), false, true);
         });
-        $(".C_pocket_equipmentSendButton").on("click", event => {
+        $(".C_pocket_equipmentSendButton").on("click", async (event) => {
             const btnId = $(event.target).attr("id") as string;
+            PageUtils.disableElement(btnId);
             const index = _.parseInt(StringUtils.substringAfterLast(btnId, "_"));
-            const equipment = this.equipmentPage!.findEquipment(index);
-            if (equipment === null) return;
-            if (equipment.isRecoverItem) {
-                // 是回复类道具，需要用不一样的方式发送、
-                const target = this._peopleFinder!.targetPeople;
-                if (target === undefined || target === "") {
-                    this.feature.publishWarning("没有选择发送的对象，忽略！");
-                    return;
-                }
-                if (target === this.credential.id) {
-                    this.feature.publishWarning("不能发送给自己，忽略！");
-                    return;
-                }
-                this._sendEquipments([equipment], target).then(() => {
-                    const message = OperationMessage.success();
-                    this._triggerRefresh(message).then();
-                });
-            } else {
-                this._cancelEquipmentSelection();
-                PageUtils.triggerClick("_pocket_equipment_select_" + index);
-                PageUtils.triggerClick("_pocket_sendEquipment");
+            const equipment = this.equipmentPage!.findEquipment(index)!;
+            const target = this._peopleFinder!.targetPeople;
+            if (target === undefined || target === "") {
+                this.feature.publishWarning("没有选择发送的对象，忽略！");
+                PageUtils.enableElement(btnId);
+                return;
             }
+            if (target === this.credential.id) {
+                this.feature.publishWarning("不能发送给自己，忽略！");
+                PageUtils.enableElement(btnId);
+                return;
+            }
+            await this._sendEquipments([equipment], target);
+            await this._triggerRefresh(OperationMessage.success());
         });
     }
 
@@ -862,40 +827,28 @@ class EquipmentManager extends CommonWidget {
             });
         }
 
+        let weaponRemainingExperience = 0;
+        let armorRemainingExperience = 0;
+        let accessoryRemainingExperience = 0;
         let attack = 0;
         let defense = 0;
         const usingWeapon = this.equipmentPage?.usingWeapon;
         if (usingWeapon) {
             const t = $("#_pocket_equipment_" + usingWeapon.index).find("> td:eq(4)").text();
             attack = _.parseInt(StringUtils.substringAfter(t, "/"));
-            const remaining = usingWeapon.calculateRemainingExperience();
-            if (this.feature.enableExperienceConfig && remaining > 0) {
-                $("#_pocket_EQM_ExperienceConfig_a").text((_idx, s) => {
-                    return s + "（剩余" + remaining + "点经验）";
-                });
-            }
+            weaponRemainingExperience = usingWeapon.calculateRemainingExperience();
         }
         const usingArmor = this.equipmentPage?.usingArmor;
         if (usingArmor) {
             const t = $("#_pocket_equipment_" + usingArmor.index).find("> td:eq(4)").text();
             defense += _.parseInt(StringUtils.substringAfter(t, "/"));
-            const remaining = usingArmor.calculateRemainingExperience();
-            if (this.feature.enableExperienceConfig && remaining > 0) {
-                $("#_pocket_EQM_ExperienceConfig_b").text((_idx, s) => {
-                    return s + "（剩余" + remaining + "点经验）";
-                });
-            }
+            armorRemainingExperience = usingArmor.calculateRemainingExperience();
         }
         const usingAccessory = this.equipmentPage?.usingAccessory;
         if (usingAccessory) {
             const t = $("#_pocket_equipment_" + usingAccessory.index).find("> td:eq(4)").text();
             defense += _.parseInt(StringUtils.substringAfter(t, "/"));
-            const remaining = usingAccessory.calculateRemainingExperience();
-            if (this.feature.enableExperienceConfig && remaining > 0) {
-                $("#_pocket_EQM_ExperienceConfig_c").text((_idx, s) => {
-                    return s + "（剩余" + remaining + "点经验）";
-                });
-            }
+            accessoryRemainingExperience = usingAccessory.calculateRemainingExperience();
         }
 
         let totalWeight = 0;
@@ -912,7 +865,7 @@ class EquipmentManager extends CommonWidget {
         } else {
             hitCount = _.floor(delta / 50);
         }
-        const status = "" +
+        let status = "" +
             "（攻击:" + role.attack + "+" + attack + "=<span style='font-weight:bold;color:red'>" + (role.attack! + attack) + "</span>）" +
             "（防御:" + role.defense + "+" + defense + "=<span style='font-weight:bold;color:green'>" + (role.defense! + defense) + "</span>）" +
             "（速度:" + role.speed + "）" +
@@ -920,6 +873,12 @@ class EquipmentManager extends CommonWidget {
             "（余速:" + (role.speed! - totalWeight) + "）" +
             "（ＨＩＴ:<span style='color:red;font-weight:bold'>" + hitCount + "击</span>）";
         $("#_pocket_roleHitStatus").html(status);
+
+        status = "";
+        status += "（武器:<span style='color:red;font-weight:bold'>" + (weaponRemainingExperience === 0 ? "MAX" : weaponRemainingExperience.toLocaleString() + "点经验") + "</span>）";
+        status += "（防具:<span style='color:green;font-weight:bold'>" + (armorRemainingExperience === 0 ? "MAX" : armorRemainingExperience.toLocaleString() + "点经验") + "</span>）";
+        status += "（饰品:<span style='color:blue;font-weight:bold'>" + (accessoryRemainingExperience === 0 ? "MAX" : accessoryRemainingExperience.toLocaleString() + "点经验") + "</span>）";
+        $("#_pocket_roleEquipmentStatus").html(status);
     }
 
     async dispose() {
@@ -938,8 +897,7 @@ class EquipmentManager extends CommonWidget {
         const promises = [];
         if (this.feature.enableGrowthTriggerOnDispose) {
             const trigger = new EquipmentGrowthTrigger(this.credential);
-            trigger.fullAutoSet = this.feature.enableFullAutoSetExperience;
-            promises.push(trigger.withEquipmentPage(this.equipmentPage).triggerUpdate());
+            promises.push(trigger.withEquipmentPage(this.equipmentPage).triggerUpdateExperienceConfig());
         }
         if (this.feature.enableSpaceTriggerOnDispose) {
             const trigger = new EquipmentSpaceTrigger(this.credential);
@@ -1557,34 +1515,40 @@ class EquipmentManager extends CommonWidget {
         await this._gemTransfer_putIntoWarehouse(true);
     }
 
-    private _changeEquipmentExperienceSetting(mode: string, value: boolean) {
-        const config = SetupLoader.loadEquipmentExperienceConfig(this.credential.id);
-        switch (mode) {
-            case "a":
-                config.weapon = value
-                break
-            case "b":
-                config.armor = value
-                break
-            case "c":
-                config.accessory = value
-                break
+    private async _storeEquipments(equipmentNames: string[]) {
+        if (equipmentNames.length === 0) return;
+        const indexList = this.equipmentPage!.equipmentList!
+            .filter(it => it.using === undefined || !it.using)
+            .filter(it => _.includes(equipmentNames, it.fullName))
+            .map(it => it.index!);
+        if (indexList.length === 0) return;
+        this._cancelEquipmentSelection();
+        _.forEach(indexList, it => {
+            const selectButton = $("#_pocket_equipment_select_" + it);
+            if (selectButton.length > 0) selectButton.trigger("click");
+        });
+        $("#_pocket_bagEquipment").trigger("click");
+    }
+
+    async useRecoverLotion() {
+        const p = await new PersonalEquipmentManagement(this.credential, this.townId).open();
+        const lotion = p.equipmentList?.reverse().find(it => it.isRecoverLotion)
+        if (lotion) {
+            const itemIndex = lotion.index!;
+            await new PersonalEquipmentManagement(this.credential, this.townId).use([itemIndex]);
         }
-        const document = config.asDocument();
-        StorageUtils.set("_pa_065_" + this.credential.id, JSON.stringify(document));
     }
 }
 
 class EquipmentManagerFeature extends CommonWidgetFeature {
 
-    enableExperienceConfig: boolean = false;
     enableRecoverItem: boolean = false;
+    enablePassportItem: boolean = false;
     enableGemTransfer: boolean = false;
     enableGrowthTriggerOnDispose: boolean = true;
     enableSpaceTriggerOnDispose: boolean = true;
     enableStatusTriggerOnDispose: boolean = true;
     enableUsingTriggerOnDispose: boolean = true;
-    enableFullAutoSetExperience: boolean = false;
 
 }
 

@@ -235,7 +235,9 @@ class CastlePostHousePageProcessor extends StatefulPageProcessor {
             return new PocketFormGenerator(this.credential, new LocationModeTown(town.id)).generateReturnFormHTML();
         });
         MessageBoard.publishMessage("<span style='color:yellow;font-size:120%;font-weight:bold'>旅途愉快，下次再见。</span>");
-        $("#returnButton").prop("disabled", false).parent().show();
+        const returnButton = $("#returnButton");
+        returnButton.prop("disabled", false).parent().show();
+        returnButton.trigger("click");
     }
 
     private async _travelToLocation(location: Coordinate) {

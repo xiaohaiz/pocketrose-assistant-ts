@@ -19,6 +19,10 @@ class SetupItem043 extends AbstractBooleanValueSetupItem {
         return "隐藏支配国情报";
     }
 
+    protected doGetDescription(): string {
+        return "隐藏城市界面中支配国的信息。";
+    }
+
 }
 
 export {SetupItem043};

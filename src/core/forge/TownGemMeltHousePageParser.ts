@@ -1,45 +1,10 @@
 import TownGemMeltHousePage from "./TownGemMeltHousePage";
-import Role from "../role/Role";
-import StringUtils from "../../util/StringUtils";
 import {Equipment} from "../equipment/Equipment";
 
 class TownGemMeltHousePageParser {
 
     static parse(html: string): TownGemMeltHousePage {
-        const page = new TownGemMeltHousePage(new Role());
-        $(html)
-            .find("td:contains('姓名')")
-            .filter((_idx, td) => $(td).text() === "姓名")
-            .closest("table")
-            .find("tr:first")
-            .next()
-            .find("td:first")
-            .each((_idx, td) => {
-                page.role.name = $(td).text();
-            })
-            .next()
-            .each((_idx, td) => {
-                let s = $(td).text();
-                page.role.level = parseInt(s);
-            })
-            .next()
-            .each((_idx, td) => {
-                let s = $(td).text();
-                page.role.attribute = StringUtils.substringBefore(s, "属");
-            })
-            .next()
-            .each((_idx, td) => {
-                page.role.career = $(td).text();
-            })
-            .parent()
-            .next()
-            .find("td:first")
-            .next()
-            .each((_idx, td) => {
-                let s = $(td).text();
-                s = StringUtils.substringBefore(s, " GOLD");
-                page.role.cash = parseInt(s);
-            });
+        const page = new TownGemMeltHousePage();
 
         $(html).find("input:radio")
             .each(function (_idx, radio) {

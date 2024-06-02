@@ -1,7 +1,7 @@
 import _ from "lodash";
 import SetupLoader from "../../setup/SetupLoader";
 import CastleInformation from "../../core/dashboard/CastleInformation";
-import MapDashboardPage from "../../core/dashboard/MapDashboardPage";
+import {MapDashboardPageParser} from "../../core/dashboard/MapDashboardPage";
 import EventHandler from "../../core/event/EventHandler";
 import MapBuilder from "../../core/map/MapBuilder";
 import TravelPlanBuilder from "../../core/map/TravelPlanBuilder";
@@ -20,7 +20,7 @@ import {RoleStatusManager} from "../../core/role/RoleStatus";
 class MapDashboardPageProcessor extends StatelessPageProcessorCredentialSupport {
 
     async doProcess(credential: Credential, context?: PageProcessorContext): Promise<void> {
-        const page = MapDashboardPage.parse(PageUtils.currentPageHtml());
+        const page = MapDashboardPageParser.parse(PageUtils.currentPageHtml());
 
         // Trigger expired RoleStatus eviction.
         await new RoleStatusManager(credential).load();

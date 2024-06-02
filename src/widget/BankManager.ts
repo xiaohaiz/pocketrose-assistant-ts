@@ -37,9 +37,8 @@ class BankManager extends CommonWidget {
             "<table style='background-color:#888888;margin:auto;width:100%;border-width:0'>" +
             "<tbody>" +
             "<tr>" +
-            "<th style='writing-mode:vertical-rl;text-orientation:mixed;" +
-            "background-color:navy;color:white;font-size:120%;text-align:left'>" +
-            "银 行" +
+            "<th style='background-color:navy;color:white;font-size:120%;vertical-align:top'>" +
+            "银<br>行" +
             "</th>" +
             "<td style='border-spacing:0;width:100%'>" +
             this._generateHTML() +
@@ -288,7 +287,7 @@ class BankManager extends CommonWidget {
             record.recordDate = DayRange.current().asText();
             record.cash = this.bankPage!.account!.cash!;
             record.saving = this.bankPage!.account!.saving!;
-            await BankRecordStorage.getInstance().upsert(record);
+            await BankRecordStorage.upsert(record);
         }
     }
 

@@ -18,6 +18,10 @@ class SetupItem026 extends AbstractBooleanValueSetupItem {
     protected getName(): string {
         return "经验进度条显示";
     }
+
+    protected doGetDescription(): string {
+        return "经验值用进度条方式表示。";
+    }
 }
 
 export {SetupItem026};

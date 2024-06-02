@@ -24,6 +24,8 @@ import {PetUsingTrigger} from "../trigger/PetUsingTrigger";
 import {CastleInformationPage} from "../dashboard/CastleInformationPage";
 import {PocketLogger} from "../../pocket/PocketLogger";
 import {PersonalChampionTrigger} from "../trigger/PersonalChampionTrigger";
+import EquipmentUsingTrigger from "../trigger/EquipmentUsingTrigger";
+import {PurgeExpiredStorageTrigger} from "../trigger/PurgeExpiredStorageTrigger";
 
 const logger = PocketLogger.getLogger("BATTLE");
 
@@ -139,7 +141,7 @@ class BattleReturnInterceptor {
         if (mod === 19 || mod === 37 || mod === 59 || mod === 79 || mod === 97) {
             const trigger = new EquipmentGrowthTrigger(this.#credential)
                 .withEquipmentPage(this.#equipmentPage);
-            await trigger.triggerUpdate();
+            await trigger.triggerUpdateEquipmentGrowth();
             if (!this.#equipmentPage && trigger.equipmentPage) {
                 this.#equipmentPage = trigger.equipmentPage;
             }
@@ -172,11 +174,19 @@ class BattleReturnInterceptor {
                 .triggerUpdate();
         }
 
+        // 记录当前正在使用的装备数据
+        await new EquipmentUsingTrigger(this.#credential).triggerUpdateFromBattlePage(this.#battlePage);
+
         // 触发自动领取俸禄
         await new PersonalSalaryTrigger(this.#credential).triggerReceive(this.#battleCount);
 
         // 触发自动个天比赛
         await new PersonalChampionTrigger(this.#credential).triggerPersonalChampionMatch();
+
+        if (mod === 13) {
+            // 队长执行清理过期数据的任务
+            await new PurgeExpiredStorageTrigger(this.#credential).triggerPurgeExpiredStorage();
+        }
     }
 
     #hasHarvestIncludesPetMap() {

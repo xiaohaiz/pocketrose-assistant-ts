@@ -21,13 +21,11 @@ class SpellManager extends CommonWidget {
     private _role?: Role;
 
     generateHTML(): string {
-        return "" +
-            "<table style='background-color:#888888;margin:auto;width:100%;border-width:0'>" +
+        return "<table style='background-color:#888888;margin:auto;width:100%;border-width:0'>" +
             "<tbody>" +
             "<tr>" +
-            "<th style='writing-mode:vertical-rl;text-orientation:mixed;" +
-            "background-color:navy;color:white;font-size:120%;text-align:left'>" +
-            "技 能" +
+            "<th style='background-color:navy;color:white;font-size:120%;vertical-align:top'>" +
+            "技<br>能" +
             "</th>" +
             "<td style='border-spacing:0;width:100%'>" +
             this._generateHTML() +

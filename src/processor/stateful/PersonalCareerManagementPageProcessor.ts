@@ -25,6 +25,9 @@ import {RoleManager} from "../../widget/RoleManager";
 import {SpellManager} from "../../widget/SpellManager";
 import CommentBoard from "../../util/CommentBoard";
 import NpcLoader from "../../core/role/NpcLoader";
+import PersonalEquipmentManagement from "../../core/equipment/PersonalEquipmentManagement";
+import {CareerSpellLoader} from "../../core/career/CareerSpellLoader";
+import PersonalSpell from "../../core/career/PersonalSpell";
 
 const logger = PocketLogger.getLogger("CAREER");
 
@@ -34,7 +37,7 @@ class PersonalCareerManagementPageProcessor extends StatefulPageProcessor {
     private readonly roleManager: RoleManager;
     private readonly spellManager: SpellManager;
     private readonly equipmentManager: EquipmentManager;
-    private mirrorManager?: MirrorManager;
+    private readonly mirrorManager?: MirrorManager;
 
     constructor(credential: Credential, context: PageProcessorContext) {
         super(credential, context);
@@ -299,6 +302,7 @@ class PersonalCareerManagementPageProcessor extends StatefulPageProcessor {
             const career = CareerLoader.findCareerById(careerId)!;
             if (!confirm("请确认要转职到“" + career + "”？")) return;
             await this.changeCareer(careerId, career);
+            PocketPage.scrollIntoTitle();
         });
 
     }
@@ -458,7 +462,7 @@ class PersonalCareerManagementPageProcessor extends StatefulPageProcessor {
     }
 
     private async changeCareer(careerId: number, careerName?: string) {
-        await new PersonalCareerManagement(this.credential).transfer(careerId);
+        const message = await new PersonalCareerManagement(this.credential).transfer(careerId);
         await this.roleManager.reload();
         await this.roleManager.render();
         await this.spellManager.reload();
@@ -469,9 +473,58 @@ class PersonalCareerManagementPageProcessor extends StatefulPageProcessor {
         await this.equipmentManager.render();
         await this.mirrorManager?.reload();
         await this.mirrorManager?.render(this.roleManager.role!);
-        if (careerName !== undefined) {
-            logger.info("成功转职到：" + careerName);
+        if (message.success) {
+            if (careerName !== undefined) {
+                logger.info("成功转职到：" + careerName);
+            }
+            await this.autoEquipment();
+            if (careerName !== undefined) {
+                await this.autoSpell(careerName);
+            }
         }
+    }
+
+    private async autoEquipment() {
+        const weapons = this.equipmentManager.equipmentPage!.equipmentList!
+            .filter(it => it.isWeapon);
+        const armors = this.equipmentManager.equipmentPage!.equipmentList!
+            .filter(it => it.isArmor);
+        const accessories = this.equipmentManager.equipmentPage!.equipmentList!
+            .filter(it => it.isAccessory);
+        if (weapons.length !== 1 || armors.length !== 1 || accessories.length !== 1) return;
+        const indexList: number[] = [];
+        const weapon = weapons[0];
+        if (!weapon.using) indexList.push(weapon.index!);
+        const armor = armors[0];
+        if (!armor.using) indexList.push(armor.index!);
+        const accessory = accessories[0];
+        if (!accessory.using) indexList.push(accessory.index!);
+        if (indexList.length === 0) return;
+        await new PersonalEquipmentManagement(this.credential, this.townId).use(indexList);
+        await this.equipmentManager.reload();
+        await this.equipmentManager.render();
+        this.equipmentManager.renderRoleStatus(this.roleManager.role);
+    }
+
+    private async autoSpell(careerName: string) {
+        let spellName = CareerSpellLoader.getSpell(careerName);
+        let spell = this.spellManager.spellPage!.findBySpellName(spellName);
+        if (spell === null) {
+            // 没有找到预设的技能，找最大出率的那个
+            const accuracies = this.spellManager.spellPage!.spellList!
+                .map(it => it.accuracy!);
+            const expect = _.max(accuracies)!;
+            spell = this.spellManager.spellPage!.spellList!
+                .find(it => it.accuracy === expect) ?? null;
+        }
+        if (spell === null) return;
+        await new PersonalSpell(this.credential, this.townId).set(spell.id!);
+        await this.roleManager.reload();
+        await this.roleManager.render();
+        await this.spellManager.reload();
+        await this.spellManager.render(this.roleManager.role!);
+        await this.mirrorManager?.reload();
+        await this.mirrorManager?.render(this.roleManager.role!);
     }
 
 }

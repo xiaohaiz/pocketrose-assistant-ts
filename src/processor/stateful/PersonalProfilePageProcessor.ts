@@ -30,6 +30,7 @@ import {PocketFormGenerator, PocketPage} from "../../pocket/PocketPage";
 import {RoleManager} from "../../widget/RoleManager";
 import {SnapshotManager} from "../../widget/SnapshotManager";
 import {SpellManager} from "../../widget/SpellManager";
+import {PocketFormatter} from "../../pocket/PocketFormatter";
 
 class PersonalProfilePageProcessor extends StatefulPageProcessor {
 
@@ -65,7 +66,6 @@ class PersonalProfilePageProcessor extends StatefulPageProcessor {
         };
         this.equipmentManager = new EquipmentManager(credential, this.location);
         this.equipmentManager.feature.enableStatusTriggerOnDispose = true;
-        this.equipmentManager.feature.enableGrowthTriggerOnDispose = true;
         this.equipmentManager.feature.enableSpaceTriggerOnDispose = true;
         this.equipmentManager.feature.enableStatusTriggerOnDispose = true;
         this.equipmentManager.feature.enableUsingTriggerOnDispose = true;
@@ -370,7 +370,7 @@ class PersonalProfilePageProcessor extends StatefulPageProcessor {
         html += "<th style='background-color:#E0D0B0;white-space:nowrap'>种族</th>";
         html += "<td style='background-color:#E8E8D0' id='roleRace'></td>";
         html += "<th style='background-color:#E0D0B0;white-space:nowrap'>等级</th>";
-        html += "<td style='background-color:#E8E8D0' id='roleLevel'></td>";
+        html += "<td style='background-color:#E8E8D0;white-space:nowrap' id='roleLevel'></td>";
         html += "<td style='background-color:#E8E8D0;width:100%' rowspan='13' id='roleDimension'></td>";
         html += "</tr>";
         html += "<tr>";
@@ -387,7 +387,7 @@ class PersonalProfilePageProcessor extends StatefulPageProcessor {
         html += "</tr>";
         html += "<tr>";
         html += "<th style='background-color:#E0D0B0;white-space:nowrap'>部队</th>";
-        html += "<td style='background-color:#E8E8D0' id='roleUnit'></td>";
+        html += "<td style='background-color:#E8E8D0;white-space:nowrap' id='roleUnit'></td>";
         html += "<th style='background-color:#E0D0B0;white-space:nowrap'>攻击</th>";
         html += "<td style='background-color:#E8E8D0' id='roleAttack'></td>";
         html += "</tr>";
@@ -411,7 +411,7 @@ class PersonalProfilePageProcessor extends StatefulPageProcessor {
         html += "</tr>";
         html += "<tr>";
         html += "<th style='background-color:#E0D0B0;white-space:nowrap'>经验</th>";
-        html += "<td style='background-color:#E8E8D0' id='roleExperience'></td>";
+        html += "<td style='background-color:#E8E8D0;white-space:nowrap' id='roleExperience'></td>";
         html += "<th style='background-color:#E0D0B0;white-space:nowrap'>速度</th>";
         html += "<td style='background-color:#E8E8D0' id='roleSpeed'></td>";
         html += "</tr>";
@@ -466,7 +466,7 @@ class PersonalProfilePageProcessor extends StatefulPageProcessor {
         $("#roleName").html(_.toString(role.name));
         roleImage.html(role.imageHtml);
         $("#roleRace").html(_.toString(role.race));
-        $("#roleLevel").html(_.toString(role.level));
+        $("#roleLevel").html(PocketFormatter.formatRoleLevelHTML(role.level));
         $("#roleGender").html(_.toString(role.gender));
         $("#roleHealth").html(role.health + "/" + role.maxHealth);
         $("#roleCountry").html(_.toString(role.country));
@@ -474,8 +474,8 @@ class PersonalProfilePageProcessor extends StatefulPageProcessor {
         $("#roleUnit").html(_.toString(role.unit));
         $("#roleAttribute").html(_.toString(role.attribute));
         $("#roleCareer").html(_.toString(role.career));
-        $("#roleBattleCount").html(role.battleCount + "/" + role.battleWinCount);
-        $("#roleExperience").html(role.experienceHtml);
+        $("#roleBattleCount").html(role.battleCount!.toLocaleString() + "/" + role.battleWinCount!.toLocaleString());
+        $("#roleExperience").html(PocketFormatter.formatRoleExperience(role.experience));
         $("#roleAdditionalLuck").html(_.toString(role.additionalLuck));
         $("#roleConsecrateRP").html(_.toString(role.consecrateRP));
         $("#roleAdditionalRP").html(_.toString(role.additionalRP));

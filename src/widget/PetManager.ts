@@ -65,13 +65,11 @@ class PetManager extends CommonWidget {
     }
 
     generateHTML(): string {
-        return "" +
-            "<table style='background-color:#888888;margin:auto;width:100%;border-width:0'>" +
+        return "<table style='background-color:#888888;margin:auto;width:100%;border-width:0'>" +
             "<tbody>" +
             "<tr>" +
-            "<th style='writing-mode:vertical-rl;text-orientation:mixed;" +
-            "background-color:navy;color:white;font-size:120%;text-align:left'>" +
-            "宠 物" +
+            "<th style='background-color:navy;color:white;font-size:120%;vertical-align:top'>" +
+            "宠<br>物" +
             "</th>" +
             "<td style='border-spacing:0;width:100%'>" +
             this._generateHTML() +

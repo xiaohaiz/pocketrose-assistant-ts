@@ -8,6 +8,7 @@ import {RoleStatusManager} from "./RoleStatus";
 import {PocketNetwork} from "../../pocket/PocketNetwork";
 import _ from "lodash";
 import {PocketLogger} from "../../pocket/PocketLogger";
+import WeaponSkillParser from "./WeaponSkillParser";
 
 const logger = PocketLogger.getLogger("STATUS");
 
@@ -219,6 +220,8 @@ class PersonalStatusPageParser {
             const s = petTable.find("> tbody:first > tr:eq(1) > td:first").text();
             role.petLevel = _.parseInt(StringUtils.substringAfter(s, "Ｌｖ"));
         }
+
+        role.weaponSkills = WeaponSkillParser.parse(pageHtml);
 
         const page = new PersonalStatusPage();
         page.role = role;

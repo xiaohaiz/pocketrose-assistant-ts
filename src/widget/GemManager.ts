@@ -27,13 +27,11 @@ class GemManager extends CommonWidget {
     private selectedPosition?: EquipmentPosition;               // 当前被选择的装备
 
     generateHTML(): string {
-        return "" +
-            "<table style='background-color:#888888;margin:auto;width:100%;border-width:0'>" +
+        return "<table style='background-color:#888888;margin:auto;width:100%;border-width:0'>" +
             "<tbody>" +
             "<tr>" +
-            "<th style='writing-mode:vertical-rl;text-orientation:mixed;" +
-            "background-color:navy;color:white;font-size:120%;text-align:left'>" +
-            "宝 石" +
+            "<th style='background-color:navy;color:white;font-size:120%;vertical-align:top'>" +
+            "宝<br>石" +
             "</th>" +
             "<td style='border-spacing:0;width:100%'>" +
             "<table style='background-color:transparent;margin:auto;width:100%;border-spacing:0;'>" +
@@ -52,8 +50,7 @@ class GemManager extends CommonWidget {
             "</td>" +
             "</tr>" +
             "</tbody>" +
-            "</table>" +
-            "";
+            "</table>";
     }
 
     private generateEquipmentHTML() {

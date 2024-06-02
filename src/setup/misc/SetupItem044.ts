@@ -19,6 +19,9 @@ class SetupItem044 extends AbstractBooleanValueSetupItem {
         return "只封印初始宠物";
     }
 
+    protected doGetDescription(): string {
+        return "只能封印等级为１的宠物。";
+    }
 }
 
 export {SetupItem044};

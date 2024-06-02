@@ -1,5 +1,6 @@
 import SetupLoader from "../../setup/SetupLoader";
 import {PocketLogger} from "../../pocket/PocketLogger";
+import {BattleButtonProcessor} from "./BattleButtonProcessor";
 
 const logger = PocketLogger.getLogger("SESSION");
 const MAX_SESSION_COUNT = 10;
@@ -8,8 +9,13 @@ class BattleSessionManager {
 
     private readonly sessions: BattleSession[] = [];
     private lastScanTime: number = Date.now();
-
     doRefresh?: () => void;
+
+    private readonly buttonProcessor: BattleButtonProcessor;
+
+    constructor(buttonProcessor: BattleButtonProcessor) {
+        this.buttonProcessor = buttonProcessor;
+    }
 
     async touch(sessionId: string) {
         let session = this.sessions.find(it => it.sessionId === sessionId);
@@ -46,17 +52,19 @@ class BattleSessionManager {
             const duration = Date.now() - session.epochMillis;
             if (duration >= 150000) {
                 logger.debug("Last battle session expired: " + session.sessionId + " duration: " + duration + "ms");
+                this.buttonProcessor.battleButtonTextColor = "blue";
+                $("#battleButton").hide();
                 (this.doRefresh) && (this.doRefresh());
             }
         }
     }
 
     private checkScanPermission(date: Date): boolean {
-        if (!SetupLoader.isAutoRefreshWhenBattleSessionExpiredEnabled()) {
+        if (!SetupLoader.isConfirmAutoRefreshExpiredSessionRiskEnabled()) {
             return false;
         }
-        if (!SetupLoader.isAutoRefreshTimeLimitationEnabled()) {
-            return true;
+        if (!SetupLoader.isAutoRefreshWhenBattleSessionExpiredEnabled()) {
+            return false;
         }
         const day = date.getDay();
         if (!(day >= 1 && day <= 5)) {

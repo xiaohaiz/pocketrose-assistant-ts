@@ -1,6 +1,7 @@
 import EquipmentProfile from "./EquipmentProfile";
-import _ from "lodash";
 import StringUtils from "../../util/StringUtils";
+import _ from "lodash";
+import {Equipment} from "./Equipment";
 
 class EquipmentProfileLoader {
 
@@ -14,6 +15,42 @@ class EquipmentProfileLoader {
         return profile === undefined ? null : profile;
     }
 
+    static loadAsEquipments(): Equipment[] {
+        const equipments: Equipment[] = [];
+        for (const value of Object.values(EQUIPMENT_PROFILES)) {
+            const profile = value as EquipmentProfile;
+            const equipment = new Equipment();
+            equipment.name = profile.name;
+            equipment.category = profile.category;
+            equipment.power = profile.power;
+            equipment.weight = profile.weight;
+            if (equipment.name === "千幻碧水猿洛克奇斯") equipment.attribute = "水";
+            if (equipment.name === "地纹玄甲龟斯特奥特斯") equipment.attribute = "土";
+            if (equipment.name === "幽冥黑鳞蟒罗尼科斯") equipment.attribute = "暗";
+            if (equipment.name === "火睛混沌兽哈贝达") equipment.attribute = "火";
+            if (equipment.name === "羽翅圣光虎阿基勒斯") equipment.attribute = "光";
+            if (equipment.name === "金翅追日鹰庞塔雷斯") equipment.attribute = "金";
+            if (equipment.name === "风翼三足凤纳托利斯") equipment.attribute = "风";
+            equipments.push(equipment);
+        }
+        return equipments;
+    }
+
+    static loadRecoverItemNames() {
+        return RECOVER_ITEMS;
+    }
+
+    static loadTrashEquipmentNames() {
+        return TRASH_EQUIPMENTS;
+    }
+
+    static isRecoverItem(name: string | undefined) {
+        return name !== undefined && RECOVER_ITEMS.includes(name);
+    }
+
+    static isTrashEquipment(name: string | undefined) {
+        return name !== undefined && TRASH_EQUIPMENTS.includes(name);
+    }
 }
 
 const EQUIPMENT_PROFILES: any = {
@@ -71,5 +108,62 @@ const EQUIPMENT_PROFILES: any = {
     "极光护轮": new EquipmentProfile("极光护轮", "饰品", 55, 8, 200, 5, true, true, true, false),
     "月牙之戒": new EquipmentProfile("月牙之戒", "饰品", 30, 3, 200, 5, true, true, true, false),
 };
+
+const RECOVER_ITEMS = [
+    "药草",
+    "当归",
+    "雪莲",
+    "鹿茸",
+    "人参",
+    "大还丹",
+];
+
+const TRASH_EQUIPMENTS = [
+    "腰刀",
+    "支配者之杖",
+    "异域镇魂剑",
+    "银光双手剑",
+    "瞬风之枪",
+    "猫爪",
+    "残月弯刀",
+    "石矛枪",
+    "荡寇双刃剑",
+    "罗马剑 ",         // 坑爹啊，罗马剑后面多了一个空格
+    "弯剑",
+    "重剑",
+    "匕首",
+    "布衣",
+    "丝衣",
+    "皮衣",
+    "主教斗篷",
+    "皮甲",
+    "软皮半身甲",
+    "鳞甲",
+    "青铜甲",
+    "暗影甲衬",
+    "头巾",
+    "方巾",
+    "皮帽",
+    "重装头盔",
+    "狂战士头盔",
+    "波斯弯刀",
+    "刺馈剑",
+    "世界树之枝",
+    "夺魂冰钩",
+    "奥利哈钢匕首",
+    "夜魔披风",
+    "逆魔道袍",
+    "犰狳铁皮甲",
+    "修罗轻衣",
+    "雷之法袍",
+    "吟游诗人双面上装",
+    "孔雀袍",
+    "羽毛帽",
+    "头带",
+    "司祭头环",
+    "铁制头盔",
+    "红头巾",
+    "锁子鳞甲",
+];
 
 export = EquipmentProfileLoader;

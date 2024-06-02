@@ -66,7 +66,7 @@ class PalaceTaskStorage {
         })();
     }
 
-    async completeMonsterTask(roleId: string,): Promise<void> {
+    async completeMonsterTask(roleId: string): Promise<void> {
         const db = await PocketDatabase.connectDatabase();
         return await (() => {
             return new Promise<void>((resolve, reject) => {
@@ -112,6 +112,8 @@ class PalaceTaskStorage {
                                 .put(data);
                             request.onerror = reject;
                             request.onsuccess = () => resolve();
+                        } else {
+                            resolve();
                         }
                     });
             });

@@ -1,20 +1,22 @@
-import SetupItem from "./SetupItem";
 import ComplexSetupItem002 from "./battle/ComplexSetupItem002";
-import SetupItem003 from "../core/config/internal/SetupItem003";
-import SetupItem004 from "../core/config/internal/SetupItem004";
-import SetupItem005 from "../core/config/internal/SetupItem005";
-import SetupItem036 from "../core/config/internal/SetupItem036";
-import SetupItem054 from "../core/config/internal/SetupItem054";
-import SetupItem056 from "../core/config/internal/SetupItem056";
-import SetupItem064 from "../core/config/internal/SetupItem064";
+import ComplexSetupItem003 from "./battle/ComplexSetupItem003";
+import ComplexSetupItem004 from "./battle/ComplexSetupItem004";
+import ComplexSetupItem005 from "./battle/ComplexSetupItem005";
+import ComplexSetupItem054 from "./ui/ComplexSetupItem054";
+import ComplexSetupItem056 from "./battle/ComplexSetupItem056";
+import ComplexSetupItem064 from "./battle/ComplexSetupItem064";
+import SetupItem from "./SetupItem";
+import {ComplexSetupItem036} from "./ui/ComplexSetupItem036";
+import {ComplexSetupItem041} from "./ui/ComplexSetupItem041";
+import {ComplexSetupItem071} from "./battle/ComplexSetupItem071";
 import {ComplexSetupItem083} from "./ui/ComplexSetupItem083";
 import {ComplexSetupItem084} from "./ui/ComplexSetupItem084";
+import {ComplexSetupItem099} from "./misc/ComplexSetupItem099";
 import {SetupItem001} from "./ui/SetupItem001";
 import {SetupItem026} from "./ui/SetupItem026";
 import {SetupItem028} from "./ui/SetupItem028";
 import {SetupItem035} from "./ui/SetupItem035";
 import {SetupItem038} from "./ui/SetupItem038";
-import {SetupItem041} from "../core/config/internal/SetupItem041";
 import {SetupItem043} from "./ui/SetupItem043";
 import {SetupItem044} from "./misc/SetupItem044";
 import {SetupItem045} from "./battle/SetupItem045";
@@ -22,23 +24,19 @@ import {SetupItem048} from "./ui/SetupItem048";
 import {SetupItem057} from "./ui/SetupItem057";
 import {SetupItem058} from "./ui/SetupItem058";
 import {SetupItem062} from "./ui/SetupItem062";
-import {SetupItem069} from "./misc/SetupItem069";
-import {SetupItem071} from "../core/config/internal/SetupItem071";
 import {SetupItem072} from "./ui/SetupItem072";
-import {SetupItem073} from "./misc/SetupItem073";
 import {SetupItem074} from "./battle/SetupItem074";
 import {SetupItem075} from "./ui/SetupItem075";
 import {SetupItem076} from "./misc/SetupItem076";
 import {SetupItem077} from "./ui/SetupItem077";
 import {SetupItem078} from "./misc/SetupItem078";
-import {SetupItem079} from "./ui/SetupItem079";
 import {SetupItem080} from "./ui/SetupItem080";
-import {SetupItem081} from "./ui/SetupItem081";
 import {SetupItem082} from "./ui/SetupItem082";
-import {SetupItem085} from "./misc/SetupItem085";
 import {SetupItem086} from "./battle/SetupItem086";
-import {SetupItem087} from "./battle/SetupItem087";
-import {SetupItem088} from "./misc/SetupItem088";
+import {SetupItem091} from "./battle/SetupItem091";
+import {SetupItem094} from "./misc/SetupItem094";
+import {SetupItem098} from "./misc/SetupItem098";
+import {SetupItem100} from "./misc/SetupItem100";
 
 class SetupItemManager {
 
@@ -60,14 +58,11 @@ class SetupItemManager {
             new SetupItem062(),
             new SetupItem072(),
             new SetupItem077(),
-            new SetupItem079(),
             new SetupItem082(),
             new SetupItem080(),
-            new SetupItem081(),
-
-            new SetupItem036(),
-            new SetupItem041(),
-            new SetupItem054(),
+            new ComplexSetupItem036(),
+            new ComplexSetupItem041(),
+            new ComplexSetupItem054(),
             new ComplexSetupItem083(),
             new ComplexSetupItem084(),
 
@@ -75,24 +70,23 @@ class SetupItemManager {
             new SetupItem045(),
             new SetupItem074(),
             new SetupItem086(),
-            new SetupItem087(),
-
+            new SetupItem091(),
             new ComplexSetupItem002(),
-            new SetupItem003(),
-            new SetupItem004(),
-            new SetupItem005(),
-            new SetupItem056(),
-            new SetupItem064(),
-            new SetupItem071(),
+            new ComplexSetupItem003(),
+            new ComplexSetupItem004(),
+            new ComplexSetupItem005(),
+            new ComplexSetupItem056(),
+            new ComplexSetupItem064(),
+            new ComplexSetupItem071(),
 
             // MISC
             new SetupItem078(),
             new SetupItem044(),
-            new SetupItem069(),
-            new SetupItem073(),
             new SetupItem076(),
-            new SetupItem085(),
-            new SetupItem088(),
+            new SetupItem094(),
+            new SetupItem098(),
+            new SetupItem100(),
+            new ComplexSetupItem099(),
         ];
     }
 

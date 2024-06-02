@@ -1,6 +1,10 @@
 import {PocketDatabase} from "../../pocket/PocketDatabase";
 import RandomUtils from "../../util/RandomUtils";
 import {BattleFailureRecord} from "./BattleFailureRecord";
+import {DayRange} from "../../util/PocketDateUtils";
+import {PocketLogger} from "../../pocket/PocketLogger";
+
+const logger = PocketLogger.getLogger("STORAGE");
 
 class BattleFailureRecordStorage {
 
@@ -51,6 +55,33 @@ class BattleFailureRecordStorage {
                 };
             });
         })();
+    }
+
+    static async purgeExpired() {
+        const day = DayRange.current().previous();
+        logger.debug("Purge expired battle failure record data before: " + day.asText());
+        const range = IDBKeyRange.upperBound(day.start - 1);
+        const db = await PocketDatabase.connectDatabase();
+        return new Promise<void>((resolve, reject) => {
+            const request = db
+                .transaction(["BattleFailureRecord"], "readwrite")
+                .objectStore("BattleFailureRecord")
+                .index("createTime")
+                .openCursor(range);
+            request.onerror = reject;
+            let deletedCount = 0;
+            request.onsuccess = () => {
+                const cursor = request.result;
+                if (cursor) {
+                    cursor.delete();
+                    deletedCount++;
+                    cursor.continue();
+                } else {
+                    logger.debug("Total " + deletedCount + " battle failure record(s) purged.");
+                    resolve();
+                }
+            };
+        });
     }
 
 }

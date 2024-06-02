@@ -136,6 +136,10 @@ const POCKET_TASK_NPC_IMAGES = {
     "王植": Constants.POCKET_DOMAIN + "/image/npc/699.jpg",      // 8,10
     "秦琪": Constants.POCKET_DOMAIN + "/image/npc/699.jpg",      // 9,10
     "东方不败": Constants.POCKET_DOMAIN + "/image/npc/dfbb.jpg",      // 5,10
+
+    "白雪公主": Constants.POCKET_DOMAIN + "/image/npc/baixuegongzhu.jpg",
+    "匹诺曹": Constants.POCKET_DOMAIN + "/image/npc/pinuocao.jpg",
+    "七矮人": Constants.POCKET_DOMAIN + "/image/npc/qiairen.jpg",
 };
 
 const POCKET_NPC_IMAGES = {
@@ -195,6 +199,7 @@ const POCKET_NPC_IMAGES = {
     "白皇": Constants.POCKET_DOMAIN + "/image/head/11134.gif",
     "莫莫": Constants.POCKET_DOMAIN + "/image/head/13165.gif",
     "天翔": Constants.POCKET_DOMAIN + "/image/head/14129.gif",
+    "瓜娃": Constants.POCKET_DOMAIN + "/image/head/1665.gif",
 
 };
 

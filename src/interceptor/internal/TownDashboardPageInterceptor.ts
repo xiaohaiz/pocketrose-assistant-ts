@@ -7,7 +7,8 @@ import {TownDashboardPageProcessor} from "../../processor/stateful/TownDashboard
 class TownDashboardPageInterceptor implements PageInterceptor {
 
     accept(cgi: string, pageText: string): boolean {
-        if (cgi === "status.cgi" || cgi === "town.cgi") {
+        if (cgi === "status.cgi" || cgi === "town.cgi" || cgi === "dcommand.cgi") {
+            // 从唐朝回来调用的是dcommand.cgi
             return pageText.includes("城市支配率");
         }
         return false;

@@ -8,6 +8,7 @@ import PersonalCareerManagementPage from "./PersonalCareerManagementPage";
 import PersonalCareerManagementPageParser from "./PersonalCareerManagementPageParser";
 import {PocketNetwork} from "../../pocket/PocketNetwork";
 import {PocketLogger} from "../../pocket/PocketLogger";
+import OperationMessage from "../../util/OperationMessage";
 
 const logger = PocketLogger.getLogger("CAREER");
 
@@ -34,7 +35,7 @@ class PersonalCareerManagement {
         return page;
     }
 
-    async transfer(careerId: number) {
+    async transfer(careerId: number): Promise<OperationMessage> {
         const before = await new PersonalStatus(this.#credential, this.#townId).load();
         const request = this.#credential.asRequest();
         request.set("chara", "1");
@@ -44,10 +45,10 @@ class PersonalCareerManagement {
         MessageBoard.processResponseMessage(response.html);
         // 不需要额外的清理RoleStatus缓存数据了
         const after = await new PersonalStatus(this.#credential, this.#townId).load();
-        await this.#postTransfer(before, after);
+        return await this.#postTransfer(before, after);
     }
 
-    async #postTransfer(before: Role, after: Role) {
+    async #postTransfer(before: Role, after: Role): Promise<OperationMessage> {
         if (before.level! !== after.level! && after.level! === 1) {
             // 成功完成了转职操作
             // 否则没有转职，大概率是由于需要转职任务引发的
@@ -74,7 +75,9 @@ class PersonalCareerManagement {
             // 保存转职的记录
             await CareerChangeLogStorage.getInstance().insert(data);
             logger.debug("Career change log saved into IndexedDB.");
+            return OperationMessage.success();
         }
+        return OperationMessage.failure();
     }
 
 }

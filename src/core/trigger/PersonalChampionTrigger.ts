@@ -1,5 +1,4 @@
 import Credential from "../../util/Credential";
-import SetupLoader from "../../setup/SetupLoader";
 import {DayRange} from "../../util/PocketDateUtils";
 import {PocketCache} from "../../pocket/PocketCache";
 import {TownPersonalChampion} from "../champion/TownPersonalChampion";
@@ -20,10 +19,6 @@ class PersonalChampionTrigger {
     }
 
     async triggerPersonalChampionMatch() {
-        if (!SetupLoader.isAutoTriggerPersonalChampionEnabled()) {
-            // 没开配置，此项功能不启用，忽略返回
-            return;
-        }
         const date = new Date();
 
         if (date.getDay() !== 3) {

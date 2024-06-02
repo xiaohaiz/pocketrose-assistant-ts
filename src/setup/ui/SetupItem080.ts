@@ -19,6 +19,10 @@ class SetupItem080 extends AbstractBooleanValueSetupItem {
         return "战斗后自动置顶";
     }
 
+    protected doGetDescription(): string {
+        return "进行战斗后页面自动置顶。";
+    }
+
 }
 
 export {SetupItem080};

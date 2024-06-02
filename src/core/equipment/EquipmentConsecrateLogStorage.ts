@@ -2,6 +2,10 @@ import ObjectID from "bson-objectid";
 import _ from "lodash";
 import {PocketDatabase} from "../../pocket/PocketDatabase";
 import EquipmentConsecrateLog from "./EquipmentConsecrateLog";
+import {PocketLogger} from "../../pocket/PocketLogger";
+import {DayRange, MonthRange} from "../../util/PocketDateUtils";
+
+const logger = PocketLogger.getLogger("STORAGE");
 
 class EquipmentConsecrateLogStorage {
 
@@ -100,6 +104,36 @@ class EquipmentConsecrateLogStorage {
                         $("#importedConsecrateLogCount").text(c);
                         resolve();
                     };
+                }
+            };
+        });
+    }
+
+    static async purgeExpired() {
+        const month = MonthRange.current().previous().previous().previous()
+            .previous().previous().previous();
+        const day = new DayRange(month.start);
+        logger.debug("Purge expired equipment consecrate log before: " + day.asText());
+
+        const range = IDBKeyRange.upperBound(day.previous().end);
+        const db = await PocketDatabase.connectDatabase();
+        return new Promise<void>((resolve, reject) => {
+            const request = db
+                .transaction(["EquipmentConsecrateLog"], "readwrite")
+                .objectStore("EquipmentConsecrateLog")
+                .index("createTime")
+                .openCursor(range);
+            request.onerror = reject;
+            let deletedCount = 0;
+            request.onsuccess = () => {
+                const cursor = request.result;
+                if (cursor) {
+                    cursor.delete();
+                    deletedCount++;
+                    cursor.continue();
+                } else {
+                    logger.debug("Total " + deletedCount + " equipment consecrate log(s) purged.");
+                    resolve();
                 }
             };
         });

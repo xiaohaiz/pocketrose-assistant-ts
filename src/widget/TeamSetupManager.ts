@@ -20,12 +20,12 @@ class TeamSetupManager extends CommonWidget {
     }
 
     generateHTML(): string {
-        return "" +
-            "<table style='background-color:#888888;margin:auto;width:100%;border-width:0'>" +
+        return "<table style='background-color:#888888;margin:auto;width:100%;border-width:0'>" +
             "<tbody>" +
             "<tr>" +
-            "<th style='writing-mode:vertical-rl;text-orientation:mixed;" +
-            "background-color:navy;color:white;font-size:120%;text-align:left'>团 队 设 置</th>" +
+            "<th style='background-color:navy;color:white;font-size:120%;vertical-align:top'>" +
+            "团<br>队<br>设<br>置" +
+            "</th>" +
             "<td style='border-spacing:0;width:100%;text-align:center;background-color:#F8F0E0'>" +
             "<table style='background-color:#888888;margin:auto;border-width:0'>" +
             "<tbody style='background-color:#F8F0E0;text-align:center' id='TeamSetupTable'>" +
@@ -34,8 +34,7 @@ class TeamSetupManager extends CommonWidget {
             "</td>" +
             "</tr>" +
             "</tbody>" +
-            "</table>" +
-            "";
+            "</table>";
     }
 
     bindButtons() {

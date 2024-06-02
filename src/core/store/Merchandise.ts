@@ -26,18 +26,6 @@ class Merchandise {
         return parseInt(this.id!.split("_")[1]);
     }
 
-    get categoryHtml(): string {
-        if (this.category === "武器") {
-            return "<span style='color:blue'>" + this.category + "</span>";
-        } else if (this.category === "防具") {
-            return "<span style='color:red'>" + this.category + "</span>";
-        } else if (this.category === "饰品") {
-            return "<span style='color:green'>" + this.category + "</span>";
-        } else {
-            return this.category!;
-        }
-    }
-
     get priceHtml() {
         if (this.price === undefined) {
             return "-";

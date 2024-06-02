@@ -5,6 +5,7 @@ import EquipmentSet from "./EquipmentSet";
 import PersonalEquipmentManagement from "./PersonalEquipmentManagement";
 import TreasureBag from "./TreasureBag";
 import {PocketNetwork} from "../../pocket/PocketNetwork";
+import OperationMessage from "../../util/OperationMessage";
 
 class EquipmentSetLoader {
 
@@ -16,9 +17,9 @@ class EquipmentSetLoader {
         this.#equipmentList = equipmentList;
     }
 
-    async load(set: EquipmentSet): Promise<void> {
+    async load(set: EquipmentSet): Promise<OperationMessage> {
         const action = (credential: Credential, equipmentList: Equipment[], set: EquipmentSet) => {
-            return new Promise<void>(resolve => {
+            return new Promise<OperationMessage>(resolve => {
                 set = doScanEquipmentSet(equipmentList, set);
                 // 在自身完成了检索
                 if (!set.isAllFound && set.treasureBagIndex !== undefined) {
@@ -108,7 +109,7 @@ function doScanEquipmentSet(equipmentList: Equipment[], set: EquipmentSet) {
     return set;
 }
 
-function doLoadEquipmentSet(credential: Credential, set: EquipmentSet, resolve: () => void) {
+function doLoadEquipmentSet(credential: Credential, set: EquipmentSet, resolve: (message: OperationMessage) => void) {
     const request = credential.asRequest();
     request.set("chara", "1");
     request.set("mode", "USE");
@@ -127,11 +128,11 @@ function doLoadEquipmentSet(credential: Credential, set: EquipmentSet, resolve: 
     }
     if (count === 0) {
         MessageBoard.publishMessage("没有找到对应的装备或者正在装备中，忽略。");
-        resolve();
+        resolve(OperationMessage.failure());
     } else {
         PocketNetwork.post("mydata.cgi", request).then(response => {
             MessageBoard.processResponseMessage(response.html);
-            resolve();
+            resolve(OperationMessage.success());
         });
     }
 }

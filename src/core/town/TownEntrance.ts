@@ -3,13 +3,13 @@ import Credential from "../../util/Credential";
 import MessageBoard from "../../util/MessageBoard";
 import OperationMessage from "../../util/OperationMessage";
 import TimeoutUtils from "../../util/TimeoutUtils";
-import SetupLoader from "../../setup/SetupLoader";
 import TravelPlan from "../map/TravelPlan";
 import TravelPlanBuilder from "../map/TravelPlanBuilder";
 import TownLoader from "./TownLoader";
 import BattleFieldTrigger from "../trigger/BattleFieldTrigger";
 import {PocketNetwork} from "../../pocket/PocketNetwork";
 import {PocketLogger} from "../../pocket/PocketLogger";
+import {MapDashboard} from "../dashboard/MapDashboard";
 
 const logger = PocketLogger.getLogger("TRAVEL");
 
@@ -21,43 +21,42 @@ class TownEntrance {
         this.#credential = credential;
     }
 
-    async enter(townId: string): Promise<void> {
-        const instance = this;
-        const action = (credential: Credential, townId: string) => {
-            return new Promise<void>(resolve => {
-                MessageBoard.publishMessage("等待进城冷却中......(约52秒)");
-                TimeoutUtils.execute(52000, function () {
-                    const request = credential.asRequest()
+    /**
+     * 这个方法必须身处在地图上执行。
+     */
+    async enter(townId: string) {
+        const dashboardPage = await new MapDashboard(this.#credential).open();
+        if (dashboardPage === null) {
+            logger.warn("当前不处在地图模式！");
+            return;
+        }
+        return new Promise<void>(resolve => {
+            TimeoutUtils.executeWithTimeoutSpecified(dashboardPage.timeoutInSeconds,
+                async () => {
+                    const request = this.#credential.asRequest()
                     request.set("townid", townId);
                     request.set("mode", "MOVE");
-                    PocketNetwork.post("status.cgi", request).then(response => {
-                        const html = response.html;
-                        if ($(html).text().includes("进入方法选择")) {
-                            MessageBoard.publishMessage("与门卫交涉中......");
-                            const request = credential.asRequest();
-                            request.set("townid", townId);
-                            request.set("givemoney", "1");
-                            request.set("mode", "MOVE");
-                            PocketNetwork.post("status.cgi", request).then(() => {
-                                MessageBoard.publishMessage("门卫通情达理的收取了入城费用放你入城。");
-                                const town = TownLoader.load(townId);
-                                MessageBoard.publishMessage("进入了<span style='color:greenyellow'>" + town!.name + "</span>。");
-                                instance.#changeAccessPointIfNecessary(townId).then(() => {
-                                    instance.#changeBattleFieldIfNecessary(credential).then(() => resolve());
-                                });
-                            });
-                        } else {
-                            const town = TownLoader.load(townId);
-                            MessageBoard.publishMessage("进入了<span style='color:greenyellow'>" + town!.name + "</span>。");
-                            instance.#changeAccessPointIfNecessary(townId).then(() => {
-                                instance.#changeBattleFieldIfNecessary(credential).then(() => resolve());
-                            });
-                        }
-                    });
+                    const response = await PocketNetwork.post("status.cgi", request);
+                    if (_.includes(response.html, "进入方法选择")) {
+                        logger.info("与门卫交涉中......");
+                        const request = this.#credential.asRequest();
+                        request.set("townid", townId);
+                        request.set("givemoney", "1");
+                        request.set("mode", "MOVE");
+                        await PocketNetwork.post("status.cgi", request);
+                        logger.info("门卫通情达理的收取了入城费用放你入城。");
+                    }
+                    const town = TownLoader.load(townId)!;
+                    logger.info("进入了<span style='color:greenyellow'>" + town.name + "</span>。");
+                    await this.#changeAccessPointIfNecessary(townId);
+                    await this.#changeBattleFieldIfNecessary(this.#credential);
+                    resolve();
+                },
+                () => {
+                    logger.info("等待进城冷却中......(约" + dashboardPage.timeoutInSeconds + "秒)");
                 });
-            });
-        };
-        return await action(this.#credential, townId);
+        });
+
     }
 
     async leave(): Promise<TravelPlan> {
@@ -80,7 +79,6 @@ class TownEntrance {
     }
 
     async #changeAccessPointIfNecessary(townId: string) {
-        if (!SetupLoader.isAutoChangePointToTown()) return;
         const town = TownLoader.load(townId);
         const message = await this.changeAccessPoint(townId);
         if (message.success && town !== null) {

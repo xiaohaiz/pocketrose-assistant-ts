@@ -21,6 +21,7 @@ class BattleButtonProcessor {
 
     private digitalValidationCodeMet?: boolean;     // 遇到了数字验证码
     private digitalValidationCodeDodged?: boolean;  // 成功规避了数字验证码
+    battleButtonTextColor?: string;                 // 战斗按钮文字的警示颜色
 
     async renderBattleButton() {
         await this.processValidationFailure();
@@ -29,6 +30,7 @@ class BattleButtonProcessor {
     async reset() {
         this.digitalValidationCodeMet = undefined;
         this.digitalValidationCodeDodged = undefined;
+        this.battleButtonTextColor = undefined;
     }
 
     private async processValidationFailure() {
@@ -106,6 +108,7 @@ class BattleButtonProcessor {
         if (this.digitalValidationCodeMet) {
             // 之前的处理器已经发现了数字验证码，设置成功规避
             this.digitalValidationCodeDodged = true;
+            this.battleButtonTextColor = "red";
         }
 
         if (!BattleConfigManager.isSafeBattleButtonEnabled()) {
@@ -139,10 +142,10 @@ class BattleButtonProcessor {
             // 先清理战斗按钮的状态
             battleButton.html(battleButtonText);
         }
-        if (this.digitalValidationCodeDodged) {
+        if (this.battleButtonTextColor !== undefined) {
             // 成功规避数字验证码的时候特殊显示战斗按钮
             battleButton.html(() => {
-                return "<span style='color:red'>" + battleButtonText + "</span>";
+                return "<span style='color:" + this.battleButtonTextColor + "'>" + battleButtonText + "</span>";
             });
         }
         battleButton.show();

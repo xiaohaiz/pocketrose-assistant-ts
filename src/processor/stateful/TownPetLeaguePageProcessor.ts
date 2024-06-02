@@ -357,8 +357,10 @@ class TownPetLeaguePageProcessor extends StatefulPageProcessor {
             const timeoutInSeconds = _.parseInt(s);
             TimeoutUtils.execute((timeoutInSeconds + 1) * 1000, async () => {
                 // 刷新城市主页触发在线
-                await new TownDashboard(this.credential).open();
-                await this.triggerPetLeagueMatchStarting();
+                const dashboardPage = await new TownDashboard(this.credential).open();
+                if (dashboardPage !== null) {
+                    await this.triggerPetLeagueMatchStarting();
+                }
             });
         }
     }

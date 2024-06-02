@@ -19,6 +19,21 @@ class TimeoutUtils {
         }
     }
 
+    static executeWithTimeoutSpecified(timeoutInSeconds: number | undefined,
+                                       callback: () => void,
+                                       timeout?: () => void) {
+        if (timeoutInSeconds === undefined || timeoutInSeconds <= 0) {
+            // 不需要读秒
+            callback();
+        } else {
+            // 开始读秒
+            (timeout) && (timeout());
+            TimeoutUtils.execute(timeoutInSeconds * 1000, () => {
+                callback();
+            });
+        }
+    }
+
 }
 
 export = TimeoutUtils;

@@ -1,8 +1,8 @@
 import Credential from "../../util/Credential";
-import {BattleFailureRecord} from "./BattleFailureRecord";
-import {BattleFailureRecordStorage} from "./BattleFailureRecordStorage";
-import _ from "lodash";
 import StorageUtils from "../../util/StorageUtils";
+import _ from "lodash";
+import {BattleFailureRecordStorage} from "./BattleFailureRecordStorage";
+import {BattleFailureRecord} from "./BattleFailureRecord";
 
 class BattleFailureRecordManager {
 
@@ -25,11 +25,6 @@ class BattleFailureRecordManager {
         return _.forEach(await BattleFailureRecordStorage.findRecords(startTime))
             .filter(it => it.roleId === this.credential.id)
             .filter(it => it.validationCodeFailure);
-    }
-
-    async getValidationCodeFailureCount(): Promise<number> {
-        const records = await this.findValidationCodeFailureRecords();
-        return records.length;
     }
 
     static loadConfiguredThreshold(): number {

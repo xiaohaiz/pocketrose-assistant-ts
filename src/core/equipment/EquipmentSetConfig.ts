@@ -62,30 +62,6 @@ class EquipmentSetConfig {
         return html;
     }
 
-    renderSetupItem(): EquipmentSetConfig {
-        if (this.alias !== undefined) {
-            $("#ES_ALIAS_" + this.index).val(this.alias);
-        }
-        if (this.weaponStar) {
-            $("#ES_WEA_STAR_" + this.index).css("color", "blue");
-        }
-        if (this.armorStar) {
-            $("#ES_ARM_STAR_" + this.index).css("color", "blue");
-        }
-        if (this.accessoryStar) {
-            $("#ES_ACC_STAR_" + this.index).css("color", "blue");
-        }
-
-        $(".ES_WEA_OPTION_" + this.index + "[value='" + this.weaponName + "']")
-            .prop("selected", true);
-        $(".ES_ARM_OPTION_" + this.index + "[value='" + this.armorName + "']")
-            .prop("selected", true);
-        $(".ES_ACC_OPTION_" + this.index + "[value='" + this.accessoryName + "']")
-            .prop("selected", true);
-
-        return this;
-    }
-
     bind(setupButtonId: string, handler?: (config: EquipmentSetConfig) => void) {
         $("._star_button_" + this.index).on("click", event => {
             const buttonId = $(event.target).attr("id") as string;

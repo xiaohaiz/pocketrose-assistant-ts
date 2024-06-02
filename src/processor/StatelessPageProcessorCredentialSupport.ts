@@ -4,6 +4,9 @@ import PageUtils from "../util/PageUtils";
 import PageProcessor from "./PageProcessor";
 import PageProcessorContext from "./PageProcessorContext";
 
+/**
+ * @deprecated
+ */
 abstract class StatelessPageProcessorCredentialSupport implements PageProcessor {
 
     process(context?: PageProcessorContext): void {

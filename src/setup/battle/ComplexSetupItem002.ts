@@ -13,11 +13,11 @@ class ComplexSetupItem002 implements SetupItem {
         return code;
     }
 
-    accept(id?: string): boolean {
+    accept(): boolean {
         return true;
     }
 
-    render(id?: string): void {
+    render(): void {
         doRender();
     }
 
@@ -32,8 +32,8 @@ function doRender() {
     html += "<tr>";
     html += "<th style='background-color:#E8E8D0' class='C_setupItemName' id='_s_" + code + "'>" + name + "</th>";
     html += "<td style='background-color:#E8E8D0'></td>";
-    html += "<td style='background-color:#EFE0C0'><input type='button' class='dynamic_button' id='setup_" + code + "' value='设置'></td>";
-    html += "<td style='background-color:#E0D0B0;text-align:left' colspan='2'>" + doGenerateSetupItem() + "</td>";
+    html += "<td style='background-color:#EFE0C0'><input type='button' class='dynamic_button' id='setup_" + code + "' value='重置'></td>";
+    html += "<td style='background-color:#F8F0E0;text-align:left' colspan='2'>" + doGenerateSetupItem() + "</td>";
     html += "</tr>";
 
     $("#setup_item_table").append($(html));
@@ -41,8 +41,15 @@ function doRender() {
     const value = SetupLoader.getLodgeHealthLostRatio();
     $(".option_class_" + code + "[value='" + Number(value) + "']").prop("selected", true);
 
+    $("#select_" + code).on("change", () => {
+        const value = $("#select_" + code).val();
+        SetupStorage.store(key, value!.toString());
+        MessageBoard.publishMessage("<b style='color:red'>" + name + "</b>已经设置。");
+    });
+
     $("#setup_" + code).on("click", function () {
-        doSaveSetupItem();
+        SetupStorage.remove(key);
+        $("#refreshSetupButton").trigger("click");
     });
 }
 
@@ -60,13 +67,6 @@ function doGenerateSetupItem() {
     html += "<option class='option_class_" + code + "' value='0.9'>90%</option>";
     html += "</select>";
     return html;
-}
-
-function doSaveSetupItem() {
-    const value = $("#select_" + code).val();
-    SetupStorage.store(key, value!.toString());
-    MessageBoard.publishMessage("<b style='color:red'>" + name + "</b>已经设置。");
-    $("#refreshButton").trigger("click");
 }
 
 export = ComplexSetupItem002;

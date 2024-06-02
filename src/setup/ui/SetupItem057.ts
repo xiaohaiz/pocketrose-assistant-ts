@@ -19,6 +19,10 @@ class SetupItem057 extends AbstractBooleanValueSetupItem {
         return "上班悄悄的摸鱼";
     }
 
+    protected doGetDescription(): string {
+        return "用极简风格展现战斗结果报告。";
+    }
+
 }
 
 export {SetupItem057};

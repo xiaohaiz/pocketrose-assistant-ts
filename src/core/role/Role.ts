@@ -3,6 +3,7 @@ import StringUtils from "../../util/StringUtils";
 import Castle from "../castle/Castle";
 import Town from "../town/Town";
 import _ from "lodash";
+import WeaponSkill from "./WeaponSkill";
 
 class Role {
     name?: string;               // 姓名
@@ -51,6 +52,8 @@ class Role {
 
     canConsecrate?: boolean;        // 是否可祭奠，从主页解析
 
+    weaponSkills?: WeaponSkill[];
+
     get imageHtml(): string {
         const src = Constants.POCKET_DOMAIN + "/image/head/" + this.image;
         return "<img src='" + src + "' alt='" + this.name + "' width='64' height='64' id='roleImage'>";
@@ -59,14 +62,6 @@ class Role {
     get imageHTML(): string {
         const src = Constants.POCKET_DOMAIN + "/image/head/" + this.image;
         return "<img src='" + src + "' alt='" + this.name + "' width='64' height='64' title='" + this.name + "'>";
-    }
-
-    get experienceHtml(): string {
-        if (this.experience! >= 14900) {
-            return "MAX";
-        } else {
-            return this.experience!.toString();
-        }
     }
 
     parseHealth(s: string) {

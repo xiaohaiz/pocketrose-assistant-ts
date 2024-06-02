@@ -19,6 +19,10 @@ class SetupItem035 extends AbstractBooleanValueSetupItem {
         return "字母文本的按钮";
     }
 
+    protected doGetDescription(): string {
+        return "按钮文本显示为英文字母。";
+    }
+
 }
 
 export {SetupItem035};

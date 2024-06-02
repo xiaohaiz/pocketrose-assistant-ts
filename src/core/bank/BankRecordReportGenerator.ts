@@ -104,12 +104,11 @@ async function _loadBankRecords(includeExternal: boolean): Promise<Map<string, R
         .filter(it => includeExternal || it.external === undefined || !it.external)
         .forEach(it => names.set(it.id!, it.name!));
 
-    const storage = BankRecordStorage.getInstance();
     const promises: Promise<BankRecord | null>[] = [];
     TeamMemberLoader.loadTeamMembers()
         .filter(it => includeExternal || it.external === undefined || !it.external)
         .map(it => it.id!)
-        .forEach(it => promises.push(storage.load(it)));
+        .forEach(it => promises.push(BankRecordStorage.load(it)));
 
     const reports = new Map<string, Report>();
     (await Promise.all(promises))

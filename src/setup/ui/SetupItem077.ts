@@ -19,6 +19,10 @@ class SetupItem077 extends AbstractBooleanValueSetupItem {
         return "警示验证码错误";
     }
 
+    protected doGetDescription(): string {
+        return "在战斗菜单左侧空白处警示验证码选择错误的次数。";
+    }
+
 }
 
 export {SetupItem077};

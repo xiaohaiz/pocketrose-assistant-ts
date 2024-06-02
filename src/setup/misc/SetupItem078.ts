@@ -19,6 +19,9 @@ class SetupItem078 extends AbstractBooleanValueSetupItem {
         return "开发和调试模式";
     }
 
+    protected doGetDescription(): string {
+        return "在消息面板显示开发调试相关的日志。";
+    }
 }
 
 export {SetupItem078};

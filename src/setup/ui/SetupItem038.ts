@@ -19,6 +19,9 @@ class SetupItem038 extends AbstractBooleanValueSetupItem {
         return "装备和宠物排序";
     }
 
+    protected doGetDescription(): string {
+        return "装备和宠物排序显示。";
+    }
 }
 
 export {SetupItem038};

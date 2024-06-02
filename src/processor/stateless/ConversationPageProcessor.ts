@@ -1,12 +1,11 @@
 import EventHandler from "../../core/event/EventHandler";
 import Credential from "../../util/Credential";
 import StringUtils from "../../util/StringUtils";
-import PageProcessorContext from "../PageProcessorContext";
 import StatelessPageProcessorCredentialSupport from "../StatelessPageProcessorCredentialSupport";
 
 class ConversationPageProcessor extends StatelessPageProcessorCredentialSupport {
 
-    async doProcess(credential: Credential, context?: PageProcessorContext): Promise<void> {
+    async doProcess(_credential: Credential): Promise<void> {
         $("table:first")
             .next()
             .find("> tbody:first")

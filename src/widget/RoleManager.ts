@@ -93,8 +93,8 @@ class RoleManager extends CommonWidget {
         const information = $("#_pocket_RoleInformation");
         information.find("> td:first").html(this.role!.name!);
         information.find("> td:eq(1)").html(_.toString(this.role!.level!));
-        information.find("> td:eq(2)").html(this.role!.healthHtml);
-        information.find("> td:eq(3)").html(this.role!.manaHtml);
+        information.find("> td:eq(2)").html("<span style='color:red;font-weight:bold'>" + this.role!.healthHtml + "</span>");
+        information.find("> td:eq(3)").html("<span style='color:blue;font-weight:bold'>" + this.role!.manaHtml + "</span>");
         information.find("> td:eq(4)").html(this.role!.attackHtml);
         information.find("> td:eq(5)").html(this.role!.defenseHtml);
         information.find("> td:eq(6)").html(this.role!.specialAttackHtml);

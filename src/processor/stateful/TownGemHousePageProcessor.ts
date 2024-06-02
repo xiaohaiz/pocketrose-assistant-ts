@@ -34,7 +34,6 @@ class TownGemHousePageProcessor extends StatefulPageProcessor {
 
         this.equipmentManager = new EquipmentManager(credential, this.location);
         this.equipmentManager.feature.enableGemTransfer = true;
-        this.equipmentManager.feature.enableGrowthTriggerOnDispose = true;
         this.equipmentManager.feature.enableSpaceTriggerOnDispose = true;
         this.equipmentManager.feature.enableStatusTriggerOnDispose = true;
         this.equipmentManager.feature.enableUsingTriggerOnDispose = true;

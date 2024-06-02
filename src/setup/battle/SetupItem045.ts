@@ -19,6 +19,9 @@ class SetupItem045 extends AbstractBooleanValueSetupItem {
         return "安全的战斗按钮";
     }
 
+    protected doGetDescription(): string {
+        return "战斗读秒倒计时没结束前隐藏战斗按钮。";
+    }
 }
 
 export {SetupItem045};

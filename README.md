@@ -1,5 +1,104 @@
 # pocketrose assistant
 
+### 版本 6.0.5
+
+1. [ISSUE #I9TZU7](https://gitee.com/barnabus/pocketrose-assistant/issues/I9TZU7) 齐心丹任务辅助系统默认开启。
+2. [ISSUE #I9TZUW](https://gitee.com/barnabus/pocketrose-assistant/issues/I9TZUW) 可自行选择匹诺曹战斗失败是否自动吃药。
+
+### 版本 6.0.1
+
+1. [ISSUE #I9TLAF](https://gitee.com/barnabus/pocketrose-assistant/issues/I9TLAF) 齐心丹任务辅助系统。
+2. [ISSUE #I9TLA3](https://gitee.com/barnabus/pocketrose-assistant/issues/I9TLA3) 枫丹地铁站合并到驿站。
+3. [ISSUE #I9T9OC](https://gitee.com/barnabus/pocketrose-assistant/issues/I9T9OC) 枫丹可从驿站直接去迪士尼。
+4. [ISSUE #I9T9P4](https://gitee.com/barnabus/pocketrose-assistant/issues/I9T9P4) 枫丹可以从驿站直接去唐朝（不建议）。
+5. [ISSUE #I9TLAE](https://gitee.com/barnabus/pocketrose-assistant/issues/I9TLAE) 修改装备练满的提示方式。
+6. [ISSUE #I9T7UM](https://gitee.com/barnabus/pocketrose-assistant/issues/I9T7UM) 缓存管理可排序显示。
+7. [ISSUE #I9TLOB](https://gitee.com/barnabus/pocketrose-assistant/issues/I9TLOB) 去迪士尼前修理所有装备。
+
+### 版本 5.6.10
+
+1. [ISSUE #I9SVWM](https://gitee.com/barnabus/pocketrose-assistant/issues/I9SVWM) 皇宫任务页面标准化改造提高自动化程度。
+2. [ISSUE #I9SZB8](https://gitee.com/barnabus/pocketrose-assistant/issues/I9SZB8) 相对更加精准的倒计时机制。
+
+### 版本 5.6.9
+
+1. [ISSUE #I9SN5G](https://gitee.com/barnabus/pocketrose-assistant/issues/I9SN5G) 皇帝内阁页面重构。
+2. [ISSUE #I9SN5K](https://gitee.com/barnabus/pocketrose-assistant/issues/I9SN5K) 仕官下野页面标准化改造。
+3. [ISSUE #I9SQSL](https://gitee.com/barnabus/pocketrose-assistant/issues/I9SQSL) 资金援助页面标准化改造。
+
+### 版本 5.6.8
+
+1. [ISSUE #I9S1ZI](https://gitee.com/barnabus/pocketrose-assistant/issues/I9S1ZI) 自动卖龙珠升级包括自动卖初森和中塔。
+2. [ISSUE #I9S9BJ](https://gitee.com/barnabus/pocketrose-assistant/issues/I9S9BJ) 解决组件侧边栏样式浏览器和字体兼容问题。
+3. [ISSUE #I9SFQA](https://gitee.com/barnabus/pocketrose-assistant/issues/I9SFQA) 分身管理页面标准化改造。
+4. [ISSUE #I9SK9P](https://gitee.com/barnabus/pocketrose-assistant/issues/I9SK9P) 皇帝内阁页面标准化改造。
+5. [ISSUE #I9SI01](https://gitee.com/barnabus/pocketrose-assistant/issues/I9SI01) 开发调试页面重构。
+6. [ISSUE #I9SGUZ](https://gitee.com/barnabus/pocketrose-assistant/issues/I9SGUZ) 优化城市界面国家相关的菜单选项。
+
+### 版本 5.6.7
+
+1. [ISSUE #I9RPWY](https://gitee.com/barnabus/pocketrose-assistant/issues/I9RPWY) 定时清理过期银行记录。
+2. [ISSUE #I9RXBS](https://gitee.com/barnabus/pocketrose-assistant/issues/I9RXBS) 定时清理过期战斗日志。
+3. [ISSUE #I9RXVD](https://gitee.com/barnabus/pocketrose-assistant/issues/I9RXVD) 定时清理过期验证码错误日志。
+4. [ISSUE #I9RY01](https://gitee.com/barnabus/pocketrose-assistant/issues/I9RY01) 定时清理过期转职日志。
+5. [ISSUE #I9RY4T](https://gitee.com/barnabus/pocketrose-assistant/issues/I9RY4T) 定时清理过期祭奠日志。
+6. [ISSUE #I9RY6A](https://gitee.com/barnabus/pocketrose-assistant/issues/I9RY6A) 定时清理过期宝石合成日志。
+7. [ISSUE #I9S88W](https://gitee.com/barnabus/pocketrose-assistant/issues/I9S88W) 解决某些边界情况下进入城市界面时智能战斗场所没有正确刷新的问题。
+
+### 版本 5.6.5
+
+1. [ISSUE #I9RPXB](https://gitee.com/barnabus/pocketrose-assistant/issues/I9RPXB) 智能战斗切换点设置处可附件选择是否未定型时强制上洞。
+2. [ISSUE #I9RNC9](https://gitee.com/barnabus/pocketrose-assistant/issues/I9RNC9) 提示城市可收益默认开启。
+3. [ISSUE #I9RQ8D](https://gitee.com/barnabus/pocketrose-assistant/issues/I9RQ8D) 个天的自动触发默认开启。
+4. [ISSUE #I9RQ9H](https://gitee.com/barnabus/pocketrose-assistant/issues/I9RQ9H) 转职后自动穿戴默认开启。
+5. [ISSUE #I9RQ9G](https://gitee.com/barnabus/pocketrose-assistant/issues/I9RQ9G) 转职后自动设技默认开启。
+6. [ISSUE #I9RU0E](https://gitee.com/barnabus/pocketrose-assistant/issues/I9RU0E) 常驻饰品可优雅更换。
+
+### 版本 5.6.3
+
+1. [ISSUE #I9RLUE](https://gitee.com/barnabus/pocketrose-assistant/issues/I9RLUE) 全自动练装备提醒机制完全取消人工干预。
+2. [ISSUE #I9RG5V](https://gitee.com/barnabus/pocketrose-assistant/issues/I9RG5V) 战斗后触发更新在用装备的状态更新。
+3. [ISSUE #I9RLVX](https://gitee.com/barnabus/pocketrose-assistant/issues/I9RLVX) 显示战斗的收获默认开启。
+4. [ISSUE #I9RM3A](https://gitee.com/barnabus/pocketrose-assistant/issues/I9RM3A) 可自行设定低贡献者的评判标准。
+
+### 版本 5.6.2
+
+1. [ISSUE #I9REXG](https://gitee.com/barnabus/pocketrose-assistant/issues/I9REXG) 可设置低贡献者自动小额收益。
+2. [ISSUE #I9RDDS](https://gitee.com/barnabus/pocketrose-assistant/issues/I9RDDS) 祭奠后自动千寻默认开启。
+3. [ISSUE #I9REXD](https://gitee.com/barnabus/pocketrose-assistant/issues/I9REXD) 修复转职自动设置技能后页面没有刷新的问题。
+
+### 版本 5.6.1
+
+1. [ISSUE #I9R9YW](https://gitee.com/barnabus/pocketrose-assistant/issues/I9R9YW) 转职后自动尝试装备。
+2. [ISSUE #I9RBN4](https://gitee.com/barnabus/pocketrose-assistant/issues/I9RBN4) 转职后自动设置技能。
+3. [ISSUE #I9RC3E](https://gitee.com/barnabus/pocketrose-assistant/issues/I9RC3E) 祭奠后自动装备千与千寻。
+4. [ISSUE #I9R869](https://gitee.com/barnabus/pocketrose-assistant/issues/I9R869) 禁售非空的城堡默认开启。
+5. [ISSUE #I9R836](https://gitee.com/barnabus/pocketrose-assistant/issues/I9R836) 提醒战斗无宠物默认开启。
+6. [ISSUE #I9R833](https://gitee.com/barnabus/pocketrose-assistant/issues/I9R833) 提醒战斗无装备默认开启。
+7. [ISSUE #I9R4QQ](https://gitee.com/barnabus/pocketrose-assistant/issues/I9R4QQ) 移动后自动进城默认开启。
+8. [ISSUE #I9R4QN](https://gitee.com/barnabus/pocketrose-assistant/issues/I9R4QN) 自动转移城据点默认开启。
+
+### 版本 5.5.10
+
+1. [ISSUE #I9QZP7](https://gitee.com/barnabus/pocketrose-assistant/issues/I9QZP7) 自制屋改造为智能装备推荐中心。
+2. [ISSUE #I9QZOY](https://gitee.com/barnabus/pocketrose-assistant/issues/I9QZOY) 可设置自动卖出战斗中入手的龙珠。
+3. [ISSUE #I9QZPX](https://gitee.com/barnabus/pocketrose-assistant/issues/I9QZPX) 提前观看战斗结果设置为默认开启。
+
+### 版本 5.5.8
+
+1. [ISSUE #I9QQON](https://gitee.com/barnabus/pocketrose-assistant/issues/I9QQON) 自动刷新过期验证码免责设置需双重选项启用。
+2. [ISSUE #I9QQ1S](https://gitee.com/barnabus/pocketrose-assistant/issues/I9QQ1S) 如果启用自动刷新强制限时工作时间。
+3. [ISSUE #I9QSJX](https://gitee.com/barnabus/pocketrose-assistant/issues/I9QSJX) 装备管理组件支持入国证。
+4. [ISSUE #I9QQ9M](https://gitee.com/barnabus/pocketrose-assistant/issues/I9QQ9M) 可设置战斗忘记带装备时提示。
+5. [ISSUE #I9QQ2D](https://gitee.com/barnabus/pocketrose-assistant/issues/I9QQ2D) 可设置战斗忘记带宠物时提示。
+
+### 版本 5.5.7
+
+1. [ISSUE #I9O7UV](https://gitee.com/barnabus/pocketrose-assistant/issues/I9O7UV) 修复无宠物战斗时战斗结果显示格式错乱的问题。
+2. [ISSUE #I9QKZ1](https://gitee.com/barnabus/pocketrose-assistant/issues/I9QKZ1) 可设置移动到城市或者城堡后自动进入。
+3. [ISSUE #I9QLCO](https://gitee.com/barnabus/pocketrose-assistant/issues/I9QLCO) 自动刷新过期验证码功能谨慎使用（增加边界判断提高可靠性）。
+4. [ISSUE I9QOT0](https://gitee.com/barnabus/pocketrose-assistant/issues/I9QOT0) 可设置提前观看战斗结果。
+
 ### 版本 5.5.5
 
 1. [ISSUE #I9P3O9](https://gitee.com/barnabus/pocketrose-assistant/issues/I9P3O9) 个人天真比赛期可自动触发。

@@ -32,6 +32,15 @@ class BattlePage {
 
     additionalRP?: number;
 
+    noWeaponFound?: boolean;
+    noArmorFound?: boolean;
+    noAccessoryFound?: boolean;
+    noPetFound?: boolean;
+
+    usingWeaponName?: string;
+    usingArmorName?: string;
+    usingAccessoryName?: string;
+
     constructor() {
         this.treasureBattle = false;
         this.primaryBattle = false;

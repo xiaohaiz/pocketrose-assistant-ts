@@ -5,15 +5,29 @@ import Role from "../role/Role";
 
 class MetroDashboardPage {
 
+    /**
+     * Role parsed from metro dashboard page.
+     * - name
+     * - health
+     * - mana
+     * - cash
+     */
     role?: Role;
+
     scope?: number;
     mode?: string;
     coordinate?: Coordinate;
 
-    static parse(html: string) {
+    timeoutInSeconds?: number;
+
+}
+
+class MetroDashboardPageParser {
+
+    static parse(pageHTML: string) {
+        const dom = $(pageHTML);
         const role = new Role();
-        $(html)
-            .find("td:contains('ＨＰ')")
+        dom.find("td:contains('ＨＰ')")
             .filter((idx, td) => $(td).text() === "ＨＰ")
             .closest("table")
             .find("tr:first")
@@ -46,14 +60,13 @@ class MetroDashboardPage {
                 role.cash = _.parseInt(s);
             });
 
-        let s = $(html)
-            .find("select[name='chara_m']")
+        let s = dom.find("select[name='chara_m']")
             .find("option:last")
             .val();
         const scope = parseInt(s! as string);
 
         let mode = "ROOK";
-        $(html).find("input:submit").each(function (_idx, input) {
+        dom.find("input:submit").each(function (_idx, input) {
             const v = $(input).val();
             const d = $(input).attr("disabled");
             if (v === "↖" && d === undefined) {
@@ -62,8 +75,7 @@ class MetroDashboardPage {
         });
 
         let source = new Coordinate(-1, -1);
-        $(html)
-            .find("td")
+        dom.find("td")
             .each(function (_idx, td) {
                 const text = $(td).text();
                 if (text.includes("现在位置(") && text.endsWith(")")) {
@@ -79,9 +91,19 @@ class MetroDashboardPage {
         page.scope = scope;
         page.mode = mode;
         page.coordinate = source;
+
+        const clock = dom.find("input:text[name='clock']");
+        if (clock.length > 0) {
+            let timeout = _.parseInt(clock.val() as string);
+            timeout = _.max([timeout, 0])!;
+            if (timeout > 0) {
+                page.timeoutInSeconds = timeout;
+            }
+        }
+
         return page;
     }
 
 }
 
-export = MetroDashboardPage;
+export {MetroDashboardPage, MetroDashboardPageParser};

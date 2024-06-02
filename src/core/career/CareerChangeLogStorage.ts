@@ -2,6 +2,10 @@ import ObjectID from "bson-objectid";
 import _ from "lodash";
 import {PocketDatabase} from "../../pocket/PocketDatabase";
 import CareerChangeLog from "./CareerChangeLog";
+import {DayRange, MonthRange} from "../../util/PocketDateUtils";
+import {PocketLogger} from "../../pocket/PocketLogger";
+
+const logger = PocketLogger.getLogger("STORAGE");
 
 class CareerChangeLogStorage {
 
@@ -117,6 +121,36 @@ class CareerChangeLogStorage {
                         $("#importedCareerChangeCount").text(c);
                         resolve();
                     };
+                }
+            };
+        });
+    }
+
+    static async purgeExpired() {
+        const month = MonthRange.current().previous().previous().previous()
+            .previous().previous().previous();
+        const day = new DayRange(month.start);
+        logger.debug("Purge expired career change log before: " + day.asText());
+
+        const range = IDBKeyRange.upperBound(day.previous().end);
+        const db = await PocketDatabase.connectDatabase();
+        return new Promise<void>((resolve, reject) => {
+            const request = db
+                .transaction(["CareerChangeLog"], "readwrite")
+                .objectStore("CareerChangeLog")
+                .index("createTime")
+                .openCursor(range);
+            request.onerror = reject;
+            let deletedCount = 0;
+            request.onsuccess = () => {
+                const cursor = request.result;
+                if (cursor) {
+                    cursor.delete();
+                    deletedCount++;
+                    cursor.continue();
+                } else {
+                    logger.debug("Total " + deletedCount + " career change log(s) purged.");
+                    resolve();
                 }
             };
         });

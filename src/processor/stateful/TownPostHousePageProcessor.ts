@@ -24,6 +24,9 @@ import LocationModeCastle from "../../core/location/LocationModeCastle";
 import LocationModeMap from "../../core/location/LocationModeMap";
 import MouseClickEventBuilder from "../../util/MouseClickEventBuilder";
 import {PocketEvent} from "../../pocket/PocketEvent";
+import NpcLoader from "../../core/role/NpcLoader";
+import PocketPageRenderer from "../../util/PocketPageRenderer";
+import TownForgeHouse from "../../core/forge/TownForgeHouse";
 
 class TownPostHousePageProcessor extends StatefulPageProcessor {
 
@@ -37,6 +40,7 @@ class TownPostHousePageProcessor extends StatefulPageProcessor {
     }
 
     protected async doProcess(): Promise<void> {
+        ButtonUtils.loadButtonStyle(10028);
         await this.generateHTML();
         await this.resetMessageBoard();
         await this.bindButtons();
@@ -87,6 +91,32 @@ class TownPostHousePageProcessor extends StatefulPageProcessor {
 
         table.find("> tbody:first > tr:eq(3) > td:first")
             .attr("id", "mapPanel");
+
+        if (this.townId === "12") {
+            // 当前城市是枫丹
+            $("#mapPanel").closest("tr")
+                .before($("<tr><td style='background-color:#F8F0E0' id='metroStation'></td></tr>"));
+            $("#metroStation").html(() => {
+                return "<table style='background-color:#888888;margin:auto;border-width:0'>" +
+                    "<tbody style='background-color:#F8F0E0;text-align:center'>" +
+                    "<tr>" +
+                    "<td style='width:64px;height:64px' rowspan='2'>" + NpcLoader.getTaskNpcImageHtml("东方不败") + "</td>" +
+                    "<th style='background-color:skyblue;font-size:120%'>" +
+                    "欢迎您的到来，勇敢的冒险者，这里是枫丹地铁站9¾站台。<br>" +
+                    "放心选择以下车次，出发前我们会帮您把所有现金存入银行，并回复您所有的体力。" +
+                    "</th>" +
+                    "</tr>" +
+                    "<tr>" +
+                    "<td>" +
+                    "<button role='button' class='button-10028' id='disneyButton'>　白雪公主号（终点迪士尼）　</button>" +
+                    PocketPageRenderer.OR() +
+                    "<button role='button' class='button-10028' id='tangButton'>　贞观盛世号（终点唐朝）　</button>" +
+                    "</td>" +
+                    "</tr>" +
+                    "</tbody>" +
+                    "</table>";
+            });
+        }
     }
 
     private async resetMessageBoard() {
@@ -126,10 +156,56 @@ class TownPostHousePageProcessor extends StatefulPageProcessor {
             }
             PocketPage.enableStatelessElements();
         });
-        const roleImageClickHandler = PocketEvent.newMouseClickHandler();
+
+        if (this.townId === "12") {
+            // 当前城市是枫丹
+            // 提供直接去迪士尼和唐朝的表单
+            $("#_pocket_page_extension_2").html(() => {
+                let form = "";
+                // noinspection HtmlUnknownTarget
+                form += "<form action='map.cgi' method='post'>";
+                form += "<input type='hidden' name='id' value='" + this.credential.id + "'>";
+                form += "<input type='hidden' name='pass' value='" + this.credential.pass + "'>";
+                form += "<input type='hidden' name='select' value='0'>";
+                form += "<input type='hidden' name='out' value='underway'>";
+                form += "<input type='hidden' name='mode' value='MAP_MOVE'>";
+                form += "<input type='submit' id='_pocket_DisneySubmit'>";
+                form += "</form>";
+                return form;
+            });
+            $("#disneyButton").on("click", async () => {
+                await new TownBank(this.credential, this.townId).depositAll();
+                await new TownInn(this.credential, this.townId).recovery();
+                await new TownForgeHouse(this.credential, this.townId).repairAll();
+                await this.dispose();
+                PageUtils.triggerClick("_pocket_DisneySubmit");
+            });
+            $("#_pocket_page_extension_3").html(() => {
+                let form = "";
+                // noinspection HtmlUnknownTarget
+                form += "<form action='town.cgi' method='post'>";
+                form += "<input type='hidden' name='id' value='" + this.credential.id + "'>";
+                form += "<input type='hidden' name='pass' value='" + this.credential.pass + "'>";
+                form += "<input type='hidden' name='select' value='1'>";
+                form += "<input type='hidden' name='mode' value='FLYMOVE'>";
+                form += "<input type='submit' id='_pocket_TangSubmit'>";
+                form += "</form>";
+                return form;
+            });
+            $("#tangButton").on("click", async () => {
+                if (!confirm("不推荐去唐朝，那里还没有完工，乱七八糟的。您确定要去？")) return;
+                if (!confirm("真的，好多人去了唐朝都不知道怎么回来。您依然坚持要去？")) return;
+                await new TownBank(this.credential, this.townId).depositAll();
+                await new TownInn(this.credential, this.townId).recovery();
+                await this.dispose();
+                PageUtils.triggerClick("_pocket_TangSubmit");
+            });
+        }
+
+        const roleImageHandler = PocketEvent.newMouseClickHandler();
         MouseClickEventBuilder.newInstance()
             .onElementClicked("roleInformationManager", async () => {
-                await roleImageClickHandler.onMouseClicked();
+                await roleImageHandler.onMouseClicked();
             })
             .onElementClicked("messageBoardManager", async () => {
                 await this.resetMessageBoard();
@@ -221,6 +297,9 @@ class TownPostHousePageProcessor extends StatefulPageProcessor {
                     return;
                 }
 
+                PageUtils.disableElement("disneyButton");
+                PageUtils.disableElement("tangButton");
+
                 // 准备切换到移动模式
                 PocketPage.scrollIntoTitle();
                 MessageBoard.publishMessage("准备进入移动模式。");
@@ -274,7 +353,9 @@ class TownPostHousePageProcessor extends StatefulPageProcessor {
         await this.roleManager.reload();
         await this.roleManager.render();
         MessageBoard.publishMessage("<span style='color:yellow;font-size:120%;font-weight:bold'>旅途愉快，下次再见。</span>");
-        $("#returnButton").prop("disabled", false).parent().show();
+        const returnButton = $("#returnButton");
+        returnButton.prop("disabled", false).parent().show();
+        returnButton.trigger("click");
     }
 
     private async _travelToCastle(castle: Castle) {
@@ -295,7 +376,9 @@ class TownPostHousePageProcessor extends StatefulPageProcessor {
             "<span style='color:yellow;font-size:120%;font-weight:bold'>" +
             "伟大的<span style='color:wheat'>" + this.roleManager.role!.name! + "</span>回到了忠诚的“" + castle.name! + "”。" +
             "</span>");
-        $("#returnButton").prop("disabled", false).parent().show();
+        const returnButton = $("#returnButton");
+        returnButton.prop("disabled", false).parent().show();
+        returnButton.trigger("click");
     }
 
     private async _travelToLocation(location: Coordinate) {

@@ -26,15 +26,26 @@ class BattlePageParser {
             .closest("table");
         let div = table.prev();
 
-        table.find("> tbody:first")
-            .find("> tr:eq(3)")
-            .find("> td:first")
-            .find("> table:first")
-            .find("> tbody:first")
-            .find("> tr:first")
-            .find("> td:first")
-            .find("> table:first")
-            .find("> tbody:first")
+        const roleTable = table.find("> tbody:first")
+            .find("> tr:eq(3) > td:first")
+            .find("> table:first > tbody:first")
+            .find("> tr:first > td:first")
+            .find("> table:first");
+
+        const weaponName = roleTable.find("> tbody:first")
+            .find("> tr:eq(2)")
+            .find("> td:eq(4)")
+            .text();
+        const armorName = roleTable.find("> tbody:first")
+            .find("> tr:eq(2)")
+            .find("> td:eq(5)")
+            .text();
+        const accessoryName = roleTable.find("> tbody:first")
+            .find("> tr:eq(2)")
+            .find("> td:eq(6)")
+            .text();
+
+        roleTable.find("> tbody:first")
             .find("> tr:eq(2)")
             .find("> td:first")
             .next()
@@ -172,25 +183,28 @@ class BattlePageParser {
             page.petImageHtml = "<img src='" + petImageSrc + "' alt='' width='64' height='64'>";
         }
 
-        battleTable
-            .find("> tbody:first")
-            .find("> tr:first")
-            .find("> td:first")
-            .find("> center:first")
-            .find("> h1:eq(1)")
-            .find("> font:first")
-            .find("> b:first")
-            .find("> p:first")
-            .find("> table:eq(1)")
-            .find("> tbody:first")
-            .find("> tr:first")
-            .find("> td:first")
-            .find("> table:first")
-            .find("> tbody:first")
-            .find("> tr:eq(4)")
-            .each((idx, tr) => {
-                page.petNameHtml = $(tr).find("> td:first").html();
-            });
+        if (page.petImageHtml !== undefined) {
+            battleTable
+                .find("> tbody:first")
+                .find("> tr:first")
+                .find("> td:first")
+                .find("> center:first")
+                .find("> h1:eq(1)")
+                .find("> font:first")
+                .find("> b:first")
+                .find("> p:first")
+                .find("> table:eq(1)")
+                .find("> tbody:first")
+                .find("> tr:first")
+                .find("> td:first")
+                .find("> table:first")
+                .find("> tbody:first")
+                .find("> tr:eq(4)")
+                .each((idx, tr) => {
+                    page.petNameHtml = $(tr).find("> td:first").html();
+                });
+        }
+
 
         battleTable
             .find("td:contains('＜怪物＞')")
@@ -277,13 +291,15 @@ class BattlePageParser {
         }
 
         // 解析宠物的亲密度
-        $(html).find("font:contains('亲密度成为')")
-            .filter((_idx, it) => _.startsWith($(it).text(), "亲密度成为"))
-            .each((idx, it) => {
-                let petLoveText = $(it).html();
-                petLoveText = StringUtils.substringBetween(petLoveText, "亲密度成为", "！");
-                page.petLove = parseFloat(petLoveText);
-            });
+        if (page.petNameHtml !== undefined) {
+            $(html).find("font:contains('亲密度成为')")
+                .filter((_idx, it) => _.startsWith($(it).text(), "亲密度成为"))
+                .each((idx, it) => {
+                    let petLoveText = $(it).html();
+                    petLoveText = StringUtils.substringBetween(petLoveText, "亲密度成为", "！");
+                    page.petLove = parseFloat(petLoveText);
+                });
+        }
 
         generateBattleReport(battleTable, page);
 
@@ -298,6 +314,29 @@ class BattlePageParser {
                 }
             });
 
+
+        page.noWeaponFound = (weaponName === "");
+        page.noArmorFound = (armorName === "");
+        page.noAccessoryFound = (accessoryName === "");
+        page.noPetFound = (page.petNameHtml === undefined);
+
+        if (weaponName !== "") page.usingWeaponName = weaponName;
+        if (armorName !== "") page.usingArmorName = armorName;
+        if (accessoryName !== "") page.usingAccessoryName = accessoryName;
+
+        if (page.noWeaponFound) {
+            page.harvestList.push("亲，你好像没有带<span style='color:green'>武器</span>！");
+        }
+        if (page.noArmorFound) {
+            page.harvestList.push("穿上<span style='color:green'>防具</span>不裸奔，是一种美德！");
+        }
+        if (page.noAccessoryFound) {
+            page.harvestList.push("<span style='color:green'>饰品</span>空空，不觉得有点别扭么？");
+        }
+        if (page.noPetFound) {
+            page.harvestList.push("就不带<span style='color:blue'>宠物</span>，就要独美！");
+        }
+
         return await (() => {
             return new Promise<BattlePage>(resolve => resolve(page));
         })();
@@ -306,60 +345,90 @@ class BattlePageParser {
 }
 
 function generateBattleReport(battleTable: JQuery, page: BattlePage) {
-    let lastTurnIndex = 0;  // 最后一个回合p元素对应的下标
-    battleTable
-        .find("> tbody:first")
-        .find("> tr:first")
-        .find("> td:first")
-        .find("> center:first")
-        .find("> h1:eq(1)")
-        .find("> font:first")
-        .find("> b:first")
-        .find("> p")
-        .each((idx, p) => {
-            const t = $(p).text();
-            if (_.startsWith(t, "第 ") && _.includes(t, " 回合")) {
-                lastTurnIndex = idx;
-            }
-        });
-
-    const pList: JQuery[] = [];
-    battleTable
-        .find("> tbody:first")
-        .find("> tr:first")
-        .find("> td:first")
-        .find("> center:first")
-        .find("> h1:eq(1)")
-        .find("> font:first")
-        .find("> b:first")
-        .find("> p")
-        .each((idx, p) => {
-            if (idx >= lastTurnIndex) {
-                pList.push($(p));
-            }
-        });
-
-    let p1 = pList[0].html();
-    p1 = StringUtils.substringAfterLast(p1, "</tbody></table><br>");
-
+    let p1 = "";
     let p2 = "";
-    if (pList.length > 1) {
-        p2 = pList[1].html();
+    let p3 = "";
+
+    // 没有宠物的时候最后一个回合不在p里面！！！巨坑巨坑。
+    if (page.petNameHtml === undefined) {
+        let s = battleTable
+            .find("> tbody:first")
+            .find("> tr:first")
+            .find("> td:first")
+            .find("> center:first")
+            .find("> h1:eq(1)")
+            .find("> p:first")
+            .html();
+        p3 = StringUtils.substringAfterLast(s, "</table>");
+        if (_.startsWith(p3, "<br>")) {
+            p3 = StringUtils.substringAfter(p3, "<br>");
+            // noinspection HtmlDeprecatedTag,HtmlDeprecatedAttribute,XmlDeprecatedElement
+            p3 = "<b><font size='3'>" + p3 + "</font></b>";
+        }
+    } else {
+        let lastTurnIndex = 0;  // 最后一个回合p元素对应的下标
+        battleTable
+            .find("> tbody:first")
+            .find("> tr:first")
+            .find("> td:first")
+            .find("> center:first")
+            .find("> h1:eq(1)")
+            .find("> font:first")
+            .find("> b:first")
+            .find("> p")
+            .each((idx, p) => {
+                const t = $(p).text();
+                if (_.startsWith(t, "第 ") && _.includes(t, " 回合")) {
+                    lastTurnIndex = idx;
+                }
+            });
+
+        const pList: JQuery[] = [];
+        battleTable
+            .find("> tbody:first")
+            .find("> tr:first")
+            .find("> td:first")
+            .find("> center:first")
+            .find("> h1:eq(1)")
+            .find("> font:first")
+            .find("> b:first")
+            .find("> p")
+            .each((idx, p) => {
+                if (idx >= lastTurnIndex) {
+                    pList.push($(p));
+                }
+            });
+
+        p1 = pList[0].html();
+        p1 = StringUtils.substringAfterLast(p1, "</tbody></table><br>");
+
+        p2 = "";
+        if (pList.length > 1) {
+            p2 = pList[1].html();
+        }
+
+        p3 = battleTable
+            .find("> tbody:first")
+            .find("> tr:first")
+            .find("> td:first")
+            .find("> center:first")
+            .find("> h1:eq(1)")
+            .find("> p:first")
+            .html();
     }
 
-    let p3 = battleTable
-        .find("> tbody:first")
-        .find("> tr:first")
-        .find("> td:first")
-        .find("> center:first")
-        .find("> h1:eq(1)")
-        .find("> p:first")
-        .html();
 
     let report = "";
     if (!SetupLoader.isQuietBattleModeEnabled()) {
-        // noinspection HtmlDeprecatedTag,HtmlDeprecatedAttribute,XmlDeprecatedElement
-        report = "<b><font size='3'>" + p1 + "</font></b><br><b><font size='3'>" + p2 + "</font></b><br>" + p3;
+        if (p1 !== "") {
+            // noinspection HtmlDeprecatedTag,HtmlDeprecatedAttribute,XmlDeprecatedElement
+            report += "<b><font size='3'>" + p1 + "</font></b><br>"
+        }
+        if (p2 !== "") {
+            // noinspection HtmlDeprecatedTag,HtmlDeprecatedAttribute,XmlDeprecatedElement
+            report += "<b><font size='3'>" + p2 + "</font></b><br>";
+        }
+        report += p3;
         while (true) {
             if (!report.includes("<br><br>")) {
                 break;
